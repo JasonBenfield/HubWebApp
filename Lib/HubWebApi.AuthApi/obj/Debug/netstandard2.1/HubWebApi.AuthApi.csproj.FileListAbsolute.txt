@@ -1,6 +1,0 @@
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.csprojAssemblyReference.cache
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.ValidationErrors.resources
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.csproj.GenerateResource.cache
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.AssemblyInfoInputs.cache
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.AssemblyInfo.cs
-C:\Users\xarto\source\repos\XTI\XTI\HubWebApp\HubWebApi.AuthApi\obj\Debug\netstandard2.1\HubWebApi.AuthApi.csproj.CoreCompileInputs.cache

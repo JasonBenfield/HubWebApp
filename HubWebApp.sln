@@ -27,17 +27,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubApiGeneratorApp", "Apps\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E167D40E-9DB8-40E5-A388-FAD1FEFBC7C0}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		apigenerator.ps1 = apigenerator.ps1
 		Version.Targets = Version.Targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Extensions", "Lib\HubWebApp.Extensions\HubWebApp.Extensions.csproj", "{CAE048F6-E844-48A8-9357-10FCF512BD16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubWebApp.Fakes", "Lib\HubWebApp.Fakes\HubWebApp.Fakes.csproj", "{52C42886-4AE4-4806-9522-1A23D0681BC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Fakes", "Lib\HubWebApp.Fakes\HubWebApp.Fakes.csproj", "{52C42886-4AE4-4806-9522-1A23D0681BC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubWebApp.Tests", "Tests\HubWebApp.Tests\HubWebApp.Tests.csproj", "{4E815D32-B1E2-4BE4-9B3D-3CC6CF8C7484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Tests", "Tests\HubWebApp.Tests\HubWebApp.Tests.csproj", "{4E815D32-B1E2-4BE4-9B3D-3CC6CF8C7484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubWebApp.IntegrationTests", "Tests\HubWebApp.IntegrationTests\HubWebApp.IntegrationTests.csproj", "{17780D78-1CD1-4BC7-97F7-1A4007CED363}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.IntegrationTests", "Tests\HubWebApp.IntegrationTests\HubWebApp.IntegrationTests.csproj", "{17780D78-1CD1-4BC7-97F7-1A4007CED363}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
