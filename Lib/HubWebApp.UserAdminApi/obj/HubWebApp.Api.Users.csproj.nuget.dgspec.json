@@ -1,0 +1,190 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\HubWebApp\\HubWebApp.Api.Users\\HubWebApp.Api.Users.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\HubWebApp\\HubWebApp.Api.Users\\HubWebApp.Api.Users.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\HubWebApp\\HubWebApp.Api.Users\\HubWebApp.Api.Users.csproj",
+        "projectName": "HubWebApp.Api.Users",
+        "projectPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\HubWebApp\\HubWebApp.Api.Users\\HubWebApp.Api.Users.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\HubWebApp\\HubWebApp.Api.Users\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\XTI_WebApp.Api.csproj": {
+                "projectPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\XTI_WebApp.Api.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\XTI_WebApp.Api.csproj": {
+      "version": "1.0.1-dev1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\XTI_WebApp.Api.csproj",
+        "projectName": "XTI_WebApp.Api",
+        "projectPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\XTI_WebApp.Api.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Api\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\XTI_WebApp.Auth.csproj": {
+                "projectPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\XTI_WebApp.Auth.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\XTI_WebApp.Auth.csproj": {
+      "version": "1.0.1-dev1",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\XTI_WebApp.Auth.csproj",
+        "projectName": "XTI_WebApp.Auth",
+        "projectPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\XTI_WebApp.Auth.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\xarto\\source\\repos\\XTI\\XTI\\Lib\\XTI_WebApp.Auth\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

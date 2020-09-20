@@ -1,0 +1,428 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\XTI\\src\\HubWebApp\\Apps\\HubWebApp\\HubWebApp.csproj": {}
+  },
+  "projects": {
+    "C:\\XTI\\src\\HubWebApp\\Apps\\HubWebApp\\HubWebApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Apps\\HubWebApp\\HubWebApp.csproj",
+        "projectName": "HubWebApp",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Apps\\HubWebApp\\HubWebApp.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Apps\\HubWebApp\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\HubWebApp.ApiControllers.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\HubWebApp.ApiControllers.csproj"
+              },
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\HubWebApp.Extensions.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\HubWebApp.Extensions.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "MSBuildTasks": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.5.0.235, )"
+            },
+            "XTI_Configuration.Extensions": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\HubWebApp.AuthApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\HubWebApp.AuthApi.csproj",
+        "projectName": "HubWebApp.AuthApi",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\HubWebApp.AuthApi.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "XTI_WebApp.Api": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\HubWebApp.ApiControllers.csproj": {
+      "version": "1.0.4-dev1",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\HubWebApp.ApiControllers.csproj",
+        "projectName": "HubWebApp.ApiControllers",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\HubWebApp.ApiControllers.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.ApiControllers\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Authorization": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "Microsoft.AspNetCore.Mvc": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj": {
+      "version": "1.0.4-dev1",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj",
+        "projectName": "HubWebApp.Api",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\HubWebApp.AuthApi.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApi.AuthApi\\HubWebApp.AuthApi.csproj"
+              },
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\HubWebApp.UserAdminApi.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\HubWebApp.UserAdminApi.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\HubWebApp.Extensions.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\HubWebApp.Extensions.csproj",
+        "projectName": "HubWebApp.Extensions",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\HubWebApp.Extensions.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Extensions\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj": {
+                "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.Api\\HubWebApp.Api.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "XTI_WebApp.Extensions": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\HubWebApp.UserAdminApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\HubWebApp.UserAdminApi.csproj",
+        "projectName": "HubWebApp.UserAdminApi",
+        "projectPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\HubWebApp.UserAdminApi.csproj",
+        "packagesPath": "C:\\Users\\xarto\\.nuget\\packages\\",
+        "outputPath": "C:\\XTI\\src\\HubWebApp\\Lib\\HubWebApp.UserAdminApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\xarto\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\ProgramData\\XTI\\Packages": {},
+          "C:\\Users\\xarto\\Documents\\GitHub\\NuGetPackages": {},
+          "C:\\XTI\\src\\XTI\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "XTI_WebApp.Api": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

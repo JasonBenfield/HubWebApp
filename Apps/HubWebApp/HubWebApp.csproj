@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <UserSecretsId>06fc7bb1-bce8-444d-8883-ddda42ebf3f1</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="webpack.config.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSBuildTasks" Version="1.5.0.235">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.4" />
+  </ItemGroup>
+
+  <Import Project="$(XTI_Targets)\WebAppOffline.Targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />
+    <ProjectReference Include="..\..\Lib\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

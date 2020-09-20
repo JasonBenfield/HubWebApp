@@ -1,0 +1,18 @@
+﻿@inject XTI_WebApp.PageContext pageContext
+<!doctype html>
+<html class="vh-100 overflow-hidden" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@ViewBag.Title</title>
+</head>
+<body class="vh-100 overflow-hidden">
+    <!-- ko component: { name: 'page-frame', params: $data } --><!-- /ko -->
+    @RenderBody()
+    <script>
+        pageContext = @Html.Raw(pageContext.Serialize());
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

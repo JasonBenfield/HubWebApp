@@ -1,0 +1,53 @@
+﻿declare module '*.scss' {
+    const content: { [className: string]: string };
+    export default content;
+}
+
+declare module '*.html' {
+    const content: string;
+    export default content;
+}
+
+interface PageContext {
+    BaseUrl: string;
+    CacheBust: string;
+}
+
+declare let pageContext: PageContext;
+
+declare module 'cpwstart' {
+    export function startup(
+        createPageVM: (modalErrorVM: any) => any,
+        createPage: (vm: any) => any
+    );
+}
+
+interface EventCallback<TArgs> {
+    (args: TArgs, source?: any): void;
+}
+
+interface IEventHandler<TArgs> {
+    register(callback: EventCallback<TArgs>, identifier?: any, isEnabled?: () => boolean): IEventHandler<TArgs>;
+    unregister(identifier: any);
+}
+
+interface IEvent<TArgs> extends IEventHandler<TArgs> {
+    invoke(args?: TArgs);
+    dispose();
+}
+
+interface RegisteredEventCallback {
+    callback: EventCallback<any>;
+    identifier: string;
+    isEnabled: () => boolean;
+}
+
+interface IActionErrorOptions {
+    caption?: string;
+    preventDefault?: boolean;
+}
+
+interface IErrorModel {
+    propertyName: string;
+    message: string;
+}

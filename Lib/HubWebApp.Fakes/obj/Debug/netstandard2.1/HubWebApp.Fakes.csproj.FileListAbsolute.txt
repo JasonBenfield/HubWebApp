@@ -1,0 +1,16 @@
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.Fakes.deps.json
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.Fakes.dll
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.Api.dll
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.AuthApi.dll
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.UserAdminApi.dll
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.Api.pdb
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.AuthApi.pdb
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.UserAdminApi.pdb
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.csprojAssemblyReference.cache
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.AssemblyInfoInputs.cache
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.AssemblyInfo.cs
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.csproj.CopyComplete
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\bin\Debug\netstandard2.1\HubWebApp.Fakes.pdb
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.csproj.CoreCompileInputs.cache
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.dll
+C:\XTI\src\HubWebApp\Lib\HubWebApp.Fakes\obj\Debug\netstandard2.1\HubWebApp.Fakes.pdb

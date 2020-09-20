@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\\..\\Version.Targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\HubWebApi.AuthApi\HubWebApp.AuthApi.csproj" />
+    <ProjectReference Include="..\HubWebApp.UserAdminApi\HubWebApp.UserAdminApi.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="ValidationErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValidationErrors.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="ValidationErrors.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
