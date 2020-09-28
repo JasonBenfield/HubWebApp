@@ -15,7 +15,7 @@ interface PageContext {
 
 declare let pageContext: PageContext;
 
-declare module 'cpwstart' {
+declare module 'xtistart' {
     export function startup(
         createPageVM: (modalErrorVM: any) => any,
         createPage: (vm: any) => any

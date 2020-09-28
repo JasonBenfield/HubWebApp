@@ -1,7 +1,7 @@
 ﻿import { UserPageViewModel } from "./UserPageViewModel";
 import { Alert } from '../Alert';
 import { UrlBuilder } from '../UrlBuilder';
-import { startup } from 'cpwstart';
+import { startup } from 'xtistart';
 import { WebPage } from '../WebPage';
 import { baseApi } from '../BaseAppApiCollection';
 

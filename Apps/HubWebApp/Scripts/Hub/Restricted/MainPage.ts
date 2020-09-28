@@ -1,5 +1,5 @@
 ﻿import { MainPageViewModel } from "./MainPageViewModel";
-import { startup } from 'cpwstart';
+import { startup } from 'xtistart';
 
 class MainPage {
     constructor(private readonly viewModel: MainPageViewModel) {

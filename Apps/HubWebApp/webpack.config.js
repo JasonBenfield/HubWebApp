@@ -32,7 +32,7 @@ const exportModule = {
 const outputFilename = '[name].js';
 const resolve = {
     alias: {
-        cpwstart: path.resolve(__dirname, 'Scripts/Hub/Startup.js')
+        xtistart: path.resolve(__dirname, 'Scripts/Hub/Startup.js')
     }
 };
 const plugins = [

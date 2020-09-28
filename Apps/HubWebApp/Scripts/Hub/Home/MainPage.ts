@@ -1,6 +1,6 @@
 ﻿import { MainPageViewModel } from "./MainPageViewModel";
 import { TelephoneNumber } from "../TelephoneNumber";
-import { startup } from 'cpwstart';
+import { startup } from 'xtistart';
 
 class MainPage {
     constructor(private readonly viewModel: MainPageViewModel) {

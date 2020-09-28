@@ -1,6 +1,6 @@
 ﻿import { LoginPageViewModel } from "./LoginPageViewModel";
 import { LoginComponent, LoginResult } from "./LoginComponent";
-import { startup } from 'cpwstart';
+import { startup } from 'xtistart';
 
 class LoginPage
 {
