@@ -4,10 +4,10 @@ exports.AppApi = void 0;
 var AppResourceUrl_1 = require("./AppResourceUrl");
 var UserGroup_1 = require("./UserGroup");
 var AppApi = /** @class */ (function () {
-    function AppApi(events, baseUrl, app) {
+    function AppApi(events, baseUrl, app, version) {
         this.events = events;
         this.groups = {};
-        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, pageContext.CacheBust);
+        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, version, pageContext.CacheBust);
         this.addGroup(function (evts, ru) { return new UserGroup_1.UserGroup(evts, ru); });
     }
     Object.defineProperty(AppApi.prototype, "name", {

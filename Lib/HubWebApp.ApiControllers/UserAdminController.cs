@@ -18,7 +18,7 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         [HttpPost]
-        public Task<ResultContainer<int>> AddUser(AddUserModel model)
+        public Task<ResultContainer<int>> AddUser([FromBody] AddUserModel model)
         {
             return api.Group("UserAdmin").Action<AddUserModel, int>("AddUser").Execute(model);
         }

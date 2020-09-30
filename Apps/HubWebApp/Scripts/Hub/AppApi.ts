@@ -7,9 +7,10 @@ export class AppApi {
     constructor(
         private readonly events: AppApiEvents,
         baseUrl: string,
-        app: string
+        app: string,
+        version: string
     ) {
-        this.resourceUrl = AppResourceUrl.app(baseUrl, app, pageContext.CacheBust);
+        this.resourceUrl = AppResourceUrl.app(baseUrl, app, version, pageContext.CacheBust);
         this.addGroup((evts, ru) => new UserGroup(evts, ru));
     }
 

@@ -15,7 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.4" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.7" />
   </ItemGroup>
 
   <Import Project="$(XTI_Targets)\WebAppOffline.Targets" />

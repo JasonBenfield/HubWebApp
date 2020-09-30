@@ -30,13 +30,13 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<LoginResult>> Login(LoginModel model)
+        public Task<ResultContainer<LoginResult>> Login([FromBody] LoginModel model)
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Login").Execute(model);
         }
 
         [HttpPost]
-        public Task<ResultContainer<LoginResult>> Authenticate(LoginModel model)
+        public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginModel model)
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Authenticate").Execute(model);
         }

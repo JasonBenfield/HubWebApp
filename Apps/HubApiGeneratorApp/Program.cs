@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using XTI_Configuration.Extensions;
 using XTI_ApiGeneratorApp.Extensions;
+using XTI_ConsoleApp.Extensions;
 
 namespace HubApiGeneratorApp
 {
@@ -17,6 +18,7 @@ namespace HubApiGeneratorApp
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddConsoleAppServices(hostContext.Configuration);
                     services.ConfigureForApiGenerator(hostContext.Configuration);
                     services.AddHostedService(sp =>
                     {

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var MainPageViewModel_1 = require("./MainPageViewModel");
 var TelephoneNumber_1 = require("../TelephoneNumber");
-var cpwstart_1 = require("cpwstart");
+var xtistart_1 = require("xtistart");
 var MainPage = /** @class */ (function () {
     function MainPage(viewModel) {
         this.viewModel = viewModel;
@@ -10,5 +10,5 @@ var MainPage = /** @class */ (function () {
     }
     return MainPage;
 }());
-cpwstart_1.startup(function () { return new MainPageViewModel_1.MainPageViewModel(); }, function (vm) { return new MainPage(vm); });
+xtistart_1.startup(function () { return new MainPageViewModel_1.MainPageViewModel(); }, function (vm) { return new MainPage(vm); });
 //# sourceMappingURL=MainPage.js.map

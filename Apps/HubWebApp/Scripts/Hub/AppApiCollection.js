@@ -8,7 +8,7 @@ var AppApiCollection = /** @class */ (function (_super) {
     tslib_1.__extends(AppApiCollection, _super);
     function AppApiCollection(events) {
         var _this = _super.call(this, events) || this;
-        _this.Hub = _this.addThisApp(function (evts) { return new HubAppApi_1.HubAppApi(evts, location.protocol + "//" + location.host); });
+        _this.Hub = _this.addThisApp(function (evts) { return new HubAppApi_1.HubAppApi(evts, location.protocol + "//" + location.host, 'Current'); });
         return _this;
     }
     return AppApiCollection;

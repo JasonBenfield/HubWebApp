@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var UserPageViewModel_1 = require("./UserPageViewModel");
 var Alert_1 = require("../Alert");
 var UrlBuilder_1 = require("../UrlBuilder");
-var cpwstart_1 = require("cpwstart");
+var xtistart_1 = require("xtistart");
 var WebPage_1 = require("../WebPage");
 var BaseAppApiCollection_1 = require("../BaseAppApiCollection");
 var UserPage = /** @class */ (function () {
@@ -24,5 +24,5 @@ var UserPage = /** @class */ (function () {
     };
     return UserPage;
 }());
-cpwstart_1.startup(function () { return new UserPageViewModel_1.UserPageViewModel(); }, function (vm) { return new UserPage(vm); });
+xtistart_1.startup(function () { return new UserPageViewModel_1.UserPageViewModel(); }, function (vm) { return new UserPage(vm); });
 //# sourceMappingURL=UserPage.js.map
