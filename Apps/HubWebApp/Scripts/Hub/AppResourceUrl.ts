@@ -1,14 +1,14 @@
-﻿import { AppResourceName } from "./AppResourceName";
+﻿import { XtiPath } from "./XtiPath";
 import { UrlBuilder } from "./UrlBuilder";
 
 export class AppResourceUrl {
-    static app(baseUrl: string, appKey: string, cacheBust: string) {
-        return new AppResourceUrl(baseUrl, AppResourceName.app(appKey), cacheBust);
+    static app(baseUrl: string, appKey: string, version: string, cacheBust: string) {
+        return new AppResourceUrl(baseUrl, XtiPath.app(appKey, version), cacheBust);
     }
 
     private constructor(
         private readonly baseUrl: string,
-        readonly resourceName: AppResourceName,
+        readonly resourceName: XtiPath,
         private readonly cacheBust: string
     ) {
         this.url = new UrlBuilder(baseUrl)

@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.EF" Version="1.0.4" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.0.4" />
+    <PackageReference Include="XTI_App.EF" Version="1.0.7" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.0.7" />
   </ItemGroup>
 
   <ItemGroup>

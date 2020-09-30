@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var LoginPageViewModel_1 = require("./LoginPageViewModel");
 var LoginComponent_1 = require("./LoginComponent");
-var cpwstart_1 = require("cpwstart");
+var xtistart_1 = require("xtistart");
 var LoginPage = /** @class */ (function () {
     function LoginPage(vm) {
         this.vm = vm;
@@ -28,5 +28,5 @@ var LoginPage = /** @class */ (function () {
     };
     return LoginPage;
 }());
-cpwstart_1.startup(function () { return new LoginPageViewModel_1.LoginPageViewModel(); }, function (vm) { return new LoginPage(vm); });
+xtistart_1.startup(function () { return new LoginPageViewModel_1.LoginPageViewModel(); }, function (vm) { return new LoginPage(vm); });
 //# sourceMappingURL=LoginPage.js.map
