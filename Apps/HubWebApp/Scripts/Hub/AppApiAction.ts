@@ -25,7 +25,7 @@ export class AppApiAction<TArgs,TResult> {
         let postResult = await new HttpClient().post(this.url, jsonText);
         let result: TResult;
         let apiError: AppApiError;
-        result = postResult && postResult.result && postResult.result.data;
+        result = postResult && postResult.result && postResult.result.Data;
         if (!postResult.isSuccessful()) {
             let errors: ErrorModel[] = [];
             if (result) {

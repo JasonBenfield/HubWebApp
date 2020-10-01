@@ -5,7 +5,7 @@ import { baseApi, setBaseApi, BaseAppApiCollection } from './BaseAppApiCollectio
 export class AppApiCollection extends BaseAppApiCollection {
     constructor(events: AppApiEvents) {
         super(events);
-        this.Hub = this.addThisApp(evts=> new HubAppApi(evts, `${location.protocol}//${location.host}`));
+        this.Hub = this.addThisApp(evts=> new HubAppApi(evts, `${location.protocol}//${location.host}`, 'Current'));
     }
 
     readonly Hub: HubAppApi;

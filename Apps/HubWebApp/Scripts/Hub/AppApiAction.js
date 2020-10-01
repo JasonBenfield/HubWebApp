@@ -24,7 +24,7 @@ var AppApiAction = /** @class */ (function () {
                         return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.url, jsonText)];
                     case 1:
                         postResult = _a.sent();
-                        result = postResult && postResult.result && postResult.result.data;
+                        result = postResult && postResult.result && postResult.result.Data;
                         if (!postResult.isSuccessful()) {
                             errors = [];
                             if (result) {
