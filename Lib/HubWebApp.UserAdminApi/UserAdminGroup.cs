@@ -1,10 +1,10 @@
-﻿using XTI_WebApp.Api;
+﻿using XTI_App.Api;
 
 namespace HubWebApp.UserAdminApi
 {
     public sealed class UserAdminGroup : AppApiGroup
     {
-        public UserAdminGroup(AppApi api, WebAppUser user, IUserAdminFactory factory)
+        public UserAdminGroup(AppApi api, AppApiUser user, IUserAdminFactory factory)
             : base
             (
                   api,

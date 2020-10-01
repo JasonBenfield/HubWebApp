@@ -1,4 +1,4 @@
-﻿@inject XTI_WebApp.PageContext pageContext
+﻿@inject XTI_WebApp.Extensions.PageContext pageContext
 <!doctype html>
 <html class="vh-100 overflow-hidden" lang="en">
 <head>
@@ -12,7 +12,10 @@
     <!-- ko component: { name: 'page-frame', params: $data } --><!-- /ko -->
     @RenderBody()
     <script>
-        pageContext = @Html.Raw(pageContext.Serialize());
+        @{
+            var serializedPageContext = await pageContext.Serialize();
+        }
+        pageContext = @Html.Raw(serializedPageContext);
     </script>
     @RenderSection("Scripts", required: false)
 </body>

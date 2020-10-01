@@ -1,6 +1,6 @@
 ﻿using HubWebApp.AuthApi;
 using HubWebApp.UserAdminApi;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 
 namespace HubWebApp.Api
 {
@@ -10,7 +10,7 @@ namespace HubWebApp.Api
 
         public HubAppApi
         (
-            WebAppUser user,
+            AppApiUser user,
             IAuthGroupFactory authGroupFactory,
             IUserAdminFactory userAdminFactory
         )

@@ -1,5 +1,5 @@
 ﻿using HubWebApp.Api;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 
 namespace HubWebApp.ApiTemplate
 {
@@ -9,7 +9,7 @@ namespace HubWebApp.ApiTemplate
         {
             var api = new HubAppApi
             (
-                new SuperUser(),
+                new AppApiSuperUser(),
                 new AuthGroupFactoryForTemplate(),
                 new UserAdminFactoryForTemplate()
             );

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using XTI_App;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 
 namespace HubWebApp.Fakes
 {
@@ -24,7 +24,7 @@ namespace HubWebApp.Fakes
             var userAdminGroupFactory = sp.GetService<UserAdminGroupFactory>();
             var api = new HubAppApi
             (
-                new SuperUser(),
+                new AppApiSuperUser(),
                 authGroupFactory,
                 userAdminGroupFactory
             );

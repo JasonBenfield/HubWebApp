@@ -1,12 +1,12 @@
 ﻿using HubWebApp.Api;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
 using XTI_App;
 using XTI_App.EF;
-using XTI_WebApp;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 
 namespace HubWebApp.Extensions
 {
@@ -14,10 +14,11 @@ namespace HubWebApp.Extensions
     {
         public static void AddServicesForHub(this IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(optionsAction: (IServiceProvider sp, DbContextOptionsBuilder dbOptions) =>
+            services.AddDbContext<AppDbContext>(optionsAction: (IServiceProvider sp, DbContextOptionsBuilder dbOptionsBuilder) =>
             {
-                var webAppOptions = sp.GetService<IOptions<WebAppOptions>>().Value;
-                dbOptions.UseSqlServer(webAppOptions.ConnectionString)
+                var dbOptions = sp.GetService<IOptions<DbOptions>>();
+                var hostEnvironment = sp.GetService<IHostEnvironment>();
+                dbOptionsBuilder.UseSqlServer(new AppConnectionString(dbOptions, hostEnvironment.EnvironmentName).Value())
                     .EnableSensitiveDataLogging();
             });
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
@@ -27,7 +28,7 @@ namespace HubWebApp.Extensions
                 var userAdminFactory = new DiUserAdminFactory(sp);
                 return new HubAppApi
                 (
-                    new SuperUser(),
+                    new AppApiSuperUser(),
                     authGroupFactory,
                     userAdminFactory
                 );

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 using HubWebApp.AuthApi;
 using HubWebApp.Api;
 
@@ -30,13 +30,13 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<LoginResult>> Login(LoginModel model)
+        public Task<ResultContainer<LoginResult>> Login([FromBody] LoginModel model)
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Login").Execute(model);
         }
 
         [HttpPost]
-        public Task<ResultContainer<LoginResult>> Authenticate(LoginModel model)
+        public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginModel model)
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Authenticate").Execute(model);
         }

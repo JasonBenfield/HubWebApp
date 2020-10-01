@@ -4,7 +4,7 @@ using HubWebApp.UserAdminApi;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 using XTI_App.EF;
 using Microsoft.Extensions.DependencyInjection;
 using System;

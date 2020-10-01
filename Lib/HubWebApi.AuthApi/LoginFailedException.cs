@@ -1,4 +1,4 @@
-﻿using XTI_WebApp.Api;
+﻿using XTI_App.Api;
 
 namespace HubWebApp.AuthApi
 {

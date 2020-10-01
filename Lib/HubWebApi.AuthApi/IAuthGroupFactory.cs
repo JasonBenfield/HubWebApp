@@ -1,10 +1,10 @@
-﻿using XTI_WebApp.Api;
+﻿using XTI_App.Api;
 
 namespace HubWebApp.AuthApi
 {
     public interface IAuthGroupFactory
     {
-        AppAction<LoginModel, LoginResult> CreateAuthenticateAction(WebAppUser user);
-        AppAction<LoginModel, LoginResult> CreateLoginAction(WebAppUser user);
+        AppAction<LoginModel, LoginResult> CreateAuthenticateAction(AppApiUser user);
+        AppAction<LoginModel, LoginResult> CreateLoginAction(AppApiUser user);
     }
 }

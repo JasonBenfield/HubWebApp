@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppResourceUrl = void 0;
-var AppResourceName_1 = require("./AppResourceName");
+var XtiPath_1 = require("./XtiPath");
 var UrlBuilder_1 = require("./UrlBuilder");
 var AppResourceUrl = /** @class */ (function () {
     function AppResourceUrl(baseUrl, resourceName, cacheBust) {
@@ -12,8 +12,8 @@ var AppResourceUrl = /** @class */ (function () {
             .addPart(resourceName.format());
         this.url.addQuery('cacheBust', cacheBust);
     }
-    AppResourceUrl.app = function (baseUrl, appKey, cacheBust) {
-        return new AppResourceUrl(baseUrl, AppResourceName_1.AppResourceName.app(appKey), cacheBust);
+    AppResourceUrl.app = function (baseUrl, appKey, version, cacheBust) {
+        return new AppResourceUrl(baseUrl, XtiPath_1.XtiPath.app(appKey, version), cacheBust);
     };
     Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
         get: function () {

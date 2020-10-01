@@ -1,18 +1,18 @@
-﻿using XTI_WebApp.Api;
+﻿using XTI_App.Api;
 using XTI_App;
 
 namespace HubWebApp.AuthApi
 {
     public abstract class AuthGroupFactory : IAuthGroupFactory
     {
-        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction(WebAppUser user)
+        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction(AppApiUser user)
         {
             var accessToken = CreateAccessTokenForAuthenticate();
             var auth = createAuthentication(accessToken);
             return new AuthenticateAction(auth);
         }
 
-        public AppAction<LoginModel, LoginResult> CreateLoginAction(WebAppUser user)
+        public AppAction<LoginModel, LoginResult> CreateLoginAction(AppApiUser user)
         {
             var accessToken = CreateAccessTokenForLogin();
             var auth = createAuthentication(accessToken);

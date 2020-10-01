@@ -1,4 +1,4 @@
-﻿using XTI_WebApp.Api;
+﻿using XTI_App.Api;
 
 namespace HubWebApp.AuthApi
 {
@@ -10,7 +10,7 @@ namespace HubWebApp.AuthApi
                   api,
                   new NameFromGroupClassName(nameof(AuthGroup)).Value,
                   ResourceAccess.AllowAnonymous(),
-                  new SuperUser()
+                  new AppApiSuperUser()
             )
         {
             Index = AddDefaultView();

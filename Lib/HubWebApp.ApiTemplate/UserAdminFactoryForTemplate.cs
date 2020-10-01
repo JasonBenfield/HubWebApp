@@ -1,5 +1,5 @@
 ﻿using HubWebApp.UserAdminApi;
-using XTI_WebApp.Api;
+using XTI_App.Api;
 
 namespace HubWebApp.ApiTemplate
 {
