@@ -12,7 +12,6 @@ var AppApiAction = /** @class */ (function () {
         this.events = events;
         this.friendlyName = friendlyName;
         this.resourceUrl = resourceUrl.withAction(actionName);
-        this.url = this.resourceUrl.url.getUrl();
     }
     AppApiAction.prototype.execute = function (data, errorOptions) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -21,7 +20,7 @@ var AppApiAction = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         jsonText = new JsonText_1.JsonText(data).toString();
-                        return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.url, jsonText)];
+                        return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.resourceUrl.url.getUrl(), jsonText)];
                     case 1:
                         postResult = _a.sent();
                         result = postResult && postResult.result && postResult.result.Data;
@@ -59,7 +58,7 @@ var AppApiAction = /** @class */ (function () {
         });
     };
     AppApiAction.prototype.toString = function () {
-        return "AppApiAction " + this.url;
+        return "AppApiAction " + this.resourceUrl;
     };
     return AppApiAction;
 }());

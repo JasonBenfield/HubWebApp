@@ -2,6 +2,7 @@
 import { AppApiEvents } from "./AppApiEvents";
 import { AppResourceUrl } from "./AppResourceUrl";
 import { UserGroup } from './UserGroup';
+import { XtiUrl } from './XtiUrl';
 
 export class AppApi {
     constructor(
@@ -10,13 +11,13 @@ export class AppApi {
         app: string,
         version: string
     ) {
-        this.resourceUrl = AppResourceUrl.app(baseUrl, app, version, pageContext.CacheBust);
+        this.resourceUrl = AppResourceUrl.app(baseUrl, app, version, XtiUrl.current.path.modifier, pageContext.CacheBust);
         this.addGroup((evts, ru) => new UserGroup(evts, ru));
     }
 
     private readonly resourceUrl: AppResourceUrl;
 
-    get name() { return this.resourceUrl.resourceName.app; }
+    get name() { return this.resourceUrl.path.app; }
 
     get url() { return this.resourceUrl.relativeUrl; }
 

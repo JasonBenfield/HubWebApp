@@ -14,15 +14,13 @@ export class AppApiAction<TArgs,TResult> {
         private readonly friendlyName: string
     ) {
         this.resourceUrl = resourceUrl.withAction(actionName);
-        this.url = this.resourceUrl.url.getUrl();
     }
 
     private readonly resourceUrl: AppResourceUrl;
-    private readonly url: string;
 
     async execute(data: TArgs, errorOptions: IActionErrorOptions) {
         let jsonText = new JsonText(data).toString();
-        let postResult = await new HttpClient().post(this.url, jsonText);
+        let postResult = await new HttpClient().post(this.resourceUrl.url.getUrl(), jsonText);
         let result: TResult;
         let apiError: AppApiError;
         result = postResult && postResult.result && postResult.result.Data;
@@ -63,6 +61,6 @@ export class AppApiAction<TArgs,TResult> {
     }
 
     toString() {
-        return `AppApiAction ${this.url}`;
+        return `AppApiAction ${this.resourceUrl}`;
     }
 }

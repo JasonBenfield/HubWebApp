@@ -2,32 +2,32 @@
 import { UrlBuilder } from "./UrlBuilder";
 
 export class AppResourceUrl {
-    static app(baseUrl: string, appKey: string, version: string, cacheBust: string) {
-        return new AppResourceUrl(baseUrl, XtiPath.app(appKey, version), cacheBust);
+    static app(baseUrl: string, appKey: string, version: string, modifier: string, cacheBust: string) {
+        return new AppResourceUrl(baseUrl, XtiPath.app(appKey, version, modifier), cacheBust);
     }
 
     private constructor(
         private readonly baseUrl: string,
-        readonly resourceName: XtiPath,
+        readonly path: XtiPath,
         private readonly cacheBust: string
     ) {
         this.url = new UrlBuilder(baseUrl)
-            .addPart(resourceName.format());
+            .addPart(path.format());
         this.url.addQuery('cacheBust', cacheBust);
     }
 
     readonly url: UrlBuilder;
 
     get relativeUrl() {
-        return new UrlBuilder(`/${this.resourceName.format()}`);
+        return new UrlBuilder(`/${this.path.format()}`);
     }
 
     withGroup(group: string) {
-        return new AppResourceUrl(this.baseUrl, this.resourceName.withGroup(group), this.cacheBust);
+        return new AppResourceUrl(this.baseUrl, this.path.withGroup(group), this.cacheBust);
     }
 
     withAction(action: string) {
-        return new AppResourceUrl(this.baseUrl, this.resourceName.withAction(action), this.cacheBust);
+        return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
     }
 
     toString() {
