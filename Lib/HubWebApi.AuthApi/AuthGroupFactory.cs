@@ -5,14 +5,14 @@ namespace HubWebApp.AuthApi
 {
     public abstract class AuthGroupFactory : IAuthGroupFactory
     {
-        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction(AppApiUser user)
+        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction(IAppApiUser user)
         {
             var accessToken = CreateAccessTokenForAuthenticate();
             var auth = createAuthentication(accessToken);
             return new AuthenticateAction(auth);
         }
 
-        public AppAction<LoginModel, LoginResult> CreateLoginAction(AppApiUser user)
+        public AppAction<LoginModel, LoginResult> CreateLoginAction(IAppApiUser user)
         {
             var accessToken = CreateAccessTokenForLogin();
             var auth = createAuthentication(accessToken);

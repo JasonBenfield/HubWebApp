@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace HubWebApp.client
 {
-    public sealed class HubAppClient : AppClient, IAuthClient
+    public sealed partial class HubAppClient : AppClient, IAuthClient
     {
         public HubAppClient(IHttpClientFactory httpClientFactory, XtiCredentials credentials, string baseUrl, string version = "V0"): base(httpClientFactory, baseUrl, "Hub", version)
         {

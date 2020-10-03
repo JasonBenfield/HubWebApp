@@ -21,9 +21,8 @@ namespace HubWebApp.UserAdminApi
         {
             var userName = new AppUserName(model.UserName);
             var hashedPassword = hashedPasswordFactory.Create(model.Password);
-            var userRepo = appFactory.UserRepository();
             var timeAdded = clock.Now();
-            var user = await userRepo.Add(userName, hashedPassword, timeAdded);
+            var user = await appFactory.Users().Add(userName, hashedPassword, timeAdded);
             return user.ID;
         }
     }

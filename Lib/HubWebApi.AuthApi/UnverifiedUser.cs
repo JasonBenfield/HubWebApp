@@ -14,15 +14,14 @@ namespace HubWebApp.AuthApi
 
         public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword)
         {
-            var userRepo = factory.UserRepository();
-            var user = await userRepo.RetrieveByUserName(userName);
+            var user = await factory.Users().User(userName);
             if (user.IsUnknown())
             {
-                throw new UserNotFoundException(userName.Value());
+                throw new UserNotFoundException(userName.Value);
             }
             if (!user.IsPasswordCorrect(hashedPassword))
             {
-                throw new PasswordIncorrectException(userName.Value());
+                throw new PasswordIncorrectException(userName.Value);
             }
             return user;
         }

@@ -4,11 +4,12 @@ namespace HubWebApp.UserAdminApi
 {
     public sealed class UserAdminGroup : AppApiGroup
     {
-        public UserAdminGroup(AppApi api, AppApiUser user, IUserAdminFactory factory)
+        public UserAdminGroup(AppApi api, IAppApiUser user, IUserAdminFactory factory)
             : base
             (
                   api,
                   new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
+                  false,
                   ResourceAccess.AllowAuthenticated(),
                   user
             )

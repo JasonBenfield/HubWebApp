@@ -18,7 +18,7 @@ namespace HubWebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddXtiServices(Configuration, typeof(Startup).Assembly);
+            services.AddWebAppServices(Configuration);
             services.ConfigureXtiCookieAndTokenAuthentication();
             services.AddServicesForHub();
         }

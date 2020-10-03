@@ -19,13 +19,13 @@ namespace HubWebApp.IntegrationTests
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.UseXtiConfiguration("Development", new string[] { });
             var configuration = configurationBuilder.Build();
-            services.AddXtiServices(configuration, typeof(AddUserIntegrationTest).Assembly);
+            services.AddWebAppServices(configuration);
             services.AddServicesForHub();
             var sp = services.BuildServiceProvider();
             var factory = sp.GetService<AppFactory>();
             var setup = new AppSetup(factory);
             await setup.Run();
-            var anonUser = await factory.UserRepository().RetrieveByUserName(AppUserName.Anon);
+            var anonUser = await factory.Users().User(AppUserName.Anon);
             Assert.That(anonUser.IsUnknown(), Is.False, "Should add anonymous user");
         }
     }

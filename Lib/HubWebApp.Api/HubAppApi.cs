@@ -1,20 +1,22 @@
 ﻿using HubWebApp.AuthApi;
 using HubWebApp.UserAdminApi;
+using XTI_App;
 using XTI_App.Api;
 
 namespace HubWebApp.Api
 {
     public sealed class HubAppApi : AppApi
     {
-        public static readonly string AppKey = "Hub";
+        public static readonly string AppKeyValue = "Hub";
+        public static readonly AppKey AppKey = new AppKey("Hub");
 
         public HubAppApi
         (
-            AppApiUser user,
+            IAppApiUser user,
             IAuthGroupFactory authGroupFactory,
             IUserAdminFactory userAdminFactory
         )
-            : base(AppKey, user)
+            : base(AppKeyValue, user)
         {
             Auth = AddGroup((u) => new AuthGroup(this, authGroupFactory));
             UserAdmin = AddGroup(u => new UserAdminGroup(this, u, userAdminFactory));
