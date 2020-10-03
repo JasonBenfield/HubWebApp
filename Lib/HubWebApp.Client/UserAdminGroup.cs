@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace HubWebApp.client
 {
-    public sealed class UserAdminGroup : AppClientGroup
+    public sealed partial class UserAdminGroup : AppClientGroup
     {
         public UserAdminGroup(IHttpClientFactory httpClientFactory, XtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "UserAdmin")
         {
         }
 
-        public Task<int> AddUser(AddUserModel model) => Post<int, AddUserModel>("AddUser", model);
+        public Task<int> AddUser(AddUserModel model) => Post<int, AddUserModel>("AddUser", "", model);
     }
 }

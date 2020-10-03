@@ -9,6 +9,7 @@ using XTI_App.EF;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using XTI_WebApp.Fakes;
+using XTI_App;
 
 namespace HubWebApp.Tests
 {
@@ -80,7 +81,7 @@ namespace HubWebApp.Tests
 
         private static Task<ResultContainer<int>> execute(TestInput input)
         {
-            return input.Api.UserAdmin.AddUser.Execute(input.Model);
+            return input.Api.UserAdmin.AddUser.Execute(AccessModifier.Default, input.Model);
         }
 
         private class TestInput

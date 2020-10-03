@@ -9,6 +9,7 @@ namespace HubWebApp.AuthApi
             (
                   api,
                   new NameFromGroupClassName(nameof(AuthGroup)).Value,
+                  false,
                   ResourceAccess.AllowAnonymous(),
                   new AppApiSuperUser()
             )
