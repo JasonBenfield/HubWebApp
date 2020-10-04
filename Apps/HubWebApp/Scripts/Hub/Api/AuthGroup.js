@@ -11,14 +11,10 @@ var AuthGroup = /** @class */ (function (_super) {
         _this.Index = _this.createView('Index');
         _this.Start = _this.createView('Start');
         _this.LoginAction = _this.createAction('Login', 'Login');
-        _this.AuthenticateAction = _this.createAction('Authenticate', 'Authenticate');
         return _this;
     }
     AuthGroup.prototype.Login = function (model, errorOptions) {
         return this.LoginAction.execute(model, errorOptions || {});
-    };
-    AuthGroup.prototype.Authenticate = function (model, errorOptions) {
-        return this.AuthenticateAction.execute(model, errorOptions || {});
     };
     return AuthGroup;
 }(AppApiGroup_1.AppApiGroup));

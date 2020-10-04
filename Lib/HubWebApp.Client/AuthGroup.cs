@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace HubWebApp.client
 {
-    public sealed partial class AuthGroup : AppClientGroup, IAuthClientGroup
+    public sealed partial class AuthGroup : AppClientGroup
     {
         public AuthGroup(IHttpClientFactory httpClientFactory, XtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "Auth")
         {
         }
 
         public Task<LoginResult> Login(LoginModel model) => Post<LoginResult, LoginModel>("Login", "", model);
-        public Task<LoginResult> Authenticate(LoginModel model) => Post<LoginResult, LoginModel>("Authenticate", "", model);
     }
 }

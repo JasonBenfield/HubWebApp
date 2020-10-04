@@ -37,11 +37,5 @@ namespace HubWebApp.ApiControllers
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Login").Execute(xtiPath.Modifier, model);
         }
-
-        [HttpPost]
-        public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginModel model)
-        {
-            return api.Group("Auth").Action<LoginModel, LoginResult>("Authenticate").Execute(xtiPath.Modifier, model);
-        }
     }
 }

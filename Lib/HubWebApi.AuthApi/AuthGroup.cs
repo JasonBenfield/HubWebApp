@@ -27,16 +27,9 @@ namespace HubWebApp.AuthApi
                 (u) => new LoginValidation(),
                 factory.CreateLoginAction
             );
-            Authenticate = AddAction
-            (
-                nameof(Authenticate),
-                (u) => new LoginValidation(),
-                factory.CreateAuthenticateAction
-            );
         }
         public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
         public AppApiAction<StartRequest, AppActionRedirectResult> Start { get; }
         public AppApiAction<LoginModel, LoginResult> Login { get; }
-        public AppApiAction<LoginModel, LoginResult> Authenticate { get; }
     }
 }
