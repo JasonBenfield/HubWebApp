@@ -15,7 +15,7 @@ namespace HubWebApp.AuthApi
         public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword)
         {
             var user = await factory.Users().User(userName);
-            if (user.IsUnknown())
+            if (!user.Exists())
             {
                 throw new UserNotFoundException(userName.Value);
             }

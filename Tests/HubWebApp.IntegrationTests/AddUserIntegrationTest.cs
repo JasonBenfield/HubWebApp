@@ -26,7 +26,7 @@ namespace HubWebApp.IntegrationTests
             var setup = new AppSetup(factory);
             await setup.Run();
             var anonUser = await factory.Users().User(AppUserName.Anon);
-            Assert.That(anonUser.IsUnknown(), Is.False, "Should add anonymous user");
+            Assert.That(anonUser.Exists(), Is.True, "Should add anonymous user");
         }
     }
 }
