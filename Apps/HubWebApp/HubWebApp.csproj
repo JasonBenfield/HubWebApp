@@ -23,11 +23,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.18" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.0.18" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.20" />
+    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.0.20" />
   </ItemGroup>
-
-  <Import Project="$(XTI_Targets)\WebAppOffline.Targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />

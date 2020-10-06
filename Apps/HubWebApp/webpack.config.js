@@ -3,8 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
     user: './Scripts/Hub/User/UserPage.ts',
     login: './Scripts/Hub/Auth/LoginPage.ts',
-    home: './Scripts/Hub/Home/MainPage.ts',
-    restricted: './Scripts/Hub/Restricted/MainPage.ts'
+    home: './Scripts/Hub/Home/MainPage.ts'
 };
 const exportModule = {
     rules: [
@@ -16,16 +15,21 @@ const exportModule = {
         {
             test: /\.s[ac]ss$/i,
             use: [
-                process.env.NODE_ENV === 'production'
-                    ? MiniCssExtractPlugin.loader
-                    : 'style-loader',
+                'style-loader',
                 'css-loader',
                 'sass-loader',
             ]
         },
         {
             test: /\.html$/i,
-            use: 'html-loader'
+            use: [{
+                loader: 'html-loader',
+                options: {
+                    minimize: {
+                        removeComments: false
+                    }
+                }
+            }]
         }
     ]
 };
