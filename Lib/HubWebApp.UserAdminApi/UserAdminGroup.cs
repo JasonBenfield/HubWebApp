@@ -1,4 +1,5 @@
-﻿using XTI_App.Api;
+﻿using HubWebApp.Core;
+using XTI_App.Api;
 
 namespace HubWebApp.UserAdminApi
 {
@@ -10,7 +11,7 @@ namespace HubWebApp.UserAdminApi
                   api,
                   new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
                   false,
-                  ResourceAccess.AllowAuthenticated(),
+                  ResourceAccess.AllowAuthenticated().WithAllowed(HubRoles.Instance.Admin),
                   user
             )
         {

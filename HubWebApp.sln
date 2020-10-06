@@ -29,7 +29,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		apigenerator.ps1 = apigenerator.ps1
+		backupappdb.ps1 = backupappdb.ps1
+		beginpublishversion.ps1 = beginpublishversion.ps1
+		endpublishversion.ps1 = endpublishversion.ps1
+		hubsetup.ps1 = hubsetup.ps1
+		newversion.ps1 = newversion.ps1
+		publishapp.ps1 = publishapp.ps1
+		readme.md = readme.md
+		resetappdb.ps1 = resetappdb.ps1
+		restoreappdb.ps1 = restoreappdb.ps1
+		runwebpack.ps1 = runwebpack.ps1
 		Version.Targets = Version.Targets
+		xtiuser.ps1 = xtiuser.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Extensions", "Lib\HubWebApp.Extensions\HubWebApp.Extensions.csproj", "{CAE048F6-E844-48A8-9357-10FCF512BD16}"
@@ -40,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Tests", "Tests\Hu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.IntegrationTests", "Tests\HubWebApp.IntegrationTests\HubWebApp.IntegrationTests.csproj", "{17780D78-1CD1-4BC7-97F7-1A4007CED363}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubSetupConsoleApp", "Apps\HubSetupConsoleApp\HubSetupConsoleApp.csproj", "{20ADCC54-DB62-45D5-8B5A-351F570C1BF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubSetupConsoleApp", "Apps\HubSetupConsoleApp\HubSetupConsoleApp.csproj", "{20ADCC54-DB62-45D5-8B5A-351F570C1BF7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Core", "Lib\HubWebApp.Core\HubWebApp.Core.csproj", "{84B45295-CBF0-4817-ADCD-DDD19D239A99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +113,10 @@ Global
 		{20ADCC54-DB62-45D5-8B5A-351F570C1BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20ADCC54-DB62-45D5-8B5A-351F570C1BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20ADCC54-DB62-45D5-8B5A-351F570C1BF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B45295-CBF0-4817-ADCD-DDD19D239A99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B45295-CBF0-4817-ADCD-DDD19D239A99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B45295-CBF0-4817-ADCD-DDD19D239A99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B45295-CBF0-4817-ADCD-DDD19D239A99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +135,7 @@ Global
 		{4E815D32-B1E2-4BE4-9B3D-3CC6CF8C7484} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 		{17780D78-1CD1-4BC7-97F7-1A4007CED363} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 		{20ADCC54-DB62-45D5-8B5A-351F570C1BF7} = {9642C4C4-1FCC-4F25-BD5A-3325428F2882}
+		{84B45295-CBF0-4817-ADCD-DDD19D239A99} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

@@ -1,12 +1,12 @@
 ﻿using XTI_App;
 
-namespace HubWebApp.Api
+namespace HubWebApp.Core
 {
     public sealed class HubRoles : AppRoleNames
     {
         public static HubRoles Instance = new HubRoles();
 
-        private HubRoles() : base(HubAppApi.AppKey)
+        private HubRoles() : base(HubAppKey.Key)
         {
             Admin = Add("Admin");
         }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HubWebApi.AuthApi\HubWebApp.AuthApi.csproj" />
+    <ProjectReference Include="..\HubWebApp.Core\HubWebApp.Core.csproj" />
     <ProjectReference Include="..\HubWebApp.UserAdminApi\HubWebApp.UserAdminApi.csproj" />
   </ItemGroup>
   
