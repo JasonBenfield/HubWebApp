@@ -21,9 +21,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
-    <PackageReference Include="XTI_ApiGeneratorApp.Extensions" Version="1.0.10" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.0.20" />
-    <PackageReference Include="XTI_ConsoleApp.Extensions" Version="1.0.20" />
+    <PackageReference Include="XTI_ApiGeneratorApp.Extensions" Version="1.0.12" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.1.6-dev637376965952848863" />
+    <PackageReference Include="XTI_ConsoleApp.Extensions" Version="1.1.6-dev637376965952848863" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setModalError = exports.modalError = exports.ModalErrorComponent = void 0;
+exports.ModalErrorComponent = void 0;
+var tslib_1 = require("tslib");
+var ModalErrorComponentViewModel_1 = require("./ModalErrorComponentViewModel");
 var Command_1 = require("../Command");
 var ModalErrorViewModel_1 = require("./ModalErrorViewModel");
+var tsyringe_1 = require("tsyringe");
 var ModalErrorComponent = /** @class */ (function () {
     function ModalErrorComponent(vm) {
         this.vm = vm;
@@ -29,11 +32,15 @@ var ModalErrorComponent = /** @class */ (function () {
         this.vm.errors([]);
         this.vm.modalOptions.command('hide');
     };
+    ModalErrorComponent = tslib_1.__decorate([
+        tsyringe_1.singleton(),
+        tslib_1.__metadata("design:paramtypes", [ModalErrorComponentViewModel_1.ModalErrorComponentViewModel])
+    ], ModalErrorComponent);
     return ModalErrorComponent;
 }());
 exports.ModalErrorComponent = ModalErrorComponent;
-function setModalError(_modalError) {
-    exports.modalError = _modalError;
-}
-exports.setModalError = setModalError;
+//export let modalError: ModalErrorComponent; 
+//export function setModalError(_modalError: ModalErrorComponent) {
+//    modalError = _modalError;
+//}
 //# sourceMappingURL=ModalErrorComponent.js.map

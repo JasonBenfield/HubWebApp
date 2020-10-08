@@ -11,6 +11,7 @@ var AuthGroup = /** @class */ (function (_super) {
         _this.Index = _this.createView('Index');
         _this.Start = _this.createView('Start');
         _this.LoginAction = _this.createAction('Login', 'Login');
+        _this.Logout = _this.createView('Logout');
         return _this;
     }
     AuthGroup.prototype.Login = function (model, errorOptions) {

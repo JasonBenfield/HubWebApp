@@ -2,7 +2,9 @@
 import { Command } from '../Command';
 import { ModalErrorViewModel } from './ModalErrorViewModel';
 import { ErrorModel } from '../ErrorModel';
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class ModalErrorComponent {
     constructor(
         private readonly vm: ModalErrorComponentViewModel
@@ -35,8 +37,8 @@ export class ModalErrorComponent {
     }
 }
 
-export let modalError: ModalErrorComponent; 
+//export let modalError: ModalErrorComponent; 
 
-export function setModalError(_modalError: ModalErrorComponent) {
-    modalError = _modalError;
-}
+//export function setModalError(_modalError: ModalErrorComponent) {
+//    modalError = _modalError;
+//}

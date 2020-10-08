@@ -1,13 +1,13 @@
 ﻿export class ErrorModel implements IErrorModel {
-    constructor(public readonly message: string, public readonly propertyName: string = '', public readonly context?: any) {
+    constructor(public readonly Message: string, public readonly Source: string = '', public readonly context?: any) {
     }
 
     toString() {
         let str = '';
-        if (this.propertyName) {
-            str += `${this.propertyName}, `;
+        if (this.Source) {
+            str += `${this.Source}, `;
         }
-        str += this.message;
+        str += this.Message;
         return str;
     }
 }

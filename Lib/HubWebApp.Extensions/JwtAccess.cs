@@ -11,16 +11,16 @@ using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions
 {
-    public sealed class JwtAccessToken : AccessToken
+    public sealed class JwtAccess : AccessForAuthenticate
     {
-        public JwtAccessToken(IOptions<JwtOptions> jwtOptions)
+        private readonly JwtOptions jwtOptions;
+
+        public JwtAccess(IOptions<JwtOptions> jwtOptions)
         {
             this.jwtOptions = jwtOptions.Value;
         }
 
-        private readonly JwtOptions jwtOptions;
-
-        public Task<string> Generate(IEnumerable<Claim> claims)
+        protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
@@ -40,6 +40,11 @@ namespace HubWebApp.Extensions
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var accessToken = tokenHandler.WriteToken(token);
             return Task.FromResult(accessToken);
+        }
+
+        protected override Task _Logout()
+        {
+            return Task.CompletedTask;
         }
     }
 }

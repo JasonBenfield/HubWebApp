@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 
 namespace HubWebApp.AuthApi
 {
-    public interface AccessToken
+    public interface IAccess
     {
-        Task<string> Generate(IEnumerable<Claim> claims);
+        Task<string> GenerateToken(IEnumerable<Claim> claims);
+        Task Logout();
     }
 }

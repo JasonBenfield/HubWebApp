@@ -1,11 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
+require("reflect-metadata");
 var UserPageViewModel_1 = require("./UserPageViewModel");
 var Alert_1 = require("../Alert");
 var UrlBuilder_1 = require("../UrlBuilder");
 var xtistart_1 = require("xtistart");
 var WebPage_1 = require("../WebPage");
-var BaseAppApiCollection_1 = require("../BaseAppApiCollection");
+var tsyringe_1 = require("tsyringe");
+var AppApi_1 = require("../AppApi");
 var UserPage = /** @class */ (function () {
     function UserPage(vm) {
         this.vm = vm;
@@ -19,10 +22,14 @@ var UserPage = /** @class */ (function () {
         if (returnUrl) {
             returnUrl = decodeURIComponent(returnUrl);
         }
-        returnUrl = BaseAppApiCollection_1.baseApi.thisApp.url.addPart(returnUrl).getUrl();
+        returnUrl = tsyringe_1.container.resolve(AppApi_1.AppApi).url.addPart(returnUrl).getUrl();
         new WebPage_1.WebPage(returnUrl).open();
     };
+    UserPage = tslib_1.__decorate([
+        tsyringe_1.singleton(),
+        tslib_1.__metadata("design:paramtypes", [UserPageViewModel_1.UserPageViewModel])
+    ], UserPage);
     return UserPage;
 }());
-xtistart_1.startup(function () { return new UserPageViewModel_1.UserPageViewModel(); }, function (vm) { return new UserPage(vm); });
+xtistart_1.startup(UserPageViewModel_1.UserPageViewModel, UserPage);
 //# sourceMappingURL=UserPage.js.map

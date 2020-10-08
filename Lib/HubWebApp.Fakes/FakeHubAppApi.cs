@@ -20,17 +20,19 @@ namespace HubWebApp.Fakes
 
         public async Task<HubAppApi> Create()
         {
-            var authGroupFactory = sp.GetService<AuthGroupFactory>();
-            var userAdminGroupFactory = sp.GetService<UserAdminGroupFactory>();
+            var authGroupFactory = new AuthGroupFactory(sp);
+            var userAdminGroupFactory = new UserAdminGroupFactory(sp);
             var api = new HubAppApi
             (
                 new AppApiSuperUser(),
+                "Current",
                 authGroupFactory,
                 userAdminGroupFactory
             );
             var appFactory = sp.GetService<AppFactory>();
-            var setup = new AppSetup(appFactory);
-            await setup.Run();
+            await new AppSetup(appFactory).Run();
+            var clock = sp.GetService<Clock>();
+            await new HubSetup(appFactory, clock).Run();
             return api;
         }
     }

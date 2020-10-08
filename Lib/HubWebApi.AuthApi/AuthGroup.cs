@@ -4,7 +4,7 @@ namespace HubWebApp.AuthApi
 {
     public sealed class AuthGroup : AppApiGroup
     {
-        public AuthGroup(AppApi api, IAuthGroupFactory factory)
+        public AuthGroup(AppApi api, AuthGroupFactory factory)
             : base
             (
                   api,
@@ -18,18 +18,24 @@ namespace HubWebApp.AuthApi
             Start = AddAction
             (
                nameof(Start),
-                (u) => new AppActionValidationNotRequired<StartRequest>(),
-                u => new StartAction()
+                () => new AppActionValidationNotRequired<StartRequest>(),
+                () => new StartAction()
             );
             Login = AddAction
             (
                 nameof(Login),
-                (u) => new LoginValidation(),
+                () => new LoginValidation(),
                 factory.CreateLoginAction
+            );
+            Logout = AddAction
+            (
+                nameof(Logout),
+                () => factory.CreateLogoutAction()
             );
         }
         public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
         public AppApiAction<StartRequest, AppActionRedirectResult> Start { get; }
         public AppApiAction<LoginModel, LoginResult> Login { get; }
+        public AppApiAction<EmptyRequest, AppActionRedirectResult> Logout { get; }
     }
 }

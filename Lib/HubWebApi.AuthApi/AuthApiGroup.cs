@@ -4,7 +4,7 @@ namespace HubWebApp.AuthApi
 {
     public sealed class AuthApiGroup : AppApiGroup
     {
-        public AuthApiGroup(AppApi api, IAuthGroupFactory factory)
+        public AuthApiGroup(AppApi api, AuthGroupFactory factory)
             : base
             (
                   api,
@@ -17,7 +17,7 @@ namespace HubWebApp.AuthApi
             Authenticate = AddAction
             (
                 nameof(Authenticate),
-                (u) => new LoginValidation(),
+                () => new LoginValidation(),
                 factory.CreateAuthenticateAction
             );
         }

@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace HubWebApp.Extensions
 {
-    public sealed class CookieAccessToken : AccessToken
+    public sealed class CookieAccess : AccessForLogin
     {
-        public CookieAccessToken(IHttpContextAccessor httpContextAccessor, AccessToken source)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly AccessForAuthenticate source;
+
+        public CookieAccess(IHttpContextAccessor httpContextAccessor, AccessForAuthenticate source)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.source = source;
         }
 
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly AccessToken source;
-
-        public async Task<string> Generate(IEnumerable<Claim> claims)
+        protected override async Task<string> _GenerateToken(IEnumerable<Claim> claims)
         {
-            var token = await source.Generate(claims);
+            var token = await source.GenerateToken(claims);
             var claimsPrincipal = new ClaimsPrincipal();
             claimsPrincipal.AddIdentity
             (
@@ -52,5 +52,7 @@ namespace HubWebApp.Extensions
             );
             return token;
         }
+
+        protected override Task _Logout() => httpContextAccessor.HttpContext.SignOutAsync();
     }
 }

@@ -7,6 +7,8 @@ using System;
 using XTI_App;
 using XTI_App.EF;
 using XTI_App.Api;
+using HubWebApp.AuthApi;
+using HubWebApp.UserAdminApi;
 
 namespace HubWebApp.Extensions
 {
@@ -22,15 +24,17 @@ namespace HubWebApp.Extensions
                     .EnableSensitiveDataLogging();
             });
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
+            services.AddScoped<AccessForAuthenticate, JwtAccess>();
+            services.AddScoped<AccessForLogin, CookieAccess>();
             services.AddScoped<AppApi>(sp =>
             {
-                var authGroupFactory = new DiAuthGroupFactory(sp);
-                var userAdminFactory = new DiUserAdminFactory(sp);
+                var xtiPath = sp.GetService<XtiPath>();
                 return new HubAppApi
                 (
                     new AppApiSuperUser(),
-                    authGroupFactory,
-                    userAdminFactory
+                    xtiPath.Version,
+                    new AuthGroupFactory(sp),
+                    new UserAdminGroupFactory(sp)
                 );
             });
             services.AddScoped(sp => (HubAppApi)sp.GetService<AppApi>());

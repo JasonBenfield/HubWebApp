@@ -1,44 +1,45 @@
-﻿using XTI_App.Api;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using XTI_App;
+using XTI_App.Api;
 
 namespace HubWebApp.AuthApi
 {
-    public abstract class AuthGroupFactory : IAuthGroupFactory
+    public sealed class AuthGroupFactory
     {
-        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction(IAppApiUser user)
+        private readonly IServiceProvider sp;
+
+        public AuthGroupFactory(IServiceProvider sp)
         {
-            var accessToken = CreateAccessTokenForAuthenticate();
-            var auth = createAuthentication(accessToken);
+            this.sp = sp;
+        }
+
+        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction()
+        {
+            var access = sp.GetService<AccessForAuthenticate>();
+            var auth = createAuthentication(access);
             return new AuthenticateAction(auth);
         }
 
-        public AppAction<LoginModel, LoginResult> CreateLoginAction(IAppApiUser user)
+        public AppAction<LoginModel, LoginResult> CreateLoginAction()
         {
-            var accessToken = CreateAccessTokenForLogin();
-            var auth = createAuthentication(accessToken);
+            var access = sp.GetService<AccessForLogin>();
+            var auth = createAuthentication(access);
             return new LoginAction(auth);
         }
 
-        private Authentication createAuthentication(AccessToken accessToken)
+        private Authentication createAuthentication(IAccess access)
         {
-            var unverifiedUser = CreateUnverifiedUser();
-            var hashedPasswordFactory = CreateHashedPasswordFactory();
-            return new Authentication(unverifiedUser, accessToken, hashedPasswordFactory);
+            var sesssionContext = sp.GetService<ISessionContext>();
+            var unverifiedUser = new UnverifiedUser(sp.GetService<AppFactory>());
+            var hashedPasswordFactory = sp.GetService<IHashedPasswordFactory>();
+            return new Authentication(sesssionContext, unverifiedUser, access, hashedPasswordFactory);
         }
 
-        protected abstract AccessToken CreateAccessTokenForAuthenticate();
-
-        protected abstract AccessToken CreateAccessTokenForLogin();
-
-        private UnverifiedUser CreateUnverifiedUser()
+        public AppAction<EmptyRequest, AppActionRedirectResult> CreateLogoutAction()
         {
-            var appFactory = CreateAppFactory();
-            return new UnverifiedUser(appFactory);
+            var access = sp.GetService<AccessForLogin>();
+            return new LogoutAction(access);
         }
-
-        protected abstract AppFactory CreateAppFactory();
-
-        protected abstract IHashedPasswordFactory CreateHashedPasswordFactory();
-
     }
 }

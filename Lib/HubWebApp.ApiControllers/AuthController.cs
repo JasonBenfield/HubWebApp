@@ -37,5 +37,11 @@ namespace HubWebApp.ApiControllers
         {
             return api.Group("Auth").Action<LoginModel, LoginResult>("Login").Execute(xtiPath.Modifier, model);
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            var result = await api.Group("Auth").Action<EmptyRequest, AppActionRedirectResult>("Logout").Execute(xtiPath.Modifier, new EmptyRequest());
+            return Redirect(result.Data.Url);
+        }
     }
 }
