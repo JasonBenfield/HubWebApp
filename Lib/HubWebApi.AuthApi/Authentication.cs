@@ -24,6 +24,7 @@ namespace HubWebApp.AuthApi
         {
             var hashedPassword = hashedPasswordFactory.Create(password);
             var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword);
+            await sessionContext.CurrentSession.Authenticate(user);
             var claims = new XtiClaimsCreator(sessionContext.CurrentSession, user).Values();
             var token = await access.GenerateToken(claims);
             return new LoginResult(token);
