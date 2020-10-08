@@ -10,13 +10,17 @@ namespace HubWebApp.Api
         public HubAppApi
         (
             IAppApiUser user,
-            IAuthGroupFactory authGroupFactory,
-            IUserAdminFactory userAdminFactory
+            string version,
+            AuthGroupFactory authGroupFactory,
+            UserAdminGroupFactory userAdminFactory
         )
             : base
             (
                   HubAppKey.Value,
-                  user
+                  version,
+                  user,
+                  ResourceAccess.AllowAuthenticated()
+                    .WithAllowed(HubRoles.Instance.Admin)
             )
         {
             Auth = AddGroup((u) => new AuthGroup(this, authGroupFactory));

@@ -9,7 +9,7 @@ export class AppApiError {
         private readonly _location: string,
         private readonly _caption: string
     ) {
-        this._errors = new MappedArray(errors, e => new ErrorModel(e.message, e.propertyName)).value();
+        this._errors = new MappedArray(errors, e => new ErrorModel(e.Message, e.Source)).value();
     }
 
     private readonly _errors: ErrorModel[];

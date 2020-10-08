@@ -28,7 +28,7 @@ export class AppApiAction<TArgs,TResult> {
             let errors: ErrorModel[] = [];
             if (result) {
                 let rawErrors = <IErrorModel[]><any>result;
-                errors = new MappedArray(rawErrors, e => new ErrorModel(e.message, e.propertyName)).value();
+                errors = new MappedArray(rawErrors, e => new ErrorModel(e.Message, e.Source)).value();
             }
             else if (postResult.status === 404) {
                 errors = [new ErrorModel('Not Found', '', this)];

@@ -18,9 +18,14 @@ namespace HubWebApp.Api
         public async Task Run()
         {
             var app = await appFactory.Apps().App(HubAppKey.Key);
-            if (!app.Exists())
+            const string title = "Hub";
+            if (app.Exists())
             {
-                app = await appFactory.Apps().AddApp(HubAppKey.Key, clock.Now());
+                await app.SetTitle(title);
+            }
+            else
+            {
+                app = await appFactory.Apps().AddApp(HubAppKey.Key, title, clock.Now());
             }
             var currentVersion = await app.CurrentVersion();
             if (!currentVersion.IsCurrent())

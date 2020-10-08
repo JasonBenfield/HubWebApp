@@ -5,7 +5,9 @@ import { ModalOptionsViewModel } from '../ModalOptionsViewModel';
 import { CommandViewModel } from '../Command';
 import { ModalErrorViewModel } from './ModalErrorViewModel';
 import { CommandButtonTemplate } from "../Templates/CommandButtonTemplate";
+import { singleton } from 'tsyringe';
 
+@singleton()
 export class ModalErrorComponentViewModel {
     constructor() {
         new ComponentTemplate(this.template(), template).register();
