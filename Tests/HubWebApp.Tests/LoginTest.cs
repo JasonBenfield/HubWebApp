@@ -8,6 +8,11 @@ using System;
 using System.Threading.Tasks;
 using XTI_App.Api;
 using XTI_WebApp.Fakes;
+using XTI_App.EF;
+using System.Runtime.CompilerServices;
+using System.Linq;
+using XTI_App;
+using Microsoft.AspNetCore.Http;
 
 namespace HubWebApp.Tests
 {
@@ -66,6 +71,17 @@ namespace HubWebApp.Tests
             Assert.That(result.Data?.Token, Is.Not.Null, "Should return token if password is correct");
         }
 
+        [Test]
+        public async Task ShouldSetUserForSession()
+        {
+            var input = await setup();
+            await input.SessionContext.StartSession();
+            await execute(input);
+            var sessions = input.AppDbContext.Sessions.ToArray();
+            var user = await input.AppFactory.Users().User(new AppUserName(input.Model.UserName));
+            Assert.That(sessions[0].UserID, Is.EqualTo(user.ID));
+        }
+
         private async Task<TestInput> setup()
         {
             var services = new ServiceCollection();
@@ -75,6 +91,9 @@ namespace HubWebApp.Tests
             var fakeApi = sp.GetService<FakeHubAppApi>();
             var api = await fakeApi.Create();
             var input = new TestInput(sp, api);
+            var userContext = (FakeUserContext)sp.GetService<IUserContext>();
+            var anonUser = await input.AppFactory.Users().User(AppUserName.Anon);
+            userContext.SetUser(anonUser);
             await input.Api.UserAdmin.AddUser.Execute(new AddUserModel
             {
                 UserName = input.Model.UserName,
@@ -92,15 +111,21 @@ namespace HubWebApp.Tests
         {
             public TestInput(IServiceProvider sp, HubAppApi api)
             {
-                Api = api; sp.GetService<HubAppApi>();
+                Api = api;
                 Model = new LoginModel
                 {
                     UserName = "xartogg",
                     Password = "password"
                 };
+                AppFactory = sp.GetService<AppFactory>();
+                AppDbContext = sp.GetService<AppDbContext>();
+                SessionContext = sp.GetService<ISessionContext>();
             }
             public HubAppApi Api { get; }
             public LoginModel Model { get; }
+            public AppFactory AppFactory { get; }
+            public AppDbContext AppDbContext { get; }
+            public ISessionContext SessionContext { get; }
         }
     }
 }
