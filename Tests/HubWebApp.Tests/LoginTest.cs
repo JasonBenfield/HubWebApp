@@ -99,6 +99,8 @@ namespace HubWebApp.Tests
                 UserName = input.Model.UserName,
                 Password = input.Model.Password
             });
+            var sessionContext = sp.GetService<ISessionContext>();
+            await sessionContext.StartSession();
             return input;
         }
 

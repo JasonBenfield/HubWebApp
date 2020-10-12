@@ -17,7 +17,7 @@ namespace HubWebApp.Api
 
         public async Task Run()
         {
-            var app = await appFactory.Apps().App(HubAppKey.Key);
+            var app = await appFactory.Apps().WebApp(HubAppKey.Key);
             const string title = "Hub";
             if (app.Exists())
             {
@@ -25,15 +25,16 @@ namespace HubWebApp.Api
             }
             else
             {
-                app = await appFactory.Apps().AddApp(HubAppKey.Key, title, clock.Now());
+                app = await appFactory.Apps().AddApp(HubAppKey.Key, AppType.Values.WebApp, title, clock.Now());
             }
             var currentVersion = await app.CurrentVersion();
             if (!currentVersion.IsCurrent())
             {
                 currentVersion = await app.StartNewMajorVersion(clock.Now());
+                await currentVersion.Publishing();
                 await currentVersion.Published();
             }
-            await app.SetRoles(HubRoles.Instance.Valus());
+            await app.SetRoles(HubRoles.Instance.Values());
         }
     }
 }
