@@ -28,7 +28,7 @@ var AppApiAction = /** @class */ (function () {
                             errors = [];
                             if (result) {
                                 rawErrors = result;
-                                errors = new Enumerable_1.MappedArray(rawErrors, function (e) { return new ErrorModel_1.ErrorModel(e.message, e.propertyName); }).value();
+                                errors = new Enumerable_1.MappedArray(rawErrors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Source); }).value();
                             }
                             else if (postResult.status === 404) {
                                 errors = [new ErrorModel_1.ErrorModel('Not Found', '', this)];

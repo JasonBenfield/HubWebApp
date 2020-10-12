@@ -12,11 +12,13 @@ export class AuthGroup extends AppApiGroup {
 		this.Index = this.createView<IEmptyRequest>('Index');
 		this.Start = this.createView<IStartRequest>('Start');
 		this.LoginAction = this.createAction<ILoginModel,ILoginResult>('Login', 'Login');
+		this.Logout = this.createView<IEmptyRequest>('Logout');
 	}
 
 	readonly Index: AppApiView<IEmptyRequest>;
 	readonly Start: AppApiView<IStartRequest>;
 	private readonly LoginAction: AppApiAction<ILoginModel,ILoginResult>;
+	readonly Logout: AppApiView<IEmptyRequest>;
 
 	Login(model: ILoginModel, errorOptions?: IActionErrorOptions) {
 		return this.LoginAction.execute(model, errorOptions || {});

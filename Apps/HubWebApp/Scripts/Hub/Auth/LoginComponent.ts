@@ -2,9 +2,10 @@
 import { TextInput, PasswordInput } from "../TextInput";
 import { AsyncCommand } from "../Command";
 import { ColumnCss } from "../ColumnCss";
-import { hub } from '../AppApiCollection';
 import { LoginComponentViewModel } from './LoginComponentViewModel';
 import { UrlBuilder } from '../UrlBuilder';
+import { container } from 'tsyringe';
+import { HubAppApi } from '../Api/HubAppApi';
 
 export class LoginResult {
     constructor(public readonly token: string) {
@@ -30,10 +31,11 @@ export class LoginComponent extends BaseComponent<LoginResult> {
                 UserName: this.userName.getValue(),
                 Password: this.password.getValue()
             };
-            await hub().Auth.Login(model);
+            let hub = container.resolve(HubAppApi);
+            await hub.Auth.Login(model);
             this.alert.info('Opening page...');
             var form = <HTMLFormElement>document.createElement('form');
-            form.action = hub().Auth.Start.getUrl(null).getUrl();
+            form.action = hub.Auth.Start.getUrl(null).getUrl();
             form.style.position = 'absolute';
             form.style.top = '-100px';
             form.style.left = '-100px';

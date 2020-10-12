@@ -1,4 +1,5 @@
-﻿declare module '*.scss' {
+﻿
+declare module '*.scss' {
     const content: { [className: string]: string };
     export default content;
 }
@@ -11,15 +12,17 @@ declare module '*.html' {
 interface PageContext {
     BaseUrl: string;
     CacheBust: string;
+    EnvironmentName: string;
+    AppTitle: string;
+    PageTitle: string;
+    IsAuthenticated: boolean;
+    UserName: string;
 }
 
 declare let pageContext: PageContext;
 
 declare module 'xtistart' {
-    export function startup(
-        createPageVM: (modalErrorVM: any) => any,
-        createPage: (vm: any) => any
-    );
+    export function startup(pageVM: any, page: any);
 }
 
 interface EventCallback<TArgs> {
@@ -48,6 +51,6 @@ interface IActionErrorOptions {
 }
 
 interface IErrorModel {
-    propertyName: string;
-    message: string;
+    Message: string;
+    Source: string;
 }

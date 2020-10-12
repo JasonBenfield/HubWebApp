@@ -5,13 +5,17 @@ import { ComponentTemplate } from './ComponentTemplate';
 import 'tslib';
 import { SubmitBindingHandler } from './SubmitBindingHandler';
 import { ModalBindingHandler } from './ModalBindingHandler';
+import { container } from 'tsyringe';
+import { PageFrameViewModel } from './PageFrameViewModel';
 
 export class PageLoader {
-    load(pageVM: any) {
+    load() {
         new ComponentTemplate('page-frame', template).register();
         ko.options.deferUpdates = true;
         ko.bindingHandlers.submit = new SubmitBindingHandler();
         ko.bindingHandlers.modal = new ModalBindingHandler();
-        ko.applyBindings(pageVM);
+        let page = container.resolve('Page');
+        let pageFrameVM = container.resolve(PageFrameViewModel);
+        ko.applyBindings(pageFrameVM);
     }
 }

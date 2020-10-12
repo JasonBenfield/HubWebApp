@@ -1,7 +1,10 @@
-﻿import { LoginPageViewModel } from "./LoginPageViewModel";
+﻿import 'reflect-metadata';
+import { LoginPageViewModel } from "./LoginPageViewModel";
 import { LoginComponent, LoginResult } from "./LoginComponent";
 import { startup } from 'xtistart';
+import { singleton } from 'tsyringe';
 
+@singleton()
 class LoginPage
 {
     constructor(private readonly vm: LoginPageViewModel) {
@@ -17,7 +20,4 @@ class LoginPage
         }
     }
 }
-startup(
-    () => new LoginPageViewModel(),
-    vm => new LoginPage(<LoginPageViewModel>vm)
-);
+startup(LoginPageViewModel, LoginPage);

@@ -6,8 +6,9 @@ var AwaitableComponent_1 = require("../AwaitableComponent");
 var TextInput_1 = require("../TextInput");
 var Command_1 = require("../Command");
 var ColumnCss_1 = require("../ColumnCss");
-var AppApiCollection_1 = require("../AppApiCollection");
 var UrlBuilder_1 = require("../UrlBuilder");
+var tsyringe_1 = require("tsyringe");
+var HubAppApi_1 = require("../Api/HubAppApi");
 var LoginResult = /** @class */ (function () {
     function LoginResult(token) {
         this.token = token;
@@ -30,7 +31,7 @@ var LoginComponent = /** @class */ (function (_super) {
     }
     LoginComponent.prototype.login = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var model, form, userNameInput, passwordInput, urlBuilder, startUrlInput, returnUrlInput;
+            var model, hub, form, userNameInput, passwordInput, urlBuilder, startUrlInput, returnUrlInput;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -42,12 +43,13 @@ var LoginComponent = /** @class */ (function (_super) {
                             UserName: this.userName.getValue(),
                             Password: this.password.getValue()
                         };
-                        return [4 /*yield*/, AppApiCollection_1.hub().Auth.Login(model)];
+                        hub = tsyringe_1.container.resolve(HubAppApi_1.HubAppApi);
+                        return [4 /*yield*/, hub.Auth.Login(model)];
                     case 2:
                         _a.sent();
                         this.alert.info('Opening page...');
                         form = document.createElement('form');
-                        form.action = AppApiCollection_1.hub().Auth.Start.getUrl(null).getUrl();
+                        form.action = hub.Auth.Start.getUrl(null).getUrl();
                         form.style.position = 'absolute';
                         form.style.top = '-100px';
                         form.style.left = '-100px';

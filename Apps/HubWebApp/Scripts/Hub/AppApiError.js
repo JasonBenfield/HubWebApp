@@ -9,7 +9,7 @@ var AppApiError = /** @class */ (function () {
         this._status = _status;
         this._location = _location;
         this._caption = _caption;
-        this._errors = new Enumerable_1.MappedArray(errors, function (e) { return new ErrorModel_1.ErrorModel(e.message, e.propertyName); }).value();
+        this._errors = new Enumerable_1.MappedArray(errors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Source); }).value();
     }
     AppApiError.prototype.getErrors = function () {
         return this._errors;

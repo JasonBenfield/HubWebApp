@@ -40,6 +40,8 @@ namespace HubWebApp
 
             app.UseSession();
 
+            app.UseXti();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute
