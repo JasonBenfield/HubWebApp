@@ -18,6 +18,16 @@ function Hub-New-XtiIssue {
     $script:config | New-XtiIssue @PsBoundParameters
 }
 
+function Hub-Xti-StartIssue {
+    param(
+        [Parameter(Position=0)]
+        [long]$IssueNumber = 0,
+        $IssueBranchTitle = "",
+        $AssignTo = ""
+    )
+    $script:config | Xti-StartIssue @PsBoundParameters
+}
+
 function Hub-New-XtiVersion {
     param(
         [ValidateSet(“Development", "Production", "Staging", "Test")]

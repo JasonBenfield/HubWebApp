@@ -39,7 +39,9 @@ namespace HubWebApp.AuthApi
         public AppAction<EmptyRequest, AppActionRedirectResult> CreateLogoutAction()
         {
             var access = sp.GetService<AccessForLogin>();
-            return new LogoutAction(access);
+            var sessionContext = sp.GetService<ISessionContext>();
+            var clock = sp.GetService<Clock>();
+            return new LogoutAction(access, sessionContext, clock);
         }
     }
 }

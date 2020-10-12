@@ -1,18 +1,16 @@
 using HubWebApp.Api;
-using HubWebApp.Fakes;
 using HubWebApp.AuthApi;
+using HubWebApp.Fakes;
 using HubWebApp.UserAdminApi;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
-using System.Threading.Tasks;
-using XTI_App.Api;
-using XTI_WebApp.Fakes;
-using XTI_App.EF;
-using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Threading.Tasks;
 using XTI_App;
-using Microsoft.AspNetCore.Http;
+using XTI_App.Api;
+using XTI_App.EF;
+using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests
 {
