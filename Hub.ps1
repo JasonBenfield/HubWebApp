@@ -12,7 +12,7 @@ function Hub-New-XtiIssue {
     param(
         [Parameter(Mandatory)]
         [string] $IssueTitle,
-        [string] $Label = "",
+        $Label = @(),
         [string] $Body = ""
     )
     $script:config | New-XtiIssue @PsBoundParameters
@@ -40,7 +40,6 @@ function Hub-New-XtiVersion {
 
 function Hub-New-XtiPullRequest {
     param(
-        [Parameter(Mandatory)]
         $CommitMessage
     )
     $script:config | New-XtiPullRequest @PsBoundParameters
