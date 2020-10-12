@@ -2,6 +2,7 @@
 using System;
 using XTI_App;
 using XTI_App.Api;
+using XTI_WebApp;
 
 namespace HubWebApp.AuthApi
 {
@@ -25,7 +26,8 @@ namespace HubWebApp.AuthApi
         {
             var access = sp.GetService<AccessForLogin>();
             var auth = createAuthentication(access);
-            return new LoginAction(auth);
+            var anonClient = sp.GetService<IAnonClient>();
+            return new LoginAction(auth, anonClient);
         }
 
         private Authentication createAuthentication(IAccess access)

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
 using XTI_App.EF;
+using XTI_WebApp;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests
@@ -80,6 +81,16 @@ namespace HubWebApp.Tests
             Assert.That(sessions[0].UserID, Is.EqualTo(user.ID));
         }
 
+        [Test]
+        public async Task ShouldClearSessionForAnonUser()
+        {
+            var input = await setup();
+            await input.SessionContext.StartSession();
+            await execute(input);
+            var anonClient = input.Services.GetService<IAnonClient>();
+            Assert.That(anonClient.SessionID, Is.EqualTo(0), "Should clear session for anon client after authenticating");
+        }
+
         private async Task<TestInput> setup()
         {
             var services = new ServiceCollection();
@@ -117,6 +128,7 @@ namespace HubWebApp.Tests
                     UserName = "xartogg",
                     Password = "password"
                 };
+                Services = sp;
                 AppFactory = sp.GetService<AppFactory>();
                 AppDbContext = sp.GetService<AppDbContext>();
                 SessionContext = sp.GetService<ISessionContext>();
@@ -126,6 +138,7 @@ namespace HubWebApp.Tests
             public AppFactory AppFactory { get; }
             public AppDbContext AppDbContext { get; }
             public ISessionContext SessionContext { get; }
+            public IServiceProvider Services { get; }
         }
     }
 }
