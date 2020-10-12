@@ -11,8 +11,7 @@ namespace HubWebApp.AuthApi
 
         protected abstract Task<string> _GenerateToken(IEnumerable<Claim> claims);
 
-        public Task Logout() =>
-            _Logout();
+        public Task Logout() => _Logout();
 
         protected abstract Task _Logout();
     }
