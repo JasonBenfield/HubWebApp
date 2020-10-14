@@ -9,6 +9,8 @@ using XTI_App.EF;
 using XTI_App.Api;
 using HubWebApp.AuthApi;
 using HubWebApp.UserAdminApi;
+using HubWebApp.ApiControllers;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace HubWebApp.Extensions
 {
@@ -28,10 +30,11 @@ namespace HubWebApp.Extensions
             services.AddScoped<AccessForLogin, CookieAccess>();
             services.AddScoped<AppApi>(sp =>
             {
+                var appApiUser = sp.GetService<IAppApiUser>();
                 var xtiPath = sp.GetService<XtiPath>();
                 return new HubAppApi
                 (
-                    new AppApiSuperUser(),
+                    appApiUser,
                     xtiPath.Version,
                     new AuthGroupFactory(sp),
                     new UserAdminGroupFactory(sp)
@@ -40,10 +43,20 @@ namespace HubWebApp.Extensions
             services.AddScoped(sp => (HubAppApi)sp.GetService<AppApi>());
             services
                 .AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                })
                 .AddMvcOptions(options =>
                 {
                 });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .PartManager.ApplicationParts.Add
+                (
+                    new AssemblyPart(typeof(AuthController).Assembly)
+                );
         }
     }
 }
