@@ -10,17 +10,17 @@ export class AuthGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Auth');
 		this.Index = this.createView<IEmptyRequest>('Index');
-		this.Start = this.createView<IStartRequest>('Start');
-		this.LoginAction = this.createAction<ILoginModel,ILoginResult>('Login', 'Login');
+		this.VerifyAction = this.createAction<ILoginCredentials,IEmptyActionResult>('Verify', 'Verify');
+		this.Login = this.createView<ILoginModel>('Login');
 		this.Logout = this.createView<IEmptyRequest>('Logout');
 	}
 
 	readonly Index: AppApiView<IEmptyRequest>;
-	readonly Start: AppApiView<IStartRequest>;
-	private readonly LoginAction: AppApiAction<ILoginModel,ILoginResult>;
+	private readonly VerifyAction: AppApiAction<ILoginCredentials,IEmptyActionResult>;
+	readonly Login: AppApiView<ILoginModel>;
 	readonly Logout: AppApiView<IEmptyRequest>;
 
-	Login(model: ILoginModel, errorOptions?: IActionErrorOptions) {
-		return this.LoginAction.execute(model, errorOptions || {});
+	Verify(model: ILoginCredentials, errorOptions?: IActionErrorOptions) {
+		return this.VerifyAction.execute(model, errorOptions || {});
 	}
 }

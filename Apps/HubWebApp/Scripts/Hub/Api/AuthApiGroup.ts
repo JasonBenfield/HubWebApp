@@ -9,12 +9,12 @@ import { AppResourceUrl } from "../../Hub/AppResourceUrl";
 export class AuthApiGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AuthApi');
-		this.AuthenticateAction = this.createAction<ILoginModel,ILoginResult>('Authenticate', 'Authenticate');
+		this.AuthenticateAction = this.createAction<ILoginCredentials,ILoginResult>('Authenticate', 'Authenticate');
 	}
 
-	private readonly AuthenticateAction: AppApiAction<ILoginModel,ILoginResult>;
+	private readonly AuthenticateAction: AppApiAction<ILoginCredentials,ILoginResult>;
 
-	Authenticate(model: ILoginModel, errorOptions?: IActionErrorOptions) {
+	Authenticate(model: ILoginCredentials, errorOptions?: IActionErrorOptions) {
 		return this.AuthenticateAction.execute(model, errorOptions || {});
 	}
 }

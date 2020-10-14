@@ -1,5 +1,6 @@
 ﻿using HubWebApp.Core;
 using XTI_App.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.UserAdminApi
 {
@@ -12,16 +13,21 @@ namespace HubWebApp.UserAdminApi
                   new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
                   false,
                   api.Access.WithAllowed(HubRoles.Instance.Admin),
-                  user
+                  user,
+                  (n, a, u) => new WebAppApiActionCollection(n, a, u)
             )
         {
-            AddUser = AddAction
+            var actions = Actions<WebAppApiActionCollection>();
+            Index = actions.AddDefaultView();
+            AddUser = actions.AddAction
             (
                 nameof(AddUser),
                 () => new AddUserValidation(),
                 () => factory.CreateAddUserAction()
             );
         }
+
+        public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
 
         public AppApiAction<AddUserModel, int> AddUser { get; }
     }

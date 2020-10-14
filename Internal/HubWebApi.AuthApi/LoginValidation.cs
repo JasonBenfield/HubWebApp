@@ -3,17 +3,24 @@ using XTI_App.Api;
 
 namespace HubWebApp.AuthApi
 {
-    public sealed class LoginValidation : AppActionValidation<LoginModel>
+    public sealed class LoginModelValidation : AppActionValidation<LoginModel>
     {
         public Task Validate(ErrorList errors, LoginModel model)
         {
+            return new LoginValidation().Validate(errors, model.Credentials ?? new LoginCredentials());
+        }
+    }
+    public sealed class LoginValidation : AppActionValidation<LoginCredentials>
+    {
+        public Task Validate(ErrorList errors, LoginCredentials model)
+        {
             if (string.IsNullOrWhiteSpace(model.UserName))
             {
-                errors.Add(ValidationErrors.UserNameIsRequired, nameof(model.UserName));
+                errors.Add(AuthErrors.UserNameIsRequired, nameof(model.UserName));
             }
             if (string.IsNullOrWhiteSpace(model.Password))
             {
-                errors.Add(ValidationErrors.PasswordIsRequired, nameof(model.Password));
+                errors.Add(AuthErrors.PasswordIsRequired, nameof(model.Password));
             }
             return Task.CompletedTask;
         }

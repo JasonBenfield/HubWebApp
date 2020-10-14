@@ -31,7 +31,7 @@ var LoginComponent = /** @class */ (function (_super) {
     }
     LoginComponent.prototype.login = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var model, hub, form, userNameInput, passwordInput, urlBuilder, startUrlInput, returnUrlInput;
+            var cred, hub, form, userNameInput, passwordInput, urlBuilder, startUrlInput, returnUrlInput;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -39,23 +39,23 @@ var LoginComponent = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, , 3, 4]);
-                        model = {
+                        cred = {
                             UserName: this.userName.getValue(),
                             Password: this.password.getValue()
                         };
                         hub = tsyringe_1.container.resolve(HubAppApi_1.HubAppApi);
-                        return [4 /*yield*/, hub.Auth.Login(model)];
+                        return [4 /*yield*/, hub.Auth.Verify(cred)];
                     case 2:
                         _a.sent();
                         this.alert.info('Opening page...');
                         form = document.createElement('form');
-                        form.action = hub.Auth.Start.getUrl(null).getUrl();
+                        form.action = hub.Auth.Login.getUrl(null).getUrl();
                         form.style.position = 'absolute';
                         form.style.top = '-100px';
                         form.style.left = '-100px';
                         form.method = 'POST';
-                        userNameInput = this.createInput('UserName', model.UserName, 'text');
-                        passwordInput = this.createInput('Password', model.Password, 'password');
+                        userNameInput = this.createInput('Credentials.UserName', cred.UserName, 'text');
+                        passwordInput = this.createInput('Credentials.Password', cred.Password, 'password');
                         urlBuilder = UrlBuilder_1.UrlBuilder.current();
                         startUrlInput = this.createInput('StartUrl', urlBuilder.getQueryValue('startUrl'));
                         returnUrlInput = this.createInput('ReturnUrl', urlBuilder.getQueryValue('returnUrl'));

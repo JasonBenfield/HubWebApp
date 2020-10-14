@@ -2,10 +2,11 @@
 using HubWebApp.Core;
 using HubWebApp.UserAdminApi;
 using XTI_App.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.Api
 {
-    public sealed class HubAppApi : AppApi
+    public sealed class HubAppApi : WebAppApi
     {
         public HubAppApi
         (

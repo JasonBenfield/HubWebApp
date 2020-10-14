@@ -9,11 +9,11 @@ namespace HubWebApp.UserAdminApi
         {
             if (string.IsNullOrWhiteSpace(model.UserName))
             {
-                errors.Add(ValidationErrors.UserNameIsRequired, nameof(model.UserName));
+                errors.Add(UserAdminErrors.UserNameIsRequired, nameof(model.UserName));
             }
             if (string.IsNullOrWhiteSpace(model.Password))
             {
-                errors.Add(ValidationErrors.PasswordIsRequired, nameof(model.Password));
+                errors.Add(UserAdminErrors.PasswordIsRequired, nameof(model.Password));
             }
             return Task.CompletedTask;
         }

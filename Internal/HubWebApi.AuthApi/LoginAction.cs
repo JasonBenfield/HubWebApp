@@ -1,10 +1,12 @@
-﻿using XTI_App.Api;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Web;
+using XTI_App.Api;
 using XTI_WebApp;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.AuthApi
 {
-    public sealed class LoginAction : AppAction<LoginModel, LoginResult>
+    public sealed class LoginAction : AppAction<LoginModel, AppActionRedirectResult>
     {
         private readonly Authentication auth;
         private readonly IAnonClient anonClient;
@@ -15,12 +17,33 @@ namespace HubWebApp.AuthApi
             this.anonClient = anonClient;
         }
 
-        public async Task<LoginResult> Execute(LoginModel model)
+        public async Task<AppActionRedirectResult> Execute(LoginModel model)
         {
-            var result = await auth.Authenticate(model.UserName, model.Password);
+            await auth.Authenticate(model.Credentials.UserName, model.Credentials.Password);
             anonClient.Load();
             anonClient.Persist(0, anonClient.RequesterKey);
-            return result;
+            var startUrl = model.StartUrl;
+            if (string.IsNullOrWhiteSpace(startUrl))
+            {
+                startUrl = "~/User";
+            }
+            else
+            {
+                startUrl = HttpUtility.UrlDecode(startUrl);
+            }
+            if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
+            {
+                if (startUrl.Contains("?"))
+                {
+                    startUrl += "&";
+                }
+                else
+                {
+                    startUrl += "?";
+                }
+                startUrl += $"returnUrl={model.ReturnUrl}";
+            }
+            return new AppActionRedirectResult(startUrl);
         }
     }
 

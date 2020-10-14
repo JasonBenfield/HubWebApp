@@ -1,7 +1,6 @@
 ﻿import { AppApiGroup } from "./AppApiGroup";
 import { AppApiEvents } from "./AppApiEvents";
 import { AppResourceUrl } from "./AppResourceUrl";
-import { UserGroup } from './UserGroup';
 import { XtiUrl } from './XtiUrl';
 
 export class AppApi {
@@ -12,7 +11,6 @@ export class AppApi {
         version: string
     ) {
         this.resourceUrl = AppResourceUrl.app(baseUrl, app, version, XtiUrl.current.path.modifier, pageContext.CacheBust);
-        this.addGroup((evts, ru) => new UserGroup(evts, ru));
     }
 
     private readonly resourceUrl: AppResourceUrl;
@@ -25,7 +23,7 @@ export class AppApi {
         [name: string]: AppApiGroup
     } = {};
 
-    readonly User: UserGroup;
+    readonly User: IUserGroup;
 
     protected addGroup<T extends AppApiGroup>(
         createGroup: (evts: AppApiEvents, resourceUrl: AppResourceUrl) => T

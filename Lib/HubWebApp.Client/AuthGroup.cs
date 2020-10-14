@@ -11,6 +11,6 @@ namespace HubWebApp.client
         {
         }
 
-        public Task<LoginResult> Login(LoginModel model) => Post<LoginResult, LoginModel>("Login", "", model);
+        public Task<EmptyActionResult> Verify(LoginCredentials model) => Post<EmptyActionResult, LoginCredentials>("Verify", "", model);
     }
 }

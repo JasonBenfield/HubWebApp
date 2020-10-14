@@ -10,9 +10,15 @@ namespace HubWebApp.client
         public HubAppClient(IHttpClientFactory httpClientFactory, ICredentials credentials, string baseUrl, string version = "V2"): base(httpClientFactory, baseUrl, "Hub", version)
         {
             xtiToken = new XtiToken(this, credentials);
+            User = new UserGroup(httpClientFactory, xtiToken, url);
             Auth = new AuthGroup(httpClientFactory, xtiToken, url);
             AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, url);
             UserAdmin = new UserAdminGroup(httpClientFactory, xtiToken, url);
+        }
+
+        public UserGroup User
+        {
+            get;
         }
 
         public AuthGroup Auth

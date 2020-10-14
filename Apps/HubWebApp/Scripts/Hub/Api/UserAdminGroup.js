@@ -8,6 +8,7 @@ var UserAdminGroup = /** @class */ (function (_super) {
     tslib_1.__extends(UserAdminGroup, _super);
     function UserAdminGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'UserAdmin') || this;
+        _this.Index = _this.createView('Index');
         _this.AddUserAction = _this.createAction('AddUser', 'AddUser');
         return _this;
     }
