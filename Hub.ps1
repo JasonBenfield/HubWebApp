@@ -1,6 +1,6 @@
 ﻿Import-Module PowershellForXti -Force
 
-$script:config = [PSCustomObject]@{
+$script:hubConfig = [PSCustomObject]@{
     RepoOwner = "JasonBenfield"
     RepoName = "HubWebApp"
     AppKey = "Hub"
@@ -12,10 +12,10 @@ function Hub-New-XtiIssue {
     param(
         [Parameter(Mandatory)]
         [string] $IssueTitle,
-        $Label = @(),
+        $Labels = @(),
         [string] $Body = ""
     )
-    $script:config | New-XtiIssue @PsBoundParameters
+    $script:hubConfig | New-XtiIssue @PsBoundParameters
 }
 
 function Hub-Xti-StartIssue {
@@ -25,7 +25,7 @@ function Hub-Xti-StartIssue {
         $IssueBranchTitle = "",
         $AssignTo = ""
     )
-    $script:config | Xti-StartIssue @PsBoundParameters
+    $script:hubConfig | Xti-StartIssue @PsBoundParameters
 }
 
 function Hub-New-XtiVersion {
@@ -35,20 +35,20 @@ function Hub-New-XtiVersion {
         [ValidateSet(“major”, "minor", "patch")]
         $VersionType = "minor"
     )
-    $script:config | New-XtiVersion @PsBoundParameters
+    $script:hubConfig | New-XtiVersion @PsBoundParameters
 }
 
 function Hub-New-XtiPullRequest {
     param(
         $CommitMessage
     )
-    $script:config | New-XtiPullRequest @PsBoundParameters
+    $script:hubConfig | New-XtiPullRequest @PsBoundParameters
 }
 
 function Hub-Xti-PostMerge {
     param(
     )
-    $script:config | Xti-PostMerge @PsBoundParameters
+    $script:hubConfig | Xti-PostMerge @PsBoundParameters
 }
 
 function Hub-Publish {
@@ -83,27 +83,27 @@ function Hub-Publish {
     }
 
     Write-Progress -Activity $activity -Status "Generating the api" -PercentComplete 30
-    XtiHub-GenerateApi -EnvName $EnvName
+    Hub-GenerateApi -EnvName $EnvName
 
     Write-Progress -Activity $activity -Status "Running web pack" -PercentComplete 40
-    $script:config | XtiHub-Webpack
+    $script:hubConfig | Hub-Webpack
 
     Write-Progress -Activity $activity -Status "Building solution" -PercentComplete 50
     dotnet build 
 
     Write-Progress -Activity $activity -Status "Setting up Hub Web App" -PercentComplete 60
-    XtiHub-Setup -EnvName $EnvName
+    Hub-Setup -EnvName $EnvName
 
     if ($EnvName -eq "Test") {
         Write-Progress -Activity $activity -Status "Creating user" -PercentComplete 70
-        $script:config | New-XtiHubUser -EnvName $EnvName -CredentialKey HubAdmin -UserName HubAdmin -RoleNames Admin
+        $script:hubConfig | New-XtiHubUser -EnvName $EnvName -CredentialKey HubAdmin -UserName HubAdmin -RoleNames Admin
     }
 
     Write-Progress -Activity $activity -Status "Publishing website" -PercentComplete 80
 
-    $script:config | Xti-PublishWebApp -EnvName $EnvName
+    $script:hubConfig | Xti-PublishWebApp -EnvName $EnvName
     if($EnvName -eq "Production") {
-        $script:config | Xti-PublishPackage -DisableUpdateVersion
+        $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion
     }
 }
 
@@ -116,10 +116,10 @@ function New-XtiHubUser {
         [string] $Password = "", 
         [string] $RoleNames = ""
     )
-    $script:config | New-XtiUser @PsBoundParameters
+    $script:hubConfig | New-XtiUser @PsBoundParameters
 }
 
-function XtiHub-GenerateApi {
+function Hub-GenerateApi {
     param (
         [ValidateSet("Development", "Production", "Staging", "Test")]
         [string] $EnvName='Production'
@@ -131,7 +131,7 @@ function XtiHub-GenerateApi {
     Set-Location $currentDir
 }
 
-function XtiHub-Setup {
+function Hub-Setup {
     param (
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [string] $EnvName="Development"
@@ -150,7 +150,7 @@ function XtiHub-Setup {
     }
 }
 
-function XtiHub-Webpack {
+function Hub-Webpack {
     param(
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         [string] $ProjectDir
@@ -159,4 +159,10 @@ function XtiHub-Webpack {
     Set-Location $ProjectDir
     webpack
     Set-Location $currentDir
+}
+
+function Hub-ResetTest {
+	Xti-ResetAppDb -EnvName Test
+    Hub-Setup -EnvName Test
+    New-XtiHubUser -EnvName Test -CredentialKey HubAdmin -UserName HubAdmin -RoleNames Admin
 }

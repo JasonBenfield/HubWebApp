@@ -38,8 +38,6 @@ namespace HubWebApp
 
             app.UseAuthorization();
 
-            app.UseSession();
-
             app.UseXti();
 
             app.UseEndpoints(endpoints =>

@@ -20,13 +20,6 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         private readonly XtiPath xtiPath;
-
-        public async Task<IActionResult> Index()
-        {
-            var hasAccess = await api.UserAdmin.AddUser.HasAccess(AccessModifier.Default);
-            return View();
-        }
-
         [HttpPost]
         public Task<ResultContainer<int>> AddUser([FromBody] AddUserModel model)
         {

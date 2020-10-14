@@ -1,12 +1,13 @@
 // Generated Code
 using XTI_WebAppClient;
 using System.Net.Http;
+using XTI_Credentials;
 
 namespace HubWebApp.client
 {
     public sealed partial class HubAppClient : AppClient, IAuthClient
     {
-        public HubAppClient(IHttpClientFactory httpClientFactory, XtiCredentials credentials, string baseUrl, string version = "V2"): base(httpClientFactory, baseUrl, "Hub", version)
+        public HubAppClient(IHttpClientFactory httpClientFactory, ICredentials credentials, string baseUrl, string version = "V2"): base(httpClientFactory, baseUrl, "Hub", version)
         {
             xtiToken = new XtiToken(this, credentials);
             Auth = new AuthGroup(httpClientFactory, xtiToken, url);

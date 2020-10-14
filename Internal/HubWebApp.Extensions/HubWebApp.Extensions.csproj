@@ -6,10 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
-    <PackageReference Include="XTI_WebApp.Extensions" Version="1.3.1-dev201011223811338" />
+    <PackageReference Include="XTI_WebApp.Extensions" Version="1.3.1-dev201014000019634" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />
     <ProjectReference Include="..\HubWebApp.Api\HubWebApp.Api.csproj" />
   </ItemGroup>
 
