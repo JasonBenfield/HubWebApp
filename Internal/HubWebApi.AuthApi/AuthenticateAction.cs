@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HubWebApp.AuthApi
 {
-    public sealed class AuthenticateAction : AppAction<LoginModel, LoginResult>
+    public sealed class AuthenticateAction : AppAction<LoginCredentials, LoginResult>
     {
         public AuthenticateAction(Authentication auth)
         {
@@ -12,7 +12,7 @@ namespace HubWebApp.AuthApi
 
         private readonly Authentication auth;
 
-        public Task<LoginResult> Execute(LoginModel model) => auth.Authenticate(model.UserName, model.Password);
+        public Task<LoginResult> Execute(LoginCredentials model) => auth.Authenticate(model.UserName, model.Password);
     }
 
 }

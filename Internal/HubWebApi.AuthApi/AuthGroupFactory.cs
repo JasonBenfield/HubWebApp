@@ -3,6 +3,7 @@ using System;
 using XTI_App;
 using XTI_App.Api;
 using XTI_WebApp;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.AuthApi
 {
@@ -15,14 +16,21 @@ namespace HubWebApp.AuthApi
             this.sp = sp;
         }
 
-        public AppAction<LoginModel, LoginResult> CreateAuthenticateAction()
+        public AppAction<LoginCredentials, LoginResult> CreateAuthenticateAction()
         {
             var access = sp.GetService<AccessForAuthenticate>();
             var auth = createAuthentication(access);
             return new AuthenticateAction(auth);
         }
 
-        public AppAction<LoginModel, LoginResult> CreateLoginAction()
+        public AppAction<LoginCredentials, EmptyActionResult> CreateVerifyAction()
+        {
+            var unverifiedUser = new UnverifiedUser(sp.GetService<AppFactory>());
+            var hashedPasswordFactory = sp.GetService<IHashedPasswordFactory>();
+            return new VerifyAction(unverifiedUser, hashedPasswordFactory);
+        }
+
+        public AppAction<LoginModel, AppActionRedirectResult> CreateLoginAction()
         {
             var access = sp.GetService<AccessForLogin>();
             var auth = createAuthentication(access);

@@ -54,3 +54,17 @@ interface IErrorModel {
     Message: string;
     Source: string;
 }
+
+interface IUserStartRequest {
+    ReturnUrl: string;
+}
+
+interface IAppApiView<TArgs> {
+    getUrl(data: TArgs);
+    open(data: TArgs);
+    openWindow(data: TArgs);
+}
+
+interface IUserGroup {
+    readonly Index: IAppApiView<IUserStartRequest>;
+}

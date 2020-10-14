@@ -1,4 +1,5 @@
 ﻿using XTI_App.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.AuthApi
 {
@@ -11,16 +12,18 @@ namespace HubWebApp.AuthApi
                   new NameFromGroupClassName(nameof(AuthApiGroup)).Value,
                   false,
                   ResourceAccess.AllowAnonymous(),
-                  new AppApiSuperUser()
+                  new AppApiSuperUser(),
+                  (n, a, u) => new WebAppApiActionCollection(n, a, u)
             )
         {
-            Authenticate = AddAction
+            var actions = Actions<WebAppApiActionCollection>();
+            Authenticate = actions.AddAction
             (
                 nameof(Authenticate),
                 () => new LoginValidation(),
                 factory.CreateAuthenticateAction
             );
         }
-        public AppApiAction<LoginModel, LoginResult> Authenticate { get; }
+        public AppApiAction<LoginCredentials, LoginResult> Authenticate { get; }
     }
 }

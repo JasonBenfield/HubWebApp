@@ -11,6 +11,6 @@ namespace HubWebApp.client
         {
         }
 
-        public Task<LoginResult> Authenticate(LoginModel model) => Post<LoginResult, LoginModel>("Authenticate", "", model);
+        public Task<LoginResult> Authenticate(LoginCredentials model) => Post<LoginResult, LoginCredentials>("Authenticate", "", model);
     }
 }

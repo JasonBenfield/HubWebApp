@@ -9,13 +9,13 @@ var AuthGroup = /** @class */ (function (_super) {
     function AuthGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Auth') || this;
         _this.Index = _this.createView('Index');
-        _this.Start = _this.createView('Start');
-        _this.LoginAction = _this.createAction('Login', 'Login');
+        _this.VerifyAction = _this.createAction('Verify', 'Verify');
+        _this.Login = _this.createView('Login');
         _this.Logout = _this.createView('Logout');
         return _this;
     }
-    AuthGroup.prototype.Login = function (model, errorOptions) {
-        return this.LoginAction.execute(model, errorOptions || {});
+    AuthGroup.prototype.Verify = function (model, errorOptions) {
+        return this.VerifyAction.execute(model, errorOptions || {});
     };
     return AuthGroup;
 }(AppApiGroup_1.AppApiGroup));

@@ -27,7 +27,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(ValidationErrors.UserNameIsRequired, "UserName")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.UserNameIsRequired, "UserName")),
                 "Should require user name"
             );
         }
@@ -44,7 +44,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(ValidationErrors.PasswordIsRequired, "Password")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.PasswordIsRequired, "Password")),
                 "Should require password"
             );
         }

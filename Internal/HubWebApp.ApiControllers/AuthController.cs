@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using XTI_App.Api;
+using XTI_WebApp.Api;
 using HubWebApp.AuthApi;
 using HubWebApp.Api;
 using XTI_App;
@@ -26,16 +27,16 @@ namespace HubWebApp.ApiControllers
             return View(result.Data.ViewName);
         }
 
-        public async Task<IActionResult> Start(StartRequest model)
+        [HttpPost]
+        public Task<ResultContainer<EmptyActionResult>> Verify([FromBody] LoginCredentials model)
         {
-            var result = await api.Group("Auth").Action<StartRequest, AppActionRedirectResult>("Start").Execute(xtiPath.Modifier, model);
-            return Redirect(result.Data.Url);
+            return api.Group("Auth").Action<LoginCredentials, EmptyActionResult>("Verify").Execute(xtiPath.Modifier, model);
         }
 
-        [HttpPost]
-        public Task<ResultContainer<LoginResult>> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            return api.Group("Auth").Action<LoginModel, LoginResult>("Login").Execute(xtiPath.Modifier, model);
+            var result = await api.Group("Auth").Action<LoginModel, AppActionRedirectResult>("Login").Execute(xtiPath.Modifier, model);
+            return Redirect(result.Data.Url);
         }
 
         public async Task<IActionResult> Logout()

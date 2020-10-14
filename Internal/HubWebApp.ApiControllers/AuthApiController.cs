@@ -6,6 +6,7 @@ using HubWebApp.AuthApi;
 using HubWebApp.Api;
 using XTI_App;
 using XTI_App.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
 {
@@ -21,9 +22,9 @@ namespace HubWebApp.ApiControllers
         private readonly HubAppApi api;
         private readonly XtiPath xtiPath;
         [HttpPost]
-        public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginModel model)
+        public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginCredentials model)
         {
-            return api.Group("AuthApi").Action<LoginModel, LoginResult>("Authenticate").Execute(xtiPath.Modifier, model);
+            return api.Group("AuthApi").Action<LoginCredentials, LoginResult>("Authenticate").Execute(xtiPath.Modifier, model);
         }
     }
 }

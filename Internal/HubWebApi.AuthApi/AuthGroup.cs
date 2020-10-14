@@ -1,4 +1,5 @@
 ﻿using XTI_App.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.AuthApi
 {
@@ -11,31 +12,33 @@ namespace HubWebApp.AuthApi
                   new NameFromGroupClassName(nameof(AuthGroup)).Value,
                   false,
                   ResourceAccess.AllowAnonymous(),
-                  new AppApiSuperUser()
+                  new AppApiSuperUser(),
+                  (n, a, u) => new WebAppApiActionCollection(n, a, u)
             )
         {
-            Index = AddDefaultView();
-            Start = AddAction
+            var actions = Actions<WebAppApiActionCollection>();
+            Index = actions.AddDefaultView();
+            Verify = actions.AddAction
             (
-               nameof(Start),
-                () => new AppActionValidationNotRequired<StartRequest>(),
-                () => new StartAction()
+                nameof(Verify),
+                () => new LoginValidation(),
+                factory.CreateVerifyAction
             );
-            Login = AddAction
+            Login = actions.AddAction
             (
                 nameof(Login),
-                () => new LoginValidation(),
+                () => new LoginModelValidation(),
                 factory.CreateLoginAction
             );
-            Logout = AddAction
+            Logout = actions.AddAction
             (
                 nameof(Logout),
                 () => factory.CreateLogoutAction()
             );
         }
         public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
-        public AppApiAction<StartRequest, AppActionRedirectResult> Start { get; }
-        public AppApiAction<LoginModel, LoginResult> Login { get; }
+        public AppApiAction<LoginCredentials, EmptyActionResult> Verify { get; }
+        public AppApiAction<LoginModel, AppActionRedirectResult> Login { get; }
         public AppApiAction<EmptyRequest, AppActionRedirectResult> Logout { get; }
     }
 }

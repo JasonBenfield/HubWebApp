@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using XTI_App.Api;
+using XTI_WebApp.Api;
 using HubWebApp.UserAdminApi;
 using HubWebApp.Api;
 using XTI_App;
-using XTI_App.Api;
 
 namespace HubWebApp.ApiControllers
 {
@@ -20,11 +21,10 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         private readonly XtiPath xtiPath;
-
         public async Task<IActionResult> Index()
         {
-            var hasAccess = await api.UserAdmin.AddUser.HasAccess(AccessModifier.Default);
-            return View();
+            var result = await api.Group("UserAdmin").Action<EmptyRequest, AppActionViewResult>("Index").Execute(xtiPath.Modifier, new EmptyRequest());
+            return View(result.Data.ViewName);
         }
 
         [HttpPost]

@@ -11,6 +11,7 @@ using XTI_App;
 using XTI_App.Api;
 using XTI_App.EF;
 using XTI_WebApp;
+using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests
@@ -21,7 +22,7 @@ namespace HubWebApp.Tests
         public async Task ShouldRequireUserName()
         {
             var input = await setup();
-            input.Model.UserName = "";
+            input.Model.Credentials.UserName = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
                 () => execute(input)
@@ -29,7 +30,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(HubWebApp.AuthApi.ValidationErrors.UserNameIsRequired, "UserName")),
+                Has.One.EqualTo(new ErrorModel(AuthErrors.UserNameIsRequired, "UserName")),
                 "Should require user name"
             );
         }
@@ -38,7 +39,7 @@ namespace HubWebApp.Tests
         public async Task ShouldRequirePassword()
         {
             var input = await setup();
-            input.Model.Password = "";
+            input.Model.Credentials.Password = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
                 () => execute(input)
@@ -46,7 +47,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(HubWebApp.AuthApi.ValidationErrors.PasswordIsRequired, "Password")),
+                Has.One.EqualTo(new ErrorModel(AuthErrors.PasswordIsRequired, "Password")),
                 "Should require password"
             );
         }
@@ -55,7 +56,7 @@ namespace HubWebApp.Tests
         public async Task ShouldRequireCorrectPassword()
         {
             var input = await setup();
-            input.Model.Password = "Incorrect";
+            input.Model.Credentials.Password = "Incorrect";
             Assert.ThrowsAsync<PasswordIncorrectException>
             (
                 () => execute(input)
@@ -67,7 +68,7 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             var result = await execute(input);
-            Assert.That(result.Data?.Token, Is.Not.Null, "Should return token if password is correct");
+            Assert.That(result.Data?.Url, Is.EqualTo("/Hub/Current/Home"), "Should redirect to start if password is correct");
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace HubWebApp.Tests
             await input.SessionContext.StartSession();
             await execute(input);
             var sessions = input.AppDbContext.Sessions.ToArray();
-            var user = await input.AppFactory.Users().User(new AppUserName(input.Model.UserName));
+            var user = await input.AppFactory.Users().User(new AppUserName(input.Model.Credentials.UserName));
             Assert.That(sessions[0].UserID, Is.EqualTo(user.ID));
         }
 
@@ -105,15 +106,15 @@ namespace HubWebApp.Tests
             userContext.SetUser(anonUser);
             await input.Api.UserAdmin.AddUser.Execute(new AddUserModel
             {
-                UserName = input.Model.UserName,
-                Password = input.Model.Password
+                UserName = input.Model.Credentials.UserName,
+                Password = input.Model.Credentials.Password
             });
             var sessionContext = sp.GetService<ISessionContext>();
             await sessionContext.StartSession();
             return input;
         }
 
-        private static Task<ResultContainer<LoginResult>> execute(TestInput input)
+        private static Task<ResultContainer<AppActionRedirectResult>> execute(TestInput input)
         {
             return input.Api.Auth.Login.Execute(input.Model);
         }
@@ -125,8 +126,11 @@ namespace HubWebApp.Tests
                 Api = api;
                 Model = new LoginModel
                 {
-                    UserName = "xartogg",
-                    Password = "password"
+                    Credentials = new LoginCredentials
+                    {
+                        UserName = "xartogg",
+                        Password = "password"
+                    }
                 };
                 Services = sp;
                 AppFactory = sp.GetService<AppFactory>();

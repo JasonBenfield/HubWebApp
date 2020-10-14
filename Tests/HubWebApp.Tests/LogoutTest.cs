@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
+using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests
