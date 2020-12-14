@@ -1,6 +1,6 @@
 ﻿import 'reflect-metadata';
 import { MainPageViewModel } from "./MainPageViewModel";
-import { TelephoneNumber } from "../TelephoneNumber";
+import { TelephoneNumber } from "../../Shared/TelephoneNumber";
 import { startup } from 'xtistart';
 import { singleton } from 'tsyringe';
 

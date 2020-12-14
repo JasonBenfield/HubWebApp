@@ -1,9 +1,10 @@
 // Generated Code
 using System;
+using System.Collections.Generic;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
-    public sealed class AppActionViewResult
+    public sealed partial class AppActionViewResult
     {
         public string ViewName
         {

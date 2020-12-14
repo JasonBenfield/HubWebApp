@@ -1,20 +1,18 @@
-using HubWebApp.client;
-using Microsoft.AspNetCore.DataProtection;
+using HubWebApp.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_AuthenticatorClient.Extensions;
 using XTI_Configuration.Extensions;
 using XTI_Credentials;
-using XTI_Secrets;
 using XTI_Secrets.Extensions;
-using XTI_WebApp.Fakes;
 using XTI_WebAppClient;
 
 namespace HubWebApp.EndToEndTests
@@ -48,46 +46,50 @@ namespace HubWebApp.EndToEndTests
 
         private TestInput setup()
         {
-            var hostEnv = new FakeHostEnvironment { EnvironmentName = "Test" };
-            var services = new ServiceCollection();
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.UseXtiConfiguration(hostEnv.EnvironmentName, new string[] { });
-            var configuration = configurationBuilder.Build();
-            services.Configure<AppOptions>(configuration.GetSection(AppOptions.App));
-            services.AddHttpClient();
-            services.AddDataProtection();
-            services.AddFileSecretCredentials();
-            services.AddScoped<IHostEnvironment>(sp => hostEnv);
-            services.Configure<SecretOptions>(configuration.GetSection(SecretOptions.Secret));
-            var secretOptions = configuration.GetSection(SecretOptions.Secret).Get<SecretOptions>();
-            services
-                .AddDataProtection
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Test");
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration
                 (
-                    options => options.ApplicationDiscriminator = secretOptions.ApplicationName
+                    (hostContext, config) =>
+                    {
+                        config.UseXtiConfiguration(hostContext.HostingEnvironment, new string[] { });
+                        config.AddInMemoryCollection
+                        (
+                            new[]
+                            {
+                                KeyValuePair.Create("Authenticator:CredentialKey", "HubAdmin")
+                            }
+                        );
+                    }
                 )
-                .PersistKeysToFileSystem(new DirectoryInfo(secretOptions.KeyDirectoryPath))
-                .SetApplicationName(secretOptions.ApplicationName);
-            services.AddScoped<ICredentials, TestCredentials>(sp =>
-            {
-                var secretCredentialsFactory = sp.GetService<SecretCredentialsFactory>();
-                var secretCredentials = secretCredentialsFactory.Create("HubAdmin");
-                return new TestCredentials(secretCredentials);
-            });
-            services.AddScoped(sp =>
-            {
-                var httpClientFactory = sp.GetService<IHttpClientFactory>();
-                var credentials = sp.GetService<ICredentials>();
-                var appOptions = sp.GetService<IOptions<AppOptions>>().Value;
-                return new HubAppClient
+                .ConfigureServices
                 (
-                    httpClientFactory,
-                    credentials,
-                    appOptions.BaseUrl,
-                    "Current"
-                );
-            });
-            var sp = services.BuildServiceProvider();
-            return new TestInput(sp);
+                    (hostContext, services) =>
+                    {
+                        services.Configure<AppOptions>(hostContext.Configuration.GetSection(AppOptions.App));
+                        services.AddHttpClient();
+                        services.AddDataProtection();
+                        services.AddFileSecretCredentials();
+                        services.AddAuthenticatorClientServices(hostContext.Configuration);
+                        services.AddSingleton<ICredentials, TestCredentials>();
+                        services.AddScoped(sp =>
+                        {
+                            var httpClientFactory = sp.GetService<IHttpClientFactory>();
+                            var token = sp.GetService<XtiToken>();
+                            var appOptions = sp.GetService<IOptions<AppOptions>>().Value;
+                            return new HubAppClient
+                            (
+                                httpClientFactory,
+                                token,
+                                appOptions.BaseUrl,
+                                "Current"
+                            );
+                        });
+                    }
+                )
+                .Build();
+            var scope = host.Services.CreateScope();
+            return new TestInput(scope.ServiceProvider);
         }
 
         public sealed class TestCredentials : ICredentials

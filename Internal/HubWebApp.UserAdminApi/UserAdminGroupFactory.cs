@@ -1,7 +1,8 @@
-﻿using XTI_App.Api;
-using XTI_App;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using Microsoft.Extensions.DependencyInjection;
+using XTI_App;
+using XTI_App.Api;
+using XTI_Core;
 
 namespace HubWebApp.UserAdminApi
 {

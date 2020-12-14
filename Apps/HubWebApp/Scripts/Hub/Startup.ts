@@ -1,10 +1,13 @@
-﻿import { PageLoader } from './PageLoader';
-import { AppApiEvents } from './AppApiEvents';
-import { ConsoleLog } from './ConsoleLog';
-import { ModalErrorComponent } from './Error/ModalErrorComponent';
+﻿import { PageLoader } from '../Shared/PageLoader';
+import { AppApiEvents } from '../Shared/AppApiEvents';
+import { ConsoleLog } from '../Shared/ConsoleLog';
+import { ModalErrorComponent } from '../Shared/Error/ModalErrorComponent';
 import { container } from 'tsyringe';
 import { HubAppApi } from './Api/HubAppApi';
-import { AppApi } from './AppApi';
+import { AuthenticatorAppApi } from '../Authenticator/Api/AuthenticatorAppApi';
+import { AppApi } from '../Shared/AppApi';
+import { HostEnvironment } from '../Shared/HostEnvironment';
+import { LogoutUrl } from '../Authenticator/LogoutUrl';
 
 export function startup(pageVM: any, page: any) {
     container.register('PageVM', { useFactory: c => c.resolve(pageVM) });
@@ -18,6 +21,17 @@ export function startup(pageVM: any, page: any) {
             })
         }
     );
+    let hostEnvironment = new HostEnvironment();
+    container.register(
+        AuthenticatorAppApi,
+        {
+            useFactory: c => new AuthenticatorAppApi(
+                c.resolve(AppApiEvents),
+                pageContext.BaseUrl,
+                hostEnvironment.isProduction ? '' : 'Current'
+            )
+        }
+    );
     container.register(
         HubAppApi,
         {
@@ -29,5 +43,11 @@ export function startup(pageVM: any, page: any) {
         }
     )
     container.register(AppApi, { useFactory: c => c.resolve(HubAppApi) });
+    container.register(
+        'LogoutUrl',
+        {
+            useToken: LogoutUrl
+        }
+    );
     new PageLoader().load();
 }

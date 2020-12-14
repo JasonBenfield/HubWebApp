@@ -1,15 +1,16 @@
 ﻿using HubWebApp.Api;
 using HubWebApp.Fakes;
 using HubWebApp.UserAdminApi;
+using MainDB.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 using XTI_App.Api;
-using XTI_App.EF;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+using XTI_App.Fakes;
 using XTI_WebApp.Fakes;
-using XTI_App;
 
 namespace HubWebApp.Tests
 {
@@ -54,7 +55,7 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             var result = await execute(input);
-            var user = await input.AppDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
+            var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user, Is.Not.Null, "Should add user");
             Assert.That(user.UserName, Is.EqualTo(input.Model.UserName), "Should add user with the given user name");
         }
@@ -64,16 +65,24 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             var result = await execute(input);
-            var user = await input.AppDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
+            var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user.Password, Is.EqualTo(new FakeHashedPassword(input.Model.Password).Value()), "Should add user with the hashed password");
         }
 
         private async Task<TestInput> setup()
         {
-            var services = new ServiceCollection();
-            services.AddFakesForXtiWebApp();
-            services.AddFakesForHubWebApp();
-            var sp = services.BuildServiceProvider();
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureServices
+                (
+                    (hostContext, services) =>
+                    {
+                        services.AddFakesForXtiWebApp(hostContext.Configuration);
+                        services.AddFakesForHubWebApp();
+                    }
+                )
+                .Build();
+            var scope = host.Services.CreateScope();
+            var sp = scope.ServiceProvider;
             var fakeApi = sp.GetService<FakeHubAppApi>();
             var api = await fakeApi.Create();
             return new TestInput(sp, api);
@@ -81,7 +90,7 @@ namespace HubWebApp.Tests
 
         private static Task<ResultContainer<int>> execute(TestInput input)
         {
-            return input.Api.UserAdmin.AddUser.Execute(AccessModifier.Default, input.Model);
+            return input.Api.UserAdmin.AddUser.Execute(input.Model);
         }
 
         private class TestInput
@@ -89,7 +98,7 @@ namespace HubWebApp.Tests
             public TestInput(IServiceProvider sp, HubAppApi api)
             {
                 Api = api;
-                AppDbContext = sp.GetService<AppDbContext>();
+                MainDbContext = sp.GetService<MainDbContext>();
                 Model = new AddUserModel
                 {
                     UserName = "xartogg",
@@ -97,7 +106,7 @@ namespace HubWebApp.Tests
                 };
             }
             public HubAppApi Api { get; }
-            public AppDbContext AppDbContext { get; }
+            public MainDbContext MainDbContext { get; }
             public AddUserModel Model { get; }
         }
     }

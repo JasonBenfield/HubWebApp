@@ -3,7 +3,7 @@ using XTI_WebAppClient;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
     public sealed partial class UserAdminGroup : AppClientGroup
     {
