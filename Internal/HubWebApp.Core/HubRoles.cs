@@ -6,7 +6,7 @@ namespace HubWebApp.Core
     {
         public static HubRoles Instance = new HubRoles();
 
-        private HubRoles() : base(HubAppKey.Key)
+        private HubRoles()
         {
             Admin = Add("Admin");
         }

@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "../../Hub/AppApiGroup";
-import { AppApiAction } from "../../Hub/AppApiAction";
-import { AppApiView } from "../../Hub/AppApiView";
-import { AppApiEvents } from "../../Hub/AppApiEvents";
-import { AppResourceUrl } from "../../Hub/AppResourceUrl";
+import { AppApiGroup } from "../../Shared/AppApiGroup";
+import { AppApiAction } from "../../Shared/AppApiAction";
+import { AppApiView } from "../../Shared/AppApiView";
+import { AppApiEvents } from "../../Shared/AppApiEvents";
+import { AppResourceUrl } from "../../Shared/AppResourceUrl";
 
 export class UserAdminGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {

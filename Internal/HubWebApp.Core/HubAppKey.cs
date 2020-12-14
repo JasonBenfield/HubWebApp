@@ -2,9 +2,8 @@
 
 namespace HubWebApp.Core
 {
-    public sealed class HubAppKey
+    public static class HubAppKey
     {
-        public static readonly string Value = "Hub";
-        public static readonly AppKey Key = new AppKey(Value);
+        public static readonly AppKey Key = new AppKey("Hub", AppType.Values.WebApp);
     }
 }

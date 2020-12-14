@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HubWebApi.AuthApi\HubWebApp.AuthApi.csproj" />
     <ProjectReference Include="..\HubWebApp.Core\HubWebApp.Core.csproj" />
     <ProjectReference Include="..\HubWebApp.UserAdminApi\HubWebApp.UserAdminApi.csproj" />
   </ItemGroup>

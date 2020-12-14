@@ -10,10 +10,10 @@ namespace HubSetupConsoleApp
     public sealed class HubSetupService : IHostedService
     {
         private readonly IHostApplicationLifetime lifetime;
-        private readonly AppSetup appSetup;
+        private readonly AllAppSetup appSetup;
         private readonly HubSetup hubSetup;
 
-        public HubSetupService(IHostApplicationLifetime lifetime, AppSetup appSetup, HubSetup hubSetup)
+        public HubSetupService(IHostApplicationLifetime lifetime, AllAppSetup appSetup, HubSetup hubSetup)
         {
             this.lifetime = lifetime;
             this.appSetup = appSetup;

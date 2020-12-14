@@ -1,6 +1,6 @@
 ﻿import { singleton } from 'tsyringe';
-import { AlertViewModel } from '../Alert';
-import { PageViewModel } from '../PageViewModel';
+import { AlertViewModel } from '../../Shared/Alert';
+import { PageViewModel } from '../../Shared/PageViewModel';
 import * as template from './MainPage.html';
 
 @singleton()

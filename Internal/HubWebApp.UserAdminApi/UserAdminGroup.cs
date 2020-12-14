@@ -1,4 +1,5 @@
 ﻿using HubWebApp.Core;
+using XTI_App;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
@@ -11,7 +12,7 @@ namespace HubWebApp.UserAdminApi
             (
                   api,
                   new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
-                  false,
+                  ModifierCategoryName.Default,
                   api.Access.WithAllowed(HubRoles.Instance.Admin),
                   user,
                   (n, a, u) => new WebAppApiActionCollection(n, a, u)

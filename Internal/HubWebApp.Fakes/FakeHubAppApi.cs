@@ -1,11 +1,11 @@
 ﻿using HubWebApp.Api;
-using HubWebApp.AuthApi;
 using HubWebApp.UserAdminApi;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
+using XTI_Core;
 
 namespace HubWebApp.Fakes
 {
@@ -20,18 +20,16 @@ namespace HubWebApp.Fakes
 
         public async Task<HubAppApi> Create()
         {
-            var authGroupFactory = new AuthGroupFactory(sp);
             var userAdminGroupFactory = new UserAdminGroupFactory(sp);
             var api = new HubAppApi
             (
                 new AppApiSuperUser(),
-                "Current",
-                authGroupFactory,
+                AppVersionKey.Current,
                 userAdminGroupFactory
             );
             var appFactory = sp.GetService<AppFactory>();
-            await new AppSetup(appFactory).Run();
             var clock = sp.GetService<Clock>();
+            await new AllAppSetup(appFactory, clock).Run();
             await new HubSetup(appFactory, clock).Run();
             return api;
         }

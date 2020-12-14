@@ -1,8 +1,7 @@
 ﻿const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
-    user: './Scripts/Hub/User/UserPage.ts',
-    login: './Scripts/Hub/Auth/LoginPage.ts',
+    user: './Scripts/Shared/User/UserPage.ts',
     home: './Scripts/Hub/Home/MainPage.ts',
     userAdmin: './Scripts/Hub/UserAdmin/MainPage.ts'
 };

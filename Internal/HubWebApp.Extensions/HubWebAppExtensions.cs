@@ -1,33 +1,23 @@
 ﻿using HubWebApp.Api;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using System;
-using XTI_App;
-using XTI_App.EF;
-using XTI_App.Api;
-using HubWebApp.AuthApi;
-using HubWebApp.UserAdminApi;
 using HubWebApp.ApiControllers;
+using HubWebApp.Core;
+using HubWebApp.UserAdminApi;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using XTI_App;
+using XTI_App.Api;
+using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions
 {
     public static class HubWebAppExtensions
     {
-        public static void AddServicesForHub(this IServiceCollection services)
+        public static void AddServicesForHub(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(optionsAction: (IServiceProvider sp, DbContextOptionsBuilder dbOptionsBuilder) =>
-            {
-                var dbOptions = sp.GetService<IOptions<DbOptions>>();
-                var hostEnvironment = sp.GetService<IHostEnvironment>();
-                dbOptionsBuilder.UseSqlServer(new AppConnectionString(dbOptions, hostEnvironment.EnvironmentName).Value())
-                    .EnableSensitiveDataLogging();
-            });
+            services.AddWebAppServices(configuration);
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-            services.AddScoped<AccessForAuthenticate, JwtAccess>();
-            services.AddScoped<AccessForLogin, CookieAccess>();
+            services.AddSingleton(_ => HubAppKey.Key);
             services.AddScoped<AppApi>(sp =>
             {
                 var appApiUser = sp.GetService<IAppApiUser>();
@@ -36,7 +26,6 @@ namespace HubWebApp.Extensions
                 (
                     appApiUser,
                     xtiPath.Version,
-                    new AuthGroupFactory(sp),
                     new UserAdminGroupFactory(sp)
                 );
             });
@@ -55,7 +44,7 @@ namespace HubWebApp.Extensions
             services.AddControllersWithViews()
                 .PartManager.ApplicationParts.Add
                 (
-                    new AssemblyPart(typeof(AuthController).Assembly)
+                    new AssemblyPart(typeof(UserAdminController).Assembly)
                 );
         }
     }

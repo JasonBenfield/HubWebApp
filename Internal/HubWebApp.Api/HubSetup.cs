@@ -1,6 +1,7 @@
 ﻿using HubWebApp.Core;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_Core;
 
 namespace HubWebApp.Api
 {
@@ -17,15 +18,15 @@ namespace HubWebApp.Api
 
         public async Task Run()
         {
-            var app = await appFactory.Apps().WebApp(HubAppKey.Key);
+            var app = await appFactory.Apps().App(HubAppKey.Key);
             const string title = "Hub";
-            if (app.Exists())
+            if (app.Key().Equals(HubAppKey.Key))
             {
                 await app.SetTitle(title);
             }
             else
             {
-                app = await appFactory.Apps().AddApp(HubAppKey.Key, AppType.Values.WebApp, title, clock.Now());
+                app = await appFactory.Apps().Add(HubAppKey.Key, title, clock.Now());
             }
             var currentVersion = await app.CurrentVersion();
             if (!currentVersion.IsCurrent())

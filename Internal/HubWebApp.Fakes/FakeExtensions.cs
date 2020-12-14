@@ -1,5 +1,4 @@
-﻿using HubWebApp.AuthApi;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace HubWebApp.Fakes
 {
@@ -7,8 +6,6 @@ namespace HubWebApp.Fakes
     {
         public static void AddFakesForHubWebApp(this IServiceCollection services)
         {
-            services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
-            services.AddScoped<AccessForLogin, FakeAccessForLogin>();
             services.AddScoped(sp => new FakeHubAppApi(sp));
         }
     }
