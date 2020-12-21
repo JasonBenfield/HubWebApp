@@ -6,11 +6,11 @@ using XTI_Core;
 
 namespace HubWebApp.UserAdminApi
 {
-    public sealed class UserAdminGroupFactory
+    public sealed class UserAdminActionFactory
     {
         private readonly IServiceProvider sp;
 
-        public UserAdminGroupFactory(IServiceProvider sp)
+        public UserAdminActionFactory(IServiceProvider sp)
         {
             this.sp = sp;
         }

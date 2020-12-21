@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HubWebApp.Apps\HubWebApp.Apps.csproj" />
     <ProjectReference Include="..\HubWebApp.Core\HubWebApp.Core.csproj" />
     <ProjectReference Include="..\HubWebApp.UserAdminApi\HubWebApp.UserAdminApi.csproj" />
   </ItemGroup>

@@ -85,7 +85,7 @@ function Hub-Publish {
     $activity = "Publishing to $EnvName"
     
     $timestamp = Get-Date -Format "yyMMdd_HHmmssfff"
-    $backupFilePath = "$($env:ProgramData)\XTI\Backups\$EnvName\app_$timestamp.bak"
+    $backupFilePath = "$($env:XTI_AppData)\$EnvName\Backups\app_$timestamp.bak"
     if($EnvName -eq "Production" -or $EnvName -eq "Staging") {
         Write-Progress -Activity $activity -Status "Backuping up the app database" -PercentComplete 10
 	    Xti-BackupMainDb -EnvName "Production" -BackupFilePath $backupFilePath
@@ -135,6 +135,7 @@ function Hub-Publish {
         Hub-GenerateApi -EnvName $EnvName -DisableControllers
         $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion -Prod
         Xti-EndPublish -BranchName $branch
+        $script:hubConfig | Xti-Merge
     }
     else {
         $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion
@@ -182,9 +183,8 @@ function Hub-Setup {
 
 function Hub-Webpack {
     param(
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        [string] $ProjectDir
     )
+    $ProjectDir = $script:hubConfig.ProjectDir
     $currentDir = (Get-Item .).FullName
     Set-Location $ProjectDir
     webpack

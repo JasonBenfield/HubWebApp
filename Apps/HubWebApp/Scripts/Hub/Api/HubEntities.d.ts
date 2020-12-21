@@ -12,3 +12,13 @@ interface IAddUserModel {
 	UserName: string;
 	Password: string;
 }
+interface IAppModel {
+	ID: number;
+	Type: IAppType;
+	AppKey: string;
+	Title: string;
+}
+interface IAppType {
+	Value: number;
+	DisplayText: string;
+}

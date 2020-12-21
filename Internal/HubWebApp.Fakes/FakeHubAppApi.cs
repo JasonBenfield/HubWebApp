@@ -1,5 +1,4 @@
 ﻿using HubWebApp.Api;
-using HubWebApp.UserAdminApi;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -20,12 +19,11 @@ namespace HubWebApp.Fakes
 
         public async Task<HubAppApi> Create()
         {
-            var userAdminGroupFactory = new UserAdminGroupFactory(sp);
             var api = new HubAppApi
             (
                 new AppApiSuperUser(),
                 AppVersionKey.Current,
-                userAdminGroupFactory
+                sp
             );
             var appFactory = sp.GetService<AppFactory>();
             var clock = sp.GetService<Clock>();

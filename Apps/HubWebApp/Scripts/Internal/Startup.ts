@@ -3,7 +3,7 @@ import { AppApiEvents } from '../Shared/AppApiEvents';
 import { ConsoleLog } from '../Shared/ConsoleLog';
 import { ModalErrorComponent } from '../Shared/Error/ModalErrorComponent';
 import { container } from 'tsyringe';
-import { HubAppApi } from './Api/HubAppApi';
+import { HubAppApi } from '../Hub/Api/HubAppApi';
 import { AuthenticatorAppApi } from '../Authenticator/Api/AuthenticatorAppApi';
 import { AppApi } from '../Shared/AppApi';
 import { HostEnvironment } from '../Shared/HostEnvironment';
