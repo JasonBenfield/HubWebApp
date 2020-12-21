@@ -1,5 +1,4 @@
 ﻿using HubWebApp.Api;
-using HubWebApp.UserAdminApi;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App;
 using XTI_App.Api;
@@ -16,7 +15,7 @@ namespace HubWebApp.ApiTemplate
             (
                 new AppApiSuperUser(),
                 AppVersionKey.Current,
-                new UserAdminGroupFactory(sp)
+                sp
             );
             return api.Template();
         }

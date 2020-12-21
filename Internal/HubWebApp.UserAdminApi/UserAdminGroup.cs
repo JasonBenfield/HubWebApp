@@ -7,13 +7,13 @@ namespace HubWebApp.UserAdminApi
 {
     public sealed class UserAdminGroup : AppApiGroup
     {
-        public UserAdminGroup(AppApi api, IAppApiUser user, UserAdminGroupFactory factory)
+        public UserAdminGroup(AppApi api, ResourceAccess access, IAppApiUser user, UserAdminActionFactory factory)
             : base
             (
                   api,
                   new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
                   ModifierCategoryName.Default,
-                  api.Access.WithAllowed(HubRoles.Instance.Admin),
+                  access,
                   user,
                   (n, a, u) => new WebAppApiActionCollection(n, a, u)
             )

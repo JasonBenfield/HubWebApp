@@ -1,5 +1,7 @@
-﻿using HubWebApp.Core;
+﻿using HubWebApp.Apps;
+using HubWebApp.Core;
 using HubWebApp.UserAdminApi;
+using System;
 using XTI_App;
 using XTI_App.Api;
 using XTI_WebApp.Api;
@@ -12,7 +14,7 @@ namespace HubWebApp.Api
         (
             IAppApiUser user,
             AppVersionKey version,
-            UserAdminGroupFactory userAdminFactory
+            IServiceProvider services
         )
             : base
             (
@@ -23,9 +25,11 @@ namespace HubWebApp.Api
                     .WithAllowed(HubRoles.Instance.Admin)
             )
         {
-            UserAdmin = AddGroup(u => new UserAdminGroup(this, u, userAdminFactory));
+            UserAdmin = AddGroup(u => new UserAdminGroup(this, Access, u, new UserAdminActionFactory(services)));
+            Apps = AddGroup(u => new AppsGroup(this, Access, u, new AppsActionFactory(services)));
         }
 
         public UserAdminGroup UserAdmin { get; }
+        public AppsGroup Apps { get; }
     }
 }

@@ -26,7 +26,7 @@ namespace HubWebApp.Extensions
                 (
                     appApiUser,
                     xtiPath.Version,
-                    new UserAdminGroupFactory(sp)
+                    sp
                 );
             });
             services.AddScoped(sp => (HubAppApi)sp.GetService<AppApi>());

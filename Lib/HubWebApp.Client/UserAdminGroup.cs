@@ -7,7 +7,7 @@ namespace HubWebApp.Client
 {
     public sealed partial class UserAdminGroup : AppClientGroup
     {
-        public UserAdminGroup(IHttpClientFactory httpClientFactory, XtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "UserAdmin")
+        public UserAdminGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "UserAdmin")
         {
         }
 
