@@ -17,7 +17,8 @@ namespace HubWebApp.Apps
         public AppAction<EmptyRequest, AppModel[]> CreateAll()
         {
             var appFactory = sp.GetService<AppFactory>();
-            return new AllAction(appFactory);
+            var userContext = sp.GetService<IUserContext>();
+            return new AllAction(appFactory, userContext);
         }
     }
 }
