@@ -12,7 +12,7 @@ namespace HubApiGeneratorApp
     {
         static Task Main(string[] args)
         {
-            return Host.CreateDefaultBuilder()
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.UseXtiConfiguration(hostingContext.HostingEnvironment, args);

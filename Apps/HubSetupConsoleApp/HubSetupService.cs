@@ -1,30 +1,27 @@
 ﻿using HubWebApp.Api;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using XTI_App;
 
 namespace HubSetupConsoleApp
 {
     public sealed class HubSetupService : IHostedService
     {
-        private readonly IHostApplicationLifetime lifetime;
-        private readonly AllAppSetup appSetup;
-        private readonly HubSetup hubSetup;
+        private readonly IServiceProvider services;
 
-        public HubSetupService(IHostApplicationLifetime lifetime, AllAppSetup appSetup, HubSetup hubSetup)
+        public HubSetupService(IServiceProvider services)
         {
-            this.lifetime = lifetime;
-            this.appSetup = appSetup;
-            this.hubSetup = hubSetup;
+            this.services = services;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            using var scope = services.CreateScope();
             try
             {
-                await appSetup.Run();
+                var hubSetup = scope.ServiceProvider.GetService<HubSetup>();
                 await hubSetup.Run();
             }
             catch (Exception ex)
@@ -32,6 +29,7 @@ namespace HubSetupConsoleApp
                 Console.WriteLine(ex.ToString());
                 Environment.ExitCode = 999;
             }
+            var lifetime = scope.ServiceProvider.GetService<IHostApplicationLifetime>();
             lifetime.StopApplication();
         }
 

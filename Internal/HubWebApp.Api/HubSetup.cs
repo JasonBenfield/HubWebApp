@@ -18,24 +18,31 @@ namespace HubWebApp.Api
 
         public async Task Run()
         {
-            var app = await appFactory.Apps().App(HubAppKey.Key);
+            await new AllAppSetup(appFactory, clock).Run();
+            var hubApp = await appFactory.Apps().App(HubAppKey.Key);
             const string title = "Hub";
-            if (app.Key().Equals(HubAppKey.Key))
+            if (hubApp.Key().Equals(HubAppKey.Key))
             {
-                await app.SetTitle(title);
+                await hubApp.SetTitle(title);
             }
             else
             {
-                app = await appFactory.Apps().Add(HubAppKey.Key, title, clock.Now());
+                hubApp = await appFactory.Apps().Add(HubAppKey.Key, title, clock.Now());
             }
-            var currentVersion = await app.CurrentVersion();
+            var currentVersion = await hubApp.CurrentVersion();
             if (!currentVersion.IsCurrent())
             {
-                currentVersion = await app.StartNewMajorVersion(clock.Now());
+                currentVersion = await hubApp.StartNewMajorVersion(clock.Now());
                 await currentVersion.Publishing();
                 await currentVersion.Published();
             }
-            await app.SetRoles(HubRoles.Instance.Values());
+            await hubApp.SetRoles(HubRoles.Instance.Values());
+            var appModCategory = await hubApp.TryAddModCategory(new ModifierCategoryName("Apps"));
+            var apps = await appFactory.Apps().All();
+            foreach (var app in apps)
+            {
+                await appModCategory.AddOrUpdateModifier(app.ID.Value, app.Title);
+            }
         }
     }
 }
