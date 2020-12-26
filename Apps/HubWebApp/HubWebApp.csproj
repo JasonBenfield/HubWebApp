@@ -24,7 +24,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.3-dev201219094947885" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.6.4-dev201222073210020" />
+    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.6.4-dev201224083655899" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +33,27 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy - Copy.js">
+      <DependentUpon>AppPanelViewModel - Copy.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy - Copy.js.map">
+      <DependentUpon>AppPanelViewModel - Copy.js.map</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy.js">
+      <DependentUpon>CurrentVersionPanelViewModel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy.js.map">
+      <DependentUpon>CurrentVersionPanelViewModel.js.map</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\App\CurrentVersionPanelViewModel - Copy.js">
+      <DependentUpon>CurrentVersionPanelViewModel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\App\CurrentVersionPanelViewModel - Copy.js.map">
+      <DependentUpon>CurrentVersionPanelViewModel.js.map</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>

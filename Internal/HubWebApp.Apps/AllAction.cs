@@ -20,19 +20,19 @@ namespace HubWebApp.Apps
 
         public async Task<AppModel[]> Execute(EmptyRequest model)
         {
-            var user = await userContext.User();
+            var user = await userContext.UncachedUser();
             var apps = await appFactory.Apps().All();
             var hubApp = apps.First(a => a.Key().Equals(HubAppKey.Key));
             var appsModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
             var isModCategoryAdmin = await user.IsModCategoryAdmin(appsModCategory);
             if (!isModCategoryAdmin)
             {
+                var userModifiers = await user.Modifiers(appsModCategory);
                 var allowedApps = new List<App>();
                 foreach (var app in apps)
                 {
                     var modifier = await appsModCategory.Modifier(app.ID.Value);
-                    var hasModifier = await user.HasModifier(modifier.ModKey());
-                    if (hasModifier)
+                    if (userModifiers.Any(um => um.ModKey().Equals(modifier.ModKey())))
                     {
                         allowedApps.Add(app);
                     }

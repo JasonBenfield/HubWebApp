@@ -13,13 +13,11 @@ namespace HubWebApp.Api
         public HubAppApi
         (
             IAppApiUser user,
-            AppVersionKey version,
             IServiceProvider services
         )
             : base
             (
                   HubAppKey.Key,
-                  version,
                   user,
                   ResourceAccess.AllowAuthenticated()
                     .WithAllowed(HubRoles.Instance.Admin)
@@ -27,9 +25,11 @@ namespace HubWebApp.Api
         {
             UserAdmin = AddGroup(u => new UserAdminGroup(this, Access, u, new UserAdminActionFactory(services)));
             Apps = AddGroup(u => new AppsGroup(this, Access, u, new AppsActionFactory(services)));
+            App = AddGroup(u => new AppGroup(this, Access, u, new AppsActionFactory(services)));
         }
 
         public UserAdminGroup UserAdmin { get; }
         public AppsGroup Apps { get; }
+        public AppGroup App { get; }
     }
 }

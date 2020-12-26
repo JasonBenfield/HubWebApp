@@ -1,15 +1,12 @@
-﻿using HubWebApp.Core;
+﻿using HubWebApp.Api;
+using HubWebApp.Core;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Fakes;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using XTI_WebApp.Fakes;
-using HubWebApp.Api;
 
 namespace HubWebApp.Tests
 {
@@ -40,12 +37,28 @@ namespace HubWebApp.Tests
         public static void LoginAs(this IServiceProvider services, AppUser user)
         {
             var httpContextAccessor = services.GetService<IHttpContextAccessor>();
-            httpContextAccessor.HttpContext = new DefaultHttpContext
+            if (httpContextAccessor.HttpContext == null)
             {
-                RequestServices = services,
-                User = new FakeHttpUser().Create(new GeneratedKey().Value(), user)
-            };
+                httpContextAccessor.HttpContext = new DefaultHttpContext()
+                {
+                    RequestServices = services
+                };
+            }
+            httpContextAccessor.HttpContext.User = new FakeHttpUser().Create(new GeneratedKey().Value(), user);
         }
 
+        public static void RequestPage(this IServiceProvider services, XtiPath path)
+        {
+            var httpContextAccessor = services.GetService<IHttpContextAccessor>();
+            if (httpContextAccessor.HttpContext == null)
+            {
+                httpContextAccessor.HttpContext = new DefaultHttpContext()
+                {
+                    RequestServices = services
+                };
+            }
+            httpContextAccessor.HttpContext.Request.PathBase = $"/{path.App.DisplayText}/{path.Version.DisplayText}";
+            httpContextAccessor.HttpContext.Request.Path = $"/{path.Group.DisplayText}/{path.Action.DisplayText}/{path.Modifier.DisplayText}";
+        }
     }
 }

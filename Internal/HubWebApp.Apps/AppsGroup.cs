@@ -23,15 +23,21 @@ namespace HubWebApp.Apps
         )
         {
             var actions = Actions<WebAppApiActionCollection>();
-            Index = actions.AddDefaultView();
+            Index = actions.AddView(nameof(Index), factory.CreateAppsIndex);
             All = actions.AddAction
             (
                 nameof(All),
-                () => factory.CreateAll()
+                factory.CreateAll
+            );
+            RedirectToApp = actions.AddAction
+            (
+                nameof(RedirectToApp),
+                factory.CreateRedirectToApp
             );
         }
 
         public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
         public AppApiAction<EmptyRequest, AppModel[]> All { get; }
+        public AppApiAction<int, AppActionRedirectResult> RedirectToApp { get; }
     }
 }

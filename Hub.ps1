@@ -77,7 +77,7 @@ function Xti-CopyAuthenticator {
 function Hub-Publish {
     param(
         [ValidateSet("Production", “Development", "Staging", "Test")]
-        [string] $EnvName="Production"
+        [string] $EnvName="Development"
     )
     
     $ErrorActionPreference = "Stop"
@@ -160,10 +160,10 @@ function Hub-GenerateApi {
         [switch] $DisableClient,
         [switch] $DisableControllers
     )
-    $currentDir = (Get-Item .).FullName
-    Set-Location Apps/HubApiGeneratorApp
-    dotnet run --environment=$EnvName -- --Output:TsClient:Disable $DisableClient --Output:CsClient:Disable $DisableClient --Output:CsControllers:Disable $DisableControllers
-    Set-Location $currentDir
+    dotnet run --project Apps/HubApiGeneratorApp --environment=$EnvName -- --Output:TsClient:Disable $DisableClient --Output:CsClient:Disable $DisableClient --Output:CsControllers:Disable $DisableControllers
+    if( $LASTEXITCODE -ne 0 ) {
+        Throw "Hub api generator failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Hub-Setup {
@@ -171,11 +171,7 @@ function Hub-Setup {
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [string] $EnvName="Development"
     )
-    $currentDir = (Get-Item .).FullName
-    Set-Location Apps/HubSetupConsoleApp
-    dotnet run --no-launch-profile --environment=$EnvName
-    Set-Location $currentDir
-
+    dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Hub setup failed with exit code $LASTEXITCODE"
     }

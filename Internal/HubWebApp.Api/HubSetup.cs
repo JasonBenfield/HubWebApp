@@ -1,6 +1,7 @@
 ﻿using HubWebApp.Core;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Api;
 using XTI_Core;
 
 namespace HubWebApp.Api
@@ -18,26 +19,15 @@ namespace HubWebApp.Api
 
         public async Task Run()
         {
-            await new AllAppSetup(appFactory, clock).Run();
+            await new DefaultAppSetup
+            (
+                appFactory,
+                clock,
+                new HubAppApiTemplateFactory().Create(),
+                "Hub"
+            ).Run();
             var hubApp = await appFactory.Apps().App(HubAppKey.Key);
-            const string title = "Hub";
-            if (hubApp.Key().Equals(HubAppKey.Key))
-            {
-                await hubApp.SetTitle(title);
-            }
-            else
-            {
-                hubApp = await appFactory.Apps().Add(HubAppKey.Key, title, clock.Now());
-            }
-            var currentVersion = await hubApp.CurrentVersion();
-            if (!currentVersion.IsCurrent())
-            {
-                currentVersion = await hubApp.StartNewMajorVersion(clock.Now());
-                await currentVersion.Publishing();
-                await currentVersion.Published();
-            }
-            await hubApp.SetRoles(HubRoles.Instance.Values());
-            var appModCategory = await hubApp.TryAddModCategory(new ModifierCategoryName("Apps"));
+            var appModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
             var apps = await appFactory.Apps().All();
             foreach (var app in apps)
             {

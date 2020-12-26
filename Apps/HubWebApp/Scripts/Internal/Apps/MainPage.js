@@ -9,11 +9,13 @@ var Alert_1 = require("../../Shared/Alert");
 var HubAppApi_1 = require("../../Hub/Api/HubAppApi");
 var AppListItem_1 = require("./AppListItem");
 var Enumerable_1 = require("../../Shared/Enumerable");
+var AppListItemViewModel_1 = require("./AppListItemViewModel");
 var MainPage = /** @class */ (function () {
     function MainPage(vm, hub) {
         this.vm = vm;
         this.hub = hub;
         this.alert = new Alert_1.Alert(this.vm.alert);
+        this.appAlert = new Alert_1.Alert(this.vm.appAlert);
         this.refreshAllApps();
     }
     MainPage.prototype.refreshAllApps = function () {
@@ -21,10 +23,15 @@ var MainPage = /** @class */ (function () {
             var apps;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.allApps()];
+                    case 0:
+                        this.appAlert.clear();
+                        return [4 /*yield*/, this.allApps()];
                     case 1:
                         apps = _a.sent();
                         this.vm.apps(apps);
+                        if (apps.length === 0) {
+                            this.appAlert.danger('No apps were found');
+                        }
                         return [2 /*return*/];
                 }
             });
@@ -38,12 +45,17 @@ var MainPage = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                             var appsFromSource;
+                            var _this = this;
                             return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hub.Apps.All()];
                                     case 1:
                                         appsFromSource = _a.sent();
-                                        apps = new Enumerable_1.MappedArray(appsFromSource, function (a) { return new AppListItem_1.AppListItem(a); })
+                                        apps = new Enumerable_1.MappedArray(appsFromSource, function (a) {
+                                            var vm = new AppListItemViewModel_1.AppListItemViewModel();
+                                            new AppListItem_1.AppListItem(a, _this.hub, vm);
+                                            return vm;
+                                        })
                                             .value();
                                         return [2 /*return*/];
                                 }

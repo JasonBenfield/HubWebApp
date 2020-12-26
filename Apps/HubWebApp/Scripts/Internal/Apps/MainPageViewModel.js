@@ -13,6 +13,7 @@ var MainPageViewModel = /** @class */ (function (_super) {
         var _this = _super.call(this, template) || this;
         _this.alert = new Alert_1.AlertViewModel();
         _this.apps = ko.observableArray([]);
+        _this.appAlert = new Alert_1.AlertViewModel();
         return _this;
     }
     MainPageViewModel = tslib_1.__decorate([

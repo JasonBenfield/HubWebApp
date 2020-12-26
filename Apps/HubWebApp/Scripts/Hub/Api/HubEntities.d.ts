@@ -15,10 +15,31 @@ interface IAddUserModel {
 interface IAppModel {
 	ID: number;
 	Type: IAppType;
-	AppKey: string;
+	AppName: string;
 	Title: string;
 }
+interface IAppActionRedirectResult {
+	Url: string;
+}
+interface IAppVersionModel {
+	ID: number;
+	VersionKey: string;
+	Major: number;
+	Minor: number;
+	Patch: number;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: Date;
+}
 interface IAppType {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppVersionType {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppVersionStatus {
 	Value: number;
 	DisplayText: string;
 }

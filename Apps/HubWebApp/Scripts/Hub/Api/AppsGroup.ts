@@ -11,10 +11,12 @@ export class AppsGroup extends AppApiGroup {
 		super(events, resourceUrl, 'Apps');
 		this.Index = this.createView<IEmptyRequest>('Index');
 		this.AllAction = this.createAction<IEmptyRequest,IAppModel[]>('All', 'All');
+		this.RedirectToApp = this.createView<number>('RedirectToApp');
 	}
 
 	readonly Index: AppApiView<IEmptyRequest>;
 	private readonly AllAction: AppApiAction<IEmptyRequest,IAppModel[]>;
+	readonly RedirectToApp: AppApiView<number>;
 
 	All(errorOptions?: IActionErrorOptions) {
 		return this.AllAction.execute({}, errorOptions || {});

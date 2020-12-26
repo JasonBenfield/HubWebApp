@@ -7,6 +7,7 @@ var AppApi_1 = require("../../Shared/AppApi");
 var UserGroup_1 = require("./UserGroup");
 var UserAdminGroup_1 = require("./UserAdminGroup");
 var AppsGroup_1 = require("./AppsGroup");
+var AppGroup_1 = require("./AppGroup");
 var HubAppApi = /** @class */ (function (_super) {
     tslib_1.__extends(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
@@ -15,9 +16,10 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
         _this.UserAdmin = _this.addGroup(function (evts, resourceUrl) { return new UserAdminGroup_1.UserAdminGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
+        _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V4';
+    HubAppApi.DefaultVersion = 'V58';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

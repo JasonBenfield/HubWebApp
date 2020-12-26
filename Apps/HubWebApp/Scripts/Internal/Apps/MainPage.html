@@ -2,17 +2,23 @@
     <h1>Apps</h1>
     <div class="flex-fill bg-light position-relative">
         <div class="position-absolute-fill overflow-auto">
+            <!-- ko with: alert -->
+            <!-- ko component: { name: componentName, params: $data }--><!-- /ko -->
+            <!-- /ko -->
             <div class="list-group">
                 <!-- ko foreach: apps -->
-                <a href="javascript:;" class="list-group-item list-group-item-action">
+                <a data-bind="attr: { href: url }" class="list-group-item list-group-item-action">
                     <div class="row">
-                        <div data-bind="text: key" class="col-3"></div>
+                        <div data-bind="text: appName" class="col-3"></div>
                         <div data-bind="text: title" class="col"></div>
                         <div data-bind="text: type" class="col-3"></div>
                     </div>
                 </a>
                 <!-- /ko -->
             </div>
+            <!-- ko with: appAlert -->
+            <!-- ko component: { name: componentName, params: $data }--><!-- /ko -->
+            <!-- /ko -->
         </div>
     </div>
 </div>

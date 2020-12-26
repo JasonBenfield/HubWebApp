@@ -1,13 +1,15 @@
-﻿import * as ko from 'knockout';
+﻿import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { AppListItemViewModel } from './AppListItemViewModel';
 
 export class AppListItem {
-    constructor(source: IAppModel) {
-        this.key(source ? source.AppKey : '');
-        this.title(source ? source.Title : '');
-        this.type(source ? source.Type.DisplayText : '');
+    constructor(
+        source: IAppModel,
+        hubApi: HubAppApi,
+        vm: AppListItemViewModel
+    ) {
+        vm.appName(source ? source.AppName : '');
+        vm.title(source ? source.Title : '');
+        vm.type(source ? source.Type.DisplayText : '');
+        vm.url(hubApi.Apps.RedirectToApp.getUrl(source.ID).getUrl());
     }
-
-    readonly key = ko.observable('');
-    readonly title = ko.observable('');
-    readonly type = ko.observable('');
 }

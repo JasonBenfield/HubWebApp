@@ -10,6 +10,7 @@ var AppsGroup = /** @class */ (function (_super) {
         var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
         _this.Index = _this.createView('Index');
         _this.AllAction = _this.createAction('All', 'All');
+        _this.RedirectToApp = _this.createView('RedirectToApp');
         return _this;
     }
     AppsGroup.prototype.All = function (errorOptions) {

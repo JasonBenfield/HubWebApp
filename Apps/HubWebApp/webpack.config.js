@@ -4,7 +4,8 @@ const entry = {
     user: './Scripts/Shared/User/UserPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     userAdmin: './Scripts/Internal/UserAdmin/MainPage.ts',
-    apps: './Scripts/Internal/Apps/MainPage.ts'
+    apps: './Scripts/Internal/Apps/MainPage.ts',
+    app: './Scripts/Internal/App/MainPage.ts'
 };
 const exportModule = {
     rules: [
@@ -16,9 +17,29 @@ const exportModule = {
         {
             test: /\.s[ac]ss$/i,
             use: [
-                'style-loader',
-                'css-loader',
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: '../../styles/css/[name].css',
+                    },
+                },
                 'sass-loader',
+            ]
+        },
+        {
+            test: /\.css$/i,
+            use: [
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: (resourcePath, resourceQuery) => {
+                            if (/@fortawesome[\\\/]fontawesome-free/.test(resourcePath)) {
+                                return '../../styles/css/fontawesome/[name].css';
+                            }
+                            return '../../styles/css/[name].css';
+                        }
+                    }
+                }
             ]
         },
         {
@@ -29,6 +50,16 @@ const exportModule = {
                     minimize: {
                         removeComments: false
                     }
+                }
+            }]
+        },
+        {
+            test: /\.(svg|eot|woff|woff2|ttf)$/,
+            use: [{
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: '../../styles/css/webfonts'
                 }
             }]
         }

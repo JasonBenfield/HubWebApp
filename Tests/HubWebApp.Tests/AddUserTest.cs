@@ -21,6 +21,7 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             input.Model.UserName = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
@@ -39,6 +40,7 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             input.Model.Password = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
@@ -57,6 +59,7 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             var result = await execute(input);
             var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user, Is.Not.Null, "Should add user");
@@ -68,9 +71,16 @@ namespace HubWebApp.Tests
         {
             var input = await setup();
             input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             var result = await execute(input);
             var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user.Password, Is.EqualTo(new FakeHashedPassword(input.Model.Password).Value()), "Should add user with the hashed password");
+        }
+
+        private static void requestPage(TestInput input)
+        {
+            var hubApi = input.Services.GetService<HubAppApi>();
+            input.Services.RequestPage(hubApi.UserAdmin.AddUser.Path);
         }
 
         private async Task<TestInput> setup()
@@ -88,18 +98,19 @@ namespace HubWebApp.Tests
             var sp = scope.ServiceProvider;
             await scope.ServiceProvider.Setup();
             var adminUser = await sp.AddAdminUser();
-            var api = sp.GetService<HubAppApi>();
-            return new TestInput(sp, api, adminUser);
+            return new TestInput(sp, adminUser);
         }
 
         private static Task<ResultContainer<int>> execute(TestInput input)
-            => input.Api.UserAdmin.AddUser.Execute(input.Model);
+        {
+            var hubApi = input.Services.GetService<HubAppApi>();
+            return hubApi.UserAdmin.AddUser.Execute(input.Model);
+        }
 
         private class TestInput
         {
-            public TestInput(IServiceProvider sp, HubAppApi api, AppUser adminUser)
+            public TestInput(IServiceProvider sp, AppUser adminUser)
             {
-                Api = api;
                 MainDbContext = sp.GetService<MainDbContext>();
                 Model = new AddUserModel
                 {
@@ -109,7 +120,6 @@ namespace HubWebApp.Tests
                 AdminUser = adminUser;
                 Services = sp;
             }
-            public HubAppApi Api { get; }
             public MainDbContext MainDbContext { get; }
             public AddUserModel Model { get; }
             public AppUser AdminUser { get; }

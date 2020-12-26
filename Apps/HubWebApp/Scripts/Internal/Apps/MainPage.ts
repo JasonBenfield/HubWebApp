@@ -6,6 +6,7 @@ import { Alert } from '../../Shared/Alert';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { AppListItem } from './AppListItem';
 import { MappedArray } from '../../Shared/Enumerable';
+import { AppListItemViewModel } from './AppListItemViewModel';
 
 @singleton()
 class MainPage {
@@ -17,21 +18,30 @@ class MainPage {
     }
 
     readonly alert = new Alert(this.vm.alert);
+    readonly appAlert = new Alert(this.vm.appAlert);
 
     private async refreshAllApps() {
+        this.appAlert.clear();
         let apps = await this.allApps();
         this.vm.apps(apps);
+        if (apps.length === 0) {
+            this.appAlert.danger('No apps were found');
+        }
     }
     
     private async allApps() {
-        let apps: AppListItem[];
+        let apps: AppListItemViewModel[];
         await this.alert.infoAction(
             'Loading...',
             async () => {
                 let appsFromSource = await this.hub.Apps.All();
                 apps = new MappedArray(
                     appsFromSource,
-                    a => new AppListItem(a)
+                    a => {
+                        let vm = new AppListItemViewModel();
+                        new AppListItem(a, this.hub, vm);
+                        return vm;
+                    }
                 )
                 .value();
             }

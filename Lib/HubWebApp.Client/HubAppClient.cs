@@ -12,9 +12,10 @@ namespace HubWebApp.Client
             User = new UserGroup(httpClientFactory, xtiToken, url);
             UserAdmin = new UserAdminGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
+            App = new AppGroup(httpClientFactory, xtiToken, url);
         }
 
-        public const string DefaultVersion = "V4";
+        public const string DefaultVersion = "V58";
         public UserGroup User
         {
             get;
@@ -26,6 +27,11 @@ namespace HubWebApp.Client
         }
 
         public AppsGroup Apps
+        {
+            get;
+        }
+
+        public AppGroup App
         {
             get;
         }

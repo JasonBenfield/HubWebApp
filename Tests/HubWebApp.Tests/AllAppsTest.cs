@@ -5,13 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
-using XTI_App.Fakes;
 
 namespace HubWebApp.Tests
 {
@@ -23,12 +20,12 @@ namespace HubWebApp.Tests
             var services = await setup();
             var adminUser = await services.AddAdminUser();
             services.LoginAs(adminUser);
+            requestPage(services);
             var hubApp = await services.HubApp();
             var appsModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
             await adminUser.GrantFullAccessToModCategory(appsModCategory);
-            var hubApi = services.GetService<HubAppApi>();
-            var result = await hubApi.Apps.All.Execute(new EmptyRequest());
-            var appNames = result.Data.Select(a => a.AppName);
+            var apps = await execute(services);
+            var appNames = apps.Select(a => a.AppName);
             Assert.That
             (
                 appNames,
@@ -43,13 +40,13 @@ namespace HubWebApp.Tests
             var services = await setup();
             var adminUser = await services.AddAdminUser();
             services.LoginAs(adminUser);
+            requestPage(services);
             var hubApp = await services.HubApp();
             var appsModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
             var hubAppModifier = await appsModCategory.Modifier(hubApp.ID.Value);
             await adminUser.AddModifier(hubAppModifier);
-            var hubApi = services.GetService<HubAppApi>();
-            var result = await hubApi.Apps.All.Execute(new EmptyRequest());
-            var appNames = result.Data.Select(a => a.AppName);
+            var apps = await execute(services);
+            var appNames = apps.Select(a => a.AppName);
             Assert.That
             (
                 appNames,
@@ -73,5 +70,19 @@ namespace HubWebApp.Tests
             await scope.ServiceProvider.Setup();
             return scope.ServiceProvider;
         }
+
+        private static void requestPage(IServiceProvider services)
+        {
+            var hubApi = services.GetService<HubAppApi>();
+            services.RequestPage(hubApi.Apps.All.Path);
+        }
+
+        private static async Task<AppModel[]> execute(IServiceProvider services)
+        {
+            var hubApi = services.GetService<HubAppApi>();
+            var result = await hubApi.Apps.All.Execute(new EmptyRequest());
+            return result.Data;
+        }
+
     }
 }

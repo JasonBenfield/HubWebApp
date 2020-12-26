@@ -1,5 +1,6 @@
 ﻿using HubWebApp.Api;
 using HubWebApp.ApiControllers;
+using HubWebApp.Apps;
 using HubWebApp.Core;
 using HubWebApp.UserAdminApi;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -16,20 +17,11 @@ namespace HubWebApp.Extensions
         public static void AddServicesForHub(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddWebAppServices(configuration);
+            services.AddScoped<AppFromPath>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
             services.AddSingleton(_ => HubAppKey.Key);
-            services.AddScoped<AppApi>(sp =>
-            {
-                var appApiUser = sp.GetService<IAppApiUser>();
-                var xtiPath = sp.GetService<XtiPath>();
-                return new HubAppApi
-                (
-                    appApiUser,
-                    xtiPath.Version,
-                    sp
-                );
-            });
-            services.AddScoped(sp => (HubAppApi)sp.GetService<AppApi>());
+            services.AddScoped<HubAppApi>();
+            services.AddScoped<AppApi>(sp => sp.GetService<HubAppApi>());
             services
                 .AddMvc()
                 .AddJsonOptions(options =>

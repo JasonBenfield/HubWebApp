@@ -1,9 +1,10 @@
 // Generated Code
 using System;
+using System.Collections.Generic;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
-    public sealed class AppActionRedirectResult
+    public sealed partial class AppActionRedirectResult
     {
         public string Url
         {
