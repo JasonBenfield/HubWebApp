@@ -67,29 +67,37 @@ function Hub-Publish {
     
     $ErrorActionPreference = "Stop"
 
-    $activity = "Publishing to $EnvName"
+    Write-Output "Publishing to $EnvName"
     
     $timestamp = Get-Date -Format "yyMMdd_HHmmssfff"
     $backupFilePath = "$($env:XTI_AppData)\$EnvName\Backups\app_$timestamp.bak"
     if($EnvName -eq "Production" -or $EnvName -eq "Staging") {
-        Write-Progress -Activity $activity -Status "Backuping up the app database" -PercentComplete 10
+        Write-Output "Backuping up the app database"
 	    Xti-BackupMainDb -EnvName "Production" -BackupFilePath $backupFilePath
     }
     if($EnvName -eq "Staging") { 
-        Write-Progress -Activity $activity -Status "Restoring the app database" -PercentComplete 15
+        Write-Output "Restoring the app database"
 	    Xti-RestoreMainDb -EnvName $EnvName -BackupFilePath $backupFilePath
     }
 
-    Write-Progress -Activity $activity -Status "Updating the app database" -PercentComplete 18
+    Write-Output "Updating the app database"
     Xti-UpdateMainDb -EnvName $EnvName
 
     if ($EnvName -eq "Test"){
-        Write-Progress -Activity $activity -Status "Resetting the app database" -PercentComplete 20
+        Write-Output "Resetting the app database"
 	    Xti-ResetMainDb -EnvName $EnvName
     }
-
-    Write-Progress -Activity $activity -Status "Generating the api" -PercentComplete 30
-    Hub-GenerateApi -EnvName $EnvName -DisableClients
+    
+    $defaultVersion = ""
+    if($EnvName -eq "Production") {
+        $branch = Get-CurrentBranchname
+        Xti-BeginPublish -BranchName $branch
+        $releaseBranch = Parse-ReleaseBranch -BranchName $branch
+        $defaultVersion = $releaseBranch.VersionKey
+    }
+    
+    Write-Output "Generating the api"
+    Hub-GenerateApi -EnvName $EnvName -DefaultVersion $defaultVersion
     
     tsc -p "$($script:hubConfig.ProjectDir)\Scripts\$($script:hubConfig.AppName)\tsconfig.json"
     
@@ -100,35 +108,34 @@ function Hub-Publish {
         Hub-ImportWeb
     }
 
-    Write-Progress -Activity $activity -Status "Running web pack" -PercentComplete 40
+    Write-Output "Running web pack"
     $script:hubConfig | Hub-Webpack
 
-    Write-Progress -Activity $activity -Status "Building solution" -PercentComplete 50
+    Write-Output "Building solution"
     dotnet build 
 
     Hub-Setup -EnvName $EnvName
 
     if ($EnvName -eq "Test") {
         Invoke-WebRequest -Uri https://test.guinevere.com/Authenticator/Current/StopApp
-        Write-Progress -Activity $activity -Status "Creating user" -PercentComplete 70
+        Write-Output "Creating user"
         Hub-New-AdminUser -EnvName $EnvName
     }
 
-    Write-Progress -Activity $activity -Status "Publishing website" -PercentComplete 80
+    Write-Output "Publishing website"
     
-    if($EnvName -eq "Production") {
-        $branch = Get-CurrentBranchname
-        Xti-BeginPublish -BranchName $branch
-    }
     $script:hubConfig | Xti-PublishWebApp -EnvName $EnvName
 
     if($EnvName -eq "Production") {
-        Hub-GenerateApi -EnvName $EnvName -DisableControllers
+        Write-Output "Publishing Package"
         $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion -Prod
+        Write-Output "End publish"
         Xti-EndPublish -BranchName $branch
+        Write-Output "Merging Pull Request"
         $script:hubConfig | Xti-Merge
     }
     else {
+        Write-Output "Publishing Package"
         $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion
     }
 }
@@ -148,11 +155,10 @@ function Hub-GenerateApi {
     param (
         [ValidateSet("Development", "Production", "Staging", "Test")]
         [string] $EnvName='Production',
-        [switch] $DisableClient,
-        [switch] $DisableControllers
+        [string] $DefaultVersion
     )
     dotnet build Apps/HubApiGeneratorApp
-    dotnet run --project Apps/HubApiGeneratorApp --environment=$EnvName -- --Output:TsClient:Disable $DisableClient --Output:CsClient:Disable $DisableClient --Output:CsControllers:Disable $DisableControllers
+    dotnet run --project Apps/HubApiGeneratorApp --environment $EnvName --Output:DefaultVersion "`"$DefaultVersion`""
     tsc -p Apps/HubWebApp/Scripts/Hub/tsconfig.json
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Hub api generator failed with exit code $LASTEXITCODE"
@@ -164,6 +170,10 @@ function Hub-Setup {
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [string] $EnvName="Development"
     )
+    dotnet build Apps/HubSetupConsoleApp
+    if( $LASTEXITCODE -ne 0 ) {
+        Throw "Hub setup build failed with exit code $LASTEXITCODE"
+    }
     dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Hub setup failed with exit code $LASTEXITCODE"
