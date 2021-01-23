@@ -2,10 +2,10 @@
 import { startup } from 'xtistart';
 import { singleton } from 'tsyringe';
 import { MainPageViewModel } from './MainPageViewModel';
-import { Alert } from '../../Shared/Alert';
+import { Alert } from 'XtiShared/Alert';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { AppListItem } from './AppListItem';
-import { MappedArray } from '../../Shared/Enumerable';
+import { MappedArray } from 'XtiShared/Enumerable';
 import { AppListItemViewModel } from './AppListItemViewModel';
 
 @singleton()
@@ -18,14 +18,12 @@ class MainPage {
     }
 
     readonly alert = new Alert(this.vm.alert);
-    readonly appAlert = new Alert(this.vm.appAlert);
 
     private async refreshAllApps() {
-        this.appAlert.clear();
         let apps = await this.allApps();
         this.vm.apps(apps);
         if (apps.length === 0) {
-            this.appAlert.danger('No apps were found');
+            this.alert.danger('No apps were found');
         }
     }
     

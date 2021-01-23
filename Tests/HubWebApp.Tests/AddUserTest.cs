@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
 using XTI_App.Fakes;
+using XTI_Core;
 
 namespace HubWebApp.Tests
 {
@@ -30,7 +31,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(UserAdminErrors.UserNameIsRequired, "UserName")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.UserNameIsRequired, "User Name", "UserName")),
                 "Should require user name"
             );
         }
@@ -49,7 +50,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(UserAdminErrors.PasswordIsRequired, "Password")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.PasswordIsRequired, "Password", "Password")),
                 "Should require password"
             );
         }

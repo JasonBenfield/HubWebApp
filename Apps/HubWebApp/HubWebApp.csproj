@@ -23,11 +23,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.3-dev201219094947885" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.6.4-dev201224083655899" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
+    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.8.1-dev210118114827853" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Exports\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -36,23 +37,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy - Copy.js">
-      <DependentUpon>AppPanelViewModel - Copy.js</DependentUpon>
+    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js">
+      <DependentUpon>CurrentVersionComponentViewModel.js</DependentUpon>
     </None>
-    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy - Copy.js.map">
-      <DependentUpon>AppPanelViewModel - Copy.js.map</DependentUpon>
+    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js.map">
+      <DependentUpon>CurrentVersionComponentViewModel.js.map</DependentUpon>
     </None>
-    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy.js">
-      <DependentUpon>CurrentVersionPanelViewModel.js</DependentUpon>
+    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js">
+      <DependentUpon>SelectableListCardViewModel.js</DependentUpon>
     </None>
-    <None Update="Scripts\Internal\App\AppPanelViewModel - Copy.js.map">
-      <DependentUpon>CurrentVersionPanelViewModel.js.map</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\App\CurrentVersionPanelViewModel - Copy.js">
-      <DependentUpon>CurrentVersionPanelViewModel.js</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\App\CurrentVersionPanelViewModel - Copy.js.map">
-      <DependentUpon>CurrentVersionPanelViewModel.js.map</DependentUpon>
+    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js.map">
+      <DependentUpon>SelectableListCardViewModel.js.map</DependentUpon>
     </None>
   </ItemGroup>
 

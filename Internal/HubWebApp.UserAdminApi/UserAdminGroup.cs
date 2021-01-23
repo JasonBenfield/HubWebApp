@@ -1,34 +1,27 @@
-﻿using HubWebApp.Core;
-using XTI_App;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.UserAdminApi
 {
-    public sealed class UserAdminGroup : AppApiGroup
+    public sealed class UserAdminGroup : AppApiGroupWrapper
     {
-        public UserAdminGroup(AppApi api, ResourceAccess access, IAppApiUser user, UserAdminActionFactory factory)
-            : base
-            (
-                  api,
-                  new NameFromGroupClassName(nameof(UserAdminGroup)).Value,
-                  ModifierCategoryName.Default,
-                  access,
-                  user,
-                  (n, a, u) => new WebAppApiActionCollection(n, a, u)
-            )
+        public UserAdminGroup(AppApiGroup source, UserAdminActionFactory factory)
+            : base(source)
         {
-            var actions = Actions<WebAppApiActionCollection>();
-            Index = actions.AddDefaultView();
-            AddUser = actions.AddAction
+            var actions = new WebAppApiActionFactory(source);
+            Index = source.AddAction(actions.DefaultView());
+            AddUser = source.AddAction
             (
-                nameof(AddUser),
-                () => new AddUserValidation(),
-                () => factory.CreateAddUserAction()
+                actions.Action
+                (
+                    nameof(AddUser),
+                    () => new AddUserValidation(),
+                    () => factory.CreateAddUserAction()
+                )
             );
         }
 
-        public AppApiAction<EmptyRequest, AppActionViewResult> Index { get; }
+        public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
 
         public AppApiAction<AddUserModel, int> AddUser { get; }
     }

@@ -1,0 +1,17 @@
+﻿<div class="card">
+    <div class="card-header">App</div>
+    <!-- ko with: alert -->
+    <!-- ko if: hasMessage -->
+    <div class="card-body">
+        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+    <div class="card-body">
+        <div class="row">
+            <div data-bind="text: title" class="col-auto"></div>
+            <div data-bind="text: appType" class="col-auto"></div>
+            <div data-bind="text: appName" class="col"></div>
+        </div>
+    </div>
+</div>

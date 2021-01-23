@@ -4,8 +4,8 @@ exports.MainPageViewModel = void 0;
 var tslib_1 = require("tslib");
 var ko = require("knockout");
 var tsyringe_1 = require("tsyringe");
-var Alert_1 = require("../../Shared/Alert");
-var PageViewModel_1 = require("../../Shared/PageViewModel");
+var Alert_1 = require("XtiShared/Alert");
+var PageViewModel_1 = require("XtiShared/PageViewModel");
 var template = require("./MainPage.html");
 var MainPageViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(MainPageViewModel, _super);
@@ -13,7 +13,6 @@ var MainPageViewModel = /** @class */ (function (_super) {
         var _this = _super.call(this, template) || this;
         _this.alert = new Alert_1.AlertViewModel();
         _this.apps = ko.observableArray([]);
-        _this.appAlert = new Alert_1.AlertViewModel();
         return _this;
     }
     MainPageViewModel = tslib_1.__decorate([

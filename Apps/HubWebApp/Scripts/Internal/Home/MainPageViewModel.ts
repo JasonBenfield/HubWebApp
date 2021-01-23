@@ -1,6 +1,6 @@
 ﻿import * as template from './MainPage.html';
 import * as ko from 'knockout';
-import { PageViewModel } from '../../Shared/PageViewModel';
+import { PageViewModel } from 'XtiShared/PageViewModel';
 import { singleton } from 'tsyringe';
 
 @singleton()

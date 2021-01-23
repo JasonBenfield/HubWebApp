@@ -1,0 +1,21 @@
+﻿<div class="card">
+    <div class="card-header">Resources</div>
+    <!-- ko with: alert -->
+    <!-- ko if: hasMessage -->
+    <div class="card-body">
+        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: hasResources -->
+    <div data-bind="foreach: resources, 
+        delegatedEvent: { event: 'click', selector: 'a', callback: selectResource }" class="list-group list-group-flush">
+        <a href="javascript:;" class="list-group-item list-group-item-action">
+            <div class="row">
+                <div data-bind="text: name" class="col-8"></div>
+                <div data-bind="text: resultType" class="col"></div>
+            </div>
+        </a>
+    </div>
+    <!-- /ko -->
+</div>

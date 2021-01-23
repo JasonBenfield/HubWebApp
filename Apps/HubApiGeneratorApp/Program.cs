@@ -20,7 +20,7 @@ namespace HubApiGeneratorApp
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddApiGenerator(hostContext.Configuration);
-                    services.AddScoped<IAppApiTemplateFactory, HubAppApiTemplateFactory>();
+                    services.AddScoped<AppApiFactory, HubAppApiFactory>();
                     services.AddHostedService<ApiGeneratorHostedService>();
                 })
                 .RunConsoleAsync();

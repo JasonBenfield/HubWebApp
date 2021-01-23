@@ -21,7 +21,7 @@ namespace HubWebApp.Tests
         public static Task<App> HubApp(this IServiceProvider services)
         {
             var factory = services.GetService<AppFactory>();
-            return factory.Apps().App(HubAppKey.Key);
+            return factory.Apps().App(HubInfo.AppKey);
         }
 
         public static async Task<AppUser> AddAdminUser(this IServiceProvider services)

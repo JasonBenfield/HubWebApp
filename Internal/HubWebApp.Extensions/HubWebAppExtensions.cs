@@ -2,7 +2,6 @@
 using HubWebApp.ApiControllers;
 using HubWebApp.Apps;
 using HubWebApp.Core;
-using HubWebApp.UserAdminApi;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,19 +18,19 @@ namespace HubWebApp.Extensions
             services.AddWebAppServices(configuration);
             services.AddScoped<AppFromPath>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-            services.AddSingleton(_ => HubAppKey.Key);
-            services.AddScoped<HubAppApi>();
-            services.AddScoped<AppApi>(sp => sp.GetService<HubAppApi>());
+            services.AddSingleton(_ => HubInfo.AppKey);
+            services.AddScoped<AppApiFactory, HubAppApiFactory>();
+            services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
+            services.AddScoped<HubSetup>();
             services
                 .AddMvc()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.SetDefaultJsonOptions();
                 })
                 .AddMvcOptions(options =>
                 {
+                    options.SetDefaultMvcOptions();
                 });
             services.AddControllersWithViews()
                 .PartManager.ApplicationParts.Add

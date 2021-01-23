@@ -1,24 +1,27 @@
 ﻿<div class="d-flex flex-column h-100">
-    <h1>Apps</h1>
     <div class="flex-fill bg-light position-relative">
         <div class="position-absolute-fill overflow-auto">
-            <!-- ko with: alert -->
-            <!-- ko component: { name: componentName, params: $data }--><!-- /ko -->
-            <!-- /ko -->
-            <div class="list-group">
-                <!-- ko foreach: apps -->
-                <a data-bind="attr: { href: url }" class="list-group-item list-group-item-action">
-                    <div class="row">
-                        <div data-bind="text: appName" class="col-3"></div>
-                        <div data-bind="text: title" class="col"></div>
-                        <div data-bind="text: type" class="col-3"></div>
+            <div class="container pt-3">
+                <div class="card">
+                    <div class="card-header">Apps</div>
+                    <!-- ko with: alert -->
+                    <!-- ko if: hasMessage -->
+                    <div class="card-body">
+                        <!-- ko component: { name: componentName, params: $data }--><!-- /ko -->
                     </div>
-                </a>
-                <!-- /ko -->
+                    <!-- /ko -->
+                    <!-- /ko -->
+                    <div data-bind="foreach: apps" class="list-group list-group-flush">
+                        <a data-bind="attr: { href: url }" class="list-group-item list-group-item-action">
+                            <div class="row">
+                                <div data-bind="text: appName" class="col-3"></div>
+                                <div data-bind="text: title" class="col"></div>
+                                <div data-bind="text: type" class="col-3"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <!-- ko with: appAlert -->
-            <!-- ko component: { name: componentName, params: $data }--><!-- /ko -->
-            <!-- /ko -->
         </div>
     </div>
 </div>

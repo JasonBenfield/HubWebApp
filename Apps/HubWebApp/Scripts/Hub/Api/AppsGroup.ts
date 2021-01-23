@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "../../Shared/AppApiGroup";
-import { AppApiAction } from "../../Shared/AppApiAction";
-import { AppApiView } from "../../Shared/AppApiView";
-import { AppApiEvents } from "../../Shared/AppApiEvents";
-import { AppResourceUrl } from "../../Shared/AppResourceUrl";
+import { AppApiGroup } from "XtiShared/AppApiGroup";
+import { AppApiAction } from "XtiShared/AppApiAction";
+import { AppApiView } from "XtiShared/AppApiView";
+import { AppApiEvents } from "XtiShared/AppApiEvents";
+import { AppResourceUrl } from "XtiShared/AppResourceUrl";
 
 export class AppsGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
@@ -13,11 +13,11 @@ export class AppsGroup extends AppApiGroup {
 		this.AllAction = this.createAction<IEmptyRequest,IAppModel[]>('All', 'All');
 		this.RedirectToApp = this.createView<number>('RedirectToApp');
 	}
-
+	
 	readonly Index: AppApiView<IEmptyRequest>;
-	private readonly AllAction: AppApiAction<IEmptyRequest,IAppModel[]>;
+	readonly AllAction: AppApiAction<IEmptyRequest,IAppModel[]>;
 	readonly RedirectToApp: AppApiView<number>;
-
+	
 	All(errorOptions?: IActionErrorOptions) {
 		return this.AllAction.execute({}, errorOptions || {});
 	}

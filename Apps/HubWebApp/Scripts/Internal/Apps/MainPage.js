@@ -5,17 +5,16 @@ require("reflect-metadata");
 var xtistart_1 = require("xtistart");
 var tsyringe_1 = require("tsyringe");
 var MainPageViewModel_1 = require("./MainPageViewModel");
-var Alert_1 = require("../../Shared/Alert");
+var Alert_1 = require("XtiShared/Alert");
 var HubAppApi_1 = require("../../Hub/Api/HubAppApi");
 var AppListItem_1 = require("./AppListItem");
-var Enumerable_1 = require("../../Shared/Enumerable");
+var Enumerable_1 = require("XtiShared/Enumerable");
 var AppListItemViewModel_1 = require("./AppListItemViewModel");
 var MainPage = /** @class */ (function () {
     function MainPage(vm, hub) {
         this.vm = vm;
         this.hub = hub;
         this.alert = new Alert_1.Alert(this.vm.alert);
-        this.appAlert = new Alert_1.Alert(this.vm.appAlert);
         this.refreshAllApps();
     }
     MainPage.prototype.refreshAllApps = function () {
@@ -23,14 +22,12 @@ var MainPage = /** @class */ (function () {
             var apps;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        this.appAlert.clear();
-                        return [4 /*yield*/, this.allApps()];
+                    case 0: return [4 /*yield*/, this.allApps()];
                     case 1:
                         apps = _a.sent();
                         this.vm.apps(apps);
                         if (apps.length === 0) {
-                            this.appAlert.danger('No apps were found');
+                            this.alert.danger('No apps were found');
                         }
                         return [2 /*return*/];
                 }

@@ -22,14 +22,14 @@ namespace HubWebApp.Tests
             services.LoginAs(adminUser);
             requestPage(services);
             var hubApp = await services.HubApp();
-            var appsModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
+            var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
             await adminUser.GrantFullAccessToModCategory(appsModCategory);
             var apps = await execute(services);
             var appNames = apps.Select(a => a.AppName);
             Assert.That
             (
                 appNames,
-                Is.EquivalentTo(new[] { AppKey.Unknown.Name.Value, HubAppKey.Key.Name.Value }),
+                Is.EquivalentTo(new[] { AppKey.Unknown.Name.DisplayText, HubInfo.AppKey.Name.DisplayText }),
                 "Should get all apps"
             );
         }
@@ -42,7 +42,7 @@ namespace HubWebApp.Tests
             services.LoginAs(adminUser);
             requestPage(services);
             var hubApp = await services.HubApp();
-            var appsModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
+            var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
             var hubAppModifier = await appsModCategory.Modifier(hubApp.ID.Value);
             await adminUser.AddModifier(hubAppModifier);
             var apps = await execute(services);
@@ -50,7 +50,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 appNames,
-                Is.EquivalentTo(new[] { HubAppKey.Key.Name.Value }),
+                Is.EquivalentTo(new[] { HubInfo.AppKey.Name.DisplayText }),
                 "Should get only allowed apps"
             );
         }

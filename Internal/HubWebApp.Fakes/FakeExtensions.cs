@@ -14,10 +14,11 @@ namespace HubWebApp.Fakes
         {
             services.AddFakesForXtiWebApp(config);
             services.AddScoped<AppFromPath>();
+            services.AddScoped<AppApiFactory, HubAppApiFactory>();
             services.AddTransient<HubAppApi>();
-            services.AddTransient<AppApi>(sp => sp.GetService<HubAppApi>());
+            services.AddTransient<IAppApi>(sp => sp.GetService<HubAppApi>());
             services.AddScoped<HubSetup>();
-            services.AddScoped(_ => HubAppKey.Key);
+            services.AddScoped(_ => HubInfo.AppKey);
         }
     }
 }

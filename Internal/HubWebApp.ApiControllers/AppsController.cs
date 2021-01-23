@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using XTI_App.Api;
-using XTI_WebApp.Api;
 using XTI_App;
 using HubWebApp.Api;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
 {
@@ -20,7 +21,7 @@ namespace HubWebApp.ApiControllers
         private readonly HubAppApi api;
         public async Task<IActionResult> Index()
         {
-            var result = await api.Group("Apps").Action<EmptyRequest, AppActionViewResult>("Index").Execute(new EmptyRequest());
+            var result = await api.Group("Apps").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest());
             return View(result.Data.ViewName);
         }
 
@@ -32,7 +33,7 @@ namespace HubWebApp.ApiControllers
 
         public async Task<IActionResult> RedirectToApp(int model)
         {
-            var result = await api.Group("Apps").Action<int, AppActionRedirectResult>("RedirectToApp").Execute(model);
+            var result = await api.Group("Apps").Action<int, WebRedirectResult>("RedirectToApp").Execute(model);
             return Redirect(result.Data.Url);
         }
     }

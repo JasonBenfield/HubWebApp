@@ -10,24 +10,27 @@ namespace HubWebApp.Api
     {
         private readonly AppFactory appFactory;
         private readonly Clock clock;
+        private readonly AppApiFactory apiFactory;
 
-        public HubSetup(AppFactory appFactory, Clock clock)
+        public HubSetup(AppFactory appFactory, Clock clock, AppApiFactory apiFactory)
         {
             this.appFactory = appFactory;
             this.clock = clock;
+            this.apiFactory = apiFactory;
         }
 
         public async Task Run()
         {
+            await new AllAppSetup(appFactory, clock).Run();
             await new DefaultAppSetup
             (
                 appFactory,
                 clock,
-                new HubAppApiTemplateFactory().Create(),
+                apiFactory.CreateTemplate(),
                 "Hub"
             ).Run();
-            var hubApp = await appFactory.Apps().App(HubAppKey.Key);
-            var appModCategory = await hubApp.ModCategory(new ModifierCategoryName("Apps"));
+            var hubApp = await appFactory.Apps().App(HubInfo.AppKey);
+            var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
             var apps = await appFactory.Apps().All();
             foreach (var app in apps)
             {

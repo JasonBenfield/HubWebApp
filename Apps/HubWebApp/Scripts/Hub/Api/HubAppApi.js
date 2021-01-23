@@ -3,11 +3,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HubAppApi = void 0;
 var tslib_1 = require("tslib");
-var AppApi_1 = require("../../Shared/AppApi");
+var AppApi_1 = require("XtiShared/AppApi");
 var UserGroup_1 = require("./UserGroup");
 var UserAdminGroup_1 = require("./UserAdminGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
+var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
+var ResourceGroup_1 = require("./ResourceGroup");
+var ModCategoryGroup_1 = require("./ModCategoryGroup");
 var HubAppApi = /** @class */ (function (_super) {
     tslib_1.__extends(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
@@ -17,6 +20,9 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserAdmin = _this.addGroup(function (evts, resourceUrl) { return new UserAdminGroup_1.UserAdminGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
+        _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
+        _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
+        _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
         return _this;
     }
     HubAppApi.DefaultVersion = 'V58';
