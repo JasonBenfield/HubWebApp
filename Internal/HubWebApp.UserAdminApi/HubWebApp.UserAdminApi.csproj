@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Api" Version="1.3.0" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -13,17 +13,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ValidationErrors.Designer.cs">
+    <Compile Update="UserAdminErrors.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ValidationErrors.resx</DependentUpon>
+      <DependentUpon>UserAdminErrors.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="ValidationErrors.resx">
+    <EmbeddedResource Update="UserAdminErrors.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
+      <LastGenOutput>UserAdminErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

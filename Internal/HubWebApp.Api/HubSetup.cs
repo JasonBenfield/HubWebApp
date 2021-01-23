@@ -1,6 +1,8 @@
 ﻿using HubWebApp.Core;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Api;
+using XTI_Core;
 
 namespace HubWebApp.Api
 {
@@ -8,33 +10,32 @@ namespace HubWebApp.Api
     {
         private readonly AppFactory appFactory;
         private readonly Clock clock;
+        private readonly AppApiFactory apiFactory;
 
-        public HubSetup(AppFactory appFactory, Clock clock)
+        public HubSetup(AppFactory appFactory, Clock clock, AppApiFactory apiFactory)
         {
             this.appFactory = appFactory;
             this.clock = clock;
+            this.apiFactory = apiFactory;
         }
 
         public async Task Run()
         {
-            var app = await appFactory.Apps().WebApp(HubAppKey.Key);
-            const string title = "Hub";
-            if (app.Exists())
+            await new AllAppSetup(appFactory, clock).Run();
+            await new DefaultAppSetup
+            (
+                appFactory,
+                clock,
+                apiFactory.CreateTemplate(),
+                "Hub"
+            ).Run();
+            var hubApp = await appFactory.Apps().App(HubInfo.AppKey);
+            var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+            var apps = await appFactory.Apps().All();
+            foreach (var app in apps)
             {
-                await app.SetTitle(title);
+                await appModCategory.AddOrUpdateModifier(app.ID.Value, app.Title);
             }
-            else
-            {
-                app = await appFactory.Apps().AddApp(HubAppKey.Key, AppType.Values.WebApp, title, clock.Now());
-            }
-            var currentVersion = await app.CurrentVersion();
-            if (!currentVersion.IsCurrent())
-            {
-                currentVersion = await app.StartNewMajorVersion(clock.Now());
-                await currentVersion.Publishing();
-                await currentVersion.Published();
-            }
-            await app.SetRoles(HubRoles.Instance.Values());
         }
     }
 }

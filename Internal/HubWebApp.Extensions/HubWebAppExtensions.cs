@@ -1,49 +1,42 @@
 ﻿using HubWebApp.Api;
-using Microsoft.EntityFrameworkCore;
+using HubWebApp.ApiControllers;
+using HubWebApp.Apps;
+using HubWebApp.Core;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using System;
 using XTI_App;
-using XTI_App.EF;
 using XTI_App.Api;
-using HubWebApp.AuthApi;
-using HubWebApp.UserAdminApi;
+using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions
 {
     public static class HubWebAppExtensions
     {
-        public static void AddServicesForHub(this IServiceCollection services)
+        public static void AddServicesForHub(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(optionsAction: (IServiceProvider sp, DbContextOptionsBuilder dbOptionsBuilder) =>
-            {
-                var dbOptions = sp.GetService<IOptions<DbOptions>>();
-                var hostEnvironment = sp.GetService<IHostEnvironment>();
-                dbOptionsBuilder.UseSqlServer(new AppConnectionString(dbOptions, hostEnvironment.EnvironmentName).Value())
-                    .EnableSensitiveDataLogging();
-            });
+            services.AddWebAppServices(configuration);
+            services.AddScoped<AppFromPath>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-            services.AddScoped<AccessForAuthenticate, JwtAccess>();
-            services.AddScoped<AccessForLogin, CookieAccess>();
-            services.AddScoped<AppApi>(sp =>
-            {
-                var xtiPath = sp.GetService<XtiPath>();
-                return new HubAppApi
-                (
-                    new AppApiSuperUser(),
-                    xtiPath.Version,
-                    new AuthGroupFactory(sp),
-                    new UserAdminGroupFactory(sp)
-                );
-            });
-            services.AddScoped(sp => (HubAppApi)sp.GetService<AppApi>());
+            services.AddSingleton(_ => HubInfo.AppKey);
+            services.AddScoped<AppApiFactory, HubAppApiFactory>();
+            services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
+            services.AddScoped<HubSetup>();
             services
                 .AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SetDefaultJsonOptions();
+                })
                 .AddMvcOptions(options =>
                 {
+                    options.SetDefaultMvcOptions();
                 });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .PartManager.ApplicationParts.Add
+                (
+                    new AssemblyPart(typeof(UserAdminController).Assembly)
+                );
         }
     }
 }

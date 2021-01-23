@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <UserSecretsId>06fc7bb1-bce8-444d-8883-ddda42ebf3f1</UserSecretsId>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.3">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -23,16 +23,32 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.3.0" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.3.0" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
+    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.8.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Exports\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js">
+      <DependentUpon>CurrentVersionComponentViewModel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js.map">
+      <DependentUpon>CurrentVersionComponentViewModel.js.map</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js">
+      <DependentUpon>SelectableListCardViewModel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js.map">
+      <DependentUpon>SelectableListCardViewModel.js.map</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,17 @@
 ﻿using HubWebApp.Api;
 using HubWebApp.Fakes;
 using HubWebApp.UserAdminApi;
+using MainDB.EF;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System.Threading.Tasks;
-using XTI_App.Api;
-using XTI_App.EF;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NUnit.Framework;
 using System;
-using XTI_WebApp.Fakes;
+using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Api;
+using XTI_App.Fakes;
+using XTI_Core;
 
 namespace HubWebApp.Tests
 {
@@ -19,6 +21,8 @@ namespace HubWebApp.Tests
         public async Task ShouldRequireUserName()
         {
             var input = await setup();
+            input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             input.Model.UserName = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
@@ -27,7 +31,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(ValidationErrors.UserNameIsRequired, "UserName")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.UserNameIsRequired, "User Name", "UserName")),
                 "Should require user name"
             );
         }
@@ -36,6 +40,8 @@ namespace HubWebApp.Tests
         public async Task ShouldRequirePassword()
         {
             var input = await setup();
+            input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             input.Model.Password = "";
             var ex = Assert.ThrowsAsync<ValidationFailedException>
             (
@@ -44,7 +50,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 ex.Errors,
-                Has.One.EqualTo(new ErrorModel(ValidationErrors.PasswordIsRequired, "Password")),
+                Has.One.EqualTo(new ErrorModel(UserAdminErrors.PasswordIsRequired, "Password", "Password")),
                 "Should require password"
             );
         }
@@ -53,8 +59,10 @@ namespace HubWebApp.Tests
         public async Task ShouldAddUser()
         {
             var input = await setup();
+            input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             var result = await execute(input);
-            var user = await input.AppDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
+            var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user, Is.Not.Null, "Should add user");
             Assert.That(user.UserName, Is.EqualTo(input.Model.UserName), "Should add user with the given user name");
         }
@@ -63,42 +71,60 @@ namespace HubWebApp.Tests
         public async Task ShouldHashPassword()
         {
             var input = await setup();
+            input.Services.LoginAs(input.AdminUser);
+            requestPage(input);
             var result = await execute(input);
-            var user = await input.AppDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
+            var user = await input.MainDbContext.Users.FirstOrDefaultAsync(u => u.ID == result.Data);
             Assert.That(user.Password, Is.EqualTo(new FakeHashedPassword(input.Model.Password).Value()), "Should add user with the hashed password");
+        }
+
+        private static void requestPage(TestInput input)
+        {
+            var hubApi = input.Services.GetService<HubAppApi>();
+            input.Services.RequestPage(hubApi.UserAdmin.AddUser.Path);
         }
 
         private async Task<TestInput> setup()
         {
-            var services = new ServiceCollection();
-            services.AddFakesForXtiWebApp();
-            services.AddFakesForHubWebApp();
-            var sp = services.BuildServiceProvider();
-            var fakeApi = sp.GetService<FakeHubAppApi>();
-            var api = await fakeApi.Create();
-            return new TestInput(sp, api);
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureServices
+                (
+                    (hostContext, services) =>
+                    {
+                        services.AddFakesForHubWebApp(hostContext.Configuration);
+                    }
+                )
+                .Build();
+            var scope = host.Services.CreateScope();
+            var sp = scope.ServiceProvider;
+            await scope.ServiceProvider.Setup();
+            var adminUser = await sp.AddAdminUser();
+            return new TestInput(sp, adminUser);
         }
 
         private static Task<ResultContainer<int>> execute(TestInput input)
         {
-            return input.Api.UserAdmin.AddUser.Execute(AccessModifier.Default, input.Model);
+            var hubApi = input.Services.GetService<HubAppApi>();
+            return hubApi.UserAdmin.AddUser.Execute(input.Model);
         }
 
         private class TestInput
         {
-            public TestInput(IServiceProvider sp, HubAppApi api)
+            public TestInput(IServiceProvider sp, AppUser adminUser)
             {
-                Api = api;
-                AppDbContext = sp.GetService<AppDbContext>();
+                MainDbContext = sp.GetService<MainDbContext>();
                 Model = new AddUserModel
                 {
                     UserName = "xartogg",
                     Password = "password"
                 };
+                AdminUser = adminUser;
+                Services = sp;
             }
-            public HubAppApi Api { get; }
-            public AppDbContext AppDbContext { get; }
+            public MainDbContext MainDbContext { get; }
             public AddUserModel Model { get; }
+            public AppUser AdminUser { get; }
+            public IServiceProvider Services { get; }
         }
     }
 }

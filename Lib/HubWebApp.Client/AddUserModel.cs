@@ -1,9 +1,10 @@
 // Generated Code
 using System;
+using System.Collections.Generic;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
-    public sealed class AddUserModel
+    public sealed partial class AddUserModel
     {
         public string UserName
         {

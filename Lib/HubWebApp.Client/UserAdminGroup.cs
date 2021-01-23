@@ -2,12 +2,13 @@
 using XTI_WebAppClient;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
     public sealed partial class UserAdminGroup : AppClientGroup
     {
-        public UserAdminGroup(IHttpClientFactory httpClientFactory, XtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "UserAdmin")
+        public UserAdminGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "UserAdmin")
         {
         }
 

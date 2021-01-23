@@ -7,7 +7,7 @@ using XTI_WebApp.Extensions;
 
 namespace HubWebApp
 {
-    public class Startup
+    public sealed class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -18,9 +18,10 @@ namespace HubWebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWebAppServices(Configuration);
-            services.ConfigureXtiCookieAndTokenAuthentication();
-            services.AddServicesForHub();
+            services.AddResponseCaching();
+            services.ConfigureXtiCookieAndTokenAuthentication(Configuration);
+            services.AddServicesForHub(Configuration);
+            services.AddHostedService<StartupHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,7 +39,7 @@ namespace HubWebApp
 
             app.UseAuthorization();
 
-            app.UseSession();
+            app.UseResponseCaching();
 
             app.UseXti();
 

@@ -1,0 +1,13 @@
+﻿<li class="list-group-item">
+    <div class="row">
+        <div class="col-auto">
+            <!-- ko if: isAllowed -->
+            <i class="far fa-thumbs-up fa-fw text-success"></i>
+            <!-- /ko -->
+            <!-- ko ifnot: isAllowed -->
+            <i class="far fa-thumbs-down fa-fw text-danger"></i>
+            <!-- /ko -->
+        </div>
+        <div data-bind="text: roleName" class="col"></div>
+    </div>
+</li>

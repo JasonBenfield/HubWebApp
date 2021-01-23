@@ -2,29 +2,54 @@
 using XTI_WebAppClient;
 using System.Net.Http;
 
-namespace HubWebApp.client
+namespace HubWebApp.Client
 {
-    public sealed partial class HubAppClient : AppClient, IAuthClient
+    public sealed partial class HubAppClient : AppClient
     {
-        public HubAppClient(IHttpClientFactory httpClientFactory, XtiCredentials credentials, string baseUrl, string version = "V2"): base(httpClientFactory, baseUrl, "Hub", version)
+        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl, string version = DefaultVersion): base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
         {
-            xtiToken = new XtiToken(this, credentials);
-            Auth = new AuthGroup(httpClientFactory, xtiToken, url);
-            AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, url);
+            this.xtiToken = xtiToken;
+            User = new UserGroup(httpClientFactory, xtiToken, url);
             UserAdmin = new UserAdminGroup(httpClientFactory, xtiToken, url);
+            Apps = new AppsGroup(httpClientFactory, xtiToken, url);
+            App = new AppGroup(httpClientFactory, xtiToken, url);
+            ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
+            Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
+            ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, url);
         }
 
-        public AuthGroup Auth
-        {
-            get;
-        }
-
-        public IAuthApiClientGroup AuthApi
+        public const string DefaultVersion = "V58";
+        public UserGroup User
         {
             get;
         }
 
         public UserAdminGroup UserAdmin
+        {
+            get;
+        }
+
+        public AppsGroup Apps
+        {
+            get;
+        }
+
+        public AppGroup App
+        {
+            get;
+        }
+
+        public ResourceGroupGroup ResourceGroup
+        {
+            get;
+        }
+
+        public ResourceGroup Resource
+        {
+            get;
+        }
+
+        public ModCategoryGroup ModCategory
         {
             get;
         }

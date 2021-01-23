@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using XTI_Configuration.Extensions;
 using XTI_ApiGeneratorApp.Extensions;
-using XTI_ConsoleApp.Extensions;
+using XTI_App.Api;
+using XTI_Configuration.Extensions;
+using HubWebApp.Api;
 
 namespace HubApiGeneratorApp
 {
@@ -11,22 +12,16 @@ namespace HubApiGeneratorApp
     {
         static Task Main(string[] args)
         {
-            return Host.CreateDefaultBuilder()
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.UseXtiConfiguration(hostingContext.HostingEnvironment.EnvironmentName, args);
+                    config.UseXtiConfiguration(hostingContext.HostingEnvironment, args);
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddConsoleAppServices(hostContext.Configuration);
-                    services.ConfigureForApiGenerator(hostContext.Configuration);
-                    services.AddHostedService(sp =>
-                    {
-                        var scope = sp.CreateScope();
-                        var lifetime = scope.ServiceProvider.GetService<IHostApplicationLifetime>();
-                        var apiGenerator = scope.ServiceProvider.GetService<ApiGenerator>();
-                        return new HubApiGenerator(lifetime, apiGenerator);
-                    });
+                    services.AddApiGenerator(hostContext.Configuration);
+                    services.AddScoped<AppApiFactory, HubAppApiFactory>();
+                    services.AddHostedService<ApiGeneratorHostedService>();
                 })
                 .RunConsoleAsync();
         }

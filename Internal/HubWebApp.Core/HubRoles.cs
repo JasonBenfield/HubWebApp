@@ -2,15 +2,10 @@
 
 namespace HubWebApp.Core
 {
-    public sealed class HubRoles : AppRoleNames
+    public sealed class HubRoles
     {
         public static HubRoles Instance = new HubRoles();
 
-        private HubRoles() : base(HubAppKey.Key)
-        {
-            Admin = Add("Admin");
-        }
-
-        public AppRoleName Admin { get; }
+        public AppRoleName Admin { get; } = new AppRoleName(nameof(Admin));
     }
 }

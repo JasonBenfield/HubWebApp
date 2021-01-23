@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using XTI_App.Api;
 using XTI_App;
+using XTI_Core;
 
 namespace HubWebApp.UserAdminApi
 {
@@ -23,7 +24,7 @@ namespace HubWebApp.UserAdminApi
             var hashedPassword = hashedPasswordFactory.Create(model.Password);
             var timeAdded = clock.Now();
             var user = await appFactory.Users().Add(userName, hashedPassword, timeAdded);
-            return user.ID;
+            return user.ID.Value;
         }
     }
 }
