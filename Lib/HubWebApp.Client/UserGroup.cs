@@ -2,6 +2,7 @@
 using XTI_WebAppClient;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace HubWebApp.Client
 {

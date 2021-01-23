@@ -1,0 +1,23 @@
+﻿<!-- ko if: isVisible -->
+<button data-bind="css: {
+        active: isActive,
+        'btn-outline-default': contextualClass.isDefault,
+        'btn-outline-primary': contextualClass.isPrimary,
+        'btn-outline-secondary': contextualClass.isSecondary,
+        'btn-outline-light': contextualClass.isLight,
+        'btn-outline-dark': contextualClass.isDark,
+        'btn-outline-warning': contextualClass.isWarning,
+        'btn-outline-info': contextualClass.isInfo,
+        'btn-outline-danger': contextualClass.isDanger
+        },
+        attr: {
+            title: title
+        },
+        click: requestExecute,
+        enable: isEnabled" class="btn">
+    <!-- ko with: icon -->
+    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    <!-- /ko -->
+    <span data-bind="text: text, attr: { 'class': textCss }"></span>
+</button>
+<!-- /ko -->

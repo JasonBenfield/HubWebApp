@@ -11,14 +11,17 @@
     "sourceMap": true,
     "target": "es5",
     "importHelpers": true,
+    "baseUrl": ".",
+    "paths": {
+      "XtiShared/*": [ "../../Imports/Shared/*" ],
+      "XtiAuthenticator/*": [ "../../Imports/Authenticator/*" ]
+    },
     "typeRoots": [
       "../../node_modules/@types"
     ]
   },
-  "include": [
-    "./**/*.ts"
-  ],
   "exclude": [
+    "Imports",
     "node_modules",
     "wwwroot"
   ]

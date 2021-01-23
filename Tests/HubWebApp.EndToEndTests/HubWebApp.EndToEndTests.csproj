@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="nunit" Version="3.13.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.3" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.3-dev201219094947885" />
-    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.3" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.6.4-dev201222073210020" />
+    <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.6-dev210121082630013" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
+    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.4" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.1-dev210121182521705" />
   </ItemGroup>
 
   <ItemGroup>

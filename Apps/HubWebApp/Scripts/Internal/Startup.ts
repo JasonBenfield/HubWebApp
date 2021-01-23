@@ -1,13 +1,13 @@
-﻿import { PageLoader } from '../Shared/PageLoader';
-import { AppApiEvents } from '../Shared/AppApiEvents';
-import { ConsoleLog } from '../Shared/ConsoleLog';
-import { ModalErrorComponent } from '../Shared/Error/ModalErrorComponent';
+﻿import { PageLoader } from 'XtiShared/PageLoader';
+import { AppApiEvents } from 'XtiShared/AppApiEvents';
+import { ConsoleLog } from 'XtiShared/ConsoleLog';
+import { ModalErrorComponent } from 'XtiShared/Error/ModalErrorComponent';
 import { container } from 'tsyringe';
 import { HubAppApi } from '../Hub/Api/HubAppApi';
-import { AuthenticatorAppApi } from '../Authenticator/Api/AuthenticatorAppApi';
-import { AppApi } from '../Shared/AppApi';
-import { HostEnvironment } from '../Shared/HostEnvironment';
-import { LogoutUrl } from '../Authenticator/LogoutUrl';
+import { AuthenticatorAppApi } from 'XtiAuthenticator/Api/AuthenticatorAppApi';
+import { AppApi } from 'XtiShared/AppApi';
+import { HostEnvironment } from 'XtiShared/HostEnvironment';
+import { LogoutUrl } from 'XtiAuthenticator/LogoutUrl';
 
 export function startup(pageVM: any, page: any) {
     container.register('PageVM', { useFactory: c => c.resolve(pageVM) });

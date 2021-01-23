@@ -31,8 +31,8 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubSetup>();
             await hubSetup.Run();
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubAppKey.Key);
-            Assert.That(hubApp.Key(), Is.EqualTo(HubAppKey.Key), "Should add hub app");
+            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            Assert.That(hubApp.Key(), Is.EqualTo(HubInfo.AppKey), "Should add hub app");
         }
 
         [Test]
@@ -42,8 +42,8 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubSetup>();
             await hubSetup.Run();
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubAppKey.Key);
-            var modCategoryName = new ModifierCategoryName("Apps");
+            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var modCategoryName = HubInfo.ModCategories.Apps;
             var modCategory = await hubApp.ModCategory(modCategoryName);
             Assert.That(modCategory.Name(), Is.EqualTo(modCategoryName), "Should add mod category for apps");
         }
@@ -55,8 +55,8 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubSetup>();
             await hubSetup.Run();
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubAppKey.Key);
-            var modCategoryName = new ModifierCategoryName("Apps");
+            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var modCategoryName = HubInfo.ModCategories.Apps;
             var modCategory = await hubApp.ModCategory(modCategoryName);
             var modifiers = await modCategory.Modifiers();
             var modIDs = modifiers.Select(m => m.TargetKey);

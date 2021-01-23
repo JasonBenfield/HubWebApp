@@ -1,5 +1,6 @@
-import { NumericValue } from '../../Shared/NumericValue';
-import { NumericValues } from '../../Shared/NumericValues';
+// Generated code
+import { NumericValue } from 'XtiShared/NumericValue';
+import { NumericValues } from 'XtiShared/NumericValues';
 
 export class AppTypes extends NumericValues<AppType> {
 	constructor(
@@ -21,7 +22,7 @@ export class AppType extends NumericValue implements IAppType {
 		new AppType(20, 'Package'),
 		new AppType(25, 'Console App')
 	);
-
+	
 	private constructor(Value: number, DisplayText: string) {
 		super(Value, DisplayText);
 	}

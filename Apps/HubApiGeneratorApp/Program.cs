@@ -1,10 +1,10 @@
-﻿using HubWebApp.ApiTemplate;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using XTI_ApiGeneratorApp.Extensions;
 using XTI_App.Api;
 using XTI_Configuration.Extensions;
+using HubWebApp.Api;
 
 namespace HubApiGeneratorApp
 {
@@ -20,7 +20,7 @@ namespace HubApiGeneratorApp
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddApiGenerator(hostContext.Configuration);
-                    services.AddScoped<IAppApiTemplateFactory, HubAppApiTemplateFactory>();
+                    services.AddScoped<AppApiFactory, HubAppApiFactory>();
                     services.AddHostedService<ApiGeneratorHostedService>();
                 })
                 .RunConsoleAsync();

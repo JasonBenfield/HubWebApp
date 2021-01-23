@@ -18,7 +18,7 @@ namespace HubWebApp.Client
             set;
         }
 
-        public string AppKey
+        public string AppName
         {
             get;
             set;

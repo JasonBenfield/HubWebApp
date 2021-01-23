@@ -8,28 +8,85 @@ using XTI_WebApp.Api;
 
 namespace HubWebApp.Api
 {
-    public sealed class HubAppApi : WebAppApi
+    public sealed class HubAppApi : WebAppApiWrapper
     {
         public HubAppApi
         (
             IAppApiUser user,
-            AppVersionKey version,
             IServiceProvider services
         )
             : base
             (
-                  HubAppKey.Key,
-                  version,
-                  user,
-                  ResourceAccess.AllowAuthenticated()
+                new AppApi
+                (
+                    HubInfo.AppKey,
+                    user,
+                    ResourceAccess.AllowAuthenticated()
                     .WithAllowed(HubRoles.Instance.Admin)
+                )
             )
         {
-            UserAdmin = AddGroup(u => new UserAdminGroup(this, Access, u, new UserAdminActionFactory(services)));
-            Apps = AddGroup(u => new AppsGroup(this, Access, u, new AppsActionFactory(services)));
+            UserAdmin = new UserAdminGroup
+            (
+                source.AddGroup
+                (
+                    nameof(UserAdmin),
+                    ModifierCategoryName.Default,
+                    Access
+                ),
+                new UserAdminActionFactory(services)
+            );
+            Apps = new AppListGroup
+            (
+                source.AddGroup
+                (
+                    nameof(Apps)
+                ),
+                new AppGroupActionFactory(services)
+            );
+            App = new AppInquiryGroup
+            (
+                source.AddGroup
+                (
+                    nameof(App),
+                    HubInfo.ModCategories.Apps
+                ),
+                new AppGroupActionFactory(services)
+            );
+            ResourceGroup = new ResourceGroupInquiryGroup
+            (
+                source.AddGroup
+                (
+                    nameof(ResourceGroup),
+                    HubInfo.ModCategories.Apps
+                ),
+                new ResourceGroupInquiryActionFactory(services)
+            );
+            Resource = new ResourceInquiryGroup
+            (
+                source.AddGroup
+                (
+                    nameof(Resource),
+                    HubInfo.ModCategories.Apps
+                ),
+                new ResourceInquiryActionFactory(services)
+            );
+            ModCategory = new ModCategoryGroup
+            (
+                source.AddGroup
+                (
+                    nameof(ModCategory),
+                    HubInfo.ModCategories.Apps
+                ),
+                new ModCategoryGroupActionFactory(services)
+            );
         }
 
         public UserAdminGroup UserAdmin { get; }
-        public AppsGroup Apps { get; }
+        public AppListGroup Apps { get; }
+        public AppInquiryGroup App { get; }
+        public ResourceGroupInquiryGroup ResourceGroup { get; }
+        public ResourceInquiryGroup Resource { get; }
+        public ModCategoryGroup ModCategory { get; }
     }
 }

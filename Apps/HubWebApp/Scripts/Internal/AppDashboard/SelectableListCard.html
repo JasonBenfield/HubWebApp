@@ -1,0 +1,18 @@
+﻿<div class="card">
+    <!-- ko if: title -->
+    <div data-bind="text: title" class="card-header"></div>
+    <!-- /ko -->
+    <!-- ko with: alert -->
+    <!-- ko if: hasMessage -->
+    <div class="card-body">
+        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: hasItems -->
+    <div data-bind="foreach: items,
+        delegatedEvent: { event: 'click', selector: 'a', callback: select }" class="list-group list-group-flush">
+        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>

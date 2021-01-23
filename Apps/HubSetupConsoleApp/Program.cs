@@ -1,10 +1,10 @@
 ﻿using HubWebApp.Api;
+using MainDB.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using XTI_App;
-using XTI_App.EF;
-using XTI_App.Extensions;
+using XTI_App.Api;
 using XTI_Configuration.Extensions;
 using XTI_Core;
 
@@ -23,8 +23,8 @@ namespace HubSetupConsoleApp
                 {
                     services.AddAppDbContextForSqlServer(hostContext.Configuration);
                     services.AddScoped<Clock, UtcClock>();
-                    services.AddScoped<AppFactory, EfAppFactory>();
-                    services.AddScoped<AllAppSetup>();
+                    services.AddScoped<AppFactory>();
+                    services.AddScoped<AppApiFactory, HubAppApiFactory>();
                     services.AddScoped<HubSetup>();
                     services.AddHostedService<HubSetupService>();
                 })

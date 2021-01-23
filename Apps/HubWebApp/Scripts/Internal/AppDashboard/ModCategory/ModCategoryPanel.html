@@ -1,0 +1,34 @@
+﻿<div class="d-flex flex-column h-100">
+    <div class="flex-fill position-relative">
+        <div class="position-absolute-fill overflow-auto">
+            <div class="container">
+                <div class="mb-3">
+                    <!-- ko with: modCategoryComponent -->
+                    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+                <div class="mb-3">
+                    <!-- ko with: modifierListCard -->
+                    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+                <div class="mb-3">
+                    <!-- ko with: resourceGroupListCard -->
+                    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-secondary p-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-auto">
+                    <!-- ko with: backCommand -->
+                    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

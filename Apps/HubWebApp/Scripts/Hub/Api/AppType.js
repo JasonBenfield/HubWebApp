@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppType = exports.AppTypes = void 0;
 var tslib_1 = require("tslib");
-var NumericValue_1 = require("../../Shared/NumericValue");
-var NumericValues_1 = require("../../Shared/NumericValues");
+// Generated code
+var NumericValue_1 = require("XtiShared/NumericValue");
+var NumericValues_1 = require("XtiShared/NumericValues");
 var AppTypes = /** @class */ (function (_super) {
     tslib_1.__extends(AppTypes, _super);
     function AppTypes(NotFound, WebApp, Service, Package, ConsoleApp) {

@@ -5,7 +5,7 @@ $script:hubConfig = [PSCustomObject]@{
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
-    ProjectDir = "C:\XTI\src\HubWebApp\Apps\HubWebApp"
+    ProjectDir = "Apps\HubWebApp"
 }
 
 function Hub-New-XtiIssue {
@@ -59,25 +59,10 @@ function Hub-Xti-PostMerge {
     $script:hubConfig | Xti-PostMerge @PsBoundParameters
 }
 
-function Xti-CopyShared {
-    $source = "..\SharedWebApp\Apps\SharedWebApp"
-    $target = ".\Apps\HubWebApp"
-    robocopy "$source\Scripts\Shared\" "$target\Scripts\Shared\" *.ts /e /purge /njh /njs /np /ns /nc /nfl /ndl /a+:R
-    robocopy "$source\Scripts\Shared\" "$target\Scripts\Shared\" /xf *.ts /e /purge /njh /njs /np /ns /nc /nfl /ndl /a-:R
-    robocopy "$source\Views\Exports\Shared\" "$target\Views\Exports\Shared\" /e /purge /njh /njs /np /ns /nc /nfl /ndl /a+:R
-}
-
-function Xti-CopyAuthenticator {
-    $source = "..\AuthenticatorWebApp\Apps\AuthenticatorWebApp"
-    $target = ".\Apps\HubWebApp"
-    robocopy "$source\Scripts\Authenticator\" "$target\Scripts\Authenticator\" *.ts /e /purge /njh /njs /np /ns /nc /nfl /ndl /a+:R
-    robocopy "$source\Scripts\Authenticator\" "$target\Scripts\Authenticator\" /xf *.ts /e /purge /njh /njs /np /ns /nc /nfl /ndl /a-:R
-}
-
 function Hub-Publish {
     param(
         [ValidateSet("Production", “Development", "Staging", "Test")]
-        [string] $EnvName="Production"
+        [string] $EnvName="Development"
     )
     
     $ErrorActionPreference = "Stop"
@@ -105,9 +90,15 @@ function Hub-Publish {
 
     Write-Progress -Activity $activity -Status "Generating the api" -PercentComplete 30
     Hub-GenerateApi -EnvName $EnvName -DisableClients
-
-    Xti-CopyShared
-    Xti-CopyAuthenticator
+    
+    tsc -p "$($script:hubConfig.ProjectDir)\Scripts\$($script:hubConfig.AppName)\tsconfig.json"
+    
+    if($EnvName -eq "Production") {
+        Hub-ImportWeb -Prod
+    }
+    else {
+        Hub-ImportWeb
+    }
 
     Write-Progress -Activity $activity -Status "Running web pack" -PercentComplete 40
     $script:hubConfig | Hub-Webpack
@@ -160,10 +151,12 @@ function Hub-GenerateApi {
         [switch] $DisableClient,
         [switch] $DisableControllers
     )
-    $currentDir = (Get-Item .).FullName
-    Set-Location Apps/HubApiGeneratorApp
-    dotnet run --environment=$EnvName -- --Output:TsClient:Disable $DisableClient --Output:CsClient:Disable $DisableClient --Output:CsControllers:Disable $DisableControllers
-    Set-Location $currentDir
+    dotnet build Apps/HubApiGeneratorApp
+    dotnet run --project Apps/HubApiGeneratorApp --environment=$EnvName -- --Output:TsClient:Disable $DisableClient --Output:CsClient:Disable $DisableClient --Output:CsControllers:Disable $DisableControllers
+    tsc -p Apps/HubWebApp/Scripts/Hub/tsconfig.json
+    if( $LASTEXITCODE -ne 0 ) {
+        Throw "Hub api generator failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Hub-Setup {
@@ -171,11 +164,7 @@ function Hub-Setup {
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [string] $EnvName="Development"
     )
-    $currentDir = (Get-Item .).FullName
-    Set-Location Apps/HubSetupConsoleApp
-    dotnet run --no-launch-profile --environment=$EnvName
-    Set-Location $currentDir
-
+    dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Hub setup failed with exit code $LASTEXITCODE"
     }
@@ -195,4 +184,12 @@ function Hub-ResetTest {
 	Xti-ResetMainDb -EnvName Test
     Hub-Setup -EnvName Test
     New-XtiHubUser -EnvName Test -CredentialKey HubAdmin -UserName HubAdmin -RoleNames Admin
+}
+
+function Hub-ImportWeb {
+    param(
+        [switch] $Prod
+    )
+    $script:hubConfig | Xti-ImportWeb -Prod:$Prod -AppToImport Shared
+    $script:hubConfig | Xti-ImportWeb -Prod:$Prod -AppToImport Authenticator
 }
