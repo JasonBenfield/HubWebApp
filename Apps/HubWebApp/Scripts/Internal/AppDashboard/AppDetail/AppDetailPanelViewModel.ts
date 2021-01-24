@@ -4,8 +4,8 @@ import { CurrentVersionComponentViewModel } from './CurrentVersionComponentViewM
 import { ComponentTemplate } from 'XtiShared/ComponentTemplate';
 import { createCommandOutlineButtonViewModel } from 'XtiShared/Templates/CommandOutlineButtonTemplate';
 import { ComponentViewModel } from 'XtiShared/ComponentViewModel';
-import { ListCardViewModel } from '../ListCardViewModel';
-import { SelectableListCardViewModel } from '../SelectableListCardViewModel';
+import { ListCardViewModel } from '../../ListCard/ListCardViewModel';
+import { SelectableListCardViewModel } from '../../ListCard/SelectableListCardViewModel';
 
 export class AppDetailPanelViewModel extends ComponentViewModel {
     constructor() {

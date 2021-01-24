@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.EndToEndTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Apps", "Internal\HubWebApp.Apps\HubWebApp.Apps.csproj", "{8D56D9D1-A3AC-4307-9DF7-50797A5AC703}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubWebApp.UserApi", "Lib\HubWebApp.UserApi\HubWebApp.UserApi.csproj", "{09F0447B-50E6-4450-8D35-3E96A86C75AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{8D56D9D1-A3AC-4307-9DF7-50797A5AC703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D56D9D1-A3AC-4307-9DF7-50797A5AC703}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D56D9D1-A3AC-4307-9DF7-50797A5AC703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F0447B-50E6-4450-8D35-3E96A86C75AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F0447B-50E6-4450-8D35-3E96A86C75AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F0447B-50E6-4450-8D35-3E96A86C75AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F0447B-50E6-4450-8D35-3E96A86C75AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{35F3636B-9068-43E6-A4C9-FFB5E159CC9A} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{D61A3BF0-9C52-4C97-ADD6-171FB8665C0D} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 		{8D56D9D1-A3AC-4307-9DF7-50797A5AC703} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
+		{09F0447B-50E6-4450-8D35-3E96A86C75AD} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

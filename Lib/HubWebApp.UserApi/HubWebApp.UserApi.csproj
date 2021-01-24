@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.2-dev210124080511304" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Internal\HubWebApp.Core\HubWebApp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

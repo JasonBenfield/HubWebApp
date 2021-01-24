@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MostRecentRequestListCard = void 0;
 var tslib_1 = require("tslib");
-var ListCard_1 = require("../ListCard");
+var ListCard_1 = require("../../ListCard/ListCard");
 var RequestExpandedListItem_1 = require("../RequestExpandedListItem");
 var RequestExpandedListItemViewModel_1 = require("../RequestExpandedListItemViewModel");
 var MostRecentRequestListCard = /** @class */ (function (_super) {

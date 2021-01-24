@@ -1,0 +1,1 @@
+{"version":3,"file":"MainPageViewModel.js","sourceRoot":"","sources":["MainPageViewModel.ts"],"names":[],"mappings":";;;;AACA,qCAAqC;AACrC,yDAAwD;AACxD,0CAA4C;AAC5C,mEAAkE;AAGlE;IAAuC,6CAAa;IAChD;QAAA,YACI,kBAAM,QAAQ,CAAC,SAClB;QAEQ,mBAAa,GAAG,IAAI,+CAAsB,EAAE,CAAC;;IAFtD,CAAC;IAHQ,iBAAiB;QAD7B,oBAAS,EAAE;;OACC,iBAAiB,CAM7B;IAAD,wBAAC;CAAA,AAND,CAAuC,6BAAa,GAMnD;AANY,8CAAiB"}

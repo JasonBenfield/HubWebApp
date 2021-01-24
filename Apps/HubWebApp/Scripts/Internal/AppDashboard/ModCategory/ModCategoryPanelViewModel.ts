@@ -3,8 +3,8 @@ import { createCommandOutlineButtonViewModel } from 'XtiShared/Templates/Command
 import { ComponentViewModel } from 'XtiShared/ComponentViewModel';
 import * as template from './ModCategoryPanel.html';
 import { ModCategoryComponentViewModel } from './ModCategoryComponentViewModel';
-import { SelectableListCardViewModel } from '../SelectableListCardViewModel';
-import { ListCardViewModel } from '../ListCardViewModel';
+import { SelectableListCardViewModel } from '../../ListCard/SelectableListCardViewModel';
+import { ListCardViewModel } from '../../ListCard/ListCardViewModel';
 
 export class ModCategoryPanelViewModel extends ComponentViewModel {
     constructor() {

@@ -16,6 +16,7 @@ var SelectableListCardViewModel = /** @class */ (function (_super) {
     }
     SelectableListCardViewModel.prototype.select = function (item) {
         this._itemSelected.invoke(item);
+        return true;
     };
     return SelectableListCardViewModel;
 }(ListCardViewModel_1.ListCardViewModel));

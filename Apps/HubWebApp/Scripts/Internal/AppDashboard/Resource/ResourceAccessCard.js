@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceAccessCard = void 0;
 var tslib_1 = require("tslib");
-var ListCard_1 = require("../ListCard");
+var ListCard_1 = require("../../ListCard/ListCard");
 var RoleAccessListItemViewModel_1 = require("../RoleAccessListItemViewModel");
 var ResourceAccessCard = /** @class */ (function (_super) {
     tslib_1.__extends(ResourceAccessCard, _super);

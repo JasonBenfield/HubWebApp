@@ -7,7 +7,7 @@ var CommandOutlineButtonTemplate_1 = require("XtiShared/Templates/CommandOutline
 var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
 var ResourceComponentViewModel_1 = require("./ResourceComponentViewModel");
 var template = require("./ResourcePanel.html");
-var ListCardViewModel_1 = require("../ListCardViewModel");
+var ListCardViewModel_1 = require("../../ListCard/ListCardViewModel");
 var ResourcePanelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ResourcePanelViewModel, _super);
     function ResourcePanelViewModel() {

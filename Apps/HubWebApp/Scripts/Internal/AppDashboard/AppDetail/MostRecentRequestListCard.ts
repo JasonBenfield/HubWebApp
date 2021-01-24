@@ -1,6 +1,6 @@
 ﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ListCard } from "../ListCard";
-import { ListCardViewModel } from "../ListCardViewModel";
+import { ListCard } from "../../ListCard/ListCard";
+import { ListCardViewModel } from "../../ListCard/ListCardViewModel";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
 import { RequestExpandedListItemViewModel } from "../RequestExpandedListItemViewModel";
 

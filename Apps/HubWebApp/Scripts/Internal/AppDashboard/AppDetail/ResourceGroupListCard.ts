@@ -1,7 +1,7 @@
 ﻿import { DefaultEvent } from "XtiShared/Events";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { SelectableListCard } from "../SelectableListCard";
-import { SelectableListCardViewModel } from "../SelectableListCardViewModel";
+import { SelectableListCard } from "../../ListCard/SelectableListCard";
+import { SelectableListCardViewModel } from "../../ListCard/SelectableListCardViewModel";
 import { ResourceGroupListItemViewModel } from "../ResourceGroupListItemViewModel";
 
 export class ResourceGroupListCard extends SelectableListCard {

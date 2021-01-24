@@ -1,8 +1,8 @@
 ﻿using HubWebApp.Apps;
 using HubWebApp.Core;
 using HubWebApp.UserAdminApi;
+using HubWebApp.UserApi;
 using System;
-using XTI_App;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
@@ -31,7 +31,7 @@ namespace HubWebApp.Api
                 source.AddGroup
                 (
                     nameof(UserAdmin),
-                    ModifierCategoryName.Default,
+                    HubInfo.ModCategories.Default,
                     Access
                 ),
                 new UserAdminActionFactory(services)
@@ -80,6 +80,15 @@ namespace HubWebApp.Api
                 ),
                 new ModCategoryGroupActionFactory(services)
             );
+            Users = new UserListGroup
+            (
+                source.AddGroup
+                (
+                    nameof(Users),
+                    HubInfo.ModCategories.Default
+                ),
+                new UserListGroupFactory(services)
+            );
         }
 
         public UserAdminGroup UserAdmin { get; }
@@ -88,5 +97,6 @@ namespace HubWebApp.Api
         public ResourceGroupInquiryGroup ResourceGroup { get; }
         public ResourceInquiryGroup Resource { get; }
         public ModCategoryGroup ModCategory { get; }
+        public UserListGroup Users { get; }
     }
 }
