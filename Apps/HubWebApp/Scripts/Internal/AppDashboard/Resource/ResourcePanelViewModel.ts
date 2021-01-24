@@ -3,7 +3,7 @@ import { createCommandOutlineButtonViewModel } from 'XtiShared/Templates/Command
 import { ComponentViewModel } from 'XtiShared/ComponentViewModel';
 import { ResourceComponentViewModel } from './ResourceComponentViewModel';
 import * as template from './ResourcePanel.html';
-import { ListCardViewModel } from '../ListCardViewModel';
+import { ListCardViewModel } from '../../ListCard/ListCardViewModel';
 
 export class ResourcePanelViewModel extends ComponentViewModel {
     constructor() {

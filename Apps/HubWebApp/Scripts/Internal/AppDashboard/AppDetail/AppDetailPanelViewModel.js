@@ -8,8 +8,8 @@ var CurrentVersionComponentViewModel_1 = require("./CurrentVersionComponentViewM
 var ComponentTemplate_1 = require("XtiShared/ComponentTemplate");
 var CommandOutlineButtonTemplate_1 = require("XtiShared/Templates/CommandOutlineButtonTemplate");
 var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
-var ListCardViewModel_1 = require("../ListCardViewModel");
-var SelectableListCardViewModel_1 = require("../SelectableListCardViewModel");
+var ListCardViewModel_1 = require("../../ListCard/ListCardViewModel");
+var SelectableListCardViewModel_1 = require("../../ListCard/SelectableListCardViewModel");
 var AppDetailPanelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(AppDetailPanelViewModel, _super);
     function AppDetailPanelViewModel() {

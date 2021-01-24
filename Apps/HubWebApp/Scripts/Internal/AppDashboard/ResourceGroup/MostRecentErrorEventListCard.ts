@@ -1,8 +1,8 @@
 ﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { EventListItem } from "../EventListItem";
 import { EventListItemViewModel } from "../EventListItemViewModel";
-import { ListCard } from "../ListCard";
-import { ListCardViewModel } from "../ListCardViewModel";
+import { ListCard } from "../../ListCard/ListCard";
+import { ListCardViewModel } from "../../ListCard/ListCardViewModel";
 
 export class MostRecentErrorEventListCard extends ListCard {
     constructor(

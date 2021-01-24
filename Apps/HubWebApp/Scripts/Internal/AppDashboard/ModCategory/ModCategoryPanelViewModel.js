@@ -7,8 +7,8 @@ var CommandOutlineButtonTemplate_1 = require("XtiShared/Templates/CommandOutline
 var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
 var template = require("./ModCategoryPanel.html");
 var ModCategoryComponentViewModel_1 = require("./ModCategoryComponentViewModel");
-var SelectableListCardViewModel_1 = require("../SelectableListCardViewModel");
-var ListCardViewModel_1 = require("../ListCardViewModel");
+var SelectableListCardViewModel_1 = require("../../ListCard/SelectableListCardViewModel");
+var ListCardViewModel_1 = require("../../ListCard/ListCardViewModel");
 var ModCategoryPanelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ModCategoryPanelViewModel, _super);
     function ModCategoryPanelViewModel() {

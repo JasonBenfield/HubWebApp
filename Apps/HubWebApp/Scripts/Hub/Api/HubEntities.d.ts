@@ -82,6 +82,12 @@ interface IModifierModel {
 	TargetKey: string;
 	DisplayText: string;
 }
+interface IAppUserModel {
+	ID: number;
+	UserName: string;
+	Name: string;
+	Email: string;
+}
 interface IAppType {
 	Value: number;
 	DisplayText: string;

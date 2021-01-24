@@ -43,12 +43,6 @@
     <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js.map">
       <DependentUpon>CurrentVersionComponentViewModel.js.map</DependentUpon>
     </None>
-    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js">
-      <DependentUpon>SelectableListCardViewModel.js</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js.map">
-      <DependentUpon>SelectableListCardViewModel.js.map</DependentUpon>
-    </None>
   </ItemGroup>
 
 </Project>

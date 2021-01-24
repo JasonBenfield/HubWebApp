@@ -9,10 +9,11 @@ import { AppGroup } from "./AppGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
 import { ResourceGroup } from "./ResourceGroup";
 import { ModCategoryGroup } from "./ModCategoryGroup";
+import { UsersGroup } from "./UsersGroup";
 
 
 export class HubAppApi extends AppApi {
-	public static readonly DefaultVersion = 'V58';
+	public static readonly DefaultVersion = 'V21';
 	
 	constructor(events: AppApiEvents, baseUrl: string, version: string = '') {
 		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
@@ -23,6 +24,7 @@ export class HubAppApi extends AppApi {
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
 		this.Resource = this.addGroup((evts, resourceUrl) => new ResourceGroup(evts, resourceUrl));
 		this.ModCategory = this.addGroup((evts, resourceUrl) => new ModCategoryGroup(evts, resourceUrl));
+		this.Users = this.addGroup((evts, resourceUrl) => new UsersGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
@@ -32,4 +34,5 @@ export class HubAppApi extends AppApi {
 	readonly ResourceGroup: ResourceGroupGroup;
 	readonly Resource: ResourceGroup;
 	readonly ModCategory: ModCategoryGroup;
+	readonly Users: UsersGroup;
 }

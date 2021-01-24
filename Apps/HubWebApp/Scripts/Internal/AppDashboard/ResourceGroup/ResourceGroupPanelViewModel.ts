@@ -1,11 +1,11 @@
 ﻿import * as template from './ResourceGroupPanel.html';
 import { ComponentTemplate } from 'XtiShared/ComponentTemplate';
-import { SelectableListCardViewModel } from '../SelectableListCardViewModel';
+import { SelectableListCardViewModel } from '../../ListCard/SelectableListCardViewModel';
 import { ResourceGroupComponentViewModel } from './ResourceGroupComponentViewModel';
 import { createCommandOutlineButtonViewModel } from 'XtiShared/Templates/CommandOutlineButtonTemplate';
 import { ComponentViewModel } from 'XtiShared/ComponentViewModel';
 import { ModCategoryComponentViewModel } from './ModCategoryComponentViewModel';
-import { ListCardViewModel } from '../ListCardViewModel';
+import { ListCardViewModel } from '../../ListCard/ListCardViewModel';
 
 export class ResourceGroupPanelViewModel extends ComponentViewModel {
     constructor() {

@@ -11,6 +11,7 @@ var AppGroup_1 = require("./AppGroup");
 var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
 var ResourceGroup_1 = require("./ResourceGroup");
 var ModCategoryGroup_1 = require("./ModCategoryGroup");
+var UsersGroup_1 = require("./UsersGroup");
 var HubAppApi = /** @class */ (function (_super) {
     tslib_1.__extends(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
@@ -23,9 +24,10 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
         _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
         _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
+        _this.Users = _this.addGroup(function (evts, resourceUrl) { return new UsersGroup_1.UsersGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V58';
+    HubAppApi.DefaultVersion = 'V21';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

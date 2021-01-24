@@ -4,7 +4,7 @@ exports.MostRecentErrorEventListCard = void 0;
 var tslib_1 = require("tslib");
 var EventListItem_1 = require("../EventListItem");
 var EventListItemViewModel_1 = require("../EventListItemViewModel");
-var ListCard_1 = require("../ListCard");
+var ListCard_1 = require("../../ListCard/ListCard");
 var MostRecentErrorEventListCard = /** @class */ (function (_super) {
     tslib_1.__extends(MostRecentErrorEventListCard, _super);
     function MostRecentErrorEventListCard(vm, hubApi) {

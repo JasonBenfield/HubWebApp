@@ -4,12 +4,12 @@ exports.ResourceGroupPanelViewModel = void 0;
 var tslib_1 = require("tslib");
 var template = require("./ResourceGroupPanel.html");
 var ComponentTemplate_1 = require("XtiShared/ComponentTemplate");
-var SelectableListCardViewModel_1 = require("../SelectableListCardViewModel");
+var SelectableListCardViewModel_1 = require("../../ListCard/SelectableListCardViewModel");
 var ResourceGroupComponentViewModel_1 = require("./ResourceGroupComponentViewModel");
 var CommandOutlineButtonTemplate_1 = require("XtiShared/Templates/CommandOutlineButtonTemplate");
 var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
 var ModCategoryComponentViewModel_1 = require("./ModCategoryComponentViewModel");
-var ListCardViewModel_1 = require("../ListCardViewModel");
+var ListCardViewModel_1 = require("../../ListCard/ListCardViewModel");
 var ResourceGroupPanelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ResourceGroupPanelViewModel, _super);
     function ResourceGroupPanelViewModel() {

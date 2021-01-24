@@ -5,7 +5,8 @@ const entry = {
     home: './Scripts/Internal/Home/MainPage.ts',
     userAdmin: './Scripts/Internal/UserAdmin/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
-    appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts'
+    appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
+    users: './Scripts/Internal/Users/MainPage.ts'
 };
 const exportModule = {
     rules: [

@@ -4,7 +4,7 @@ exports.ResourceListCard = void 0;
 var tslib_1 = require("tslib");
 var Events_1 = require("XtiShared/Events");
 var ResourceResultType_1 = require("../../../Hub/Api/ResourceResultType");
-var SelectableListCard_1 = require("../SelectableListCard");
+var SelectableListCard_1 = require("../../ListCard/SelectableListCard");
 var ResourceListItemViewModel_1 = require("./ResourceListItemViewModel");
 var ResourceListCard = /** @class */ (function (_super) {
     tslib_1.__extends(ResourceListCard, _super);

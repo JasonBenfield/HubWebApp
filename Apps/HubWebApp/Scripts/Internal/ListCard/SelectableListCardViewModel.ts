@@ -13,5 +13,6 @@ export class SelectableListCardViewModel extends ListCardViewModel {
 
     select(item: any) {
         this._itemSelected.invoke(item);
+        return true;
     }
 }

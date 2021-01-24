@@ -8,9 +8,11 @@ namespace HubWebApp.Core
 
         private HubModCategories()
         {
+            Default = ModifierCategoryName.Default;
             Apps = new ModifierCategoryName("Apps");
         }
 
+        public ModifierCategoryName Default { get; }
         public ModifierCategoryName Apps { get; }
     }
 }
