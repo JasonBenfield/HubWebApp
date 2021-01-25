@@ -89,6 +89,15 @@ namespace HubWebApp.Api
                 ),
                 new UserListGroupFactory(services)
             );
+            UserInquiry = new UserInquiryGroup
+            (
+                source.AddGroup
+                (
+                    nameof(UserInquiry),
+                    HubInfo.ModCategories.Default
+                ),
+                new UserInquiryGroupFactory(services)
+            );
         }
 
         public UserAdminGroup UserAdmin { get; }
@@ -98,5 +107,6 @@ namespace HubWebApp.Api
         public ResourceInquiryGroup Resource { get; }
         public ModCategoryGroup ModCategory { get; }
         public UserListGroup Users { get; }
+        public UserInquiryGroup UserInquiry { get; }
     }
 }

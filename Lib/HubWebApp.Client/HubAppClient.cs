@@ -17,6 +17,7 @@ namespace HubWebApp.Client
             Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
             ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, url);
             Users = new UsersGroup(httpClientFactory, xtiToken, url);
+            UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, url);
         }
 
         public const string DefaultVersion = "V21";
@@ -56,6 +57,11 @@ namespace HubWebApp.Client
         }
 
         public UsersGroup Users
+        {
+            get;
+        }
+
+        public UserInquiryGroup UserInquiry
         {
             get;
         }
