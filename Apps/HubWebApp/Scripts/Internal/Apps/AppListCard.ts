@@ -17,6 +17,10 @@ export class AppListCard extends SelectableListCard {
     private readonly _appSelected = new DefaultEvent<IAppModel>(this);
     readonly appSelected = this._appSelected.handler();
 
+    setTitle(title: string) {
+        this.vm.title(title);
+    }
+
     protected onItemSelected(item: AppListItemViewModel) {
         this._appSelected.invoke(item.source);
     }

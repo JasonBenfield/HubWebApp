@@ -16,6 +16,9 @@ var AppListCard = /** @class */ (function (_super) {
         vm.title('Apps');
         return _this;
     }
+    AppListCard.prototype.setTitle = function (title) {
+        this.vm.title(title);
+    };
     AppListCard.prototype.onItemSelected = function (item) {
         this._appSelected.invoke(item.source);
     };

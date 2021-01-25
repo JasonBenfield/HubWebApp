@@ -1,6 +1,6 @@
 ﻿import { ComponentTemplate } from "XtiShared/ComponentTemplate";
 import { ComponentViewModel } from "XtiShared/ComponentViewModel";
-import { SelectableListCardViewModel } from "../ListCard/SelectableListCardViewModel";
+import { SelectableListCardViewModel } from "../../ListCard/SelectableListCardViewModel";
 import * as template from './UserListPanel.html';
 
 export class UserListPanelViewModel extends ComponentViewModel {

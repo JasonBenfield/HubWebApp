@@ -4,7 +4,7 @@ import { ListCardViewModel } from "./ListCardViewModel";
 
 export abstract class ListCard {
     constructor(
-        private readonly vm: ListCardViewModel,
+        protected readonly vm: ListCardViewModel,
         private readonly noItemsFoundMessage
     ) {
     }

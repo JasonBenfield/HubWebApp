@@ -4,7 +4,7 @@ exports.UserListPanelViewModel = void 0;
 var tslib_1 = require("tslib");
 var ComponentTemplate_1 = require("XtiShared/ComponentTemplate");
 var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
-var SelectableListCardViewModel_1 = require("../ListCard/SelectableListCardViewModel");
+var SelectableListCardViewModel_1 = require("../../ListCard/SelectableListCardViewModel");
 var template = require("./UserListPanel.html");
 var UserListPanelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(UserListPanelViewModel, _super);

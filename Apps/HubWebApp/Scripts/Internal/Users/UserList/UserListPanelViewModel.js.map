@@ -1,0 +1,1 @@
+{"version":3,"file":"UserListPanelViewModel.js","sourceRoot":"","sources":["UserListPanelViewModel.ts"],"names":[],"mappings":";;;;AAAA,iEAAgE;AAChE,mEAAkE;AAClE,0FAAyF;AACzF,+CAAiD;AAEjD;IAA4C,kDAAkB;IAC1D;QAAA,YACI,kBAAM,IAAI,qCAAiB,CAAC,iBAAiB,EAAE,QAAQ,CAAC,CAAC,SAC5D;QAEQ,kBAAY,GAAG,IAAI,yDAA2B,EAAE,CAAC;;IAF1D,CAAC;IAGL,6BAAC;AAAD,CAAC,AAND,CAA4C,uCAAkB,GAM7D;AANY,wDAAsB"}

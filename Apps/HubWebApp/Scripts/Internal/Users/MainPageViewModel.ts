@@ -1,8 +1,9 @@
-﻿import ko = require('knockout');
-import { singleton } from 'tsyringe';
+﻿import { singleton } from 'tsyringe';
 import { PageViewModel } from 'XtiShared/PageViewModel';
+import { PanelViewModel } from '../Panel/PanelViewModel';
 import * as template from './MainPage.html';
-import { UserListPanelViewModel } from './UserListPanelViewModel';
+import { UserPanelViewModel } from './User/UserPanelViewModel';
+import { UserListPanelViewModel } from './UserList/UserListPanelViewModel';
 
 @singleton()
 export class MainPageViewModel extends PageViewModel {
@@ -10,5 +11,6 @@ export class MainPageViewModel extends PageViewModel {
         super(template);
     }
 
-    readonly userListPanel = new UserListPanelViewModel();
+    readonly userListPanel = new PanelViewModel(new UserListPanelViewModel());
+    readonly userPanel = new PanelViewModel(new UserPanelViewModel());
 }

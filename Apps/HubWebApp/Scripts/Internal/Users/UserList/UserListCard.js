@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserListCard = void 0;
 var tslib_1 = require("tslib");
 var Events_1 = require("XtiShared/Events");
-var SelectableListCard_1 = require("../ListCard/SelectableListCard");
+var SelectableListCard_1 = require("../../ListCard/SelectableListCard");
 var UserListItemViewModel_1 = require("./UserListItemViewModel");
 var UserListCard = /** @class */ (function (_super) {
     tslib_1.__extends(UserListCard, _super);
