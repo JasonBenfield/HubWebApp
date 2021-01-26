@@ -11,6 +11,7 @@ var DropDownField_1 = require("./DropDownField");
 var ErrorList_1 = require("./ErrorList");
 var FieldCollection_1 = require("./FieldCollection");
 var FormSaveResult_1 = require("./FormSaveResult");
+var HiddenField_1 = require("./HiddenField");
 var NumberInputField_1 = require("./NumberInputField");
 var TextInputField_1 = require("./TextInputField");
 var Form = /** @class */ (function () {
@@ -50,13 +51,13 @@ var Form = /** @class */ (function () {
         return null;
     };
     Form.prototype.addHiddenTextField = function (name, vm) {
-        return this.addField(TextInputField_1.TextInputField.hidden(this.name, name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.name, name, vm));
     };
     Form.prototype.addHiddenNumberField = function (name, vm) {
-        return this.addField(NumberInputField_1.NumberInputField.hidden(this.name, name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.name, name, vm));
     };
     Form.prototype.addHiddenDateField = function (name, vm) {
-        return this.addField(DateInputField_1.DateInputField.hidden(this.name, name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.name, name, vm));
     };
     Form.prototype.addTextInputField = function (name, vm) {
         return this.addField(new TextInputField_1.TextInputField(this.name, name, vm));

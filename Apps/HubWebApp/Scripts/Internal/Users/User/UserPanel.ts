@@ -9,7 +9,8 @@ import { UserPanelViewModel } from "./UserPanelViewModel";
 export class UserPanel {
     public static readonly ResultKeys = {
         backRequested: 'back-requested',
-        appSelected: 'app-selected'
+        appSelected: 'app-selected',
+        editRequested: 'edit-requested'
     };
 
     constructor(
@@ -22,11 +23,18 @@ export class UserPanel {
         this.backCommand.makeLight();
         this.appListCard.setTitle('App Permissions');
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        this.userComponent.editRequested.register(this.onEditRequested.bind(this));
     }
 
     private onAppSelected(app: IAppModel) {
         this.awaitable.resolve(
             new Result(UserPanel.ResultKeys.appSelected, app)
+        );
+    }
+
+    private onEditRequested(userID: number) {
+        this.awaitable.resolve(
+            new Result(UserPanel.ResultKeys.editRequested, userID)
         );
     }
 

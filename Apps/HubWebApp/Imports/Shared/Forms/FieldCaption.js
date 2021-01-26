@@ -19,6 +19,9 @@ var FieldCaption = /** @class */ (function () {
         }
         this.vm.css(css.toString());
     };
+    FieldCaption.prototype.setFor = function (forControl) {
+        this.vm.forControl(forControl);
+    };
     return FieldCaption;
 }());
 exports.FieldCaption = FieldCaption;

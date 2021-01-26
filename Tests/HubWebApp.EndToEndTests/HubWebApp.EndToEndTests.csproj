@@ -16,7 +16,7 @@
     <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.7" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
     <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.4" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210124080511304" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210124224131126" />
   </ItemGroup>
 
   <ItemGroup>

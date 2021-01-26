@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App" Version="1.7.2-dev210124080349073" />
+    <PackageReference Include="XTI_App" Version="1.7.2-dev210124224043143" />
   </ItemGroup>
 
 </Project>

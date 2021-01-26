@@ -43,6 +43,15 @@
     <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js.map">
       <DependentUpon>CurrentVersionComponentViewModel.js.map</DependentUpon>
     </None>
+    <None Update="Scripts\Internal\Users\UserEdit\UserPanel - Copy.js">
+      <DependentUpon>UserEditPanel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\Users\UserEdit\UserPanelViewModel - Copy.js">
+      <DependentUpon>UserEditPanelViewModel.js</DependentUpon>
+    </None>
+    <None Update="Scripts\Internal\Users\UserEdit\UserPanelViewModel - Copy.js.map">
+      <DependentUpon>UserEditPanelViewModel.js.map</DependentUpon>
+    </None>
     <None Update="Scripts\Internal\Users\User\UserPanel - Copy.js">
       <DependentUpon>UserPanel.js</DependentUpon>
     </None>

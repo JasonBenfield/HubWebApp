@@ -1,5 +1,4 @@
-﻿<!-- ko if: isVisible -->
-<div data-bind="class: css">
+﻿<div data-bind="class: css, visible: isVisible">
     <!-- ko if: isEnabled -->
     <!-- ko component: { name: inputComponentName, params: $data } --><!-- /ko -->
     <!-- /ko -->
@@ -7,4 +6,3 @@
     <div data-bind="text: value"></div>
     <!-- /ko -->
 </div>
-<!-- /ko -->

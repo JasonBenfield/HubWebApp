@@ -7,5 +7,6 @@ namespace HubWebApp.Core
         public static HubRoles Instance = new HubRoles();
 
         public AppRoleName Admin { get; } = new AppRoleName(nameof(Admin));
+        public AppRoleName EditUser { get; } = new AppRoleName(nameof(EditUser));
     }
 }

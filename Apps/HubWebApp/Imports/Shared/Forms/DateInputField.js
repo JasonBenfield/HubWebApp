@@ -14,13 +14,6 @@ var DateInputField = /** @class */ (function (_super) {
         _this.inputVM.value.type('date');
         return _this;
     }
-    DateInputField.hidden = function (prefix, name, vm, viewValue) {
-        if (viewValue === void 0) { viewValue = new TextToDateViewValue_1.TextToDateViewValue(); }
-        var field = new DateInputField(prefix, name, vm, viewValue);
-        vm.value.type('hidden');
-        return field;
-    };
-    ;
     DateInputField.prototype.setFocus = function () { this.inputVM.value.hasFocus(true); };
     DateInputField.prototype.blur = function () { this.inputVM.value.hasFocus(false); };
     DateInputField.prototype.setValue = function (value) { _super.prototype.setValue.call(this, value); };

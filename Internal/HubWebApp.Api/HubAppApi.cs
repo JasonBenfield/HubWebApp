@@ -22,26 +22,18 @@ namespace HubWebApp.Api
                     HubInfo.AppKey,
                     user,
                     ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(HubRoles.Instance.Admin)
+                        .WithAllowed(HubRoles.Instance.Admin)
                 )
             )
         {
             UserAdmin = new UserAdminGroup
             (
-                source.AddGroup
-                (
-                    nameof(UserAdmin),
-                    HubInfo.ModCategories.Default,
-                    Access
-                ),
+                source.AddGroup(nameof(UserAdmin)),
                 new UserAdminActionFactory(services)
             );
             Apps = new AppListGroup
             (
-                source.AddGroup
-                (
-                    nameof(Apps)
-                ),
+                source.AddGroup(nameof(Apps)),
                 new AppGroupActionFactory(services)
             );
             App = new AppInquiryGroup
@@ -82,21 +74,22 @@ namespace HubWebApp.Api
             );
             Users = new UserListGroup
             (
-                source.AddGroup
-                (
-                    nameof(Users),
-                    HubInfo.ModCategories.Default
-                ),
+                source.AddGroup(nameof(Users)),
                 new UserListGroupFactory(services)
             );
             UserInquiry = new UserInquiryGroup
             (
+                source.AddGroup(nameof(UserInquiry)),
+                new UserInquiryGroupFactory(services)
+            );
+            UserMaintenance = new UserMaintenanceGroup
+            (
                 source.AddGroup
                 (
-                    nameof(UserInquiry),
-                    HubInfo.ModCategories.Default
+                    nameof(UserMaintenance),
+                    Access.WithAllowed(HubInfo.Roles.EditUser)
                 ),
-                new UserInquiryGroupFactory(services)
+                new UserMaintenanceGroupFactory(services)
             );
         }
 
@@ -108,5 +101,6 @@ namespace HubWebApp.Api
         public ModCategoryGroup ModCategory { get; }
         public UserListGroup Users { get; }
         public UserInquiryGroup UserInquiry { get; }
+        public UserMaintenanceGroup UserMaintenance { get; }
     }
 }

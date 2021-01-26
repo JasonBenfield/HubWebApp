@@ -6,6 +6,7 @@ import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { UserListPanel } from './UserList/UserListPanel';
 import { SingleActivePanel } from '../Panel/SingleActivePanel';
 import { UserPanel } from './User/UserPanel';
+import { UserEditPanel } from './UserEdit/UserEditPanel';
 
 @singleton()
 class MainPage {
@@ -25,6 +26,10 @@ class MainPage {
         this.vm.userPanel,
         vm => new UserPanel(vm, this.hubApi)
     );
+    private readonly userEditPanel = this.panels.add(
+        this.vm.userEditPanel,
+        vm => new UserEditPanel(vm, this.hubApi)
+    );
 
     private async activateUserListPanel() {
         this.panels.activate(this.userListPanel);
@@ -43,6 +48,20 @@ class MainPage {
         let result = await this.userPanel.content.start();
         if (result.key === UserPanel.ResultKeys.backRequested) {
             this.activateUserListPanel();
+        }
+        else if (result.key === UserPanel.ResultKeys.editRequested) {
+            this.activateUserEditPanel(userID);
+        }
+    }
+
+    private async activateUserEditPanel(userID: number) {
+        this.panels.activate(this.userEditPanel);
+        this.userEditPanel.content.setUserID(userID);
+        this.userEditPanel.content.refresh();
+        let result = await this.userEditPanel.content.start();
+        if (result.key === UserEditPanel.ResultKeys.canceled ||
+            result.key === UserEditPanel.ResultKeys.saved) {
+            this.activateUserPanel(userID);
         }
     }
 }

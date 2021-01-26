@@ -6,11 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using XTI_App;
 
 namespace HubWebApp.Tests
 {
@@ -33,7 +29,7 @@ namespace HubWebApp.Tests
             Assert.That
             (
                 result.Data.Url,
-                Is.EqualTo($"/Hub/Current/AppDashboard/Index/{hubAppModifier.ModKey().Value}").IgnoreCase,
+                Is.EqualTo($"/Hub/Current/App/Index/{hubAppModifier.ModKey().Value}").IgnoreCase,
                 "Should add app modifier when redirecting to app"
             );
         }

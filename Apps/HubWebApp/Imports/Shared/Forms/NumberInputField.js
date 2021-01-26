@@ -14,13 +14,6 @@ var NumberInputField = /** @class */ (function (_super) {
         _this.inputVM.value.type('text');
         return _this;
     }
-    NumberInputField.hidden = function (prefix, name, vm, viewValue) {
-        if (viewValue === void 0) { viewValue = new TextToNumberViewValue_1.TextToNumberViewValue(); }
-        var field = new NumberInputField(prefix, name, vm, viewValue);
-        vm.value.type('hidden');
-        return field;
-    };
-    ;
     NumberInputField.prototype.setFocus = function () { this.inputVM.value.hasFocus(true); };
     NumberInputField.prototype.blur = function () { this.inputVM.value.hasFocus(false); };
     NumberInputField.prototype.setValue = function (value) { _super.prototype.setValue.call(this, value); };
