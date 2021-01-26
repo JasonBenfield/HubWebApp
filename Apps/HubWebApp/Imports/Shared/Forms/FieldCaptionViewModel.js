@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ko = require("knockout");
 var FieldCaptionViewModel = /** @class */ (function () {
     function FieldCaptionViewModel() {
+        this.forControl = ko.observable('');
         this.caption = ko.observable('');
         this.css = ko.observable('');
         this.isVisible = ko.observable(true);

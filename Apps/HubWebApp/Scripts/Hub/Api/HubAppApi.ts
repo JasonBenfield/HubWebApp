@@ -11,6 +11,7 @@ import { ResourceGroup } from "./ResourceGroup";
 import { ModCategoryGroup } from "./ModCategoryGroup";
 import { UsersGroup } from "./UsersGroup";
 import { UserInquiryGroup } from "./UserInquiryGroup";
+import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -27,6 +28,7 @@ export class HubAppApi extends AppApi {
 		this.ModCategory = this.addGroup((evts, resourceUrl) => new ModCategoryGroup(evts, resourceUrl));
 		this.Users = this.addGroup((evts, resourceUrl) => new UsersGroup(evts, resourceUrl));
 		this.UserInquiry = this.addGroup((evts, resourceUrl) => new UserInquiryGroup(evts, resourceUrl));
+		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
@@ -38,4 +40,5 @@ export class HubAppApi extends AppApi {
 	readonly ModCategory: ModCategoryGroup;
 	readonly Users: UsersGroup;
 	readonly UserInquiry: UserInquiryGroup;
+	readonly UserMaintenance: UserMaintenanceGroup;
 }

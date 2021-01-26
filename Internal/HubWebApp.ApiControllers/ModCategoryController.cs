@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App;
 using HubWebApp.Api;
+using HubWebApp.UserApi;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 

@@ -7,6 +7,7 @@ var ComponentViewModel_1 = require("XtiShared/ComponentViewModel");
 var Alert_1 = require("XtiShared/Alert");
 var template = require("./UserComponent.html");
 var ko = require("knockout");
+var CommandOutlineButtonTemplate_1 = require("XtiShared/Templates/CommandOutlineButtonTemplate");
 var UserComponentViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(UserComponentViewModel, _super);
     function UserComponentViewModel() {
@@ -15,6 +16,7 @@ var UserComponentViewModel = /** @class */ (function (_super) {
         _this.userName = ko.observable('');
         _this.name = ko.observable('');
         _this.email = ko.observable('');
+        _this.editCommand = CommandOutlineButtonTemplate_1.createCommandOutlineButtonViewModel();
         return _this;
     }
     return UserComponentViewModel;

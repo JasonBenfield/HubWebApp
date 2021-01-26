@@ -3,6 +3,7 @@ import { ComponentViewModel } from "XtiShared/ComponentViewModel";
 import { AlertViewModel } from "XtiShared/Alert";
 import * as template from './UserComponent.html';
 import * as ko from 'knockout';
+import { createCommandOutlineButtonViewModel } from "XtiShared/Templates/CommandOutlineButtonTemplate";
 
 export class UserComponentViewModel extends ComponentViewModel {
     constructor() {
@@ -13,4 +14,5 @@ export class UserComponentViewModel extends ComponentViewModel {
     readonly userName = ko.observable('');
     readonly name = ko.observable('');
     readonly email = ko.observable('');
+    readonly editCommand = createCommandOutlineButtonViewModel();
 }

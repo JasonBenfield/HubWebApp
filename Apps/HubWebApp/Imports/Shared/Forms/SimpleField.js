@@ -10,7 +10,11 @@ var SimpleField = /** @class */ (function () {
         this.constraints = new ConstraintCollection_1.ConstraintCollection();
         this.caption = new FieldCaption_1.FieldCaption(vm.caption);
         this.value = new FieldValue_1.FieldValue(prefix, name, vm.value, fieldValue);
+        this.caption.setFor(this.getName());
     }
+    SimpleField.prototype.setCaption = function (caption) {
+        this.caption.setCaption(caption);
+    };
     SimpleField.prototype.getName = function () {
         return this.value.getName();
     };
@@ -50,9 +54,11 @@ var SimpleField = /** @class */ (function () {
         errors.merge(fieldErrors);
     };
     SimpleField.prototype.import = function (values) {
-        var value = values[this.getName()];
-        if (value !== undefined) {
-            this.value.setValue(value);
+        if (values) {
+            var value = values[this.getName()];
+            if (value !== undefined) {
+                this.value.setValue(value);
+            }
         }
     };
     SimpleField.prototype.export = function (values) {

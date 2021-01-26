@@ -14,13 +14,6 @@ var TextInputField = /** @class */ (function (_super) {
         _this.inputVM = vm;
         return _this;
     }
-    TextInputField.hidden = function (prefix, name, vm, viewValue) {
-        if (viewValue === void 0) { viewValue = new FieldViewValue_1.FieldViewValue(); }
-        var field = new TextInputField(prefix, name, vm, viewValue);
-        vm.value.type('hidden');
-        return field;
-    };
-    ;
     TextInputField.prototype.protect = function () {
         this.inputVM.value.type('password');
     };

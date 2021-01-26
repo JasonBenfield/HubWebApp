@@ -8,6 +8,7 @@ export declare class SimpleField implements IField {
     constructor(prefix: string, name: string, vm: IFieldViewModel, fieldValue: FieldViewValue);
     readonly caption: FieldCaption;
     readonly value: FieldValue;
+    setCaption(caption: string): void;
     getName(): string;
     getCaption(): string;
     getField(name: string): this;

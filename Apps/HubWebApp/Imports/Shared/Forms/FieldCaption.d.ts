@@ -6,4 +6,5 @@ export declare class FieldCaption {
     setCaption(caption: string): void;
     getCaption(): string;
     setColumns(columns: ColumnCss): void;
+    setFor(forControl: string): void;
 }

@@ -7,6 +7,7 @@ var PageViewModel_1 = require("XtiShared/PageViewModel");
 var PanelViewModel_1 = require("../Panel/PanelViewModel");
 var template = require("./MainPage.html");
 var UserPanelViewModel_1 = require("./User/UserPanelViewModel");
+var UserEditPanelViewModel_1 = require("./UserEdit/UserEditPanelViewModel");
 var UserListPanelViewModel_1 = require("./UserList/UserListPanelViewModel");
 var MainPageViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(MainPageViewModel, _super);
@@ -14,6 +15,7 @@ var MainPageViewModel = /** @class */ (function (_super) {
         var _this = _super.call(this, template) || this;
         _this.userListPanel = new PanelViewModel_1.PanelViewModel(new UserListPanelViewModel_1.UserListPanelViewModel());
         _this.userPanel = new PanelViewModel_1.PanelViewModel(new UserPanelViewModel_1.UserPanelViewModel());
+        _this.userEditPanel = new PanelViewModel_1.PanelViewModel(new UserEditPanelViewModel_1.UserEditPanelViewModel());
         return _this;
     }
     MainPageViewModel = tslib_1.__decorate([

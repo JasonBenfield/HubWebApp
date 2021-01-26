@@ -20,9 +20,13 @@ var UserPanel = /** @class */ (function () {
         this.backCommand.makeLight();
         this.appListCard.setTitle('App Permissions');
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        this.userComponent.editRequested.register(this.onEditRequested.bind(this));
     }
     UserPanel.prototype.onAppSelected = function (app) {
         this.awaitable.resolve(new Result_1.Result(UserPanel.ResultKeys.appSelected, app));
+    };
+    UserPanel.prototype.onEditRequested = function (userID) {
+        this.awaitable.resolve(new Result_1.Result(UserPanel.ResultKeys.editRequested, userID));
     };
     UserPanel.prototype.setUserID = function (userID) {
         this.userComponent.setUserID(userID);
@@ -42,7 +46,8 @@ var UserPanel = /** @class */ (function () {
     };
     UserPanel.ResultKeys = {
         backRequested: 'back-requested',
-        appSelected: 'app-selected'
+        appSelected: 'app-selected',
+        editRequested: 'edit-requested'
     };
     return UserPanel;
 }());

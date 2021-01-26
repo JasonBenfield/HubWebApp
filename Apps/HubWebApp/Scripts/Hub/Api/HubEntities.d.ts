@@ -88,6 +88,8 @@ interface IAppUserModel {
 	Name: string;
 	Email: string;
 }
+interface IEmptyActionResult {
+}
 interface IAppType {
 	Value: number;
 	DisplayText: string;

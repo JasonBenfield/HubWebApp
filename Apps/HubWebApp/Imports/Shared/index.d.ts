@@ -117,6 +117,7 @@ interface IConstraint {
 }
 
 interface IFieldCaptionViewModel {
+    readonly forControl: ko.Observable<string>;
     readonly caption: ko.Observable<string>;
     readonly css: ko.Observable<string>;
     readonly isVisible: ko.Observable<boolean>;

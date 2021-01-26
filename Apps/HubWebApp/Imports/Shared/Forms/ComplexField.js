@@ -6,6 +6,7 @@ var FieldCaption_1 = require("./FieldCaption");
 var FieldCollection_1 = require("./FieldCollection");
 var FieldValue_1 = require("./FieldValue");
 var FieldViewValue_1 = require("./FieldViewValue");
+var HiddenField_1 = require("./HiddenField");
 var NumberInputField_1 = require("./NumberInputField");
 var TextInputField_1 = require("./TextInputField");
 var ComplexField = /** @class */ (function () {
@@ -16,6 +17,9 @@ var ComplexField = /** @class */ (function () {
     }
     ComplexField.prototype.getName = function () {
         return this.value.getName();
+    };
+    ComplexField.prototype.setCaption = function (caption) {
+        this.caption.setCaption(caption);
     };
     ComplexField.prototype.getCaption = function () {
         return this.caption.getCaption();
@@ -35,13 +39,13 @@ var ComplexField = /** @class */ (function () {
         this.value.setColumns(valueColumns);
     };
     ComplexField.prototype.addHiddenTextField = function (name, vm) {
-        return this.addField(TextInputField_1.TextInputField.hidden(this.getName(), name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.getName(), name, vm));
     };
     ComplexField.prototype.addHiddenNumberField = function (name, vm) {
-        return this.addField(NumberInputField_1.NumberInputField.hidden(this.getName(), name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.getName(), name, vm));
     };
     ComplexField.prototype.addHiddenDateField = function (name, vm) {
-        return this.addField(DateInputField_1.DateInputField.hidden(this.getName(), name, vm));
+        return this.addField(new HiddenField_1.HiddenField(this.getName(), name, vm));
     };
     ComplexField.prototype.addTextInputField = function (name, vm) {
         return this.addField(new TextInputField_1.TextInputField(this.getName(), name, vm));
@@ -65,7 +69,9 @@ var ComplexField = /** @class */ (function () {
         this.fields.validate(errors);
     };
     ComplexField.prototype.import = function (values) {
-        this.fields.import(values);
+        if (values) {
+            this.fields.import(values);
+        }
     };
     ComplexField.prototype.export = function (values) {
         this.fields.export(values);
