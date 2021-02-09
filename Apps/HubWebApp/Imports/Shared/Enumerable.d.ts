@@ -30,3 +30,8 @@ export declare class Any<T> {
     private readonly source;
     value(): boolean;
 }
+export declare class EnumerableRange implements IEnumerable<number> {
+    constructor(start: number, count: number);
+    private readonly source;
+    value(): number[];
+}

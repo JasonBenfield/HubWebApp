@@ -1,18 +1,27 @@
 ﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Result } from "../../../../Imports/Shared/Result";
+import { Block } from "XtiShared/Html/Block";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { FlexColumn } from "XtiShared/Html/FlexColumn";
+import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
+import { Result } from "XtiShared/Result";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { UserListCard } from "./UserListCard";
-import { UserListPanelViewModel } from "./UserListPanelViewModel";
 
-export class UserListPanel {
+export class UserListPanel extends Block {
     public static readonly ResultKeys = {
         userSelected: 'user-selected'
     };
 
     constructor(
-        private readonly vm: UserListPanelViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
+        super(vm);
+        this.height100();
+        this.setName(UserListPanel.name);
+        let flexColumn = this.addContent(new FlexColumn());
+        let flexFill = flexColumn.addContent(new FlexColumnFill());
+        this.userListCard = flexFill.container.addContent(new UserListCard(this.hubApi));
         this.userListCard.userSelected.register(this.onUserSelected.bind(this));
     }
 
@@ -22,7 +31,7 @@ export class UserListPanel {
         );
     }
 
-    private readonly userListCard = new UserListCard(this.vm.userListCard, this.hubApi);
+    private readonly userListCard: UserListCard;
 
     refresh() {
         return this.userListCard.refresh();

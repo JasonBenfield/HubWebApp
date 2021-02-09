@@ -1,0 +1,16 @@
+﻿<!-- ko if: isVisible -->
+<button data-bind="
+        attr: { 
+            type: type, 
+            'class': css, 
+            title: title, 
+            id: id, 
+            name: name
+        }, 
+        click: click,
+        enable: isEnabled">
+    <!-- ko with: content -->
+    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    <!-- /ko -->
+</button>
+<!-- /ko -->

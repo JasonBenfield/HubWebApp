@@ -2,15 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EditUserForm = void 0;
 var tslib_1 = require("tslib");
-var Form_1 = require("XtiShared/Forms/Form");
+// Generated code
+var BaseForm_1 = require("XtiShared/Forms/BaseForm");
+var FormComponentViewModel_1 = require("XtiShared/Html/FormComponentViewModel");
 var EditUserForm = /** @class */ (function (_super) {
     tslib_1.__extends(EditUserForm, _super);
     function EditUserForm(vm) {
-        var _this = _super.call(this, 'EditUserForm') || this;
-        _this.vm = vm;
-        _this.UserID = _this.addHiddenNumberField('UserID', _this.vm.UserID);
-        _this.PersonName = _this.addTextInputField('PersonName', _this.vm.PersonName);
-        _this.Email = _this.addTextInputField('Email', _this.vm.Email);
+        if (vm === void 0) { vm = new FormComponentViewModel_1.FormComponentViewModel(); }
+        var _this = _super.call(this, 'EditUserForm', vm) || this;
+        _this.UserID = _this.addHiddenNumberFormGroup('UserID');
+        _this.PersonName = _this.addTextInputFormGroup('PersonName');
+        _this.Email = _this.addTextInputFormGroup('Email');
         _this.UserID.setCaption('User ID');
         _this.UserID.constraints.mustNotBeNull();
         _this.PersonName.setCaption('Person Name');
@@ -18,6 +20,6 @@ var EditUserForm = /** @class */ (function (_super) {
         return _this;
     }
     return EditUserForm;
-}(Form_1.Form));
+}(BaseForm_1.BaseForm));
 exports.EditUserForm = EditUserForm;
 //# sourceMappingURL=EditUserForm.js.map

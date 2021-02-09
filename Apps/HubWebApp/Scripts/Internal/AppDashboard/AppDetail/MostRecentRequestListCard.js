@@ -2,26 +2,63 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MostRecentRequestListCard = void 0;
 var tslib_1 = require("tslib");
-var ListCard_1 = require("../../ListCard/ListCard");
+var Card_1 = require("XtiShared/Card/Card");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var RequestExpandedListItem_1 = require("../RequestExpandedListItem");
-var RequestExpandedListItemViewModel_1 = require("../RequestExpandedListItemViewModel");
 var MostRecentRequestListCard = /** @class */ (function (_super) {
     tslib_1.__extends(MostRecentRequestListCard, _super);
-    function MostRecentRequestListCard(vm, hubApi) {
-        var _this = _super.call(this, vm, 'No Requests were Found') || this;
+    function MostRecentRequestListCard(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
         _this.hubApi = hubApi;
-        vm.title('Most Recent Requests');
+        _this.addCardTitleHeader('Most Recent Requests');
+        _this.alert = _this.addCardAlert().alert;
+        _this.requests = _this.addButtonListGroup();
         return _this;
     }
-    MostRecentRequestListCard.prototype.createItem = function (request) {
-        var item = new RequestExpandedListItemViewModel_1.RequestExpandedListItemViewModel();
-        new RequestExpandedListItem_1.RequestExpandedListItem(item, request);
-        return item;
+    MostRecentRequestListCard.prototype.refresh = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var requests;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getRequests()];
+                    case 1:
+                        requests = _a.sent();
+                        this.requests.setItems(requests, function (sourceItem, listItem) {
+                            listItem.addContent(new RequestExpandedListItem_1.RequestExpandedListItem(sourceItem));
+                        });
+                        if (requests.length === 0) {
+                            this.alert.danger('No Requests were Found');
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    MostRecentRequestListCard.prototype.getSourceItems = function () {
-        return this.hubApi.App.GetMostRecentRequests(10);
+    MostRecentRequestListCard.prototype.getRequests = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var requests;
+            var _this = this;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.hubApi.App.GetMostRecentRequests(10)];
+                                    case 1:
+                                        requests = _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, requests];
+                }
+            });
+        });
     };
     return MostRecentRequestListCard;
-}(ListCard_1.ListCard));
+}(Card_1.Card));
 exports.MostRecentRequestListCard = MostRecentRequestListCard;
 //# sourceMappingURL=MostRecentRequestListCard.js.map

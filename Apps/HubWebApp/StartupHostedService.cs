@@ -1,9 +1,10 @@
-﻿using HubWebApp.Api;
+﻿using HubWebAppApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using XTI_App;
 
 namespace HubWebApp
 {
@@ -20,7 +21,7 @@ namespace HubWebApp
         {
             using var scope = sp.CreateScope();
             var hubSetup = scope.ServiceProvider.GetService<HubSetup>();
-            await hubSetup.Run();
+            await hubSetup.Run(AppVersionKey.Current);
             await StopAsync(cancellationToken);
         }
 

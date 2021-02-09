@@ -11,11 +11,12 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210124224131126" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210207205608699" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
+    <ProjectReference Include="..\..\Internal\HubWebAppApi\HubWebAppApi.csproj" />
   </ItemGroup>
 
 </Project>

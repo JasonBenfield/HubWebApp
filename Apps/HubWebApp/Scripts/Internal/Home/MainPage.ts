@@ -1,12 +1,8 @@
-﻿import 'reflect-metadata';
-import { MainPageViewModel } from "./MainPageViewModel";
-import { startup } from 'xtistart';
-import { singleton } from 'tsyringe';
+﻿import { Startup } from 'xtistart';
+import { PageFrame } from 'XtiShared/PageFrame';
 
-@singleton()
 class MainPage {
-    constructor(private readonly viewModel: MainPageViewModel) {
-        this.viewModel.telephoneNumber('');
+    constructor(private readonly page: PageFrame) {
     }
 }
-startup(MainPageViewModel, MainPage);
+new MainPage(new Startup().build());

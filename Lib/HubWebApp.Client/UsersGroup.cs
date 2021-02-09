@@ -13,5 +13,6 @@ namespace HubWebApp.Client
         }
 
         public Task<AppUserModel[]> GetUsers() => Post<AppUserModel[], EmptyRequest>("GetUsers", "", new EmptyRequest());
+        public Task<int> AddUser(AddUserModel model) => Post<int, AddUserModel>("AddUser", "", model);
     }
 }

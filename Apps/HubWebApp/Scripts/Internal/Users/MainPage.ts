@@ -1,34 +1,28 @@
-﻿import 'reflect-metadata';
-import { startup } from 'xtistart';
-import { singleton } from 'tsyringe';
-import { MainPageViewModel } from './MainPageViewModel';
+﻿import { Startup } from 'xtistart';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { UserListPanel } from './UserList/UserListPanel';
 import { SingleActivePanel } from '../Panel/SingleActivePanel';
 import { UserPanel } from './User/UserPanel';
 import { UserEditPanel } from './UserEdit/UserEditPanel';
+import { PageFrame } from 'XtiShared/PageFrame';
+import { PaddingCss } from 'XtiShared/PaddingCss';
 
-@singleton()
 class MainPage {
-    constructor(
-        private readonly vm: MainPageViewModel,
-        private readonly hubApi: HubAppApi
-    ) {
+    constructor(private readonly page: PageFrame) {
+        this.page.content.setPadding(PaddingCss.top(3));
         this.activateUserListPanel();
     }
 
+    private readonly hubApi = this.page.api(HubAppApi);
     private readonly panels = new SingleActivePanel();
-    private readonly userListPanel = this.panels.add(
-        this.vm.userListPanel,
-        vm => new UserListPanel(vm, this.hubApi)
+    private readonly userListPanel = this.page.addContent(
+        this.panels.add(new UserListPanel(this.hubApi))
     );
-    private readonly userPanel = this.panels.add(
-        this.vm.userPanel,
-        vm => new UserPanel(vm, this.hubApi)
+    private readonly userPanel = this.page.addContent(
+        this.panels.add(new UserPanel(this.hubApi))
     );
-    private readonly userEditPanel = this.panels.add(
-        this.vm.userEditPanel,
-        vm => new UserEditPanel(vm, this.hubApi)
+    private readonly userEditPanel = this.page.addContent(
+        this.panels.add(new UserEditPanel(this.hubApi))
     );
 
     private async activateUserListPanel() {
@@ -52,6 +46,10 @@ class MainPage {
         else if (result.key === UserPanel.ResultKeys.editRequested) {
             this.activateUserEditPanel(userID);
         }
+        else if (result.key === UserPanel.ResultKeys.appSelected) {
+            let app: IAppModel = result.data;
+            this.hubApi.UserInquiry.RedirectToAppUser.open({ UserID: userID, AppID: app.ID });
+        }
     }
 
     private async activateUserEditPanel(userID: number) {
@@ -65,4 +63,4 @@ class MainPage {
         }
     }
 }
-startup(MainPageViewModel, MainPage);
+new MainPage(new Startup().build());

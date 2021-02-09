@@ -1,33 +1,54 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = require("tslib");
 var ko = require("knockout");
-var Command_1 = require("./Command");
 var _ = require("lodash");
+var DelayedAction_1 = require("./DelayedAction");
 var SubmitBindingHandler = /** @class */ (function () {
     function SubmitBindingHandler() {
         this.init = this.init.bind(this);
     }
-    SubmitBindingHandler.prototype.init = function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-        ko.utils.registerEventHandler(element, "submit", function (event) {
-            if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-            }
-            _.delay(function () {
-                var unwrapped = ko.utils.unwrapObservable(valueAccessor());
-                if (unwrapped instanceof Command_1.CommandViewModel) {
-                    unwrapped.requestExecute.call(unwrapped, element);
+    SubmitBindingHandler.prototype.init = function (element, valueAccessor) {
+        var _this = this;
+        ko.utils.registerEventHandler(element, "submit", function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+            var unwrapped, model, result;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        unwrapped = ko.utils.unwrapObservable(valueAccessor());
+                        if (!unwrapped.requestExecute) return [3 /*break*/, 2];
+                        if (document.activeElement instanceof HTMLElement) {
+                            document.activeElement.blur();
+                        }
+                        return [4 /*yield*/, DelayedAction_1.DelayedAction.delay(300)];
+                    case 1:
+                        _a.sent();
+                        unwrapped.requestExecute.call(unwrapped, element);
+                        if (event.preventDefault) {
+                            event.preventDefault();
+                        }
+                        else {
+                            event.returnValue = false;
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
+                        if (_.isFunction(unwrapped)) {
+                            model = ko.dataFor(element);
+                            result = unwrapped.call(model, element);
+                            if (result !== true) {
+                                if (event.preventDefault) {
+                                    event.preventDefault();
+                                }
+                                else {
+                                    event.returnValue = false;
+                                }
+                            }
+                        }
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
-                else if (_.isFunction(unwrapped)) {
-                    unwrapped.call(unwrapped, element);
-                }
-            }, 300);
-            if (event.preventDefault) {
-                event.preventDefault();
-            }
-            else {
-                event.returnValue = false;
-            }
-        });
+            });
+        }); });
     };
     return SubmitBindingHandler;
 }());

@@ -16,7 +16,7 @@ var LoginComponentViewModel = /** @class */ (function () {
         this.loginCommand = CommandOutlineButtonTemplate_1.createCommandOutlineButtonViewModel();
         this.offscreenSubmit = new OffscreenSubmitViewModel_1.OffscreenSubmitViewModel();
         new ComponentTemplate_1.ComponentTemplate(this.componentName(), template).register();
-        new ComponentTemplateAsync_1.ComponentTemplateAsync(this.verifyLoginForm.componentName(), authApi.Auth.VerifyLoginForm.getUrl({}).getUrl()).register();
+        new ComponentTemplateAsync_1.ComponentTemplateAsync(this.verifyLoginForm.componentName(), authApi.Auth.VerifyLoginForm.getUrl({}).value()).register();
     }
     return LoginComponentViewModel;
 }());

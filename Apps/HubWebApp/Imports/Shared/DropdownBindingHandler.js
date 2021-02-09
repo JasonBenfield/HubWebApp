@@ -6,15 +6,22 @@ var $ = require("jquery");
 var DropdownBindingHandler = /** @class */ (function () {
     function DropdownBindingHandler() {
     }
-    DropdownBindingHandler.prototype.init = function (element, valueAccessor) {
+    DropdownBindingHandler.prototype.init = function (element) {
+        var $el = $(element);
+        var $parentEl = $el.parent();
+        var $menuEl = $parentEl.find('ul');
+        if (!$menuEl.hasClass('dropdown-menu')) {
+            $menuEl.addClass('dropdown-menu');
+        }
         var dropdown = new bootstrap_1.Dropdown(element);
-        $(element).data('bs.dropdown', dropdown);
+        $el.data('bs.dropdown', dropdown);
         ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
             var d = dropdown;
             if (d) {
                 d.dispose();
             }
             dropdown = null;
+            $el = null;
         });
     };
     return DropdownBindingHandler;

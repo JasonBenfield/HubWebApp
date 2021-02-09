@@ -1,5 +1,4 @@
-﻿using HubWebApp.Api;
-using HubWebApp.Core;
+﻿using HubWebAppApi;
 using HubWebApp.Fakes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +17,7 @@ namespace HubWebApp.Tests
         {
             var services = setup();
             var hubSetup = services.GetService<HubSetup>();
-            await hubSetup.Run();
+            await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var unknownApp = await factory.Apps().App(AppKey.Unknown);
             Assert.That(unknownApp.ID.IsValid(), Is.True, "Should add unknown app");
@@ -29,7 +28,7 @@ namespace HubWebApp.Tests
         {
             var services = setup();
             var hubSetup = services.GetService<HubSetup>();
-            await hubSetup.Run();
+            await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
             Assert.That(hubApp.Key(), Is.EqualTo(HubInfo.AppKey), "Should add hub app");
@@ -40,7 +39,7 @@ namespace HubWebApp.Tests
         {
             var services = setup();
             var hubSetup = services.GetService<HubSetup>();
-            await hubSetup.Run();
+            await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
             var modCategoryName = HubInfo.ModCategories.Apps;
@@ -53,7 +52,7 @@ namespace HubWebApp.Tests
         {
             var services = setup();
             var hubSetup = services.GetService<HubSetup>();
-            await hubSetup.Run();
+            await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
             var modCategoryName = HubInfo.ModCategories.Apps;

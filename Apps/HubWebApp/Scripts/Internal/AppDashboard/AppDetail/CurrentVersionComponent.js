@@ -2,12 +2,27 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurrentVersionComponent = void 0;
 var tslib_1 = require("tslib");
-var Alert_1 = require("XtiShared/Alert");
-var CurrentVersionComponent = /** @class */ (function () {
-    function CurrentVersionComponent(vm, hubApi) {
-        this.vm = vm;
-        this.hubApi = hubApi;
-        this.alert = new Alert_1.Alert(this.vm.alert);
+var Card_1 = require("XtiShared/Card/Card");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var TextSpan_1 = require("XtiShared/Html/TextSpan");
+var Row_1 = require("XtiShared/Grid/Row");
+var ColumnCss_1 = require("XtiShared/ColumnCss");
+var CurrentVersionComponent = /** @class */ (function (_super) {
+    tslib_1.__extends(CurrentVersionComponent, _super);
+    function CurrentVersionComponent(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.hubApi = hubApi;
+        _this.addCardTitleHeader('Version');
+        _this.alert = _this.addCardAlert().alert;
+        var row = _this.addCardBody()
+            .addContent(new Row_1.Row());
+        _this.versionKey = row.addColumn()
+            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
+            .addContent(new TextSpan_1.TextSpan());
+        _this.version = row.addColumn()
+            .addContent(new TextSpan_1.TextSpan());
+        return _this;
     }
     CurrentVersionComponent.prototype.refresh = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -17,8 +32,8 @@ var CurrentVersionComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getCurrentVersion()];
                     case 1:
                         currentVersion = _a.sent();
-                        this.vm.versionKey(currentVersion.VersionKey);
-                        this.vm.version(currentVersion.Major + "." + currentVersion.Minor + "." + currentVersion.Patch);
+                        this.versionKey.setText(currentVersion.VersionKey);
+                        this.version.setText(currentVersion.Major + "." + currentVersion.Minor + "." + currentVersion.Patch);
                         return [2 /*return*/];
                 }
             });
@@ -48,6 +63,6 @@ var CurrentVersionComponent = /** @class */ (function () {
         });
     };
     return CurrentVersionComponent;
-}());
+}(Card_1.Card));
 exports.CurrentVersionComponent = CurrentVersionComponent;
 //# sourceMappingURL=CurrentVersionComponent.js.map

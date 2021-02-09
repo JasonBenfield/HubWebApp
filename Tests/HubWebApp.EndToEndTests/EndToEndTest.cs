@@ -28,12 +28,12 @@ namespace HubWebApp.EndToEndTests
                 UserName = "TestUser1",
                 Password = "Password12345"
             };
-            await input.HubClient.UserAdmin.AddUser(addUserModel);
+            await input.HubClient.Users.AddUser(addUserModel);
             input.HubClient.ResetToken();
             input.TestCredentials.Source = new SimpleCredentials(new CredentialValue(addUserModel.UserName, addUserModel.Password));
             var ex = Assert.ThrowsAsync<AppClientException>(async () =>
             {
-                await input.HubClient.UserAdmin.AddUser(new AddUserModel
+                await input.HubClient.Users.AddUser(new AddUserModel
                 {
                     UserName = "TestUser2",
                     Password = "Password12345"

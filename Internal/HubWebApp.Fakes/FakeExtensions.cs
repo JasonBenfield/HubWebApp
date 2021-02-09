@@ -1,6 +1,5 @@
-﻿using HubWebApp.Api;
-using HubWebApp.Apps;
-using HubWebApp.Core;
+﻿using HubWebAppApi;
+using HubWebAppApi.Apps;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Api;
@@ -13,10 +12,9 @@ namespace HubWebApp.Fakes
         public static void AddFakesForHubWebApp(this IServiceCollection services, IConfiguration config)
         {
             services.AddFakesForXtiWebApp(config);
-            services.AddScoped<AppFromPath>();
+            services.AddTransient<AppFromPath>();
             services.AddScoped<AppApiFactory, HubAppApiFactory>();
-            services.AddTransient<HubAppApi>();
-            services.AddTransient<IAppApi>(sp => sp.GetService<HubAppApi>());
+            services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
             services.AddScoped<HubSetup>();
             services.AddScoped(_ => HubInfo.AppKey);
         }

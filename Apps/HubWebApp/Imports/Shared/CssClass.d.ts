@@ -2,6 +2,8 @@ export declare class CssClass {
     constructor(...initialNames: string[]);
     private value;
     private readonly names;
+    clear(): this;
+    addFrom(cssClass: CssClass): this;
     addName(name: string): this;
     addNames(...names: string[]): this;
     private _addName;

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App.Api;
 using XTI_App;
-using HubWebApp.Api;
-using HubWebApp.UserApi;
+using HubWebAppApi.Users;
+using HubWebAppApi;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
@@ -30,6 +30,12 @@ namespace HubWebApp.ApiControllers
         public Task<ResultContainer<AppUserModel[]>> GetUsers()
         {
             return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest());
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<int>> AddUser([FromBody] AddUserModel model)
+        {
+            return api.Group("Users").Action<AddUserModel, int>("AddUser").Execute(model);
         }
     }
 }

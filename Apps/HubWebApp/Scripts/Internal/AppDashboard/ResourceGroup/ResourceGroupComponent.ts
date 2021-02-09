@@ -1,12 +1,29 @@
-﻿import { Alert } from "XtiShared/Alert";
+﻿import { Card } from "XtiShared/Card/Card";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { TextSpan } from "XtiShared/Html/TextSpan";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { Row } from "XtiShared/Grid/Row";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ResourceGroupComponentViewModel } from "./ResourceGroupComponentViewModel";
 
-export class ResourceGroupComponent {
+export class ResourceGroupComponent extends Card {
     constructor(
-        private readonly vm: ResourceGroupComponentViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
+        super(vm);
+        this.addCardTitleHeader('Resource Group');
+        this.alert = this.addCardAlert().alert;
+        let listGroup = this.addListGroup();
+        let row = listGroup
+            .addItem()
+            .addContent(new Row());
+        this.groupName = row.addColumn()
+            .addContent(new TextSpan());
+        this.anonListItem = listGroup.addItem();
+        this.anonListItem.addContent(new Row())
+            .addColumn()
+            .addContent(new TextSpan('Anonymous is Allowed'));
+        this.anonListItem.hide();
     }
 
     private groupID: number;
@@ -15,12 +32,19 @@ export class ResourceGroupComponent {
         this.groupID = groupID;
     }
 
-    private readonly alert = new Alert(this.vm.alert);
+    private readonly alert: MessageAlert;
+    private readonly groupName: TextSpan;
+    private readonly anonListItem: IListItem;
 
     async refresh() {
         let group = await this.getResourceGroup(this.groupID);
-        this.vm.groupName(group.Name);
-        this.vm.isAnonymousAllowed(group.IsAnonymousAllowed);
+        this.groupName.setText(group.Name);
+        if (group.IsAnonymousAllowed) {
+            this.anonListItem.show();
+        }
+        else {
+            this.anonListItem.hide();
+        }
     }
 
     private async getResourceGroup(groupID: number) {

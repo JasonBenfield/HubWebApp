@@ -1,20 +1,17 @@
-﻿import 'reflect-metadata';
-import { startup } from 'xtistart';
-import { singleton } from 'tsyringe';
-import { MainPageViewModel } from './MainPageViewModel';
+﻿import { Startup } from 'xtistart';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { AppListPanel } from './AppListPanel';
+import { PageFrame } from 'XtiShared/PageFrame';
+import { PaddingCss } from 'XtiShared/PaddingCss';
 
-@singleton()
 class MainPage {
-    constructor(
-        private readonly vm: MainPageViewModel,
-        private readonly hubApi: HubAppApi
-    ) {
+    constructor(private readonly page: PageFrame) {
+        this.page.content.setPadding(PaddingCss.top(3));
         this.activateAppListPanel();
     }
 
-    private readonly appListPanel = new AppListPanel(this.vm.appListPanel, this.hubApi);
+    private readonly hubApi = this.page.api(HubAppApi);
+    private readonly appListPanel = this.page.content.addContent(new AppListPanel(this.hubApi));
 
     private async activateAppListPanel() {
         this.appListPanel.refresh();
@@ -25,4 +22,4 @@ class MainPage {
         }
     }
 }
-startup(MainPageViewModel, MainPage);
+new MainPage(new Startup().build());

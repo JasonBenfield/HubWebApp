@@ -5,10 +5,6 @@ interface IUserStartRequest {
 }
 interface IEmptyRequest {
 }
-interface IAddUserModel {
-	UserName: string;
-	Password: string;
-}
 interface IAppModel {
 	ID: number;
 	Type: IAppType;
@@ -88,7 +84,27 @@ interface IAppUserModel {
 	Name: string;
 	Email: string;
 }
+interface IAddUserModel {
+	UserName: string;
+	Password: string;
+}
+interface IRedirectToAppUserRequest {
+	AppID: number;
+	UserID: number;
+}
 interface IEmptyActionResult {
+}
+interface IAppUserRoleModel {
+	ID: number;
+	Role: IAppRoleModel;
+}
+interface IUserRoleAccessModel {
+	UnassignedRoles: IAppRoleModel[];
+	AssignedRoles: IAppUserRoleModel[];
+}
+interface IAssignRoleRequest {
+	UserID: number;
+	RoleID: number;
 }
 interface IAppType {
 	Value: number;

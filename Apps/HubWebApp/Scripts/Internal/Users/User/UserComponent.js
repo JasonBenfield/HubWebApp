@@ -2,22 +2,48 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserComponent = void 0;
 var tslib_1 = require("tslib");
-var Alert_1 = require("XtiShared/Alert");
 var Events_1 = require("XtiShared/Events");
-var Command_1 = require("../../../../Imports/Shared/Command");
-var UserComponent = /** @class */ (function () {
-    function UserComponent(vm, hubApi) {
-        this.vm = vm;
-        this.hubApi = hubApi;
-        this._editRequested = new Events_1.DefaultEvent(this);
-        this.editRequested = this._editRequested.handler();
-        this.editCommand = new Command_1.Command(this.vm.editCommand, this.requestEdit.bind(this));
-        this.alert = new Alert_1.Alert(this.vm.alert);
-        var icon = this.editCommand.icon();
-        icon.setName('fa-edit');
-        this.editCommand.setText('Edit');
-        this.editCommand.makePrimary();
+var Command_1 = require("XtiShared/Command/Command");
+var Card_1 = require("XtiShared/Card/Card");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var TextSpan_1 = require("XtiShared/Html/TextSpan");
+var Row_1 = require("XtiShared/Grid/Row");
+var ColumnCss_1 = require("XtiShared/ColumnCss");
+var FormGroup_1 = require("XtiShared/Html/FormGroup");
+var TextCss_1 = require("XtiShared/TextCss");
+var HubTheme_1 = require("../../HubTheme");
+var UserComponent = /** @class */ (function (_super) {
+    tslib_1.__extends(UserComponent, _super);
+    function UserComponent(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.hubApi = hubApi;
+        _this._editRequested = new Events_1.DefaultEvent(_this);
+        _this.editRequested = _this._editRequested.handler();
+        _this.editCommand = new Command_1.Command(_this.requestEdit.bind(_this));
+        _this.setName(UserComponent.name);
+        var headerRow = _this.addCardHeader()
+            .addContent(new Row_1.Row());
+        headerRow.addColumn()
+            .addContent(new TextSpan_1.TextSpan('User'));
+        var editButton = _this.editCommand.add(headerRow.addColumn()
+            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
+            .addContent(HubTheme_1.HubTheme.instance.cardHeader.editButton()));
+        _this.alert = _this.addCardAlert().alert;
+        var body = _this.addCardBody();
+        _this.userName = _this.addBodyRow(body, 'User Name');
+        _this.fullName = _this.addBodyRow(body, 'Name');
+        _this.email = _this.addBodyRow(body, 'Email');
+        return _this;
     }
+    UserComponent.prototype.addBodyRow = function (body, caption) {
+        var row = body.addContent(new FormGroup_1.FormGroup());
+        row.captionColumn.addContent(new TextSpan_1.TextSpan(caption));
+        row.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
+        row.valueColumn.setTextCss(new TextCss_1.TextCss().truncate());
+        return row.valueColumn.addContent(new TextSpan_1.TextSpan())
+            .configure(function (ts) { return ts.addCssName('form-control-plaintext'); });
+    };
     UserComponent.prototype.setUserID = function (userID) {
         this.userID = userID;
     };
@@ -32,9 +58,12 @@ var UserComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getUser(this.userID)];
                     case 1:
                         user = _a.sent();
-                        this.vm.userName(user.UserName);
-                        this.vm.name(user.Name);
-                        this.vm.email(user.Email);
+                        this.userName.setText(user.UserName);
+                        this.userName.setTitleFromText();
+                        this.fullName.setText(user.Name);
+                        this.fullName.setTitleFromText();
+                        this.email.setText(user.Email);
+                        this.email.setTitleFromText();
                         return [2 /*return*/];
                 }
             });
@@ -64,6 +93,6 @@ var UserComponent = /** @class */ (function () {
         });
     };
     return UserComponent;
-}());
+}(Card_1.Card));
 exports.UserComponent = UserComponent;
 //# sourceMappingURL=UserComponent.js.map

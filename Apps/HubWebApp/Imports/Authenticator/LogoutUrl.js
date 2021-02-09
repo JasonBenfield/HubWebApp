@@ -8,7 +8,7 @@ var LogoutUrl = /** @class */ (function () {
         this.authenticator = authenticator;
     }
     LogoutUrl.prototype.value = function () {
-        return this.authenticator.Auth.Logout.getUrl({}).getUrl();
+        return this.authenticator.Auth.Logout.getUrl({}).value();
     };
     LogoutUrl = tslib_1.__decorate([
         tsyringe_1.injectable(),

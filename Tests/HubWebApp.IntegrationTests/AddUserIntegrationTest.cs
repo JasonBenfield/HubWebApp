@@ -1,5 +1,4 @@
-﻿using HubWebApp.Api;
-using HubWebApp.Extensions;
+﻿using HubWebApp.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;

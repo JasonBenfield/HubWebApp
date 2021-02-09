@@ -10,7 +10,6 @@ namespace HubWebApp.Client
         {
             this.xtiToken = xtiToken;
             User = new UserGroup(httpClientFactory, xtiToken, url);
-            UserAdmin = new UserAdminGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
             App = new AppGroup(httpClientFactory, xtiToken, url);
             ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
@@ -19,15 +18,12 @@ namespace HubWebApp.Client
             Users = new UsersGroup(httpClientFactory, xtiToken, url);
             UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, url);
             UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
+            AppUser = new AppUserGroup(httpClientFactory, xtiToken, url);
+            AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, url);
         }
 
         public const string DefaultVersion = "V21";
         public UserGroup User
-        {
-            get;
-        }
-
-        public UserAdminGroup UserAdmin
         {
             get;
         }
@@ -68,6 +64,16 @@ namespace HubWebApp.Client
         }
 
         public UserMaintenanceGroup UserMaintenance
+        {
+            get;
+        }
+
+        public AppUserGroup AppUser
+        {
+            get;
+        }
+
+        public AppUserMaintenanceGroup AppUserMaintenance
         {
             get;
         }

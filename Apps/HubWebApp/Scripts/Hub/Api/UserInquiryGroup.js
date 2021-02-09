@@ -9,6 +9,7 @@ var UserInquiryGroup = /** @class */ (function (_super) {
     function UserInquiryGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'UserInquiry') || this;
         _this.GetUserAction = _this.createAction('GetUser', 'Get User');
+        _this.RedirectToAppUser = _this.createView('RedirectToAppUser');
         return _this;
     }
     UserInquiryGroup.prototype.GetUser = function (model, errorOptions) {

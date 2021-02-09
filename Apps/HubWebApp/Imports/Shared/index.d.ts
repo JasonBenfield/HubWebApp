@@ -9,6 +9,8 @@ declare module '*.html' {
     export default content;
 }
 
+declare type LayoutBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
 interface IEmptyRequest {
 }
 
@@ -24,8 +26,17 @@ interface PageContext {
 
 declare let pageContext: PageContext;
 
+interface IPageViewModel {
+}
+
+interface IPageFrame extends IAggregateComponent {
+    load();
+}
+
 declare module 'xtistart' {
-    export function startup(pageVM: any, page: any);
+    export class Startup {
+        build();
+    }
 }
 
 interface EventCallback<TArgs> {
@@ -85,10 +96,6 @@ interface IUserGroup {
     readonly Index: IAppApiView<IUserStartRequest>;
 }
 
-interface ILogoutUrl {
-    value(): string;
-}
-
 interface IErrorList {
     add(error: IErrorModel);
     merge(errors: IErrorList);
@@ -116,30 +123,6 @@ interface IConstraint {
     test(value: any): IConstraintResult;
 }
 
-interface IFieldCaptionViewModel {
-    readonly forControl: ko.Observable<string>;
-    readonly caption: ko.Observable<string>;
-    readonly css: ko.Observable<string>;
-    readonly isVisible: ko.Observable<boolean>;
-}
-
-interface IFieldValueViewModel {
-    readonly name: ko.Observable<string>;
-    readonly value: ko.Observable<any>;
-    readonly changed: IEventHandler<any>;
-    readonly css: ko.Observable<string>;
-    readonly isVisible: ko.Observable<boolean>;
-    readonly isEnabled: ko.Observable<boolean>;
-    readonly errors: ko.ObservableArray<IErrorModel>;
-    readonly hasError: ko.Observable<boolean>;
-}
-
-interface IFieldViewModel {
-    readonly caption: IFieldCaptionViewModel;
-    readonly value: IFieldValueViewModel;
-    readonly isVisible: ko.Observable<boolean>;
-}
-
 interface IComponentViewModel {
     readonly componentName: ko.Observable<string>;
 }
@@ -148,3 +131,110 @@ interface IComponentTemplate {
     readonly name: string;
     register();
 }
+
+interface IHtmlComponentViewModel extends IComponentViewModel {
+    readonly id: ko.Observable<string>;
+    readonly name: ko.Observable<string>;
+    readonly css: ko.Observable<string>;
+    readonly isVisible: ko.Observable<boolean>;
+    readonly title: ko.Observable<string>;
+}
+
+interface IHtmlContainerComponentViewModel extends IHtmlComponentViewModel {
+    readonly content: IAggregateComponentViewModel;
+}
+
+interface IAggregateComponent {
+    setName(name: string);
+    addContent<TItem extends IComponent>(item: TItem): TItem;
+    insertContent<TItem extends IComponent>(index: number, item: TItem): TItem;
+    addItem<TItemVM extends IComponentViewModel, TItem extends IComponent>(
+        itemVM: TItemVM,
+        item: TItem
+    ): TItem;
+    insertItem<TItemVM extends IComponentViewModel, TItem extends IComponent>(
+        index: number,
+        itemVM: TItemVM,
+        item: TItem
+    ): TItem;
+    removeItem<TItem extends IComponent>(item: TItem);
+    show();
+    hide();
+}
+
+interface IAggregateComponentViewModel extends IComponentViewModel {
+    readonly name: ko.Observable<string>;
+    readonly items: ko.ObservableArray<IComponentViewModel>;
+    readonly isVisible: ko.Observable<boolean>;
+}
+
+interface IList {
+    readonly itemClicked: IEventHandler<IListItem>;
+    addListItem<TListItem extends IListItem>(itemVM: IListItemViewModel, item: TListItem): TListItem;
+}
+
+interface IListViewModel extends IHtmlComponentViewModel {
+    readonly itemClicked: IEventHandler<IListItemViewModel>;
+    readonly items: ko.ObservableArray<IListItemViewModel>;
+    readonly hasItems: ko.Observable<boolean>;
+}
+
+interface IListItemViewModel extends IHtmlComponentViewModel {
+    readonly content: IAggregateComponentViewModel;
+    readonly isClickable: boolean;
+}
+
+interface IListItem {
+    readonly content: IAggregateComponent;
+
+    getData<T>(): T;
+
+    setData(data: any);
+
+    addCssName(name: string);
+
+    addContent<TItem extends IComponent>(item: TItem): TItem;
+
+    addToList(list: IList): this;
+
+    show();
+
+    hide();
+}
+
+type ColumnCssSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto' | 'fill';
+
+interface IColumnCss {
+    xs(columnSize: ColumnCssSize);
+    sm(columnSize: ColumnCssSize);
+    md(columnSize: ColumnCssSize);
+    lg(columnSize: ColumnCssSize);
+    xl(columnSize: ColumnCssSize);
+    xxl(columnSize: ColumnCssSize);
+}
+
+interface ITextCss {
+}
+
+interface IColumn {
+    setColumnCss(columnCss: IColumnCss);
+    setTextCss(textCss: ITextCss);
+}
+
+interface IFormGroup extends IComponent {
+    readonly captionColumn: IColumn;
+    readonly valueColumn: IColumn;
+}
+
+interface IFormGroupField extends IFormGroup, IField {
+}
+
+interface IComponent {
+    addToContainer(container: IAggregateComponent): this;
+    insertIntoContainer(container: IAggregateComponent, index: number): this;
+    removeFromContainer(container: IAggregateComponent): this;
+}
+
+declare type constructor<T> = {
+    new(...args: any[]): T;
+};

@@ -1,81 +1,66 @@
-﻿using HubWebApp.Api;
-using HubWebApp.Core;
-using HubWebApp.Fakes;
-using HubWebApp.UserApi;
+﻿using HubWebAppApi;
+using HubWebAppApi.Users;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using System;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Core;
 
 namespace HubWebApp.Tests
 {
     public sealed class EditUserTest
     {
         [Test]
-        public async Task ShouldRequireUserWithEditUserRole()
+        public async Task ShouldThrowError_WhenRoleIsNotAssignedToUser()
         {
-            var services = await setup();
-            var loggedInUser = await addUser(services, "loggedinUser");
-            services.LoginAs(loggedInUser);
-            var userToEdit = await addUser(services, "userToEdit");
-            var form = new EditUserForm();
-            var hubApi = services.GetService<HubAppApi>();
-            Assert.ThrowsAsync<AccessDeniedException>
-            (
-                () => hubApi.UserMaintenance.EditUser.Execute(form)
-            );
+            var tester = await setup();
+            var userToEdit = await addUser(tester, "userToEdit");
+            var form = createEditUserForm(userToEdit);
+            await AccessAssertions.Create(tester).ShouldThrowError_WhenRoleIsNotAssignedToUser(form);
         }
 
         [Test]
         public async Task ShouldUpdateName()
         {
-            var services = await setup();
-            var loggedInUser = await addUser(services, "loggedinUser");
-            await addEditUserRole(services, loggedInUser);
-            services.LoginAs(loggedInUser);
-            var userToEdit = await addUser(services, "userToEdit");
+            var tester = await setup();
+            var loggedInUser = await addUser(tester, "loggedinUser");
+            await addEditUserRole(tester, loggedInUser);
+            var userToEdit = await addUser(tester, "userToEdit");
             var form = createEditUserForm(userToEdit);
             form.PersonName.SetValue("Changed Name");
-            var hubApi = services.GetService<HubAppApi>();
-            await hubApi.UserMaintenance.EditUser.Execute(form);
-            var userModel = (await services.GetService<AppFactory>().Users().User(userToEdit.ID.Value)).ToModel();
+            await tester.Execute(form, loggedInUser);
+            var factory = tester.Services.GetService<AppFactory>();
+            var userModel = (await factory.Users().User(userToEdit.ID.Value)).ToModel();
             Assert.That(userModel.Name, Is.EqualTo("Changed Name"), "Should update name");
         }
 
         [Test]
         public async Task ShouldUpdateNameFromUserName_WhenNameIsBlank()
         {
-            var services = await setup();
-            var loggedInUser = await addUser(services, "loggedinUser");
-            await addEditUserRole(services, loggedInUser);
-            services.LoginAs(loggedInUser);
-            var userToEdit = await addUser(services, "userToEdit");
+            var tester = await setup();
+            var loggedInUser = await addUser(tester, "loggedinUser");
+            await addEditUserRole(tester, loggedInUser);
+            var userToEdit = await addUser(tester, "userToEdit");
             var form = createEditUserForm(userToEdit);
             form.PersonName.SetValue("");
-            var hubApi = services.GetService<HubAppApi>();
-            await hubApi.UserMaintenance.EditUser.Execute(form);
-            var userModel = (await services.GetService<AppFactory>().Users().User(userToEdit.ID.Value)).ToModel();
+            await tester.Execute(form, loggedInUser);
+            var factory = tester.Services.GetService<AppFactory>();
+            var userModel = (await factory.Users().User(userToEdit.ID.Value)).ToModel();
             Assert.That(userModel.Name, Is.EqualTo("usertoedit"), "Should update name from user name when name is blank");
         }
 
         [Test]
         public async Task ShouldUpdateEmail()
         {
-            var services = await setup();
-            var loggedInUser = await addUser(services, "loggedinUser");
-            await addEditUserRole(services, loggedInUser);
-            services.LoginAs(loggedInUser);
-            var userToEdit = await addUser(services, "userToEdit");
+            var tester = await setup();
+            var loggedInUser = await addUser(tester, "loggedinUser");
+            await addEditUserRole(tester, loggedInUser);
+            var userToEdit = await addUser(tester, "userToEdit");
             var form = createEditUserForm(userToEdit);
             form.Email.SetValue("changed@gmail.com");
-            var hubApi = services.GetService<HubAppApi>();
-            await hubApi.UserMaintenance.EditUser.Execute(form);
-            var userModel = (await services.GetService<AppFactory>().Users().User(userToEdit.ID.Value)).ToModel();
+            await tester.Execute(form, loggedInUser);
+            var factory = tester.Services.GetService<AppFactory>();
+            var userModel = (await factory.Users().User(userToEdit.ID.Value)).ToModel();
             Assert.That(userModel.Email, Is.EqualTo("changed@gmail.com"), "Should update email");
         }
 
@@ -86,41 +71,32 @@ namespace HubWebApp.Tests
             return form;
         }
 
-        private static async Task addEditUserRole(IServiceProvider services, AppUser loggedInUser)
+        private static async Task addEditUserRole(HubActionTester<EditUserForm, EmptyActionResult> tester, AppUser loggedInUser)
         {
-            var app = await services.HubApp();
+            var app = await tester.HubApp();
             var editUserRole = await app.Role(HubInfo.Roles.EditUser);
             await loggedInUser.AddRole(editUserRole);
         }
 
-        private Task<AppUser> addUser(IServiceProvider services, string userName)
+        private async Task<AppUser> addUser(HubActionTester<EditUserForm, EmptyActionResult> tester, string userName)
         {
-            var factory = services.GetService<AppFactory>();
-            var clock = services.GetService<Clock>();
-            return factory.Users().Add
-            (
-                new AppUserName(userName),
-                new FakeHashedPassword("Password12345"),
-                clock.Now()
-            );
+            var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+            var adminUser = await addUserTester.AdminUser();
+            var userID = await addUserTester.Execute(new AddUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            }, adminUser);
+            var factory = tester.Services.GetService<AppFactory>();
+            var user = await factory.Users().User(new AppUserName(userName));
+            return user;
         }
 
-        private async Task<IServiceProvider> setup()
+        private async Task<HubActionTester<EditUserForm, EmptyActionResult>> setup()
         {
-            var host = Host.CreateDefaultBuilder()
-                .ConfigureServices
-                (
-                    (hostContext, services) =>
-                    {
-                        services.AddFakesForHubWebApp(hostContext.Configuration);
-                    }
-                )
-                .Build();
-            var scope = host.Services.CreateScope();
-            var sp = scope.ServiceProvider;
-            await scope.ServiceProvider.Setup();
-            var adminUser = await sp.AddAdminUser();
-            return sp;
+            var host = new HubTestHost();
+            var services = await host.Setup();
+            return HubActionTester.Create(services, hubApi => hubApi.UserMaintenance.EditUser);
         }
     }
 }

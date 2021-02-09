@@ -1,24 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ko = require("knockout");
-var CssClass_1 = require("./CssClass");
+var tslib_1 = require("tslib");
 var ComponentTemplate_1 = require("./ComponentTemplate");
 var template = require("./Templates/FaIcon.html");
-var FaIconViewModel = /** @class */ (function () {
+var ContextualClass_1 = require("./ContextualClass");
+var HtmlComponent_1 = require("./Html/HtmlComponent");
+var HtmlComponentViewModel_1 = require("./Html/HtmlComponentViewModel");
+var FaIconViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(FaIconViewModel, _super);
     function FaIconViewModel() {
-        this.componentName = ko.observable('fa-icon');
-        this.cssClass = ko.observable('');
-        this.isVisible = ko.observable(true);
-        new ComponentTemplate_1.ComponentTemplate(this.componentName(), template).register();
+        return _super.call(this, new ComponentTemplate_1.ComponentTemplate('fa-icon', template)) || this;
     }
     return FaIconViewModel;
-}());
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
 exports.FaIconViewModel = FaIconViewModel;
-var FaIconPrefix;
-(function (FaIconPrefix) {
-    FaIconPrefix[FaIconPrefix["solid"] = 0] = "solid";
-    FaIconPrefix[FaIconPrefix["regular"] = 1] = "regular";
-})(FaIconPrefix = exports.FaIconPrefix || (exports.FaIconPrefix = {}));
 var FaIconNames = /** @class */ (function () {
     function FaIconNames() {
     }
@@ -28,43 +23,83 @@ var FaIconNames = /** @class */ (function () {
     return FaIconNames;
 }());
 exports.FaIconNames = FaIconNames;
-var FaIcon = /** @class */ (function () {
-    function FaIcon(vm, name, prefix) {
-        if (prefix === void 0) { prefix = FaIconPrefix.solid; }
-        this.vm = vm;
-        this.name = name;
-        this.prefix = prefix;
-        this.cssClass = new CssClass_1.CssClass();
-        this.cssClass.addNames(this.prefixCss(this.prefix), this.name);
-        this.updateVmCssClass();
+var FaIcon = /** @class */ (function (_super) {
+    tslib_1.__extends(FaIcon, _super);
+    function FaIcon(name, vm) {
+        if (name === void 0) { name = ''; }
+        if (vm === void 0) { vm = new FaIconViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.color = '';
+        _this.size = '';
+        _this.rotation = '';
+        _this.pulled = '';
+        _this.animation = '';
+        _this.solidStyle();
+        _this.setName(name);
+        return _this;
     }
-    FaIcon.prototype.prefixCss = function (prefix) {
-        var css;
-        if (prefix === FaIconPrefix.regular) {
-            css = 'far';
-        }
-        else if (prefix === FaIconPrefix.solid) {
-            css = 'fas';
-        }
-        return css;
+    FaIcon.prototype.setColor = function (color) {
+        if (color === void 0) { color = ContextualClass_1.ContextualClass.default; }
+        var colorCss = color === ContextualClass_1.ContextualClass.default ? '' : color.append('text');
+        this.replaceCssName(this.color, colorCss);
+        this.color = colorCss;
+    };
+    FaIcon.prototype.regularStyle = function () {
+        this.setPrefix('far');
+    };
+    FaIcon.prototype.solidStyle = function () {
+        this.setPrefix('fas');
     };
     FaIcon.prototype.setPrefix = function (prefix) {
-        this.cssClass.removeName(this.prefixCss(this.prefix));
+        this.replaceCssName(this.prefix, prefix);
         this.prefix = prefix;
-        this.cssClass.addName(this.prefixCss(this.prefix));
-        this.updateVmCssClass();
     };
     FaIcon.prototype.setName = function (name) {
-        this.cssClass.removeName(this.name);
+        name = this.normalizeName(name);
+        this.replaceCssName(this.name, name);
         this.name = name;
-        this.cssClass.addName(this.name);
-        this.updateVmCssClass();
     };
-    FaIcon.prototype.updateVmCssClass = function () {
-        this.vm.cssClass(this.cssClass.toString());
-        this.vm.isVisible(Boolean(this.name));
+    FaIcon.prototype.normalizeName = function (name) {
+        if (name && name.indexOf('fa-') !== 0) {
+            name = "fa-" + name;
+        }
+        return name;
+    };
+    FaIcon.prototype.makeFixedWidth = function () {
+        this.addCssName('fa-fw');
+    };
+    FaIcon.prototype.resize = function (size) {
+        var sizeCss = size ? "fa-" + size : size;
+        this.replaceCssName(this.size, sizeCss);
+        this.size = sizeCss;
+    };
+    FaIcon.prototype.makeBordered = function () {
+        this.addCssName('fa-bordered');
+    };
+    FaIcon.prototype.rotate = function (howMuch) {
+        var rotationCss = howMuch ? "fa-rotate-" + howMuch : '';
+        this.replaceCssName(this.rotation, rotationCss);
+    };
+    FaIcon.prototype.pullLeft = function () {
+        this.pull('fa-pull-left');
+    };
+    FaIcon.prototype.pullRight = function () {
+        this.pull('fa-pull-right');
+    };
+    FaIcon.prototype.pull = function (pulled) {
+        this.replaceCssName(this.pulled, pulled);
+        this.pulled = pulled;
+    };
+    FaIcon.prototype.startAnimation = function (animation) {
+        var css = animation ? "fa-" + animation : animation;
+        this.replaceCssName(this.animation, css);
+        this.animation = css;
+    };
+    FaIcon.prototype.stopAnimation = function () {
+        this.removeCssName(this.animation);
+        this.animation = '';
     };
     return FaIcon;
-}());
+}(HtmlComponent_1.HtmlComponent));
 exports.FaIcon = FaIcon;
 //# sourceMappingURL=FaIcon.js.map

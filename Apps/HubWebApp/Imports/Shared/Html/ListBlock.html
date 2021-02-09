@@ -1,0 +1,8 @@
+﻿<!-- ko if: isVisible -->
+<div data-bind="
+    attr: { 'class': css, title: title, id: id, name: name },
+    delegatedEvent: { event: 'click', selector: 'button,a,li', callback: click },
+    foreach: items">
+    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+</div>
+<!-- /ko -->

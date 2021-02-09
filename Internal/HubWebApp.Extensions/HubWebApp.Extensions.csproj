@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Extensions" Version="1.7.2-dev210124224131126" />
+    <PackageReference Include="XTI_WebApp.Extensions" Version="1.7.2-dev210207205608699" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />
-    <ProjectReference Include="..\HubWebApp.Api\HubWebApp.Api.csproj" />
+    <ProjectReference Include="..\HubWebAppApi\HubWebAppApi.csproj" />
   </ItemGroup>
 
 </Project>
