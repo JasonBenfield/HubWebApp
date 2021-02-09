@@ -69,7 +69,9 @@ var LoginComponent = /** @class */ (function () {
     };
     LoginComponent.prototype.postLogin = function (cred) {
         var form = document.createElement('form');
-        form.action = this.authApi.Auth.Login.getUrl(null).getUrl();
+        form.action = this.authApi.Auth.Login
+            .getUrl(null)
+            .value();
         form.style.position = 'absolute';
         form.style.top = '-100px';
         form.style.left = '-100px';

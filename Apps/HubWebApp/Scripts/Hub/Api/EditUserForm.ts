@@ -1,16 +1,16 @@
 // Generated code
-import { EditUserFormViewModel } from "./EditUserFormViewModel";
-import { Form } from 'XtiShared/Forms/Form';
+import { BaseForm } from 'XtiShared/Forms/BaseForm';
+import { FormComponentViewModel } from 'XtiShared/Html/FormComponentViewModel';
 
-export class EditUserForm extends Form {
-	constructor(private readonly vm: EditUserFormViewModel) {
-		super('EditUserForm');
+export class EditUserForm extends BaseForm {
+	constructor(vm: FormComponentViewModel = new FormComponentViewModel()) {
+		super('EditUserForm', vm);
 		this.UserID.setCaption('User ID');
 		this.UserID.constraints.mustNotBeNull();
 		this.PersonName.setCaption('Person Name');
 		this.Email.setCaption('Email');
 	}
-	readonly UserID = this.addHiddenNumberField('UserID', this.vm.UserID);
-	readonly PersonName = this.addTextInputField('PersonName', this.vm.PersonName);
-	readonly Email = this.addTextInputField('Email', this.vm.Email);
+	readonly UserID = this.addHiddenNumberFormGroup('UserID');
+	readonly PersonName = this.addTextInputFormGroup('PersonName');
+	readonly Email = this.addTextInputFormGroup('Email');
 }

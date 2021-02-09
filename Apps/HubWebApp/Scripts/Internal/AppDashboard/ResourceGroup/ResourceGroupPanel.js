@@ -4,32 +4,46 @@ exports.ResourceGroupPanel = void 0;
 var tslib_1 = require("tslib");
 var Awaitable_1 = require("XtiShared/Awaitable");
 var Result_1 = require("XtiShared/Result");
-var Command_1 = require("XtiShared/Command");
+var Command_1 = require("XtiShared/Command/Command");
 var ResourceGroupAccessCard_1 = require("./ResourceGroupAccessCard");
 var ResourceGroupComponent_1 = require("./ResourceGroupComponent");
 var ResourceListCard_1 = require("./ResourceListCard");
 var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
 var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
 var ModCategoryComponent_1 = require("./ModCategoryComponent");
-var ResourceGroupPanel = /** @class */ (function () {
-    function ResourceGroupPanel(vm, hubApi) {
-        this.vm = vm;
-        this.hubApi = hubApi;
-        this.resourceGroupComponent = new ResourceGroupComponent_1.ResourceGroupComponent(this.vm.resourceGroupComponent, this.hubApi);
-        this.modCategoryComponent = new ModCategoryComponent_1.ModCategoryComponent(this.vm.modCategoryComponent, this.hubApi);
-        this.roleAccessCard = new ResourceGroupAccessCard_1.ResourceGroupAccessCard(this.vm.roleAccessCard, this.hubApi);
-        this.resourceListCard = new ResourceListCard_1.ResourceListCard(this.vm.resourceListCard, this.hubApi);
-        this.mostRecentRequestListCard = new MostRecentRequestListCard_1.MostRecentRequestListCard(this.vm.mostRecentRequestListCard, this.hubApi);
-        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(this.vm.mostRecentErrorEventListCard, this.hubApi);
-        this.awaitable = new Awaitable_1.Awaitable();
-        this.backCommand = new Command_1.Command(this.vm.backCommand, this.back.bind(this));
-        var icon = this.backCommand.icon();
-        icon.setName('fa-caret-left');
-        this.backCommand.setText('App');
-        this.backCommand.setTitle('Back');
-        this.backCommand.makeLight();
-        this.modCategoryComponent.clicked.register(this.onModCategoryClicked.bind(this));
-        this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
+var Block_1 = require("XtiShared/Html/Block");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
+var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
+var MarginCss_1 = require("XtiShared/MarginCss");
+var HubTheme_1 = require("../../HubTheme");
+var ResourceGroupPanel = /** @class */ (function (_super) {
+    tslib_1.__extends(ResourceGroupPanel, _super);
+    function ResourceGroupPanel(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.hubApi = hubApi;
+        _this.awaitable = new Awaitable_1.Awaitable();
+        _this.backCommand = new Command_1.Command(_this.back.bind(_this));
+        _this.height100();
+        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
+        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
+        _this.resourceGroupComponent = flexFill.addContent(new ResourceGroupComponent_1.ResourceGroupComponent(_this.hubApi))
+            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        _this.modCategoryComponent = flexFill.addContent(new ModCategoryComponent_1.ModCategoryComponent(_this.hubApi))
+            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        _this.modCategoryComponent.clicked.register(_this.onModCategoryClicked.bind(_this));
+        _this.roleAccessCard = flexFill.addContent(new ResourceGroupAccessCard_1.ResourceGroupAccessCard(_this.hubApi))
+            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        _this.resourceListCard = flexFill.addContent(new ResourceListCard_1.ResourceListCard(_this.hubApi))
+            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        _this.resourceListCard.resourceSelected.register(_this.onResourceSelected.bind(_this));
+        _this.mostRecentRequestListCard = flexFill.addContent(new MostRecentRequestListCard_1.MostRecentRequestListCard(_this.hubApi))
+            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        _this.mostRecentErrorEventListCard = flexFill.addContent(new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(_this.hubApi)).configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
+        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
+        _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton())).configure(function (b) { return b.setText('App'); });
+        return _this;
     }
     ResourceGroupPanel.prototype.onModCategoryClicked = function (modCategory) {
         this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.modCategorySelected, modCategory));
@@ -73,6 +87,6 @@ var ResourceGroupPanel = /** @class */ (function () {
         modCategorySelected: 'mod-category-selected'
     };
     return ResourceGroupPanel;
-}());
+}(Block_1.Block));
 exports.ResourceGroupPanel = ResourceGroupPanel;
 //# sourceMappingURL=ResourceGroupPanel.js.map

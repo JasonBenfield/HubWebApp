@@ -1,30 +1,31 @@
 ﻿import { DefaultEvent } from "XtiShared/Events";
+import { Card } from "XtiShared/Card/Card";
+import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { MessageAlert } from "XtiShared/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { SelectableListCard } from "../../ListCard/SelectableListCard";
-import { SelectableListCardViewModel } from "../../ListCard/SelectableListCardViewModel";
-import { ResourceGroupListItemViewModel } from "../ResourceGroupListItemViewModel";
+import { ResourceGroupListItem } from "../ResourceGroupListItem";
 
-export class ResourceGroupListCard extends SelectableListCard {
+export class ResourceGroupListCard extends Card {
     constructor(
-        vm: SelectableListCardViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        super(vm, 'No Resource Groups were Found');
-        vm.title('Resource Groups');
+        super(vm);
+        this.addCardTitleHeader('Resource Groups');
+        this.alert = this.addCardAlert().alert;
+        this.requests = this.addButtonListGroup();
     }
 
     private readonly _resourceSelected = new DefaultEvent<IResourceGroupModel>(this);
     readonly resourceGroupSelected = this._resourceSelected.handler();
 
-    protected onItemSelected(item: ResourceGroupListItemViewModel) {
-        this._resourceSelected.invoke(item.source);
+    protected onItemSelected(item: IListItem) {
+        this._resourceSelected.invoke(item.getData<IResourceGroupModel>());
     }
 
-    protected createItem(group: IResourceGroupModel) {
-        let item = new ResourceGroupListItemViewModel(group);
-        item.name(group.Name);
-        return item;
-    }
+    private readonly alert: MessageAlert;
+    private readonly requests: CardButtonListGroup;
 
     private modCategoryID: number;
 
@@ -32,7 +33,28 @@ export class ResourceGroupListCard extends SelectableListCard {
         this.modCategoryID = modCategoryID;
     }
 
-    protected getSourceItems() {
-        return this.hubApi.ModCategory.GetResourceGroups(this.modCategoryID);
+    async refresh() {
+        let resourceGroups = await this.getResourceGroups();
+        this.requests.setItems(
+            resourceGroups,
+            (sourceItem, listItem) => {
+                listItem.setData(sourceItem);
+                listItem.addContent(new ResourceGroupListItem(sourceItem));
+            }
+        );
+        if (resourceGroups.length === 0) {
+            this.alert.danger('No Resource Groups were Found');
+        }
+    }
+
+    private async getResourceGroups() {
+        let resourceGroup: IResourceGroupModel[];
+        await this.alert.infoAction(
+            'Loading...',
+            async () => {
+                resourceGroup = await this.hubApi.ModCategory.GetResourceGroups(this.modCategoryID);
+            }
+        );
+        return resourceGroup;
     }
 }

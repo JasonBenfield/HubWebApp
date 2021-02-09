@@ -1,22 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
 var ModalErrorComponentViewModel_1 = require("./ModalErrorComponentViewModel");
-var Command_1 = require("../Command");
+var Command_1 = require("../Command/Command");
 var ModalErrorViewModel_1 = require("./ModalErrorViewModel");
-var tsyringe_1 = require("tsyringe");
 var ModalErrorItemViewModel_1 = require("./ModalErrorItemViewModel");
 var Enumerable_1 = require("../Enumerable");
 var CssClass_1 = require("../CssClass");
+var ContextualClass_1 = require("../ContextualClass");
 var ModalErrorComponent = /** @class */ (function () {
     function ModalErrorComponent(vm) {
+        var _this = this;
+        if (vm === void 0) { vm = new ModalErrorComponentViewModel_1.ModalErrorComponentViewModel(); }
         this.vm = vm;
         this.errorSelected = this.vm.errorSelected;
-        this.okCommand = new Command_1.Command(this.vm.okCommand, this.ok.bind(this));
-        this.okCommand.setText('OK');
-        this.okCommand.makeDanger();
+        this.okCommand = new Command_1.Command(this.ok.bind(this))
+            .configure(function (c) {
+            c.addButton(_this.vm.okCommand)
+                .configure(function (b) {
+                b.setText('OK');
+                b.setContext(ContextualClass_1.ContextualClass.danger);
+            });
+        });
         this.vm.modalOptions.closed.register(this.onClosed.bind(this));
     }
+    ModalErrorComponent.prototype.addToContainer = function (container) {
+        return container.addItem(this.vm, this);
+    };
+    ModalErrorComponent.prototype.insertIntoContainer = function (container, index) {
+        return container.insertItem(index, this.vm, this);
+    };
+    ModalErrorComponent.prototype.removeFromContainer = function (container) {
+        return container.removeItem(this);
+    };
     ModalErrorComponent.prototype.onClosed = function () {
         this.vm.errors([]);
     };
@@ -53,10 +68,6 @@ var ModalErrorComponent = /** @class */ (function () {
         this.vm.errors([]);
         this.vm.modalOptions.command('hide');
     };
-    ModalErrorComponent = tslib_1.__decorate([
-        tsyringe_1.singleton(),
-        tslib_1.__metadata("design:paramtypes", [ModalErrorComponentViewModel_1.ModalErrorComponentViewModel])
-    ], ModalErrorComponent);
     return ModalErrorComponent;
 }());
 exports.ModalErrorComponent = ModalErrorComponent;

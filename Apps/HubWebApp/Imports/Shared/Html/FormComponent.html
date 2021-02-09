@@ -1,0 +1,14 @@
+﻿<!-- ko if: isVisible -->
+<form data-bind="attr: { 
+      'class': css, 
+      title: title, 
+      id: id, 
+      name: name,
+      action: action,
+      method: method
+    }, submit: submit">
+    <!-- ko with: content -->
+    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    <!-- /ko -->
+</form>
+<!-- /ko -->

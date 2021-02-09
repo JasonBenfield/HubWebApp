@@ -1,7 +1,6 @@
-﻿using HubWebApp.Api;
-using HubWebApp.ApiControllers;
-using HubWebApp.Apps;
-using HubWebApp.Core;
+﻿using HubWebApp.ApiControllers;
+using HubWebAppApi;
+using HubWebAppApi.Apps;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +34,7 @@ namespace HubWebApp.Extensions
             services.AddControllersWithViews()
                 .PartManager.ApplicationParts.Add
                 (
-                    new AssemblyPart(typeof(UserAdminController).Assembly)
+                    new AssemblyPart(typeof(UsersController).Assembly)
                 );
         }
     }

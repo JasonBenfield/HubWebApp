@@ -3,10 +3,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
     user: './Imports/Shared/User/UserPage.js',
     home: './Scripts/Internal/Home/MainPage.ts',
-    userAdmin: './Scripts/Internal/UserAdmin/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
-    users: './Scripts/Internal/Users/MainPage.ts'
+    users: './Scripts/Internal/Users/MainPage.ts',
+    appUser: './Scripts/Internal/AppUser/MainPage.ts'
 };
 const exportModule = {
     rules: [

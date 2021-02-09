@@ -1,25 +1,45 @@
 ﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { EventListItem } from "../EventListItem";
-import { EventListItemViewModel } from "../EventListItemViewModel";
-import { ListCard } from "../../ListCard/ListCard";
-import { ListCardViewModel } from "../../ListCard/ListCardViewModel";
+import { Card } from "XtiShared/Card/Card";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
 
-export class MostRecentErrorEventListCard extends ListCard {
+export class MostRecentErrorEventListCard extends Card {
     constructor(
-        vm: ListCardViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        super(vm, 'No Errors were Found');
-        vm.title('Most Recent Errors');
+        super(vm);
+        this.addCardTitleHeader('Most Recent Errors');
+        this.alert = this.addCardAlert().alert;
+        this.errorEvents = this.addButtonListGroup();
     }
 
-    protected createItem(evt: IAppEventModel) {
-        let item = new EventListItemViewModel();
-        new EventListItem(item, evt);
-        return item;
+    private readonly alert: MessageAlert;
+    private readonly errorEvents: CardButtonListGroup;
+
+    async refresh() {
+        let errorEvents = await this.getErrorEvents();
+        this.errorEvents.setItems(
+            errorEvents,
+            (sourceItem, listItem) => {
+                listItem.addContent(new EventListItem(sourceItem));
+            }
+        );
+        if (errorEvents.length === 0) {
+            this.alert.danger('No Errors were Found');
+        }
     }
 
-    protected getSourceItems() {
-        return this.hubApi.App.GetMostRecentErrorEvents(10);
+    private async getErrorEvents() {
+        let errorEvents: IAppEventModel[];
+        await this.alert.infoAction(
+            'Loading...',
+            async () => {
+                errorEvents = await this.hubApi.App.GetMostRecentErrorEvents(10);
+            }
+        );
+        return errorEvents;
     }
 }

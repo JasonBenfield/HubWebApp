@@ -1,33 +1,56 @@
 ﻿import { Awaitable } from "XtiShared/Awaitable";
-import { AsyncCommand, Command } from "XtiShared/Command";
+import { Command } from "XtiShared/Command/Command";
 import { Result } from "XtiShared/Result";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { UserEditPanelViewModel } from "./UserEditPanelViewModel";
 import { EditUserForm } from '../../../Hub/Api/EditUserForm';
-import { Alert } from "XtiShared/Alert";
 import { DelayedAction } from 'XtiShared/DelayedAction';
+import { AsyncCommand } from "XtiShared/Command/AsyncCommand";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { Block } from "XtiShared/Html/Block";
+import { FlexColumn } from "XtiShared/Html/FlexColumn";
+import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { HubTheme } from "../../HubTheme";
+import { Card } from "XtiShared/Card/Card";
+import { TextCss } from "XtiShared/TextCss";
 
-export class UserEditPanel {
+export class UserEditPanel extends Block {
     public static readonly ResultKeys = {
         canceled: 'canceled',
         saved: 'saved'
     };
 
     constructor(
-        private readonly vm: UserEditPanelViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        let cancelIcon = this.cancelCommand.icon();
-        cancelIcon.setName('fa-times');
-        this.cancelCommand.setText('Cancel');
-        this.cancelCommand.makeDanger();
-        let saveIcon = this.saveCommand.icon();
-        saveIcon.setName('fa-check');
-        this.saveCommand.setText('Save');
-        this.saveCommand.makePrimary();
+        super(vm);
+        this.height100();
+        this.setName(UserEditPanel.name);
+        let flexColumn = this.addContent(new FlexColumn());
+        let flexFill = flexColumn.addContent(new FlexColumnFill());
+        this.alert = flexFill.container.addContent(new MessageAlert());
+
+        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
+        this.cancelCommand.add(
+            toolbar.columnEnd.addContent(HubTheme.instance.commandToolbar.cancelButton())
+        );
+        this.saveCommand.add(
+            toolbar.columnEnd.addContent(HubTheme.instance.commandToolbar.saveButton())
+        );
+        let editCard = flexFill.addContent(new Card());
+        editCard.addCardTitleHeader('Edit User');
+        let cardBody = editCard.addCardBody();
+        this.editUserForm = cardBody.addContent(new EditUserForm());
+        this.editUserForm.addOffscreenSubmit();
+        this.editUserForm.executeLayout();
+        this.editUserForm.forEachFormGroup(fg => {
+            fg.captionColumn.setTextCss(new TextCss().end().bold());
+        });
     }
 
-    private readonly editUserForm = new EditUserForm(this.vm.editUserForm);
+    private readonly alert: MessageAlert;
+    private readonly editUserForm: EditUserForm;
 
     private userID: number;
 
@@ -35,19 +58,17 @@ export class UserEditPanel {
         this.userID = userID;
     }
 
-    private readonly alert = new Alert(this.vm.alert);
-
     async refresh() {
         let userForm = await this.getUserForEdit(this.userID);
         this.editUserForm.import(userForm);
-        new DelayedAction(
+        await new DelayedAction(
             () => this.editUserForm.PersonName.setFocus(),
             1000
         ).execute();
     }
 
     private async getUserForEdit(userID: number) {
-        let userForm: Record<string,object>;
+        let userForm: Record<string, object>;
         await this.alert.infoAction(
             'Loading...',
             async () => {
@@ -63,7 +84,7 @@ export class UserEditPanel {
         return this.awaitable.start();
     }
 
-    private readonly cancelCommand = new Command(this.vm.cancelCommand, this.cancel.bind(this));
+    private readonly cancelCommand = new Command(this.cancel.bind(this));
 
     private cancel() {
         this.awaitable.resolve(
@@ -71,7 +92,7 @@ export class UserEditPanel {
         );
     }
 
-    private readonly saveCommand = new AsyncCommand(this.vm.saveCommand, this.save.bind(this));
+    private readonly saveCommand = new AsyncCommand(this.save.bind(this));
 
     private async save() {
         let result = await this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction);

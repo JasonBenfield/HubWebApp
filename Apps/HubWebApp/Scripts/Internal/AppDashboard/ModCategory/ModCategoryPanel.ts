@@ -1,27 +1,44 @@
 ﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command";
+import { Command } from "XtiShared/Command/Command";
 import { Result } from "XtiShared/Result";
+import { Block } from "XtiShared/Html/Block";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { FlexColumn } from "XtiShared/Html/FlexColumn";
+import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
+import { MarginCss } from "XtiShared/MarginCss";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ModCategoryComponent } from "./ModCategoryComponent";
-import { ModCategoryPanelViewModel } from "./ModCategoryPanelViewModel";
 import { ModifierListCard } from "./ModifierListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
+import { HubTheme } from "../../HubTheme";
 
-export class ModCategoryPanel {
+export class ModCategoryPanel extends Block {
     public static readonly ResultKeys = {
         backRequested: 'back-requested',
         resourceGroupSelected: 'resource-group-selected'
     };
 
     constructor(
-        private readonly vm: ModCategoryPanelViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        let backIcon = this.backCommand.icon();
-        backIcon.setName('fa-caret-left');
-        this.backCommand.setText('App');
-        this.backCommand.setTitle('Back');
-        this.backCommand.makeLight();
+        super(vm);
+        this.height100();
+        let flexColumn = this.addContent(new FlexColumn());
+        let flexFill = flexColumn.addContent(new FlexColumnFill());
+        this.modCategoryComponent = flexFill
+            .addContent(new ModCategoryComponent(this.hubApi))
+            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        this.modifierListCard = flexFill
+            .addContent(new ModifierListCard(this.hubApi))
+            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        this.resourceGroupListCard = flexFill
+            .addContent(new ResourceGroupListCard(this.hubApi))
+            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
+        this.backCommand.add(
+            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
+        ).configure(b => b.setText('App'));
         this.resourceGroupListCard.resourceGroupSelected.register(
             this.onResourceGroupSelected.bind(this)
         );
@@ -33,18 +50,9 @@ export class ModCategoryPanel {
         );
     }
 
-    private readonly modCategoryComponent = new ModCategoryComponent(
-        this.vm.modCategoryComponent,
-        this.hubApi
-    );
-    private readonly modifierListCard = new ModifierListCard(
-        this.vm.modifierListCard,
-        this.hubApi
-    );
-    private readonly resourceGroupListCard = new ResourceGroupListCard(
-        this.vm.resourceGroupListCard,
-        this.hubApi
-    );
+    private readonly modCategoryComponent: ModCategoryComponent;
+    private readonly modifierListCard: ModifierListCard;
+    private readonly resourceGroupListCard: ResourceGroupListCard;
 
     setModCategoryID(categoryID: number) {
         this.modCategoryComponent.setModCategoryID(categoryID);
@@ -67,7 +75,7 @@ export class ModCategoryPanel {
         return this.awaitable.start();
     }
 
-    readonly backCommand = new Command(this.vm.backCommand, this.back.bind(this));
+    readonly backCommand = new Command(this.back.bind(this));
 
     private back() {
         this.awaitable.resolve(new Result(ModCategoryPanel.ResultKeys.backRequested));

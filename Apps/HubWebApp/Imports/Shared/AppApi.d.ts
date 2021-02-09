@@ -1,6 +1,9 @@
 import { AppApiGroup } from "./AppApiGroup";
 import { AppApiEvents } from "./AppApiEvents";
 import { AppResourceUrl } from "./AppResourceUrl";
+export declare type apiConstructor<T extends AppApi> = {
+    new (events: AppApiEvents, baseUrl: string, version: string): T;
+};
 export declare class AppApi {
     private readonly events;
     constructor(events: AppApiEvents, baseUrl: string, app: string, version: string);

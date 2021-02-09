@@ -8,9 +8,8 @@ var SingleActivePanel = /** @class */ (function () {
         this._previousActive = null;
         this._currentActive = null;
     }
-    SingleActivePanel.prototype.add = function (panelVM, createContent) {
-        var content = createContent(panelVM.content);
-        var panel = new Panel_1.Panel(content, panelVM);
+    SingleActivePanel.prototype.add = function (panelContent) {
+        var panel = new Panel_1.Panel(panelContent);
         this.panels.push(panel);
         return panel;
     };

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App;
-using HubWebApp.Api;
-using HubWebApp.UserApi;
+using HubWebAppApi.Users;
+using HubWebAppApi;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
@@ -24,6 +24,12 @@ namespace HubWebApp.ApiControllers
         public Task<ResultContainer<AppUserModel>> GetUser([FromBody] int model)
         {
             return api.Group("UserInquiry").Action<int, AppUserModel>("GetUser").Execute(model);
+        }
+
+        public async Task<IActionResult> RedirectToAppUser(RedirectToAppUserRequest model)
+        {
+            var result = await api.Group("UserInquiry").Action<RedirectToAppUserRequest, WebRedirectResult>("RedirectToAppUser").Execute(model);
+            return Redirect(result.Data.Url);
         }
     }
 }

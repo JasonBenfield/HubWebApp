@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModifierListCard = void 0;
 var tslib_1 = require("tslib");
-var ListCard_1 = require("../../ListCard/ListCard");
-var ModifierListItemViewModel_1 = require("./ModifierListItemViewModel");
+var Card_1 = require("XtiShared/Card/Card");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var ModifierListItem_1 = require("./ModifierListItem");
 var ModifierListCard = /** @class */ (function (_super) {
     tslib_1.__extends(ModifierListCard, _super);
-    function ModifierListCard(vm, hubApi) {
-        var _this = _super.call(this, vm, 'No Modifiers were Found') || this;
+    function ModifierListCard(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
         _this.hubApi = hubApi;
         vm.title('Modifiers');
         return _this;
@@ -15,16 +17,50 @@ var ModifierListCard = /** @class */ (function (_super) {
     ModifierListCard.prototype.setModCategoryID = function (modCategoryID) {
         this.modCategoryID = modCategoryID;
     };
-    ModifierListCard.prototype.createItem = function (sourceItem) {
-        var item = new ModifierListItemViewModel_1.ModifierListItemViewModel();
-        item.modKey(sourceItem.ModKey);
-        item.displayText(sourceItem.DisplayText);
-        return item;
+    ModifierListCard.prototype.refresh = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var modifiers;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getModifiers()];
+                    case 1:
+                        modifiers = _a.sent();
+                        this.modifiers.setItems(modifiers, function (sourceItem, listItem) {
+                            listItem.setData(sourceItem);
+                            listItem.addContent(new ModifierListItem_1.ModifierListItem(sourceItem));
+                        });
+                        if (modifiers.length === 0) {
+                            this.alert.danger('No Modifiers were Found');
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    ModifierListCard.prototype.getSourceItems = function () {
-        return this.hubApi.ModCategory.GetModifiers(this.modCategoryID);
+    ModifierListCard.prototype.getModifiers = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var modifiers;
+            var _this = this;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.hubApi.ModCategory.GetModifiers(this.modCategoryID)];
+                                    case 1:
+                                        modifiers = _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, modifiers];
+                }
+            });
+        });
     };
     return ModifierListCard;
-}(ListCard_1.ListCard));
+}(Card_1.Card));
 exports.ModifierListCard = ModifierListCard;
 //# sourceMappingURL=ModifierListCard.js.map

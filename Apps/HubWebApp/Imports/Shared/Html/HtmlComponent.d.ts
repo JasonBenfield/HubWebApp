@@ -1,0 +1,34 @@
+import { ContextualClass } from "../ContextualClass";
+import { CssClass } from "../CssClass";
+import { MarginCss } from "../MarginCss";
+import { PaddingCss } from "../PaddingCss";
+import { TextCss } from "../TextCss";
+export declare class HtmlComponent implements IComponent {
+    protected readonly vm: IHtmlComponentViewModel;
+    constructor(vm: IHtmlComponentViewModel);
+    addToContainer(container: IAggregateComponent): this;
+    insertIntoContainer(container: IAggregateComponent, index: number): this;
+    removeFromContainer(container: IAggregateComponent): any;
+    configure(action: (c: this) => void): this;
+    setID(id: string): void;
+    setName(name: string): void;
+    private bgContextCss;
+    setBackgroundContext(contextClass: ContextualClass): void;
+    private textCss;
+    setTextCss(textCss: TextCss): void;
+    private margin;
+    setMargin(margin: MarginCss): void;
+    private padding;
+    setPadding(padding: PaddingCss): void;
+    private readonly css;
+    replaceCss(css: CssClass): void;
+    clearCss(): void;
+    addCssFrom(css: CssClass): void;
+    replaceCssName(nameToRemove: string, nameToAdd: string): void;
+    addCssName(name: string): void;
+    removeCssName(name: string): void;
+    private updateVmCss;
+    setTitle(title: string): void;
+    show(): void;
+    hide(): void;
+}

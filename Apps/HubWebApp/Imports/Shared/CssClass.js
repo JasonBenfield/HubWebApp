@@ -13,6 +13,16 @@ var CssClass = /** @class */ (function () {
             this.addNames.apply(this, initialNames);
         }
     }
+    CssClass.prototype.clear = function () {
+        this.names.splice(0, this.names.length);
+        return this;
+    };
+    CssClass.prototype.addFrom = function (cssClass) {
+        if (cssClass) {
+            this.addName(cssClass.value);
+        }
+        return this;
+    };
     CssClass.prototype.addName = function (name) {
         return this.addNames(name);
     };
@@ -21,15 +31,17 @@ var CssClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             names[_i] = arguments[_i];
         }
-        var added = false;
-        for (var _a = 0, names_1 = names; _a < names_1.length; _a++) {
-            var name_1 = names_1[_a];
-            if (this._addName(name_1)) {
-                added = true;
+        if (names) {
+            var added = false;
+            for (var _a = 0, names_1 = names; _a < names_1.length; _a++) {
+                var name_1 = names_1[_a];
+                if (this._addName(name_1)) {
+                    added = true;
+                }
             }
-        }
-        if (added) {
-            this.updateValue();
+            if (added) {
+                this.updateValue();
+            }
         }
         return this;
     };
@@ -63,15 +75,17 @@ var CssClass = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             names[_i] = arguments[_i];
         }
-        var removed = false;
-        for (var _a = 0, names_2 = names; _a < names_2.length; _a++) {
-            var name_2 = names_2[_a];
-            if (this._removeName(name_2)) {
-                removed = true;
+        if (names) {
+            var removed = false;
+            for (var _a = 0, names_2 = names; _a < names_2.length; _a++) {
+                var name_2 = names_2[_a];
+                if (this._removeName(name_2)) {
+                    removed = true;
+                }
             }
-        }
-        if (removed) {
-            this.updateValue();
+            if (removed) {
+                this.updateValue();
+            }
         }
         return this;
     };
@@ -89,7 +103,7 @@ var CssClass = /** @class */ (function () {
             }
             else {
                 var index = this.names.indexOf(nameParts[0]);
-                if (index < 0) {
+                if (index >= 0) {
                     this.names.splice(index, 1);
                     removed = true;
                 }

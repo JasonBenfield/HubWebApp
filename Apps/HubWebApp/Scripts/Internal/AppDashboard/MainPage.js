@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-require("reflect-metadata");
 var xtistart_1 = require("xtistart");
-var tsyringe_1 = require("tsyringe");
-var MainPageViewModel_1 = require("./MainPageViewModel");
 var HubAppApi_1 = require("../../Hub/Api/HubAppApi");
 var XtiUrl_1 = require("XtiShared/XtiUrl");
 var WebPage_1 = require("XtiShared/WebPage");
@@ -13,16 +10,17 @@ var AppDetailPanel_1 = require("./AppDetail/AppDetailPanel");
 var ResourceGroupPanel_1 = require("./ResourceGroup/ResourceGroupPanel");
 var ResourcePanel_1 = require("./Resource/ResourcePanel");
 var ModCategoryPanel_1 = require("./ModCategory/ModCategoryPanel");
+var PaddingCss_1 = require("XtiShared/PaddingCss");
 var MainPage = /** @class */ (function () {
-    function MainPage(vm, hubApi) {
-        var _this = this;
-        this.vm = vm;
-        this.hubApi = hubApi;
+    function MainPage(page) {
+        this.page = page;
         this.panels = new SingleActivePanel_1.SingleActivePanel();
-        this.appDetailPanel = this.panels.add(this.vm.appDetailPanel, function (vm) { return new AppDetailPanel_1.AppDetailPanel(vm, _this.hubApi); });
-        this.resourceGroupPanel = this.panels.add(this.vm.resourceGroupPanel, function (vm) { return new ResourceGroupPanel_1.ResourceGroupPanel(vm, _this.hubApi); });
-        this.resourcePanel = this.panels.add(this.vm.resourcePanel, function (vm) { return new ResourcePanel_1.ResourcePanel(vm, _this.hubApi); });
-        this.modCategoryPanel = this.panels.add(this.vm.modCategoryPanel, function (vm) { return new ModCategoryPanel_1.ModCategoryPanel(vm, _this.hubApi); });
+        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
+        this.hubApi = this.page.api(HubAppApi_1.HubAppApi);
+        this.appDetailPanel = this.page.addContent(this.panels.add(new AppDetailPanel_1.AppDetailPanel(this.hubApi)));
+        this.resourceGroupPanel = this.page.addContent(this.panels.add(new ResourceGroupPanel_1.ResourceGroupPanel(this.hubApi)));
+        this.resourcePanel = this.page.addContent(this.panels.add(new ResourcePanel_1.ResourcePanel(this.hubApi)));
+        this.modCategoryPanel = this.page.addContent(this.panels.add(new ModCategoryPanel_1.ModCategoryPanel(this.hubApi)));
         if (XtiUrl_1.XtiUrl.current.path.modifier) {
             this.activateAppDetailPanel();
         }
@@ -133,12 +131,7 @@ var MainPage = /** @class */ (function () {
             });
         });
     };
-    MainPage = tslib_1.__decorate([
-        tsyringe_1.singleton(),
-        tslib_1.__metadata("design:paramtypes", [MainPageViewModel_1.MainPageViewModel,
-            HubAppApi_1.HubAppApi])
-    ], MainPage);
     return MainPage;
 }());
-xtistart_1.startup(MainPageViewModel_1.MainPageViewModel, MainPage);
+new MainPage(new xtistart_1.Startup().build());
 //# sourceMappingURL=MainPage.js.map

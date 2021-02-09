@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HubWebApp.Api\HubWebApp.Api.csproj" />
+    <ProjectReference Include="..\HubWebAppApi\HubWebAppApi.csproj" />
   </ItemGroup>
 
 </Project>

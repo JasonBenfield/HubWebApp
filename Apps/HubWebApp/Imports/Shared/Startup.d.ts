@@ -1,1 +1,4 @@
-export declare function startup(pageVM: any, page: any): void;
+import { BaseStartup } from "./BaseStartup";
+export declare class Startup extends BaseStartup {
+    protected getDefaultApi(): any;
+}

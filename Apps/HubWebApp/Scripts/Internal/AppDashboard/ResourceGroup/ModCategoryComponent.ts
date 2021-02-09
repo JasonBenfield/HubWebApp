@@ -1,15 +1,28 @@
-﻿import { Alert } from "XtiShared/Alert";
-import { DefaultEvent } from "XtiShared/Events";
+﻿import { DefaultEvent } from "XtiShared/Events";
+import { Card } from "XtiShared/Card/Card";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { TextSpan } from "XtiShared/Html/TextSpan";
+import { ButtonListGroup } from "XtiShared/ListGroup/ButtonListGroup";
+import { MessageAlert } from "XtiShared/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ModCategoryComponentViewModel } from "./ModCategoryComponentViewModel";
 
-export class ModCategoryComponent {
+export class ModCategoryComponent extends Card {
     constructor(
-        private readonly vm: ModCategoryComponentViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        this.vm.clicked.register(this.onClicked.bind(this));
+        super(vm);
+        this.addCardTitleHeader('Modifier Category');
+        this.alert = this.addCardAlert().alert;
+        this.listGroup = this.addButtonListGroup();
+        this.modCategoryName = this.listGroup
+            .addItem()
+            .addContent(new TextSpan());
+        this.listGroup.itemClicked.register(this.onClicked.bind(this));
     }
+
+    private readonly listGroup: ButtonListGroup;
+    private readonly modCategoryName: TextSpan;
 
     private readonly _clicked = new DefaultEvent<IModifierCategoryModel>(this);
     readonly clicked = this._clicked.handler();
@@ -22,17 +35,17 @@ export class ModCategoryComponent {
 
     setGroupID(groupID: number) {
         this.groupID = groupID;
-        this.vm.name('');
+        this.listGroup.hide();
     }
 
-    private readonly alert = new Alert(this.vm.alert);
+    private readonly alert: MessageAlert;
 
     private modCategory: IModifierCategoryModel;
 
     async refresh() {
-        let modCategory = await this.getModCategory(this.groupID);
-        this.vm.name(modCategory.Name);
-        this.modCategory = modCategory;
+        this.modCategory = await this.getModCategory(this.groupID);
+        this.modCategoryName.setText(this.modCategory.Name);
+        this.listGroup.show();
     }
 
     private async getModCategory(groupID: number) {

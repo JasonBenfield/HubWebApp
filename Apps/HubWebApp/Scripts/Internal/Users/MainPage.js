@@ -1,24 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-require("reflect-metadata");
 var xtistart_1 = require("xtistart");
-var tsyringe_1 = require("tsyringe");
-var MainPageViewModel_1 = require("./MainPageViewModel");
 var HubAppApi_1 = require("../../Hub/Api/HubAppApi");
 var UserListPanel_1 = require("./UserList/UserListPanel");
 var SingleActivePanel_1 = require("../Panel/SingleActivePanel");
 var UserPanel_1 = require("./User/UserPanel");
 var UserEditPanel_1 = require("./UserEdit/UserEditPanel");
+var PaddingCss_1 = require("XtiShared/PaddingCss");
 var MainPage = /** @class */ (function () {
-    function MainPage(vm, hubApi) {
-        var _this = this;
-        this.vm = vm;
-        this.hubApi = hubApi;
+    function MainPage(page) {
+        this.page = page;
+        this.hubApi = this.page.api(HubAppApi_1.HubAppApi);
         this.panels = new SingleActivePanel_1.SingleActivePanel();
-        this.userListPanel = this.panels.add(this.vm.userListPanel, function (vm) { return new UserListPanel_1.UserListPanel(vm, _this.hubApi); });
-        this.userPanel = this.panels.add(this.vm.userPanel, function (vm) { return new UserPanel_1.UserPanel(vm, _this.hubApi); });
-        this.userEditPanel = this.panels.add(this.vm.userEditPanel, function (vm) { return new UserEditPanel_1.UserEditPanel(vm, _this.hubApi); });
+        this.userListPanel = this.page.addContent(this.panels.add(new UserListPanel_1.UserListPanel(this.hubApi)));
+        this.userPanel = this.page.addContent(this.panels.add(new UserPanel_1.UserPanel(this.hubApi)));
+        this.userEditPanel = this.page.addContent(this.panels.add(new UserEditPanel_1.UserEditPanel(this.hubApi)));
+        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
         this.activateUserListPanel();
     }
     MainPage.prototype.activateUserListPanel = function () {
@@ -43,7 +41,7 @@ var MainPage = /** @class */ (function () {
     };
     MainPage.prototype.activateUserPanel = function (userID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var result;
+            var result, app;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -58,6 +56,10 @@ var MainPage = /** @class */ (function () {
                         }
                         else if (result.key === UserPanel_1.UserPanel.ResultKeys.editRequested) {
                             this.activateUserEditPanel(userID);
+                        }
+                        else if (result.key === UserPanel_1.UserPanel.ResultKeys.appSelected) {
+                            app = result.data;
+                            this.hubApi.UserInquiry.RedirectToAppUser.open({ UserID: userID, AppID: app.ID });
                         }
                         return [2 /*return*/];
                 }
@@ -85,12 +87,7 @@ var MainPage = /** @class */ (function () {
             });
         });
     };
-    MainPage = tslib_1.__decorate([
-        tsyringe_1.singleton(),
-        tslib_1.__metadata("design:paramtypes", [MainPageViewModel_1.MainPageViewModel,
-            HubAppApi_1.HubAppApi])
-    ], MainPage);
     return MainPage;
 }());
-xtistart_1.startup(MainPageViewModel_1.MainPageViewModel, MainPage);
+new MainPage(new xtistart_1.Startup().build());
 //# sourceMappingURL=MainPage.js.map

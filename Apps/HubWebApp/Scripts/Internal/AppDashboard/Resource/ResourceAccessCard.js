@@ -2,33 +2,59 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceAccessCard = void 0;
 var tslib_1 = require("tslib");
-var ListCard_1 = require("../../ListCard/ListCard");
-var RoleAccessListItemViewModel_1 = require("../RoleAccessListItemViewModel");
+var Card_1 = require("XtiShared/Card/Card");
+var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceAccessCard = /** @class */ (function (_super) {
     tslib_1.__extends(ResourceAccessCard, _super);
-    function ResourceAccessCard(vm, hubApi) {
-        var _this = _super.call(this, vm, 'No Roles were Found') || this;
+    function ResourceAccessCard(hubApi, vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
         _this.hubApi = hubApi;
-        vm.title('Permissions');
+        _this.addCardTitleHeader('Permissions');
+        _this.alert = _this.addCardAlert().alert;
         return _this;
     }
     ResourceAccessCard.prototype.setResourceID = function (resourceID) {
         this.resourceID = resourceID;
     };
-    ResourceAccessCard.prototype.createItem = function (sourceItem) {
-        var item = new RoleAccessListItemViewModel_1.RoleAccessListItemViewModel();
-        item.roleName(sourceItem.role.Name);
-        item.isAllowed(sourceItem.isAllowed);
-        return item;
+    ResourceAccessCard.prototype.refresh = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var accessItems;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getRoleAccessItems()];
+                    case 1:
+                        accessItems = _a.sent();
+                        this.accessItems.setItems(accessItems, function (sourceItem, listItem) {
+                            listItem.addContent(new RoleAccessListItem_1.RoleAccessListItem(sourceItem));
+                        });
+                        if (accessItems.length === 0) {
+                            this.alert.danger('No Roles were Found');
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    ResourceAccessCard.prototype.getSourceItems = function () {
+    ResourceAccessCard.prototype.getRoleAccessItems = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var access, accessItems, _i, _a, allowedRole, _b, _c, deniedRole;
+            var _this = this;
             return tslib_1.__generator(this, function (_d) {
                 switch (_d.label) {
-                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetRoleAccess(this.resourceID)];
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetRoleAccess(this.resourceID)];
+                                    case 1:
+                                        access = _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
                     case 1:
-                        access = _d.sent();
+                        _d.sent();
                         accessItems = [];
                         for (_i = 0, _a = access.AllowedRoles; _i < _a.length; _i++) {
                             allowedRole = _a[_i];
@@ -50,6 +76,6 @@ var ResourceAccessCard = /** @class */ (function (_super) {
         });
     };
     return ResourceAccessCard;
-}(ListCard_1.ListCard));
+}(Card_1.Card));
 exports.ResourceAccessCard = ResourceAccessCard;
 //# sourceMappingURL=ResourceAccessCard.js.map

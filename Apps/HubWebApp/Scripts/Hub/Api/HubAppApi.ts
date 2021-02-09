@@ -3,7 +3,6 @@
 import { AppApi } from "XtiShared/AppApi";
 import { AppApiEvents } from "XtiShared/AppApiEvents";
 import { UserGroup } from "./UserGroup";
-import { UserAdminGroup } from "./UserAdminGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
@@ -12,6 +11,8 @@ import { ModCategoryGroup } from "./ModCategoryGroup";
 import { UsersGroup } from "./UsersGroup";
 import { UserInquiryGroup } from "./UserInquiryGroup";
 import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
+import { AppUserGroup } from "./AppUserGroup";
+import { AppUserMaintenanceGroup } from "./AppUserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -20,7 +21,6 @@ export class HubAppApi extends AppApi {
 	constructor(events: AppApiEvents, baseUrl: string, version: string = '') {
 		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
 		this.User = this.addGroup((evts, resourceUrl) => new UserGroup(evts, resourceUrl));
-		this.UserAdmin = this.addGroup((evts, resourceUrl) => new UserAdminGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
@@ -29,10 +29,11 @@ export class HubAppApi extends AppApi {
 		this.Users = this.addGroup((evts, resourceUrl) => new UsersGroup(evts, resourceUrl));
 		this.UserInquiry = this.addGroup((evts, resourceUrl) => new UserInquiryGroup(evts, resourceUrl));
 		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
+		this.AppUser = this.addGroup((evts, resourceUrl) => new AppUserGroup(evts, resourceUrl));
+		this.AppUserMaintenance = this.addGroup((evts, resourceUrl) => new AppUserMaintenanceGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
-	readonly UserAdmin: UserAdminGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;
 	readonly ResourceGroup: ResourceGroupGroup;
@@ -41,4 +42,6 @@ export class HubAppApi extends AppApi {
 	readonly Users: UsersGroup;
 	readonly UserInquiry: UserInquiryGroup;
 	readonly UserMaintenance: UserMaintenanceGroup;
+	readonly AppUser: AppUserGroup;
+	readonly AppUserMaintenance: AppUserMaintenanceGroup;
 }

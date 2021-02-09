@@ -114,8 +114,8 @@ function Hub-Publish {
     Write-Output "Building solution"
     dotnet build 
 
-    Hub-Setup -EnvName $EnvName
-
+    Hub-Setup -EnvName $EnvName -VersionKey $defaultVersion
+    
     if ($EnvName -eq "Test") {
         Invoke-WebRequest -Uri https://test.guinevere.com/Authenticator/Current/StopApp
         Write-Output "Creating user"
@@ -157,7 +157,6 @@ function Hub-GenerateApi {
         [string] $EnvName='Production',
         [string] $DefaultVersion
     )
-    dotnet build Apps/HubApiGeneratorApp
     dotnet run --project Apps/HubApiGeneratorApp --environment $EnvName --Output:DefaultVersion "`"$DefaultVersion`""
     tsc -p Apps/HubWebApp/Scripts/Hub/tsconfig.json
     if( $LASTEXITCODE -ne 0 ) {
@@ -168,13 +167,10 @@ function Hub-GenerateApi {
 function Hub-Setup {
     param (
         [ValidateSet("Production", "Development", "Staging", "Test")]
-        [string] $EnvName="Development"
+        [string] $EnvName="Development",
+        [string] $VersionKey = ""
     )
-    dotnet build Apps/HubSetupConsoleApp
-    if( $LASTEXITCODE -ne 0 ) {
-        Throw "Hub setup build failed with exit code $LASTEXITCODE"
-    }
-    dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName
+    dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName --Setup:VersionKey="`"$VersionKey`""
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Hub setup failed with exit code $LASTEXITCODE"
     }

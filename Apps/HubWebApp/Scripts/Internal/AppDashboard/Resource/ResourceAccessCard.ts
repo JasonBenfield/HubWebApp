@@ -1,21 +1,22 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ListCard } from "../../ListCard/ListCard";
-import { ListCardViewModel } from "../../ListCard/ListCardViewModel";
-import { RoleAccessListItemViewModel } from "../RoleAccessListItemViewModel";
+﻿import { Card } from "XtiShared/Card/Card";
+import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { RoleAccessListItem } from "../RoleAccessListItem";
 
-interface IRoleAccessItem {
-    readonly isAllowed: boolean;
-    readonly role: IAppRoleModel;
-}
-
-export class ResourceAccessCard extends ListCard {
+export class ResourceAccessCard extends Card {
     constructor(
-        vm: ListCardViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        super(vm, 'No Roles were Found');
-        vm.title('Permissions');
+        super(vm);
+        this.addCardTitleHeader('Permissions');
+        this.alert = this.addCardAlert().alert;
     }
+
+    private readonly alert: MessageAlert;
+    private readonly accessItems: CardButtonListGroup;
 
     private resourceID: number;
 
@@ -23,15 +24,27 @@ export class ResourceAccessCard extends ListCard {
         this.resourceID = resourceID;
     }
 
-    protected createItem(sourceItem: IRoleAccessItem) {
-        let item = new RoleAccessListItemViewModel();
-        item.roleName(sourceItem.role.Name);
-        item.isAllowed(sourceItem.isAllowed);
-        return item;
+    async refresh() {
+        let accessItems = await this.getRoleAccessItems();
+        this.accessItems.setItems(
+            accessItems,
+            (sourceItem, listItem) => {
+                listItem.addContent(new RoleAccessListItem(sourceItem));
+            }
+        );
+        if (accessItems.length === 0) {
+            this.alert.danger('No Roles were Found');
+        }
     }
 
-    protected async getSourceItems() {
-        let access = await this.hubApi.Resource.GetRoleAccess(this.resourceID);
+    private async getRoleAccessItems() {
+        let access: IRoleAccessModel;
+        await this.alert.infoAction(
+            'Loading...',
+            async () => {
+                access = await this.hubApi.Resource.GetRoleAccess(this.resourceID);
+            }
+        );
         let accessItems: IRoleAccessItem[] = [];
         for (let allowedRole of access.AllowedRoles) {
             accessItems.push({
