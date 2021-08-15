@@ -34,9 +34,9 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<RoleAccessModel>> GetRoleAccess([FromBody] int model)
+        public Task<ResultContainer<AppRoleModel[]>> GetRoleAccess([FromBody] int model)
         {
-            return api.Group("ResourceGroup").Action<int, RoleAccessModel>("GetRoleAccess").Execute(model);
+            return api.Group("ResourceGroup").Action<int, AppRoleModel[]>("GetRoleAccess").Execute(model);
         }
 
         [HttpPost]

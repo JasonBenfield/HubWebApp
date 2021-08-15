@@ -12,7 +12,8 @@ namespace HubWebApp.Client
         {
         }
 
-        public Task<AppUserRoleModel[]> GetUserRoles(string modifier, int model) => Post<AppUserRoleModel[], int>("GetUserRoles", modifier, model);
-        public Task<UserRoleAccessModel> GetUserRoleAccess(string modifier, int model) => Post<UserRoleAccessModel, int>("GetUserRoleAccess", modifier, model);
+        public Task<AppRoleModel[]> GetUserRoles(string modifier, int model) => Post<AppRoleModel[], int>("GetUserRoles", modifier, model);
+        public Task<UserRoleAccessModel> GetUserRoleAccess(string modifier, GetUserRoleAccessRequest model) => Post<UserRoleAccessModel, GetUserRoleAccessRequest>("GetUserRoleAccess", modifier, model);
+        public Task<UserModifierCategoryModel[]> GetUserModCategories(string modifier, int model) => Post<UserModifierCategoryModel[], int>("GetUserModCategories", modifier, model);
     }
 }

@@ -16,30 +16,15 @@ namespace HubWebApp.Client
                 Current = Add(new AppVersionStatus(4, "Current"));
             }
 
-            public AppVersionStatus NotSet
-            {
-                get;
-            }
+            public AppVersionStatus NotSet { get; }
 
-            public AppVersionStatus New
-            {
-                get;
-            }
+            public AppVersionStatus New { get; }
 
-            public AppVersionStatus Publishing
-            {
-                get;
-            }
+            public AppVersionStatus Publishing { get; }
 
-            public AppVersionStatus Old
-            {
-                get;
-            }
+            public AppVersionStatus Old { get; }
 
-            public AppVersionStatus Current
-            {
-                get;
-            }
+            public AppVersionStatus Current { get; }
         }
 
         public static readonly AppVersionStatuss Values = new AppVersionStatuss();

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_App.Fakes;
 
 namespace HubWebApp.Tests

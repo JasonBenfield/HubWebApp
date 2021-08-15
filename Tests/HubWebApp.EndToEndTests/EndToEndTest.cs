@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_AuthenticatorClient.Extensions;
 using XTI_Configuration.Extensions;
 using XTI_Credentials;

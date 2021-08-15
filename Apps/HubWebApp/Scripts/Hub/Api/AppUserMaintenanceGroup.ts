@@ -9,17 +9,17 @@ import { AppResourceUrl } from "XtiShared/AppResourceUrl";
 export class AppUserMaintenanceGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUserMaintenance');
-		this.AssignRoleAction = this.createAction<IAssignRoleRequest,number>('AssignRole', 'Assign Role');
-		this.UnassignRoleAction = this.createAction<number,IEmptyActionResult>('UnassignRole', 'Unassign Role');
+		this.AssignRoleAction = this.createAction<IUserRoleRequest,number>('AssignRole', 'Assign Role');
+		this.UnassignRoleAction = this.createAction<IUserRoleRequest,IEmptyActionResult>('UnassignRole', 'Unassign Role');
 	}
 	
-	readonly AssignRoleAction: AppApiAction<IAssignRoleRequest,number>;
-	readonly UnassignRoleAction: AppApiAction<number,IEmptyActionResult>;
+	readonly AssignRoleAction: AppApiAction<IUserRoleRequest,number>;
+	readonly UnassignRoleAction: AppApiAction<IUserRoleRequest,IEmptyActionResult>;
 	
-	AssignRole(model: IAssignRoleRequest, errorOptions?: IActionErrorOptions) {
+	AssignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
 		return this.AssignRoleAction.execute(model, errorOptions || {});
 	}
-	UnassignRole(model: number, errorOptions?: IActionErrorOptions) {
+	UnassignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
 		return this.UnassignRoleAction.execute(model, errorOptions || {});
 	}
 }

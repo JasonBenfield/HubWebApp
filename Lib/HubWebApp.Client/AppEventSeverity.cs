@@ -16,30 +16,15 @@ namespace HubWebApp.Client
                 ValidationFailed = Add(new AppEventSeverity(60, "Validation Failed"));
             }
 
-            public AppEventSeverity NotSet
-            {
-                get;
-            }
+            public AppEventSeverity NotSet { get; }
 
-            public AppEventSeverity CriticalError
-            {
-                get;
-            }
+            public AppEventSeverity CriticalError { get; }
 
-            public AppEventSeverity AccessDenied
-            {
-                get;
-            }
+            public AppEventSeverity AccessDenied { get; }
 
-            public AppEventSeverity AppError
-            {
-                get;
-            }
+            public AppEventSeverity AppError { get; }
 
-            public AppEventSeverity ValidationFailed
-            {
-                get;
-            }
+            public AppEventSeverity ValidationFailed { get; }
         }
 
         public static readonly AppEventSeveritys Values = new AppEventSeveritys();

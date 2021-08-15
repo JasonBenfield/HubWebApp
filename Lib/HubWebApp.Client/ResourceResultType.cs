@@ -16,30 +16,15 @@ namespace HubWebApp.Client
                 Json = Add(new ResourceResultType(4, "Json"));
             }
 
-            public ResourceResultType None
-            {
-                get;
-            }
+            public ResourceResultType None { get; }
 
-            public ResourceResultType View
-            {
-                get;
-            }
+            public ResourceResultType View { get; }
 
-            public ResourceResultType PartialView
-            {
-                get;
-            }
+            public ResourceResultType PartialView { get; }
 
-            public ResourceResultType Redirect
-            {
-                get;
-            }
+            public ResourceResultType Redirect { get; }
 
-            public ResourceResultType Json
-            {
-                get;
-            }
+            public ResourceResultType Json { get; }
         }
 
         public static readonly ResourceResultTypes Values = new ResourceResultTypes();

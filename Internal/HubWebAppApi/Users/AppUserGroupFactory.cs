@@ -35,5 +35,12 @@ namespace HubWebAppApi.Users
             var factory = services.GetService<AppFactory>();
             return new GetUserRoleAccessAction(appFromPath, factory);
         }
+
+        internal GetUserModifierCategoriesAction CreateGetUserModifierCategories()
+        {
+            var appFromPath = services.GetService<AppFromPath>();
+            var factory = services.GetService<AppFactory>();
+            return new GetUserModifierCategoriesAction(appFromPath, factory);
+        }
     }
 }

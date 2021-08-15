@@ -27,15 +27,21 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<AppUserRoleModel[]>> GetUserRoles([FromBody] int model)
+        public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] int model)
         {
-            return api.Group("AppUser").Action<int, AppUserRoleModel[]>("GetUserRoles").Execute(model);
+            return api.Group("AppUser").Action<int, AppRoleModel[]>("GetUserRoles").Execute(model);
         }
 
         [HttpPost]
-        public Task<ResultContainer<UserRoleAccessModel>> GetUserRoleAccess([FromBody] int model)
+        public Task<ResultContainer<UserRoleAccessModel>> GetUserRoleAccess([FromBody] GetUserRoleAccessRequest model)
         {
-            return api.Group("AppUser").Action<int, UserRoleAccessModel>("GetUserRoleAccess").Execute(model);
+            return api.Group("AppUser").Action<GetUserRoleAccessRequest, UserRoleAccessModel>("GetUserRoleAccess").Execute(model);
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<UserModifierCategoryModel[]>> GetUserModCategories([FromBody] int model)
+        {
+            return api.Group("AppUser").Action<int, UserModifierCategoryModel[]>("GetUserModCategories").Execute(model);
         }
     }
 }

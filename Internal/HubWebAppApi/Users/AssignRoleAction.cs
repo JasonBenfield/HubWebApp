@@ -5,13 +5,7 @@ using XTI_App.Api;
 
 namespace HubWebAppApi.Users
 {
-    public sealed class AssignRoleRequest
-    {
-        public int UserID { get; set; }
-        public int RoleID { get; set; }
-    }
-
-    public sealed class AssignRoleAction : AppAction<AssignRoleRequest, int>
+    public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
     {
         private readonly AppFromPath appFromPath;
         private readonly AppFactory appFactory;
@@ -22,13 +16,14 @@ namespace HubWebAppApi.Users
             this.appFactory = appFactory;
         }
 
-        public async Task<int> Execute(AssignRoleRequest model)
+        public async Task<int> Execute(UserRoleRequest model)
         {
             var app = await appFromPath.Value();
             var role = await app.Role(model.RoleID);
             var user = await appFactory.Users().User(model.UserID);
-            var userRole = await user.AddRole(role);
-            return userRole.ID.Value;
+            var defaultModifier = await app.DefaultModifier();
+            await user.AddRole(role, defaultModifier);
+            return role.ID.Value;
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using HubWebAppApi;
 using HubWebAppApi.Users;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using XTI_App;
-using HubWebAppApi;
-using NUnit.Framework;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 
 namespace HubWebApp.Tests
@@ -77,9 +75,9 @@ namespace HubWebApp.Tests
             return viewAppRole;
         }
 
-        private AssignRoleRequest createModel(AppUser userToEdit, AppRole role)
+        private UserRoleRequest createModel(AppUser userToEdit, AppRole role)
         {
-            return new AssignRoleRequest
+            return new UserRoleRequest
             {
                 UserID = userToEdit.ID.Value,
                 RoleID = role.ID.Value
@@ -106,7 +104,7 @@ namespace HubWebApp.Tests
             var adminUser = await assignRoleTester.AdminUser();
             var hubAppModifier = await tester.HubAppModifier();
             await adminUser.AddModifier(hubAppModifier);
-            var userRoleID = await assignRoleTester.Execute(new AssignRoleRequest
+            var userRoleID = await assignRoleTester.Execute(new UserRoleRequest
             {
                 UserID = user.ID.Value,
                 RoleID = role.ID.Value

@@ -19,7 +19,7 @@ namespace HubWebAppApi.Apps
         }
         public AppApiAction<int, ResourceGroupModel> GetResourceGroup { get; }
         public AppApiAction<int, ResourceModel[]> GetResources { get; }
-        public AppApiAction<int, RoleAccessModel> GetRoleAccess { get; }
+        public AppApiAction<int, AppRoleModel[]> GetRoleAccess { get; }
         public AppApiAction<int, ModifierCategoryModel> GetModCategory { get; }
         public AppApiAction<GetResourceGroupLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests { get; }
         public AppApiAction<GetResourceGroupLogRequest, AppEventModel[]> GetMostRecentErrorEvents { get; }

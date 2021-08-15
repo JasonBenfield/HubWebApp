@@ -13,19 +13,10 @@ namespace HubWebApp.Client
             Email = AddField(new InputField<string>(FieldName, nameof(Email)));
         }
 
-        public HiddenField<int> UserID
-        {
-            get;
-        }
+        public HiddenField<int> UserID { get; }
 
-        public InputField<string> PersonName
-        {
-            get;
-        }
+        public InputField<string> PersonName { get; }
 
-        public InputField<string> Email
-        {
-            get;
-        }
+        public InputField<string> Email { get; }
     }
 }

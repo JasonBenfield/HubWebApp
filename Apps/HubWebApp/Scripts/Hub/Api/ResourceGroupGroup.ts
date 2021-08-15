@@ -11,7 +11,7 @@ export class ResourceGroupGroup extends AppApiGroup {
 		super(events, resourceUrl, 'ResourceGroup');
 		this.GetResourceGroupAction = this.createAction<number,IResourceGroupModel>('GetResourceGroup', 'Get Resource Group');
 		this.GetResourcesAction = this.createAction<number,IResourceModel[]>('GetResources', 'Get Resources');
-		this.GetRoleAccessAction = this.createAction<number,IRoleAccessModel>('GetRoleAccess', 'Get Role Access');
+		this.GetRoleAccessAction = this.createAction<number,IAppRoleModel[]>('GetRoleAccess', 'Get Role Access');
 		this.GetModCategoryAction = this.createAction<number,IModifierCategoryModel>('GetModCategory', 'Get Mod Category');
 		this.GetMostRecentRequestsAction = this.createAction<IGetResourceGroupLogRequest,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
 		this.GetMostRecentErrorEventsAction = this.createAction<IGetResourceGroupLogRequest,IAppEventModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
@@ -19,7 +19,7 @@ export class ResourceGroupGroup extends AppApiGroup {
 	
 	readonly GetResourceGroupAction: AppApiAction<number,IResourceGroupModel>;
 	readonly GetResourcesAction: AppApiAction<number,IResourceModel[]>;
-	readonly GetRoleAccessAction: AppApiAction<number,IRoleAccessModel>;
+	readonly GetRoleAccessAction: AppApiAction<number,IAppRoleModel[]>;
 	readonly GetModCategoryAction: AppApiAction<number,IModifierCategoryModel>;
 	readonly GetMostRecentRequestsAction: AppApiAction<IGetResourceGroupLogRequest,IAppRequestExpandedModel[]>;
 	readonly GetMostRecentErrorEventsAction: AppApiAction<IGetResourceGroupLogRequest,IAppEventModel[]>;

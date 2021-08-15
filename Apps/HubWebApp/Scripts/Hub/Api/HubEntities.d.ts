@@ -3,6 +3,12 @@
 interface IUserStartRequest {
 	ReturnUrl: string;
 }
+interface IClearUserCacheRequest {
+	UserID: number;
+	UserName: string;
+}
+interface IEmptyActionResult {
+}
 interface IEmptyRequest {
 }
 interface IAppModel {
@@ -55,10 +61,6 @@ interface IResourceModel {
 	IsAnonymousAllowed: boolean;
 	ResultType: IResourceResultType;
 }
-interface IRoleAccessModel {
-	AllowedRoles: IAppRoleModel[];
-	DeniedRoles: IAppRoleModel[];
-}
 interface IAppRoleModel {
 	ID: number;
 	Name: string;
@@ -92,17 +94,19 @@ interface IRedirectToAppUserRequest {
 	AppID: number;
 	UserID: number;
 }
-interface IEmptyActionResult {
-}
-interface IAppUserRoleModel {
-	ID: number;
-	Role: IAppRoleModel;
+interface IGetUserRoleAccessRequest {
+	UserID: number;
+	ModifierID: number;
 }
 interface IUserRoleAccessModel {
 	UnassignedRoles: IAppRoleModel[];
-	AssignedRoles: IAppUserRoleModel[];
+	AssignedRoles: IAppRoleModel[];
 }
-interface IAssignRoleRequest {
+interface IUserModifierCategoryModel {
+	ModCategory: IModifierCategoryModel;
+	Modifiers: IModifierModel[];
+}
+interface IUserRoleRequest {
 	UserID: number;
 	RoleID: number;
 }

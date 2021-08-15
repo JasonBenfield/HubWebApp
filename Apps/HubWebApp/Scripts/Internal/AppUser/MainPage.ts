@@ -42,6 +42,9 @@ class MainPage {
         else if (result.key === AppUserPanel.ResultKeys.editUserRolesRequested) {
             this.activateUserRolePanel(userID);
         }
+        else if (result.key === AppUserPanel.ResultKeys.editUserModCategoryRequested) {
+            let userModCategory: IUserModifierCategoryModel = result.data;
+        }
     }
 
     private async activateUserRolePanel(userID: number) {

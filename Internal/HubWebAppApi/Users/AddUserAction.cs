@@ -2,6 +2,7 @@
 using XTI_App.Api;
 using XTI_App;
 using XTI_Core;
+using XTI_App.Abstractions;
 
 namespace HubWebAppApi.Users
 {

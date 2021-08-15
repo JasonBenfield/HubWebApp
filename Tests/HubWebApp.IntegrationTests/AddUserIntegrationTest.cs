@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_Core;
 
 namespace HubWebApp.IntegrationTests

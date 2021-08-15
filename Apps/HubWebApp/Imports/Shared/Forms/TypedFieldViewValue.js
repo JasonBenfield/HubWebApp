@@ -7,15 +7,6 @@ var TypedFieldViewValue = /** @class */ (function (_super) {
     function TypedFieldViewValue() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TypedFieldViewValue.prototype.getValue = function () {
-        return _super.prototype.getValue.call(this);
-    };
-    TypedFieldViewValue.prototype.setValue = function (value) {
-        _super.prototype.setValue.call(this, value);
-    };
-    TypedFieldViewValue.prototype.setValueFromView = function (value) {
-        _super.prototype.setValueFromView.call(this, value);
-    };
     return TypedFieldViewValue;
 }(FieldViewValue_1.FieldViewValue));
 exports.TypedFieldViewValue = TypedFieldViewValue;

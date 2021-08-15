@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var Events_1 = require("../Events");
 var Input_1 = require("../Html/Input");
 var SimpleFieldFormGroup_1 = require("./SimpleFieldFormGroup");
 var InputFormGroup = /** @class */ (function (_super) {
@@ -8,6 +9,8 @@ var InputFormGroup = /** @class */ (function (_super) {
     function InputFormGroup(prefix, name, vm, viewValue) {
         var _this = _super.call(this, prefix, name, vm) || this;
         _this.viewValue = viewValue;
+        _this._valueChanged = new Events_1.DefaultEvent(_this);
+        _this.valueChanged = _this._valueChanged.handler();
         _this.input = _this.inputGroup.insertContent(0, new Input_1.Input())
             .configure(function (input) {
             input.addCssName('form-control');
@@ -18,8 +21,9 @@ var InputFormGroup = /** @class */ (function (_super) {
         _this.input.changed.register(_this.onInputValueChanged.bind(_this));
         return _this;
     }
-    InputFormGroup.prototype.onInputValueChanged = function (value) {
-        this.viewValue.setValueFromView(value);
+    InputFormGroup.prototype.onInputValueChanged = function (viewValue) {
+        var value = this.viewValue.setValueFromView(viewValue);
+        this._valueChanged.invoke(value);
     };
     InputFormGroup.prototype.getValue = function () {
         return this.viewValue.getValue();

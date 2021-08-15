@@ -13,9 +13,11 @@ namespace HubWebAppApi.Users
             Index = source.AddAction(actions.View(nameof(Index), factory.CreateIndex));
             GetUserRoles = source.AddAction(actions.Action(nameof(GetUserRoles), factory.CreateGetUserRoles));
             GetUserRoleAccess = source.AddAction(actions.Action(nameof(GetUserRoleAccess), factory.CreateGetUserRoleAccess));
+            GetUserModCategories = source.AddAction(actions.Action(nameof(GetUserModCategories), factory.CreateGetUserModifierCategories));
         }
         public AppApiAction<int, WebViewResult> Index { get; }
-        public AppApiAction<int, AppUserRoleModel[]> GetUserRoles { get; }
-        public AppApiAction<int, UserRoleAccessModel> GetUserRoleAccess { get; }
+        public AppApiAction<int, AppRoleModel[]> GetUserRoles { get; }
+        public AppApiAction<GetUserRoleAccessRequest, UserRoleAccessModel> GetUserRoleAccess { get; }
+        public AppApiAction<int, UserModifierCategoryModel[]> GetUserModCategories { get; }
     }
 }

@@ -28,7 +28,7 @@ var MainPage = /** @class */ (function () {
     }
     MainPage.prototype.activateAppUserPanel = function (userID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var result;
+            var result, userModCategory;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -43,6 +43,9 @@ var MainPage = /** @class */ (function () {
                         }
                         else if (result.key === AppUserPanel_1.AppUserPanel.ResultKeys.editUserRolesRequested) {
                             this.activateUserRolePanel(userID);
+                        }
+                        else if (result.key === AppUserPanel_1.AppUserPanel.ResultKeys.editUserModCategoryRequested) {
+                            userModCategory = result.data;
                         }
                         return [2 /*return*/];
                 }

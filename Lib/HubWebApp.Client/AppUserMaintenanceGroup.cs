@@ -12,7 +12,7 @@ namespace HubWebApp.Client
         {
         }
 
-        public Task<int> AssignRole(string modifier, AssignRoleRequest model) => Post<int, AssignRoleRequest>("AssignRole", modifier, model);
-        public Task<EmptyActionResult> UnassignRole(string modifier, int model) => Post<EmptyActionResult, int>("UnassignRole", modifier, model);
+        public Task<int> AssignRole(string modifier, UserRoleRequest model) => Post<int, UserRoleRequest>("AssignRole", modifier, model);
+        public Task<EmptyActionResult> UnassignRole(string modifier, UserRoleRequest model) => Post<EmptyActionResult, UserRoleRequest>("UnassignRole", modifier, model);
     }
 }

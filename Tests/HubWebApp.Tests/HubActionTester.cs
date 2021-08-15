@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
 using XTI_WebApp.Fakes;
@@ -100,7 +101,7 @@ namespace HubWebApp.Tests
             var modKeyPath = modKey.Equals(ModifierKey.Default) ? "" : $"/{modKey.Value}";
             httpContextAccessor.HttpContext.Request.Path = $"/{actionForSuperUser.Path.Group.DisplayText}/{actionForSuperUser.Path.Action.DisplayText}{modKeyPath}".Replace(" ", "");
             var appContext = Services.GetService<IAppContext>();
-            var userContext = new FakeUserContext();
+            var userContext = (FakeUserContext)Services.GetService<IUserContext>();
             userContext.SetUser(user);
             var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
             var apiUser = new XtiAppApiUser(appContext, userContext, path);

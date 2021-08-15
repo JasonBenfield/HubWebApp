@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_WebApp.Extensions;
 

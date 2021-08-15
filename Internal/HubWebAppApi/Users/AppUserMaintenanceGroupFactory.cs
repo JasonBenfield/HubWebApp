@@ -24,7 +24,8 @@ namespace HubWebAppApi.Users
         internal UnassignRoleAction CreateUnassignRole()
         {
             var appFromPath = services.GetService<AppFromPath>();
-            return new UnassignRoleAction(appFromPath);
+            var appFactory = services.GetService<AppFactory>();
+            return new UnassignRoleAction(appFromPath, appFactory);
         }
     }
 }
