@@ -19,25 +19,22 @@ namespace HubWebAppApi.Apps
 
         public async Task<AppModel[]> Execute(EmptyRequest model)
         {
-            var user = await userContext.UncachedUser();
+            var currentUser = await userContext.User();
+            var user = await appFactory.Users().User(currentUser.ID.Value);
             var apps = await appFactory.Apps().All();
             var hubApp = apps.First(a => a.Key().Equals(HubInfo.AppKey));
             var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-            var isModCategoryAdmin = await user.IsModCategoryAdmin(appsModCategory);
-            if (!isModCategoryAdmin)
+            var allowedApps = new List<App>();
+            foreach (var app in apps)
             {
-                var userModifiers = await user.Modifiers(appsModCategory);
-                var allowedApps = new List<App>();
-                foreach (var app in apps)
+                var modifier = await appsModCategory.Modifier(app.ID.Value);
+                var userRoles = await user.AssignedRoles(app, modifier);
+                if (userRoles.Any(ur => ur.Name().Equals(HubRoles.Instance.ViewApp) || ur.Name().Equals(HubRoles.Instance.Admin)))
                 {
-                    var modifier = await appsModCategory.Modifier(app.ID.Value);
-                    if (userModifiers.Any(um => um.ModKey().Equals(modifier.ModKey())))
-                    {
-                        allowedApps.Add(app);
-                    }
+                    allowedApps.Add(app);
                 }
-                apps = allowedApps;
             }
+            apps = allowedApps;
             return apps.Select(a => a.ToAppModel()).ToArray();
         }
     }

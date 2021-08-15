@@ -21,15 +21,15 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         [HttpPost]
-        public Task<ResultContainer<int>> AssignRole([FromBody] AssignRoleRequest model)
+        public Task<ResultContainer<int>> AssignRole([FromBody] UserRoleRequest model)
         {
-            return api.Group("AppUserMaintenance").Action<AssignRoleRequest, int>("AssignRole").Execute(model);
+            return api.Group("AppUserMaintenance").Action<UserRoleRequest, int>("AssignRole").Execute(model);
         }
 
         [HttpPost]
-        public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] int model)
+        public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest model)
         {
-            return api.Group("AppUserMaintenance").Action<int, EmptyActionResult>("UnassignRole").Execute(model);
+            return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model);
         }
     }
 }

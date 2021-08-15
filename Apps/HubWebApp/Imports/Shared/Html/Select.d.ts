@@ -4,6 +4,9 @@ import { SelectViewModel } from "./SelectViewModel";
 import { SelectOption } from "./SelectOption";
 export declare class Select<T> extends HtmlComponent {
     constructor(vm?: SelectViewModel);
+    private onChange;
+    private readonly _changed;
+    readonly changed: import("../Events").DefaultEventHandler<T>;
     protected readonly vm: SelectViewModel;
     enable(): void;
     disable(): void;

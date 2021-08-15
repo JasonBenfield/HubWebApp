@@ -5,6 +5,8 @@ import { TypedFieldViewValue } from "./TypedFieldViewValue";
 export declare abstract class InputFormGroup<TValue> extends SimpleFieldFormGroup<TValue> {
     private readonly viewValue;
     constructor(prefix: string, name: string, vm: BlockViewModel, viewValue: TypedFieldViewValue<string, TValue>);
+    private readonly _valueChanged;
+    readonly valueChanged: import("../Events").DefaultEventHandler<TValue>;
     private onInputValueChanged;
     readonly input: Input;
     getValue(): TValue;

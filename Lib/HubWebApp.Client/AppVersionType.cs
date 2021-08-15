@@ -15,25 +15,13 @@ namespace HubWebApp.Client
                 Patch = Add(new AppVersionType(3, "Patch"));
             }
 
-            public AppVersionType NotSet
-            {
-                get;
-            }
+            public AppVersionType NotSet { get; }
 
-            public AppVersionType Major
-            {
-                get;
-            }
+            public AppVersionType Major { get; }
 
-            public AppVersionType Minor
-            {
-                get;
-            }
+            public AppVersionType Minor { get; }
 
-            public AppVersionType Patch
-            {
-                get;
-            }
+            public AppVersionType Patch { get; }
         }
 
         public static readonly AppVersionTypes Values = new AppVersionTypes();

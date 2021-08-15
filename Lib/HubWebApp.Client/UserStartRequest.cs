@@ -6,10 +6,6 @@ namespace HubWebApp.Client
 {
     public sealed partial class UserStartRequest
     {
-        public string ReturnUrl
-        {
-            get;
-            set;
-        }
+        public string ReturnUrl { get; set; }
     }
 }

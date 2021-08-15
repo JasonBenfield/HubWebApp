@@ -11,7 +11,7 @@ namespace HubWebAppApi.Users
             AssignRole = source.AddAction(actions.Action(nameof(AssignRole), factory.CreateAssignRole));
             UnassignRole = source.AddAction(actions.Action(nameof(UnassignRole), factory.CreateUnassignRole));
         }
-        public AppApiAction<AssignRoleRequest, int> AssignRole { get; }
-        public AppApiAction<int, EmptyActionResult> UnassignRole { get; }
+        public AppApiAction<UserRoleRequest, int> AssignRole { get; }
+        public AppApiAction<UserRoleRequest, EmptyActionResult> UnassignRole { get; }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Api;
 using Microsoft.Extensions.DependencyInjection;
+using XTI_App.Abstractions;
 
 namespace HubWebApp.Tests
 {

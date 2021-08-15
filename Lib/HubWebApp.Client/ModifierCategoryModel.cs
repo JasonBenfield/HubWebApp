@@ -6,16 +6,8 @@ namespace HubWebApp.Client
 {
     public sealed partial class ModifierCategoryModel
     {
-        public int ID
-        {
-            get;
-            set;
-        }
+        public int ID { get; set; }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
     }
 }

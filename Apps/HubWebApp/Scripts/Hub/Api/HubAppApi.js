@@ -5,6 +5,7 @@ exports.HubAppApi = void 0;
 var tslib_1 = require("tslib");
 var AppApi_1 = require("XtiShared/AppApi");
 var UserGroup_1 = require("./UserGroup");
+var UserCacheGroup_1 = require("./UserCacheGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
 var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
@@ -21,6 +22,7 @@ var HubAppApi = /** @class */ (function (_super) {
         if (version === void 0) { version = ''; }
         var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
         _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
+        _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
         _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });

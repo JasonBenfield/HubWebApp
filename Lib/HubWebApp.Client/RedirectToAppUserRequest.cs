@@ -6,16 +6,8 @@ namespace HubWebApp.Client
 {
     public sealed partial class RedirectToAppUserRequest
     {
-        public int AppID
-        {
-            get;
-            set;
-        }
+        public int AppID { get; set; }
 
-        public int UserID
-        {
-            get;
-            set;
-        }
+        public int UserID { get; set; }
     }
 }

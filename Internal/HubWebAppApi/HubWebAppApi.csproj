@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Api" Version="1.7.2-dev210207205608699" />
+    <PackageReference Include="XTI_App.EfApi" Version="1.7.6" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.4" />
   </ItemGroup>
 
   <ItemGroup>

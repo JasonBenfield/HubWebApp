@@ -10,6 +10,7 @@ namespace HubWebApp.Client
         {
             this.xtiToken = xtiToken;
             User = new UserGroup(httpClientFactory, xtiToken, url);
+            UserCache = new UserCacheGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
             App = new AppGroup(httpClientFactory, xtiToken, url);
             ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
@@ -23,59 +24,28 @@ namespace HubWebApp.Client
         }
 
         public const string DefaultVersion = "V21";
-        public UserGroup User
-        {
-            get;
-        }
+        public UserGroup User { get; }
 
-        public AppsGroup Apps
-        {
-            get;
-        }
+        public UserCacheGroup UserCache { get; }
 
-        public AppGroup App
-        {
-            get;
-        }
+        public AppsGroup Apps { get; }
 
-        public ResourceGroupGroup ResourceGroup
-        {
-            get;
-        }
+        public AppGroup App { get; }
 
-        public ResourceGroup Resource
-        {
-            get;
-        }
+        public ResourceGroupGroup ResourceGroup { get; }
 
-        public ModCategoryGroup ModCategory
-        {
-            get;
-        }
+        public ResourceGroup Resource { get; }
 
-        public UsersGroup Users
-        {
-            get;
-        }
+        public ModCategoryGroup ModCategory { get; }
 
-        public UserInquiryGroup UserInquiry
-        {
-            get;
-        }
+        public UsersGroup Users { get; }
 
-        public UserMaintenanceGroup UserMaintenance
-        {
-            get;
-        }
+        public UserInquiryGroup UserInquiry { get; }
 
-        public AppUserGroup AppUser
-        {
-            get;
-        }
+        public UserMaintenanceGroup UserMaintenance { get; }
 
-        public AppUserMaintenanceGroup AppUserMaintenance
-        {
-            get;
-        }
+        public AppUserGroup AppUser { get; }
+
+        public AppUserMaintenanceGroup AppUserMaintenance { get; }
     }
 }

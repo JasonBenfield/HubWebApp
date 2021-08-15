@@ -14,9 +14,9 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.8-dev210127065213196" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.14" />
     <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.4" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210207205608699" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.2-dev210220152049218" />
   </ItemGroup>
 
   <ItemGroup>

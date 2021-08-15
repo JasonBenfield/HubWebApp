@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 
 namespace HubWebApp
 {

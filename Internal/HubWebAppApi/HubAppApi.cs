@@ -21,7 +21,8 @@ namespace HubWebAppApi
                     user,
                     ResourceAccess.AllowAuthenticated()
                         .WithAllowed(HubRoles.Instance.Admin)
-                )
+                ),
+                services
             )
         {
             Apps = new AppListGroup

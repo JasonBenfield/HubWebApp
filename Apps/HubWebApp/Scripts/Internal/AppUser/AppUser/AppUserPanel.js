@@ -13,6 +13,7 @@ var UserComponent_1 = require("./UserComponent");
 var UserRoleListCard_1 = require("./UserRoleListCard");
 var HubTheme_1 = require("../../HubTheme");
 var MarginCss_1 = require("XtiShared/MarginCss");
+var UserModCategoryListCard_1 = require("./UserModCategoryListCard");
 var AppUserPanel = /** @class */ (function (_super) {
     tslib_1.__extends(AppUserPanel, _super);
     function AppUserPanel(hubApi, vm) {
@@ -26,8 +27,11 @@ var AppUserPanel = /** @class */ (function (_super) {
         var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
         _this.userComponent = flexFill.addContent(new UserComponent_1.UserComponent(_this.hubApi))
             .configure(function (c) { return c.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.userRoles = flexFill.addContent(new UserRoleListCard_1.UserRoleListCard(_this.hubApi));
+        _this.userRoles = flexFill.addContent(new UserRoleListCard_1.UserRoleListCard(_this.hubApi))
+            .configure(function (c) { return c.setMargin(MarginCss_1.MarginCss.bottom(3)); });
         _this.userRoles.editRequested.register(_this.onEditUserRolesRequested.bind(_this));
+        _this.userModCategories = flexFill.addContent(new UserModCategoryListCard_1.UserModCategoryListCard(_this.hubApi));
+        _this.userModCategories.editRequested.register(_this.onEditUserModCategoryRequested.bind(_this));
         var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
         _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton())).configure(function (b) { return b.setText('User'); });
         return _this;
@@ -35,14 +39,19 @@ var AppUserPanel = /** @class */ (function (_super) {
     AppUserPanel.prototype.onEditUserRolesRequested = function () {
         this.awaitable.resolve(new Result_1.Result(AppUserPanel.ResultKeys.editUserRolesRequested));
     };
+    AppUserPanel.prototype.onEditUserModCategoryRequested = function (userModCategory) {
+        this.awaitable.resolve(new Result_1.Result(AppUserPanel.ResultKeys.editUserModCategoryRequested, userModCategory));
+    };
     AppUserPanel.prototype.setUserID = function (userID) {
         this.userComponent.setUserID(userID);
         this.userRoles.setUserID(userID);
+        this.userModCategories.setUserID(userID);
     };
     AppUserPanel.prototype.refresh = function () {
         var promises = [
             this.userComponent.refresh(),
-            this.userRoles.refresh()
+            this.userRoles.refresh(),
+            this.userModCategories.refresh()
         ];
         return Promise.all(promises);
     };
@@ -54,7 +63,8 @@ var AppUserPanel = /** @class */ (function (_super) {
     };
     AppUserPanel.ResultKeys = {
         backRequested: 'back-requested',
-        editUserRolesRequested: 'edit-user-roles-requested'
+        editUserRolesRequested: 'edit-user-roles-requested',
+        editUserModCategoryRequested: 'edit-user-mod-category-requested'
     };
     return AppUserPanel;
 }(Block_1.Block));

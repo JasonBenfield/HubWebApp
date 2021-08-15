@@ -9,6 +9,7 @@ export declare class DropDownFormGroup<TValue> extends SimpleFieldFormGroup<TVal
     readonly constraints: ConstraintCollection;
     protected validateConstraints(fieldErrors: ErrorList): void;
     readonly select: Select<TValue>;
+    readonly valueChanged: import("../Events").DefaultEventHandler<TValue>;
     getValue(): TValue;
     setValue(value: TValue): void;
     setItems(...items: SelectOption<TValue>[]): void;

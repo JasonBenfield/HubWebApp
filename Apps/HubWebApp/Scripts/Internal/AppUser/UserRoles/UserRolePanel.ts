@@ -9,10 +9,9 @@ import { Command } from "XtiShared/Command/Command";
 import { Result } from "XtiShared/Result";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { EditUserRoleListItem } from "./EditUserRoleListItem";
-import { Toolbar } from "../../../../Imports/Shared/Html/Toolbar";
 import { HubTheme } from "../../HubTheme";
-import { FlexColumn } from "../../../../Imports/Shared/Html/FlexColumn";
-import { FlexColumnFill } from "../../../../Imports/Shared/Html/FlexColumnFill";
+import { FlexColumn } from "XtiShared/Html/FlexColumn";
+import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
 
 export class UserRolePanel extends Block {
     public static ResultKeys = {

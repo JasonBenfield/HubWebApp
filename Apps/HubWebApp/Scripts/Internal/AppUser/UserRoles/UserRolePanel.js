@@ -10,8 +10,8 @@ var Command_1 = require("XtiShared/Command/Command");
 var Result_1 = require("XtiShared/Result");
 var EditUserRoleListItem_1 = require("./EditUserRoleListItem");
 var HubTheme_1 = require("../../HubTheme");
-var FlexColumn_1 = require("../../../../Imports/Shared/Html/FlexColumn");
-var FlexColumnFill_1 = require("../../../../Imports/Shared/Html/FlexColumnFill");
+var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
+var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var UserRolePanel = /** @class */ (function (_super) {
     tslib_1.__extends(UserRolePanel, _super);
     function UserRolePanel(hubApi, vm) {

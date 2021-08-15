@@ -5,20 +5,23 @@ using XTI_App.Api;
 
 namespace HubWebAppApi.Users
 {
-    public sealed class UnassignRoleAction : AppAction<int, EmptyActionResult>
+    public sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionResult>
     {
         private readonly AppFromPath appFromPath;
+        private readonly AppFactory factory;
 
-        public UnassignRoleAction(AppFromPath appFromPath)
+        public UnassignRoleAction(AppFromPath appFromPath, AppFactory factory)
         {
             this.appFromPath = appFromPath;
+            this.factory = factory;
         }
 
-        public async Task<EmptyActionResult> Execute(int userRoleID)
+        public async Task<EmptyActionResult> Execute(UserRoleRequest model)
         {
             var app = await appFromPath.Value();
-            var userRole = await app.UserRole(userRoleID);
-            await userRole.Delete();
+            var user = await factory.Users().User(model.UserID);
+            var role = await app.Role(model.RoleID);
+            await user.RemoveRole(role);
             return new EmptyActionResult();
         }
     }

@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 
 namespace HubWebApp.Tests
 {
@@ -114,7 +115,7 @@ namespace HubWebApp.Tests
             await user.AddModifier(hubAppModifier);
         }
 
-        private async Task<HubActionTester<AssignRoleRequest, int>> setup()
+        private async Task<HubActionTester<UserRoleRequest, int>> setup()
         {
             var host = new HubTestHost();
             var services = await host.Setup();
@@ -128,9 +129,9 @@ namespace HubWebApp.Tests
             return viewAppRole;
         }
 
-        private AssignRoleRequest createModel(AppUser userToEdit, AppRole role)
+        private UserRoleRequest createModel(AppUser userToEdit, AppRole role)
         {
-            return new AssignRoleRequest
+            return new UserRoleRequest
             {
                 UserID = userToEdit.ID.Value,
                 RoleID = role.ID.Value

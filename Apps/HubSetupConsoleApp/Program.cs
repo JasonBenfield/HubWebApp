@@ -8,6 +8,7 @@ using XTI_App.Api;
 using XTI_Configuration.Extensions;
 using XTI_Core;
 using XTI_AppSetupApp.Extensions;
+using XTI_App.Abstractions;
 
 namespace HubSetupConsoleApp
 {

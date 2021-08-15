@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_Core;
 using XTI_WebApp;

@@ -15,6 +15,7 @@ var DropDownFormGroup = /** @class */ (function (_super) {
             .configure(function (select) {
             select.addCssName('form-control');
         });
+        _this.valueChanged = _this.select.changed;
         return _this;
     }
     DropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
