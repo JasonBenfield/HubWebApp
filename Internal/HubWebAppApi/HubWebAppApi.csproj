@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.EfApi" Version="1.7.12" />
-    <PackageReference Include="XTI_App.Extensions" Version="1.7.12" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.7.11" />
+    <PackageReference Include="XTI_App.EfApi" Version="1.7.13" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.7.13" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.12" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +41,10 @@
       <LastGenOutput>UserErrors.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PermanentLog\" />
   </ItemGroup>
 
 </Project>

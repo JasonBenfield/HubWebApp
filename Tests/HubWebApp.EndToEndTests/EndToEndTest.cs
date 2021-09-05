@@ -1,4 +1,3 @@
-using HubWebApp.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using XTI_App;
 using XTI_App.Abstractions;
-using XTI_AuthenticatorClient.Extensions;
 using XTI_Configuration.Extensions;
 using XTI_Credentials;
+using XTI_HubAppClient;
+using XTI_Secrets;
 using XTI_Secrets.Extensions;
 using XTI_WebAppClient;
 
@@ -71,17 +70,22 @@ namespace HubWebApp.EndToEndTests
                         services.AddHttpClient();
                         services.AddDataProtection();
                         services.AddFileSecretCredentials();
-                        services.AddAuthenticatorClientServices(hostContext.Configuration);
+                        services.AddSingleton(sp =>
+                        {
+                            var credentialsFactory = sp.GetService<SecretCredentialsFactory>();
+                            var credentials = credentialsFactory.Create("TEST");
+                            return new XtiTokenFactory(credentials);
+                        });
                         services.AddSingleton<ICredentials, TestCredentials>();
                         services.AddScoped(sp =>
                         {
                             var httpClientFactory = sp.GetService<IHttpClientFactory>();
-                            var token = sp.GetService<XtiToken>();
+                            var tokenFactory = sp.GetService<IXtiTokenFactory>();
                             var appOptions = sp.GetService<IOptions<AppOptions>>().Value;
                             return new HubAppClient
                             (
                                 httpClientFactory,
-                                token,
+                                tokenFactory,
                                 appOptions.BaseUrl,
                                 "Current"
                             );
