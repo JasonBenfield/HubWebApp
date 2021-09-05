@@ -6,7 +6,7 @@ namespace XTI_HubAppClient
 {
     public sealed partial class EditUserForm : Form
     {
-        public EditUserForm(string name) : base(name)
+        public EditUserForm(string name): base(name)
         {
             UserID = AddField(new HiddenField<int>(FieldName, nameof(UserID)));
             PersonName = AddField(new InputField<string>(FieldName, nameof(PersonName)));

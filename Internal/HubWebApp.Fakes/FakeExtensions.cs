@@ -1,10 +1,10 @@
-﻿using HubWebAppApi;
-using HubWebAppApi.Apps;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Apps;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes

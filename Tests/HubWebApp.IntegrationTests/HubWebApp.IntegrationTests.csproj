@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
-    <ProjectReference Include="..\..\Internal\HubWebAppApi\HubWebAppApi.csproj" />
   </ItemGroup>
 
 </Project>

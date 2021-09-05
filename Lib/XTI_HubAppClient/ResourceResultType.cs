@@ -28,7 +28,7 @@ namespace XTI_HubAppClient
         }
 
         public static readonly ResourceResultTypes Values = new ResourceResultTypes();
-        public ResourceResultType(int value, string displayText) : base(value, displayText)
+        public ResourceResultType(int value, string displayText): base(value, displayText)
         {
         }
     }

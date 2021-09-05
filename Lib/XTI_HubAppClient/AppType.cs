@@ -28,7 +28,7 @@ namespace XTI_HubAppClient
         }
 
         public static readonly AppTypes Values = new AppTypes();
-        public AppType(int value, string displayText) : base(value, displayText)
+        public AppType(int value, string displayText): base(value, displayText)
         {
         }
     }

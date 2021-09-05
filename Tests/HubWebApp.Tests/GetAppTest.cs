@@ -1,4 +1,4 @@
-﻿using HubWebAppApi;
+﻿using XTI_HubAppApi;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using XTI_App;

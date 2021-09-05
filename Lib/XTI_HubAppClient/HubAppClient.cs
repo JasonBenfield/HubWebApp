@@ -6,7 +6,7 @@ namespace XTI_HubAppClient
 {
     public sealed partial class HubAppClient : AppClient
     {
-        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, string baseUrl, string version = DefaultVersion) : base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
+        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, string baseUrl, string version = DefaultVersion): base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
         {
             xtiToken = tokenFactory.Create(this);
             User = new UserGroup(httpClientFactory, xtiToken, url);
@@ -26,7 +26,7 @@ namespace XTI_HubAppClient
             AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, url);
         }
 
-        public const string DefaultVersion = "V21";
+        public const string DefaultVersion = "Current";
         public UserGroup User { get; }
 
         public UserCacheGroup UserCache { get; }

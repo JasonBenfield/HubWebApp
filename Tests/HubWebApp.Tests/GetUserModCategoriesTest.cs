@@ -1,5 +1,5 @@
-﻿using HubWebAppApi;
-using HubWebAppApi.Users;
+﻿using XTI_HubAppApi;
+using XTI_HubAppApi.Users;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Threading.Tasks;

@@ -15,7 +15,7 @@ var Result_1 = require("../../../../Imports/Shared/Result");
 var DropDownFormGroup_1 = require("../../../../Imports/Shared/Forms/DropDownFormGroup");
 var SelectOption_1 = require("../../../../Imports/Shared/Html/SelectOption");
 var UserModCategoryPanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserModCategoryPanel, _super);
+    tslib_1.__extends(UserModCategoryPanel, _super);
     function UserModCategoryPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -50,10 +50,10 @@ var UserModCategoryPanel = /** @class */ (function (_super) {
         this.userID = userID;
     };
     UserModCategoryPanel.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var access, sourceItems, _i, _a, userRole, _b, _c, role;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_d) {
+            return tslib_1.__generator(this, function (_d) {
                 switch (_d.label) {
                     case 0: return [4 /*yield*/, this.getUserRoleAccess(this.userID)];
                     case 1:
@@ -95,14 +95,14 @@ var UserModCategoryPanel = /** @class */ (function (_super) {
         return result;
     };
     UserModCategoryPanel.prototype.getUserRoleAccess = function (userID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var access;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                             var request;
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
                                         request = {

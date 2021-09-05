@@ -28,7 +28,7 @@ namespace XTI_HubAppClient
         }
 
         public static readonly AppVersionStatuss Values = new AppVersionStatuss();
-        public AppVersionStatus(int value, string displayText) : base(value, displayText)
+        public AppVersionStatus(int value, string displayText): base(value, displayText)
         {
         }
     }

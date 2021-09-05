@@ -1,6 +1,6 @@
 ﻿using HubWebApp.ApiControllers;
-using HubWebAppApi;
-using HubWebAppApi.Apps;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Apps;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

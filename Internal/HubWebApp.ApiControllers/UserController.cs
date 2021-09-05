@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_WebApp.Api;
-using HubWebAppApi;
-using HubWebAppApi.Users;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Users;
 using XTI_App;
 using XTI_App.Api;
 

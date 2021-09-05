@@ -29,9 +29,9 @@ var MainPage = /** @class */ (function () {
         }
     }
     MainPage.prototype.activateAppDetailPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result, resourceGroup, modCategory;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.appDetailPanel);
@@ -56,9 +56,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateResourceGroupPanel = function (groupID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result, resource, modCategory;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.resourceGroupPanel);
@@ -86,9 +86,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateResourcePanel = function (resourceID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.resourcePanel);
@@ -108,9 +108,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateModCategoryPanel = function (modCategoryID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result, resourceGroup;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.modCategoryPanel);

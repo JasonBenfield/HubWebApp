@@ -20,7 +20,7 @@ var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var AppUserGroup_1 = require("./AppUserGroup");
 var AppUserMaintenanceGroup_1 = require("./AppUserMaintenanceGroup");
 var HubAppApi = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(HubAppApi, _super);
+    tslib_1.__extends(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
         if (version === void 0) { version = ''; }
         var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
@@ -41,7 +41,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.AppUserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new AppUserMaintenanceGroup_1.AppUserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V21';
+    HubAppApi.DefaultVersion = 'Current';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

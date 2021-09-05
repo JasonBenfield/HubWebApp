@@ -8,7 +8,7 @@ var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var TextCss_1 = require("XtiShared/TextCss");
 var EventListItem = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(EventListItem, _super);
+    tslib_1.__extends(EventListItem, _super);
     function EventListItem(evt, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

@@ -5,7 +5,7 @@ exports.UserMaintenanceGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var UserMaintenanceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserMaintenanceGroup, _super);
+    tslib_1.__extends(UserMaintenanceGroup, _super);
     function UserMaintenanceGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'UserMaintenance') || this;
         _this.EditUserAction = _this.createAction('EditUser', 'Edit User');
