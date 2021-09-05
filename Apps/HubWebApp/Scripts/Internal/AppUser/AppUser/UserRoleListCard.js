@@ -15,7 +15,7 @@ var Command_1 = require("XtiShared/Command/Command");
 var Card_1 = require("XtiShared/Card/Card");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var UserRoleListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserRoleListCard, _super);
+    tslib_1.__extends(UserRoleListCard, _super);
     function UserRoleListCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -43,9 +43,9 @@ var UserRoleListCard = /** @class */ (function (_super) {
         this.userID = userID;
     };
     UserRoleListCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var roles;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getRoles()];
                     case 1:
@@ -64,13 +64,13 @@ var UserRoleListCard = /** @class */ (function (_super) {
         });
     };
     UserRoleListCard.prototype.getRoles = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var roles;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.AppUser.GetUserRoles(this.userID)];
                                     case 1:

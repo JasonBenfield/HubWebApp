@@ -1,4 +1,4 @@
-﻿using HubWebAppApi;
+﻿using XTI_HubAppApi;
 using HubWebApp.Fakes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

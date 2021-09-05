@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XTI_App.EfApi" Version="1.7.13" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.7.13" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Apps\AppErrors.Designer.cs">
+      <DependentUpon>AppErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Auth\AuthErrors.Designer.cs">
+      <DependentUpon>AuthErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Users\UserErrors.Designer.cs">
+      <DependentUpon>UserErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Apps\AppErrors.resx">
+      <LastGenOutput>AppErrors.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Auth\AuthErrors.resx">
+      <LastGenOutput>AuthErrors.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Users\UserErrors.resx">
+      <LastGenOutput>UserErrors.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

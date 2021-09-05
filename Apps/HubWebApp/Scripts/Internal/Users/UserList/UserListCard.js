@@ -9,7 +9,7 @@ var Row_1 = require("XtiShared/Grid/Row");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var UserListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserListCard, _super);
+    tslib_1.__extends(UserListCard, _super);
     function UserListCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -27,9 +27,9 @@ var UserListCard = /** @class */ (function (_super) {
         this._userSelected.invoke(listItem.getData());
     };
     UserListCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var users;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getUsers()];
                     case 1:
@@ -52,13 +52,13 @@ var UserListCard = /** @class */ (function (_super) {
         });
     };
     UserListCard.prototype.getUsers = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var users;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.Users.GetUsers()];
                                     case 1:

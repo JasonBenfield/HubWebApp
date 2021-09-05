@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HubWebAppApi\HubWebAppApi.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubAppApi\XTI_HubAppApi.csproj" />
   </ItemGroup>
 
 </Project>

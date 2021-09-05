@@ -8,7 +8,7 @@ namespace XTI_HubAppClient
 {
     public sealed partial class AuthApiGroup : AppClientGroup
     {
-        public AuthApiGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl) : base(httpClientFactory, xtiToken, baseUrl, "AuthApi")
+        public AuthApiGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "AuthApi")
         {
         }
 

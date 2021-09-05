@@ -5,7 +5,7 @@ exports.ResourceGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var ResourceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroup, _super);
+    tslib_1.__extends(ResourceGroup, _super);
     function ResourceGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Resource') || this;
         _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');

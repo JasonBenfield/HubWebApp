@@ -5,7 +5,7 @@ exports.AppUserGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var AppUserGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppUserGroup, _super);
+    tslib_1.__extends(AppUserGroup, _super);
     function AppUserGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'AppUser') || this;
         _this.Index = _this.createView('Index');

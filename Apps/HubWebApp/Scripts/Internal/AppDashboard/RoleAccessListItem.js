@@ -10,7 +10,7 @@ var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ContextualClass_1 = require("XtiShared/ContextualClass");
 var FaIcon_1 = require("XtiShared/FaIcon");
 var RoleAccessListItem = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(RoleAccessListItem, _super);
+    tslib_1.__extends(RoleAccessListItem, _super);
     function RoleAccessListItem(accessItem, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

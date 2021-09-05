@@ -31,7 +31,7 @@ namespace XTI_HubAppClient
         }
 
         public static readonly AppEventSeveritys Values = new AppEventSeveritys();
-        public AppEventSeverity(int value, string displayText) : base(value, displayText)
+        public AppEventSeverity(int value, string displayText): base(value, displayText)
         {
         }
     }

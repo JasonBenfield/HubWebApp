@@ -1,4 +1,4 @@
-﻿using HubWebAppApi.Users;
+﻿using XTI_HubAppApi.Users;
 using MainDB.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -10,7 +10,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ContextualClass_1 = require("XtiShared/ContextualClass");
 var EditUserRoleListItem = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(EditUserRoleListItem, _super);
+    tslib_1.__extends(EditUserRoleListItem, _super);
     function EditUserRoleListItem(hubApi, vm) {
         if (vm === void 0) { vm = new ButtonListItemViewModel_1.ButtonListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -35,8 +35,8 @@ var EditUserRoleListItem = /** @class */ (function (_super) {
         return this.toggleAssignment();
     };
     EditUserRoleListItem.prototype.toggleAssignment = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.disable();

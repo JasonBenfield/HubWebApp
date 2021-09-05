@@ -1,5 +1,5 @@
-﻿using HubWebAppApi.Apps;
-using HubWebAppApi.Users;
+﻿using XTI_HubAppApi.Apps;
+using XTI_HubAppApi.Users;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;

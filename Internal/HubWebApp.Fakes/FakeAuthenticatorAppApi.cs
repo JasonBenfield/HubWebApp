@@ -1,4 +1,4 @@
-﻿using HubWebAppApi;
+﻿using XTI_HubAppApi;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;

@@ -18,7 +18,7 @@ var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var MarginCss_1 = require("XtiShared/MarginCss");
 var HubTheme_1 = require("../../HubTheme");
 var AppDetailPanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppDetailPanel, _super);
+    tslib_1.__extends(AppDetailPanel, _super);
     function AppDetailPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -59,9 +59,9 @@ var AppDetailPanel = /** @class */ (function (_super) {
         this.awaitable.resolve(new Result_1.Result(AppDetailPanel.ResultKeys.modCategorySelected, modCategory));
     };
     AppDetailPanel.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var promises;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 promises = [
                     this.app.refresh(),
                     this.currentVersion.refresh(),

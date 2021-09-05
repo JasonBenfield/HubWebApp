@@ -1,5 +1,5 @@
-﻿using HubWebAppApi;
-using HubWebAppApi.PermanentLog;
+﻿using XTI_HubAppApi;
+using XTI_HubAppApi.PermanentLog;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;

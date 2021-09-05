@@ -1,4 +1,4 @@
-﻿using HubWebAppApi;
+﻿using XTI_HubAppApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;

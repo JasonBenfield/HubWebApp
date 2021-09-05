@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using XTI_ApiGeneratorApp.Extensions;
 using XTI_App.Api;
 using XTI_Configuration.Extensions;
-using HubWebAppApi;
+using XTI_HubAppApi;
 
 namespace HubApiGeneratorApp
 {

@@ -5,7 +5,7 @@ exports.AppUserMaintenanceGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var AppUserMaintenanceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppUserMaintenanceGroup, _super);
+    tslib_1.__extends(AppUserMaintenanceGroup, _super);
     function AppUserMaintenanceGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'AppUserMaintenance') || this;
         _this.AssignRoleAction = _this.createAction('AssignRole', 'Assign Role');

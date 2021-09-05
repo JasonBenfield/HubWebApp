@@ -25,7 +25,7 @@ namespace XTI_HubAppClient
         }
 
         public static readonly AppVersionTypes Values = new AppVersionTypes();
-        public AppVersionType(int value, string displayText) : base(value, displayText)
+        public AppVersionType(int value, string displayText): base(value, displayText)
         {
         }
     }

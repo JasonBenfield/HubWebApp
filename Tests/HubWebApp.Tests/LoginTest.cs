@@ -1,6 +1,6 @@
 using HubWebApp.Fakes;
-using HubWebAppApi;
-using HubWebAppApi.Auth;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

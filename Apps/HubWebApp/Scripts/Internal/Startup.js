@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var HubAppApi_1 = require("../Hub/Api/HubAppApi");
 var BaseStartup_1 = require("XtiShared/BaseStartup");
 var Startup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(Startup, _super);
+    tslib_1.__extends(Startup, _super);
     function Startup() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

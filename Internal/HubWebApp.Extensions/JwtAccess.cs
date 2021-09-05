@@ -1,4 +1,4 @@
-﻿using HubWebAppApi;
+﻿using XTI_HubAppApi;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

@@ -6,7 +6,7 @@ namespace XTI_HubAppClient
 {
     public sealed partial class VerifyLoginForm : Form
     {
-        public VerifyLoginForm(string name) : base(name)
+        public VerifyLoginForm(string name): base(name)
         {
             UserName = AddField(new InputField<string>(FieldName, nameof(UserName)));
             Password = AddField(new InputField<string>(FieldName, nameof(Password)));
