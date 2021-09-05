@@ -13,14 +13,13 @@
     <PackageReference Include="nunit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.8-dev210127065213196" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.15" />
     <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.7" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.11" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.12" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\HubWebApp.Client\HubWebApp.Client.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
   </ItemGroup>
 
 </Project>

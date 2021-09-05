@@ -1,4 +1,5 @@
 ﻿using HubWebAppApi.Apps;
+using HubWebAppApi.PermanentLog;
 using HubWebAppApi.Users;
 using System;
 using XTI_App.Api;
@@ -34,6 +35,11 @@ namespace HubWebAppApi
             (
                 source.AddGroup(nameof(AuthApi), ResourceAccess.AllowAnonymous()),
                 new AuthActionFactory(services)
+            );
+            PermanentLog = new PermanentLogGroup
+            (
+                source.AddGroup(nameof(PermanentLog), ResourceAccess.AllowAuthenticated()),
+                new PermanentLogGroupActionFactory(services)
             );
             Apps = new AppListGroup
             (
@@ -123,6 +129,7 @@ namespace HubWebAppApi
 
         public AuthGroup Auth { get; }
         public AuthApiGroup AuthApi { get; }
+        public PermanentLogGroup PermanentLog { get; }
         public AppListGroup Apps { get; }
         public AppInquiryGroup App { get; }
         public ResourceGroupInquiryGroup ResourceGroup { get; }

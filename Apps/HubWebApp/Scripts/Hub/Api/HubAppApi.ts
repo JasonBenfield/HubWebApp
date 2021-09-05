@@ -6,6 +6,7 @@ import { UserGroup } from "./UserGroup";
 import { UserCacheGroup } from "./UserCacheGroup";
 import { AuthGroup } from "./AuthGroup";
 import { AuthApiGroup } from "./AuthApiGroup";
+import { PermanentLogGroup } from "./PermanentLogGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
@@ -27,6 +28,7 @@ export class HubAppApi extends AppApi {
 		this.UserCache = this.addGroup((evts, resourceUrl) => new UserCacheGroup(evts, resourceUrl));
 		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
 		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
+		this.PermanentLog = this.addGroup((evts, resourceUrl) => new PermanentLogGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
@@ -43,6 +45,7 @@ export class HubAppApi extends AppApi {
 	readonly UserCache: UserCacheGroup;
 	readonly Auth: AuthGroup;
 	readonly AuthApi: AuthApiGroup;
+	readonly PermanentLog: PermanentLogGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;
 	readonly ResourceGroup: ResourceGroupGroup;
