@@ -13,7 +13,7 @@ var FormGroup_1 = require("XtiShared/Html/FormGroup");
 var TextCss_1 = require("XtiShared/TextCss");
 var HubTheme_1 = require("../../HubTheme");
 var UserComponent = /** @class */ (function (_super) {
-    tslib_1.__extends(UserComponent, _super);
+    (0, tslib_1.__extends)(UserComponent, _super);
     function UserComponent(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -51,9 +51,9 @@ var UserComponent = /** @class */ (function (_super) {
         this._editRequested.invoke(this.userID);
     };
     UserComponent.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var user;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getUser(this.userID)];
                     case 1:
@@ -70,13 +70,13 @@ var UserComponent = /** @class */ (function (_super) {
         });
     };
     UserComponent.prototype.getUser = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var user;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.UserInquiry.GetUser(userID)];
                                     case 1:

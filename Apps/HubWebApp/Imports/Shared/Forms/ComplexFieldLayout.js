@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ComplexFieldLayout = void 0;
 var BaseForm_1 = require("./BaseForm");
 var ComplexFieldLayout = /** @class */ (function () {
     function ComplexFieldLayout(complexField) {

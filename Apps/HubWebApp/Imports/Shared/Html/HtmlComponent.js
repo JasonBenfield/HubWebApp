@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HtmlComponent = void 0;
 var CssClass_1 = require("../CssClass");
 var HtmlComponent = /** @class */ (function () {
     function HtmlComponent(vm) {

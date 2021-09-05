@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BlockViewModel = void 0;
 var tslib_1 = require("tslib");
 var HtmlComponentViewModel_1 = require("./HtmlComponentViewModel");
 var template = require("./Block.html");

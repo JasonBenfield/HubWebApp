@@ -71,6 +71,20 @@ namespace HubWebApp.Tests
             return factory.Users().User(new AppUserName("hubadmin"));
         }
 
+        public async Task<AppRole> AdminRole()
+        {
+            var app = await HubApp();
+            var adminRole = await app.Role(AppRoleName.Admin);
+            return adminRole;
+        }
+
+        public async Task<AppRole> DenyAccessRole()
+        {
+            var app = await HubApp();
+            var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
+            return denyAccessRole;
+        }
+
         public async Task<Modifier> HubAppModifier()
         {
             var hubApp = await HubApp();
@@ -103,8 +117,10 @@ namespace HubWebApp.Tests
             var appContext = Services.GetService<IAppContext>();
             var userContext = (FakeUserContext)Services.GetService<IUserContext>();
             userContext.SetUser(user);
+            var pathAccessor = (FakeXtiPathAccessor)Services.GetService<IXtiPathAccessor>();
             var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
-            var apiUser = new XtiAppApiUser(appContext, userContext, path);
+            pathAccessor.SetPath(path);
+            var apiUser = new AppApiUser(appContext, userContext, pathAccessor);
             var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
             var action = getAction(hubApi);
             var result = await action.Execute(model);

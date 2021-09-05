@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApiFactory = void 0;
 var AppApiEvents_1 = require("./AppApiEvents");
 var ConsoleLog_1 = require("./ConsoleLog");
 var HostEnvironment_1 = require("./HostEnvironment");
@@ -10,7 +11,7 @@ var AppApiFactory = /** @class */ (function () {
         set: function (defaultApi) {
             this._defaultApiType = defaultApi;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AppApiFactory.prototype.defaultApi = function (modalError) {

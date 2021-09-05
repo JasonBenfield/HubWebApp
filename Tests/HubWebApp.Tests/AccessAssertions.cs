@@ -51,6 +51,8 @@ namespace HubWebApp.Tests
         {
             var loggedInUser = await addUser(tester, "assertions_user");
             await loggedInUser.AddRole(role);
+            var denyAccessRole = await tester.DenyAccessRole();
+            await loggedInUser.AddRole(denyAccessRole, modifier);
             Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
         }
 
@@ -60,10 +62,11 @@ namespace HubWebApp.Tests
             Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser));
         }
 
-        public async Task ShouldThrowError_WhenRoleIsNotAssignedToUserButModifierIsAssignedToUser(TModel model, Modifier modifier)
+        public async Task ShouldThrowError_WhenModifiedRoleIsNotAssignedToUser(TModel model, Modifier modifier)
         {
             var loggedInUser = await addUser(tester, "assertions_user");
-            await loggedInUser.AddModifier(modifier);
+            var denyAccessRole = await tester.DenyAccessRole();
+            await loggedInUser.AddRole(denyAccessRole, modifier);
             Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
         }
 

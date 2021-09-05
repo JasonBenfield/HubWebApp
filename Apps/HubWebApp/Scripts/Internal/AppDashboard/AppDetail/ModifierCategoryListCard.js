@@ -8,7 +8,7 @@ var Row_1 = require("XtiShared/Grid/Row");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var ModifierCategoryListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierCategoryListCard, _super);
+    (0, tslib_1.__extends)(ModifierCategoryListCard, _super);
     function ModifierCategoryListCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -25,9 +25,9 @@ var ModifierCategoryListCard = /** @class */ (function (_super) {
         this._modCategorySelected.invoke(item.getData());
     };
     ModifierCategoryListCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var modCategories;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getModCategories()];
                     case 1:
@@ -47,13 +47,13 @@ var ModifierCategoryListCard = /** @class */ (function (_super) {
         });
     };
     ModifierCategoryListCard.prototype.getModCategories = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var modCategories;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.App.GetModifierCategories()];
                                     case 1:

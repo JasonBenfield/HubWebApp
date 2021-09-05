@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpClient = exports.HttpPostResult = void 0;
 var HttpPostResult = /** @class */ (function () {
     function HttpPostResult(result, url, status, responseText) {
         this.result = result;

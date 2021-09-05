@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextCss = void 0;
 var ContextualClass_1 = require("./ContextualClass");
 var CssClass_1 = require("./CssClass");
 var TextCss = /** @class */ (function () {

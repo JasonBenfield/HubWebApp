@@ -16,7 +16,7 @@ var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
 var HubTheme_1 = require("../../HubTheme");
 var ResourcePanel = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourcePanel, _super);
+    (0, tslib_1.__extends)(ResourcePanel, _super);
     function ResourcePanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

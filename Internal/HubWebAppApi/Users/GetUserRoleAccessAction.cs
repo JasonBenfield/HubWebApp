@@ -22,8 +22,8 @@ namespace HubWebAppApi.Users
             var app = await appFromPath.Value();
             var user = await factory.Users().User(model.UserID);
             var modifier = await factory.Modifiers().Modifier(model.ModifierID);
-            var unassignedRoles = await user.ExplicitlyUnassignedRoles(app, modifier);
-            var assignedRoles = await user.ExplicitlyAssignedRoles(app, modifier);
+            var unassignedRoles = await user.ExplicitlyUnassignedRoles(modifier);
+            var assignedRoles = await user.ExplicitlyAssignedRoles(modifier);
             return new UserRoleAccessModel
             (
                 unassignedRoles.Select(role => role.ToModel()).ToArray(),

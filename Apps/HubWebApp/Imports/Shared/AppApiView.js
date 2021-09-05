@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApiView = void 0;
 var UrlBuilder_1 = require("./UrlBuilder");
 var WebPage_1 = require("./WebPage");
 var AppApiView = /** @class */ (function () {

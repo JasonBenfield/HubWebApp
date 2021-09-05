@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LabelViewModel = void 0;
 var tslib_1 = require("tslib");
 var ComponentTemplate_1 = require("../ComponentTemplate");
 var ko = require("knockout");

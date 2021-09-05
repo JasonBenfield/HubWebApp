@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ComponentViewModel = void 0;
 var ko = require("knockout");
 var ComponentViewModel = /** @class */ (function () {
     function ComponentViewModel(componentTemplate) {

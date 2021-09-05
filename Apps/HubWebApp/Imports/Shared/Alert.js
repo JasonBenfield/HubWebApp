@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Alert = void 0;
 var tslib_1 = require("tslib");
 var ContextualClass_1 = require("./ContextualClass");
 var BlockViewModel_1 = require("./Html/BlockViewModel");

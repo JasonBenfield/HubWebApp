@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LabelColumn = void 0;
 var tslib_1 = require("tslib");
 var ColumnCss_1 = require("../ColumnCss");
 var Label_1 = require("../Html/Label");

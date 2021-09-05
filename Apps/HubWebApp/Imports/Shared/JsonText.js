@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonText = void 0;
 var JsonText = /** @class */ (function () {
     function JsonText(data) {
         this.formatDates(data);

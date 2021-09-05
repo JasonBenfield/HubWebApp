@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Span = void 0;
 var tslib_1 = require("tslib");
 var SpanViewModel_1 = require("./SpanViewModel");
 var AggregateComponent_1 = require("./AggregateComponent");

@@ -6,7 +6,7 @@ var Card_1 = require("XtiShared/Card/Card");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceGroupAccessCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceGroupAccessCard, _super);
+    (0, tslib_1.__extends)(ResourceGroupAccessCard, _super);
     function ResourceGroupAccessCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -19,9 +19,9 @@ var ResourceGroupAccessCard = /** @class */ (function (_super) {
         this.groupID = groupID;
     };
     ResourceGroupAccessCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var accessItems;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getRoleAccessItems()];
                     case 1:
@@ -38,36 +38,29 @@ var ResourceGroupAccessCard = /** @class */ (function (_super) {
         });
     };
     ResourceGroupAccessCard.prototype.getRoleAccessItems = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var access, accessItems, _i, _a, allowedRole, _b, _c, deniedRole;
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var allowedRoles, accessItems, _i, allowedRoles_1, allowedRole;
             var _this = this;
-            return tslib_1.__generator(this, function (_d) {
-                switch (_d.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.ResourceGroup.GetRoleAccess(this.groupID)];
                                     case 1:
-                                        access = _a.sent();
+                                        allowedRoles = _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); })];
                     case 1:
-                        _d.sent();
+                        _a.sent();
                         accessItems = [];
-                        for (_i = 0, _a = access.AllowedRoles; _i < _a.length; _i++) {
-                            allowedRole = _a[_i];
+                        for (_i = 0, allowedRoles_1 = allowedRoles; _i < allowedRoles_1.length; _i++) {
+                            allowedRole = allowedRoles_1[_i];
                             accessItems.push({
                                 isAllowed: true,
                                 role: allowedRole
-                            });
-                        }
-                        for (_b = 0, _c = access.DeniedRoles; _b < _c.length; _b++) {
-                            deniedRole = _c[_b];
-                            accessItems.push({
-                                isAllowed: false,
-                                role: deniedRole
                             });
                         }
                         return [2 /*return*/, accessItems];

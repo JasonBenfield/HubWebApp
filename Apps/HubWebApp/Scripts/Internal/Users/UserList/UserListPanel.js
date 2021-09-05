@@ -10,7 +10,7 @@ var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var Result_1 = require("XtiShared/Result");
 var UserListCard_1 = require("./UserListCard");
 var UserListPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(UserListPanel, _super);
+    (0, tslib_1.__extends)(UserListPanel, _super);
     function UserListPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

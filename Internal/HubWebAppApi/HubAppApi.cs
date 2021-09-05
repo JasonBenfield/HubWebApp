@@ -25,9 +25,19 @@ namespace HubWebAppApi
                 services
             )
         {
+            Auth = new AuthGroup
+            (
+                source.AddGroup(nameof(Auth), ResourceAccess.AllowAnonymous()),
+                new AuthActionFactory(services)
+            );
+            AuthApi = new AuthApiGroup
+            (
+                source.AddGroup(nameof(AuthApi), ResourceAccess.AllowAnonymous()),
+                new AuthActionFactory(services)
+            );
             Apps = new AppListGroup
             (
-                source.AddGroup(nameof(Apps), Access.WithAllowed(HubInfo.Roles.ViewApp)),
+                source.AddGroup(nameof(Apps), ResourceAccess.AllowAuthenticated()),
                 new AppListActionFactory(services)
             );
             App = new AppInquiryGroup
@@ -111,6 +121,8 @@ namespace HubWebAppApi
             );
         }
 
+        public AuthGroup Auth { get; }
+        public AuthApiGroup AuthApi { get; }
         public AppListGroup Apps { get; }
         public AppInquiryGroup App { get; }
         public ResourceGroupInquiryGroup ResourceGroup { get; }

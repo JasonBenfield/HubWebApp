@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormGroupCollection = void 0;
 var BooleanDropDownFormGroup_1 = require("./BooleanDropDownFormGroup");
 var ComplexFieldFormGroup_1 = require("./ComplexFieldFormGroup");
 var DateDropDownFormGroup_1 = require("./DateDropDownFormGroup");

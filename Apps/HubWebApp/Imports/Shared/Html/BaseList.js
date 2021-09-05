@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseList = void 0;
 var tslib_1 = require("tslib");
 var Enumerable_1 = require("../Enumerable");
 var Events_1 = require("../Events");
@@ -51,7 +52,7 @@ var BaseList = /** @class */ (function (_super) {
             config(sourceItem, item);
             return item;
         }).value();
-        (_a = this.items).splice.apply(_a, tslib_1.__spreadArrays([0, this.items.length], items));
+        (_a = this.items).splice.apply(_a, tslib_1.__spreadArray([0, this.items.length], items));
         this.vm.items(itemVMs);
         this.vm.hasItems(itemVMs.length > 0);
     };

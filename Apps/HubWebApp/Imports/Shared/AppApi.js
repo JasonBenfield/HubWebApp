@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApi = void 0;
 var AppResourceUrl_1 = require("./AppResourceUrl");
 var XtiUrl_1 = require("./XtiUrl");
 var AppApi = /** @class */ (function () {
@@ -10,12 +11,12 @@ var AppApi = /** @class */ (function () {
     }
     Object.defineProperty(AppApi.prototype, "name", {
         get: function () { return this.resourceUrl.path.app; },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(AppApi.prototype, "url", {
         get: function () { return this.resourceUrl.relativeUrl; },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AppApi.prototype.addGroup = function (createGroup) {

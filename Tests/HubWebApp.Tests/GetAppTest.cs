@@ -44,8 +44,9 @@ namespace HubWebApp.Tests
         {
             var tester = await setup();
             var adminUser = await tester.AdminUser();
+            var adminRole = await tester.AdminRole();
             var hubAppModifier = await tester.HubAppModifier();
-            await adminUser.AddModifier(hubAppModifier);
+            await adminUser.AddRole(adminRole, hubAppModifier);
             var app = await tester.Execute(new EmptyRequest(), adminUser, hubAppModifier.ModKey());
             Assert.That(app?.Title, Is.EqualTo("Hub"), "Should get app");
         }

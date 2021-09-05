@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Label = void 0;
 var tslib_1 = require("tslib");
 var HtmlComponent_1 = require("./HtmlComponent");
 var AggregateComponent_1 = require("./AggregateComponent");

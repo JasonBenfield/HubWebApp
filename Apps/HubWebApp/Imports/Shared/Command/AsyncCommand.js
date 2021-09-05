@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AsyncCommand = void 0;
 var tslib_1 = require("tslib");
 var ButtonCommandItem_1 = require("./ButtonCommandItem");
 var AsyncCommand = /** @class */ (function () {

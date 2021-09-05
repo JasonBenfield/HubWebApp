@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CardTitleHeader = void 0;
 var tslib_1 = require("tslib");
 var CardHeader_1 = require("./CardHeader");
 var BlockViewModel_1 = require("../Html/BlockViewModel");

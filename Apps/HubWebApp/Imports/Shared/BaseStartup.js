@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseStartup = exports.defaultApi = void 0;
 var PageFrame_1 = require("./PageFrame");
 var BaseStartup = /** @class */ (function () {
     function BaseStartup() {

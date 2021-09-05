@@ -45,12 +45,16 @@ export class EditUserModifierListItem extends ButtonListGroupItem {
         this.icon.setName('sync-alt');
         this.icon.startAnimation('spin');
         try {
-            if (this.userRoleID) {
-                await this.hubApi.AppUserMaintenance.UnassignRole(this.userRoleID);
+            if (this.roleID) {
+                let request: IUserRoleRequest = {
+                    UserID: this.userID,
+                    RoleID: this.roleID
+                };
+                await this.hubApi.AppUserMaintenance.UnassignRole(request);
                 this.unassignedIcon();
             }
             else {
-                this.userRoleID = await this.hubApi.AppUserMaintenance.AssignRole({
+                this.roleID = await this.hubApi.AppUserMaintenance.AssignRole({
                     UserID: this.userID,
                     RoleID: this.roleID
                 });
@@ -65,12 +69,10 @@ export class EditUserModifierListItem extends ButtonListGroupItem {
 
     private readonly icon: FaIcon;
 
-    private userRoleID: number;
     private roleID: number;
 
-    withAssignedModifier(userRole: IAppUserRoleModel) {
-        this.modKey.setText(userRole.Role.Name);
-        this.userRoleID = userRole.ID;
+    withAssignedModifier(userRole: IAppRoleModel) {
+        this.modKey.setText(userRole.Name);
         this.roleID = userRole.ID;
         this.assignedIcon();
     }
@@ -84,7 +86,7 @@ export class EditUserModifierListItem extends ButtonListGroupItem {
     withUnassignedModifier(modifier: IModifierModel) {
         this.modKey.setText(modifier.ModKey);
         this.modDisplayText.setText(modifier.DisplayText);
-        this.userRoleID = null;
+        this.roleID = null;
         this.roleID = modifier.ID;
         this.unassignedIcon();
     }

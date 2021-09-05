@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DropdownBindingHandler = void 0;
 var ko = require("knockout");
 var bootstrap_1 = require("bootstrap");
 var $ = require("jquery");

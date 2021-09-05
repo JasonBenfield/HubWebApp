@@ -2,7 +2,6 @@
 using HubWebAppApi.Users;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Abstractions;
@@ -28,61 +27,16 @@ namespace HubWebApp.Tests
         }
 
         [Test]
-        public async Task ShouldThrowError_WhenUserIsNotAssignedToAnAllowedRole()
-        {
-            var tester = await setup();
-            var user = await addUser(tester, "some.user");
-            var modifier = await tester.HubAppModifier();
-            await AccessAssertions.Create(tester)
-                .ShouldThrowError_WhenRoleIsNotAssignedToUserButModifierIsAssignedToUser
-                (
-                    user.ID.Value,
-                    modifier
-                );
-        }
-
-        [Test]
-        public async Task ShouldGetUserModCategories_UserDoesNotHaveAccessTo()
-        {
-            var tester = await setup();
-            var loggedInUser = await addUser(tester, "loggedinUser");
-            await grantUserAccess(tester, loggedInUser);
-            var user = await addUser(tester, "some.user");
-            var hubAppModifier = await tester.HubAppModifier();
-            var modCategories = await tester.Execute(user.ID.Value, loggedInUser, hubAppModifier.ModKey());
-            Assert.That(modCategories.Length, Is.EqualTo(1), "Should get one modifier category");
-            Assert.That(modCategories[0].ModCategory.Name, Is.EqualTo(HubInfo.ModCategories.Apps.DisplayText));
-            Assert.That(modCategories[0].HasAccessToAll, Is.False, "Should not have access to all modifiers in the modifier category");
-            Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(0), "Should noot have access to any modifiers in the modifier category");
-        }
-
-        [Test]
-        public async Task ShouldGetUserModCategories_WhenUserHasAccessToAllModifiers()
-        {
-            var tester = await setup();
-            var loggedInUser = await addUser(tester, "loggedinUser");
-            await grantUserAccess(tester, loggedInUser);
-            var user = await addUser(tester, "some.user");
-            var hubAppModifier = await tester.HubAppModifier();
-            var app = await tester.HubApp();
-            var appsModCategory = await app.ModCategory(HubInfo.ModCategories.Apps);
-            await user.GrantFullAccessToModCategory(appsModCategory);
-            var modCategories = await tester.Execute(user.ID.Value, loggedInUser, hubAppModifier.ModKey());
-            Assert.That(modCategories[0].HasAccessToAll, Is.True, "Should have access to all modifiers in the modifier category");
-            Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(0), "Should not get modifiers if the user has access to all");
-        }
-
-        [Test]
         public async Task ShouldGetUserModifiers_WhenUserDoesNotHaveAccessToAllModifiers()
         {
             var tester = await setup();
             var loggedInUser = await addUser(tester, "loggedinUser");
             await grantUserAccess(tester, loggedInUser);
             var user = await addUser(tester, "some.user");
+            var adminRole = await tester.AdminRole();
             var hubAppModifier = await tester.HubAppModifier();
-            await user.AddModifier(hubAppModifier);
+            await user.AddRole(adminRole, hubAppModifier);
             var modCategories = await tester.Execute(user.ID.Value, loggedInUser, hubAppModifier.ModKey());
-            Assert.That(modCategories[0].HasAccessToAll, Is.False, "Should not have access to all modifiers in the modifier category");
             Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(1), "Should have access to one modifier");
             Assert.That(modCategories[0].Modifiers[0].ModKey, Is.EqualTo(hubAppModifier.ModKey()), "Should have access to one modifier");
         }
@@ -114,7 +68,7 @@ namespace HubWebApp.Tests
             var viewUserRole = await app.Role(HubInfo.Roles.ViewUser);
             await user.AddRole(viewUserRole);
             var hubAppModifier = await tester.HubAppModifier();
-            await user.AddModifier(hubAppModifier);
+            await user.AddRole(viewUserRole, hubAppModifier);
         }
 
     }

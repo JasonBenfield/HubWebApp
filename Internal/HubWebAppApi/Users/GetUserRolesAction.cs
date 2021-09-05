@@ -22,7 +22,7 @@ namespace HubWebAppApi.Users
             var app = await appFromPath.Value();
             var user = await factory.Users().User(userID);
             var modifier = await app.DefaultModifier();
-            var roles = await user.AssignedRoles(app, modifier);
+            var roles = await user.AssignedRoles(modifier);
             var roleModels = roles.Select(r => r.ToModel()).ToArray();
             return roleModels;
         }

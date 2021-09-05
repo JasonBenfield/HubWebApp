@@ -11,6 +11,18 @@ interface IEmptyActionResult {
 }
 interface IEmptyRequest {
 }
+interface ILoginModel {
+	Credentials: ILoginCredentials;
+	StartUrl: string;
+	ReturnUrl: string;
+}
+interface ILoginCredentials {
+	UserName: string;
+	Password: string;
+}
+interface ILoginResult {
+	Token: string;
+}
 interface IAppModel {
 	ID: number;
 	Type: IAppType;

@@ -10,7 +10,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ContextualClass_1 = require("XtiShared/ContextualClass");
 var EditUserRoleListItem = /** @class */ (function (_super) {
-    tslib_1.__extends(EditUserRoleListItem, _super);
+    (0, tslib_1.__extends)(EditUserRoleListItem, _super);
     function EditUserRoleListItem(hubApi, vm) {
         if (vm === void 0) { vm = new ButtonListItemViewModel_1.ButtonListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -35,47 +35,36 @@ var EditUserRoleListItem = /** @class */ (function (_super) {
         return this.toggleAssignment();
     };
     EditUserRoleListItem.prototype.toggleAssignment = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _a;
-            return tslib_1.__generator(this, function (_b) {
-                switch (_b.label) {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         this.disable();
                         this.icon.solidStyle();
                         this.icon.setName('sync-alt');
                         this.icon.startAnimation('spin');
-                        _b.label = 1;
+                        _a.label = 1;
                     case 1:
-                        _b.trys.push([1, , 6, 7]);
-                        if (!this.userRoleID) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.hubApi.AppUserMaintenance.UnassignRole(this.userRoleID)];
-                    case 2:
-                        _b.sent();
-                        this.unassignedIcon();
-                        return [3 /*break*/, 5];
-                    case 3:
-                        _a = this;
+                        _a.trys.push([1, , 3, 4]);
                         return [4 /*yield*/, this.hubApi.AppUserMaintenance.AssignRole({
                                 UserID: this.userID,
                                 RoleID: this.roleID
                             })];
-                    case 4:
-                        _a.userRoleID = _b.sent();
+                    case 2:
+                        _a.sent();
                         this.assignedIcon();
-                        _b.label = 5;
-                    case 5: return [3 /*break*/, 7];
-                    case 6:
+                        return [3 /*break*/, 4];
+                    case 3:
                         this.enable();
                         this.icon.stopAnimation();
                         return [7 /*endfinally*/];
-                    case 7: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
     EditUserRoleListItem.prototype.withAssignedRole = function (userRole) {
-        this.roleName.setText(userRole.Role.Name);
-        this.userRoleID = userRole.ID;
+        this.roleName.setText(userRole.Name);
         this.roleID = userRole.ID;
         this.assignedIcon();
     };
@@ -86,7 +75,6 @@ var EditUserRoleListItem = /** @class */ (function (_super) {
     };
     EditUserRoleListItem.prototype.withUnassignedRole = function (role) {
         this.roleName.setText(role.Name);
-        this.userRoleID = null;
         this.roleID = role.ID;
         this.unassignedIcon();
     };

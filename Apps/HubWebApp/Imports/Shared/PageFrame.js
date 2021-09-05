@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageFrame = void 0;
 var ContextualClass_1 = require("./ContextualClass");
 var AggregateComponent_1 = require("./Html/AggregateComponent");
 var DropdownBlock_1 = require("./Dropdown/DropdownBlock");
@@ -27,16 +28,16 @@ var PageFrame = /** @class */ (function () {
         var frame = this.outerContent.addContent(new FlexColumn_1.FlexColumn());
         frame.setName('PageFrame');
         frame.flexFill();
-        var toolbar = frame.addContent(new Toolbar_1.Toolbar());
-        toolbar.setName('PageFrame_MainToolbar');
-        toolbar.setBackgroundContext(ContextualClass_1.ContextualClass.primary);
-        toolbar.setPadding(PaddingCss_1.PaddingCss.xs(3));
-        toolbar.columnStart.setTextCss(new TextCss_1.TextCss().context(ContextualClass_1.ContextualClass.light));
-        var heading = toolbar.columnStart.addContent(new Heading1_1.Heading1());
-        heading.addContent(new TextSpan_1.TextSpan(pageContext.AppTitle));
-        heading.addContent(new TextSmall_1.TextSmall(pageContext.PageTitle));
-        toolbar.columnEnd.addCssFrom(new AlignCss_1.AlignCss().self(function (a) { return a.xs('center'); }).cssClass());
-        var dropdown = toolbar.columnEnd.addContent(new DropdownBlock_1.DropdownBlock());
+        this.toolbar = frame.addContent(new Toolbar_1.Toolbar());
+        this.toolbar.setName('PageFrame_MainToolbar');
+        this.toolbar.setBackgroundContext(ContextualClass_1.ContextualClass.primary);
+        this.toolbar.setPadding(PaddingCss_1.PaddingCss.xs(3));
+        this.toolbar.columnStart.setTextCss(new TextCss_1.TextCss().context(ContextualClass_1.ContextualClass.light));
+        var heading = this.toolbar.columnStart.addContent(new Heading1_1.Heading1());
+        this.appTitle = heading.addContent(new TextSpan_1.TextSpan(pageContext.AppTitle));
+        this.pageTitle = heading.addContent(new TextSmall_1.TextSmall(pageContext.PageTitle));
+        this.toolbar.columnEnd.addCssFrom(new AlignCss_1.AlignCss().self(function (a) { return a.xs('center'); }).cssClass());
+        var dropdown = this.toolbar.columnEnd.addContent(new DropdownBlock_1.DropdownBlock());
         if (!pageContext.IsAuthenticated) {
             dropdown.hide();
         }
@@ -49,7 +50,7 @@ var PageFrame = /** @class */ (function () {
             .addContent(new TextSpan_1.TextSpan(pageContext.UserName));
         this.logoutMenuItem = dropdown.addLinkItem();
         this.logoutMenuItem.link.addContent(new TextSpan_1.TextSpan('Logout'));
-        this.logoutMenuItem.link.setHref(pageContext.BaseUrl + "/Authenticator/Current/Auth/Logout");
+        this.logoutMenuItem.link.setHref(pageContext.BaseUrl + "/Hub/Current/Auth/Logout");
         this.content = frame.addContent(new Block_1.Block());
         this.content.flexFill();
         this.content.addCssName('h-100');

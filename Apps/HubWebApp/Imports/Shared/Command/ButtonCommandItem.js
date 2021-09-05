@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ButtonCommandItem = void 0;
 var tslib_1 = require("tslib");
 var ButtonViewModel_1 = require("../Html/ButtonViewModel");
 var Button_1 = require("../Html/Button");

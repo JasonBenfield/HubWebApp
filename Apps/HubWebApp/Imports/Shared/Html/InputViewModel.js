@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InputViewModel = void 0;
 var tslib_1 = require("tslib");
 var ComponentTemplate_1 = require("../ComponentTemplate");
 var ko = require("knockout");
@@ -14,6 +15,7 @@ var InputViewModel = /** @class */ (function (_super) {
         _this.maxLength = ko.observable(null);
         _this.isEnabled = ko.observable(true);
         _this.hasFocus = ko.observable(false);
+        _this.autocomplete = ko.observable(null);
         return _this;
     }
     return InputViewModel;

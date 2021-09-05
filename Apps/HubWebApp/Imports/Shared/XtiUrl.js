@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.XtiUrl = void 0;
 var XtiPath_1 = require("./XtiPath");
 var XtiUrl = /** @class */ (function () {
     function XtiUrl(url) {

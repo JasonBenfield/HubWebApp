@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApiGroup = void 0;
 var AppApiAction_1 = require("./AppApiAction");
 var AppApiView_1 = require("./AppApiView");
 var AppApiGroup = /** @class */ (function () {

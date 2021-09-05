@@ -19,24 +19,12 @@ namespace HubWebApp.Tests
             var userToEdit = await addUser(tester, "userToEdit");
             var viewAppRole = await getViewAppRole(tester);
             var userRoleID = await assignRole(tester, userToEdit, viewAppRole);
-            await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(userRoleID);
-        }
-
-        [Test]
-        public async Task ShouldThrowError_WhenUserIsNotAssignedToAnAllowedRole()
-        {
-            var tester = await setup();
-            var userToEdit = await addUser(tester, "userToEdit");
-            var hubAppModifier = await tester.HubAppModifier();
-            await userToEdit.AddModifier(hubAppModifier);
-            var viewAppRole = await getViewAppRole(tester);
-            var userRoleID = await assignRole(tester, userToEdit, viewAppRole);
-            await AccessAssertions.Create(tester)
-                .ShouldThrowError_WhenRoleIsNotAssignedToUserButModifierIsAssignedToUser
-                (
-                    userRoleID,
-                    hubAppModifier
-                );
+            var request = new UserRoleRequest
+            {
+                UserID = userToEdit.ID.Value,
+                RoleID = userRoleID
+            };
+            await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(request);
         }
 
         [Test]
@@ -50,9 +38,10 @@ namespace HubWebApp.Tests
             var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
             var model = createModel(userToEdit, viewAppRole);
             var userRoleID = await assignRole(tester, userToEdit, viewAppRole);
+            var request = new UserRoleRequest { RoleID = userRoleID, UserID = userToEdit.ID.Value };
             var hubAppModifier = await tester.HubAppModifier();
-            await tester.Execute(userRoleID, loggedInUser, hubAppModifier.ModKey());
-            var userRoles = await userToEdit.Roles(app);
+            await tester.Execute(request, loggedInUser, hubAppModifier.ModKey());
+            var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
             Assert.That
             (
                 userRoles.Select(r => r.Name()),
@@ -61,7 +50,7 @@ namespace HubWebApp.Tests
             );
         }
 
-        private async Task<HubActionTester<int, EmptyActionResult>> setup()
+        private async Task<HubActionTester<UserRoleRequest, EmptyActionResult>> setup()
         {
             var host = new HubTestHost();
             var services = await host.Setup();
@@ -103,7 +92,6 @@ namespace HubWebApp.Tests
             var assignRoleTester = tester.Create(hubApi => hubApi.AppUserMaintenance.AssignRole);
             var adminUser = await assignRoleTester.AdminUser();
             var hubAppModifier = await tester.HubAppModifier();
-            await adminUser.AddModifier(hubAppModifier);
             var userRoleID = await assignRoleTester.Execute(new UserRoleRequest
             {
                 UserID = user.ID.Value,
@@ -116,9 +104,8 @@ namespace HubWebApp.Tests
         {
             var app = await tester.HubApp();
             var editUserRole = await app.Role(HubInfo.Roles.EditUser);
-            await user.AddRole(editUserRole);
             var hubAppModifier = await tester.HubAppModifier();
-            await user.AddModifier(hubAppModifier);
+            await user.AddRole(editUserRole, hubAppModifier);
         }
 
     }

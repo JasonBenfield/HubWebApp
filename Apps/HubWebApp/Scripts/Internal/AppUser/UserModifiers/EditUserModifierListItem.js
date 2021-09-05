@@ -10,7 +10,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ContextualClass_1 = require("XtiShared/ContextualClass");
 var EditUserModifierListItem = /** @class */ (function (_super) {
-    tslib_1.__extends(EditUserModifierListItem, _super);
+    (0, tslib_1.__extends)(EditUserModifierListItem, _super);
     function EditUserModifierListItem(hubApi, vm) {
         if (vm === void 0) { vm = new ButtonListItemViewModel_1.ButtonListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -35,9 +35,9 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
         return this.toggleAssignment();
     };
     EditUserModifierListItem.prototype.toggleAssignment = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _a;
-            return tslib_1.__generator(this, function (_b) {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var request, _a;
+            return (0, tslib_1.__generator)(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         this.disable();
@@ -47,8 +47,12 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, , 6, 7]);
-                        if (!this.userRoleID) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.hubApi.AppUserMaintenance.UnassignRole(this.userRoleID)];
+                        if (!this.roleID) return [3 /*break*/, 3];
+                        request = {
+                            UserID: this.userID,
+                            RoleID: this.roleID
+                        };
+                        return [4 /*yield*/, this.hubApi.AppUserMaintenance.UnassignRole(request)];
                     case 2:
                         _b.sent();
                         this.unassignedIcon();
@@ -60,7 +64,7 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
                                 RoleID: this.roleID
                             })];
                     case 4:
-                        _a.userRoleID = _b.sent();
+                        _a.roleID = _b.sent();
                         this.assignedIcon();
                         _b.label = 5;
                     case 5: return [3 /*break*/, 7];
@@ -74,8 +78,7 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
         });
     };
     EditUserModifierListItem.prototype.withAssignedModifier = function (userRole) {
-        this.modKey.setText(userRole.Role.Name);
-        this.userRoleID = userRole.ID;
+        this.modKey.setText(userRole.Name);
         this.roleID = userRole.ID;
         this.assignedIcon();
     };
@@ -87,7 +90,7 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
     EditUserModifierListItem.prototype.withUnassignedModifier = function (modifier) {
         this.modKey.setText(modifier.ModKey);
         this.modDisplayText.setText(modifier.DisplayText);
-        this.userRoleID = null;
+        this.roleID = null;
         this.roleID = modifier.ID;
         this.unassignedIcon();
     };

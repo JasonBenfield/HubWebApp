@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextHeading1 = void 0;
 var tslib_1 = require("tslib");
 var Heading1_1 = require("./Heading1");
 var Heading1ViewModel_1 = require("./Heading1ViewModel");

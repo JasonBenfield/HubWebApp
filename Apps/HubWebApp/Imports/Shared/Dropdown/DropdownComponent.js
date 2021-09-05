@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DropdownComponent = void 0;
 var DropdownButton_1 = require("./DropdownButton");
 var DropdownSpanItem_1 = require("./DropdownSpanItem");
 var DropdownMenu_1 = require("./DropdownMenu");

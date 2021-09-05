@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CssClass = void 0;
 var JoinedStrings_1 = require("./JoinedStrings");
 var CssClass = /** @class */ (function () {
     function CssClass() {

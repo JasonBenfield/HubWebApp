@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JoinedStrings = void 0;
 var Enumerable_1 = require("./Enumerable");
 var JoinedStrings = /** @class */ (function () {
     function JoinedStrings(separator, arr, format) {

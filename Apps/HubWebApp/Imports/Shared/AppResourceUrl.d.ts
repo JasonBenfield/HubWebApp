@@ -8,7 +8,7 @@ export declare class AppResourceUrl {
     static app(baseUrl: string, appKey: string, version: string, modifier: string, cacheBust: string): AppResourceUrl;
     private constructor();
     readonly url: Url;
-    readonly relativeUrl: UrlBuilder;
+    get relativeUrl(): UrlBuilder;
     withGroup(group: string): AppResourceUrl;
     withAction(action: string): AppResourceUrl;
     toString(): string;
