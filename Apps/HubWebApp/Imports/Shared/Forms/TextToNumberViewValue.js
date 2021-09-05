@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextToNumberViewValue = void 0;
 var tslib_1 = require("tslib");
 var TypedFieldViewValue_1 = require("./TypedFieldViewValue");
 var TextToNumberViewValue = /** @class */ (function (_super) {

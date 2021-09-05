@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.XtiPath = void 0;
 var JoinedStrings_1 = require("./JoinedStrings");
 var XtiPath = /** @class */ (function () {
     function XtiPath(app, version, group, action, modifier) {

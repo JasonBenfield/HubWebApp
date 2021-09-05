@@ -38,24 +38,18 @@ export class ResourceAccessCard extends Card {
     }
 
     private async getRoleAccessItems() {
-        let access: IRoleAccessModel;
+        let roles: IAppRoleModel[];
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                access = await this.hubApi.Resource.GetRoleAccess(this.resourceID);
+                roles = await this.hubApi.Resource.GetRoleAccess(this.resourceID);
             }
         );
         let accessItems: IRoleAccessItem[] = [];
-        for (let allowedRole of access.AllowedRoles) {
+        for (let allowedRole of roles) {
             accessItems.push({
                 isAllowed: true,
                 role: allowedRole
-            });
-        }
-        for (let deniedRole of access.DeniedRoles) {
-            accessItems.push({
-                isAllowed: false,
-                role: deniedRole
             });
         }
         return accessItems;

@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HubWebApp.Tests
 {
     public sealed class AllAppsTest
     {
         [Test]
-        public async Task ShouldGetAllApps_WhenUserIsModCategoryAdmin()
+        public async Task ShouldGetAllApps_WhenUserIsAdmin()
         {
             var tester = await setup();
             var adminUser = await tester.AdminUser();
             var hubApp = await tester.HubApp();
             var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-            await adminUser.GrantFullAccessToModCategory(appsModCategory);
             var apps = await tester.Execute(new EmptyRequest(), adminUser);
             var appNames = apps.Select(a => a.AppName);
             Assert.That
@@ -33,8 +33,11 @@ namespace HubWebApp.Tests
         {
             var tester = await setup();
             var adminUser = await tester.AdminUser();
+            var app = await tester.HubApp();
+            var adminRole = await tester.AdminRole();
+            await adminUser.RemoveRole(adminRole);
             var hubAppModifier = await tester.HubAppModifier();
-            await adminUser.AddModifier(hubAppModifier);
+            await adminUser.AddRole(adminRole, hubAppModifier);
             var apps = await tester.Execute(new EmptyRequest(), adminUser);
             var appNames = apps.Select(a => a.AppName);
             Assert.That

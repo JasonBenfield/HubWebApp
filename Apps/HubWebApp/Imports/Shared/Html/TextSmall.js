@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextSmall = void 0;
 var tslib_1 = require("tslib");
 var Small_1 = require("./Small");
 var SmallViewModel_1 = require("./SmallViewModel");

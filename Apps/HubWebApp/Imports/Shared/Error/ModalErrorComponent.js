@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModalErrorComponent = void 0;
 var ModalErrorComponentViewModel_1 = require("./ModalErrorComponentViewModel");
 var Command_1 = require("../Command/Command");
 var ModalErrorViewModel_1 = require("./ModalErrorViewModel");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListItemViewModel = void 0;
 var tslib_1 = require("tslib");
 var template = require("./ListItem.html");
 var ComponentTemplate_1 = require("../ComponentTemplate");

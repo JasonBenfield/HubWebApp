@@ -57,7 +57,7 @@ export class UserRoleListCard extends Card {
             (role, listItem) => {
                 listItem.addContent(new Row())
                     .addColumn()
-                    .addContent(new TextSpan(role.Role.Name));
+                    .addContent(new TextSpan(role.Name));
             }
         );
         if (roles.length === 0) {
@@ -66,7 +66,7 @@ export class UserRoleListCard extends Card {
     }
 
     private async getRoles() {
-        let roles: IAppUserRoleModel[];
+        let roles: IAppRoleModel[];
         await this.alert.infoAction(
             'Loading...',
             async () => {

@@ -9,7 +9,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var Row_1 = require("XtiShared/Grid/Row");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ResourceComponent = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceComponent, _super);
+    (0, tslib_1.__extends)(ResourceComponent, _super);
     function ResourceComponent(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -39,9 +39,9 @@ var ResourceComponent = /** @class */ (function (_super) {
         this.anonListItem.hide();
     };
     ResourceComponent.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var resource, resultType, resultTypeText;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getResource(this.resourceID)];
                     case 1:
@@ -67,13 +67,13 @@ var ResourceComponent = /** @class */ (function (_super) {
         });
     };
     ResourceComponent.prototype.getResource = function (resourceID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var resource;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.Resource.GetResource(resourceID)];
                                     case 1:

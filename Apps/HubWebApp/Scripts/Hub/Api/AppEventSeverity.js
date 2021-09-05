@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var NumericValue_1 = require("XtiShared/NumericValue");
 var NumericValues_1 = require("XtiShared/NumericValues");
 var AppEventSeveritys = /** @class */ (function (_super) {
-    tslib_1.__extends(AppEventSeveritys, _super);
+    (0, tslib_1.__extends)(AppEventSeveritys, _super);
     function AppEventSeveritys(NotSet, CriticalError, AccessDenied, AppError, ValidationFailed) {
         var _this = _super.call(this, [NotSet, CriticalError, AccessDenied, AppError, ValidationFailed]) || this;
         _this.NotSet = NotSet;
@@ -20,7 +20,7 @@ var AppEventSeveritys = /** @class */ (function (_super) {
 }(NumericValues_1.NumericValues));
 exports.AppEventSeveritys = AppEventSeveritys;
 var AppEventSeverity = /** @class */ (function (_super) {
-    tslib_1.__extends(AppEventSeverity, _super);
+    (0, tslib_1.__extends)(AppEventSeverity, _super);
     function AppEventSeverity(Value, DisplayText) {
         return _super.call(this, Value, DisplayText) || this;
     }

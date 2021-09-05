@@ -13,9 +13,8 @@ var Command_1 = require("XtiShared/Command/Command");
 var Card_1 = require("XtiShared/Card/Card");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var TextCss_1 = require("XtiShared/TextCss");
-var ContextualClass_1 = require("../../../../Imports/Shared/ContextualClass");
 var UserModCategoryListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(UserModCategoryListCard, _super);
+    (0, tslib_1.__extends)(UserModCategoryListCard, _super);
     function UserModCategoryListCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -34,9 +33,9 @@ var UserModCategoryListCard = /** @class */ (function (_super) {
         this.userID = userID;
     };
     UserModCategoryListCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var userModCategories, _i, userModCategories_1, userModCategory, header, headerRow, editButton, editCommand, listGroup, listItem, row, cardAlert;
-            return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var userModCategories, _i, userModCategories_1, userModCategory, header, headerRow, editButton, editCommand, listGroup, cardAlert;
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.removeModCategories();
@@ -58,38 +57,28 @@ var UserModCategoryListCard = /** @class */ (function (_super) {
                             this.modCategoryComponents.push(header);
                             listGroup = this.addListGroup();
                             this.modCategoryComponents.push(listGroup);
-                            if (userModCategory.HasAccessToAll) {
-                                listItem = listGroup.addItem();
-                                row = listItem.addContent(new Row_1.Row());
+                            listGroup.setItems(userModCategory.Modifiers, function (modifier, listItem) {
+                                var row = listItem.addContent(new Row_1.Row());
                                 row
                                     .addColumn()
-                                    .addContent(new TextSpan_1.TextSpan('Has Access to All Modifiers'))
-                                    .configure(function (ts) { return ts.setTextCss(new TextCss_1.TextCss().context(ContextualClass_1.ContextualClass.success)); });
-                            }
-                            else {
-                                listGroup.setItems(userModCategory.Modifiers, function (modifier, listItem) {
-                                    var row = listItem.addContent(new Row_1.Row());
-                                    row
-                                        .addColumn()
-                                        .configure(function (c) {
-                                        c.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
-                                        c.addCssFrom(new TextCss_1.TextCss().truncate().cssClass());
-                                    })
-                                        .addContent(new TextSpan_1.TextSpan(modifier.ModKey))
-                                        .configure(function (ts) { return ts.setTitleFromText(); });
-                                    row
-                                        .addColumn()
-                                        .configure(function (c) {
-                                        c.addCssFrom(new TextCss_1.TextCss().truncate().cssClass());
-                                    })
-                                        .addContent(new TextSpan_1.TextSpan(modifier.DisplayText))
-                                        .configure(function (ts) { return ts.setTitleFromText(); });
-                                });
-                                if (userModCategory.Modifiers.length === 0) {
-                                    cardAlert = this.addCardAlert();
-                                    this.modCategoryComponents.push(cardAlert);
-                                    cardAlert.alert.danger('No Modifiers were Found for User');
-                                }
+                                    .configure(function (c) {
+                                    c.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
+                                    c.addCssFrom(new TextCss_1.TextCss().truncate().cssClass());
+                                })
+                                    .addContent(new TextSpan_1.TextSpan(modifier.ModKey))
+                                    .configure(function (ts) { return ts.setTitleFromText(); });
+                                row
+                                    .addColumn()
+                                    .configure(function (c) {
+                                    c.addCssFrom(new TextCss_1.TextCss().truncate().cssClass());
+                                })
+                                    .addContent(new TextSpan_1.TextSpan(modifier.DisplayText))
+                                    .configure(function (ts) { return ts.setTitleFromText(); });
+                            });
+                            if (userModCategory.Modifiers.length === 0) {
+                                cardAlert = this.addCardAlert();
+                                this.modCategoryComponents.push(cardAlert);
+                                cardAlert.alert.danger('No Modifiers were Found for User');
                             }
                         }
                         if (userModCategories.length === 0) {
@@ -107,13 +96,13 @@ var UserModCategoryListCard = /** @class */ (function (_super) {
         }
     };
     UserModCategoryListCard.prototype.getUserModCategories = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var modCategories;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.AppUser.GetUserModCategories(this.userID)];
                                     case 1:

@@ -6,8 +6,8 @@ export declare class MessageAlert extends HtmlComponent {
     private readonly alert;
     private readonly textBlock;
     private _message;
-    readonly message: string;
-    readonly hasMessage: boolean;
+    get message(): string;
+    get hasMessage(): boolean;
     private readonly _messageChanged;
     readonly messageChanged: import("./Events").DefaultEventHandler<string>;
     clear(): void;

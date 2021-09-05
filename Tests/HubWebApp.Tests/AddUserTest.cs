@@ -72,7 +72,7 @@ namespace HubWebApp.Tests
             var model = createModel();
             var userID = await tester.Execute(model, adminUser);
             var mainDbContext = tester.Services.GetService<MainDbContext>();
-            var user = await mainDbContext.Users.FirstOrDefaultAsync(u => u.ID == userID);
+            var user = await mainDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
             Assert.That(user.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");
         }
 

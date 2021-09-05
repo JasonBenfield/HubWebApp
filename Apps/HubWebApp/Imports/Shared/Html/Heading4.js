@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Heading4 = void 0;
 var tslib_1 = require("tslib");
 var AggregateComponent_1 = require("./AggregateComponent");
 var Heading4ViewModel_1 = require("./Heading4ViewModel");

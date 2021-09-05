@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var NumericValue_1 = require("XtiShared/NumericValue");
 var NumericValues_1 = require("XtiShared/NumericValues");
 var AppVersionStatuss = /** @class */ (function (_super) {
-    tslib_1.__extends(AppVersionStatuss, _super);
+    (0, tslib_1.__extends)(AppVersionStatuss, _super);
     function AppVersionStatuss(NotSet, New, Publishing, Old, Current) {
         var _this = _super.call(this, [NotSet, New, Publishing, Old, Current]) || this;
         _this.NotSet = NotSet;
@@ -20,7 +20,7 @@ var AppVersionStatuss = /** @class */ (function (_super) {
 }(NumericValues_1.NumericValues));
 exports.AppVersionStatuss = AppVersionStatuss;
 var AppVersionStatus = /** @class */ (function (_super) {
-    tslib_1.__extends(AppVersionStatus, _super);
+    (0, tslib_1.__extends)(AppVersionStatus, _super);
     function AppVersionStatus(Value, DisplayText) {
         return _super.call(this, Value, DisplayText) || this;
     }

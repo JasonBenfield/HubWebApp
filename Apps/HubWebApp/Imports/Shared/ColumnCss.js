@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ColumnCss = exports.ColumnCssForBreakpoint = void 0;
 var CssClass_1 = require("./CssClass");
 var ColumnCssForBreakpoint = /** @class */ (function () {
     function ColumnCssForBreakpoint(breakpoint, size) {

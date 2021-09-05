@@ -4,6 +4,8 @@ import { AppApi } from "XtiShared/AppApi";
 import { AppApiEvents } from "XtiShared/AppApiEvents";
 import { UserGroup } from "./UserGroup";
 import { UserCacheGroup } from "./UserCacheGroup";
+import { AuthGroup } from "./AuthGroup";
+import { AuthApiGroup } from "./AuthApiGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
@@ -23,6 +25,8 @@ export class HubAppApi extends AppApi {
 		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
 		this.User = this.addGroup((evts, resourceUrl) => new UserGroup(evts, resourceUrl));
 		this.UserCache = this.addGroup((evts, resourceUrl) => new UserCacheGroup(evts, resourceUrl));
+		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
+		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
@@ -37,6 +41,8 @@ export class HubAppApi extends AppApi {
 	
 	readonly User: UserGroup;
 	readonly UserCache: UserCacheGroup;
+	readonly Auth: AuthGroup;
+	readonly AuthApi: AuthApiGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;
 	readonly ResourceGroup: ResourceGroupGroup;

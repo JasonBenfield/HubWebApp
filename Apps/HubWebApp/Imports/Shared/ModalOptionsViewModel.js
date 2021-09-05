@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModalOptionsViewModel = void 0;
 var ko = require("knockout");
 var Events_1 = require("./Events");
 var ModalOptionsViewModel = /** @class */ (function () {

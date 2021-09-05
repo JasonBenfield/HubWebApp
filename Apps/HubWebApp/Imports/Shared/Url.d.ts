@@ -7,9 +7,9 @@ export declare class Url {
     private readonly _hash;
     constructor(baseUrl: string);
     hasQuery(name: string): boolean;
-    readonly query: UrlQuery;
+    get query(): UrlQuery;
     getQueryValue(name: string): string;
-    readonly hash: UrlHash;
+    get hash(): UrlHash;
     hasHash(name: string): boolean;
     getHashValue(name: string): string;
     value(): string;

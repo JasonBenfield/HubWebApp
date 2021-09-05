@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LinkListGroup = void 0;
 var tslib_1 = require("tslib");
 var ListBlockViewModel_1 = require("../Html/ListBlockViewModel");
 var BaseListGroup_1 = require("./BaseListGroup");

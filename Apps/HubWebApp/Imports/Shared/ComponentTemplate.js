@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ComponentTemplate = void 0;
 var ko = require("knockout");
 var ComponentTemplate = /** @class */ (function () {
     function ComponentTemplate(name, html) {

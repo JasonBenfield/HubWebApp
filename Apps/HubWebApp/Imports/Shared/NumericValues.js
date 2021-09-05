@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NumericValues = void 0;
 var Enumerable_1 = require("./Enumerable");
 var NumericValues = /** @class */ (function () {
     function NumericValues(all) {

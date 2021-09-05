@@ -32,22 +32,6 @@ namespace HubWebApp.Tests
         }
 
         [Test]
-        public async Task ShouldThrowError_WhenUserIsNotAssignedToAnAllowedRole()
-        {
-            var tester = await setup();
-            var userToEdit = await addUser(tester, "userToEdit");
-            var viewAppRole = await getViewAppRole(tester);
-            var modifier = await tester.HubAppModifier();
-            var model = createModel(userToEdit, viewAppRole);
-            await AccessAssertions.Create(tester)
-                .ShouldThrowError_WhenRoleIsNotAssignedToUserButModifierIsAssignedToUser
-                (
-                    model,
-                    modifier
-                );
-        }
-
-        [Test]
         public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser()
         {
             var tester = await setup();
@@ -76,7 +60,7 @@ namespace HubWebApp.Tests
             var model = createModel(userToEdit, viewAppRole);
             var hubAppModifier = await tester.HubAppModifier();
             await tester.Execute(model, loggedInUser, hubAppModifier.ModKey());
-            var userRoles = await userToEdit.Roles(app);
+            var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
             Assert.That
             (
                 userRoles.Select(r => r.Name()),
@@ -97,7 +81,7 @@ namespace HubWebApp.Tests
             var model = createModel(userToEdit, viewAppRole);
             var hubAppModifier = await tester.HubAppModifier();
             var userRoleID = await tester.Execute(model, loggedInUser, hubAppModifier.ModKey());
-            var userRoles = await userToEdit.AssignedRoles(app);
+            var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
             Assert.That
             (
                 userRoles.Select(r => r.ID),
@@ -110,9 +94,8 @@ namespace HubWebApp.Tests
         {
             var app = await tester.HubApp();
             var editUserRole = await app.Role(HubInfo.Roles.EditUser);
-            await user.AddRole(editUserRole);
             var hubAppModifier = await tester.HubAppModifier();
-            await user.AddModifier(hubAppModifier);
+            await user.AddRole(editUserRole, hubAppModifier);
         }
 
         private async Task<HubActionTester<UserRoleRequest, int>> setup()

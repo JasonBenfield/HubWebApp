@@ -8,8 +8,8 @@ export declare class AppApi {
     private readonly events;
     constructor(events: AppApiEvents, baseUrl: string, app: string, version: string);
     private readonly resourceUrl;
-    readonly name: string;
-    readonly url: import("./UrlBuilder").UrlBuilder;
+    get name(): string;
+    get url(): import("./UrlBuilder").UrlBuilder;
     readonly groups: {
         [name: string]: AppApiGroup;
     };

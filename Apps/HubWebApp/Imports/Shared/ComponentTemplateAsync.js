@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ComponentTemplateAsync = void 0;
 var ko = require("knockout");
 var Url_1 = require("./Url");
 var UrlBuilder_1 = require("./UrlBuilder");

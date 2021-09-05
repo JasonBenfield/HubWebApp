@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModalBindingHandler = void 0;
 var ko = require("knockout");
 var $ = require("jquery");
 var bootstrap_1 = require("bootstrap");

@@ -60,41 +60,31 @@ export class UserModCategoryListCard extends Card {
             this.modCategoryComponents.push(header);
             let listGroup = this.addListGroup();
             this.modCategoryComponents.push(listGroup);
-            if (userModCategory.HasAccessToAll) {
-                let listItem = listGroup.addItem();
-                let row = listItem.addContent(new Row());
-                row
-                    .addColumn()
-                    .addContent(new TextSpan('Has Access to All Modifiers'))
-                    .configure(ts => ts.setTextCss(new TextCss().context(ContextualClass.success)));
-            }
-            else {
-                listGroup.setItems(
-                    userModCategory.Modifiers,
-                    (modifier, listItem) => {
-                        let row = listItem.addContent(new Row());
-                        row
-                            .addColumn()
-                            .configure(c => {
-                                c.setColumnCss(ColumnCss.xs(4));
-                                c.addCssFrom(new TextCss().truncate().cssClass());
-                            })
-                            .addContent(new TextSpan(modifier.ModKey))
-                            .configure(ts => ts.setTitleFromText());
-                        row
-                            .addColumn()
-                            .configure(c => {
-                                c.addCssFrom(new TextCss().truncate().cssClass());
-                            })
-                            .addContent(new TextSpan(modifier.DisplayText))
-                            .configure(ts => ts.setTitleFromText());
-                    }
-                );
-                if (userModCategory.Modifiers.length === 0) {
-                    let cardAlert = this.addCardAlert();
-                    this.modCategoryComponents.push(cardAlert);
-                    cardAlert.alert.danger('No Modifiers were Found for User');
+            listGroup.setItems(
+                userModCategory.Modifiers,
+                (modifier, listItem) => {
+                    let row = listItem.addContent(new Row());
+                    row
+                        .addColumn()
+                        .configure(c => {
+                            c.setColumnCss(ColumnCss.xs(4));
+                            c.addCssFrom(new TextCss().truncate().cssClass());
+                        })
+                        .addContent(new TextSpan(modifier.ModKey))
+                        .configure(ts => ts.setTitleFromText());
+                    row
+                        .addColumn()
+                        .configure(c => {
+                            c.addCssFrom(new TextCss().truncate().cssClass());
+                        })
+                        .addContent(new TextSpan(modifier.DisplayText))
+                        .configure(ts => ts.setTitleFromText());
                 }
+            );
+            if (userModCategory.Modifiers.length === 0) {
+                let cardAlert = this.addCardAlert();
+                this.modCategoryComponents.push(cardAlert);
+                cardAlert.alert.danger('No Modifiers were Found for User');
             }
         }
         if (userModCategories.length === 0) {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UrlHashBuilder = void 0;
 var NamedValue_1 = require("./NamedValue");
 var _ = require("lodash");
 var UrlHash_1 = require("./UrlHash");
@@ -14,7 +15,7 @@ var UrlHashBuilder = /** @class */ (function () {
     }
     Object.defineProperty(UrlHashBuilder.prototype, "hash", {
         get: function () { return this._hash; },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     UrlHashBuilder.prototype.getValues = function () {

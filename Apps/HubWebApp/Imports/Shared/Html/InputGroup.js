@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InputGroup = void 0;
 var tslib_1 = require("tslib");
 var Block_1 = require("./Block");
 var BlockViewModel_1 = require("./BlockViewModel");

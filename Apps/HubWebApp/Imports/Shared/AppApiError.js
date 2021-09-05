@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApiError = void 0;
 var ErrorModel_1 = require("./ErrorModel");
 var JoinedStrings_1 = require("./JoinedStrings");
 var Enumerable_1 = require("./Enumerable");

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using XTI_App;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 
 namespace HubWebAppApi.Apps
@@ -28,8 +29,8 @@ namespace HubWebAppApi.Apps
             foreach (var app in apps)
             {
                 var modifier = await appsModCategory.Modifier(app.ID.Value);
-                var userRoles = await user.AssignedRoles(app, modifier);
-                if (userRoles.Any(ur => ur.Name().Equals(HubRoles.Instance.ViewApp) || ur.Name().Equals(HubRoles.Instance.Admin)))
+                var userRoles = await user.AssignedRoles(modifier);
+                if (userRoles.Any() && !userRoles.Any(ur => ur.Name().Equals(AppRoleName.DenyAccess)))
                 {
                     allowedApps.Add(app);
                 }

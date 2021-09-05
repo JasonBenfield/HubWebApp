@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppResourceUrl = void 0;
 var XtiPath_1 = require("./XtiPath");
 var UrlBuilder_1 = require("./UrlBuilder");
 var AppResourceUrl = /** @class */ (function () {
@@ -19,7 +20,7 @@ var AppResourceUrl = /** @class */ (function () {
         get: function () {
             return new UrlBuilder_1.UrlBuilder("/" + this.path.format());
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AppResourceUrl.prototype.withGroup = function (group) {

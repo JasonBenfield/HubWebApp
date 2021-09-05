@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotWhitespaceConstraint = void 0;
 var ConstraintResult_1 = require("./ConstraintResult");
 var NotWhitespaceConstraint = /** @class */ (function () {
     function NotWhitespaceConstraint(failureMessage) {

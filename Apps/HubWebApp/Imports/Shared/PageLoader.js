@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageLoader = void 0;
 var ko = require("knockout");
 require("./Styles/default.scss");
 require("@fortawesome/fontawesome-free/css/all.css");

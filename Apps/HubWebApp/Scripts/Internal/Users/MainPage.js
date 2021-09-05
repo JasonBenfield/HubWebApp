@@ -20,9 +20,9 @@ var MainPage = /** @class */ (function () {
         this.activateUserListPanel();
     }
     MainPage.prototype.activateUserListPanel = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result, user;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.userListPanel);
@@ -40,9 +40,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateUserPanel = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result, app;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.userPanel);
@@ -67,9 +67,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateUserEditPanel = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.userEditPanel);

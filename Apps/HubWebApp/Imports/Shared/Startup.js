@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Startup = void 0;
 var tslib_1 = require("tslib");
 var BaseStartup_1 = require("./BaseStartup");
 var Startup = /** @class */ (function (_super) {

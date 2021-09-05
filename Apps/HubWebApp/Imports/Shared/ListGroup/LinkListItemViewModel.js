@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LinkListItemViewModel = void 0;
 var tslib_1 = require("tslib");
 var LinkViewModel_1 = require("../Html/LinkViewModel");
 var LinkListItemViewModel = /** @class */ (function (_super) {

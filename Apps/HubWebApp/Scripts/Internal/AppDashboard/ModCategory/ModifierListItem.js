@@ -8,7 +8,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var TextCss_1 = require("XtiShared/TextCss");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ModifierListItem = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierListItem, _super);
+    (0, tslib_1.__extends)(ModifierListItem, _super);
     function ModifierListItem(modifier, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

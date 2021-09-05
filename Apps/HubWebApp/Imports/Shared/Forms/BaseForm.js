@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseForm = void 0;
 var tslib_1 = require("tslib");
 var AppApiError_1 = require("../AppApiError");
 var ConsoleLog_1 = require("../ConsoleLog");

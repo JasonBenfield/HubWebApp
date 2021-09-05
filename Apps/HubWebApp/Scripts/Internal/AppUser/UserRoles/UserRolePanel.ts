@@ -49,7 +49,7 @@ export class UserRolePanel extends Block {
 
     async refresh() {
         let access = await this.getUserRoleAccess(this.userID);
-        let sourceItems: (IAppUserRoleModel | IAppRoleModel)[] = [];
+        let sourceItems: IAppRoleModel[] = [];
         for (let userRole of access.AssignedRoles) {
             sourceItems.push(userRole);
         }
@@ -61,31 +61,16 @@ export class UserRolePanel extends Block {
             sourceItems,
             (sourceItem, listItem: EditUserRoleListItem) => {
                 listItem.setUserID(this.userID);
-                if (this.isUserRole(sourceItem)) {
-                    listItem.withAssignedRole(sourceItem);
-                }
-                else {
-                    listItem.withUnassignedRole(sourceItem);
-                }
+                listItem.withAssignedRole(sourceItem);
             }
         );
     }
 
-    private compare(a: IAppUserRoleModel | IAppRoleModel, b: IAppUserRoleModel | IAppRoleModel) {
+    private compare(a: IAppRoleModel, b: IAppRoleModel) {
         let roleName: string;
-        if (this.isUserRole(a)) {
-            roleName = a.Role.Name;
-        }
-        else {
-            roleName = a.Name;
-        }
+        roleName = a.Name;
         let otherRoleName: string;
-        if (this.isUserRole(b)) {
-            otherRoleName = b.Role.Name;
-        }
-        else {
-            otherRoleName = b.Name;
-        }
+        otherRoleName = b.Name;
         let result: number;
         if (roleName < otherRoleName) {
             result = -1;
@@ -99,16 +84,16 @@ export class UserRolePanel extends Block {
         return result;
     }
 
-    private isUserRole(sourceItem: any): sourceItem is IAppUserRoleModel {
-        return sourceItem.Role;
-    }
-
     private async getUserRoleAccess(userID: number) {
         let access: IUserRoleAccessModel;
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                access = await this.hubApi.AppUser.GetUserRoleAccess(userID);
+                let request: IGetUserRoleAccessRequest = {
+                    UserID: userID,
+                    ModifierID: 0
+                };
+                access = await this.hubApi.AppUser.GetUserRoleAccess(request);
             }
         );
         return access;

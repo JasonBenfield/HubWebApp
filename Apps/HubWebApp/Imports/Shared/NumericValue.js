@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NumericValue = void 0;
 var NumericValue = /** @class */ (function () {
     function NumericValue(Value, DisplayText) {
         this.Value = Value;

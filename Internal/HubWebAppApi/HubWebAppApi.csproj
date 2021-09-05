@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.EfApi" Version="1.7.6" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.7.4" />
+    <PackageReference Include="XTI_App.EfApi" Version="1.7.12" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.7.12" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +15,11 @@
       <DependentUpon>AppErrors.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Auth\AuthErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AuthErrors.resx</DependentUpon>
     </Compile>
     <Compile Update="Users\UserErrors.Designer.cs">
       <DependentUpon>UserErrors.resx</DependentUpon>
@@ -26,6 +32,10 @@
     <EmbeddedResource Update="Apps\AppErrors.resx">
       <LastGenOutput>AppErrors.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Auth\AuthErrors.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AuthErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Users\UserErrors.resx">
       <LastGenOutput>UserErrors.Designer.cs</LastGenOutput>

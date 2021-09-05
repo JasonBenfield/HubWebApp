@@ -3,7 +3,7 @@ import { UrlHash } from "./UrlHash";
 export declare class UrlHashBuilder {
     private _hash;
     constructor(hash: string | UrlHash);
-    readonly hash: UrlHash;
+    get hash(): UrlHash;
     getValues(): NamedValue[];
     getValue(name: string): string;
     clear(): this;

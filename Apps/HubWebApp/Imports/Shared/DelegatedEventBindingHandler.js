@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DelegatedEventBindingHandler = void 0;
 var ko = require("knockout");
 var $ = require("jquery");
 var DelegatedEventBindingHandler = /** @class */ (function () {

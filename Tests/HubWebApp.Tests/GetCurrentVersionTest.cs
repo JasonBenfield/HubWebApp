@@ -27,8 +27,9 @@ namespace HubWebApp.Tests
         {
             var tester = await setup();
             var adminUser = await tester.AdminUser();
+            var adminRole = await tester.AdminRole();
             var hubAppModifier = await tester.HubAppModifier();
-            await adminUser.AddModifier(hubAppModifier);
+            await adminUser.AddRole(adminRole, hubAppModifier);
             var hubApp = await tester.HubApp();
             var currentVersion = await hubApp.CurrentVersion();
             var currentVersionModel = await tester.Execute(new EmptyRequest(), adminUser, hubAppModifier.ModKey());

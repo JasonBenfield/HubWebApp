@@ -44,17 +44,11 @@ export class EditUserRoleListItem extends ButtonListGroupItem {
         this.icon.setName('sync-alt');
         this.icon.startAnimation('spin');
         try {
-            if (this.userRoleID) {
-                await this.hubApi.AppUserMaintenance.UnassignRole(this.userRoleID);
-                this.unassignedIcon();
-            }
-            else {
-                this.userRoleID = await this.hubApi.AppUserMaintenance.AssignRole({
-                    UserID: this.userID,
-                    RoleID: this.roleID
-                });
-                this.assignedIcon();
-            }
+            await this.hubApi.AppUserMaintenance.AssignRole({
+                UserID: this.userID,
+                RoleID: this.roleID
+            });
+            this.assignedIcon();
         }
         finally {
             this.enable();
@@ -64,12 +58,10 @@ export class EditUserRoleListItem extends ButtonListGroupItem {
 
     private readonly icon: FaIcon;
 
-    private userRoleID: number;
     private roleID: number;
 
-    withAssignedRole(userRole: IAppUserRoleModel) {
-        this.roleName.setText(userRole.Role.Name);
-        this.userRoleID = userRole.ID;
+    withAssignedRole(userRole: IAppRoleModel) {
+        this.roleName.setText(userRole.Name);
         this.roleID = userRole.ID;
         this.assignedIcon();
     }
@@ -82,7 +74,6 @@ export class EditUserRoleListItem extends ButtonListGroupItem {
 
     withUnassignedRole(role: IAppRoleModel) {
         this.roleName.setText(role.Name);
-        this.userRoleID = null;
         this.roleID = role.ID;
         this.unassignedIcon();
     }

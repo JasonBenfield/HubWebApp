@@ -14,7 +14,7 @@ var AppListCard_1 = require("../../Apps/AppListCard");
 var UserComponent_1 = require("./UserComponent");
 var HubTheme_1 = require("../../HubTheme");
 var UserPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(UserPanel, _super);
+    (0, tslib_1.__extends)(UserPanel, _super);
     function UserPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

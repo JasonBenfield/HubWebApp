@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppApiAction = void 0;
 var tslib_1 = require("tslib");
 var HttpClient_1 = require("./HttpClient");
 var JsonText_1 = require("./JsonText");

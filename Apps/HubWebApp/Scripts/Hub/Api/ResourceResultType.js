@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var NumericValue_1 = require("XtiShared/NumericValue");
 var NumericValues_1 = require("XtiShared/NumericValues");
 var ResourceResultTypes = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceResultTypes, _super);
+    (0, tslib_1.__extends)(ResourceResultTypes, _super);
     function ResourceResultTypes(None, View, PartialView, Redirect, Json) {
         var _this = _super.call(this, [None, View, PartialView, Redirect, Json]) || this;
         _this.None = None;
@@ -20,7 +20,7 @@ var ResourceResultTypes = /** @class */ (function (_super) {
 }(NumericValues_1.NumericValues));
 exports.ResourceResultTypes = ResourceResultTypes;
 var ResourceResultType = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceResultType, _super);
+    (0, tslib_1.__extends)(ResourceResultType, _super);
     function ResourceResultType(Value, DisplayText) {
         return _super.call(this, Value, DisplayText) || this;
     }

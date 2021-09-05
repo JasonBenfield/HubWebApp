@@ -2,6 +2,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
     user: './Imports/Shared/User/UserPage.js',
+    login: './Scripts/Hub/Auth/LoginPage.js',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',

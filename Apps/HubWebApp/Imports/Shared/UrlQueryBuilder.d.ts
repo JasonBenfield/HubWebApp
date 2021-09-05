@@ -3,7 +3,7 @@ import { UrlQuery } from "./UrlQuery";
 export declare class UrlQueryBuilder {
     private _query;
     constructor(query: string | UrlQuery);
-    readonly query: UrlQuery;
+    get query(): UrlQuery;
     getValues(): NamedValue[];
     getValue(name: string): string;
     clear(): this;

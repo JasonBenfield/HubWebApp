@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DropdownBlock = void 0;
 var tslib_1 = require("tslib");
 var Block_1 = require("../Html/Block");
 var DropdownButton_1 = require("./DropdownButton");

@@ -15,7 +15,7 @@ var ModifierListCard_1 = require("./ModifierListCard");
 var ResourceGroupListCard_1 = require("./ResourceGroupListCard");
 var HubTheme_1 = require("../../HubTheme");
 var ModCategoryPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(ModCategoryPanel, _super);
+    (0, tslib_1.__extends)(ModCategoryPanel, _super);
     function ModCategoryPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

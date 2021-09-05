@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HostEnvironment = void 0;
 var HostEnvironment = /** @class */ (function () {
     function HostEnvironment() {
         this.isTest = pageContext.EnvironmentName === 'Test';

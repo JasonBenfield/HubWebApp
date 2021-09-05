@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormComponentViewModel = void 0;
 var tslib_1 = require("tslib");
 var HtmlComponentViewModel_1 = require("./HtmlComponentViewModel");
 var template = require("./FormComponent.html");
@@ -16,6 +17,7 @@ var FormComponentViewModel = /** @class */ (function (_super) {
         _this.content = content;
         _this.action = ko.observable(null);
         _this.method = ko.observable(null);
+        _this.autocomplete = ko.observable(null);
         _this._submitted = new Events_1.SimpleEvent(_this);
         _this.submitted = _this._submitted.handler();
         _this.isDefaultSubmit = false;

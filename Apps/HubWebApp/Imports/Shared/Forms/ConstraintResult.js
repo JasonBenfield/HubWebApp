@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConstraintResult = void 0;
 var ConstraintResult = /** @class */ (function () {
     function ConstraintResult(isValid, errorMessage) {
         this.isValid = isValid;

@@ -7,7 +7,7 @@ export declare class UrlBuilder {
     private _url;
     private readonly _query;
     private readonly _hash;
-    readonly url: Url;
+    get url(): Url;
     addPart(part: string): this;
     hasQuery(name: string): boolean;
     clearQuery(): this;
@@ -37,7 +37,7 @@ export declare class UrlBuilder {
     addHash(name: string, value: number): UrlBuilder;
     addHashString(query: string): this;
     addHashFromObject(obj: any): this;
-    readonly hash: UrlHashBuilder;
+    get hash(): UrlHashBuilder;
     getHashValue(name: string): string;
     value(): string;
     withoutQueryAndHash(): Url;

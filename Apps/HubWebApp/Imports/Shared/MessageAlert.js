@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MessageAlert = void 0;
 var tslib_1 = require("tslib");
 var _ = require("lodash");
 var ContextualClass_1 = require("./ContextualClass");
@@ -27,14 +28,14 @@ var MessageAlert = /** @class */ (function (_super) {
         get: function () {
             return this._message;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(MessageAlert.prototype, "hasMessage", {
         get: function () {
             return Boolean(this._message);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     MessageAlert.prototype.clear = function () {

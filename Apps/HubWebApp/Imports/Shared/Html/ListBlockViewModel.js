@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListBlockViewModel = void 0;
 var tslib_1 = require("tslib");
 var ko = require("knockout");
 var Events_1 = require("../Events");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FormattedNumber = void 0;
 var numeral = require("numeral");
 var FormattedNumber = /** @class */ (function () {
     function FormattedNumber(value, format) {

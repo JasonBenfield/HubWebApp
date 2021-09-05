@@ -18,6 +18,8 @@ namespace HubWebApp.Extensions
             services.AddWebAppServices(configuration);
             services.AddScoped<AppFromPath>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
+            services.AddScoped<AccessForAuthenticate, JwtAccess>();
+            services.AddScoped<AccessForLogin, CookieAccess>();
             services.AddSingleton(_ => HubInfo.AppKey);
             services.AddScoped<AppApiFactory, HubAppApiFactory>();
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());

@@ -6,11 +6,13 @@ namespace HubWebApp.Client
 {
     public sealed partial class HubAppClient : AppClient
     {
-        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl, string version = DefaultVersion): base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
+        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, string baseUrl, string version = DefaultVersion): base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
         {
-            this.xtiToken = xtiToken;
+            xtiToken = tokenFactory.Create(this);
             User = new UserGroup(httpClientFactory, xtiToken, url);
             UserCache = new UserCacheGroup(httpClientFactory, xtiToken, url);
+            Auth = new AuthGroup(httpClientFactory, xtiToken, url);
+            AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
             App = new AppGroup(httpClientFactory, xtiToken, url);
             ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
@@ -27,6 +29,10 @@ namespace HubWebApp.Client
         public UserGroup User { get; }
 
         public UserCacheGroup UserCache { get; }
+
+        public AuthGroup Auth { get; }
+
+        public AuthApiGroup AuthApi { get; }
 
         public AppsGroup Apps { get; }
 

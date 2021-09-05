@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Url = void 0;
 var UrlHash_1 = require("./UrlHash");
 var UrlQuery_1 = require("./UrlQuery");
 var Url = /** @class */ (function () {
@@ -24,7 +25,7 @@ var Url = /** @class */ (function () {
         get: function () {
             return this._query;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Url.prototype.getQueryValue = function (name) {
@@ -34,7 +35,7 @@ var Url = /** @class */ (function () {
         get: function () {
             return this._hash;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Url.prototype.hasHash = function (name) {

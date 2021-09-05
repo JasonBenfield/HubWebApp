@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserPage = void 0;
 var UrlBuilder_1 = require("../UrlBuilder");
 var xtistart_1 = require("xtistart");
 var WebPage_1 = require("../WebPage");

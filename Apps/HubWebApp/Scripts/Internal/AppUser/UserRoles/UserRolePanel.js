@@ -13,7 +13,7 @@ var HubTheme_1 = require("../../HubTheme");
 var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
 var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var UserRolePanel = /** @class */ (function (_super) {
-    tslib_1.__extends(UserRolePanel, _super);
+    (0, tslib_1.__extends)(UserRolePanel, _super);
     function UserRolePanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -35,10 +35,10 @@ var UserRolePanel = /** @class */ (function (_super) {
         this.userID = userID;
     };
     UserRolePanel.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var access, sourceItems, _i, _a, userRole, _b, _c, role;
             var _this = this;
-            return tslib_1.__generator(this, function (_d) {
+            return (0, tslib_1.__generator)(this, function (_d) {
                 switch (_d.label) {
                     case 0: return [4 /*yield*/, this.getUserRoleAccess(this.userID)];
                     case 1:
@@ -55,12 +55,7 @@ var UserRolePanel = /** @class */ (function (_super) {
                         sourceItems.sort(this.compare.bind(this));
                         this.userRoles.setItems(sourceItems, function (sourceItem, listItem) {
                             listItem.setUserID(_this.userID);
-                            if (_this.isUserRole(sourceItem)) {
-                                listItem.withAssignedRole(sourceItem);
-                            }
-                            else {
-                                listItem.withUnassignedRole(sourceItem);
-                            }
+                            listItem.withAssignedRole(sourceItem);
                         });
                         return [2 /*return*/];
                 }
@@ -69,19 +64,9 @@ var UserRolePanel = /** @class */ (function (_super) {
     };
     UserRolePanel.prototype.compare = function (a, b) {
         var roleName;
-        if (this.isUserRole(a)) {
-            roleName = a.Role.Name;
-        }
-        else {
-            roleName = a.Name;
-        }
+        roleName = a.Name;
         var otherRoleName;
-        if (this.isUserRole(b)) {
-            otherRoleName = b.Role.Name;
-        }
-        else {
-            otherRoleName = b.Name;
-        }
+        otherRoleName = b.Name;
         var result;
         if (roleName < otherRoleName) {
             result = -1;
@@ -94,19 +79,22 @@ var UserRolePanel = /** @class */ (function (_super) {
         }
         return result;
     };
-    UserRolePanel.prototype.isUserRole = function (sourceItem) {
-        return sourceItem.Role;
-    };
     UserRolePanel.prototype.getUserRoleAccess = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var access;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            var request;
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hubApi.AppUser.GetUserRoleAccess(userID)];
+                                    case 0:
+                                        request = {
+                                            UserID: userID,
+                                            ModifierID: 0
+                                        };
+                                        return [4 /*yield*/, this.hubApi.AppUser.GetUserRoleAccess(request)];
                                     case 1:
                                         access = _a.sent();
                                         return [2 /*return*/];
