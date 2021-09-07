@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Extensions" Version="1.7.12" />
+    <PackageReference Include="MainDB.EF.SqlServer" Version="1.10.13" />
+    <PackageReference Include="XTI_WebApp.Extensions" Version="1.7.19" />
   </ItemGroup>
 
   <ItemGroup>

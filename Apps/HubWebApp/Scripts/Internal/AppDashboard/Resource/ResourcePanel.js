@@ -3,18 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourcePanel = void 0;
 var tslib_1 = require("tslib");
 var Awaitable_1 = require("XtiShared/Awaitable");
-var Result_1 = require("XtiShared/Result");
 var Command_1 = require("XtiShared/Command/Command");
-var ResourceComponent_1 = require("./ResourceComponent");
-var ResourceAccessCard_1 = require("./ResourceAccessCard");
-var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
-var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
 var Block_1 = require("XtiShared/Html/Block");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var MarginCss_1 = require("XtiShared/MarginCss");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
 var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
+var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
+var MarginCss_1 = require("XtiShared/MarginCss");
+var Result_1 = require("XtiShared/Result");
 var HubTheme_1 = require("../../HubTheme");
+var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
+var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
+var ResourceAccessCard_1 = require("./ResourceAccessCard");
+var ResourceComponent_1 = require("./ResourceComponent");
 var ResourcePanel = /** @class */ (function (_super) {
     tslib_1.__extends(ResourcePanel, _super);
     function ResourcePanel(hubApi, vm) {

@@ -72,7 +72,10 @@ export class ResourceComponent extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                resource = await this.hubApi.Resource.GetResource(resourceID);
+                resource = await this.hubApi.Resource.GetResource({
+                    VersionKey: 'Current',
+                    ResourceID: resourceID
+                });
             }
         );
         return resource;

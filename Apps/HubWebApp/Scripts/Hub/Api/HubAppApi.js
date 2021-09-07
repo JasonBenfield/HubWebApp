@@ -11,14 +11,15 @@ var AuthApiGroup_1 = require("./AuthApiGroup");
 var PermanentLogGroup_1 = require("./PermanentLogGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
+var VersionGroup_1 = require("./VersionGroup");
 var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
 var ResourceGroup_1 = require("./ResourceGroup");
 var ModCategoryGroup_1 = require("./ModCategoryGroup");
 var UsersGroup_1 = require("./UsersGroup");
 var UserInquiryGroup_1 = require("./UserInquiryGroup");
-var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var AppUserGroup_1 = require("./AppUserGroup");
 var AppUserMaintenanceGroup_1 = require("./AppUserMaintenanceGroup");
+var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var HubAppApi = /** @class */ (function (_super) {
     tslib_1.__extends(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
@@ -31,14 +32,15 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
+        _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
         _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
         _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
         _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
         _this.Users = _this.addGroup(function (evts, resourceUrl) { return new UsersGroup_1.UsersGroup(evts, resourceUrl); });
         _this.UserInquiry = _this.addGroup(function (evts, resourceUrl) { return new UserInquiryGroup_1.UserInquiryGroup(evts, resourceUrl); });
-        _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         _this.AppUser = _this.addGroup(function (evts, resourceUrl) { return new AppUserGroup_1.AppUserGroup(evts, resourceUrl); });
         _this.AppUserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new AppUserMaintenanceGroup_1.AppUserMaintenanceGroup(evts, resourceUrl); });
+        _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
     HubAppApi.DefaultVersion = 'Current';

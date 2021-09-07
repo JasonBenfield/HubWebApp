@@ -43,9 +43,11 @@ export class MostRecentErrorEventListCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                errorEvents = await this.hubApi.Resource.GetMostRecentErrorEvents(
-                    { ResourceID: this.resourceID, HowMany: 10 }
-                );
+                errorEvents = await this.hubApi.Resource.GetMostRecentErrorEvents({
+                    VersionKey: 'Current',
+                    ResourceID: this.resourceID,
+                    HowMany: 10
+                });
             }
         );
         return errorEvents;

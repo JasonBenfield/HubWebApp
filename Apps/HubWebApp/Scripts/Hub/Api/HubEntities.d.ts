@@ -3,10 +3,6 @@
 interface IUserStartRequest {
 	ReturnUrl: string;
 }
-interface IClearUserCacheRequest {
-	UserID: number;
-	UserName: string;
-}
 interface IEmptyActionResult {
 }
 interface IEmptyRequest {
@@ -73,15 +69,13 @@ interface IAppModel {
 	AppName: string;
 	Title: string;
 }
-interface IAppVersionModel {
+interface IGetAppModifierKeyRequest {
+	AppName: string;
+	AppType: number;
+}
+interface IAppRoleModel {
 	ID: number;
-	VersionKey: string;
-	Major: number;
-	Minor: number;
-	Patch: number;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: Date;
+	Name: string;
 }
 interface IResourceGroupModel {
 	ID: number;
@@ -111,30 +105,75 @@ interface IModifierCategoryModel {
 	ID: number;
 	Name: string;
 }
-interface IResourceModel {
-	ID: number;
-	Name: string;
-	IsAnonymousAllowed: boolean;
-	ResultType: IResourceResultType;
-}
-interface IAppRoleModel {
-	ID: number;
-	Name: string;
-}
-interface IGetResourceGroupLogRequest {
-	GroupID: number;
-	HowMany: number;
-}
-interface IGetResourceLogRequest {
-	ResourceID: number;
-	HowMany: number;
-}
 interface IModifierModel {
 	ID: number;
 	CategoryID: number;
 	ModKey: string;
 	TargetKey: string;
 	DisplayText: string;
+}
+interface IAppVersionModel {
+	ID: number;
+	VersionKey: string;
+	Major: number;
+	Minor: number;
+	Patch: number;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: Date;
+}
+interface IGetVersionResourceGroupRequest {
+	VersionKey: string;
+	GroupName: string;
+}
+interface IGetResourceGroupRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourcesRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IResourceModel {
+	ID: number;
+	Name: string;
+	IsAnonymousAllowed: boolean;
+	ResultType: IResourceResultType;
+}
+interface IGetResourceGroupResourceRequest {
+	VersionKey: string;
+	GroupID: number;
+	ResourceName: string;
+}
+interface IGetResourceGroupRoleAccessRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourceGroupModCategoryRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourceGroupLogRequest {
+	VersionKey: string;
+	GroupID: number;
+	HowMany: number;
+}
+interface IGetResourceRequest {
+	VersionKey: string;
+	ResourceID: number;
+}
+interface IGetResourceRoleAccessRequest {
+	VersionKey: string;
+	ResourceID: number;
+}
+interface IGetResourceLogRequest {
+	VersionKey: string;
+	ResourceID: number;
+	HowMany: number;
+}
+interface IGetModCategoryModifierRequest {
+	CategoryID: number;
+	ModifierKey: string;
 }
 interface IAppUserModel {
 	ID: number;
@@ -149,6 +188,10 @@ interface IAddUserModel {
 interface IRedirectToAppUserRequest {
 	AppID: number;
 	UserID: number;
+}
+interface IGetUserRolesRequest {
+	UserID: number;
+	ModifierID: number;
 }
 interface IGetUserRoleAccessRequest {
 	UserID: number;
@@ -170,19 +213,19 @@ interface IAppType {
 	Value: number;
 	DisplayText: string;
 }
-interface IAppVersionType {
-	Value: number;
-	DisplayText: string;
-}
-interface IAppVersionStatus {
-	Value: number;
-	DisplayText: string;
-}
 interface IResourceResultType {
 	Value: number;
 	DisplayText: string;
 }
 interface IAppEventSeverity {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppVersionType {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppVersionStatus {
 	Value: number;
 	DisplayText: string;
 }

@@ -42,7 +42,10 @@ export class ResourceAccessCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                roles = await this.hubApi.Resource.GetRoleAccess(this.resourceID);
+                roles = await this.hubApi.Resource.GetRoleAccess({
+                    VersionKey: 'Current',
+                    ResourceID: this.resourceID
+                });
             }
         );
         let accessItems: IRoleAccessItem[] = [];

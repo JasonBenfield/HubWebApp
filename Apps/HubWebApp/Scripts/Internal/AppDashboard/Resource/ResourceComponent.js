@@ -75,7 +75,10 @@ var ResourceComponent = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                             return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetResource(resourceID)];
+                                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetResource({
+                                            VersionKey: 'Current',
+                                            ResourceID: resourceID
+                                        })];
                                     case 1:
                                         resource = _a.sent();
                                         return [2 /*return*/];

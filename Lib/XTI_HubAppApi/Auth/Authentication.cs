@@ -4,7 +4,7 @@ using XTI_App.Extensions;
 using XTI_TempLog;
 using XTI_WebApp;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class Authentication
     {
@@ -37,7 +37,6 @@ namespace XTI_HubAppApi
             var authSession = await tempLog.AuthenticateSession(user.UserName().Value);
             var claims = new XtiClaimsCreator(authSession.SessionKey, user).Values();
             var token = await access.GenerateToken(claims);
-            userContext.ClearCache(user.ID.Value);
             userContext.ClearCache(user.UserName());
             return new LoginResult(token);
         }

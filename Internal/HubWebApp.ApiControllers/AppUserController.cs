@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using XTI_HubAppApi.AppUserInquiry;
 using XTI_App;
-using XTI_HubAppApi.Users;
 using XTI_HubAppApi;
+using XTI_HubAppApi.Users;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
@@ -27,9 +28,9 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] int model)
+        public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest model)
         {
-            return api.Group("AppUser").Action<int, AppRoleModel[]>("GetUserRoles").Execute(model);
+            return api.Group("AppUser").Action<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").Execute(model);
         }
 
         [HttpPost]

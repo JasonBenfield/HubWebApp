@@ -42,7 +42,10 @@ export class ResourceGroupAccessCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                allowedRoles = await this.hubApi.ResourceGroup.GetRoleAccess(this.groupID);
+                allowedRoles = await this.hubApi.ResourceGroup.GetRoleAccess({
+                    VersionKey: 'Current',
+                    GroupID: this.groupID
+                });
             }
         );
         let accessItems: IRoleAccessItem[] = [];

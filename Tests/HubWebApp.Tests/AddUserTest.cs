@@ -1,5 +1,4 @@
-﻿using XTI_HubAppApi.Users;
-using MainDB.EF;
+﻿using MainDB.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -9,6 +8,8 @@ using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
 using XTI_Core;
+using XTI_HubAppApi;
+using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests
 {

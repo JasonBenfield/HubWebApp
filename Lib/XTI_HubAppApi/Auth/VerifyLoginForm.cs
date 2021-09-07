@@ -1,6 +1,6 @@
 ﻿using XTI_Forms;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class VerifyLoginForm : Form
     {

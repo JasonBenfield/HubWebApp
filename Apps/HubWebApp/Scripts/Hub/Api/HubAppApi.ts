@@ -9,14 +9,15 @@ import { AuthApiGroup } from "./AuthApiGroup";
 import { PermanentLogGroup } from "./PermanentLogGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
+import { VersionGroup } from "./VersionGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
 import { ResourceGroup } from "./ResourceGroup";
 import { ModCategoryGroup } from "./ModCategoryGroup";
 import { UsersGroup } from "./UsersGroup";
 import { UserInquiryGroup } from "./UserInquiryGroup";
-import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 import { AppUserGroup } from "./AppUserGroup";
 import { AppUserMaintenanceGroup } from "./AppUserMaintenanceGroup";
+import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -31,14 +32,15 @@ export class HubAppApi extends AppApi {
 		this.PermanentLog = this.addGroup((evts, resourceUrl) => new PermanentLogGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
+		this.Version = this.addGroup((evts, resourceUrl) => new VersionGroup(evts, resourceUrl));
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
 		this.Resource = this.addGroup((evts, resourceUrl) => new ResourceGroup(evts, resourceUrl));
 		this.ModCategory = this.addGroup((evts, resourceUrl) => new ModCategoryGroup(evts, resourceUrl));
 		this.Users = this.addGroup((evts, resourceUrl) => new UsersGroup(evts, resourceUrl));
 		this.UserInquiry = this.addGroup((evts, resourceUrl) => new UserInquiryGroup(evts, resourceUrl));
-		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
 		this.AppUser = this.addGroup((evts, resourceUrl) => new AppUserGroup(evts, resourceUrl));
 		this.AppUserMaintenance = this.addGroup((evts, resourceUrl) => new AppUserMaintenanceGroup(evts, resourceUrl));
+		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
@@ -48,12 +50,13 @@ export class HubAppApi extends AppApi {
 	readonly PermanentLog: PermanentLogGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;
+	readonly Version: VersionGroup;
 	readonly ResourceGroup: ResourceGroupGroup;
 	readonly Resource: ResourceGroup;
 	readonly ModCategory: ModCategoryGroup;
 	readonly Users: UsersGroup;
 	readonly UserInquiry: UserInquiryGroup;
-	readonly UserMaintenance: UserMaintenanceGroup;
 	readonly AppUser: AppUserGroup;
 	readonly AppUserMaintenance: AppUserMaintenanceGroup;
+	readonly UserMaintenance: UserMaintenanceGroup;
 }

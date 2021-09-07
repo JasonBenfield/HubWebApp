@@ -10,17 +10,17 @@ export class AppUserGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUser');
 		this.Index = this.createView<number>('Index');
-		this.GetUserRolesAction = this.createAction<number,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
+		this.GetUserRolesAction = this.createAction<IGetUserRolesRequest,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
 		this.GetUserRoleAccessAction = this.createAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>('GetUserRoleAccess', 'Get User Role Access');
 		this.GetUserModCategoriesAction = this.createAction<number,IUserModifierCategoryModel[]>('GetUserModCategories', 'Get User Mod Categories');
 	}
 	
 	readonly Index: AppApiView<number>;
-	readonly GetUserRolesAction: AppApiAction<number,IAppRoleModel[]>;
+	readonly GetUserRolesAction: AppApiAction<IGetUserRolesRequest,IAppRoleModel[]>;
 	readonly GetUserRoleAccessAction: AppApiAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>;
 	readonly GetUserModCategoriesAction: AppApiAction<number,IUserModifierCategoryModel[]>;
 	
-	GetUserRoles(model: number, errorOptions?: IActionErrorOptions) {
+	GetUserRoles(model: IGetUserRolesRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserRolesAction.execute(model, errorOptions || {});
 	}
 	GetUserRoleAccess(model: IGetUserRoleAccessRequest, errorOptions?: IActionErrorOptions) {

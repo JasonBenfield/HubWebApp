@@ -16,14 +16,15 @@ namespace XTI_HubAppClient
             PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
             App = new AppGroup(httpClientFactory, xtiToken, url);
+            Version = new VersionGroup(httpClientFactory, xtiToken, url);
             ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
             Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
             ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, url);
             Users = new UsersGroup(httpClientFactory, xtiToken, url);
             UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, url);
-            UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
             AppUser = new AppUserGroup(httpClientFactory, xtiToken, url);
             AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, url);
+            UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
         }
 
         public const string DefaultVersion = "Current";
@@ -41,6 +42,8 @@ namespace XTI_HubAppClient
 
         public AppGroup App { get; }
 
+        public VersionGroup Version { get; }
+
         public ResourceGroupGroup ResourceGroup { get; }
 
         public ResourceGroup Resource { get; }
@@ -51,10 +54,10 @@ namespace XTI_HubAppClient
 
         public UserInquiryGroup UserInquiry { get; }
 
-        public UserMaintenanceGroup UserMaintenance { get; }
-
         public AppUserGroup AppUser { get; }
 
         public AppUserMaintenanceGroup AppUserMaintenance { get; }
+
+        public UserMaintenanceGroup UserMaintenance { get; }
     }
 }

@@ -10,6 +10,7 @@ var ModCategoryGroup = /** @class */ (function (_super) {
         var _this = _super.call(this, events, resourceUrl, 'ModCategory') || this;
         _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
         _this.GetModifiersAction = _this.createAction('GetModifiers', 'Get Modifiers');
+        _this.GetModifierAction = _this.createAction('GetModifier', 'Get Modifier');
         _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
         return _this;
     }
@@ -18,6 +19,9 @@ var ModCategoryGroup = /** @class */ (function (_super) {
     };
     ModCategoryGroup.prototype.GetModifiers = function (model, errorOptions) {
         return this.GetModifiersAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetModifier = function (model, errorOptions) {
+        return this.GetModifierAction.execute(model, errorOptions || {});
     };
     ModCategoryGroup.prototype.GetResourceGroups = function (model, errorOptions) {
         return this.GetResourceGroupsAction.execute(model, errorOptions || {});

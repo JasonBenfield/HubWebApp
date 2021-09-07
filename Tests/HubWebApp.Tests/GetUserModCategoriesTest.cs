@@ -1,10 +1,11 @@
-﻿using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Abstractions;
+using XTI_HubAppApi;
+using XTI_HubAppApi.AppUserInquiry;
+using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests
 {

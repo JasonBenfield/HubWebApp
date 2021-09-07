@@ -71,7 +71,10 @@ export class ResourceListCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                resources = await this.hubApi.ResourceGroup.GetResources(this.groupID);
+                resources = await this.hubApi.ResourceGroup.GetResources({
+                    VersionKey: 'Current',
+                    GroupID: this.groupID
+                });
             }
         );
         return resources;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App.Api;
 using XTI_App;
+using XTI_HubAppApi.AppList;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Users;
 using XTI_WebApp.Api;
@@ -30,6 +31,12 @@ namespace HubWebApp.ApiControllers
         public Task<ResultContainer<AppModel[]>> All()
         {
             return api.Group("Apps").Action<EmptyRequest, AppModel[]>("All").Execute(new EmptyRequest());
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<string>> GetAppModifierKey([FromBody] GetAppModifierKeyRequest model)
+        {
+            return api.Group("Apps").Action<GetAppModifierKeyRequest, string>("GetAppModifierKey").Execute(model);
         }
 
         public async Task<IActionResult> RedirectToApp(int model)

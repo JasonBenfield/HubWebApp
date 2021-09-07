@@ -46,7 +46,7 @@ namespace HubWebApp.Tests
         {
             var host = new HubTestHost();
             var services = await host.Setup();
-            return HubActionTester.Create(services, hubApi => hubApi.App.GetCurrentVersion);
+            return HubActionTester.Create(services, hubApi => hubApi.Version.GetCurrentVersion);
         }
     }
 }

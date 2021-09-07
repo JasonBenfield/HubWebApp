@@ -2,7 +2,7 @@
 using XTI_App;
 using XTI_App.Abstractions;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class UnverifiedUser
     {

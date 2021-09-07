@@ -10,11 +10,15 @@ var AppsGroup = /** @class */ (function (_super) {
         var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
         _this.Index = _this.createView('Index');
         _this.AllAction = _this.createAction('All', 'All');
+        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
         _this.RedirectToApp = _this.createView('RedirectToApp');
         return _this;
     }
     AppsGroup.prototype.All = function (errorOptions) {
         return this.AllAction.execute({}, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
+        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
     };
     return AppsGroup;
 }(AppApiGroup_1.AppApiGroup));

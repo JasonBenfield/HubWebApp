@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using XTI_WebApp.Extensions;
+using XTI_HubAppApi.Auth;
 
 namespace HubWebApp.Extensions
 {

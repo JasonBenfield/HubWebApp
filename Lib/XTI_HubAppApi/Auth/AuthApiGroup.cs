@@ -1,7 +1,7 @@
 ﻿using XTI_App.Api;
 using XTI_WebApp.Api;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class AuthApiGroup : AppApiGroupWrapper
     {

@@ -9,7 +9,7 @@ using XTI_TempLog;
 using XTI_WebApp;
 using XTI_WebApp.Api;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class AuthActionFactory
     {

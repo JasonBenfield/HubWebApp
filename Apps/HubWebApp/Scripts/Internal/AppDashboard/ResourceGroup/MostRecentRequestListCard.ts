@@ -43,9 +43,11 @@ export class MostRecentRequestListCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                requests = await this.hubApi.ResourceGroup.GetMostRecentRequests(
-                    { GroupID: this.groupID, HowMany: 10 }
-                );
+                requests = await this.hubApi.ResourceGroup.GetMostRecentRequests({
+                    VersionKey: 'Current',
+                    GroupID: this.groupID,
+                    HowMany: 10
+                });
             }
         );
         return requests;

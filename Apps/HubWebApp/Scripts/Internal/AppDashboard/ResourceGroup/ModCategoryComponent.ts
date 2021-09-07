@@ -53,7 +53,10 @@ export class ModCategoryComponent extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                modCategory = await this.hubApi.ResourceGroup.GetModCategory(groupID);
+                modCategory = await this.hubApi.ResourceGroup.GetModCategory({
+                    VersionKey: 'Current',
+                    GroupID: groupID
+                });
             }
         );
         return modCategory;

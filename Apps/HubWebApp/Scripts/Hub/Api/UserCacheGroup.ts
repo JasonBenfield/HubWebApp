@@ -9,12 +9,12 @@ import { AppResourceUrl } from "XtiShared/AppResourceUrl";
 export class UserCacheGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'UserCache');
-		this.ClearCacheAction = this.createAction<IClearUserCacheRequest,IEmptyActionResult>('ClearCache', 'Clear Cache');
+		this.ClearCacheAction = this.createAction<string,IEmptyActionResult>('ClearCache', 'Clear Cache');
 	}
 	
-	readonly ClearCacheAction: AppApiAction<IClearUserCacheRequest,IEmptyActionResult>;
+	readonly ClearCacheAction: AppApiAction<string,IEmptyActionResult>;
 	
-	ClearCache(model: IClearUserCacheRequest, errorOptions?: IActionErrorOptions) {
+	ClearCache(model: string, errorOptions?: IActionErrorOptions) {
 		return this.ClearCacheAction.execute(model, errorOptions || {});
 	}
 }

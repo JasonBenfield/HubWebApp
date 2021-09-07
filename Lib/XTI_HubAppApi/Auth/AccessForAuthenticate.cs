@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public abstract class AccessForAuthenticate : IAccess
     {

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using XTI_App;
 using XTI_App.Abstractions;
+using XTI_HubAppApi.AppUserMaintenance;
+using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests
 {

@@ -52,7 +52,10 @@ export class ResourceGroupComponent extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                group = await this.hubApi.ResourceGroup.GetResourceGroup(groupID);
+                group = await this.hubApi.ResourceGroup.GetResourceGroup({
+                    VersionKey: 'Current',
+                    GroupID: groupID
+                });
             }
         );
         return group;

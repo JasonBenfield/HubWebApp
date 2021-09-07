@@ -4,7 +4,7 @@ using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Apps;
+using XTI_HubAppApi.Auth;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes

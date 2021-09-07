@@ -13,5 +13,6 @@ namespace XTI_HubAppClient
         }
 
         public Task<AppModel[]> All() => Post<AppModel[], EmptyRequest>("All", "", new EmptyRequest());
+        public Task<string> GetAppModifierKey(GetAppModifierKeyRequest model) => Post<string, GetAppModifierKeyRequest>("GetAppModifierKey", "", model);
     }
 }

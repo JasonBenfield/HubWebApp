@@ -1,17 +1,17 @@
-﻿import { CardListGroup } from "XtiShared/Card/CardListGroup";
+﻿import { AlignCss } from "XtiShared/AlignCss";
+import { Card } from "XtiShared/Card/Card";
+import { CardAlert } from "XtiShared/Card/CardAlert";
+import { CardHeader } from "XtiShared/Card/CardHeader";
+import { CardListGroup } from "XtiShared/Card/CardListGroup";
+import { ColumnCss } from "XtiShared/ColumnCss";
+import { Command } from "XtiShared/Command/Command";
+import { SimpleEvent } from "XtiShared/Events";
 import { Row } from "XtiShared/Grid/Row";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
 import { TextSpan } from "XtiShared/Html/TextSpan";
 import { MessageAlert } from "XtiShared/MessageAlert";
-import { CardAlert } from "XtiShared/Card/CardAlert";
-import { AlignCss } from "XtiShared/AlignCss";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { CardHeader } from "XtiShared/Card/CardHeader";
-import { ColumnCss } from "XtiShared/ColumnCss";
-import { SimpleEvent } from "XtiShared/Events";
 import { HubTheme } from "../../HubTheme";
-import { Command } from "XtiShared/Command/Command";
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
 
 export class UserRoleListCard extends Card {
     constructor(
@@ -70,7 +70,10 @@ export class UserRoleListCard extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                roles = await this.hubApi.AppUser.GetUserRoles(this.userID);
+                roles = await this.hubApi.AppUser.GetUserRoles({
+                    UserID: this.userID,
+                    ModifierID: 0
+                });
             }
         );
         return roles;

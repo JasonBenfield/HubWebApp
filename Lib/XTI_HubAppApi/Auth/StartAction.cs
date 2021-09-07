@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Web;
 using XTI_WebApp.Api;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class StartRequest
     {

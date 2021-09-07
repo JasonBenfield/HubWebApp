@@ -47,7 +47,11 @@ var MostRecentErrorEventListCard = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                             return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetMostRecentErrorEvents({ ResourceID: this.resourceID, HowMany: 10 })];
+                                    case 0: return [4 /*yield*/, this.hubApi.Resource.GetMostRecentErrorEvents({
+                                            VersionKey: 'Current',
+                                            ResourceID: this.resourceID,
+                                            HowMany: 10
+                                        })];
                                     case 1:
                                         errorEvents = _a.sent();
                                         return [2 /*return*/];

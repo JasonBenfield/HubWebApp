@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using XTI_App.Api;
 using XTI_Core;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi.Auth
 {
     public sealed class LoginModelValidation : AppActionValidation<LoginModel>
     {
