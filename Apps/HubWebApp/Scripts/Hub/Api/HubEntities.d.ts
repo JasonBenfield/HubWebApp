@@ -69,9 +69,9 @@ interface IAppModel {
 	AppName: string;
 	Title: string;
 }
-interface IGetAppModifierKeyRequest {
-	AppName: string;
-	AppType: number;
+interface IAppKey {
+	Name: string;
+	Type: IAppType;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -112,6 +112,11 @@ interface IModifierModel {
 	TargetKey: string;
 	DisplayText: string;
 }
+interface IRegisterAppRequest {
+	Versions: IAppVersionModel[];
+	VersionKey: string;
+	AppTemplate: IAppApiTemplateModel;
+}
 interface IAppVersionModel {
 	ID: number;
 	VersionKey: string;
@@ -121,6 +126,42 @@ interface IAppVersionModel {
 	VersionType: IAppVersionType;
 	Status: IAppVersionStatus;
 	TimeAdded: Date;
+}
+interface IAppApiTemplateModel {
+	AppKey: IAppKey;
+	GroupTemplates: IAppApiGroupTemplateModel[];
+}
+interface IAppApiGroupTemplateModel {
+	Name: string;
+	ModCategory: string;
+	IsAnonymousAllowed: boolean;
+	Roles: string[];
+	ActionTemplates: IAppApiActionTemplateModel[];
+}
+interface IAppApiActionTemplateModel {
+	Name: string;
+	IsAnonymousAllowed: boolean;
+	Roles: string[];
+	ResultType: IResourceResultType;
+}
+interface INewVersionRequest {
+	AppKey: IAppKey;
+	VersionType: IAppVersionType;
+}
+interface IGetVersionRequest {
+	AppKey: IAppKey;
+	VersionKey: string;
+}
+interface IAddSystemUserRequest {
+	AppKey: IAppKey;
+	MachineName: string;
+	Password: string;
+}
+interface IAppUserModel {
+	ID: number;
+	UserName: string;
+	Name: string;
+	Email: string;
 }
 interface IGetVersionResourceGroupRequest {
 	VersionKey: string;
@@ -174,12 +215,6 @@ interface IGetResourceLogRequest {
 interface IGetModCategoryModifierRequest {
 	CategoryID: number;
 	ModifierKey: string;
-}
-interface IAppUserModel {
-	ID: number;
-	UserName: string;
-	Name: string;
-	Email: string;
 }
 interface IAddUserModel {
 	UserName: string;

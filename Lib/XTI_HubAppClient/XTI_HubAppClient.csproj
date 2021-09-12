@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Api" Version="1.7.21" />
-    <PackageReference Include="XTI_WebAppClient" Version="1.7.19" />
-    <PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.11" />
+    <PackageReference Include="XTI_App.Api" Version="1.7.27" />
+    <PackageReference Include="XTI_WebAppClient" Version="1.7.26" />
+    <PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.14" />
   </ItemGroup>
 
 </Project>

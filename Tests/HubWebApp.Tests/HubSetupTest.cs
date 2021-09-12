@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 
 namespace HubWebApp.Tests
@@ -17,7 +17,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddUnknownApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<HubSetup>();
+            var hubSetup = services.GetService<DefaultAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var unknownApp = await factory.Apps().App(AppKey.Unknown);
@@ -28,7 +28,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddHubApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<HubSetup>();
+            var hubSetup = services.GetService<DefaultAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
@@ -39,7 +39,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddModCategoryForApps()
         {
             var services = setup();
-            var hubSetup = services.GetService<HubSetup>();
+            var hubSetup = services.GetService<DefaultAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
@@ -52,7 +52,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddModifierForEachApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<HubSetup>();
+            var hubSetup = services.GetService<DefaultAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);

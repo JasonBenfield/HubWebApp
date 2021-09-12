@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;

@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App.Api;
-using XTI_App;
+using XTI_Hub;
+using XTI_App.Abstractions;
 using XTI_HubAppApi.UserList;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Users;
+using XTI_App;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
@@ -31,6 +33,12 @@ namespace HubWebApp.ApiControllers
         public Task<ResultContainer<AppUserModel[]>> GetUsers()
         {
             return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest());
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<AppUserModel[]>> GetSystemUsers([FromBody] AppKey model)
+        {
+            return api.Group("Users").Action<AppKey, AppUserModel[]>("GetSystemUsers").Execute(model);
         }
 
         [HttpPost]

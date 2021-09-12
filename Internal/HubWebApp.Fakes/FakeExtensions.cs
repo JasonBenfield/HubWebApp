@@ -15,9 +15,11 @@ namespace HubWebApp.Fakes
         {
             services.AddFakesForXtiWebApp(config);
             services.AddTransient<AppFromPath>();
-            services.AddScoped<AppApiFactory, HubAppApiFactory>();
+            services.AddScoped<HubAppApiFactory>();
+            services.AddScoped<AppApiFactory>(sp => sp.GetService<HubAppApiFactory>());
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
-            services.AddScoped<HubSetup>();
+            services.AddScoped<DefaultAppSetup>();
+            services.AddScoped<IAppSetup>(sp => sp.GetService<DefaultAppSetup>());
             services.AddScoped(_ => HubInfo.AppKey);
             services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
             services.AddScoped<AccessForLogin, FakeAccessForLogin>();

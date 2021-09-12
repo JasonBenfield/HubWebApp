@@ -8,16 +8,16 @@ var VersionGroup = /** @class */ (function (_super) {
     tslib_1.__extends(VersionGroup, _super);
     function VersionGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Version') || this;
-        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
         _this.GetCurrentVersionAction = _this.createAction('GetCurrentVersion', 'Get Current Version');
+        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
         _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
         return _this;
     }
-    VersionGroup.prototype.GetVersion = function (model, errorOptions) {
-        return this.GetVersionAction.execute(model, errorOptions || {});
-    };
     VersionGroup.prototype.GetCurrentVersion = function (errorOptions) {
         return this.GetCurrentVersionAction.execute({}, errorOptions || {});
+    };
+    VersionGroup.prototype.GetVersion = function (model, errorOptions) {
+        return this.GetVersionAction.execute(model, errorOptions || {});
     };
     VersionGroup.prototype.GetResourceGroup = function (model, errorOptions) {
         return this.GetResourceGroupAction.execute(model, errorOptions || {});

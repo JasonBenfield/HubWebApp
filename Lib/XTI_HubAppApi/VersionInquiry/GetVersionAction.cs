@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using XTI_App;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
 namespace XTI_HubAppApi.VersionInquiry
 {
@@ -14,13 +14,11 @@ namespace XTI_HubAppApi.VersionInquiry
             this.appFromPath = appFromPath;
         }
 
-        public async Task<AppVersionModel> Execute(string model)
+        public async Task<AppVersionModel> Execute(string versionKey)
         {
-            var versionKey = AppVersionKey.Parse(model);
             var app = await appFromPath.Value();
-            var version = await app.Version(versionKey);
-            var versionModel = version.ToModel();
-            return versionModel;
+            var version = await app.Version(AppVersionKey.Parse(versionKey));
+            return version.ToModel();
         }
     }
 }

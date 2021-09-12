@@ -13,6 +13,7 @@ namespace XTI_HubAppClient
         }
 
         public Task<AppUserModel[]> GetUsers() => Post<AppUserModel[], EmptyRequest>("GetUsers", "", new EmptyRequest());
+        public Task<AppUserModel[]> GetSystemUsers(AppKey model) => Post<AppUserModel[], AppKey>("GetSystemUsers", "", model);
         public Task<int> AddUser(AddUserModel model) => Post<int, AddUserModel>("AddUser", "", model);
     }
 }

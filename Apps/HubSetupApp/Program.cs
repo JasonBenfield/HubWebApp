@@ -22,7 +22,6 @@ namespace HubSetupApp
                 {
                     services.AddAppSetupServices(hostContext.Configuration);
                     services.AddScoped<AppApiFactory, HubAppApiFactory>();
-                    services.AddScoped<IAppSetup, HubSetup>();
                 })
                 .RunConsoleAsync();
         }

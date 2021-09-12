@@ -17,7 +17,7 @@ namespace XTI_HubAppApi
                     HubInfo.ModCategories.Apps,
                     Access.WithAllowed(HubInfo.Roles.ViewApp)
                 ),
-                new VersionInquiryActionFactory(services)
+                services
             );
         }
     }

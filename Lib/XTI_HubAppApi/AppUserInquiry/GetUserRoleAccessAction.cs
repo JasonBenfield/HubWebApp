@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Api;
 
 namespace XTI_HubAppApi.AppUserInquiry

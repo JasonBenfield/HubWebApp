@@ -12,9 +12,6 @@ namespace XTI_HubAppApi
             this.sp = sp;
         }
 
-        protected override IAppApi _Create(IAppApiUser user)
-        {
-            return new HubAppApi(user, sp);
-        }
+        protected override IAppApi _Create(IAppApiUser user) => new HubAppApi(user, sp);
     }
 }

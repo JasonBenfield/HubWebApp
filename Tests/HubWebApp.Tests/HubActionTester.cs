@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
@@ -116,7 +116,7 @@ namespace HubWebApp.Tests
             httpContextAccessor.HttpContext.Request.Path = $"/{actionForSuperUser.Path.Group.DisplayText}/{actionForSuperUser.Path.Action.DisplayText}{modKeyPath}".Replace(" ", "");
             var appContext = Services.GetService<IAppContext>();
             var userContext = (FakeUserContext)Services.GetService<IUserContext>();
-            userContext.SetUser(user);
+            userContext.SetCurrentUser(user.UserName());
             var pathAccessor = (FakeXtiPathAccessor)Services.GetService<IXtiPathAccessor>();
             var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
             pathAccessor.SetPath(path);

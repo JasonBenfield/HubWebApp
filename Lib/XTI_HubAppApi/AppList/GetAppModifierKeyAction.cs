@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 
 namespace XTI_HubAppApi.AppList
 {
-    public sealed class GetAppModifierKeyAction : AppAction<AppKeyModel, string>
+    public sealed class GetAppModifierKeyAction : AppAction<AppKey, string>
     {
         private readonly AppFactory factory;
 
@@ -14,10 +14,8 @@ namespace XTI_HubAppApi.AppList
             this.factory = factory;
         }
 
-        public async Task<string> Execute(AppKeyModel model)
+        public async Task<string> Execute(AppKey appKey)
         {
-            var appType = AppType.Values.Value(model.AppType);
-            var appKey = new AppKey(new AppName(model.AppName), appType);
             var app = await factory.Apps().App(appKey);
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
             var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 
 namespace XTI_HubAppApi

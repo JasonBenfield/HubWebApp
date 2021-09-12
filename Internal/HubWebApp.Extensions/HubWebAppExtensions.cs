@@ -3,10 +3,9 @@ using MainDB.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using XTI_App;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_App.EfApi;
+using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
 using XTI_WebApp.Extensions;
@@ -29,7 +28,7 @@ namespace HubWebApp.Extensions
             services.AddSingleton(_ => HubInfo.AppKey);
             services.AddScoped<AppApiFactory, HubAppApiFactory>();
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
-            services.AddScoped<HubSetup>();
+            services.AddScoped<DefaultAppSetup>();
             services
                 .AddMvc()
                 .AddJsonOptions(options =>

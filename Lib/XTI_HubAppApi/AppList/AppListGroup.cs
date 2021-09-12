@@ -1,6 +1,7 @@
-﻿using XTI_App;
+﻿using XTI_Hub;
 using XTI_App.Api;
 using XTI_WebApp.Api;
+using XTI_App.Abstractions;
 
 namespace XTI_HubAppApi.AppList
 {
@@ -34,7 +35,7 @@ namespace XTI_HubAppApi.AppList
 
         public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
         public AppApiAction<EmptyRequest, AppModel[]> All { get; }
-        public AppApiAction<AppKeyModel, string> GetAppModifierKey { get; }
+        public AppApiAction<AppKey, string> GetAppModifierKey { get; }
         public AppApiAction<int, WebRedirectResult> RedirectToApp { get; }
     }
 }

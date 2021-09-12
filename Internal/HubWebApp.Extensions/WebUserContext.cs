@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using XTI_App;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_App.EfApi;
+using XTI_Hub;
 using XTI_WebApp;
 
 namespace HubWebApp.Extensions

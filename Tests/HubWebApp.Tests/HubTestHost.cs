@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Fakes;
 
@@ -29,7 +29,7 @@ namespace HubWebApp.Tests
                 .Build();
             var scope = host.Services.CreateScope();
             var sp = scope.ServiceProvider;
-            var setup = scope.ServiceProvider.GetService<HubSetup>();
+            var setup = scope.ServiceProvider.GetService<DefaultAppSetup>();
             await setup.Run(AppVersionKey.Current);
             await addAdminUser(sp);
             return sp;

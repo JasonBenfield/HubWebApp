@@ -9,6 +9,7 @@ import { AuthApiGroup } from "./AuthApiGroup";
 import { PermanentLogGroup } from "./PermanentLogGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
+import { AppRegistrationGroup } from "./AppRegistrationGroup";
 import { VersionGroup } from "./VersionGroup";
 import { ResourceGroupGroup } from "./ResourceGroupGroup";
 import { ResourceGroup } from "./ResourceGroup";
@@ -21,7 +22,7 @@ import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
-	public static readonly DefaultVersion = 'Current';
+	public static readonly DefaultVersion = 'V21';
 	
 	constructor(events: AppApiEvents, baseUrl: string, version: string = '') {
 		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
@@ -32,6 +33,7 @@ export class HubAppApi extends AppApi {
 		this.PermanentLog = this.addGroup((evts, resourceUrl) => new PermanentLogGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
+		this.AppRegistration = this.addGroup((evts, resourceUrl) => new AppRegistrationGroup(evts, resourceUrl));
 		this.Version = this.addGroup((evts, resourceUrl) => new VersionGroup(evts, resourceUrl));
 		this.ResourceGroup = this.addGroup((evts, resourceUrl) => new ResourceGroupGroup(evts, resourceUrl));
 		this.Resource = this.addGroup((evts, resourceUrl) => new ResourceGroup(evts, resourceUrl));
@@ -50,6 +52,7 @@ export class HubAppApi extends AppApi {
 	readonly PermanentLog: PermanentLogGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;
+	readonly AppRegistration: AppRegistrationGroup;
 	readonly Version: VersionGroup;
 	readonly ResourceGroup: ResourceGroupGroup;
 	readonly Resource: ResourceGroup;

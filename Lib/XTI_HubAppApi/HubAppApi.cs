@@ -27,6 +27,8 @@ namespace XTI_HubAppApi
             permanentLog(services);
             appList(services);
             appInquiry(services);
+            appRegistration(services);
+            appPublish(services);
             version(services);
             resourceGroup(services);
             resource(services);
@@ -47,6 +49,10 @@ namespace XTI_HubAppApi
         partial void appList(IServiceProvider services);
 
         partial void appInquiry(IServiceProvider services);
+
+        partial void appRegistration(IServiceProvider services);
+
+        partial void appPublish(IServiceProvider services);
 
         partial void modCategory(IServiceProvider services);
 
