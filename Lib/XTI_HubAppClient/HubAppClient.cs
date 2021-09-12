@@ -16,6 +16,7 @@ namespace XTI_HubAppClient
             PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, url);
             Apps = new AppsGroup(httpClientFactory, xtiToken, url);
             App = new AppGroup(httpClientFactory, xtiToken, url);
+            AppRegistration = new AppRegistrationGroup(httpClientFactory, xtiToken, url);
             Version = new VersionGroup(httpClientFactory, xtiToken, url);
             ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
             Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
@@ -27,7 +28,7 @@ namespace XTI_HubAppClient
             UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
         }
 
-        public const string DefaultVersion = "Current";
+        public const string DefaultVersion = "V21";
         public UserGroup User { get; }
 
         public UserCacheGroup UserCache { get; }
@@ -41,6 +42,8 @@ namespace XTI_HubAppClient
         public AppsGroup Apps { get; }
 
         public AppGroup App { get; }
+
+        public AppRegistrationGroup AppRegistration { get; }
 
         public VersionGroup Version { get; }
 

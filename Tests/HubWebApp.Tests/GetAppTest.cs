@@ -1,7 +1,7 @@
 ﻿using XTI_HubAppApi;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 

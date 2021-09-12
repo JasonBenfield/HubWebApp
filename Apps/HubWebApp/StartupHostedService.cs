@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 
 namespace HubWebApp
@@ -21,7 +21,7 @@ namespace HubWebApp
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = sp.CreateScope();
-            var hubSetup = scope.ServiceProvider.GetService<HubSetup>();
+            var hubSetup = scope.ServiceProvider.GetService<DefaultAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             await StopAsync(cancellationToken);
         }

@@ -12,22 +12,5 @@ namespace XTI_HubAppApi.VersionInquiry
             this.services = services;
         }
 
-        internal GetVersionAction CreateGetVersion()
-        {
-            var appFromPath = services.GetService<AppFromPath>();
-            return new GetVersionAction(appFromPath);
-        }
-
-        internal GetCurrentVersionAction CreateGetCurrentVersion()
-        {
-            var appFromPath = services.GetService<AppFromPath>();
-            return new GetCurrentVersionAction(appFromPath);
-        }
-
-        internal GetResourceGroupAction CreateGetResourcegroup()
-        {
-            var appFromPath = services.GetService<AppFromPath>();
-            return new GetResourceGroupAction(appFromPath);
-        }
     }
 }

@@ -11,6 +11,7 @@ var AuthApiGroup_1 = require("./AuthApiGroup");
 var PermanentLogGroup_1 = require("./PermanentLogGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
+var AppRegistrationGroup_1 = require("./AppRegistrationGroup");
 var VersionGroup_1 = require("./VersionGroup");
 var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
 var ResourceGroup_1 = require("./ResourceGroup");
@@ -32,6 +33,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
+        _this.AppRegistration = _this.addGroup(function (evts, resourceUrl) { return new AppRegistrationGroup_1.AppRegistrationGroup(evts, resourceUrl); });
         _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
         _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
         _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
@@ -43,7 +45,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'Current';
+    HubAppApi.DefaultVersion = 'V21';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

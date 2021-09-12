@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App.Api;
-using XTI_App;
-using XTI_HubAppApi.AppList;
+using XTI_Hub;
+using XTI_App.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Users;
+using XTI_App;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
@@ -34,9 +35,9 @@ namespace HubWebApp.ApiControllers
         }
 
         [HttpPost]
-        public Task<ResultContainer<string>> GetAppModifierKey([FromBody] GetAppModifierKeyRequest model)
+        public Task<ResultContainer<string>> GetAppModifierKey([FromBody] AppKey model)
         {
-            return api.Group("Apps").Action<GetAppModifierKeyRequest, string>("GetAppModifierKey").Execute(model);
+            return api.Group("Apps").Action<AppKey, string>("GetAppModifierKey").Execute(model);
         }
 
         public async Task<IActionResult> RedirectToApp(int model)

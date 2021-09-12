@@ -1,4 +1,4 @@
-﻿using XTI_App;
+﻿using XTI_Hub;
 
 namespace XTI_HubAppApi.AppUserInquiry
 {

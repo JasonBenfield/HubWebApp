@@ -36,12 +36,7 @@ namespace XTI_HubAppClient
         {
             if (string.IsNullOrWhiteSpace(modKey))
             {
-                var model = new GetAppModifierKeyRequest
-                {
-                    AppName = appKey.Name.Value,
-                    AppType = appKey.Type.Value
-                };
-                modKey = await hubClient.Apps.GetAppModifierKey(model);
+                modKey = await hubClient.Apps.GetAppModifierKey(appKey);
             }
             return modKey;
         }

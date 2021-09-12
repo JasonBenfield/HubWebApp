@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using XTI_App;
+using XTI_Hub;
 
 namespace XTI_HubAppApi.Users
 {

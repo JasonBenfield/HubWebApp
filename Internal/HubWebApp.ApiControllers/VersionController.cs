@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using XTI_App;
 using XTI_App.Api;
+using XTI_Hub;
 using XTI_HubAppApi.VersionInquiry;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Users;
+using XTI_App;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
@@ -22,15 +23,15 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         [HttpPost]
-        public Task<ResultContainer<AppVersionModel>> GetVersion([FromBody] string model)
-        {
-            return api.Group("Version").Action<string, AppVersionModel>("GetVersion").Execute(model);
-        }
-
-        [HttpPost]
         public Task<ResultContainer<AppVersionModel>> GetCurrentVersion()
         {
             return api.Group("Version").Action<EmptyRequest, AppVersionModel>("GetCurrentVersion").Execute(new EmptyRequest());
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<AppVersionModel>> GetVersion([FromBody] string model)
+        {
+            return api.Group("Version").Action<string, AppVersionModel>("GetVersion").Execute(model);
         }
 
         [HttpPost]

@@ -9,20 +9,20 @@ import { AppResourceUrl } from "XtiShared/AppResourceUrl";
 export class VersionGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Version');
-		this.GetVersionAction = this.createAction<string,IAppVersionModel>('GetVersion', 'Get Version');
 		this.GetCurrentVersionAction = this.createAction<IEmptyRequest,IAppVersionModel>('GetCurrentVersion', 'Get Current Version');
+		this.GetVersionAction = this.createAction<string,IAppVersionModel>('GetVersion', 'Get Version');
 		this.GetResourceGroupAction = this.createAction<IGetVersionResourceGroupRequest,IResourceGroupModel>('GetResourceGroup', 'Get Resource Group');
 	}
 	
-	readonly GetVersionAction: AppApiAction<string,IAppVersionModel>;
 	readonly GetCurrentVersionAction: AppApiAction<IEmptyRequest,IAppVersionModel>;
+	readonly GetVersionAction: AppApiAction<string,IAppVersionModel>;
 	readonly GetResourceGroupAction: AppApiAction<IGetVersionResourceGroupRequest,IResourceGroupModel>;
 	
-	GetVersion(model: string, errorOptions?: IActionErrorOptions) {
-		return this.GetVersionAction.execute(model, errorOptions || {});
-	}
 	GetCurrentVersion(errorOptions?: IActionErrorOptions) {
 		return this.GetCurrentVersionAction.execute({}, errorOptions || {});
+	}
+	GetVersion(model: string, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionAction.execute(model, errorOptions || {});
 	}
 	GetResourceGroup(model: IGetVersionResourceGroupRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetResourceGroupAction.execute(model, errorOptions || {});

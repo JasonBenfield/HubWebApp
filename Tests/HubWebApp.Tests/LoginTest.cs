@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
@@ -143,7 +143,7 @@ namespace HubWebApp.Tests
                 DateTime.UtcNow
             );
             var user = await input.AppFactory.Users().User(new AppUserName(input.Model.Credentials.UserName));
-            var app = await input.AppFactory.Apps().App(FakeAppKey.AppKey);
+            var app = await input.AppFactory.Apps().App(HubInfo.AppKey);
             var tempLogSession = sp.GetService<TempLogSession>();
             await tempLogSession.StartSession();
             return input;

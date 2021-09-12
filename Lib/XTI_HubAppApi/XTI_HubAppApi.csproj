@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.EfApi" Version="1.7.21" />
-    <PackageReference Include="XTI_App.Extensions" Version="1.7.21" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.7.19" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.7.27" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.7.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XTI_Hub\XTI_Hub.csproj" />
   </ItemGroup>
 
   <ItemGroup>

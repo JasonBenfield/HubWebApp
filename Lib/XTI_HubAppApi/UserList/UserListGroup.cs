@@ -1,5 +1,6 @@
-﻿using XTI_App;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.UserList
@@ -26,7 +27,7 @@ namespace XTI_HubAppApi.UserList
         }
         public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
         public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
-        public AppApiAction<AppKeyModel, AppUserModel[]> GetSystemUsers { get; }
+        public AppApiAction<AppKey, AppUserModel[]> GetSystemUsers { get; }
         public AppApiAction<AddUserModel, int> AddUser { get; }
     }
 }

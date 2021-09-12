@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,16 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MainDB.EF.SqlServer" Version="1.10.13" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="XTI_AppSetupApp.Extensions" Version="1.7.21" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.16" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.18" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\XTI_HubAppApi\XTI_HubAppApi.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_AppSetupApp.Extensions\XTI_AppSetupApp.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

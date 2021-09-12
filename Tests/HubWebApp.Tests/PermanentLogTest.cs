@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using XTI_App;
+using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
@@ -14,6 +14,7 @@ using XTI_Core;
 using XTI_TempLog;
 using XTI_TempLog.Fakes;
 using XTI_WebApp.Fakes;
+using HubWebApp.Fakes;
 
 namespace HubWebApp.Tests
 {
@@ -211,7 +212,7 @@ namespace HubWebApp.Tests
                     (hostContext, services) =>
                     {
                         services.AddFakeTempLogServices();
-                        services.AddFakesForXtiWebApp(hostContext.Configuration);
+                        services.AddFakesForHubWebApp(hostContext.Configuration);
                         services.AddScoped<IAppApiUser, AppApiSuperUser>();
                         services.AddSingleton<IAppEnvironmentContext, FakeAppEnvironmentContext>();
                         services.AddSingleton(sp => HubInfo.AppKey);
@@ -233,7 +234,8 @@ namespace HubWebApp.Tests
             );
             var appFactory = sp.GetService<AppFactory>();
             var clock = sp.GetService<Clock>();
-            await new AllAppSetup(appFactory, clock).Run();
+            var defaultSetup = sp.GetService<DefaultAppSetup>();
+            await defaultSetup.Run(AppVersionKey.Current);
             var app = await appFactory.Apps().Add(new AppKey(new AppName("Fake"), AppType.Values.WebApp), "Fake", DateTime.Now);
             var version = await app.StartNewMajorVersion(DateTime.Now);
             await version.Publishing();

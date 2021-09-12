@@ -1,4 +1,4 @@
-﻿using XTI_App;
+﻿using XTI_Hub;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
