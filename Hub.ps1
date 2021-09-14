@@ -5,6 +5,7 @@ $script:hubConfig = [PSCustomObject]@{
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
+    AppsToImport = "Shared"
 }
 
 function Hub-NewVersion {
@@ -63,7 +64,7 @@ function Hub-Install {
     )
     $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
     $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
-    $script:authConfig | Xti-Install @PsBoundParameters
+    $script:hubConfig | Xti-Install @PsBoundParameters
 }
 
 function Get-DestinationMachine {

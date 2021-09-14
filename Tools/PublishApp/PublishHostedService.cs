@@ -28,9 +28,10 @@ namespace PublishApp
             var sp = scope.ServiceProvider;
             try
             {
+                var options = sp.GetService<IOptions<PublishOptions>>().Value;
                 var versionToolOutput = await getVersionKey(sp);
                 var versionKey = AppVersionKey.Parse(versionToolOutput.VersionKey);
-                var appKey = new AppKey(new AppName(versionToolOutput.AppName), AppType.Values.Value(versionToolOutput.AppType));
+                var appKey = new AppKey(new AppName(options.AppName), AppType.Values.Value(options.AppType));
                 var hostEnv = sp.GetService<IHostEnvironment>();
                 if (hostEnv.IsProduction())
                 {
@@ -39,6 +40,11 @@ namespace PublishApp
                 else
                 {
                     versionKey = AppVersionKey.Current;
+                }
+                var publishDir = getPublishDir(sp, appKey, versionKey);
+                if (Directory.Exists(publishDir))
+                {
+                    Directory.Delete(publishDir, true);
                 }
                 await publishSetup(sp, appKey, versionKey);
                 if (appKey.Type.Equals(AppType.Values.WebApp))
@@ -73,7 +79,7 @@ namespace PublishApp
         {
             var hostEnv = sp.GetService<IHostEnvironment>();
             var options = sp.GetService<IOptions<PublishOptions>>().Value;
-            var builder = new WebAppBuilder(appKey, versionKey, hostEnv, options.AppsToImport);
+            var builder = new BuildWebProcess(appKey, versionKey, hostEnv, options.AppsToImport);
             await builder.Build();
         }
 
@@ -88,12 +94,8 @@ namespace PublishApp
             );
             if (Directory.Exists(setupAppDir))
             {
-                var publishDir = getPublishDir(sp, appKey, versionKey);
-                if (Directory.Exists(publishDir))
-                {
-                    Directory.Delete(publishDir, true);
-                }
                 var hubApi = sp.GetService<HubAppApi>();
+                var publishDir = getPublishDir(sp, appKey, versionKey);
                 var versionsPath = Path.Combine(publishDir, "versions.json");
                 var persistedVersions = new PersistedVersions(hubApi, appKey, versionsPath);
                 await persistedVersions.Store();
@@ -111,8 +113,6 @@ namespace PublishApp
                     .AddArgument("p:PublishDir", publishSetupDir);
                 var result = await publishProcess.Run();
                 result.EnsureExitCodeIsZero();
-
-
             }
             else
             {
@@ -124,13 +124,9 @@ namespace PublishApp
         {
             var versionOptions = new VersionToolOptions();
             versionOptions.CommandGetVersion();
-            var hostEnv = sp.GetService<IHostEnvironment>();
-            if (!hostEnv.IsProduction())
-            {
-                var options = sp.GetService<IOptions<PublishOptions>>().Value;
-                versionOptions.AppName = options.AppName;
-                versionOptions.AppType = options.AppType;
-            }
+            var options = sp.GetService<IOptions<PublishOptions>>().Value;
+            versionOptions.AppName = options.AppName;
+            versionOptions.AppType = options.AppType;
             var result = await runVersionTool(versionOptions);
             var output = result.Data<VersionToolOutput>();
             return output;
@@ -138,6 +134,7 @@ namespace PublishApp
 
         private async Task<VersionToolOutput> beginPublish()
         {
+            Console.WriteLine("Begin Publishing");
             var versionOptions = new VersionToolOptions();
             versionOptions.CommandBeginPublish();
             var result = await runVersionTool(versionOptions);
@@ -148,10 +145,6 @@ namespace PublishApp
         private async Task runDotNetPublish(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey)
         {
             var publishDir = getPublishDir(sp, appKey, versionKey);
-            if (Directory.Exists(publishDir))
-            {
-                Directory.Delete(publishDir, true);
-            }
             var publishAppDir = Path.Combine(publishDir, "App");
             Console.WriteLine($"Publishing web app to '{publishAppDir}'");
             var publishProcess = new WinProcess("dotnet")

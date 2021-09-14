@@ -134,11 +134,15 @@ namespace InstallApp
                     hostEnv.EnvironmentName,
                     $"{getAppType(appKey)}s",
                     getAppName(appKey),
-                    versionKey,
-                    "App"
+                    versionKey
                 );
-                Console.WriteLine($"Copying from '{sourceAppDir}' to '{targetDir}'");
-                await new RobocopyProcess(sourceAppDir, targetDir)
+                if (Directory.Exists(targetDir))
+                {
+                    Directory.Delete(targetDir, true);
+                }
+                var targetAppDir = Path.Combine(targetDir, "App");
+                Console.WriteLine($"Copying from '{sourceAppDir}' to '{targetAppDir}'");
+                await new RobocopyProcess(sourceAppDir, targetAppDir)
                     .Purge()
                     .CopySubdirectoriesIncludingEmpty()
                     .NoFileClassLogging()

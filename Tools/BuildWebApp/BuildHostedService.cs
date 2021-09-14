@@ -44,7 +44,7 @@ namespace BuildWebApp
                         versionKey = currentVersion.VersionKey;
                     }
                 }
-                var builder = new WebAppBuilder(appKey, versionKey, hostEnv, options.AppsToImport);
+                var builder = new BuildWebProcess(appKey, versionKey, hostEnv, options.AppsToImport);
                 await builder.Build();
             }
             catch (Exception ex)

@@ -21,7 +21,6 @@ namespace HubWebApp
             services.AddResponseCaching();
             services.ConfigureXtiCookieAndTokenAuthentication(Configuration);
             services.AddServicesForHub(Configuration);
-            services.AddHostedService<StartupHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

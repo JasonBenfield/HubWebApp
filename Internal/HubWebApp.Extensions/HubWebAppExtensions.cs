@@ -28,7 +28,6 @@ namespace HubWebApp.Extensions
             services.AddSingleton(_ => HubInfo.AppKey);
             services.AddScoped<AppApiFactory, HubAppApiFactory>();
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
-            services.AddScoped<DefaultAppSetup>();
             services
                 .AddMvc()
                 .AddJsonOptions(options =>
