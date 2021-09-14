@@ -9,7 +9,7 @@ using XTI_Configuration.Extensions;
 using XTI_Core;
 using XTI_Hub;
 using HubWebApp.Extensions;
-using MainDB.EF;
+using XTI_HubDB.EF;
 using XTI_HubAppApi;
 
 namespace HubWebApp.IntegrationTests
@@ -100,7 +100,7 @@ namespace HubWebApp.IntegrationTests
                 )
                 .Build();
             var scope = host.Services.CreateScope();
-            var resetDB = scope.ServiceProvider.GetService<MainDbReset>();
+            var resetDB = scope.ServiceProvider.GetService<HubDbReset>();
             await resetDB.Run();
             var setup = scope.ServiceProvider.GetService<IAppSetup>();
             await setup.Run(AppVersionKey.Current);

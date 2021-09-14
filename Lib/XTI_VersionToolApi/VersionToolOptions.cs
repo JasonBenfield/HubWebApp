@@ -23,16 +23,20 @@
             RepoName = repoName;
         }
 
-        public void CommandBeginPublish()
+        public void CommandBeginPublish(string appName, string appType)
         {
             Command = "BeginPublish";
+            AppName = appName;
+            AppType = appType;
         }
 
-        public void CommandCompleteVersion(string repoOwner, string repoName)
+        public void CommandCompleteVersion(string repoOwner, string repoName, string appName, string appType)
         {
             Command = "CompleteVersion";
             RepoOwner = repoOwner;
             RepoName = repoName;
+            AppName = appName;
+            AppType = appType;
         }
 
         public void CommandGetCurrentVersion(string appName, string appType)

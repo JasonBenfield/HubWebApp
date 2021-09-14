@@ -1,4 +1,4 @@
-﻿using MainDB.Entities;
+﻿using XTI_HubDB.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

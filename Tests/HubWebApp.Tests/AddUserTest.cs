@@ -1,4 +1,4 @@
-﻿using MainDB.EF;
+﻿using XTI_HubDB.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -72,8 +72,8 @@ namespace HubWebApp.Tests
             var adminUser = await tester.AdminUser();
             var model = createModel();
             var userID = await tester.Execute(model, adminUser);
-            var mainDbContext = tester.Services.GetService<MainDbContext>();
-            var user = await mainDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
+            var hubDbContext = tester.Services.GetService<HubDbContext>();
+            var user = await hubDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
             Assert.That(user.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");
         }
 

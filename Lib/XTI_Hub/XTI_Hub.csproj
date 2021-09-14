@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,9 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
-    <PackageReference Include="MainDB.Entities" Version="1.10.14" />
     <PackageReference Include="XTI_App.Abstractions" Version="1.7.27" />
     <PackageReference Include="XTI_App.Api" Version="1.7.27" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XTI_HubDB.Entities\XTI_HubDB.Entities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -18,7 +18,6 @@ namespace XTI_Version
         {
             if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
             if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
-            if (options.IssueNumber <= 0) { throw new ArgumentException("Issue Number is required"); }
             var gitRepo = await gitFactory.CreateGitRepo();
             var currentBranchName = gitRepo.CurrentBranchName();
             var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);

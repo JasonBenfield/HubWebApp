@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -11,12 +11,12 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="XTI_Git.Fakes" Version="1.1.3" />
     <PackageReference Include="XTI_GitHub.Fakes" Version="1.1.3" />
-    <PackageReference Include="MainDB.EF.InMemory" Version="1.10.14" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Fakes\HubWebApp.Fakes.csproj" />
     <ProjectReference Include="..\..\Internal\XTI_Version\XTI_Version.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
   </ItemGroup>
 
 </Project>

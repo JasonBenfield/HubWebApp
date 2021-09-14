@@ -1,4 +1,4 @@
-﻿using MainDB.Extensions;
+﻿using XTI_HubDB.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,7 +19,7 @@ namespace XTI_Tool.Extensions
             services.Configure<AppOptions>(configuration.GetSection(AppOptions.App));
             services.Configure<DbOptions>(configuration.GetSection(DbOptions.DB));
             services.AddXtiDataProtection();
-            services.AddMainDbContextForSqlServer(configuration);
+            services.AddHubDbContextForSqlServer(configuration);
             services.AddScoped<AppFactory>();
             services.AddScoped<Clock, UtcClock>();
             services.AddScoped<AppApiFactory, HubAppApiFactory>();

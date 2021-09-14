@@ -35,7 +35,7 @@ namespace PublishApp
                 var hostEnv = sp.GetService<IHostEnvironment>();
                 if (hostEnv.IsProduction())
                 {
-                    versionToolOutput = await beginPublish();
+                    versionToolOutput = await beginPublish(appKey);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace PublishApp
                     await runDotnetBuild();
                 }
                 await packLibProjects(sp, versionToolOutput.VersionNumber);
-                await completeVersion(sp);
+                await completeVersion(sp, appKey);
                 await runInstall(sp, appKey);
             }
             catch (Exception ex)
@@ -132,11 +132,11 @@ namespace PublishApp
             return output;
         }
 
-        private async Task<VersionToolOutput> beginPublish()
+        private async Task<VersionToolOutput> beginPublish(AppKey appKey)
         {
             Console.WriteLine("Begin Publishing");
             var versionOptions = new VersionToolOptions();
-            versionOptions.CommandBeginPublish();
+            versionOptions.CommandBeginPublish(appKey.Name.Value, appKey.Type.DisplayText);
             var result = await runVersionTool(versionOptions);
             var output = result.Data<VersionToolOutput>();
             return output;
@@ -398,14 +398,14 @@ namespace PublishApp
 
         private static string getXtiDir() => Environment.GetEnvironmentVariable("XTI_Dir");
 
-        private async Task completeVersion(IServiceProvider sp)
+        private async Task completeVersion(IServiceProvider sp, AppKey appKey)
         {
             var hostEnv = sp.GetService<IHostEnvironment>();
             if (hostEnv.IsProduction())
             {
                 var options = sp.GetService<IOptions<PublishOptions>>().Value;
                 var versionOptions = new VersionToolOptions();
-                versionOptions.CommandCompleteVersion(options.RepoOwner, options.RepoName);
+                versionOptions.CommandCompleteVersion(options.RepoOwner, options.RepoName, appKey.Name.Value, appKey.Type.DisplayText);
                 await runVersionTool(versionOptions);
             }
         }

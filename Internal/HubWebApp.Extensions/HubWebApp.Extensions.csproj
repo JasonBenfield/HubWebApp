@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MainDB.EF.SqlServer" Version="1.10.14" />
     <PackageReference Include="XTI_WebApp.Extensions" Version="1.7.26" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\XTI_HubAppApi\XTI_HubAppApi.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
     <ProjectReference Include="..\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />
   </ItemGroup>
 
