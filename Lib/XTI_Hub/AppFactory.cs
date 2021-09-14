@@ -1,4 +1,4 @@
-﻿using MainDB.Entities;
+﻿using XTI_HubDB.Entities;
 using System;
 using System.Threading.Tasks;
 
@@ -6,12 +6,12 @@ namespace XTI_Hub
 {
     public sealed class AppFactory
     {
-        public AppFactory(IMainDbContext db)
+        public AppFactory(IHubDbContext db)
         {
             DB = db;
         }
 
-        internal IMainDbContext DB { get; }
+        internal IHubDbContext DB { get; }
 
         private AppUserRepository users;
         public AppUserRepository Users()

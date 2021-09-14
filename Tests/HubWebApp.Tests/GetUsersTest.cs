@@ -1,4 +1,4 @@
-﻿using MainDB.EF;
+﻿using XTI_HubDB.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

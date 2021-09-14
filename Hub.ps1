@@ -16,6 +16,12 @@ function Hub-NewVersion {
     $script:hubConfig | New-XtiVersion @PsBoundParameters
 }
 
+function Hub-Issues {
+    param(
+    )
+    $script:hubConfig | Xti-Issues @PsBoundParameters
+}
+
 function Hub-NewIssue {
     param(
         [Parameter(Mandatory)]
@@ -65,6 +71,12 @@ function Hub-Install {
     $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
     $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
     $script:hubConfig | Xti-Install @PsBoundParameters
+}
+
+function Add-DBMigrations {
+    param ([Parameter(Mandatory)]$Name)
+    $env:DOTNET_ENVIRONMENT="Development"
+    dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./Lib/XTI_HubDB.EF.SqlServer
 }
 
 function Get-DestinationMachine {

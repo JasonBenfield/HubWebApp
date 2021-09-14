@@ -1,4 +1,4 @@
-﻿using MainDB.Entities;
+﻿using XTI_HubDB.Entities;
 using XTI_App.Abstractions;
 using XTI_Core;
 

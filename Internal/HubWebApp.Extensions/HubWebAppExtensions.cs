@@ -1,5 +1,5 @@
 ﻿using HubWebApp.ApiControllers;
-using MainDB.Extensions;
+using XTI_HubDB.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +17,7 @@ namespace HubWebApp.Extensions
         public static void AddServicesForHub(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddWebAppServices(configuration);
-            services.AddMainDbContextForSqlServer(configuration);
+            services.AddHubDbContextForSqlServer(configuration);
             services.AddScoped<AppFactory>();
             services.AddScoped<ISourceUserContext, WebUserContext>();
             services.AddScoped<ISourceAppContext, DefaultAppContext>();

@@ -1,4 +1,4 @@
-﻿using MainDB.Extensions;
+﻿using XTI_HubDB.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -13,7 +13,7 @@ namespace XTI_AppSetupApp.Extensions
     {
         public static void AddAppSetupServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddMainDbContextForSqlServer(config);
+            services.AddHubDbContextForSqlServer(config);
             services.AddScoped<AppFactory>();
             services.AddScoped<Clock, UtcClock>();
             services.AddScoped<HubAppApiFactory>();

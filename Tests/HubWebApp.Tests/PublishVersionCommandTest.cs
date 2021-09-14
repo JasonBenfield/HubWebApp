@@ -24,7 +24,8 @@ namespace HubWebApp.Tests
             var versions = await tester.App.Versions();
             var newVersion = versions.First(v => !v.IsCurrent());
             await tester.Checkout(newVersion);
-            tester.Options.CommandBeginPublish();
+            var key = tester.App.Key();
+            tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
             await tester.Execute();
             newVersion = await tester.App.Version(newVersion.Key());
             Assert.That(newVersion.IsPublishing(), Is.True, "Should begin publishing the new version");
@@ -38,9 +39,10 @@ namespace HubWebApp.Tests
             var versions = await tester.App.Versions();
             var newVersion = versions.First(v => !v.IsCurrent());
             await tester.Checkout(newVersion);
-            tester.Options.CommandBeginPublish();
+            var key = tester.App.Key();
+            tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
             await tester.Command().Execute(tester.Options);
-            tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App");
+            tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App", key.Name.Value, key.Type.DisplayText);
             await tester.Execute();
             newVersion = await tester.App.Version(newVersion.Key());
             Assert.That(newVersion.IsCurrent(), Is.True, "Should make the new version the current version");
@@ -54,12 +56,13 @@ namespace HubWebApp.Tests
             var versions = await tester.App.Versions();
             var newVersion = versions.First(v => !v.IsCurrent());
             await tester.Checkout(newVersion);
-            tester.Options.CommandBeginPublish();
+            var key = tester.App.Key();
+            tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
             await tester.Execute();
-            tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App");
+            tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App", key.Name.Value, key.Type.DisplayText);
             await tester.Execute();
             await tester.Checkout(newVersion);
-            tester.Options.CommandBeginPublish();
+            tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
             Assert.ThrowsAsync<PublishVersionException>(() => tester.Execute());
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MainDB.Entities;
+using XTI_HubDB.Entities;
 using XTI_App.Abstractions;
 
 namespace XTI_Hub
