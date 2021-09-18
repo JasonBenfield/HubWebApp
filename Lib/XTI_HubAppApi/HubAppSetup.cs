@@ -5,22 +5,20 @@ using XTI_HubAppApi.AppRegistration;
 
 namespace XTI_HubAppApi
 {
-    public sealed class DefaultAppSetup : IAppSetup
+    public sealed class HubAppSetup : IAppSetup
     {
         private readonly HubAppApi hubApi;
         private readonly AppApiFactory apiFactory;
-        private readonly PersistedVersions persistedVersions;
 
-        public DefaultAppSetup(HubAppApi hubApi, AppApiFactory apiFactory, PersistedVersions persistedVersions)
+        public HubAppSetup(HubAppApi hubApi, AppApiFactory apiFactory)
         {
             this.hubApi = hubApi;
             this.apiFactory = apiFactory;
-            this.persistedVersions = persistedVersions;
         }
 
         public async Task Run(AppVersionKey versionKey)
         {
-            var versions = await persistedVersions.Versions();
+            var versions = await hubApi.AppRegistration.GetVersions.Invoke(HubInfo.AppKey);
             var template = apiFactory.CreateTemplate();
             var request = new RegisterAppRequest
             {

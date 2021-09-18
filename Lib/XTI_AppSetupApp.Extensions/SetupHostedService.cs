@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
-using XTI_HubAppApi;
 
 namespace XTI_AppSetupApp.Extensions
 {

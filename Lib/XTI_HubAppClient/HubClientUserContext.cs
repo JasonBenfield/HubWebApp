@@ -15,6 +15,12 @@ namespace XTI_HubAppClient
             this.appContext = appContext;
         }
 
+        public async Task<AppUserName> CurrentUserName()
+        {
+            var user = await hubClient.UserInquiry.GetCurrentUser();
+            return new AppUserName(user.UserName);
+        }
+
         public async Task<IAppUser> User(AppUserName userName)
         {
             var user = await hubClient.UserInquiry.GetUserByUserName(userName.Value);

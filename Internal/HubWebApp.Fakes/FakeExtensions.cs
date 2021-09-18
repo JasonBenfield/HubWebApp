@@ -18,8 +18,8 @@ namespace HubWebApp.Fakes
             services.AddScoped<HubAppApiFactory>();
             services.AddScoped<AppApiFactory>(sp => sp.GetService<HubAppApiFactory>());
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
-            services.AddScoped<DefaultAppSetup>();
-            services.AddScoped<IAppSetup>(sp => sp.GetService<DefaultAppSetup>());
+            services.AddScoped<HubAppSetup>();
+            services.AddScoped<IAppSetup>(sp => sp.GetService<HubAppSetup>());
             services.AddScoped(_ => HubInfo.AppKey);
             services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
             services.AddScoped<AccessForLogin, FakeAccessForLogin>();

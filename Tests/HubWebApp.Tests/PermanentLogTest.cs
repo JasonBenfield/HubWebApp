@@ -1,20 +1,20 @@
-﻿using XTI_HubAppApi;
-using XTI_HubAppApi.PermanentLog;
+﻿using HubWebApp.Fakes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
+using XTI_AppSetupApp.Extensions;
 using XTI_Core;
+using XTI_Hub;
+using XTI_HubAppApi;
+using XTI_HubAppApi.PermanentLog;
 using XTI_TempLog;
 using XTI_TempLog.Fakes;
-using XTI_WebApp.Fakes;
-using HubWebApp.Fakes;
 
 namespace HubWebApp.Tests
 {

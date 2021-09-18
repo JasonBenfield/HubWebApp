@@ -6,6 +6,10 @@ namespace XTI_HubDB.EF.SqlServer
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropIndex(
+                name: "IX_Modifiers_ModKey",
+                table: "Modifiers");
+
             migrationBuilder.AddColumn<int>(
                 name: "ModifierID",
                 table: "UserRoles",

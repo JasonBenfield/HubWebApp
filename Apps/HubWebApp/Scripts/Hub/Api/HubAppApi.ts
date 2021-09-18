@@ -22,7 +22,7 @@ import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
-	public static readonly DefaultVersion = 'V21';
+	public static readonly DefaultVersion = 'Current';
 	
 	constructor(events: AppApiEvents, baseUrl: string, version: string = '') {
 		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
