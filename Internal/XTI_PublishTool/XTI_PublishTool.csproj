@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.7.27" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.7.29" />
     <PackageReference Include="XTI_Processes" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Lib\XTI_HubAppApi\XTI_HubAppApi.csproj" />
     <ProjectReference Include="..\..\Lib\XTI_VersionToolApi\XTI_VersionToolApi.csproj" />
   </ItemGroup>
 

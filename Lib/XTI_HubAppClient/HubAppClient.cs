@@ -28,7 +28,7 @@ namespace XTI_HubAppClient
             UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
         }
 
-        public const string DefaultVersion = "V21";
+        public const string DefaultVersion = "Current";
         public UserGroup User { get; }
 
         public UserCacheGroup UserCache { get; }

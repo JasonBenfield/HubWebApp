@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XTI_HubAppClient.Extensions" Version="1.3.1-dev210906222701539" />
+    <PackageReference Include="XTI_ServiceApp.Extensions" Version="1.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XTI_TempLog.Api\XTI_TempLog.Api.csproj" />
+  </ItemGroup>
+
+</Project>

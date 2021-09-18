@@ -24,10 +24,17 @@ namespace HubWebApp.Extensions
             return xtiClaims.UserName().Value;
         }
 
-        public Task<string> GetKey() => Task.FromResult(getUserName());
-
         public Task<IAppUser> User() => userContext.User();
 
         public Task<IAppUser> User(AppUserName userName) => userContext.User(userName);
+
+        public Task<AppUserName> CurrentUserName()
+        {
+            var userName = getUserName();
+            return Task.FromResult
+            (
+                string.IsNullOrWhiteSpace(userName) ? AppUserName.Anon : new AppUserName(userName)
+            );
+        }
     }
 }

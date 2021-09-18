@@ -1,19 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_Core;
-using XTI_Core.Fakes;
-using XTI_HubDB.Extensions;
-using XTI_Hub;
-using XTI_HubAppApi;
+﻿using HubWebApp.Fakes;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
-using XTI_App.Abstractions;
-using Microsoft.Extensions.Configuration;
-using HubWebApp.Fakes;
+using XTI_AppSetupApp.Extensions;
+using XTI_Core;
+using XTI_Core.Fakes;
+using XTI_Hub;
+using XTI_HubAppApi;
 
 namespace HubWebApp.Tests
 {
