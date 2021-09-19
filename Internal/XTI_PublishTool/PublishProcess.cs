@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_GitHub;
 using XTI_HubAppApi;
 using XTI_Processes;
 using XTI_VersionToolApi;
@@ -13,11 +15,13 @@ namespace XTI_PublishTool
     {
         private readonly IHostEnvironment hostEnv;
         private readonly HubAppApi hubApi;
+        private readonly GitFactory gitFactory;
 
-        public PublishProcess(IHostEnvironment hostEnv, HubAppApi hubApi)
+        public PublishProcess(IHostEnvironment hostEnv, HubAppApi hubApi, GitFactory gitFactory)
         {
             this.hostEnv = hostEnv;
             this.hubApi = hubApi;
+            this.gitFactory = gitFactory;
         }
 
         public async Task Run(AppKey appKey, string appsToImport, string repoOwner, string repoName)
@@ -31,6 +35,29 @@ namespace XTI_PublishTool
             else
             {
                 versionKey = AppVersionKey.Current;
+            }
+            var gitHubRepo = await gitFactory.CreateGitHubRepo(repoOwner, repoName);
+            var tagName = hostEnv.IsProduction()
+                ? $"v{versionToolOutput.VersionNumber}"
+                : $"v1.0.0-{hostEnv.EnvironmentName.ToLower()}";
+            GitHubRelease release = null;
+            if (!appKey.Type.Equals(AppType.Values.Package))
+            {
+                release = await gitHubRepo.Release(tagName);
+                if (release != null)
+                {
+                    foreach (var asset in release.Assets)
+                    {
+                        Console.WriteLine($"Deleting release {release.TagName} asset {asset.ID}");
+                        await gitHubRepo.DeleteReleaseAsset(asset);
+                    }
+                    await gitHubRepo.DeleteRelease(release);
+                }
+                else
+                {
+                }
+                Console.WriteLine($"Creating release {tagName}");
+                release = await gitHubRepo.CreateRelease(tagName, versionToolOutput.VersionKey, "");
             }
             var publishDir = getPublishDir(appKey, versionKey);
             if (Directory.Exists(publishDir))
@@ -53,8 +80,54 @@ namespace XTI_PublishTool
             {
                 await runDotnetBuild();
             }
+            if (!appKey.Type.Equals(AppType.Values.Package))
+            {
+                await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
+                var versionsPath = Path.Combine(publishDir, "versions.json");
+                if (File.Exists(versionsPath))
+                {
+                    Console.WriteLine("Uploading versions.json");
+                    using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
+                    await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, "versions.json", "text/plain"));
+                }
+                Console.WriteLine($"Finalizing release {release.TagName}");
+                await gitHubRepo.FinalizeRelease(release);
+            }
             await packLibProjects(appKey, versionToolOutput.VersionNumber);
             await completeVersion(appKey, repoOwner, repoName);
+        }
+
+        private async Task uploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, XtiGitHubRepository gitHubRepo, GitHubRelease release)
+        {
+            Console.WriteLine("Uploading app.zip");
+            var publishDir = getPublishDir(appKey, versionKey);
+            var appZipPath = Path.Combine(publishDir, "app.zip");
+            if (File.Exists(appZipPath))
+            {
+                File.Delete(appZipPath);
+            }
+            ZipFile.CreateFromDirectory(Path.Combine(publishDir, "App"), appZipPath);
+            using (var appStream = new MemoryStream(File.ReadAllBytes(appZipPath)))
+            {
+                appStream.Seek(0, SeekOrigin.Begin);
+                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(appStream, "app.zip", "application/zip"));
+            }
+            var publishSetupDir = Path.Combine(publishDir, "Setup");
+            if (Directory.Exists(publishSetupDir))
+            {
+                Console.WriteLine("Uploading setup.zip");
+                var setupZipPath = Path.Combine(publishDir, "setup.zip");
+                if (File.Exists(setupZipPath))
+                {
+                    File.Delete(setupZipPath);
+                }
+                ZipFile.CreateFromDirectory(publishSetupDir, setupZipPath);
+                using (var setupStream = new MemoryStream(File.ReadAllBytes(setupZipPath)))
+                {
+                    setupStream.Seek(0, SeekOrigin.Begin);
+                    await gitHubRepo.UploadReleaseAsset(release, new FileUpload(setupStream, "setup.zip", "application/zip"));
+                }
+            }
         }
 
         public async Task RunInstall(AppKey appKey, string destinationMachine)

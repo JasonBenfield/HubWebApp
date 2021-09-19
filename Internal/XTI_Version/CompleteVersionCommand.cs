@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_Git.Abstractions;
+using XTI_GitHub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppRegistration;
 using XTI_VersionToolApi;

@@ -11,6 +11,7 @@ using XTI_Hub;
 using HubWebApp.Extensions;
 using XTI_HubDB.EF;
 using XTI_HubAppApi;
+using System.IO.Compression;
 
 namespace HubWebApp.IntegrationTests
 {

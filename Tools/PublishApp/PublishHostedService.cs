@@ -2,15 +2,11 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_HubAppApi;
-using XTI_Processes;
 using XTI_PublishTool;
-using XTI_SupportAppApi;
-using XTI_VersionToolApi;
 
 namespace PublishApp
 {
@@ -31,24 +27,14 @@ namespace PublishApp
             {
                 var hostEnv = sp.GetService<IHostEnvironment>();
                 var hubApi = sp.GetService<HubAppApi>();
-                var publishProcess = new PublishProcess(hostEnv, hubApi);
+                var gitFactory = sp.GetService<GitFactory>();
+                var publishProcess = new PublishProcess(hostEnv, hubApi, gitFactory);
                 var options = sp.GetService<IOptions<PublishOptions>>().Value;
                 var appKey = new AppKey(new AppName(options.AppName), AppType.Values.Value(options.AppType));
                 await publishProcess.Run(appKey, options.AppsToImport, options.RepoOwner, options.RepoName);
-                if (!appKey.Type.Equals(AppType.Values.Package))
+                if (!appKey.Type.Equals(AppType.Values.Package) && !options.NoInstall)
                 {
-                    if (!options.NoInstall)
-                    {
-                        await publishProcess.RunInstall(appKey, options.DestinationMachine);
-                    }
-                    if (appKey.Equals(HubInfo.AppKey))
-                    {
-                        await publishProcess.Run(SupportInfo.AppKey, "", options.RepoOwner, options.RepoName);
-                        if (!options.NoInstall)
-                        {
-                            await publishProcess.RunInstall(appKey, options.DestinationMachine);
-                        }
-                    }
+                    await publishProcess.RunInstall(appKey, options.DestinationMachine);
                 }
             }
             catch (Exception ex)

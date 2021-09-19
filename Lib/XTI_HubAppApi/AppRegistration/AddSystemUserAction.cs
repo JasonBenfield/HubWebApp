@@ -48,11 +48,19 @@ namespace XTI_HubAppApi.AppRegistration
                 );
             }
             var app = await appFactory.Apps().App(model.AppKey);
+            if (!app.Key().Equals(model.AppKey))
+            {
+                app = await appFactory.Apps().Add(model.AppKey, "", clock.Now());
+            }
+            var systemRole = await app.Role(AppRoleName.System);
+            if (systemRole.ID.IsNotValid())
+            {
+                systemRole = await app.AddRole(AppRoleName.System);
+            }
             var modifier = await app.DefaultModifier();
             var assignedRoles = await systemUser.AssignedRoles(modifier);
             if (!assignedRoles.Any(r => r.Name().Equals(AppRoleName.System)))
             {
-                var systemRole = await app.Role(AppRoleName.System);
                 await systemUser.AddRole(systemRole);
             }
             return systemUser.ToModel();

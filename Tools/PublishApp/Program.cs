@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using XTI_Configuration.Extensions;
+using XTI_PublishTool;
+using XTI_Secrets.Extensions;
 using XTI_Tool.Extensions;
 
 namespace PublishApp
@@ -22,6 +24,8 @@ namespace PublishApp
                     (hostContext, services) =>
                     {
                         services.AddHubToolServices(hostContext.Configuration);
+                        services.AddFileSecretCredentials();
+                        services.AddScoped<GitFactory, DefaultGitFactory>();
                         services.Configure<PublishOptions>(hostContext.Configuration);
                         services.AddHostedService<PublishHostedService>();
                     }
