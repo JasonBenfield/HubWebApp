@@ -1,21 +1,41 @@
 ﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { Alert } from "XtiShared/Alert";
-import { AppComponentViewModel } from "./AppComponentViewModel";
+import { Card } from 'XtiShared/Card/Card';
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { Row } from "XtiShared/Grid/Row";
+import { TextSpan } from 'XtiShared/Html/TextSpan';
+import { ColumnCss } from "XtiShared/ColumnCss";
 
-export class AppComponent {
+export class AppComponent extends Card {
     constructor(
-        private readonly vm: AppComponentViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
+        super();
+        this.addCardTitleHeader('App');
+        this.alert = this.addCardAlert().alert;
+        let row = this.addCardBody()
+            .addContent(new Row());
+        this.appName = row.addColumn()
+            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
+            .addContent(new TextSpan());
+        this.appTitle = row.addColumn()
+            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
+            .addContent(new TextSpan());
+        this.appType = row.addColumn()
+            .addContent(new TextSpan());
     }
 
-    readonly alert = new Alert(this.vm.alert);
+    private readonly alert: MessageAlert;
+    private readonly appName: TextSpan;
+    private readonly appTitle: TextSpan;
+    private readonly appType: TextSpan;
 
     async refresh() {
         let app = await this.getApp();
-        this.vm.appName(app.AppName);
-        this.vm.title(app.Title);
-        this.vm.appType(app.Type.DisplayText);
+        this.appName.setText(app.AppName);
+        this.appTitle.setText(app.Title);
+        this.appType.setText(app.Type.DisplayText);
     }
 
     private async getApp() {

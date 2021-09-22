@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_App.Api;
+using XTI_Hub;
+using XTI_App.Abstractions;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Users;
 using XTI_App;
-using HubWebApp.Api;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.ApiControllers
@@ -29,6 +32,12 @@ namespace HubWebApp.ApiControllers
         public Task<ResultContainer<AppModel[]>> All()
         {
             return api.Group("Apps").Action<EmptyRequest, AppModel[]>("All").Execute(new EmptyRequest());
+        }
+
+        [HttpPost]
+        public Task<ResultContainer<string>> GetAppModifierKey([FromBody] AppKey model)
+        {
+            return api.Group("Apps").Action<AppKey, string>("GetAppModifierKey").Execute(model);
         }
 
         public async Task<IActionResult> RedirectToApp(int model)

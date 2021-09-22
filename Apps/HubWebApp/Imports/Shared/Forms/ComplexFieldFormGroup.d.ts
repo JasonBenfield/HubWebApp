@@ -1,0 +1,32 @@
+import { BlockViewModel } from "../Html/BlockViewModel";
+import { FormGroup } from "../Html/FormGroup";
+import { ComplexFieldLayout } from "./ComplexFieldLayout";
+export declare class ComplexFieldFormGroup extends FormGroup implements IField {
+    constructor(prefix: string, name: string, vm?: BlockViewModel);
+    private layout;
+    useLayout(createLayout: (fg: this) => ComplexFieldLayout): void;
+    executeLayout(): void;
+    private readonly name;
+    getName(): string;
+    setValue(_: any): void;
+    getValue(): any;
+    getField(name: string): any;
+    private readonly formGroups;
+    forEachFormGroup(action: (field: IFormGroupField) => void): void;
+    protected addHiddenTextFormGroup(name: string): import("./TextInputFormGroup").TextInputFormGroup;
+    protected addHiddenNumberFormGroup(name: string): import("./NumberInputFormGroup").NumberInputFormGroup;
+    protected addHiddenDateFormGroup(name: string): import("./DateInputFormGroup").DateInputFormGroup;
+    protected addTextInputFormGroup(name: string): import("./TextInputFormGroup").TextInputFormGroup;
+    protected addNumberInputFormGroup(name: string): import("./NumberInputFormGroup").NumberInputFormGroup;
+    protected addDateInputFormGroup(name: string): import("./DateInputFormGroup").DateInputFormGroup;
+    protected addTextDropDownFormGroup(name: string): import("./TextDropDownFormGroup").TextDropDownFormGroup;
+    protected addNumberDropDownFormGroup(name: string): import("./NumberDropDownFormGroup").NumberDropDownFormGroup;
+    protected addDateDropDownFormGroup(name: string): import("./DateDropDownFormGroup").DateDropDownFormGroup;
+    protected addBooleanDropDownFormGroup(name: string): import("./BooleanDropDownFormGroup").BooleanDropDownFormGroup;
+    protected addDropDownFormGroup<T>(name: string): import("./DropDownFormGroup").DropDownFormGroup<T>;
+    protected addFormGroup<TFormGroup extends IFormGroupField>(name: string, formGroup: TFormGroup): TFormGroup;
+    clearErrors(): void;
+    validate(errors: IErrorList): void;
+    import(values: Record<string, any>): void;
+    export(values: Record<string, any>): void;
+}

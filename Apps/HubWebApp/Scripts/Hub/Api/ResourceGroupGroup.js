@@ -10,6 +10,7 @@ var ResourceGroupGroup = /** @class */ (function (_super) {
         var _this = _super.call(this, events, resourceUrl, 'ResourceGroup') || this;
         _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
         _this.GetResourcesAction = _this.createAction('GetResources', 'Get Resources');
+        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
         _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
         _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
         _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
@@ -21,6 +22,9 @@ var ResourceGroupGroup = /** @class */ (function (_super) {
     };
     ResourceGroupGroup.prototype.GetResources = function (model, errorOptions) {
         return this.GetResourcesAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetResource = function (model, errorOptions) {
+        return this.GetResourceAction.execute(model, errorOptions || {});
     };
     ResourceGroupGroup.prototype.GetRoleAccess = function (model, errorOptions) {
         return this.GetRoleAccessAction.execute(model, errorOptions || {});

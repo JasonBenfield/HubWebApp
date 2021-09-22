@@ -7,20 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-    <PackageReference Include="nunit" Version="3.13.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="XTI_AuthenticatorClient.Extensions" Version="1.4.7" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
-    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.4" />
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.1" />
+    <PackageReference Include="nunit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.0" />
+    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.9" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.28" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\HubWebApp.Client\HubWebApp.Client.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
   </ItemGroup>
 
 </Project>

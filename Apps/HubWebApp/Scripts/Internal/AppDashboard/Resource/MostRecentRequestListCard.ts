@@ -1,17 +1,23 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ListCard } from "../ListCard";
-import { ListCardViewModel } from "../ListCardViewModel";
+﻿import { Card } from "XtiShared/Card/Card";
+import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
+import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { MessageAlert } from "XtiShared/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
-import { RequestExpandedListItemViewModel } from "../RequestExpandedListItemViewModel";
 
-export class MostRecentRequestListCard extends ListCard {
+export class MostRecentRequestListCard extends Card {
     constructor(
-        vm: ListCardViewModel,
-        private readonly hubApi: HubAppApi
+        private readonly hubApi: HubAppApi,
+        vm: BlockViewModel = new BlockViewModel()
     ) {
-        super(vm, 'No Requests were Found');
-        vm.title('Most Recent Requests');
+        super(vm);
+        this.addCardTitleHeader('Most Recent Requests');
+        this.alert = this.addCardAlert().alert;
+        this.requests = this.addButtonListGroup();
     }
+
+    private readonly alert: MessageAlert;
+    private readonly requests: CardButtonListGroup;
 
     private resourceID: number;
 
@@ -19,15 +25,31 @@ export class MostRecentRequestListCard extends ListCard {
         this.resourceID = resourceID;
     }
 
-    protected createItem(request: IAppRequestExpandedModel) {
-        let item = new RequestExpandedListItemViewModel();
-        new RequestExpandedListItem(item, request);
-        return item;
+    async refresh() {
+        let requests = await this.getRequests();
+        this.requests.setItems(
+            requests,
+            (sourceItem, listItem) => {
+                listItem.addContent(new RequestExpandedListItem(sourceItem));
+            }
+        );
+        if (requests.length === 0) {
+            this.alert.danger('No Requests were Found');
+        }
     }
 
-    protected getSourceItems() {
-        return this.hubApi.Resource.GetMostRecentRequests(
-            { ResourceID: this.resourceID, HowMany: 10 }
+    private async getRequests() {
+        let requests: IAppRequestExpandedModel[];
+        await this.alert.infoAction(
+            'Loading...',
+            async () => {
+                requests = await this.hubApi.Resource.GetMostRecentRequests({
+                    VersionKey: 'Current',
+                    ResourceID: this.resourceID,
+                    HowMany: 10
+                });
+            }
         );
+        return requests;
     }
 }

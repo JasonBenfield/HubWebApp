@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.1" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.7.28" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HubWebApp.Api\HubWebApp.Api.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_HubAppApi\XTI_HubAppApi.csproj" />
   </ItemGroup>
 
 </Project>

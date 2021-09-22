@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using XTI_HubAppApi.ResourceInquiry;
+using XTI_Hub;
+using XTI_HubAppApi;
+using XTI_HubAppApi.Users;
 using XTI_App;
-using HubWebApp.Apps;
-using HubWebApp.Api;
 using XTI_App.Api;
 using XTI_WebApp.Api;
 
@@ -21,15 +23,15 @@ namespace HubWebApp.ApiControllers
 
         private readonly HubAppApi api;
         [HttpPost]
-        public Task<ResultContainer<ResourceModel>> GetResource([FromBody] int model)
+        public Task<ResultContainer<ResourceModel>> GetResource([FromBody] GetResourceRequest model)
         {
-            return api.Group("Resource").Action<int, ResourceModel>("GetResource").Execute(model);
+            return api.Group("Resource").Action<GetResourceRequest, ResourceModel>("GetResource").Execute(model);
         }
 
         [HttpPost]
-        public Task<ResultContainer<RoleAccessModel>> GetRoleAccess([FromBody] int model)
+        public Task<ResultContainer<AppRoleModel[]>> GetRoleAccess([FromBody] GetResourceRoleAccessRequest model)
         {
-            return api.Group("Resource").Action<int, RoleAccessModel>("GetRoleAccess").Execute(model);
+            return api.Group("Resource").Action<GetResourceRoleAccessRequest, AppRoleModel[]>("GetRoleAccess").Execute(model);
         }
 
         [HttpPost]

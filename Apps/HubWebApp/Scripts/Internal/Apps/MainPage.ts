@@ -1,50 +1,25 @@
-﻿import 'reflect-metadata';
-import { startup } from 'xtistart';
-import { singleton } from 'tsyringe';
-import { MainPageViewModel } from './MainPageViewModel';
-import { Alert } from 'XtiShared/Alert';
+﻿import { Startup } from 'xtistart';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { AppListItem } from './AppListItem';
-import { MappedArray } from 'XtiShared/Enumerable';
-import { AppListItemViewModel } from './AppListItemViewModel';
+import { AppListPanel } from './AppListPanel';
+import { PageFrame } from 'XtiShared/PageFrame';
+import { PaddingCss } from 'XtiShared/PaddingCss';
 
-@singleton()
 class MainPage {
-    constructor(
-        private readonly vm: MainPageViewModel,
-        private readonly hub: HubAppApi
-    ) {
-        this.refreshAllApps();
+    constructor(private readonly page: PageFrame) {
+        this.page.content.setPadding(PaddingCss.top(3));
+        this.activateAppListPanel();
     }
 
-    readonly alert = new Alert(this.vm.alert);
+    private readonly hubApi = this.page.api(HubAppApi);
+    private readonly appListPanel = this.page.content.addContent(new AppListPanel(this.hubApi));
 
-    private async refreshAllApps() {
-        let apps = await this.allApps();
-        this.vm.apps(apps);
-        if (apps.length === 0) {
-            this.alert.danger('No apps were found');
+    private async activateAppListPanel() {
+        this.appListPanel.refresh();
+        let result = await this.appListPanel.start();
+        if (result.key === AppListPanel.ResultKeys.appSelected) {
+            let app: IAppModel = result.data;
+            this.hubApi.Apps.RedirectToApp.open(app.ID);
         }
     }
-    
-    private async allApps() {
-        let apps: AppListItemViewModel[];
-        await this.alert.infoAction(
-            'Loading...',
-            async () => {
-                let appsFromSource = await this.hub.Apps.All();
-                apps = new MappedArray(
-                    appsFromSource,
-                    a => {
-                        let vm = new AppListItemViewModel();
-                        new AppListItem(a, this.hub, vm);
-                        return vm;
-                    }
-                )
-                .value();
-            }
-        );
-        return apps;
-    }
 }
-startup(MainPageViewModel, MainPage);
+new MainPage(new Startup().build());

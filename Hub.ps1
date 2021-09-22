@@ -5,201 +5,91 @@ $script:hubConfig = [PSCustomObject]@{
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
-    ProjectDir = "Apps\HubWebApp"
+    AppsToImport = "Shared"
 }
 
-function Hub-New-XtiIssue {
+function Hub-NewVersion {
     param(
-        [Parameter(Mandatory)]
-        [string] $IssueTitle,
-        $Labels = @(),
-        [string] $Body = "",
-        [switch] $Start
-    )
-    $script:hubConfig | New-XtiIssue @PsBoundParameters
-}
-
-function Hub-Xti-StartIssue {
-    param(
-        [Parameter(Position=0)]
-        [long]$IssueNumber = 0,
-        $IssueBranchTitle = "",
-        $AssignTo = ""
-    )
-    $script:hubConfig | Xti-StartIssue @PsBoundParameters
-}
-
-function Hub-New-XtiVersion {
-    param(
-        [ValidateSet(“Development", "Production", "Staging", "Test")]
-        $EnvName = "Production",
         [ValidateSet(“major”, "minor", "patch")]
         $VersionType = "minor"
     )
     $script:hubConfig | New-XtiVersion @PsBoundParameters
 }
 
-function Hub-Xti-Merge {
+function Hub-Issues {
     param(
-        $CommitMessage
     )
-    $script:hubConfig | Xti-Merge @PsBoundParameters
+    $script:hubConfig | Xti-Issues @PsBoundParameters
 }
 
-function Hub-New-XtiPullRequest {
+function Hub-NewIssue {
     param(
-        $CommitMessage
+        [Parameter(Mandatory)]
+        [string] $IssueTitle,
+        [switch] $Start
     )
-    $script:hubConfig | New-XtiPullRequest @PsBoundParameters
+    $script:hubConfig | New-XtiIssue @PsBoundParameters
 }
 
-function Hub-Xti-PostMerge {
+function Hub-StartIssue {
+    param(
+        [Parameter(Position=0)]
+        [long]$IssueNumber = 0
+    )
+    $script:hubConfig | Xti-StartIssue @PsBoundParameters
+}
+
+function Hub-CompleteIssue {
     param(
     )
-    $script:hubConfig | Xti-PostMerge @PsBoundParameters
+    $script:hubConfig | Xti-CompleteIssue @PsBoundParameters
+}
+
+function Hub-Build {
+    param(
+        [ValidateSet("Development", "Production", "Staging", "Test")]
+        $EnvName = "Development"
+    )
+    $script:hubConfig | Xti-BuildWebApp @PsBoundParameters
 }
 
 function Hub-Publish {
     param(
-        [ValidateSet("Production", “Development", "Staging", "Test")]
+        [ValidateSet("Production", "Development")]
         [string] $EnvName="Development"
     )
-    
-    $ErrorActionPreference = "Stop"
-
-    Write-Output "Publishing to $EnvName"
-    
-    $timestamp = Get-Date -Format "yyMMdd_HHmmssfff"
-    $backupFilePath = "$($env:XTI_AppData)\$EnvName\Backups\app_$timestamp.bak"
-    if($EnvName -eq "Production" -or $EnvName -eq "Staging") {
-        Write-Output "Backuping up the app database"
-	    Xti-BackupMainDb -EnvName "Production" -BackupFilePath $backupFilePath
-    }
-    if($EnvName -eq "Staging") { 
-        Write-Output "Restoring the app database"
-	    Xti-RestoreMainDb -EnvName $EnvName -BackupFilePath $backupFilePath
-    }
-
-    Write-Output "Updating the app database"
-    Xti-UpdateMainDb -EnvName $EnvName
-
-    if ($EnvName -eq "Test"){
-        Write-Output "Resetting the app database"
-	    Xti-ResetMainDb -EnvName $EnvName
-    }
-    
-    $defaultVersion = ""
-    if($EnvName -eq "Production") {
-        $branch = Get-CurrentBranchname
-        Xti-BeginPublish -BranchName $branch
-        $releaseBranch = Parse-ReleaseBranch -BranchName $branch
-        $defaultVersion = $releaseBranch.VersionKey
-    }
-    
-    Write-Output "Generating the api"
-    Hub-GenerateApi -EnvName $EnvName -DefaultVersion $defaultVersion
-    
-    tsc -p "$($script:hubConfig.ProjectDir)\Scripts\$($script:hubConfig.AppName)\tsconfig.json"
-    
-    if($EnvName -eq "Production") {
-        Hub-ImportWeb -Prod
-    }
-    else {
-        Hub-ImportWeb
-    }
-
-    Write-Output "Running web pack"
-    $script:hubConfig | Hub-Webpack
-
-    Write-Output "Building solution"
-    dotnet build 
-
-    Hub-Setup -EnvName $EnvName
-
-    if ($EnvName -eq "Test") {
-        Invoke-WebRequest -Uri https://test.guinevere.com/Authenticator/Current/StopApp
-        Write-Output "Creating user"
-        Hub-New-AdminUser -EnvName $EnvName
-    }
-
-    Write-Output "Publishing website"
-    
-    $script:hubConfig | Xti-PublishWebApp -EnvName $EnvName
-
-    if($EnvName -eq "Production") {
-        Write-Output "Publishing Package"
-        $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion -Prod
-        Write-Output "End publish"
-        Xti-EndPublish -BranchName $branch
-        Write-Output "Merging Pull Request"
-        $script:hubConfig | Xti-Merge
-    }
-    else {
-        Write-Output "Publishing Package"
-        $script:hubConfig | Xti-PublishPackage -DisableUpdateVersion
-    }
+    $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
+    $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
+    $script:hubConfig | Xti-Publish @PsBoundParameters
 }
 
-function Hub-New-AdminUser {
+function Hub-Install {
     param(
-        [ValidateSet(“Development", "Production", "Staging", "Test")]
-        [string] $EnvName="Production"
-    )
-    $password = Xti-GeneratePassword
-    $script:hubConfig | New-XtiUser -EnvName $EnvName -UserName HubAdmin -Password $password
-    $script:hubConfig | New-XtiUserRoles -EnvName $EnvName -UserName HubAdmin -RoleNames Admin
-    $script:hubConfig | New-XtiUserCredentials -EnvName $EnvName -CredentialKey HubAdmin -UserName HubAdmin -Password $password
-}
-
-function Hub-GenerateApi {
-    param (
         [ValidateSet("Development", "Production", "Staging", "Test")]
-        [string] $EnvName='Production',
-        [string] $DefaultVersion
+        $EnvName = "Development"
     )
-    dotnet build Apps/HubApiGeneratorApp
-    dotnet run --project Apps/HubApiGeneratorApp --environment $EnvName --Output:DefaultVersion "`"$DefaultVersion`""
-    tsc -p Apps/HubWebApp/Scripts/Hub/tsconfig.json
-    if( $LASTEXITCODE -ne 0 ) {
-        Throw "Hub api generator failed with exit code $LASTEXITCODE"
-    }
+    $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
+    $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
+    $script:hubConfig | Xti-Install @PsBoundParameters
 }
 
-function Hub-Setup {
-    param (
-        [ValidateSet("Production", "Development", "Staging", "Test")]
-        [string] $EnvName="Development"
-    )
-    dotnet build Apps/HubSetupConsoleApp
-    if( $LASTEXITCODE -ne 0 ) {
-        Throw "Hub setup build failed with exit code $LASTEXITCODE"
-    }
-    dotnet run --project Apps/HubSetupConsoleApp --environment=$EnvName
-    if( $LASTEXITCODE -ne 0 ) {
-        Throw "Hub setup failed with exit code $LASTEXITCODE"
-    }
+function Add-DBMigrations {
+    param ([Parameter(Mandatory)]$Name)
+    $env:DOTNET_ENVIRONMENT="Development"
+    dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./Lib/XTI_HubDB.EF.SqlServer
 }
 
-function Hub-Webpack {
+function Get-DestinationMachine {
     param(
+        $EnvName
     )
-    $ProjectDir = $script:hubConfig.ProjectDir
-    $currentDir = (Get-Item .).FullName
-    Set-Location $ProjectDir
-    webpack
-    Set-Location $currentDir
-}
-
-function Hub-ResetTest {
-	Xti-ResetMainDb -EnvName Test
-    Hub-Setup -EnvName Test
-    New-XtiHubUser -EnvName Test -CredentialKey HubAdmin -UserName HubAdmin -RoleNames Admin
-}
-
-function Hub-ImportWeb {
-    param(
-        [switch] $Prod
-    )
-    $script:hubConfig | Xti-ImportWeb -Prod:$Prod -AppToImport Shared
-    $script:hubConfig | Xti-ImportWeb -Prod:$Prod -AppToImport Authenticator
+    if($EnvName -eq "Development")
+    {
+        $DestinationMachine = ""
+    }
+    else
+    {
+        $DestinationMachine = "finduilas.xartogg.com"
+    }
+    return $DestinationMachine
 }

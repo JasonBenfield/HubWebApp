@@ -1,0 +1,7 @@
+﻿<!-- ko if: isVisible -->
+<h2 data-bind="attr: { 'class': css, title: title, id: id, name: name }">
+    <!-- ko with: content -->
+    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->
+    <!-- /ko -->
+</h2>
+<!-- /ko -->

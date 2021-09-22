@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XTI_Core.EF" Version="1.9.0" />
+    <PackageReference Include="XTI_DB" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XTI_HubDB.Entities\XTI_HubDB.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

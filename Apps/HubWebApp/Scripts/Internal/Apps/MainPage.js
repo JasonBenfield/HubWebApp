@@ -1,76 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-require("reflect-metadata");
 var xtistart_1 = require("xtistart");
-var tsyringe_1 = require("tsyringe");
-var MainPageViewModel_1 = require("./MainPageViewModel");
-var Alert_1 = require("XtiShared/Alert");
 var HubAppApi_1 = require("../../Hub/Api/HubAppApi");
-var AppListItem_1 = require("./AppListItem");
-var Enumerable_1 = require("XtiShared/Enumerable");
-var AppListItemViewModel_1 = require("./AppListItemViewModel");
+var AppListPanel_1 = require("./AppListPanel");
+var PaddingCss_1 = require("XtiShared/PaddingCss");
 var MainPage = /** @class */ (function () {
-    function MainPage(vm, hub) {
-        this.vm = vm;
-        this.hub = hub;
-        this.alert = new Alert_1.Alert(this.vm.alert);
-        this.refreshAllApps();
+    function MainPage(page) {
+        this.page = page;
+        this.hubApi = this.page.api(HubAppApi_1.HubAppApi);
+        this.appListPanel = this.page.content.addContent(new AppListPanel_1.AppListPanel(this.hubApi));
+        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
+        this.activateAppListPanel();
     }
-    MainPage.prototype.refreshAllApps = function () {
+    MainPage.prototype.activateAppListPanel = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var apps;
+            var result, app;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.allApps()];
+                    case 0:
+                        this.appListPanel.refresh();
+                        return [4 /*yield*/, this.appListPanel.start()];
                     case 1:
-                        apps = _a.sent();
-                        this.vm.apps(apps);
-                        if (apps.length === 0) {
-                            this.alert.danger('No apps were found');
+                        result = _a.sent();
+                        if (result.key === AppListPanel_1.AppListPanel.ResultKeys.appSelected) {
+                            app = result.data;
+                            this.hubApi.Apps.RedirectToApp.open(app.ID);
                         }
                         return [2 /*return*/];
                 }
             });
         });
     };
-    MainPage.prototype.allApps = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var apps;
-            var _this = this;
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            var appsFromSource;
-                            var _this = this;
-                            return tslib_1.__generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hub.Apps.All()];
-                                    case 1:
-                                        appsFromSource = _a.sent();
-                                        apps = new Enumerable_1.MappedArray(appsFromSource, function (a) {
-                                            var vm = new AppListItemViewModel_1.AppListItemViewModel();
-                                            new AppListItem_1.AppListItem(a, _this.hub, vm);
-                                            return vm;
-                                        })
-                                            .value();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, apps];
-                }
-            });
-        });
-    };
-    MainPage = tslib_1.__decorate([
-        tsyringe_1.singleton(),
-        tslib_1.__metadata("design:paramtypes", [MainPageViewModel_1.MainPageViewModel,
-            HubAppApi_1.HubAppApi])
-    ], MainPage);
     return MainPage;
 }());
-xtistart_1.startup(MainPageViewModel_1.MainPageViewModel, MainPage);
+new MainPage(new xtistart_1.Startup().build());
 //# sourceMappingURL=MainPage.js.map

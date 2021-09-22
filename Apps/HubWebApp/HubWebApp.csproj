@@ -7,24 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\Hub\CurrentUrl.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="webpack.config.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.1.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MSBuildTasks" Version="1.5.0.235">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.8.11" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.8.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.0" />
+    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.8.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,21 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js">
-      <DependentUpon>CurrentVersionComponentViewModel.js</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\AppDashboard\AppDetail\AppPanelViewModel - Copy.js.map">
-      <DependentUpon>CurrentVersionComponentViewModel.js.map</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js">
-      <DependentUpon>SelectableListCardViewModel.js</DependentUpon>
-    </None>
-    <None Update="Scripts\Internal\AppDashboard\SelectableListCardViewModel - Copy.js.map">
-      <DependentUpon>SelectableListCardViewModel.js.map</DependentUpon>
-    </None>
   </ItemGroup>
 
 </Project>

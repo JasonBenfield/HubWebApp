@@ -1,7 +1,4 @@
-﻿import 'reflect-metadata';
-import { startup } from 'xtistart';
-import { singleton } from 'tsyringe';
-import { MainPageViewModel } from './MainPageViewModel';
+﻿import { Startup } from 'xtistart';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { XtiUrl } from 'XtiShared/XtiUrl';
 import { WebPage } from 'XtiShared/WebPage';
@@ -10,13 +7,26 @@ import { AppDetailPanel } from './AppDetail/AppDetailPanel';
 import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
 import { ResourcePanel } from './Resource/ResourcePanel';
 import { ModCategoryPanel } from './ModCategory/ModCategoryPanel';
+import { PageFrame } from 'XtiShared/PageFrame';
+import { Panel } from '../Panel/Panel';
+import { PaddingCss } from 'XtiShared/PaddingCss';
 
-@singleton()
 class MainPage {
-    constructor(
-        private readonly vm: MainPageViewModel,
-        private readonly hubApi: HubAppApi
-    ) {
+    constructor(private readonly page: PageFrame) {
+        this.page.content.setPadding(PaddingCss.top(3));
+        this.hubApi = this.page.api<HubAppApi>(HubAppApi);
+        this.appDetailPanel = this.page.addContent(
+            this.panels.add(new AppDetailPanel(this.hubApi))
+        );
+        this.resourceGroupPanel = this.page.addContent(
+            this.panels.add(new ResourceGroupPanel(this.hubApi))
+        );
+        this.resourcePanel = this.page.addContent(
+            this.panels.add(new ResourcePanel(this.hubApi))
+        );
+        this.modCategoryPanel = this.page.addContent(
+            this.panels.add(new ModCategoryPanel(this.hubApi))
+        );
         if (XtiUrl.current.path.modifier) {
             this.activateAppDetailPanel();
         }
@@ -25,23 +35,12 @@ class MainPage {
         }
     }
 
+    private readonly hubApi: HubAppApi;
     private readonly panels = new SingleActivePanel();
-    private readonly appDetailPanel = this.panels.add(
-        this.vm.appDetailPanel,
-        vm => new AppDetailPanel(vm, this.hubApi)
-    );
-    private readonly resourceGroupPanel = this.panels.add(
-        this.vm.resourceGroupPanel,
-        vm => new ResourceGroupPanel(vm, this.hubApi)
-    );
-    private readonly resourcePanel = this.panels.add(
-        this.vm.resourcePanel,
-        vm => new ResourcePanel(vm, this.hubApi)
-    );
-    private readonly modCategoryPanel = this.panels.add(
-        this.vm.modCategoryPanel,
-        vm => new ModCategoryPanel(vm, this.hubApi)
-    );
+    private readonly appDetailPanel: Panel<AppDetailPanel>;
+    private readonly resourceGroupPanel: Panel<ResourceGroupPanel>;
+    private readonly resourcePanel: Panel<ResourcePanel>;
+    private readonly modCategoryPanel: Panel<ModCategoryPanel>;
 
     private async activateAppDetailPanel() {
         this.panels.activate(this.appDetailPanel);
@@ -106,4 +105,4 @@ class MainPage {
         }
     }
 }
-startup(MainPageViewModel, MainPage);
+new MainPage(new Startup().build());
