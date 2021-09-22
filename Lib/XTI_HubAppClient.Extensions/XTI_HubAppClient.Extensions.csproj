@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Secrets" Version="1.7.29" />
+    <PackageReference Include="XTI_App.Secrets" Version="1.7.30" />
   </ItemGroup>
 
   <ItemGroup>

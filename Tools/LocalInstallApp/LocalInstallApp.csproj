@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,14 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.7.29" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.7.30" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
     <PackageReference Include="XTI_SecretsToolApi" Version="1.7.9" />
-    <PackageReference Include="XTI_Credentials" Version="1.7.9" />
+    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.9" />
     <PackageReference Include="XTI_Processes" Version="1.0.1" />
+    <PackageReference Include="XTI_Git.GitLib" Version="1.1.9" />
+    <PackageReference Include="XTI_GitHub.Web" Version="1.1.9" />
   </ItemGroup>
 
 </Project>

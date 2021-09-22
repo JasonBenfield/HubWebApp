@@ -6,7 +6,6 @@ namespace XTI_PublishTool
 {
     public interface GitFactory
     {
-        Task<XtiGitRepository> CreateGitRepo();
         Task<XtiGitHubRepository> CreateGitHubRepo(string ownerName, string repoName);
     }
 }

@@ -9,6 +9,10 @@ export declare class Input extends HtmlComponent {
     protected readonly vm: InputViewModel;
     enable(): void;
     disable(): void;
+    clearAutocomplete(): void;
+    setAutocompleteOff(): void;
+    setAutocompleteNewPassword(): void;
+    private setAutocomplete;
     private value;
     getValue(): string;
     setValue(value: string): void;

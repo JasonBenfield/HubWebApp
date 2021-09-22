@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Web.Administration;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
@@ -13,7 +14,7 @@ using XTI_Credentials;
 using XTI_Processes;
 using XTI_SecretsToolApi;
 
-namespace InstallApp
+namespace LocalInstallApp
 {
     public sealed class InstallHostedService : IHostedService
     {
@@ -32,19 +33,42 @@ namespace InstallApp
             {
                 var appKey = ensureAppKeyIsValid(sp);
                 var hostEnv = sp.GetService<IHostEnvironment>();
-                await storeSystemUserCredentials(sp, appKey);
-                var versionKey = AppVersionKey.Current.DisplayText;
-                if (appKey.Type.Equals(AppType.Values.WebApp))
+                var tempDir = Path.Combine
+                (
+                    Path.GetTempPath(),
+                    $"xti_{appKey.Name.Value}_{appKey.Type.DisplayText.Replace(" ", "")}"
+                );
+                try
                 {
-                    if (hostEnv.IsProduction())
+                    var versionKey = AppVersionKey.Current.DisplayText;
+                    if (hostEnv.IsDevelopment() || hostEnv.IsEnvironment("Test"))
                     {
-                        await installWebApp(sp, appKey, versionKey, versionKey);
+                        await runSetup(sp, appKey, versionKey);
                     }
-                    await installWebApp(sp, appKey, versionKey, AppVersionKey.Current.DisplayText);
+                    else
+                    {
+                        await downloadAssets(sp, tempDir);
+                    }
+                    await storeSystemUserCredentials(sp, appKey);
+                    if (appKey.Type.Equals(AppType.Values.WebApp))
+                    {
+                        if (hostEnv.IsProduction())
+                        {
+                            await installWebApp(sp, appKey, versionKey, versionKey, tempDir);
+                        }
+                        await installWebApp(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, tempDir);
+                    }
+                    else if (appKey.Type.Equals(AppType.Values.Service))
+                    {
+                        await installServiceApp(sp, appKey, versionKey, tempDir);
+                    }
                 }
-                else if (appKey.Type.Equals(AppType.Values.Service))
+                finally
                 {
-                    await installServiceApp(sp, appKey, versionKey);
+                    if (Directory.Exists(tempDir))
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -54,6 +78,83 @@ namespace InstallApp
             }
             var lifetime = scope.ServiceProvider.GetService<IHostApplicationLifetime>();
             lifetime.StopApplication();
+        }
+
+        private static async Task runSetup(IServiceProvider sp, AppKey appKey, string versionKey)
+        {
+            var hostEnv = sp.GetService<IHostEnvironment>();
+            var sourceDir = getSourceDir(hostEnv, appKey, versionKey);
+            var setupAppDir = Path.Combine(sourceDir, "Setup");
+            Console.WriteLine($"Running Setup '{setupAppDir}'");
+            await new DotnetRunProcess(setupAppDir)
+                .UseEnvironment(hostEnv.EnvironmentName)
+                .AddConfigOptions
+                (
+                    new
+                    {
+                        VersionKey = versionKey,
+                        VersionsPath = Path.Combine(sourceDir, "versions.json")
+                    },
+                    "Setup"
+                )
+                .Run();
+        }
+
+        private static async Task downloadAssets(IServiceProvider sp, string tempDir)
+        {
+            var options = sp.GetService<IOptions<InstallOptions>>().Value;
+            var gitFactory = sp.GetService<GitFactory>();
+            var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+            if (Directory.Exists(tempDir))
+            {
+                Directory.Delete(tempDir, true);
+            }
+            Directory.CreateDirectory(tempDir);
+            var release = await gitHubRepo.Release(options.Release);
+            var setupAsset = release?.Assets.FirstOrDefault(a => a.Name.Equals("setup.zip", StringComparison.OrdinalIgnoreCase));
+            if (setupAsset != null)
+            {
+                var versionsAsset = release?.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
+                if (versionsAsset != null)
+                {
+                    Console.WriteLine($"Downloading versions.json {release.TagName} {setupAsset.Name}");
+                    var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
+                    var versionsPath = Path.Combine(tempDir, "versions.json");
+                    await File.WriteAllBytesAsync(versionsPath, versionsContent);
+                }
+                Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
+                var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
+                var setupZipPath = Path.Combine(tempDir, "setup.zip");
+                await File.WriteAllBytesAsync(setupZipPath, setupContent);
+                var setupAppDir = Path.Combine(tempDir, "Setup");
+                ZipFile.ExtractToDirectory(setupZipPath, setupAppDir);
+                var hostEnv = sp.GetService<IHostEnvironment>();
+                Console.WriteLine($"Running Setup '{setupAppDir}'");
+                var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{options.AppName}SetupApp.exe"))
+                    .UseEnvironment(hostEnv.EnvironmentName)
+                    .WriteOutputToConsole()
+                    .AddConfigOptions
+                    (
+                        new
+                        {
+                            VersionKey = options.VersionKey,
+                            VersionsPath = Path.Combine(tempDir, "versions.json")
+                        },
+                        "Setup"
+                    )
+                    .Run();
+                setupResult.EnsureExitCodeIsZero();
+            }
+            var appAsset = release?.Assets.FirstOrDefault(a => a.Name.Equals("app.zip", StringComparison.OrdinalIgnoreCase));
+            if (appAsset != null)
+            {
+                Console.WriteLine($"Downloading App {release.TagName} {setupAsset.Name}");
+                var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
+                var appZipPath = Path.Combine(tempDir, "setup.zip");
+                await File.WriteAllBytesAsync(appZipPath, appContent);
+                var setupAppDir = Path.Combine(tempDir, "App");
+                ZipFile.ExtractToDirectory(appZipPath, setupAppDir);
+            }
         }
 
         private async Task storeSystemUserCredentials(IServiceProvider sp, AppKey appKey)
@@ -102,10 +203,10 @@ namespace InstallApp
             return new AppKey(appName, appType);
         }
 
-        private async Task installWebApp(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey)
+        private async Task installWebApp(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir)
         {
             await prepareIis(sp, appKey, versionKey);
-            var installDir = await copyToInstallDir(sp, appKey, versionKey, installVersionKey, false);
+            var installDir = await copyToInstallDir(sp, appKey, versionKey, installVersionKey, tempDir, false);
             var appOfflinePath = Path.Combine(installDir, "app_offline.htm");
             File.Delete(appOfflinePath);
         }
@@ -209,7 +310,7 @@ namespace InstallApp
                 "Xti_SecretsTool.exe"
             );
 
-        private static async Task installServiceApp(IServiceProvider sp, AppKey appKey, string versionKey)
+        private static async Task installServiceApp(IServiceProvider sp, AppKey appKey, string versionKey, string tempDir)
         {
 #pragma warning disable CA1416 // Validate platform compatibility
             var hostEnv = sp.GetService<IHostEnvironment>();
@@ -246,9 +347,9 @@ namespace InstallApp
             }
             if (hostEnv.IsProduction())
             {
-                await copyToInstallDir(sp, appKey, versionKey, versionKey, true);
+                await copyToInstallDir(sp, appKey, versionKey, versionKey, tempDir, true);
             }
-            await copyToInstallDir(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, true);
+            await copyToInstallDir(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, tempDir, true);
             Console.WriteLine($"Starting services '{sc.DisplayName}'");
             sc.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -272,16 +373,21 @@ namespace InstallApp
             return Path.Combine(xtiDir, "Apps", hostEnv.EnvironmentName, $"{appType}s", appName);
         }
 
-        private static async Task<string> copyToInstallDir(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, bool purge)
+        private static async Task<string> copyToInstallDir(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir, bool purge)
         {
-            var xtiDir = getXtiDir();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var appType = getAppType(appKey);
-            var appName = getAppName(appKey);
-            var publishDir = Path.Combine(xtiDir, "Published", hostEnv.EnvironmentName, $"{appType}s", appName, versionKey, "App");
             var installDir = Path.Combine(getAppInstallDir(hostEnv, appKey), installVersionKey);
-            Console.WriteLine($"Copying from '{publishDir}' to '{installDir}'");
-            var process = new RobocopyProcess(publishDir, installDir)
+            string sourceDir;
+            if (hostEnv.IsDevelopment() || hostEnv.IsEnvironment("Test"))
+            {
+                sourceDir = getSourceAppDir(hostEnv, appKey, versionKey);
+            }
+            else
+            {
+                sourceDir = Path.Combine(tempDir, "App");
+            }
+            Console.WriteLine($"Copying from '{sourceDir}' to '{installDir}'");
+            var process = new RobocopyProcess(sourceDir, installDir)
                 .CopySubdirectoriesIncludingEmpty()
                 .NoDirectoryLogging()
                 .NoFileClassLogging()
@@ -296,6 +402,31 @@ namespace InstallApp
             }
             await process.Run();
             return installDir;
+        }
+
+        private static string getSourceAppDir(IHostEnvironment hostEnv, AppKey appKey, string versionKey)
+        {
+            return Path.Combine
+            (
+                getSourceDir(hostEnv, appKey, versionKey),
+                "App"
+            );
+        }
+
+        private static string getSourceDir(IHostEnvironment hostEnv, AppKey appKey, string versionKey)
+        {
+            var xtiDir = getXtiDir();
+            var appType = getAppType(appKey);
+            var appName = getAppName(appKey);
+            return Path.Combine
+            (
+                xtiDir,
+                "Published",
+                hostEnv.EnvironmentName,
+                $"{appType}s",
+                appName,
+                versionKey
+            );
         }
 
         private static string getXtiDir()

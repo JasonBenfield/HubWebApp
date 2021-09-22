@@ -25,6 +25,7 @@ namespace InstallApp
                     (hostContext, services) =>
                     {
                         services.AddXtiDataProtection();
+                        services.AddHttpClient();
                         services.AddFileSecretCredentials();
                         services.AddHubToolServices(hostContext.Configuration);
                         services.Configure<InstallOptions>(hostContext.Configuration);

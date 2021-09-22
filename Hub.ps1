@@ -55,7 +55,7 @@ function Hub-Build {
 
 function Hub-Publish {
     param(
-        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [ValidateSet("Production", "Development")]
         [string] $EnvName="Development"
     )
     $DestinationMachine = Get-DestinationMachine -EnvName $EnvName

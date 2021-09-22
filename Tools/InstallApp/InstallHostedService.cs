@@ -2,11 +2,14 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_Credentials;
+using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppRegistration;
 using XTI_Processes;
@@ -29,11 +32,40 @@ namespace InstallApp
             try
             {
                 var appKey = ensureAppKeyIsValid(sp);
-                var versionKey = await retrieveVersionKey(sp, appKey);
-                await runSetup(sp, appKey, versionKey);
-                await copyToDestinationMachine(sp, appKey, versionKey);
                 var credentials = await addSystemUser(sp, appKey);
-                await runLocalInstall(sp, versionKey, credentials);
+                var appVersion = await retrieveVersion(sp, appKey);
+                var hostEnv = sp.GetService<IHostEnvironment>();
+                var options = sp.GetService<IOptions<InstallOptions>>().Value;
+                if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+                {
+                    await runLocalInstall(sp, appVersion.VersionKey, credentials);
+                }
+                else
+                {
+                    var release = $"v{appVersion.Major}.{appVersion.Minor}.{appVersion.Patch}";
+                    var httpClientFactory = sp.GetService<IHttpClientFactory>();
+                    using var client = httpClientFactory.CreateClient();
+                    using var content = new FormUrlEncodedContent
+                    (
+                        new[]
+                        {
+                            KeyValuePair.Create("command", "install"),
+                            KeyValuePair.Create("envName", hostEnv.EnvironmentName),
+                            KeyValuePair.Create("appName", appKey.Name.Value),
+                            KeyValuePair.Create("appType", appKey.Type.DisplayText.Replace(" ", "")),
+                            KeyValuePair.Create("versionKey", appVersion.VersionKey),
+                            KeyValuePair.Create("repoOwner", options.RepoOwner),
+                            KeyValuePair.Create("repoName", options.RepoName),
+                            KeyValuePair.Create("systemUserName", credentials.UserName),
+                            KeyValuePair.Create("systemPassword", credentials.Password),
+                            KeyValuePair.Create("release", release)
+                        }
+                    );
+                    var response = await client.PostAsync($"http://{options.DestinationMachine}:61862", content);
+                    response.EnsureSuccessStatusCode();
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(responseBody);
+                }
             }
             catch (Exception ex)
             {
@@ -44,41 +76,32 @@ namespace InstallApp
             lifetime.StopApplication();
         }
 
-        private static async Task<string> retrieveVersionKey(IServiceProvider sp, AppKey appKey)
+        private static async Task<AppVersionModel> retrieveVersion(IServiceProvider sp, AppKey appKey)
         {
+            AppVersionModel appVersion;
             var hostEnv = sp.GetService<IHostEnvironment>();
             var versionKey = AppVersionKey.Current.DisplayText;
             if (hostEnv.IsProduction())
             {
                 var hubApi = sp.GetService<HubAppApi>();
-                var appVersion = await hubApi.AppRegistration.GetVersion.Invoke(new GetVersionRequest
+                appVersion = await hubApi.AppRegistration.GetVersion.Invoke(new GetVersionRequest
                 {
                     AppKey = appKey,
                     VersionKey = AppVersionKey.Current
                 });
                 versionKey = appVersion.VersionKey;
             }
-            return versionKey;
-        }
-
-        private static async Task runSetup(IServiceProvider sp, AppKey appKey, string versionKey)
-        {
-            var hostEnv = sp.GetService<IHostEnvironment>();
-            var sourceDir = getSourceDir(appKey, versionKey, hostEnv);
-            var setupAppDir = Path.Combine(sourceDir, "Setup");
-            Console.WriteLine($"Running Setup '{setupAppDir}'");
-            await new DotnetRunProcess(setupAppDir)
-                .UseEnvironment(hostEnv.EnvironmentName)
-                .AddConfigOptions
-                (
-                    new
-                    {
-                        VersionKey = versionKey,
-                        VersionsPath = Path.Combine(sourceDir, "versions.json")
-                    },
-                    "Setup"
-                )
-                .Run();
+            else
+            {
+                appVersion = new AppVersionModel
+                {
+                    VersionKey = AppVersionKey.Current.Value,
+                    Major = 1,
+                    Minor = 0,
+                    Patch = 0
+                };
+            }
+            return appVersion;
         }
 
         private static async Task<CredentialValue> addSystemUser(IServiceProvider sp, AppKey appKey)
@@ -143,6 +166,18 @@ namespace InstallApp
                 var targetAppDir = Path.Combine(targetDir, "App");
                 Console.WriteLine($"Copying from '{sourceAppDir}' to '{targetAppDir}'");
                 await new RobocopyProcess(sourceAppDir, targetAppDir)
+                    .Purge()
+                    .CopySubdirectoriesIncludingEmpty()
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
+                var sourceSetupDir = Path.Combine(sourceDir, "Setup");
+                var targetSetupDir = Path.Combine(targetDir, "Setup");
+                Console.WriteLine($"Copying from '{sourceSetupDir}' to '{targetSetupDir}'");
+                await new RobocopyProcess(sourceSetupDir, targetSetupDir)
                     .Purge()
                     .CopySubdirectoriesIncludingEmpty()
                     .NoFileClassLogging()

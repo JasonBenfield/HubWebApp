@@ -37,12 +37,10 @@ namespace XTI_PublishTool
                 versionKey = AppVersionKey.Current;
             }
             var gitHubRepo = await gitFactory.CreateGitHubRepo(repoOwner, repoName);
-            var tagName = hostEnv.IsProduction()
-                ? $"v{versionToolOutput.VersionNumber}"
-                : $"v1.0.0-{hostEnv.EnvironmentName.ToLower()}";
             GitHubRelease release = null;
-            if (!appKey.Type.Equals(AppType.Values.Package))
+            if (!appKey.Type.Equals(AppType.Values.Package) && hostEnv.IsProduction())
             {
+                var tagName = $"v{versionToolOutput.VersionNumber}";
                 release = await gitHubRepo.Release(tagName);
                 if (release != null)
                 {
@@ -52,9 +50,6 @@ namespace XTI_PublishTool
                         await gitHubRepo.DeleteReleaseAsset(asset);
                     }
                     await gitHubRepo.DeleteRelease(release);
-                }
-                else
-                {
                 }
                 Console.WriteLine($"Creating release {tagName}");
                 release = await gitHubRepo.CreateRelease(tagName, versionToolOutput.VersionKey, "");
@@ -80,7 +75,7 @@ namespace XTI_PublishTool
             {
                 await runDotnetBuild();
             }
-            if (!appKey.Type.Equals(AppType.Values.Package))
+            if (!appKey.Type.Equals(AppType.Values.Package) && hostEnv.IsProduction())
             {
                 await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
                 var versionsPath = Path.Combine(publishDir, "versions.json");

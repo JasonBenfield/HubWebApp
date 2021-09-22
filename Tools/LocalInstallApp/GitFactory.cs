@@ -1,19 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using XTI_Git;
-using XTI_Git.GitLib;
+﻿using System.Threading.Tasks;
 using XTI_GitHub;
 using XTI_GitHub.Web;
-using XTI_PublishTool;
 using XTI_Secrets;
 
-namespace PublishApp
+namespace LocalInstallApp
 {
-    public sealed class DefaultGitFactory : GitFactory
+    sealed class GitFactory
     {
         private readonly ISecretCredentialsFactory credentialsFactory;
 
-        public DefaultGitFactory(ISecretCredentialsFactory credentialsFactory)
+        public GitFactory(ISecretCredentialsFactory credentialsFactory)
         {
             this.credentialsFactory = credentialsFactory;
         }
