@@ -14,8 +14,8 @@
     <PackageReference Include="XTI_SecretsToolApi" Version="1.7.9" />
     <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.9" />
     <PackageReference Include="XTI_Processes" Version="1.0.1" />
-    <PackageReference Include="XTI_Git.GitLib" Version="1.1.9" />
-    <PackageReference Include="XTI_GitHub.Web" Version="1.1.9" />
+    <PackageReference Include="XTI_Git.GitLib" Version="1.1.10" />
+    <PackageReference Include="XTI_GitHub.Web" Version="1.1.10" />
   </ItemGroup>
 
 </Project>
