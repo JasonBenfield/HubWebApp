@@ -61,7 +61,9 @@ namespace InstallApp
                             KeyValuePair.Create("release", release)
                         }
                     );
-                    var response = await client.PostAsync($"http://{options.DestinationMachine}:61862", content);
+                    var installServiceUrl = $"http://{options.DestinationMachine}:61862";
+                    Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey} {credentials.UserName} {credentials.Password} {release}");
+                    var response = await client.PostAsync(installServiceUrl, content);
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
                     Console.WriteLine(responseBody);
@@ -80,7 +82,6 @@ namespace InstallApp
         {
             AppVersionModel appVersion;
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var versionKey = AppVersionKey.Current.DisplayText;
             if (hostEnv.IsProduction())
             {
                 var hubApi = sp.GetService<HubAppApi>();
@@ -89,7 +90,6 @@ namespace InstallApp
                     AppKey = appKey,
                     VersionKey = AppVersionKey.Current
                 });
-                versionKey = appVersion.VersionKey;
             }
             else
             {
@@ -141,54 +141,6 @@ namespace InstallApp
             return machineName;
         }
 
-        private static async Task copyToDestinationMachine(IServiceProvider sp, AppKey appKey, string versionKey)
-        {
-            var options = sp.GetService<IOptions<InstallOptions>>().Value;
-            if (!string.IsNullOrWhiteSpace(options.DestinationMachine))
-            {
-                var hostEnv = sp.GetService<IHostEnvironment>();
-                var sourceDir = getSourceDir(appKey, versionKey, hostEnv);
-                var sourceAppDir = Path.Combine(sourceDir, "App");
-                var targetDir = Path.Combine
-                (
-                    $"\\{options.DestinationMachine}",
-                    "XTI",
-                    "Published",
-                    hostEnv.EnvironmentName,
-                    $"{getAppType(appKey)}s",
-                    getAppName(appKey),
-                    versionKey
-                );
-                if (Directory.Exists(targetDir))
-                {
-                    Directory.Delete(targetDir, true);
-                }
-                var targetAppDir = Path.Combine(targetDir, "App");
-                Console.WriteLine($"Copying from '{sourceAppDir}' to '{targetAppDir}'");
-                await new RobocopyProcess(sourceAppDir, targetAppDir)
-                    .Purge()
-                    .CopySubdirectoriesIncludingEmpty()
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-                var sourceSetupDir = Path.Combine(sourceDir, "Setup");
-                var targetSetupDir = Path.Combine(targetDir, "Setup");
-                Console.WriteLine($"Copying from '{sourceSetupDir}' to '{targetSetupDir}'");
-                await new RobocopyProcess(sourceSetupDir, targetSetupDir)
-                    .Purge()
-                    .CopySubdirectoriesIncludingEmpty()
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-            }
-        }
-
         private static string getSourceDir(AppKey appKey, string versionKey, IHostEnvironment hostEnv)
         {
             return Path.Combine
@@ -226,22 +178,11 @@ namespace InstallApp
                         SystemPassword = credential.Password
                     }
                 );
-            if (string.IsNullOrWhiteSpace(options.DestinationMachine))
-            {
-                Console.WriteLine("Running Local Install");
-                var result = await installProcess
-                    .WriteOutputToConsole()
-                    .Run();
-                result.EnsureExitCodeIsZero();
-            }
-            else
-            {
-                Console.WriteLine($"Running Install on '{options.DestinationMachine}'");
-                var result = await new PsExecProcess(options.DestinationMachine, installProcess)
-                    .WriteOutputToConsole()
-                    .Run();
-                result.EnsureExitCodeIsZero();
-            }
+            Console.WriteLine("Running Local Install");
+            var result = await installProcess
+                .WriteOutputToConsole()
+                .Run();
+            result.EnsureExitCodeIsZero();
         }
 
         private static AppKey ensureAppKeyIsValid(IServiceProvider sp)

@@ -31,6 +31,9 @@ namespace LocalInstallApp
             var sp = scope.ServiceProvider;
             try
             {
+                initLog();
+                var options = sp.GetService<IOptions<InstallOptions>>().Value;
+                await writeLog($"Starting install {options.AppName} {options.AppType} {options.VersionKey} {options.Release}");
                 var appKey = ensureAppKeyIsValid(sp);
                 var hostEnv = sp.GetService<IHostEnvironment>();
                 var tempDir = Path.Combine
@@ -41,12 +44,17 @@ namespace LocalInstallApp
                 try
                 {
                     var versionKey = AppVersionKey.Current.DisplayText;
+                    if (hostEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
+                    {
+                        versionKey = AppVersionKey.Parse(options.VersionKey);
+                    }
                     if (hostEnv.IsDevelopment() || hostEnv.IsEnvironment("Test"))
                     {
                         await runSetup(sp, appKey, versionKey);
                     }
                     else
                     {
+                        await writeLog("Downloading Assets");
                         await downloadAssets(sp, tempDir);
                     }
                     await storeSystemUserCredentials(sp, appKey);
@@ -70,22 +78,43 @@ namespace LocalInstallApp
                         Directory.Delete(tempDir, true);
                     }
                 }
+                await writeLog("Installation Complete");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                await writeLog($"Error: {ex}");
                 Environment.ExitCode = 999;
             }
             var lifetime = scope.ServiceProvider.GetService<IHostApplicationLifetime>();
             lifetime.StopApplication();
         }
 
+        private static void initLog()
+        {
+            var path = getLogPath();
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
+        private static async Task writeLog(string message)
+        {
+            Console.WriteLine(message);
+            var path = getLogPath();
+            using var writer = new StreamWriter(path, true);
+            await writer.WriteLineAsync($"{DateTime.Now:M/dd/yy HH:mm:ss}\r\n{message}");
+        }
+
+        private static string getLogPath()
+            => Path.Combine(Path.GetTempPath(), "xti_install_log.txt");
+
         private static async Task runSetup(IServiceProvider sp, AppKey appKey, string versionKey)
         {
             var hostEnv = sp.GetService<IHostEnvironment>();
             var sourceDir = getSourceDir(hostEnv, appKey, versionKey);
             var setupAppDir = Path.Combine(sourceDir, "Setup");
-            Console.WriteLine($"Running Setup '{setupAppDir}'");
+            await writeLog($"Running Setup '{setupAppDir}'");
             await new DotnetRunProcess(setupAppDir)
                 .UseEnvironment(hostEnv.EnvironmentName)
                 .AddConfigOptions
@@ -117,19 +146,19 @@ namespace LocalInstallApp
                 var versionsAsset = release?.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
                 if (versionsAsset != null)
                 {
-                    Console.WriteLine($"Downloading versions.json {release.TagName} {setupAsset.Name}");
+                    await writeLog($"Downloading versions.json {release.TagName} {setupAsset.Name}");
                     var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
                     var versionsPath = Path.Combine(tempDir, "versions.json");
                     await File.WriteAllBytesAsync(versionsPath, versionsContent);
                 }
-                Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
+                await writeLog($"Downloading Setup {release.TagName} {setupAsset.Name}");
                 var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
                 var setupZipPath = Path.Combine(tempDir, "setup.zip");
                 await File.WriteAllBytesAsync(setupZipPath, setupContent);
                 var setupAppDir = Path.Combine(tempDir, "Setup");
                 ZipFile.ExtractToDirectory(setupZipPath, setupAppDir);
                 var hostEnv = sp.GetService<IHostEnvironment>();
-                Console.WriteLine($"Running Setup '{setupAppDir}'");
+                await writeLog($"Running Setup '{setupAppDir}'");
                 var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{options.AppName}SetupApp.exe"))
                     .UseEnvironment(hostEnv.EnvironmentName)
                     .WriteOutputToConsole()
@@ -148,7 +177,7 @@ namespace LocalInstallApp
             var appAsset = release?.Assets.FirstOrDefault(a => a.Name.Equals("app.zip", StringComparison.OrdinalIgnoreCase));
             if (appAsset != null)
             {
-                Console.WriteLine($"Downloading App {release.TagName} {setupAsset.Name}");
+                await writeLog($"Downloading App {release.TagName} {setupAsset.Name}");
                 var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
                 var appZipPath = Path.Combine(tempDir, "setup.zip");
                 await File.WriteAllBytesAsync(appZipPath, appContent);
@@ -174,7 +203,7 @@ namespace LocalInstallApp
                 .WriteOutputToConsole()
                 .UseEnvironment(hostEnv.EnvironmentName)
                 .AddConfigOptions(secretsOptions);
-            Console.WriteLine(process.CommandText());
+            await writeLog(process.CommandText());
             var result = await process.Run();
             result.EnsureExitCodeIsZero();
         }
@@ -205,7 +234,8 @@ namespace LocalInstallApp
 
         private async Task installWebApp(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir)
         {
-            await prepareIis(sp, appKey, versionKey);
+            await writeLog($"Preparing IIS for {versionKey}");
+            await prepareIis(sp, appKey, installVersionKey);
             var installDir = await copyToInstallDir(sp, appKey, versionKey, installVersionKey, tempDir, false);
             var appOfflinePath = Path.Combine(installDir, "app_offline.htm");
             File.Delete(appOfflinePath);
@@ -223,7 +253,7 @@ namespace LocalInstallApp
             var appPool = server.ApplicationPools.FirstOrDefault(ap => ap.Name.Equals(appPoolName, StringComparison.OrdinalIgnoreCase));
             if (appPool == null)
             {
-                Console.WriteLine($"Adding application pool '{appPoolName}'");
+                await writeLog($"Adding application pool '{appPoolName}'");
                 var newAppPool = server.ApplicationPools.Add(appPoolName);
                 newAppPool.ProcessModel.UserName = secretCredentialsValue.UserName;
                 newAppPool.ProcessModel.Password = secretCredentialsValue.Password;
@@ -236,7 +266,7 @@ namespace LocalInstallApp
             var virtDirPhysPath = getAppInstallDir(hostEnv, appKey);
             if (virtDir == null)
             {
-                Console.WriteLine($"Adding virtual directory '{virtDirPath}'");
+                await writeLog($"Adding virtual directory '{virtDirPath}'");
                 baseApp.VirtualDirectories.Add(virtDirPath, virtDirPhysPath);
             }
             var appPhysPath = Path.Combine(virtDirPhysPath, versionKey);
@@ -244,7 +274,7 @@ namespace LocalInstallApp
             var iisApp = site.Applications.FirstOrDefault(a => a.Path.Equals(appPath, StringComparison.OrdinalIgnoreCase));
             if (iisApp == null)
             {
-                Console.WriteLine($"Adding application '{appPath}'");
+                await writeLog($"Adding application '{appPath}'");
                 iisApp = site.Applications.Add(appPath, appPhysPath);
                 iisApp.ApplicationPoolName = appPoolName;
             }
@@ -271,7 +301,7 @@ namespace LocalInstallApp
                 );
             }
             await Task.Delay(5000);
-            Console.WriteLine($"Deleting files in '{appPhysPath}'");
+            await writeLog($"Deleting files in '{appPhysPath}'");
             foreach (var file in Directory.GetFiles(appPhysPath).Where(f => !f.Equals(offlinePath, StringComparison.OrdinalIgnoreCase)))
             {
                 File.Delete(file);
@@ -326,7 +356,7 @@ namespace LocalInstallApp
                     $"{appName}ServiceApp.exe"
                 );
                 binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
-                Console.WriteLine($"Creating service '{binPath}'");
+                await writeLog($"Creating service '{binPath}'");
                 var secretCredentialsValue = await retrieveCredentials(sp, "ServiceApp");
                 await new WinProcess("sc")
                     .UseArgumentNameDelimiter("")
@@ -341,7 +371,7 @@ namespace LocalInstallApp
             }
             else if (sc.Status == ServiceControllerStatus.Running)
             {
-                Console.WriteLine($"Stopping services '{sc.DisplayName}'");
+                await writeLog($"Stopping services '{sc.DisplayName}'");
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
             }
@@ -350,7 +380,7 @@ namespace LocalInstallApp
                 await copyToInstallDir(sp, appKey, versionKey, versionKey, tempDir, true);
             }
             await copyToInstallDir(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, tempDir, true);
-            Console.WriteLine($"Starting services '{sc.DisplayName}'");
+            await writeLog($"Starting services '{sc.DisplayName}'");
             sc.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
         }
@@ -386,7 +416,7 @@ namespace LocalInstallApp
             {
                 sourceDir = Path.Combine(tempDir, "App");
             }
-            Console.WriteLine($"Copying from '{sourceDir}' to '{installDir}'");
+            await writeLog($"Copying from '{tempDir}' to '{installDir}'");
             var process = new RobocopyProcess(sourceDir, installDir)
                 .CopySubdirectoriesIncludingEmpty()
                 .NoDirectoryLogging()

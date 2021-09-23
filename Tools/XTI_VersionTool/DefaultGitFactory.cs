@@ -22,8 +22,11 @@ namespace XTI_VersionTool
         {
             var gitHubRepo = new WebXtiGitHubRepository(ownerName, repoName);
             var credentials = credentialsFactory.Create("GitHub");
-            var credentialsValue = await credentials.Value();
-            gitHubRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            if (credentials.Exist())
+            {
+                var credentialsValue = await credentials.Value();
+                gitHubRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            }
             return gitHubRepo;
         }
 
@@ -31,8 +34,11 @@ namespace XTI_VersionTool
         {
             var gitRepo = new GitLibXtiGitRepository(Environment.CurrentDirectory);
             var credentials = credentialsFactory.Create("GitHub");
-            var credentialsValue = await credentials.Value();
-            gitRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            if (credentials.Exist())
+            {
+                var credentialsValue = await credentials.Value();
+                gitRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            }
             return gitRepo;
         }
     }

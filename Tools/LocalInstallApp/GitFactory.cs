@@ -18,8 +18,11 @@ namespace LocalInstallApp
         {
             var gitHubRepo = new WebXtiGitHubRepository(ownerName, repoName);
             var credentials = credentialsFactory.Create("GitHub");
-            var credentialsValue = await credentials.Value();
-            gitHubRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            if (credentials.Exist())
+            {
+                var credentialsValue = await credentials.Value();
+                gitHubRepo.UseCredentials(credentialsValue.UserName, credentialsValue.Password);
+            }
             return gitHubRepo;
         }
     }
