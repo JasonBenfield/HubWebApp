@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using XTI_Configuration.Extensions;
+using XTI_Core;
 using XTI_Secrets.Extensions;
 
 namespace LocalInstallApp
@@ -22,9 +23,9 @@ namespace LocalInstallApp
                     (hostContext, services) =>
                     {
                         services.Configure<InstallOptions>(hostContext.Configuration);
+                        services.AddSingleton<XtiFolder>();
                         services.AddScoped<GitFactory>();
-                        services.AddXtiDataProtection();
-                        services.AddFileSecretCredentials();
+                        services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                         services.AddHostedService<InstallHostedService>();
                     }
                 )

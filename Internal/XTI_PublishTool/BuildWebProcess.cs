@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_App.Extensions;
+using XTI_Core;
 using XTI_Processes;
 using XTI_VersionToolApi;
 
@@ -14,6 +16,7 @@ namespace XTI_PublishTool
         private readonly AppKey appKey;
         private readonly string versionKey;
         private readonly IHostEnvironment hostEnv;
+        private readonly XtiFolder xtiFolder;
         private readonly string imports;
 
         public BuildWebProcess(AppKey appKey, string versionKey, IHostEnvironment hostEnv, string imports)
@@ -21,6 +24,7 @@ namespace XTI_PublishTool
             this.appKey = appKey;
             this.versionKey = versionKey;
             this.hostEnv = hostEnv;
+            xtiFolder = new XtiFolder(hostEnv);
             this.imports = imports;
         }
 
@@ -101,26 +105,21 @@ namespace XTI_PublishTool
                 .ToArray();
             foreach (var appToImport in appsToImport)
             {
-                string versionDir;
                 var importAppKey = new AppKey(new AppName(appToImport), AppType.Values.WebApp);
+                AppVersionKey appVersionKey;
                 if (hostEnv.IsProduction())
                 {
                     var currentVersion = await retrieveCurrentVersion(importAppKey);
-                    versionDir = currentVersion.VersionKey;
+                    appVersionKey = AppVersionKey.Parse(currentVersion.VersionKey);
                 }
                 else
                 {
-                    versionDir = AppVersionKey.Current.DisplayText;
+                    appVersionKey = AppVersionKey.Current;
                 }
-                Console.WriteLine($"Importing {appToImport} {versionDir}");
+                Console.WriteLine($"Importing {appToImport} {appVersionKey.DisplayText}");
                 var baseSourcePath = Path.Combine
                 (
-                    getXtiDir(),
-                    "Published",
-                    hostEnv.EnvironmentName,
-                    "WebApps",
-                    getAppName(importAppKey),
-                    versionDir,
+                    xtiFolder.PublishPath(importAppKey, appVersionKey),
                     "Exports"
                 );
                 var sourceScriptPath = Path.Combine(baseSourcePath, "Scripts");
@@ -147,42 +146,16 @@ namespace XTI_PublishTool
                 {
                     Console.WriteLine($"Script imports not found for {appToImport} '{sourceScriptPath}'");
                 }
-                var sourceViewPath = Path.Combine(baseSourcePath, "Views");
-                if (Directory.Exists(sourceViewPath))
-                {
-                    var targetViewPath = Path.Combine
-                    (
-                        getProjectDir(),
-                        "Views",
-                        "Exports",
-                        appToImport
-                    );
-                    await new RobocopyProcess(sourceViewPath, targetViewPath)
-                        .CopySubdirectoriesIncludingEmpty()
-                        .Purge()
-                        .NoFileClassLogging()
-                        .NoFileLogging()
-                        .NoDirectoryLogging()
-                        .NoJobHeader()
-                        .NoJobSummary()
-                        .AddReadonlyAttributeToTarget()
-                        .Run();
-                }
-                else
-                {
-                    Console.WriteLine($"View imports not found for {appToImport} '{sourceViewPath}'");
-                }
             }
         }
 
-        private static async Task<VersionToolOutput> retrieveCurrentVersion(AppKey appKey)
+        private async Task<VersionToolOutput> retrieveCurrentVersion(AppKey appKey)
         {
             var versionToolProcess = new XtiProcess
             (
                 Path.Combine
                 (
-                    getXtiDir(),
-                    "Tools",
+                    xtiFolder.ToolsPath(),
                     "XTI_VersionTool",
                     "XTI_VersionTool.exe"
                 )
@@ -195,11 +168,6 @@ namespace XTI_PublishTool
             var currentVersion = versionResult.Data<VersionToolOutput>();
             return currentVersion;
         }
-
-        private static string getXtiDir() => Environment.GetEnvironmentVariable("XTI_Dir");
-
-        private string getAppName(AppKey appKey)
-            => appKey.Name.DisplayText.Replace(" ", "");
 
         private async Task runWebpack()
         {
@@ -231,6 +199,9 @@ namespace XTI_PublishTool
                 "Apps",
                 $"{getAppName(appKey)}WebApp"
             );
+
+        private string getAppName(AppKey appKey)
+            => appKey.Name.DisplayText.Replace(" ", "");
 
     }
 }

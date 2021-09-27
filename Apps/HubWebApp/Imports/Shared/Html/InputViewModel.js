@@ -15,7 +15,6 @@ var InputViewModel = /** @class */ (function (_super) {
         _this.maxLength = ko.observable(null);
         _this.isEnabled = ko.observable(true);
         _this.hasFocus = ko.observable(false);
-        _this.autocomplete = ko.observable(null);
         return _this;
     }
     return InputViewModel;

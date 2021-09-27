@@ -19,12 +19,6 @@ var FormComponent = /** @class */ (function (_super) {
     FormComponent.prototype.useDefaultSubmit = function () {
         this.vm.useDefaultSubmit();
     };
-    FormComponent.prototype.clearAutocomplete = function () { this.setAutocomplete(null); };
-    FormComponent.prototype.setAutocompleteOff = function () { this.setAutocomplete('off'); };
-    FormComponent.prototype.setAutocompleteNewPassword = function () { this.setAutocomplete('new-password'); };
-    FormComponent.prototype.setAutocomplete = function (autocomplete) {
-        this.vm.autocomplete(autocomplete);
-    };
     FormComponent.prototype.setAction = function (action) { this.vm.action(action); };
     FormComponent.prototype.setMethod = function (method) { this.vm.method(method); };
     FormComponent.prototype.addOffscreenSubmit = function () {

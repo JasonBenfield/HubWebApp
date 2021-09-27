@@ -16,9 +16,9 @@ namespace XTI_Tool.Extensions
     {
         public static void AddHubToolServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<XtiFolder>();
             services.Configure<AppOptions>(configuration.GetSection(AppOptions.App));
             services.Configure<DbOptions>(configuration.GetSection(DbOptions.DB));
-            services.AddXtiDataProtection();
             services.AddHubDbContextForSqlServer(configuration);
             services.AddScoped<AppFactory>();
             services.AddScoped<Clock, UtcClock>();

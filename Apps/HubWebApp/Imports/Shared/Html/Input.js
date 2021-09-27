@@ -23,12 +23,6 @@ var Input = /** @class */ (function (_super) {
     };
     Input.prototype.enable = function () { this.vm.isEnabled(true); };
     Input.prototype.disable = function () { this.vm.isEnabled(false); };
-    Input.prototype.clearAutocomplete = function () { this.setAutocomplete(null); };
-    Input.prototype.setAutocompleteOff = function () { this.setAutocomplete('off'); };
-    Input.prototype.setAutocompleteNewPassword = function () { this.setAutocomplete('new-password'); };
-    Input.prototype.setAutocomplete = function (autocomplete) {
-        this.vm.autocomplete(autocomplete);
-    };
     Input.prototype.getValue = function () {
         return this.value;
     };

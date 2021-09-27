@@ -6,7 +6,6 @@ export declare class FormComponentViewModel extends HtmlComponentViewModel {
     constructor(content?: AggregateComponentViewModel);
     readonly action: ko.Observable<string>;
     readonly method: ko.Observable<string>;
-    readonly autocomplete: ko.Observable<string>;
     private readonly _submitted;
     readonly submitted: import("../Events").DefaultEventHandler<any>;
     private isDefaultSubmit;

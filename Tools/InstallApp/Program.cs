@@ -24,9 +24,8 @@ namespace InstallApp
                 (
                     (hostContext, services) =>
                     {
-                        services.AddXtiDataProtection();
                         services.AddHttpClient();
-                        services.AddFileSecretCredentials();
+                        services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                         services.AddHubToolServices(hostContext.Configuration);
                         services.Configure<InstallOptions>(hostContext.Configuration);
                         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();

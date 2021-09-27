@@ -30,7 +30,8 @@ namespace HubWebApp.Tests
 
         private async Task addUser(IHubActionTester tester, AppUserName userName)
         {
-            var hubApi = tester.Services.GetService<HubAppApi>();
+            var hubApiFactory = tester.Services.GetService<HubAppApiFactory>();
+            var hubApi = hubApiFactory.CreateForSuperUser();
             await hubApi.Users.AddUser.Execute(new AddUserModel
             {
                 UserName = userName.Value,

@@ -1,4 +1,5 @@
 ﻿const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
     user: './Imports/Shared/User/UserPage.js',
@@ -76,6 +77,11 @@ const resolve = {
     }
 };
 const plugins = [
+    new webpack.SourceMapDevToolPlugin({
+        filename: "[file].map",
+        fallbackModuleFilenameTemplate: '[absolute-resource-path]',
+        moduleFilenameTemplate: '[absolute-resource-path]'
+    }),
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
@@ -85,6 +91,7 @@ module.exports = [
     {
         mode: 'production',
         context: __dirname,
+        devtool: false,
         entry: entry,
         module: exportModule,
         plugins: plugins,
@@ -97,6 +104,7 @@ module.exports = [
     {
         mode: 'development',
         context: __dirname,
+        devtool: false,
         entry: entry,
         module: exportModule,
         plugins: plugins,

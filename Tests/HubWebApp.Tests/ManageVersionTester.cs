@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_App.Api;
 using XTI_Git.Abstractions;
 using XTI_Hub;
 using XTI_HubAppApi;
@@ -28,6 +29,7 @@ namespace HubWebApp.Tests
                     (hostContext, services) =>
                     {
                         services.AddFakesForHubWebApp(hostContext.Configuration);
+                        services.AddScoped(sp => sp.GetService<AppApiFactory>().CreateForSuperUser());
                         services.AddScoped<GitFactory, FakeGitFactory>();
                         services.AddScoped<VersionCommandFactory>();
                         services.AddFakeSecretCredentials();

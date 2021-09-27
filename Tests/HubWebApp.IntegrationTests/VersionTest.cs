@@ -1,11 +1,10 @@
 ﻿using HubWebApp.Extensions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_Configuration.Extensions;
@@ -19,9 +18,11 @@ namespace HubWebApp.IntegrationTests
         [Test]
         public async Task ShouldCompleteVersion()
         {
-            var services = setup("Production");
+            var services = setup("Development");
             var appFactory = services.GetService<AppFactory>();
             var app = await appFactory.Apps().App(HubInfo.AppKey);
+            var roles = await app.Roles();
+            var denyAccessRole = roles.FirstOrDefault(r => r.Name().Equals(AppRoleName.DenyAccess));
             var version = await app.Version(AppVersionKey.Parse("V1169"));
             await version.Published();
         }
@@ -29,6 +30,7 @@ namespace HubWebApp.IntegrationTests
         private static IServiceProvider setup(string envName = "Test")
         {
             Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", envName);
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", envName);
             var host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration
                 (
@@ -41,7 +43,7 @@ namespace HubWebApp.IntegrationTests
                 (
                     (hostContext, services) =>
                     {
-                        services.AddServicesForHub(hostContext.Configuration);
+                        services.AddBasicServicesForHub(hostContext.HostingEnvironment, hostContext.Configuration);
                     }
                 )
                 .Build();

@@ -16,14 +16,12 @@ namespace HubWebApp.Tests
         {
             var tester = await setup();
             var adminUser = await tester.AdminUser();
-            var hubApp = await tester.HubApp();
-            var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
             var apps = await tester.Execute(new EmptyRequest(), adminUser);
             var appNames = apps.Select(a => a.AppName);
             Assert.That
             (
                 appNames,
-                Is.EquivalentTo(new[] { AppKey.Unknown.Name.DisplayText, HubInfo.AppKey.Name.DisplayText }),
+                Is.EquivalentTo(new[] { HubInfo.AppKey.Name.DisplayText }),
                 "Should get all apps"
             );
         }

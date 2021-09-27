@@ -18,7 +18,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddUnknownApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<DefaultAppSetup>();
+            var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var unknownApp = await factory.Apps().App(AppKey.Unknown);
@@ -29,7 +29,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddHubApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<DefaultAppSetup>();
+            var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
@@ -40,7 +40,7 @@ namespace HubWebApp.Tests
         public async Task ShouldAddModCategoryForApps()
         {
             var services = setup();
-            var hubSetup = services.GetService<DefaultAppSetup>();
+            var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
@@ -53,15 +53,15 @@ namespace HubWebApp.Tests
         public async Task ShouldAddModifierForEachApp()
         {
             var services = setup();
-            var hubSetup = services.GetService<DefaultAppSetup>();
+            var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
             var hubApp = await factory.Apps().App(HubInfo.AppKey);
             var modCategoryName = HubInfo.ModCategories.Apps;
             var modCategory = await hubApp.ModCategory(modCategoryName);
             var modifiers = await modCategory.Modifiers();
+            var apps = (await factory.Apps().All()).Where(a => !a.Key().Equals(AppKey.Unknown));
             var modIDs = modifiers.Select(m => m.TargetKey);
-            var apps = await factory.Apps().All();
             var appIDs = apps.Select(a => a.ID.Value.ToString());
             Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");
         }

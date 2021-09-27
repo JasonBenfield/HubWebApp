@@ -21,7 +21,7 @@ namespace XTI_UserApp
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHubToolServices(hostContext.Configuration);
-                    services.AddFileSecretCredentials();
+                    services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                     services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
                     services.Configure<UserOptions>(hostContext.Configuration);
                     services.AddHostedService<HostedService>();

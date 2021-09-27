@@ -26,7 +26,7 @@ namespace XTI_HubAppApi.AppList
             var hubApp = apps.First(a => a.Key().Equals(HubInfo.AppKey));
             var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
             var allowedApps = new List<App>();
-            foreach (var app in apps)
+            foreach (var app in apps.Where(a => !a.Key().Equals(AppKey.Unknown)))
             {
                 var modifier = await appsModCategory.Modifier(app.ID.Value);
                 var userRoles = await user.AssignedRoles(modifier);

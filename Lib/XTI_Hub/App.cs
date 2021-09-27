@@ -110,7 +110,7 @@ namespace XTI_Hub
             {
                 await addRoles(roleNames, existingRoles);
                 var rolesToDelete = existingRoles
-                    .Where(r => !roleNames.Any(rn => r.Name().Equals(rn)))
+                    .Where(r => !r.IsDeactivated() && !roleNames.Any(rn => r.Name().Equals(rn)))
                     .ToArray();
                 await deleteRoles(rolesToDelete);
             });

@@ -20,7 +20,7 @@ namespace XTI_VersionTool
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHubToolServices(hostContext.Configuration);
-                    services.AddFileSecretCredentials();
+                    services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                     services.Configure<VersionToolOptions>(hostContext.Configuration);
                     services.AddScoped<GitFactory, DefaultGitFactory>();
                     services.AddScoped<VersionCommandFactory>();

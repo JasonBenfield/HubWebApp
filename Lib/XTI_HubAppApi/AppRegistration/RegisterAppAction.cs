@@ -36,7 +36,10 @@ namespace XTI_HubAppApi.AppRegistration
                     versionModel.Version()
                 );
             }
-            var roleNames = model.AppTemplate.RecursiveRoles().Select(r => new AppRoleName(r));
+            var roleNames = model.AppTemplate.RecursiveRoles()
+                .Select(r => new AppRoleName(r))
+                .Union(new[] { AppRoleName.DenyAccess })
+                .Distinct();
             await app.SetRoles(roleNames);
             var version = await tryAddCurrentVersion(app);
             var versionKey = string.IsNullOrWhiteSpace(model.VersionKey)
@@ -46,10 +49,15 @@ namespace XTI_HubAppApi.AppRegistration
             {
                 version = await app.Version(versionKey);
             }
+            var defaultModCategory = await app.TryAddModCategory(ModifierCategoryName.Default);
+            await defaultModCategory.TryAddDefaultModifier();
             foreach (var groupTemplate in model.AppTemplate.GroupTemplates)
             {
                 await updateResourceGroupFromTemplate(app, version, groupTemplate);
             }
+            var hubApp = await appFactory.Apps().App(HubInfo.AppKey);
+            var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+            var appModifier = await appModCategory.AddOrUpdateModifier(app.ID.Value, app.Title);
             return new EmptyActionResult();
         }
 

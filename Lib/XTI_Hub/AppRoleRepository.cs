@@ -105,10 +105,10 @@ namespace XTI_Hub
         private IQueryable<int> getAppID(IModifier modifier)
         {
             var modCategoryID = factory.DB
-                            .Modifiers
-                            .Retrieve()
-                            .Where(m => m.ID == modifier.ID.Value)
-                            .Select(m => m.CategoryID);
+                .Modifiers
+                .Retrieve()
+                .Where(m => m.ID == modifier.ID.Value)
+                .Select(m => m.CategoryID);
             var appID = factory.DB
                 .ModifierCategories
                 .Retrieve()

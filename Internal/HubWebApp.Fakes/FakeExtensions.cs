@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using HubWebApp.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_App.Fakes;
+using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
+using XTI_HubDB.Extensions;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes
@@ -14,6 +16,8 @@ namespace HubWebApp.Fakes
         public static void AddFakesForHubWebApp(this IServiceCollection services, IConfiguration config)
         {
             services.AddFakesForXtiWebApp(config);
+            services.AddHubDbContextForInMemory();
+            services.AddScoped<AppFactory>();
             services.AddTransient<AppFromPath>();
             services.AddScoped<HubAppApiFactory>();
             services.AddScoped<AppApiFactory>(sp => sp.GetService<HubAppApiFactory>());
@@ -23,7 +27,8 @@ namespace HubWebApp.Fakes
             services.AddScoped(_ => HubInfo.AppKey);
             services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
             services.AddScoped<AccessForLogin, FakeAccessForLogin>();
-            services.AddSingleton<IXtiPathAccessor, FakeXtiPathAccessor>();
+            services.AddScoped<ISourceAppContext, DefaultAppContext>();
+            services.AddScoped<ISourceUserContext, WebUserContext>();
         }
     }
 }

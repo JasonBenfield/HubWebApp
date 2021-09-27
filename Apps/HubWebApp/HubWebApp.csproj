@@ -11,13 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.0" />
-    <PackageReference Include="XTI_WebApp.TagHelpers" Version="1.8.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.1" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.2" />
+    <PackageReference Include="XTI_WebApp.RCL" Version="1.8.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Exports\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

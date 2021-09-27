@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.7.30" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.7.34" />
     <PackageReference Include="XTI_Processes" Version="1.0.1" />
-    <PackageReference Include="XTI_Git" Version="1.1.10" />
-    <PackageReference Include="XTI_GitHub" Version="1.1.10" />
+    <PackageReference Include="XTI_Git" Version="1.1.11" />
+    <PackageReference Include="XTI_GitHub" Version="1.1.11" />
   </ItemGroup>
 
   <ItemGroup>

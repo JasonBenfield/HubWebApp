@@ -10,6 +10,8 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_App.Extensions;
+using XTI_Core;
 using XTI_Credentials;
 using XTI_Processes;
 using XTI_SecretsToolApi;
@@ -111,8 +113,9 @@ namespace LocalInstallApp
 
         private static async Task runSetup(IServiceProvider sp, AppKey appKey, string versionKey)
         {
+            var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var sourceDir = getSourceDir(hostEnv, appKey, versionKey);
+            var sourceDir = xtiFolder.PublishPath(appKey, AppVersionKey.Parse(versionKey));
             var setupAppDir = Path.Combine(sourceDir, "Setup");
             await writeLog($"Running Setup '{setupAppDir}'");
             await new DotnetRunProcess(setupAppDir)
@@ -190,7 +193,8 @@ namespace LocalInstallApp
         {
             var credentialKey = getCredentialKey(appKey);
             var options = sp.GetService<IOptions<InstallOptions>>().Value;
-            var path = getSecretsToolPath();
+            var xtiFolder = sp.GetService<XtiFolder>();
+            var path = getSecretsToolPath(xtiFolder);
             var hostEnv = sp.GetService<IHostEnvironment>();
             var secretsOptions = new SecretsToolOptions
             {
@@ -263,7 +267,8 @@ namespace LocalInstallApp
             var baseApp = site.Applications.FirstOrDefault(a => a.Path == "/");
             var virtDirPath = $"/{appName}";
             var virtDir = baseApp.VirtualDirectories.FirstOrDefault(vd => vd.Path.Equals(virtDirPath, StringComparison.OrdinalIgnoreCase));
-            var virtDirPhysPath = getAppInstallDir(hostEnv, appKey);
+            var xtiFolder = sp.GetService<XtiFolder>();
+            var virtDirPhysPath = xtiFolder.InstallPath(appKey);
             if (virtDir == null)
             {
                 await writeLog($"Adding virtual directory '{virtDirPath}'");
@@ -314,7 +319,8 @@ namespace LocalInstallApp
 
         private static async Task<CredentialValue> retrieveCredentials(IServiceProvider sp, string credentialKey)
         {
-            var path = getSecretsToolPath();
+            var xtiFolder = sp.GetService<XtiFolder>();
+            var path = getSecretsToolPath(xtiFolder);
             var hostEnv = sp.GetService<IHostEnvironment>();
             var options = new SecretsToolOptions
             {
@@ -331,11 +337,10 @@ namespace LocalInstallApp
             return secretCredentialsValue;
         }
 
-        private static string getSecretsToolPath()
+        private static string getSecretsToolPath(XtiFolder xtiFolder)
             => Path.Combine
             (
-                getXtiDir(),
-                "Tools",
+                xtiFolder.ToolsPath(),
                 "Xti_SecretsTool",
                 "Xti_SecretsTool.exe"
             );
@@ -343,6 +348,7 @@ namespace LocalInstallApp
         private static async Task installServiceApp(IServiceProvider sp, AppKey appKey, string versionKey, string tempDir)
         {
 #pragma warning disable CA1416 // Validate platform compatibility
+            var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
             var appName = getAppName(appKey);
             var serviceName = $"Xti_{hostEnv.EnvironmentName}_{appName}";
@@ -351,8 +357,7 @@ namespace LocalInstallApp
             {
                 var binPath = Path.Combine
                 (
-                    getAppInstallDir(hostEnv, appKey),
-                    AppVersionKey.Current.DisplayText,
+                    xtiFolder.InstallPath(appKey, AppVersionKey.Current),
                     $"{appName}ServiceApp.exe"
                 );
                 binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
@@ -395,22 +400,15 @@ namespace LocalInstallApp
                 );
 #pragma warning restore CA1416 // Validate platform compatibility
 
-        private static string getAppInstallDir(IHostEnvironment hostEnv, AppKey appKey)
-        {
-            var xtiDir = getXtiDir();
-            var appName = getAppName(appKey);
-            var appType = getAppType(appKey);
-            return Path.Combine(xtiDir, "Apps", hostEnv.EnvironmentName, $"{appType}s", appName);
-        }
-
         private static async Task<string> copyToInstallDir(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir, bool purge)
         {
+            var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var installDir = Path.Combine(getAppInstallDir(hostEnv, appKey), installVersionKey);
+            var installDir = xtiFolder.InstallPath(appKey, AppVersionKey.Parse(installVersionKey));
             string sourceDir;
             if (hostEnv.IsDevelopment() || hostEnv.IsEnvironment("Test"))
             {
-                sourceDir = getSourceAppDir(hostEnv, appKey, versionKey);
+                sourceDir = getSourceAppDir(xtiFolder, appKey, versionKey);
             }
             else
             {
@@ -434,53 +432,17 @@ namespace LocalInstallApp
             return installDir;
         }
 
-        private static string getSourceAppDir(IHostEnvironment hostEnv, AppKey appKey, string versionKey)
+        private static string getSourceAppDir(XtiFolder xtiFolder, AppKey appKey, string versionKey)
         {
             return Path.Combine
             (
-                getSourceDir(hostEnv, appKey, versionKey),
+                xtiFolder.PublishPath(appKey, AppVersionKey.Parse(versionKey)),
                 "App"
             );
         }
 
-        private static string getSourceDir(IHostEnvironment hostEnv, AppKey appKey, string versionKey)
-        {
-            var xtiDir = getXtiDir();
-            var appType = getAppType(appKey);
-            var appName = getAppName(appKey);
-            return Path.Combine
-            (
-                xtiDir,
-                "Published",
-                hostEnv.EnvironmentName,
-                $"{appType}s",
-                appName,
-                versionKey
-            );
-        }
-
-        private static string getXtiDir()
-        {
-            var xtiDir = Environment.GetEnvironmentVariable("XTI_Dir");
-            if (string.IsNullOrWhiteSpace(xtiDir))
-            {
-                xtiDir = "c:\\xti";
-            }
-            return xtiDir;
-        }
-
         private static string getAppName(AppKey appKey)
             => appKey.Name.DisplayText.Replace(" ", "");
-
-        private static string getAppType(AppKey appKey)
-        {
-            var appType = appKey.Type.DisplayText;
-            if (appKey.Type.Equals(AppType.Values.Service))
-            {
-                appType = "ServiceApp";
-            }
-            return appType.Replace(" ", "");
-        }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }

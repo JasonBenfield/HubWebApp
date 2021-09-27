@@ -1,23 +1,21 @@
 ﻿using System.Threading.Tasks;
 using XTI_App.Abstractions;
-using XTI_App.Api;
 using XTI_HubAppApi.AppRegistration;
 
 namespace XTI_HubAppApi
 {
     public sealed class HubAppSetup : IAppSetup
     {
-        private readonly HubAppApi hubApi;
-        private readonly AppApiFactory apiFactory;
+        private readonly HubAppApiFactory apiFactory;
 
-        public HubAppSetup(HubAppApi hubApi, AppApiFactory apiFactory)
+        public HubAppSetup(HubAppApiFactory apiFactory)
         {
-            this.hubApi = hubApi;
             this.apiFactory = apiFactory;
         }
 
         public async Task Run(AppVersionKey versionKey)
         {
+            var hubApi = apiFactory.CreateForSuperUser();
             var versions = await hubApi.AppRegistration.GetVersions.Invoke(HubInfo.AppKey);
             var template = apiFactory.CreateTemplate();
             var request = new RegisterAppRequest

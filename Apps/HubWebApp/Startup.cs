@@ -3,14 +3,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using XTI_WebApp.Extensions;
 
 namespace HubWebApp
 {
     public sealed class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostEnvironment hostEnv;
+
+        public Startup(IHostEnvironment hostEnv, IConfiguration configuration)
         {
+            this.hostEnv = hostEnv;
             Configuration = configuration;
         }
 
@@ -19,8 +23,8 @@ namespace HubWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddResponseCaching();
-            services.ConfigureXtiCookieAndTokenAuthentication(Configuration);
-            services.AddServicesForHub(Configuration);
+            services.ConfigureXtiCookieAndTokenAuthentication(hostEnv, Configuration);
+            services.AddServicesForHub(hostEnv, Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

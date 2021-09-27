@@ -96,7 +96,7 @@ namespace HubWebApp.IntegrationTests
                 (
                     (hostContext, services) =>
                     {
-                        services.AddServicesForHub(hostContext.Configuration);
+                        services.AddServicesForHub(hostContext.HostingEnvironment, hostContext.Configuration);
                     }
                 )
                 .Build();

@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_App.Api;
 using XTI_Version;
 
 namespace HubWebApp.Tests
@@ -13,7 +15,7 @@ namespace HubWebApp.Tests
         {
             var tester = await setup();
             tester.Options.VersionType = "Whatever";
-            Assert.ThrowsAsync<PublishVersionException>(() => tester.Execute());
+            Assert.ThrowsAsync<ArgumentException>(() => tester.Execute());
         }
 
         [Test]
@@ -63,7 +65,7 @@ namespace HubWebApp.Tests
             await tester.Execute();
             await tester.Checkout(newVersion);
             tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
-            Assert.ThrowsAsync<PublishVersionException>(() => tester.Execute());
+            Assert.ThrowsAsync<AppException>(() => tester.Execute());
         }
 
         private async Task<ManageVersionTester> setup()

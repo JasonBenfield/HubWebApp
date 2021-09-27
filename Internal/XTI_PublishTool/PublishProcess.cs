@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_App.Extensions;
+using XTI_Core;
 using XTI_GitHub;
 using XTI_HubAppApi;
 using XTI_Processes;
@@ -14,12 +16,14 @@ namespace XTI_PublishTool
     public sealed class PublishProcess
     {
         private readonly IHostEnvironment hostEnv;
+        private readonly XtiFolder xtiFolder;
         private readonly HubAppApi hubApi;
         private readonly GitFactory gitFactory;
 
         public PublishProcess(IHostEnvironment hostEnv, HubAppApi hubApi, GitFactory gitFactory)
         {
             this.hostEnv = hostEnv;
+            xtiFolder = new XtiFolder(hostEnv);
             this.hubApi = hubApi;
             this.gitFactory = gitFactory;
         }
@@ -309,52 +313,15 @@ namespace XTI_PublishTool
             {
                 Console.WriteLine($"Source script folder not found '{sourceScriptPath}'");
             }
-            var sourceViewDir = Path.Combine
-            (
-                getProjectDir(appKey),
-                "Views",
-                "Exports",
-                getAppName(appKey)
-            );
-            if (Directory.Exists(sourceViewDir))
-            {
-                var exportViewDir = Path.Combine(exportBaseDir, "Views");
-                await new RobocopyProcess(sourceViewDir, exportViewDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .Purge()
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-            }
-            else
-            {
-                Console.WriteLine($"Source view folder not found '{sourceViewDir}'");
-            }
         }
 
         private string getPublishDir(AppKey appKey, AppVersionKey versionKey)
         {
-            string versionDir;
-            if (hostEnv.IsProduction())
+            if (!hostEnv.IsProduction())
             {
-                versionDir = versionKey.DisplayText;
+                versionKey = AppVersionKey.Current;
             }
-            else
-            {
-                versionDir = AppVersionKey.Current.DisplayText;
-            }
-            return Path.Combine
-            (
-                getXtiDir(),
-                "Published",
-                hostEnv.EnvironmentName,
-                $"{getAppType(appKey)}s",
-                getAppName(appKey),
-                versionDir
-            );
+            return xtiFolder.PublishPath(appKey, versionKey);
         }
 
         private static async Task runDotnetBuild()

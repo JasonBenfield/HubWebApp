@@ -34,6 +34,10 @@ namespace XTI_Version
                 throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{defaultBranchName}'");
             }
             var versionType = AppVersionType.Values.Value(options.VersionType);
+            if (versionType == null)
+            {
+                throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
+            }
             var newVersionResult = await hubApi.AppRegistration.NewVersion.Execute(new NewVersionRequest
             {
                 AppKey = options.AppKey(),

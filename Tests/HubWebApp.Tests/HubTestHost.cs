@@ -1,18 +1,19 @@
 ﻿using HubWebApp.Fakes;
-using XTI_HubAppApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Fakes;
-using XTI_AppSetupApp.Extensions;
+using XTI_Hub;
+using XTI_HubAppApi;
 
 namespace HubWebApp.Tests
 {
     public sealed class HubTestHost
     {
+        private IServiceScope scope;
+
         public async Task<IServiceProvider> Setup(Action<HostBuilderContext, IServiceCollection> configure = null)
         {
             var host = Host.CreateDefaultBuilder()
@@ -28,11 +29,11 @@ namespace HubWebApp.Tests
                     }
                 )
                 .Build();
-            var scope = host.Services.CreateScope();
+            scope = host.Services.CreateScope();
             var sp = scope.ServiceProvider;
-            var setup = scope.ServiceProvider.GetService<DefaultAppSetup>();
+            var setup = sp.GetService<IAppSetup>();
             await setup.Run(AppVersionKey.Current);
-            await addAdminUser(sp);
+            var adminUser = await addAdminUser(sp);
             return sp;
         }
 

@@ -1,6 +1,3 @@
-import { TextSmall } from "./Html/TextSmall";
-import { TextSpan } from "./Html/TextSpan";
-import { Toolbar } from "./Html/Toolbar";
 import { PageViewModel } from "./PageViewModel";
 import { ModalErrorComponent } from "./Error/ModalErrorComponent";
 import { Block } from "./Html/Block";
@@ -10,9 +7,6 @@ export declare type pageConstructor<TPage extends PageFrame> = {
 };
 export declare class PageFrame implements IPageFrame {
     private readonly vm;
-    readonly toolbar: Toolbar;
-    readonly appTitle: TextSpan;
-    readonly pageTitle: TextSmall;
     constructor(vm?: PageViewModel);
     private readonly logoutMenuItem;
     setName(name: string): void;

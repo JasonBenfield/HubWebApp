@@ -68,8 +68,7 @@ namespace HubWebApp.EndToEndTests
                     {
                         services.Configure<AppOptions>(hostContext.Configuration.GetSection(AppOptions.App));
                         services.AddHttpClient();
-                        services.AddDataProtection();
-                        services.AddFileSecretCredentials();
+                        services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                         services.AddSingleton(sp =>
                         {
                             var credentialsFactory = sp.GetService<SecretCredentialsFactory>();

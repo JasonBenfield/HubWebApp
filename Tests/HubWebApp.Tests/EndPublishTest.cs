@@ -15,7 +15,8 @@ namespace HubWebApp.Tests
         public async Task ShouldSetStatusToCurrent_WhenPublished()
         {
             var tester = await setup();
-            var hubApi = tester.Services.GetService<HubAppApi>();
+            var hubApiFactory = tester.Services.GetService<HubAppApiFactory>();
+            var hubApi = hubApiFactory.CreateForSuperUser();
             var newVersion = await hubApi.AppRegistration.NewVersion.Invoke(new NewVersionRequest
             {
                 AppKey = HubInfo.AppKey,
@@ -26,6 +27,7 @@ namespace HubWebApp.Tests
                 AppKey = HubInfo.AppKey,
                 VersionKey = AppVersionKey.Parse(newVersion.VersionKey)
             };
+            await hubApi.AppRegistration.BeginPublish.Invoke(request);
             var adminUser = await tester.AdminUser();
             var version = await tester.Execute(request, adminUser);
             Assert.That(version.Status, Is.EqualTo(AppVersionStatus.Values.Current), "Should set status to current when published");
@@ -35,7 +37,8 @@ namespace HubWebApp.Tests
         public async Task ShouldOnlyAllowOneCurrentVersion()
         {
             var tester = await setup();
-            var hubApi = tester.Services.GetService<HubAppApi>();
+            var hubApiFactory = tester.Services.GetService<HubAppApiFactory>();
+            var hubApi = hubApiFactory.CreateForSuperUser();
             var version1 = await hubApi.AppRegistration.NewVersion.Invoke(new NewVersionRequest
             {
                 AppKey = HubInfo.AppKey,

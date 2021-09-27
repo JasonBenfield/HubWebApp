@@ -234,8 +234,8 @@ namespace HubWebApp.Tests
             );
             var appFactory = sp.GetService<AppFactory>();
             var clock = sp.GetService<Clock>();
-            var defaultSetup = sp.GetService<DefaultAppSetup>();
-            await defaultSetup.Run(AppVersionKey.Current);
+            var hubSetup = sp.GetService<HubAppSetup>();
+            await hubSetup.Run(AppVersionKey.Current);
             var app = await appFactory.Apps().Add(new AppKey(new AppName("Fake"), AppType.Values.WebApp), "Fake", DateTime.Now);
             var version = await app.StartNewMajorVersion(DateTime.Now);
             await version.Publishing();

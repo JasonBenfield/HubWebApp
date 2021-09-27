@@ -1,12 +1,12 @@
-﻿using XTI_HubAppApi;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
+using XTI_Hub;
+using XTI_HubAppApi;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests
@@ -99,6 +99,7 @@ namespace HubWebApp.Tests
             {
                 modKey = ModifierKey.Default;
             }
+            var appContext = Services.GetService<IAppContext>();
             var httpContextAccessor = Services.GetService<IHttpContextAccessor>();
             if (httpContextAccessor.HttpContext == null)
             {
@@ -114,12 +115,17 @@ namespace HubWebApp.Tests
             httpContextAccessor.HttpContext.Request.PathBase = $"/{actionForSuperUser.Path.App.DisplayText}/{actionForSuperUser.Path.Version.DisplayText}".Replace(" ", "");
             var modKeyPath = modKey.Equals(ModifierKey.Default) ? "" : $"/{modKey.Value}";
             httpContextAccessor.HttpContext.Request.Path = $"/{actionForSuperUser.Path.Group.DisplayText}/{actionForSuperUser.Path.Action.DisplayText}{modKeyPath}".Replace(" ", "");
-            var appContext = Services.GetService<IAppContext>();
-            var userContext = (FakeUserContext)Services.GetService<IUserContext>();
-            userContext.SetCurrentUser(user.UserName());
-            var pathAccessor = (FakeXtiPathAccessor)Services.GetService<IXtiPathAccessor>();
+            var appKey = Services.GetService<AppKey>();
+            var userContext = Services.GetService<ISourceUserContext>();
+            var pathAccessor = Services.GetService<FakeXtiPathAccessor>();
             var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
             pathAccessor.SetPath(path);
+            httpContextAccessor.HttpContext.Request.PathBase = $"/{path.App.Value}/{path.Version.Value}";
+            httpContextAccessor.HttpContext.Request.Path = $"/{path.Group.Value}/{path.Action.Value}/";
+            if (!path.Modifier.Equals(ModifierKey.Default))
+            {
+                httpContextAccessor.HttpContext.Request.Path += path.Modifier.Value;
+            }
             var apiUser = new AppApiUser(appContext, userContext, pathAccessor);
             var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
             var action = getAction(hubApi);

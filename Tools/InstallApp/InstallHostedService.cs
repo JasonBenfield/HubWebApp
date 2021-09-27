@@ -141,19 +141,6 @@ namespace InstallApp
             return machineName;
         }
 
-        private static string getSourceDir(AppKey appKey, string versionKey, IHostEnvironment hostEnv)
-        {
-            return Path.Combine
-            (
-                getXtiDir(),
-                "Published",
-                hostEnv.EnvironmentName,
-                $"{getAppType(appKey)}s",
-                getAppName(appKey),
-                versionKey
-            );
-        }
-
         private static async Task runLocalInstall(IServiceProvider sp, string versionKey, CredentialValue credential)
         {
             var hostEnv = sp.GetService<IHostEnvironment>();
@@ -203,29 +190,6 @@ namespace InstallApp
                 throw new ArgumentException($"App Type '{options.AppType}' is not valid");
             }
             return new AppKey(appName, appType);
-        }
-
-        private static string getXtiDir()
-        {
-            var xtiDir = Environment.GetEnvironmentVariable("XTI_Dir");
-            if (string.IsNullOrWhiteSpace(xtiDir))
-            {
-                xtiDir = "c:\\xti";
-            }
-            return xtiDir;
-        }
-
-        private static string getAppName(AppKey appKey)
-            => appKey.Name.DisplayText.Replace(" ", "");
-
-        private static string getAppType(AppKey appKey)
-        {
-            var appType = appKey.Type.DisplayText;
-            if (appKey.Type.Equals(AppType.Values.Service))
-            {
-                appType = "ServiceApp";
-            }
-            return appType.Replace(" ", "");
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

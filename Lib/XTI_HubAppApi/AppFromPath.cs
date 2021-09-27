@@ -8,16 +8,17 @@ namespace XTI_HubAppApi
     public sealed class AppFromPath
     {
         private readonly AppFactory factory;
-        private readonly XtiPath path;
+        private readonly IXtiPathAccessor pathAccessor;
 
-        public AppFromPath(AppFactory factory, XtiPath path)
+        public AppFromPath(AppFactory factory, IXtiPathAccessor pathAccessor)
         {
             this.factory = factory;
-            this.path = path;
+            this.pathAccessor = pathAccessor;
         }
 
         public async Task<App> Value()
         {
+            var path = pathAccessor.Value();
             var modKey = path.Modifier;
             if (modKey.Equals(ModifierKey.Default))
             {

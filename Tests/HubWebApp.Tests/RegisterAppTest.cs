@@ -10,27 +10,53 @@ using XTI_App.Fakes;
 using XTI_Core;
 using XTI_Hub;
 using XTI_WebApp.Fakes;
+using XTI_HubDB.Extensions;
+using XTI_HubAppApi.AppRegistration;
 
 namespace HubWebApp.Tests
 {
-    public sealed class DefaultAppSetupTest
+    public sealed class RegisterAppTest
     {
         [Test]
         public async Task ShouldAddWebApp()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
-            Assert.That(app.Key(), Is.EqualTo(input.Options.AppKey), "Should add app");
-            Assert.That(app.Title, Is.EqualTo(input.Options.Title), "Should set app title");
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
+            Assert.That(app.Key(), Is.EqualTo(FakeInfo.AppKey), "Should add app");
+            Assert.That(app.Title, Is.EqualTo(FakeInfo.AppKey.Name.DisplayText), "Should set app title");
+        }
+
+        private static async Task<App> getApp(IHubActionTester tester)
+        {
+            var appFactory = tester.Services.GetService<AppFactory>();
+            var app = await appFactory.Apps().App(FakeInfo.AppKey);
+            return app;
+        }
+
+        private static RegisterAppRequest createRequest()
+        {
+            var apiFactory = new FakeAppApiFactory();
+            var fakeApi = apiFactory.CreateTemplate();
+            var request = new RegisterAppRequest
+            {
+                AppTemplate = fakeApi.ToModel(),
+                VersionKey = AppVersionKey.Current,
+                Versions = new AppVersionModel[] { }
+            };
+            return request;
         }
 
         [Test]
         public async Task ShouldAddCurrentVersion()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var currentVersion = await app.CurrentVersion();
             Assert.That(currentVersion.IsCurrent(), Is.True, "Should add current version");
         }
@@ -38,45 +64,43 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddRoles()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var roleNames = new[]
             {
+                AppRoleName.Admin,
+                AppRoleName.DenyAccess,
                 FakeInfo.Roles.Manager,
                 FakeInfo.Roles.Viewer
-            }
-            .Union(AppRoleName.DefaultRoles());
+            };
             var appRoles = await app.Roles();
             Assert.That(appRoles.Select(r => r.Name()), Is.EquivalentTo(roleNames), "Should add role names from app role names");
         }
 
         [Test]
-        public async Task ShouldChangeAppTitle()
-        {
-            var input = setup();
-            await execute(input);
-            input.Options.Title = "New Title";
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
-            Assert.That(app.Title, Is.EqualTo(input.Options.Title), "Should set app title");
-        }
-
-        [Test]
         public async Task ShouldAddUnknownApp()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(AppKey.Unknown);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var appFactory = tester.Services.GetService<AppFactory>();
+            var app = await appFactory.Apps().App(AppKey.Unknown);
             Assert.That(app.ID.IsValid(), Is.True, "Should add unknown app");
         }
 
         [Test]
         public async Task ShouldAddUnknownResourceGroup()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(AppKey.Unknown);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var appFactory = tester.Services.GetService<AppFactory>();
+            var app = await appFactory.Apps().App(AppKey.Unknown);
             var version = await app.CurrentVersion();
             var group = await version.ResourceGroup(ResourceGroupName.Unknown);
             Assert.That(group.ID.IsValid(), Is.True, "Should add unknown resource group");
@@ -85,9 +109,12 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddUnknownResource()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(AppKey.Unknown);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var appFactory = tester.Services.GetService<AppFactory>();
+            var app = await appFactory.Apps().App(AppKey.Unknown);
             var version = await app.CurrentVersion();
             var group = await version.ResourceGroup(ResourceGroupName.Unknown);
             var resource = await group.Resource(ResourceName.Unknown);
@@ -97,9 +124,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddResourceGroupsFromAppTemplateGroups()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var groups = (await version.ResourceGroups()).ToArray();
             Assert.That
@@ -113,9 +142,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddAllowedGroupRoleFromAppGroupTemplate()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var employeeGroup = (await version.ResourceGroups())
                 .First(g => g.Name().Equals("Employee"));
@@ -131,9 +162,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddResourcesFromAppTemplateActions()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var group = await version.ResourceGroup(new ResourceGroupName("employee"));
             var resources = (await group.Resources()).ToArray();
@@ -148,9 +181,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddAllowedResourceRoleFromActionTemplate()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var employeeGroup = (await version.ResourceGroups()).First(g => g.Name().Equals("Employee"));
             var addEmployeeAction = await employeeGroup.Resource(new ResourceName("AddEmployee"));
@@ -166,9 +201,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddDefaultModifierCategory()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var modCategory = await app.ModCategory(ModifierCategoryName.Default);
             Assert.That
             (
@@ -181,9 +218,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAddDefaultModifierCategoryToApp()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var category = await app.ModCategory(ModifierCategoryName.Default);
             Assert.That(category.ID.IsValid(), Is.True, "Should add default modifier to app");
         }
@@ -191,28 +230,25 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldSetModifierCategoryForGroup()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var employeeGroup = await version.ResourceGroup(new ResourceGroupName("Employee"));
-            var modifiers = (await employeeGroup.Modifiers())
-                .Select(m => m.ToModel())
-                .ToArray();
-            Assert.That
-            (
-                modifiers.Select(m => m.DisplayText),
-                Is.EquivalentTo(new[] { "IT", "HR" }),
-                "Should add modifiers from group"
-            );
+            var modCategory = await employeeGroup.ModCategory();
+            Assert.That(modCategory.Name(), Is.EqualTo(FakeInfo.ModCategories.Department));
         }
 
         [Test]
         public async Task ShouldAllowAnonymousForResourceGroup()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var loginGroup = await version.ResourceGroup(new ResourceGroupName("Login"));
             var loginGroupModel = loginGroup.ToModel();
@@ -222,9 +258,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldDenyAnonymousForResourceGroup()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var employeeGroup = await version.ResourceGroup(new ResourceGroupName("Employee"));
             var employeeGroupModel = employeeGroup.ToModel();
@@ -234,9 +272,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldAllowAnonymousForResource()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var loginGroup = await version.ResourceGroup(new ResourceGroupName("Login"));
             var resource = await loginGroup.Resource(new ResourceName("Authenticate"));
@@ -247,9 +287,11 @@ namespace HubWebApp.Tests
         [Test]
         public async Task ShouldDenyAnonymousForResource()
         {
-            var input = setup();
-            await execute(input);
-            var app = await input.Factory.Apps().App(input.Options.AppKey);
+            var tester = await setup();
+            var adminUser = await tester.AdminUser();
+            var request = createRequest();
+            await tester.Execute(request, adminUser);
+            var app = await getApp(tester);
             var version = await app.CurrentVersion();
             var employeeGroup = await version.ResourceGroup(new ResourceGroupName("Employee"));
             var resource = await employeeGroup.Resource(new ResourceName("AddEmployee"));
@@ -257,53 +299,11 @@ namespace HubWebApp.Tests
             Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
         }
 
-        private Task execute(TestInput input)
+        private async Task<HubActionTester<RegisterAppRequest, EmptyActionResult>> setup()
         {
-            var setup = input.Services.GetService<IAppSetup>();
-            return setup.Run(AppVersionKey.Current);
-        }
-
-        private TestInput setup()
-        {
-            var host = Host.CreateDefaultBuilder()
-                .ConfigureServices
-                (
-                    (hostContext, services) =>
-                    {
-                        services.AddFakesForXtiWebApp(hostContext.Configuration);
-                        services.AddSingleton<FakeAppOptions>();
-                        services.AddSingleton<AppApiFactory, FakeAppApiFactory>();
-                        services.AddScoped<IAppSetup>(sp =>
-                        {
-                            var appContext = sp.GetService<FakeAppContext>();
-                            var userContext = sp.GetService<FakeUserContext>();
-                            var options = sp.GetService<FakeAppOptions>();
-                            return new FakeAppSetup
-                            (
-                                appContext,
-                                userContext,
-                                options
-                            );
-                        });
-                    }
-                )
-                .Build();
-            var scope = host.Services.CreateScope();
-            return new TestInput(scope.ServiceProvider);
-        }
-
-        private sealed class TestInput
-        {
-            public TestInput(IServiceProvider sp)
-            {
-                Services = sp;
-                Factory = sp.GetService<AppFactory>();
-                Options = sp.GetService<FakeAppOptions>();
-            }
-
-            public AppFactory Factory { get; }
-            public FakeAppOptions Options { get; }
-            public IServiceProvider Services { get; }
+            var host = new HubTestHost();
+            var services = await host.Setup();
+            return HubActionTester.Create(services, hubApi => hubApi.AppRegistration.RegisterApp);
         }
     }
 }

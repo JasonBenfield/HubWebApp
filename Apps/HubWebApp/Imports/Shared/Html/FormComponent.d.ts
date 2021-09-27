@@ -8,10 +8,6 @@ export declare class FormComponent extends HtmlContainerComponent {
     readonly submitted: import("../Events").DefaultEventHandler<any>;
     useDefaultSubmit(): void;
     readonly content: AggregateComponent;
-    clearAutocomplete(): void;
-    setAutocompleteOff(): void;
-    setAutocompleteNewPassword(): void;
-    private setAutocomplete;
     setAction(action: string): void;
     setMethod(method: string): void;
     addOffscreenSubmit(): ButtonCommandItem;

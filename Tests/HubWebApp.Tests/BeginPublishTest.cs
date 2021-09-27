@@ -15,7 +15,8 @@ namespace HubWebApp.Tests
         public async Task ShouldSetStatusToPublishing()
         {
             var tester = await setup();
-            var hubApi = tester.Services.GetService<HubAppApi>();
+            var apiFactory = tester.Services.GetService<HubAppApiFactory>();
+            var hubApi = apiFactory.CreateForSuperUser();
             var version = await hubApi.AppRegistration.NewVersion.Invoke(new NewVersionRequest
             {
                 AppKey = HubInfo.AppKey,

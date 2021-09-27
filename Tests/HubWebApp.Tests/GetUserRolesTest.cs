@@ -20,16 +20,18 @@ namespace HubWebApp.Tests
             var tester = await setup();
             var adminUser = await tester.AdminUser();
             var hubApp = await tester.HubApp();
-            var addUserRole = await hubApp.Role(HubInfo.Roles.AddUser);
-            await adminUser.AddRole(addUserRole);
-            var defaultModifier = await hubApp.DefaultModifier();
+            var hubAppModifier = await tester.HubAppModifier();
+            var adminRole = await tester.AdminRole();
+            await adminUser.AddRole(adminRole, hubAppModifier);
+            var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
+            await adminUser.AddRole(viewUserRole, hubAppModifier);
             var request = new GetUserRolesRequest
             {
                 UserID = adminUser.ID.Value,
-                ModifierID = defaultModifier.ID.Value
+                ModifierID = hubAppModifier.ID.Value
             };
-            var roles = await tester.Execute(request, adminUser);
-            Assert.That(roles.Select(r => r.Name), Has.One.EqualTo(HubInfo.Roles.AddUser.Value), "Should get user roles");
+            var roles = await tester.Execute(request, adminUser, hubAppModifier.ModKey());
+            Assert.That(roles.Select(r => new AppRoleName(r.Name)), Has.One.EqualTo(HubInfo.Roles.ViewUser), "Should get user roles");
         }
 
         private async Task<HubActionTester<GetUserRolesRequest, AppRoleModel[]>> setup()

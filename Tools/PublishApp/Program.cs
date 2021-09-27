@@ -24,7 +24,7 @@ namespace PublishApp
                     (hostContext, services) =>
                     {
                         services.AddHubToolServices(hostContext.Configuration);
-                        services.AddFileSecretCredentials();
+                        services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                         services.AddScoped<GitFactory, DefaultGitFactory>();
                         services.Configure<PublishOptions>(hostContext.Configuration);
                         services.AddHostedService<PublishHostedService>();

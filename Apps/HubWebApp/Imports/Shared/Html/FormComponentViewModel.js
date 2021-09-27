@@ -17,7 +17,6 @@ var FormComponentViewModel = /** @class */ (function (_super) {
         _this.content = content;
         _this.action = ko.observable(null);
         _this.method = ko.observable(null);
-        _this.autocomplete = ko.observable(null);
         _this._submitted = new Events_1.SimpleEvent(_this);
         _this.submitted = _this._submitted.handler();
         _this.isDefaultSubmit = false;

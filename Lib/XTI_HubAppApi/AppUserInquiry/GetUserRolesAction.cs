@@ -25,7 +25,7 @@ namespace XTI_HubAppApi.AppUserInquiry
         {
             var app = await appFromPath.Value();
             var user = await factory.Users().User(model.UserID);
-            var modifier = await app.DefaultModifier();
+            var modifier = await app.Modifier(model.ModifierID);
             var roles = await user.AssignedRoles(modifier);
             var roleModels = roles.Select(r => r.ToModel()).ToArray();
             return roleModels;
