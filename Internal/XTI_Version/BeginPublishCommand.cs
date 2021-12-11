@@ -2,20 +2,19 @@
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_Git.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
+using XTI_Hub;
 using XTI_VersionToolApi;
 
 namespace XTI_Version
 {
     public sealed class BeginPublishCommand : VersionCommand
     {
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
         private readonly GitFactory gitFactory;
 
-        public BeginPublishCommand(HubAppApi hubApi, GitFactory gitFactory)
+        public BeginPublishCommand(AppFactory appFactory, GitFactory gitFactory)
         {
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
             this.gitFactory = gitFactory;
         }
 
@@ -30,13 +29,12 @@ namespace XTI_Version
             {
                 throw new ArgumentException($"Branch '{branchName}' is not a version branch");
             }
-            var version = await hubApi.AppRegistration.BeginPublish.Invoke(new GetVersionRequest
-            {
-                AppKey = options.AppKey(),
-                VersionKey = AppVersionKey.Parse(versionBranchName.Version.Key)
-            });
+            var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
+            var app = await appFactory.Apps.App(options.AppKey());
+            var version = await app.Version(versionKey);
+            await version.Publishing();
             var output = new VersionOutput();
-            output.Output(version, options.OutputPath);
+            output.Output(version.ToModel(), options.OutputPath);
         }
     }
 }

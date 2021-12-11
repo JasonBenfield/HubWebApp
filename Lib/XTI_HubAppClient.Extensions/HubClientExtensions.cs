@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
@@ -15,10 +16,16 @@ namespace XTI_HubAppClient.Extensions
         public static void AddHubClientServices(this IServiceCollection services)
         {
             services.AddHttpClient();
-            services.AddScoped<IXtiTokenFactory>(sp =>
+            services.AddScoped(sp =>
             {
                 var credentials = sp.GetService<ISystemUserCredentials>();
                 return new XtiTokenFactory(credentials);
+            });
+            services.AddScoped<IXtiTokenFactory>(sp =>
+            {
+                var cache = sp.GetService<IMemoryCache>();
+                var xtiTokenFactory = sp.GetService<XtiTokenFactory>();
+                return new CachedXtiTokenFactory(cache, xtiTokenFactory);
             });
             services.AddScoped(sp =>
             {
@@ -30,9 +37,6 @@ namespace XTI_HubAppClient.Extensions
                 return new HubAppClient(httpClientFactory, xtiTokenFactory, appOptions.BaseUrl, versionKey);
             });
             services.AddScoped<IAuthClient>(sp => sp.GetService<HubAppClient>());
-            services.AddScoped<HubClientAppContext>();
-            services.AddScoped<ISourceAppContext>(sp => sp.GetService<HubClientAppContext>());
-            services.AddScoped<ISourceUserContext, HubClientUserContext>();
             services.AddScoped(sp =>
             {
                 var xtiTokenFactory = sp.GetService<IXtiTokenFactory>();

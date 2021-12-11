@@ -31,7 +31,6 @@ namespace HubWebApp.Tests
             services.AddScoped<IUserContext>(sp => sp.GetService<FakeUserContext>());
             services.AddScoped<IAppApiUser, AppApiUser>();
             services.AddScoped(sp => sp.GetService<HubAppApiFactory>().Create(sp.GetService<IAppApiUser>()));
-
             services.AddScoped<IAppSetup, DefaultAppSetup>();
 
         }

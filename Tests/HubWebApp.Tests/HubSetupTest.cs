@@ -6,9 +6,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
-using XTI_AppSetupApp.Extensions;
 using XTI_Hub;
-using XTI_HubAppApi;
+using XTI_HubSetup;
 
 namespace HubWebApp.Tests
 {
@@ -21,7 +20,7 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
-            var unknownApp = await factory.Apps().App(AppKey.Unknown);
+            var unknownApp = await factory.Apps.App(AppKey.Unknown);
             Assert.That(unknownApp.ID.IsValid(), Is.True, "Should add unknown app");
         }
 
@@ -32,7 +31,7 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var hubApp = await factory.Apps.App(HubInfo.AppKey);
             Assert.That(hubApp.Key(), Is.EqualTo(HubInfo.AppKey), "Should add hub app");
         }
 
@@ -43,7 +42,7 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var hubApp = await factory.Apps.App(HubInfo.AppKey);
             var modCategoryName = HubInfo.ModCategories.Apps;
             var modCategory = await hubApp.ModCategory(modCategoryName);
             Assert.That(modCategory.Name(), Is.EqualTo(modCategoryName), "Should add mod category for apps");
@@ -56,11 +55,11 @@ namespace HubWebApp.Tests
             var hubSetup = services.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
             var factory = services.GetService<AppFactory>();
-            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var hubApp = await factory.Apps.App(HubInfo.AppKey);
             var modCategoryName = HubInfo.ModCategories.Apps;
             var modCategory = await hubApp.ModCategory(modCategoryName);
             var modifiers = await modCategory.Modifiers();
-            var apps = (await factory.Apps().All()).Where(a => !a.Key().Equals(AppKey.Unknown));
+            var apps = (await factory.Apps.All()).Where(a => !a.Key().Equals(AppKey.Unknown));
             var modIDs = modifiers.Select(m => m.TargetKey);
             var appIDs = apps.Select(a => a.ID.Value.ToString());
             Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");

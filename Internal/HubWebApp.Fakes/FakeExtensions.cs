@@ -7,6 +7,7 @@ using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
 using XTI_HubDB.Extensions;
+using XTI_HubSetup;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes
@@ -19,15 +20,18 @@ namespace HubWebApp.Fakes
             services.AddHubDbContextForInMemory();
             services.AddScoped<AppFactory>();
             services.AddTransient<AppFromPath>();
+            services.AddHubAppApiServices();
             services.AddScoped<HubAppApiFactory>();
             services.AddScoped<AppApiFactory>(sp => sp.GetService<HubAppApiFactory>());
             services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
+            services.AddScoped(sp => new VersionReader(""));
             services.AddScoped<HubAppSetup>();
             services.AddScoped<IAppSetup>(sp => sp.GetService<HubAppSetup>());
             services.AddScoped(_ => HubInfo.AppKey);
             services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
             services.AddScoped<AccessForLogin, FakeAccessForLogin>();
             services.AddScoped<ISourceAppContext, DefaultAppContext>();
+            services.AddScoped<ISourceUserContext, WebUserContext>();
             services.AddScoped<ISourceUserContext, WebUserContext>();
         }
     }

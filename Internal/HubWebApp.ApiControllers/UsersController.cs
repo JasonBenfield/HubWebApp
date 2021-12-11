@@ -8,7 +8,7 @@ using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_HubAppApi.UserList;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
+using XTI_HubAppApi.UserMaintenance;
 using XTI_App;
 using XTI_WebApp.Api;
 

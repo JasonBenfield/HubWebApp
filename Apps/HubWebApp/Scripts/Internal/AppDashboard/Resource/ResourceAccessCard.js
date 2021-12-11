@@ -6,7 +6,7 @@ var Card_1 = require("XtiShared/Card/Card");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceAccessCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceAccessCard, _super);
+    (0, tslib_1.__extends)(ResourceAccessCard, _super);
     function ResourceAccessCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -19,9 +19,9 @@ var ResourceAccessCard = /** @class */ (function (_super) {
         this.resourceID = resourceID;
     };
     ResourceAccessCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var accessItems;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getRoleAccessItems()];
                     case 1:
@@ -38,13 +38,13 @@ var ResourceAccessCard = /** @class */ (function (_super) {
         });
     };
     ResourceAccessCard.prototype.getRoleAccessItems = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var roles, accessItems, _i, roles_1, allowedRole;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.Resource.GetRoleAccess({
                                             VersionKey: 'Current',

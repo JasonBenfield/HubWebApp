@@ -5,7 +5,7 @@ exports.UserCacheGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var UserCacheGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(UserCacheGroup, _super);
+    (0, tslib_1.__extends)(UserCacheGroup, _super);
     function UserCacheGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'UserCache') || this;
         _this.ClearCacheAction = _this.createAction('ClearCache', 'Clear Cache');

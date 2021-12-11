@@ -20,7 +20,7 @@ namespace HubWebApp.IntegrationTests
         {
             var services = setup("Development");
             var appFactory = services.GetService<AppFactory>();
-            var app = await appFactory.Apps().App(HubInfo.AppKey);
+            var app = await appFactory.Apps.App(HubInfo.AppKey);
             var roles = await app.Roles();
             var denyAccessRole = roles.FirstOrDefault(r => r.Name().Equals(AppRoleName.DenyAccess));
             var version = await app.Version(AppVersionKey.Parse("V1169"));

@@ -8,10 +8,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
 using XTI_Processes;
 
 namespace InstallApp
@@ -34,11 +33,21 @@ namespace InstallApp
                 var appKey = ensureAppKeyIsValid(sp);
                 var credentials = await addSystemUser(sp, appKey);
                 var appVersion = await retrieveVersion(sp, appKey);
-                var hostEnv = sp.GetService<IHostEnvironment>();
                 var options = sp.GetService<IOptions<InstallOptions>>().Value;
+                var installMachineName = 
+                    string.IsNullOrWhiteSpace(options.DestinationMachine) 
+                        ? Environment.MachineName 
+                        : options.DestinationMachine;
+                await newInstallation
+                (
+                    sp, 
+                    appKey, 
+                    installMachineName
+                );
+                var hostEnv = sp.GetService<IHostEnvironment>();
                 if (string.IsNullOrWhiteSpace(options.DestinationMachine))
                 {
-                    await runLocalInstall(sp, appVersion.VersionKey, credentials);
+                    await runLocalInstall(sp, appVersion.VersionKey, credentials, installMachineName);
                 }
                 else
                 {
@@ -58,12 +67,13 @@ namespace InstallApp
                             KeyValuePair.Create("repoName", options.RepoName),
                             KeyValuePair.Create("systemUserName", credentials.UserName),
                             KeyValuePair.Create("systemPassword", credentials.Password),
-                            KeyValuePair.Create("release", release)
+                            KeyValuePair.Create("release", release),
+                            KeyValuePair.Create("machineName", installMachineName)
                         }
                     );
                     var installServiceUrl = $"http://{options.DestinationMachine}:61862";
                     Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey} {credentials.UserName} {credentials.Password} {release}");
-                    var response = await client.PostAsync(installServiceUrl, content);
+                    using var response = await client.PostAsync(installServiceUrl, content);
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
                     Console.WriteLine(responseBody);
@@ -74,34 +84,16 @@ namespace InstallApp
                 Console.WriteLine(ex);
                 Environment.ExitCode = 999;
             }
-            var lifetime = scope.ServiceProvider.GetService<IHostApplicationLifetime>();
+            var lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
             lifetime.StopApplication();
         }
 
         private static async Task<AppVersionModel> retrieveVersion(IServiceProvider sp, AppKey appKey)
         {
-            AppVersionModel appVersion;
-            var hostEnv = sp.GetService<IHostEnvironment>();
-            if (hostEnv.IsProduction())
-            {
-                var hubApi = sp.GetService<HubAppApi>();
-                appVersion = await hubApi.AppRegistration.GetVersion.Invoke(new GetVersionRequest
-                {
-                    AppKey = appKey,
-                    VersionKey = AppVersionKey.Current
-                });
-            }
-            else
-            {
-                appVersion = new AppVersionModel
-                {
-                    VersionKey = AppVersionKey.Current.Value,
-                    Major = 1,
-                    Minor = 0,
-                    Patch = 0
-                };
-            }
-            return appVersion;
+            var appFactory = sp.GetRequiredService<AppFactory>();
+            var app = await appFactory.Apps.App(appKey);
+            var version = await app.CurrentVersion();
+            return version.ToModel();
         }
 
         private static async Task<CredentialValue> addSystemUser(IServiceProvider sp, AppKey appKey)
@@ -113,17 +105,24 @@ namespace InstallApp
             {
                 machineName = machineName.Substring(0, dashIndex);
             }
-            var hubApi = sp.GetService<HubAppApi>();
+            var appFactory = sp.GetRequiredService<AppFactory>();
+            var clock = sp.GetRequiredService<Clock>();
+            var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
             var password = $"{Guid.NewGuid():N}?!";
-            var systemUser = await hubApi.AppRegistration.AddSystemUser.Invoke(new AddSystemUserRequest
-            {
-                AppKey = appKey,
-                MachineName = machineName,
-                Password = password
-            });
-            var credentials = new CredentialValue(systemUser.UserName, password);
-            Console.WriteLine($"Added system user '{systemUser.UserName}'");
+            var hashedPassword = hashedPasswordFactory.Create(password);
+            var systemUser = await appFactory.SystemUsers.SetupSystemUser(appKey, machineName, hashedPassword, clock.Now());
+            var credentials = new CredentialValue(systemUser.UserName(), password);
+            Console.WriteLine($"Added system user '{systemUser.UserName()}'");
             return credentials;
+        }
+
+        private static Task newInstallation(IServiceProvider sp, AppKey appKey, string machineName)
+        {
+            Console.WriteLine("New installation");
+            var installationProcess = sp.GetRequiredService<InstallationProcess>();
+            var clock = sp.GetRequiredService<Clock>();
+            var hostEnv = sp.GetRequiredService<IHostEnvironment>();
+            return installationProcess.NewInstallation(appKey, machineName, hostEnv.IsProduction(), clock.Now());
         }
 
         private static string getMachineName(IServiceProvider sp)
@@ -141,14 +140,13 @@ namespace InstallApp
             return machineName;
         }
 
-        private static async Task runLocalInstall(IServiceProvider sp, string versionKey, CredentialValue credential)
+        private static async Task runLocalInstall(IServiceProvider sp, string versionKey, CredentialValue credential, string machineName)
         {
             var hostEnv = sp.GetService<IHostEnvironment>();
             var options = sp.GetService<IOptions<InstallOptions>>().Value;
             var installProcessPath = Path.Combine
             (
-                Environment.GetEnvironmentVariable("XTI_Dir"),
-                "Tools",
+                new XtiFolder(hostEnv).ToolsPath(),
                 "LocalInstallApp",
                 "LocalInstallApp.exe"
             );
@@ -162,10 +160,11 @@ namespace InstallApp
                         AppType = options.AppType,
                         VersionKey = versionKey,
                         SystemUserName = credential.UserName,
-                        SystemPassword = credential.Password
+                        SystemPassword = credential.Password,
+                        MachineName = machineName
                     }
                 );
-            Console.WriteLine("Running Local Install");
+            Console.WriteLine($"Running Local Install\r\n{installProcess.CommandText()}");
             var result = await installProcess
                 .WriteOutputToConsole()
                 .Run();

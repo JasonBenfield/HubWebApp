@@ -5,7 +5,7 @@ exports.AuthApiGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("XtiShared/AppApiGroup");
 var AuthApiGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(AuthApiGroup, _super);
+    (0, tslib_1.__extends)(AuthApiGroup, _super);
     function AuthApiGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'AuthApi') || this;
         _this.AuthenticateAction = _this.createAction('Authenticate', 'Authenticate');

@@ -7,13 +7,22 @@ var Url_1 = require("./Url");
 var UrlHashBuilder_1 = require("./UrlHashBuilder");
 var UrlBuilder = /** @class */ (function () {
     function UrlBuilder(baseUrl) {
-        this._url = new Url_1.Url(baseUrl);
-        this._query = new UrlQueryBuilder_1.UrlQueryBuilder(this._url.query);
-        this._hash = new UrlHashBuilder_1.UrlHashBuilder(this._url.hash);
+        var url = baseUrl;
+        var hashIndex = url.indexOf('#');
+        this._hash = new UrlHashBuilder_1.UrlHashBuilder(hashIndex > -1 ? url.substr(hashIndex + 1) : '');
+        if (hashIndex > -1) {
+            url = url.substr(0, hashIndex);
+        }
+        var queryIndex = url.indexOf('?');
+        this._query = new UrlQueryBuilder_1.UrlQueryBuilder(queryIndex > -1 ? url.substr(queryIndex + 1) : '');
+        if (queryIndex > -1) {
+            url = url.substr(0, queryIndex);
+        }
+        this._url = new Url_1.Url(url);
     }
     UrlBuilder.current = function () { return new UrlBuilder(location.href); };
     Object.defineProperty(UrlBuilder.prototype, "url", {
-        get: function () { return this._url; },
+        get: function () { return new Url_1.Url(this.value()); },
         enumerable: false,
         configurable: true
     });
@@ -117,7 +126,16 @@ var UrlBuilder = /** @class */ (function () {
         return this._hash.getValue(name);
     };
     UrlBuilder.prototype.value = function () {
-        return this._url.value();
+        var url = this._url.value();
+        var query = this._query.toString();
+        if (query) {
+            url += "?" + query;
+        }
+        var hash = this._hash.toString();
+        if (hash) {
+            url += "#" + hash;
+        }
+        return url;
     };
     UrlBuilder.prototype.withoutQueryAndHash = function () {
         return this._url;

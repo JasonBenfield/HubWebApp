@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using XTI_HubAppApi.Auth;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
+using XTI_HubAppApi.UserMaintenance;
 using XTI_App;
 using XTI_App.Api;
 using XTI_WebApp.Api;

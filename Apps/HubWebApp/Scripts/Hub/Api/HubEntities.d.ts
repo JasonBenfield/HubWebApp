@@ -41,6 +41,7 @@ interface IStartRequestModel {
 	AppType: string;
 	Path: string;
 	TimeStarted: Date;
+	ActualCount: number;
 }
 interface ILogEventModel {
 	EventKey: string;
@@ -50,6 +51,7 @@ interface ILogEventModel {
 	Caption: string;
 	Message: string;
 	Detail: string;
+	ActualCount: number;
 }
 interface IEndRequestModel {
 	RequestKey: string;
@@ -144,10 +146,6 @@ interface IAppApiActionTemplateModel {
 	Roles: string[];
 	ResultType: IResourceResultType;
 }
-interface INewVersionRequest {
-	AppKey: IAppKey;
-	VersionType: IAppVersionType;
-}
 interface IGetVersionRequest {
 	AppKey: IAppKey;
 	VersionKey: string;
@@ -162,6 +160,30 @@ interface IAppUserModel {
 	UserName: string;
 	Name: string;
 	Email: string;
+}
+interface INewInstallationRequest {
+	VersionID: number;
+	QualifiedMachineName: string;
+}
+interface INewInstallationResult {
+	CurrentInstallationID: number;
+	VersionInstallationID: number;
+}
+interface IBeginInstallationRequest {
+	QualifiedMachineName: string;
+	AppKey: IAppKey;
+	VersionKey: string;
+}
+interface IInstalledRequest {
+	InstallationID: number;
+}
+interface INewVersionRequest {
+	AppKey: IAppKey;
+	VersionType: IAppVersionType;
+}
+interface IPublishVersionRequest {
+	AppKey: IAppKey;
+	VersionKey: string;
 }
 interface IGetVersionResourceGroupRequest {
 	VersionKey: string;

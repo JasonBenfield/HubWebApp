@@ -6,7 +6,7 @@ var EventListItem_1 = require("../EventListItem");
 var Card_1 = require("XtiShared/Card/Card");
 var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
 var MostRecentErrorEventListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(MostRecentErrorEventListCard, _super);
+    (0, tslib_1.__extends)(MostRecentErrorEventListCard, _super);
     function MostRecentErrorEventListCard(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -17,9 +17,9 @@ var MostRecentErrorEventListCard = /** @class */ (function (_super) {
         return _this;
     }
     MostRecentErrorEventListCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var errorEvents;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getErrorEvents()];
                     case 1:
@@ -36,13 +36,13 @@ var MostRecentErrorEventListCard = /** @class */ (function (_super) {
         });
     };
     MostRecentErrorEventListCard.prototype.getErrorEvents = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var errorEvents;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.App.GetMostRecentErrorEvents(10)];
                                     case 1:

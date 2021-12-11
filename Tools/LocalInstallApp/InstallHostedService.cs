@@ -13,6 +13,8 @@ using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_Processes;
 using XTI_SecretsToolApi;
 
@@ -21,6 +23,8 @@ namespace LocalInstallApp
     public sealed class InstallHostedService : IHostedService
     {
         private readonly IServiceProvider services;
+
+        private static readonly string appOfflineFileName = "app_offline.htm";
 
         public InstallHostedService(IServiceProvider services)
         {
@@ -45,7 +49,7 @@ namespace LocalInstallApp
                 );
                 try
                 {
-                    var versionKey = AppVersionKey.Current.DisplayText;
+                    var versionKey = AppVersionKey.Current;
                     if (hostEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
                     {
                         versionKey = AppVersionKey.Parse(options.VersionKey);
@@ -66,11 +70,15 @@ namespace LocalInstallApp
                         {
                             await installWebApp(sp, appKey, versionKey, versionKey, tempDir);
                         }
-                        await installWebApp(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, tempDir);
+                        await installWebApp(sp, appKey, versionKey, AppVersionKey.Current, tempDir);
                     }
                     else if (appKey.Type.Equals(AppType.Values.Service))
                     {
-                        await installServiceApp(sp, appKey, versionKey, tempDir);
+                        if (hostEnv.IsProduction())
+                        {
+                            await installServiceApp(sp, appKey, versionKey, versionKey, tempDir);
+                        }
+                        await installServiceApp(sp, appKey, versionKey, AppVersionKey.Current, tempDir);
                     }
                 }
                 finally
@@ -111,11 +119,11 @@ namespace LocalInstallApp
         private static string getLogPath()
             => Path.Combine(Path.GetTempPath(), "xti_install_log.txt");
 
-        private static async Task runSetup(IServiceProvider sp, AppKey appKey, string versionKey)
+        private static async Task runSetup(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey)
         {
             var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var sourceDir = xtiFolder.PublishPath(appKey, AppVersionKey.Parse(versionKey));
+            var sourceDir = xtiFolder.PublishPath(appKey, versionKey);
             var setupAppDir = Path.Combine(sourceDir, "Setup");
             await writeLog($"Running Setup '{setupAppDir}'");
             await new DotnetRunProcess(setupAppDir)
@@ -236,16 +244,66 @@ namespace LocalInstallApp
             return new AppKey(appName, appType);
         }
 
-        private async Task installWebApp(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir)
+        private async Task installWebApp(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, string tempDir)
         {
-            await writeLog($"Preparing IIS for {versionKey}");
+            var installationService = createInstallationService(sp, appKey);
+            int installationID;
+            if (installVersionKey.Equals(AppVersionKey.Current))
+            {
+                installationID = await installationService.BeginCurrentInstall(installVersionKey);
+            }
+            else
+            {
+                installationID = await installationService.BeginVersionInstall();
+            }
+            await writeLog($"Preparing IIS for {versionKey.DisplayText}");
             await prepareIis(sp, appKey, installVersionKey);
-            var installDir = await copyToInstallDir(sp, appKey, versionKey, installVersionKey, tempDir, false);
-            var appOfflinePath = Path.Combine(installDir, "app_offline.htm");
+            await deleteExistingWebFiles(sp, appKey, installVersionKey);
+            await copyToInstallDir(sp, appKey, versionKey, installVersionKey, tempDir, false);
+            var appOfflinePath = getAppOfflinePath(sp, appKey, installVersionKey);
             File.Delete(appOfflinePath);
+            await installationService.Installed(installationID);
         }
 
-        private static async Task prepareIis(IServiceProvider sp, AppKey appKey, string versionKey)
+        private InstallationService createInstallationService(IServiceProvider sp, AppKey appKey)
+        {
+            InstallationService installationService;
+            var installationServiceFactory = sp.GetService<InstallationServiceFactory>();
+            if (appKey.Equals(HubInfo.AppKey))
+            {
+                installationService = installationServiceFactory.CreateHubApiInstallationService();
+            }
+            else
+            {
+                installationService = installationServiceFactory.CreateHubClientInstallationService();
+            }
+            return installationService;
+        }
+
+        private static string getAppOfflinePath(IServiceProvider sp, AppKey appKey, AppVersionKey installVersionKey)
+        {
+            var xtiFolder = sp.GetService<XtiFolder>();
+            var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
+            var appOfflinePath = Path.Combine(installDir, appOfflineFileName);
+            return appOfflinePath;
+        }
+
+        private static async Task deleteExistingWebFiles(IServiceProvider sp, AppKey appKey, AppVersionKey installVersionKey)
+        {
+            var xtiFolder = sp.GetService<XtiFolder>();
+            var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
+            await writeLog($"Deleting files in '{installDir}'");
+            foreach (var file in Directory.GetFiles(installDir).Where(f => !Path.GetFileName(f).Equals(appOfflineFileName, StringComparison.OrdinalIgnoreCase)))
+            {
+                File.Delete(file);
+            }
+            foreach (var directory in Directory.GetDirectories(installDir))
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        private static async Task prepareIis(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey)
         {
             var secretCredentialsValue = await retrieveCredentials(sp, "WebApp");
             using var server = new ServerManager();
@@ -253,7 +311,7 @@ namespace LocalInstallApp
             var siteName = hostEnv.IsProduction() ? "WebApps" : hostEnv.EnvironmentName;
             var site = server.Sites[siteName];
             var appName = getAppName(appKey);
-            var appPoolName = $"Xti_{hostEnv.EnvironmentName}_{appName}_{versionKey}";
+            var appPoolName = $"Xti_{hostEnv.EnvironmentName}_{appName}_{versionKey.DisplayText}";
             var appPool = server.ApplicationPools.FirstOrDefault(ap => ap.Name.Equals(appPoolName, StringComparison.OrdinalIgnoreCase));
             if (appPool == null)
             {
@@ -274,8 +332,8 @@ namespace LocalInstallApp
                 await writeLog($"Adding virtual directory '{virtDirPath}'");
                 baseApp.VirtualDirectories.Add(virtDirPath, virtDirPhysPath);
             }
-            var appPhysPath = Path.Combine(virtDirPhysPath, versionKey);
-            var appPath = $"/{appName}/{versionKey}";
+            var appPhysPath = Path.Combine(virtDirPhysPath, versionKey.DisplayText);
+            var appPath = $"/{appName}/{versionKey.DisplayText}";
             var iisApp = site.Applications.FirstOrDefault(a => a.Path.Equals(appPath, StringComparison.OrdinalIgnoreCase));
             if (iisApp == null)
             {
@@ -288,7 +346,13 @@ namespace LocalInstallApp
             {
                 Directory.CreateDirectory(appPhysPath);
             }
-            var offlinePath = Path.Combine(appPhysPath, "app_offline.htm");
+            await writeAppOffline(sp, appKey, versionKey);
+            await Task.Delay(5000);
+        }
+
+        private static async Task writeAppOffline(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey)
+        {
+            var offlinePath = getAppOfflinePath(sp, appKey, versionKey);
             using (var writer = new StreamWriter(offlinePath, false))
             {
                 await writer.WriteAsync
@@ -304,16 +368,6 @@ namespace LocalInstallApp
 </html>
 "
                 );
-            }
-            await Task.Delay(5000);
-            await writeLog($"Deleting files in '{appPhysPath}'");
-            foreach (var file in Directory.GetFiles(appPhysPath).Where(f => !f.Equals(offlinePath, StringComparison.OrdinalIgnoreCase)))
-            {
-                File.Delete(file);
-            }
-            foreach (var directory in Directory.GetDirectories(appPhysPath))
-            {
-                Directory.Delete(directory, true);
             }
         }
 
@@ -345,48 +399,51 @@ namespace LocalInstallApp
                 "Xti_SecretsTool.exe"
             );
 
-        private static async Task installServiceApp(IServiceProvider sp, AppKey appKey, string versionKey, string tempDir)
+        private static async Task installServiceApp(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, string tempDir)
         {
 #pragma warning disable CA1416 // Validate platform compatibility
-            var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var appName = getAppName(appKey);
-            var serviceName = $"Xti_{hostEnv.EnvironmentName}_{appName}";
-            var sc = getService(serviceName);
-            if (sc == null)
+            ServiceController sc = null;
+            if (installVersionKey.Equals(AppVersionKey.Current))
             {
-                var binPath = Path.Combine
-                (
-                    xtiFolder.InstallPath(appKey, AppVersionKey.Current),
-                    $"{appName}ServiceApp.exe"
-                );
-                binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
-                await writeLog($"Creating service '{binPath}'");
-                var secretCredentialsValue = await retrieveCredentials(sp, "ServiceApp");
-                await new WinProcess("sc")
-                    .UseArgumentNameDelimiter("")
-                    .AddArgument("create")
-                    .UseArgumentValueDelimiter("= ")
-                    .AddArgument("start", "auto")
-                    .AddArgument("binpath", new Quoted(binPath))
-                    .AddArgument("obj", new Quoted(secretCredentialsValue.UserName))
-                    .AddArgument("password", new Quoted(secretCredentialsValue.Password))
-                    .Run();
+                var xtiFolder = sp.GetService<XtiFolder>();
+                var appName = getAppName(appKey);
+                var serviceName = $"Xti_{hostEnv.EnvironmentName}_{appName}";
                 sc = getService(serviceName);
+                if (sc == null)
+                {
+                    var binPath = Path.Combine
+                    (
+                        xtiFolder.InstallPath(appKey, AppVersionKey.Current),
+                        $"{appName}ServiceApp.exe"
+                    );
+                    binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
+                    await writeLog($"Creating service '{binPath}'");
+                    var secretCredentialsValue = await retrieveCredentials(sp, "ServiceApp");
+                    await new WinProcess("sc")
+                        .UseArgumentNameDelimiter("")
+                        .AddArgument("create")
+                        .UseArgumentValueDelimiter("= ")
+                        .AddArgument("start", "auto")
+                        .AddArgument("binpath", new Quoted(binPath))
+                        .AddArgument("obj", new Quoted(secretCredentialsValue.UserName))
+                        .AddArgument("password", new Quoted(secretCredentialsValue.Password))
+                        .Run();
+                    sc = getService(serviceName);
+                }
+                else if (sc.Status == ServiceControllerStatus.Running)
+                {
+                    await writeLog($"Stopping services '{sc.DisplayName}'");
+                    sc.Stop();
+                    sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
             }
-            else if (sc.Status == ServiceControllerStatus.Running)
+            await copyToInstallDir(sp, appKey, versionKey, installVersionKey, tempDir, true);
+            if (sc != null)
             {
-                await writeLog($"Stopping services '{sc.DisplayName}'");
-                sc.Stop();
-                sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                await writeLog($"Starting services '{sc.DisplayName}'");
+                sc.Start();
             }
-            if (hostEnv.IsProduction())
-            {
-                await copyToInstallDir(sp, appKey, versionKey, versionKey, tempDir, true);
-            }
-            await copyToInstallDir(sp, appKey, versionKey, AppVersionKey.Current.DisplayText, tempDir, true);
-            await writeLog($"Starting services '{sc.DisplayName}'");
-            sc.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
         }
 
@@ -400,11 +457,11 @@ namespace LocalInstallApp
                 );
 #pragma warning restore CA1416 // Validate platform compatibility
 
-        private static async Task<string> copyToInstallDir(IServiceProvider sp, AppKey appKey, string versionKey, string installVersionKey, string tempDir, bool purge)
+        private static async Task copyToInstallDir(IServiceProvider sp, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, string tempDir, bool purge)
         {
             var xtiFolder = sp.GetService<XtiFolder>();
             var hostEnv = sp.GetService<IHostEnvironment>();
-            var installDir = xtiFolder.InstallPath(appKey, AppVersionKey.Parse(installVersionKey));
+            var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
             string sourceDir;
             if (hostEnv.IsDevelopment() || hostEnv.IsEnvironment("Test"))
             {
@@ -429,14 +486,13 @@ namespace LocalInstallApp
                 process.Purge();
             }
             await process.Run();
-            return installDir;
         }
 
-        private static string getSourceAppDir(XtiFolder xtiFolder, AppKey appKey, string versionKey)
+        private static string getSourceAppDir(XtiFolder xtiFolder, AppKey appKey, AppVersionKey versionKey)
         {
             return Path.Combine
             (
-                xtiFolder.PublishPath(appKey, AppVersionKey.Parse(versionKey)),
+                xtiFolder.PublishPath(appKey, versionKey),
                 "App"
             );
         }

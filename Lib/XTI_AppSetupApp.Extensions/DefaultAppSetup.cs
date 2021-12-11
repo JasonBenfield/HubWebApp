@@ -29,7 +29,7 @@ namespace XTI_AppSetupApp.Extensions
                 VersionKey = versionKey,
                 Versions = versions
             };
-            await hubClient.AppRegistration.RegisterApp("", request);
+            await hubClient.Install.RegisterApp("", request);
         }
 
         private XTI_HubAppClient.AppApiTemplateModel ToClientTemplateModel(XTI_App.Api.AppApiTemplateModel model)

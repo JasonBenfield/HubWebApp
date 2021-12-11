@@ -38,7 +38,7 @@ export class CurrentVersionComponent extends Card {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                currentVersion = await this.hubApi.Version.GetCurrentVersion();
+                currentVersion = await this.hubApi.Version.GetVersion('current');
             }
         );
         return currentVersion;

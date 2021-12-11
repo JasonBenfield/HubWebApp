@@ -20,6 +20,7 @@ namespace XTI_VersionTool
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            Console.WriteLine($"AppContext.BaseDirectory: '{AppContext.BaseDirectory}'");
             using var scope = services.CreateScope();
             try
             {

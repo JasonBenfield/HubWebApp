@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Git.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
+using XTI_Hub;
 using XTI_VersionToolApi;
 
 namespace XTI_Version
 {
     public sealed class NewVersionCommand : VersionCommand
     {
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
         private readonly GitFactory gitFactory;
+        private readonly Clock clock;
 
-        public NewVersionCommand(HubAppApi hubApi, GitFactory gitFactory)
+        public NewVersionCommand(AppFactory appFactory, GitFactory gitFactory, Clock clock)
         {
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
             this.gitFactory = gitFactory;
+            this.clock = clock;
         }
 
         public async Task Execute(VersionToolOptions options)
@@ -38,13 +40,8 @@ namespace XTI_Version
             {
                 throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
             }
-            var newVersionResult = await hubApi.AppRegistration.NewVersion.Execute(new NewVersionRequest
-            {
-                AppKey = options.AppKey(),
-                VersionType = versionType
-            });
-            var version = newVersionResult.Data;
-            var gitVersion = new XtiGitVersion(version.VersionType.DisplayText, version.VersionKey);
+            var version = await appFactory.Apps.StartNewVersion(options.AppKey(), versionType, clock.Now());
+            var gitVersion = new XtiGitVersion(version.Type().DisplayText, version.Key());
             await gitHubRepo.CreateNewVersion(gitVersion);
             var newVersionBranchName = gitVersion.BranchName();
             gitRepo.CheckoutBranch(newVersionBranchName.Value);
