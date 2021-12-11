@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var BaseForm_1 = require("XtiShared/Forms/BaseForm");
 var FormComponentViewModel_1 = require("XtiShared/Html/FormComponentViewModel");
 var EditUserForm = /** @class */ (function (_super) {
-    tslib_1.__extends(EditUserForm, _super);
+    (0, tslib_1.__extends)(EditUserForm, _super);
     function EditUserForm(vm) {
         if (vm === void 0) { vm = new FormComponentViewModel_1.FormComponentViewModel(); }
         var _this = _super.call(this, 'EditUserForm', vm) || this;

@@ -1,17 +1,21 @@
 ﻿using System;
+using XTI_Core;
+using XTI_Hub;
 using XTI_HubAppApi;
 
 namespace XTI_Version
 {
     public sealed class VersionCommandFactory
     {
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
         private readonly GitFactory gitFactory;
+        private readonly Clock clock;
 
-        public VersionCommandFactory(HubAppApi hubApi, GitFactory gitFactory)
+        public VersionCommandFactory(AppFactory appFactory, GitFactory gitFactory, Clock clock)
         {
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
             this.gitFactory = gitFactory;
+            this.clock = clock;
         }
 
         public VersionCommand Create(VersionCommandName commandName)
@@ -19,7 +23,7 @@ namespace XTI_Version
             VersionCommand command;
             if (commandName.Equals(VersionCommandName.NewVersion))
             {
-                command = new NewVersionCommand(hubApi, gitFactory);
+                command = new NewVersionCommand(appFactory, gitFactory, clock);
             }
             else if (commandName.Equals(VersionCommandName.NewIssue))
             {
@@ -39,19 +43,19 @@ namespace XTI_Version
             }
             else if (commandName.Equals(VersionCommandName.GetCurrentVersion))
             {
-                command = new GetCurrentVersionCommand(hubApi);
+                command = new GetCurrentVersionCommand(appFactory);
             }
             else if (commandName.Equals(VersionCommandName.GetVersion))
             {
-                command = new GetVersionCommand(hubApi, gitFactory);
+                command = new GetVersionCommand(appFactory, gitFactory);
             }
             else if (commandName.Equals(VersionCommandName.BeginPublish))
             {
-                command = new BeginPublishCommand(hubApi, gitFactory);
+                command = new BeginPublishCommand(appFactory, gitFactory);
             }
             else if (commandName.Equals(VersionCommandName.CompleteVersion))
             {
-                command = new CompleteVersionCommand(hubApi, gitFactory);
+                command = new CompleteVersionCommand(appFactory, gitFactory);
             }
             else
             {

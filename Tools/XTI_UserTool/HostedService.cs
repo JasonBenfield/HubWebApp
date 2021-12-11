@@ -6,13 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using XTI_Hub;
 using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_Hub;
 using XTI_Secrets;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
 
 namespace XTI_UserApp
 {
@@ -78,14 +76,14 @@ namespace XTI_UserApp
             }
             var userName = new AppUserName(userOptions.UserName);
             var hashedPassword = hashedPasswordFactory.Create(password);
-            var user = await appFactory.Users().User(userName);
+            var user = await appFactory.Users.User(userName);
             if (user.Exists())
             {
                 await user.ChangePassword(hashedPassword);
             }
             else
             {
-                await appFactory.Users().Add(userName, hashedPassword, clock.Now());
+                await appFactory.Users.Add(userName, hashedPassword, clock.Now());
             }
         }
 
@@ -108,13 +106,11 @@ namespace XTI_UserApp
                 new AppName(userOptions.AppName),
                 AppType.Values.Value(userOptions.AppType)
             );
-            var hubApi = sp.GetService<HubAppApi>();
-            await hubApi.AppRegistration.AddSystemUser.Invoke(new AddSystemUserRequest
-            {
-                AppKey = appKey,
-                MachineName = userOptions.MachineName,
-                Password = password
-            });
+            var appFactory = sp.GetService<AppFactory>();
+            var hashedPasswordFactory = sp.GetService<IHashedPasswordFactory>();
+            var clock = sp.GetService<Clock>();
+            var hashedPassword = hashedPasswordFactory.Create(password);
+            await appFactory.SystemUsers.SetupSystemUser(appKey, "", hashedPassword, clock.Now());
         }
 
         private static async Task addUserRoles(IServiceProvider sp, UserOptions userOptions)
@@ -124,11 +120,11 @@ namespace XTI_UserApp
             if (string.IsNullOrWhiteSpace(userOptions.AppType)) { throw new ArgumentException("App type is required"); }
             var appFactory = sp.GetService<AppFactory>();
             var userName = new AppUserName(userOptions.UserName);
-            var user = await appFactory.Users().User(userName);
+            var user = await appFactory.Users.User(userName);
             var appType = string.IsNullOrWhiteSpace(userOptions.AppType)
                 ? AppType.Values.WebApp
                 : AppType.Values.Value(userOptions.AppType);
-            var app = await appFactory.Apps().App(new AppKey(userOptions.AppName, appType));
+            var app = await appFactory.Apps.App(new AppKey(userOptions.AppName, appType));
             var roles = new List<AppRole>();
             if (!string.IsNullOrWhiteSpace(userOptions.RoleNames))
             {

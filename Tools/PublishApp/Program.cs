@@ -30,7 +30,6 @@ namespace PublishApp
                         services.AddHostedService<PublishHostedService>();
                     }
                 )
-                .Build()
-                .RunAsync();
+                .RunConsoleAsync();
     }
 }

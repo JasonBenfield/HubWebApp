@@ -40,8 +40,8 @@ namespace HubWebApp.Tests
         private async Task<AppUser> addAdminUser(IServiceProvider services)
         {
             var factory = services.GetService<AppFactory>();
-            var adminUser = await factory.Users().Add(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
-            var hubApp = await factory.Apps().App(HubInfo.AppKey);
+            var adminUser = await factory.Users.Add(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
+            var hubApp = await factory.Apps.App(HubInfo.AppKey);
             var adminRole = await hubApp.Role(HubInfo.Roles.Admin);
             await adminUser.AddRole(adminRole);
             return adminUser;

@@ -62,13 +62,13 @@ namespace HubWebApp.Tests
         public Task<App> HubApp()
         {
             var factory = Services.GetService<AppFactory>();
-            return factory.Apps().App(HubInfo.AppKey);
+            return factory.Apps.App(HubInfo.AppKey);
         }
 
         public Task<AppUser> AdminUser()
         {
             var factory = Services.GetService<AppFactory>();
-            return factory.Users().User(new AppUserName("hubadmin"));
+            return factory.Users.User(new AppUserName("hubadmin"));
         }
 
         public async Task<AppRole> AdminRole()

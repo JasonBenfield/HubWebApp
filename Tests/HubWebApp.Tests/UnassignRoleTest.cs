@@ -84,7 +84,7 @@ namespace HubWebApp.Tests
                 Password = "Password12345"
             }, adminUser);
             var factory = tester.Services.GetService<AppFactory>();
-            var user = await factory.Users().User(new AppUserName(userName));
+            var user = await factory.Users.User(new AppUserName(userName));
             return user;
         }
 

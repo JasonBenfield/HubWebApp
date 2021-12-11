@@ -16,7 +16,7 @@ var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
 var ResourceAccessCard_1 = require("./ResourceAccessCard");
 var ResourceComponent_1 = require("./ResourceComponent");
 var ResourcePanel = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourcePanel, _super);
+    (0, tslib_1.__extends)(ResourcePanel, _super);
     function ResourcePanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

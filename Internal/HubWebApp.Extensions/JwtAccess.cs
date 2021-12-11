@@ -1,5 +1,4 @@
-﻿using XTI_HubAppApi;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -7,24 +6,24 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using XTI_WebApp.Extensions;
 using XTI_HubAppApi.Auth;
+using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions
 {
     public sealed class JwtAccess : AccessForAuthenticate
     {
-        private readonly JwtOptions jwtOptions;
+        private readonly XtiAuthenticationOptions xtiAuthOptions;
 
-        public JwtAccess(IOptions<JwtOptions> jwtOptions)
+        public JwtAccess(IOptions<XtiAuthenticationOptions> xtiAuthOptions)
         {
-            this.jwtOptions = jwtOptions.Value;
+            this.xtiAuthOptions = xtiAuthOptions.Value;
         }
 
         protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
+            var key = Encoding.ASCII.GetBytes(xtiAuthOptions.JwtSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity
@@ -43,9 +42,6 @@ namespace HubWebApp.Extensions
             return Task.FromResult(accessToken);
         }
 
-        protected override Task _Logout()
-        {
-            return Task.CompletedTask;
-        }
+        protected override Task _Logout() => Task.CompletedTask;
     }
 }

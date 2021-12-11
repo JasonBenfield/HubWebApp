@@ -22,8 +22,8 @@ namespace HubWebApp.IntegrationTests
         {
             var services = await setup();
             var factory = services.GetService<AppFactory>();
-            var user = await factory.Users().User(AppUserName.Anon);
-            var createdSession = await factory.Sessions().Create
+            var user = await factory.Users.User(AppUserName.Anon);
+            var createdSession = await factory.Sessions.Create
             (
                 "JustCreated",
                 user,
@@ -32,12 +32,12 @@ namespace HubWebApp.IntegrationTests
                 "UserAgent",
                 "127.0.0.1"
             );
-            var activeSessions = (await factory.Sessions().ActiveSessions(TimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
+            var activeSessions = (await factory.Sessions.ActiveSessions(DateTimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
             Assert.That(activeSessions.Length, Is.EqualTo(1), "Should include the session that was just created");
             Assert.That(activeSessions[0].HasStarted(), Is.True);
             Assert.That(activeSessions[0].HasEnded(), Is.False);
             await createdSession.End(DateTimeOffset.UtcNow);
-            activeSessions = (await factory.Sessions().ActiveSessions(TimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
+            activeSessions = (await factory.Sessions.ActiveSessions(DateTimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
             Assert.That(activeSessions.Length, Is.EqualTo(0), "Should not include session after it ended");
         }
 
@@ -46,10 +46,10 @@ namespace HubWebApp.IntegrationTests
         {
             var services = await setup();
             var factory = services.GetService<AppFactory>();
-            var user = await factory.Users().User(AppUserName.Anon);
+            var user = await factory.Users.User(AppUserName.Anon);
             var createdSession = await createSession(factory, user);
             await logRequest(services, createdSession);
-            var activeSessions = (await factory.Sessions().ActiveSessions(TimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
+            var activeSessions = (await factory.Sessions.ActiveSessions(DateTimeRange.OnOrBefore(DateTime.UtcNow.AddDays(1)))).ToArray();
             var requests = (await activeSessions[0].MostRecentRequests(1)).ToArray();
             Assert.That(requests.Length, Is.EqualTo(1), "Should get most recent request");
         }
@@ -59,10 +59,10 @@ namespace HubWebApp.IntegrationTests
         {
             var services = await setup();
             var factory = services.GetService<AppFactory>();
-            var user = await factory.Users().User(AppUserName.Anon);
+            var user = await factory.Users.User(AppUserName.Anon);
             var createdSession = await createSession(factory, user);
             await logRequest(services, createdSession);
-            var app = await factory.Apps().App(HubInfo.AppKey);
+            var app = await factory.Apps.App(HubInfo.AppKey);
             var requests = (await app.MostRecentRequests(10)).ToArray();
             Assert.That(requests.Length, Is.EqualTo(1));
         }
@@ -72,11 +72,11 @@ namespace HubWebApp.IntegrationTests
         {
             var services = await setup();
             var factory = services.GetService<AppFactory>();
-            var user = await factory.Users().User(AppUserName.Anon);
+            var user = await factory.Users.User(AppUserName.Anon);
             var createdSession = await createSession(factory, user);
             var request = await logRequest(services, createdSession);
             await logEvent(request);
-            var app = await factory.Apps().App(HubInfo.AppKey);
+            var app = await factory.Apps.App(HubInfo.AppKey);
             var events = (await app.MostRecentErrorEvents(10)).ToArray();
             Assert.That(events.Length, Is.EqualTo(1));
         }
@@ -110,7 +110,7 @@ namespace HubWebApp.IntegrationTests
 
         private static Task<AppSession> createSession(AppFactory factory, AppUser user)
         {
-            return factory.Sessions().Create
+            return factory.Sessions.Create
             (
                 "JustCreated",
                 user,
@@ -124,7 +124,7 @@ namespace HubWebApp.IntegrationTests
         private static async Task<AppRequest> logRequest(IServiceProvider services, AppSession createdSession)
         {
             var factory = services.GetService<AppFactory>();
-            var app = await factory.Apps().App(HubInfo.AppKey);
+            var app = await factory.Apps.App(HubInfo.AppKey);
             var version = await app.CurrentVersion();
             var resourceGroup = await version.ResourceGroup(new ResourceGroupName("Employee"));
             var resource = await resourceGroup.Resource(new ResourceName("AddEmployee"));

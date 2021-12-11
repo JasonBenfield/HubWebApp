@@ -10,5 +10,6 @@
         public string RepoOwner { get; set; }
         public string RepoName { get; set; }
         public string Release { get; set; }
+        public string MachineName { get; set; }
     }
 }

@@ -1,32 +1,27 @@
 ﻿using System;
 using System.Threading.Tasks;
-using XTI_App.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
+using XTI_Hub;
 using XTI_VersionToolApi;
 
 namespace XTI_Version
 {
     public sealed class GetCurrentVersionCommand : VersionCommand
     {
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
 
-        public GetCurrentVersionCommand(HubAppApi hubApi)
+        public GetCurrentVersionCommand(AppFactory appFactory)
         {
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
         }
 
         public async Task Execute(VersionToolOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.AppName)) { throw new ArgumentException("App Name is required"); }
             if (string.IsNullOrWhiteSpace(options.AppType)) { throw new ArgumentException("App Type is required"); }
-            var currentVersion = await hubApi.AppRegistration.GetVersion.Invoke(new GetVersionRequest
-            {
-                AppKey = options.AppKey(),
-                VersionKey = AppVersionKey.Current
-            });
+            var app = await appFactory.Apps.App(options.AppKey());
+            var currentVersion = await app.CurrentVersion();
             var output = new VersionOutput();
-            output.Output(currentVersion, options.OutputPath);
+            output.Output(currentVersion.ToModel(), options.OutputPath);
         }
     }
 }

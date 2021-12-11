@@ -13,6 +13,7 @@ namespace XTI_HubAppClient
             Caption = source.Caption;
             Message = source.Message;
             Detail = source.Detail;
+            ActualCount = source.ActualCount;
         }
     }
 }

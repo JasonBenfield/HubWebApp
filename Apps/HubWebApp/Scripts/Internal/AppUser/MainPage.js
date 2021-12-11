@@ -27,9 +27,9 @@ var MainPage = /** @class */ (function () {
         }
     }
     MainPage.prototype.activateAppUserPanel = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result, userModCategory;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.appUserPanel);
@@ -53,9 +53,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateUserRolePanel = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.userRolePanel);

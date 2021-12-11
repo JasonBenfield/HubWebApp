@@ -12,7 +12,6 @@ namespace XTI_HubAppClient
         {
         }
 
-        public Task<AppVersionModel> GetCurrentVersion(string modifier) => Post<AppVersionModel, EmptyRequest>("GetCurrentVersion", modifier, new EmptyRequest());
         public Task<AppVersionModel> GetVersion(string modifier, string model) => Post<AppVersionModel, string>("GetVersion", modifier, model);
         public Task<ResourceGroupModel> GetResourceGroup(string modifier, GetVersionResourceGroupRequest model) => Post<ResourceGroupModel, GetVersionResourceGroupRequest>("GetResourceGroup", modifier, model);
     }

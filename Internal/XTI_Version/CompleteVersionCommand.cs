@@ -2,21 +2,19 @@
 using System.Threading.Tasks;
 using XTI_App.Abstractions;
 using XTI_Git.Abstractions;
-using XTI_GitHub;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppRegistration;
+using XTI_Hub;
 using XTI_VersionToolApi;
 
 namespace XTI_Version
 {
     public sealed class CompleteVersionCommand : VersionCommand
     {
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
         private readonly GitFactory gitFactory;
 
-        public CompleteVersionCommand(HubAppApi hubApi, GitFactory gitFactory)
+        public CompleteVersionCommand(AppFactory appFactory, GitFactory gitFactory)
         {
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
             this.gitFactory = gitFactory;
         }
 
@@ -38,11 +36,10 @@ namespace XTI_Version
             await gitHubRepo.CompleteVersion(versionBranchName);
             var defaultBranchName = await gitHubRepo.DefaultBranchName();
             gitRepo.CheckoutBranch(defaultBranchName);
-            await hubApi.AppRegistration.EndPublish.Invoke(new GetVersionRequest
-            {
-                AppKey = options.AppKey(),
-                VersionKey = AppVersionKey.Parse(versionBranchName.Version.Key)
-            });
+            var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
+            var app = await appFactory.Apps.App(options.AppKey());
+            var version = await app.Version(versionKey);
+            await version.Published();
             gitRepo.DeleteBranch(versionBranchName.Value);
         }
     }

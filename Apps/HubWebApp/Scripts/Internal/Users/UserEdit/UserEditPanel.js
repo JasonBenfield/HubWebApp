@@ -17,7 +17,7 @@ var HubTheme_1 = require("../../HubTheme");
 var Card_1 = require("XtiShared/Card/Card");
 var TextCss_1 = require("XtiShared/TextCss");
 var UserEditPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(UserEditPanel, _super);
+    (0, tslib_1.__extends)(UserEditPanel, _super);
     function UserEditPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -48,10 +48,10 @@ var UserEditPanel = /** @class */ (function (_super) {
         this.userID = userID;
     };
     UserEditPanel.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var userForm;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getUserForEdit(this.userID)];
                     case 1:
@@ -66,13 +66,13 @@ var UserEditPanel = /** @class */ (function (_super) {
         });
     };
     UserEditPanel.prototype.getUserForEdit = function (userID) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var userForm;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.UserMaintenance.GetUserForEdit(userID)];
                                     case 1:
@@ -95,9 +95,9 @@ var UserEditPanel = /** @class */ (function (_super) {
         this.awaitable.resolve(new Result_1.Result(UserEditPanel.ResultKeys.canceled));
     };
     UserEditPanel.prototype.save = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction)];
                     case 1:

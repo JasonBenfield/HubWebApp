@@ -41,7 +41,7 @@ namespace HubWebApp.Tests
             var setup = sp.GetService<IAppSetup>();
             await setup.Run(AppVersionKey.Current);
             var appFactory = sp.GetService<AppFactory>();
-            App = await appFactory.Apps().App(HubInfo.AppKey);
+            App = await appFactory.Apps.App(HubInfo.AppKey);
             Options = new VersionToolOptions();
             Options.CommandNewVersion
             (

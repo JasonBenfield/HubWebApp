@@ -7,7 +7,7 @@ using XTI_Hub;
 using XTI_App.Api;
 using XTI_HubAppApi.UserInquiry;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
+using XTI_HubAppApi.UserMaintenance;
 using XTI_App;
 using XTI_WebApp.Api;
 

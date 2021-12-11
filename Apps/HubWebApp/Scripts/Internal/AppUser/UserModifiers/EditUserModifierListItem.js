@@ -10,7 +10,7 @@ var TextSpan_1 = require("XtiShared/Html/TextSpan");
 var ColumnCss_1 = require("XtiShared/ColumnCss");
 var ContextualClass_1 = require("XtiShared/ContextualClass");
 var EditUserModifierListItem = /** @class */ (function (_super) {
-    tslib_1.__extends(EditUserModifierListItem, _super);
+    (0, tslib_1.__extends)(EditUserModifierListItem, _super);
     function EditUserModifierListItem(hubApi, vm) {
         if (vm === void 0) { vm = new ButtonListItemViewModel_1.ButtonListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
@@ -35,9 +35,9 @@ var EditUserModifierListItem = /** @class */ (function (_super) {
         return this.toggleAssignment();
     };
     EditUserModifierListItem.prototype.toggleAssignment = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var request, _a;
-            return tslib_1.__generator(this, function (_b) {
+            return (0, tslib_1.__generator)(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         this.disable();

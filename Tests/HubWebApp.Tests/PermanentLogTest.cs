@@ -13,6 +13,7 @@ using XTI_Core;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.PermanentLog;
+using XTI_HubSetup;
 using XTI_TempLog;
 using XTI_TempLog.Fakes;
 
@@ -27,7 +28,7 @@ namespace HubWebApp.Tests
             var sessionKey = generateKey();
             await startSession(services, sessionKey);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
+            var session = await factory.Sessions.Session(sessionKey);
             Assert.That(session.HasStarted(), Is.True, "Should start session on permanent log");
             Assert.That(session.HasEnded(), Is.False, "Should start session on permanent log");
         }
@@ -41,7 +42,7 @@ namespace HubWebApp.Tests
             var requestKey = generateKey();
             await startRequest(services, sessionKey, requestKey);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
+            var session = await factory.Sessions.Session(sessionKey);
             var requests = (await session.Requests()).ToArray();
             Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
         }
@@ -56,7 +57,7 @@ namespace HubWebApp.Tests
             await startRequest(services, sessionKey, requestKey);
             await endRequest(services, requestKey);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
+            var session = await factory.Sessions.Session(sessionKey);
             var requests = (await session.Requests()).ToArray();
             Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
         }
@@ -72,7 +73,7 @@ namespace HubWebApp.Tests
             await endRequest(services, requestKey);
             await endSession(services, sessionKey);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
+            var session = await factory.Sessions.Session(sessionKey);
             Assert.That(session.HasEnded(), Is.True, "Should end session on permanent log");
         }
 
@@ -84,8 +85,8 @@ namespace HubWebApp.Tests
             await startSession(services, sessionKey);
             await authenticateSession(services, sessionKey);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
-            var user = await factory.Users().User(session.UserID);
+            var session = await factory.Sessions.Session(sessionKey);
+            var user = await factory.Users.User(session.UserID);
             Assert.That(user.UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
         }
 
@@ -108,7 +109,7 @@ namespace HubWebApp.Tests
             }
             await logEvent(services, requestKey, exception);
             var factory = services.GetService<AppFactory>();
-            var session = await factory.Sessions().Session(sessionKey);
+            var session = await factory.Sessions.Session(sessionKey);
             var requests = (await session.Requests()).ToArray();
             var events = (await requests[0].Events()).ToArray();
             Assert.That(events.Length, Is.EqualTo(1), "Should log event on permanent log");
@@ -236,12 +237,16 @@ namespace HubWebApp.Tests
             var clock = sp.GetService<Clock>();
             var hubSetup = sp.GetService<HubAppSetup>();
             await hubSetup.Run(AppVersionKey.Current);
-            var app = await appFactory.Apps().Add(new AppKey(new AppName("Fake"), AppType.Values.WebApp), "Fake", DateTime.Now);
-            var version = await app.StartNewMajorVersion(DateTime.Now);
+            var version = await appFactory.Apps.StartNewVersion
+            (
+                new AppKey(new AppName("Fake"), AppType.Values.WebApp), 
+                AppVersionType.Values.Major, 
+                DateTime.Now
+            );
             await version.Publishing();
             await version.Published();
-            await appFactory.Users().Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
-            await appFactory.Users().Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+            await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
+            await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
             return sp;
         }
     }

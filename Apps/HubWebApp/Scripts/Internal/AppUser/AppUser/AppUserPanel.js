@@ -15,7 +15,7 @@ var HubTheme_1 = require("../../HubTheme");
 var MarginCss_1 = require("XtiShared/MarginCss");
 var UserModCategoryListCard_1 = require("./UserModCategoryListCard");
 var AppUserPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(AppUserPanel, _super);
+    (0, tslib_1.__extends)(AppUserPanel, _super);
     function AppUserPanel(hubApi, vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

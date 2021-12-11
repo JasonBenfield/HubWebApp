@@ -7,7 +7,7 @@ using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_GitHub;
-using XTI_HubAppApi;
+using XTI_Hub;
 using XTI_Processes;
 using XTI_VersionToolApi;
 
@@ -17,21 +17,22 @@ namespace XTI_PublishTool
     {
         private readonly IHostEnvironment hostEnv;
         private readonly XtiFolder xtiFolder;
-        private readonly HubAppApi hubApi;
+        private readonly AppFactory appFactory;
         private readonly GitFactory gitFactory;
 
-        public PublishProcess(IHostEnvironment hostEnv, HubAppApi hubApi, GitFactory gitFactory)
+        public PublishProcess(IHostEnvironment hostEnv, AppFactory appFactory, GitFactory gitFactory)
         {
             this.hostEnv = hostEnv;
             xtiFolder = new XtiFolder(hostEnv);
-            this.hubApi = hubApi;
+            this.appFactory = appFactory;
             this.gitFactory = gitFactory;
         }
 
         public async Task Run(AppKey appKey, string appsToImport, string repoOwner, string repoName)
         {
             var versionToolOutput = await getVersionKey(appKey);
-            var versionKey = AppVersionKey.Parse(versionToolOutput.VersionKey);
+            var buildVersionKey = AppVersionKey.Parse(versionToolOutput.VersionKey);
+            var versionKey = buildVersionKey;
             if (hostEnv.IsProduction())
             {
                 versionToolOutput = await beginPublish(appKey);
@@ -66,7 +67,7 @@ namespace XTI_PublishTool
             await publishSetup(appKey, versionKey);
             if (appKey.Type.Equals(AppType.Values.WebApp))
             {
-                await buildWebApp(appKey, versionKey, appsToImport);
+                await buildWebApp(appKey, buildVersionKey, appsToImport);
                 await runDotNetPublish(appKey, versionKey);
                 await copyToWebExports(appKey, versionKey);
             }
@@ -174,7 +175,7 @@ namespace XTI_PublishTool
             {
                 var publishDir = getPublishDir(appKey, versionKey);
                 var versionsPath = Path.Combine(publishDir, "versions.json");
-                var persistedVersions = new PersistedVersions(hubApi, appKey, versionsPath);
+                var persistedVersions = new PersistedVersions(appFactory, appKey, versionsPath);
                 await persistedVersions.Store();
                 var publishSetupDir = Path.Combine(publishDir, "Setup");
                 Console.WriteLine($"Publishing setup to '{publishSetupDir}'");

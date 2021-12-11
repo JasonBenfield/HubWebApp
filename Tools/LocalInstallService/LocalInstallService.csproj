@@ -8,6 +8,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="5.0.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.2" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.4" />
   </ItemGroup>
 </Project>

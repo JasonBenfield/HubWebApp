@@ -8,6 +8,7 @@ using XTI_Core;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubDB.Extensions;
+using XTI_HubSetup;
 
 namespace HubSetupApp
 {
@@ -26,15 +27,12 @@ namespace HubSetupApp
                     services.AddScoped<AppFactory>();
                     services.AddScoped<Clock, UtcClock>();
                     services.AddScoped<HubAppApiFactory>();
-                    services.AddScoped(sp => (HubAppApi)sp.GetService<HubAppApiFactory>().CreateForSuperUser());
+                    services.AddScoped(sp => sp.GetService<HubAppApiFactory>().CreateForSuperUser());
                     services.Configure<SetupOptions>(hostContext.Configuration.GetSection(SetupOptions.Setup));
                     services.AddScoped(sp =>
                     {
-                        var hubApi = sp.GetService<HubAppApi>();
-                        var apiFactory = sp.GetService<AppApiFactory>();
-                        var appKey = apiFactory.CreateTemplate().AppKey;
                         var options = sp.GetService<IOptions<SetupOptions>>().Value;
-                        return new PersistedVersions(hubApi, appKey, options.VersionsPath);
+                        return new VersionReader(options.VersionsPath);
                     });
                     services.AddScoped<HubAppSetup>();
                     services.AddHostedService<SetupHostedService>();

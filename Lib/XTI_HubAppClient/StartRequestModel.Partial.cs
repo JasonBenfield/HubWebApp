@@ -11,6 +11,7 @@ namespace XTI_HubAppClient
             AppType = source.AppType;
             Path = source.Path;
             TimeStarted = source.TimeStarted;
+            ActualCount = source.ActualCount;
         }
     }
 }

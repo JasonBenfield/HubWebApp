@@ -8,7 +8,6 @@ using XTI_Core;
 using XTI_DB;
 using XTI_Secrets.Extensions;
 using XTI_App.Api;
-using XTI_HubAppApi;
 
 namespace XTI_Tool.Extensions
 {
@@ -22,9 +21,7 @@ namespace XTI_Tool.Extensions
             services.AddHubDbContextForSqlServer(configuration);
             services.AddScoped<AppFactory>();
             services.AddScoped<Clock, UtcClock>();
-            services.AddScoped<AppApiFactory, HubAppApiFactory>();
-            services.AddScoped(sp => sp.GetService<AppApiFactory>().CreateForSuperUser());
-            services.AddScoped(sp => (HubAppApi)sp.GetService<IAppApi>());
+            services.AddScoped<InstallationProcess>();
         }
     }
 }

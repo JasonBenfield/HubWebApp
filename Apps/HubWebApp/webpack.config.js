@@ -52,7 +52,8 @@ const exportModule = {
                 options: {
                     minimize: {
                         removeComments: false
-                    }
+                    },
+                    esModule: false
                 }
             }]
         },
@@ -77,11 +78,11 @@ const resolve = {
     }
 };
 const plugins = [
-    new webpack.SourceMapDevToolPlugin({
-        filename: "[file].map",
-        fallbackModuleFilenameTemplate: '[absolute-resource-path]',
-        moduleFilenameTemplate: '[absolute-resource-path]'
-    }),
+    //new webpack.SourceMapDevToolPlugin({
+    //    filename: "[file].map",
+    //    fallbackModuleFilenameTemplate: '[absolute-resource-path]',
+    //    moduleFilenameTemplate: '[absolute-resource-path]'
+    //}),
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
@@ -104,7 +105,7 @@ module.exports = [
     {
         mode: 'development',
         context: __dirname,
-        devtool: false,
+        devtool: 'eval-source-map',
         entry: entry,
         module: exportModule,
         plugins: plugins,

@@ -11,7 +11,8 @@ var AuthApiGroup_1 = require("./AuthApiGroup");
 var PermanentLogGroup_1 = require("./PermanentLogGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
-var AppRegistrationGroup_1 = require("./AppRegistrationGroup");
+var InstallGroup_1 = require("./InstallGroup");
+var PublishGroup_1 = require("./PublishGroup");
 var VersionGroup_1 = require("./VersionGroup");
 var ResourceGroupGroup_1 = require("./ResourceGroupGroup");
 var ResourceGroup_1 = require("./ResourceGroup");
@@ -22,7 +23,7 @@ var AppUserGroup_1 = require("./AppUserGroup");
 var AppUserMaintenanceGroup_1 = require("./AppUserMaintenanceGroup");
 var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var HubAppApi = /** @class */ (function (_super) {
-    tslib_1.__extends(HubAppApi, _super);
+    (0, tslib_1.__extends)(HubAppApi, _super);
     function HubAppApi(events, baseUrl, version) {
         if (version === void 0) { version = ''; }
         var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
@@ -33,7 +34,8 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
-        _this.AppRegistration = _this.addGroup(function (evts, resourceUrl) { return new AppRegistrationGroup_1.AppRegistrationGroup(evts, resourceUrl); });
+        _this.Install = _this.addGroup(function (evts, resourceUrl) { return new InstallGroup_1.InstallGroup(evts, resourceUrl); });
+        _this.Publish = _this.addGroup(function (evts, resourceUrl) { return new PublishGroup_1.PublishGroup(evts, resourceUrl); });
         _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
         _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
         _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
@@ -45,7 +47,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'Current';
+    HubAppApi.DefaultVersion = 'V1169';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;
