@@ -1,32 +1,25 @@
-﻿using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.ModCategoryInquiry
+namespace XTI_HubAppApi.ModCategoryInquiry;
+
+public sealed class GetModifierAction : AppAction<GetModCategoryModifierRequest, ModifierModel>
 {
-    public sealed class GetModCategoryModifierRequest
+    private readonly AppFromPath appFromPath;
+
+    public GetModifierAction(AppFromPath appFromPath)
     {
-        public int CategoryID { get; set; }
-        public string ModifierKey { get; set; }
+        this.appFromPath = appFromPath;
     }
-    public sealed class GetModifierAction : AppAction<GetModCategoryModifierRequest, ModifierModel>
+
+    public async Task<ModifierModel> Execute(GetModCategoryModifierRequest model)
     {
-        private readonly AppFromPath appFromPath;
-
-        public GetModifierAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ModifierModel> Execute(GetModCategoryModifierRequest model)
-        {
-            var app = await appFromPath.Value();
-            var modCategory = await app.ModCategory(model.CategoryID);
-            var modKey = new ModifierKey(model.ModifierKey);
-            var modifier = await modCategory.Modifier(modKey);
-            var modifierModel = modifier.ToModel();
-            return modifierModel;
-        }
+        var app = await appFromPath.Value();
+        var modCategory = await app.ModCategory(model.CategoryID);
+        var modKey = new ModifierKey(model.ModifierKey);
+        var modifier = await modCategory.ModifierByModKey(modKey);
+        var modifierModel = modifier.ToModel();
+        return modifierModel;
     }
 }

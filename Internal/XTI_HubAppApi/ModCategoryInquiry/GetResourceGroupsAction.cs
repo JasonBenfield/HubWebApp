@@ -1,25 +1,22 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using XTI_App.Api;
 using XTI_Hub;
-using XTI_App.Api;
 
-namespace XTI_HubAppApi.ModCategoryInquiry
+namespace XTI_HubAppApi.ModCategoryInquiry;
+
+public sealed class GetResourceGroupsAction : AppAction<int, ResourceGroupModel[]>
 {
-    public sealed class GetResourceGroupsAction : AppAction<int, ResourceGroupModel[]>
+    private readonly AppFromPath appFromPath;
+
+    public GetResourceGroupsAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetResourceGroupsAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ResourceGroupModel[]> Execute(int categoryID)
-        {
-            var app = await appFromPath.Value();
-            var modCategory = await app.ModCategory(categoryID);
-            var resourceGroups = await modCategory.ResourceGroups();
-            return resourceGroups.Select(rg => rg.ToModel()).ToArray();
-        }
+    public async Task<ResourceGroupModel[]> Execute(int categoryID)
+    {
+        var app = await appFromPath.Value();
+        var modCategory = await app.ModCategory(categoryID);
+        var resourceGroups = await modCategory.ResourceGroups();
+        return resourceGroups.Select(rg => rg.ToModel()).ToArray();
     }
 }

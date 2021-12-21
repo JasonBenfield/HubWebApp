@@ -1,18 +1,16 @@
-﻿using System.Threading.Tasks;
-using XTI_DB;
+﻿using XTI_DB;
 
-namespace XTI_HubDB.EF
+namespace XTI_HubDB.EF;
+
+public sealed class HubDbBackup
 {
-    public sealed class HubDbBackup
+    private readonly HubDbContext hubDbContext;
+
+    public HubDbBackup(HubDbContext hubDbContext)
     {
-        private readonly HubDbContext hubDbContext;
-
-        public HubDbBackup(HubDbContext hubDbContext)
-        {
-            this.hubDbContext = hubDbContext;
-        }
-
-        public Task Run(string environmentName, string backupFilePath)
-            => new DbBackup(hubDbContext).Run(new HubDbName(environmentName), backupFilePath);
+        this.hubDbContext = hubDbContext;
     }
+
+    public Task Run(string environmentName, string backupFilePath)
+        => new DbBackup(hubDbContext).Run(new HubDbName(environmentName), backupFilePath);
 }

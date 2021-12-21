@@ -1,25 +1,23 @@
-﻿using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.AppInquiry
+namespace XTI_HubAppApi.AppInquiry;
+
+public sealed class GetModifierCategoryAction : AppAction<string, ModifierCategoryModel>
 {
-    public sealed class GetModifierCategoryAction : AppAction<string, ModifierCategoryModel>
+    private readonly AppFromPath appFromPath;
+
+    public GetModifierCategoryAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetModifierCategoryAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ModifierCategoryModel> Execute(string model)
-        {
-            var app = await appFromPath.Value();
-            var modCategory = await app.ModCategory(new ModifierCategoryName(model));
-            var modCategoryModel = modCategory.ToModel();
-            return modCategoryModel;
-        }
+    public async Task<ModifierCategoryModel> Execute(string model)
+    {
+        var app = await appFromPath.Value();
+        var modCategory = await app.ModCategory(new ModifierCategoryName(model));
+        var modCategoryModel = modCategory.ToModel();
+        return modCategoryModel;
     }
 }

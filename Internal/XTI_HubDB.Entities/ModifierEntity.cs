@@ -1,11 +1,10 @@
-﻿namespace XTI_HubDB.Entities
+﻿namespace XTI_HubDB.Entities;
+
+public sealed class ModifierEntity
 {
-    public sealed class ModifierEntity
-    {
-        public int ID { get; set; }
-        public int CategoryID { get; set; }
-        public string ModKey { get; set; } = "xti_notfound";
-        public string TargetKey { get; set; } = "xti_notfound";
-        public string DisplayText { get; set; }
-    }
+    public int ID { get; set; }
+    public int CategoryID { get; set; }
+    public string ModKey { get; set; } = "xti_notfound";
+    public string TargetKey { get; set; } = "xti_notfound";
+    public string DisplayText { get; set; } = "";
 }

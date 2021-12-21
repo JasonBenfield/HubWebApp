@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_WebApp.Api;
 
-namespace XTI_HubAppApi.Auth
+namespace XTI_HubAppApi.Auth;
+
+public sealed class VerifyLoginFormAction : AppAction<EmptyRequest, WebPartialViewResult>
 {
-    public sealed class VerifyLoginFormAction : AppAction<EmptyRequest, WebPartialViewResult>
-    {
-        public Task<WebPartialViewResult> Execute(EmptyRequest model)
-            => Task.FromResult(new WebPartialViewResult("VerifyLoginForm"));
-    }
+    public Task<WebPartialViewResult> Execute(EmptyRequest model)
+        => Task.FromResult(new WebPartialViewResult("VerifyLoginForm"));
 }

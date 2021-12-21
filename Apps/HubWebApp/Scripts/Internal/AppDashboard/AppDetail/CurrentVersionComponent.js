@@ -2,27 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurrentVersionComponent = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var Row_1 = require("XtiShared/Grid/Row");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var CurrentVersionComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(CurrentVersionComponent, _super);
-    function CurrentVersionComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addCardTitleHeader('Version');
-        _this.alert = _this.addCardAlert().alert;
-        var row = _this.addCardBody()
-            .addContent(new Row_1.Row());
-        _this.versionKey = row.addColumn()
-            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(new TextSpan_1.TextSpan());
-        _this.version = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var CurrentVersionComponent = /** @class */ (function () {
+    function CurrentVersionComponent(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('Version', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
     }
     CurrentVersionComponent.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -32,8 +19,8 @@ var CurrentVersionComponent = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getCurrentVersion()];
                     case 1:
                         currentVersion = _a.sent();
-                        this.versionKey.setText(currentVersion.VersionKey);
-                        this.version.setText("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
+                        this.view.setVersionKey(currentVersion.VersionKey);
+                        this.view.setVersion("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
                         return [2 /*return*/];
                 }
             });
@@ -63,6 +50,6 @@ var CurrentVersionComponent = /** @class */ (function (_super) {
         });
     };
     return CurrentVersionComponent;
-}(Card_1.Card));
+}());
 exports.CurrentVersionComponent = CurrentVersionComponent;
 //# sourceMappingURL=CurrentVersionComponent.js.map

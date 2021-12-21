@@ -1,17 +1,29 @@
-﻿import { Startup } from 'xtistart';
+﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
+import { Url } from '@jasonbenfield/sharedwebapp/Url';
+import { WebPage } from '@jasonbenfield/sharedwebapp/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { XtiUrl } from 'XtiShared/XtiUrl';
-import { WebPage } from 'XtiShared/WebPage';
-import { SingleActivePanel } from '../Panel/SingleActivePanel';
-import { Url } from 'XtiShared/Url';
+import { Apis } from '../../Hub/Apis';
 import { AppUserPanel } from './AppUser/AppUserPanel';
-import { PageFrame } from 'XtiShared/PageFrame';
-import { PaddingCss } from 'XtiShared/PaddingCss';
+import { MainPageView } from './MainPageView';
 import { UserRolePanel } from './UserRoles/UserRolePanel';
 
 class MainPage {
-    constructor(private readonly page: PageFrame) {
-        this.page.content.setPadding(PaddingCss.top(3));
+    private readonly view: MainPageView;
+    private readonly hubApi: HubAppApi;
+
+    private readonly panels = new SingleActivePanel();
+    private readonly appUserPanel: AppUserPanel;
+    private readonly userRolePanel: UserRolePanel;
+
+
+    constructor(page: PageFrameView) {
+        this.view = new MainPageView(page);
+        this.hubApi = new Apis(page.modalError).hub();
+        this.appUserPanel = this.panels.add(new AppUserPanel(this.hubApi, this.view.appUserPanel));
+        this.userRolePanel = this.panels.add(new UserRolePanel(this.hubApi, this.view.userRolePanel));
         let userID = Url.current().getQueryValue('userID');
         if (XtiUrl.current.path.modifier && userID) {
             this.activateAppUserPanel(Number(userID));
@@ -21,38 +33,27 @@ class MainPage {
         }
     }
 
-    private readonly hubApi = this.page.api(HubAppApi);
-
-    private readonly panels = new SingleActivePanel();
-    private readonly appUserPanel = this.page.addContent(
-        this.panels.add(new AppUserPanel(this.hubApi))
-    );
-    private readonly userRolePanel = this.page.addContent(
-        this.panels.add(new UserRolePanel(this.hubApi))
-    );
-
     private async activateAppUserPanel(userID: number) {
         this.panels.activate(this.appUserPanel);
-        this.appUserPanel.content.setUserID(userID);
-        this.appUserPanel.content.refresh();
-        let result = await this.appUserPanel.content.start();
-        if (result.key === AppUserPanel.ResultKeys.backRequested) {
+        this.appUserPanel.setUserID(userID);
+        this.appUserPanel.refresh();
+        let result = await this.appUserPanel.start();
+        if (result.backRequested) {
             this.hubApi.Users.Index.open({});
         }
-        else if (result.key === AppUserPanel.ResultKeys.editUserRolesRequested) {
+        else if (result.editUserRolesRequested) {
             this.activateUserRolePanel(userID);
         }
-        else if (result.key === AppUserPanel.ResultKeys.editUserModCategoryRequested) {
-            let userModCategory: IUserModifierCategoryModel = result.data;
+        else if (result.editUserModCategoryRequested) {
         }
     }
 
     private async activateUserRolePanel(userID: number) {
         this.panels.activate(this.userRolePanel);
-        this.userRolePanel.content.setUserID(userID);
-        this.userRolePanel.content.refresh();
-        let result = await this.userRolePanel.content.start();
-        if (result.key === AppUserPanel.ResultKeys.backRequested) {
+        this.userRolePanel.setUserID(userID);
+        this.userRolePanel.refresh();
+        let result = await this.userRolePanel.start();
+        if (result.backRequested) {
             this.activateAppUserPanel(userID);
         }
     }

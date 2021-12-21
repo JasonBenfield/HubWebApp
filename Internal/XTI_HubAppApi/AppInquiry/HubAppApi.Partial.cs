@@ -1,25 +1,25 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.AppInquiry;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public AppInquiryGroup App { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void appInquiry(IServiceProvider services)
-        {
-            App = new AppInquiryGroup
+partial class HubAppApi
+{
+    private AppInquiryGroup? app;
+
+    public AppInquiryGroup App { get => app ?? throw new ArgumentNullException(nameof(app)); }
+
+    partial void createAppInquiry(IServiceProvider services)
+    {
+        app = new AppInquiryGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(App),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.ViewApp)
-                ),
-                services
-            );
-        }
+                nameof(App),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.ViewApp)
+            ),
+            services
+        );
     }
 }

@@ -5,25 +5,24 @@ using XTI_Configuration.Extensions;
 using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
 
-namespace HubDbTool
+namespace HubDbTool;
+
+internal sealed class MainDbContextFactory : IDesignTimeDbContextFactory<HubDbContext>
 {
-    public sealed class MainDbContextFactory : IDesignTimeDbContextFactory<HubDbContext>
+    public HubDbContext CreateDbContext(string[] args)
     {
-        public HubDbContext CreateDbContext(string[] args)
-        {
-            var host = Host.CreateDefaultBuilder()
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.UseXtiConfiguration(hostingContext.HostingEnvironment, args);
-                })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.Configure<MainDbToolOptions>(hostContext.Configuration);
-                    services.AddHubDbContextForSqlServer(hostContext.Configuration);
-                })
-                .Build();
-            var scope = host.Services.CreateScope();
-            return scope.ServiceProvider.GetService<HubDbContext>();
-        }
+        var host = Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.UseXtiConfiguration(hostingContext.HostingEnvironment, args);
+            })
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.Configure<MainDbToolOptions>(hostContext.Configuration);
+                services.AddHubDbContextForSqlServer(hostContext.Configuration);
+            })
+            .Build();
+        var scope = host.Services.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<HubDbContext>();
     }
 }

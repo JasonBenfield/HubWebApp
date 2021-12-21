@@ -1,24 +1,21 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using XTI_App.Api;
 using XTI_Hub;
-using XTI_App.Api;
 
-namespace XTI_HubAppApi.AppInquiry
+namespace XTI_HubAppApi.AppInquiry;
+
+public sealed class GetMostRecentRequestsAction : AppAction<int, AppRequestExpandedModel[]>
 {
-    public sealed class GetMostRecentRequestsAction : AppAction<int, AppRequestExpandedModel[]>
+    private readonly AppFromPath appFromPath;
+
+    public GetMostRecentRequestsAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetMostRecentRequestsAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<AppRequestExpandedModel[]> Execute(int howMany)
-        {
-            var app = await appFromPath.Value();
-            var requests = await app.MostRecentRequests(howMany);
-            return requests.ToArray();
-        }
+    public async Task<AppRequestExpandedModel[]> Execute(int howMany)
+    {
+        var app = await appFromPath.Value();
+        var requests = await app.MostRecentRequests(howMany);
+        return requests.ToArray();
     }
 }

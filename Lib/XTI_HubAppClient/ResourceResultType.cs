@@ -1,35 +1,31 @@
 // Generated Code
-using XTI_WebAppClient;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed class ResourceResultType : NumericValue
 {
-    public sealed class ResourceResultType : NumericValue
+    public sealed class ResourceResultTypes : NumericValues<ResourceResultType>
     {
-        public sealed class ResourceResultTypes : NumericValues<ResourceResultType>
+        internal ResourceResultTypes()
         {
-            internal ResourceResultTypes()
-            {
-                None = Add(new ResourceResultType(0, "None"));
-                View = Add(new ResourceResultType(1, "View"));
-                PartialView = Add(new ResourceResultType(2, "PartialView"));
-                Redirect = Add(new ResourceResultType(3, "Redirect"));
-                Json = Add(new ResourceResultType(4, "Json"));
-            }
-
-            public ResourceResultType None { get; }
-
-            public ResourceResultType View { get; }
-
-            public ResourceResultType PartialView { get; }
-
-            public ResourceResultType Redirect { get; }
-
-            public ResourceResultType Json { get; }
+            None = Add(new ResourceResultType(0, "None"));
+            View = Add(new ResourceResultType(1, "View"));
+            PartialView = Add(new ResourceResultType(2, "PartialView"));
+            Redirect = Add(new ResourceResultType(3, "Redirect"));
+            Json = Add(new ResourceResultType(4, "Json"));
         }
 
-        public static readonly ResourceResultTypes Values = new ResourceResultTypes();
-        public ResourceResultType(int value, string displayText): base(value, displayText)
-        {
-        }
+        public ResourceResultType None { get; }
+
+        public ResourceResultType View { get; }
+
+        public ResourceResultType PartialView { get; }
+
+        public ResourceResultType Redirect { get; }
+
+        public ResourceResultType Json { get; }
+    }
+
+    public static readonly ResourceResultTypes Values = new ResourceResultTypes();
+    private ResourceResultType(int value, string displayText) : base(value, displayText)
+    {
     }
 }

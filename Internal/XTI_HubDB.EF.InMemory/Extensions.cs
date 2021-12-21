@@ -4,19 +4,18 @@ using System;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 
-namespace XTI_HubDB.Extensions
+namespace XTI_HubDB.Extensions;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static void AddHubDbContextForInMemory(this IServiceCollection services)
     {
-        public static void AddHubDbContextForInMemory(this IServiceCollection services)
+        services.AddDbContext<HubDbContext>(options =>
         {
-            services.AddDbContext<HubDbContext>(options =>
-            {
-                options
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .EnableSensitiveDataLogging();
-            });
-            services.AddScoped<IHubDbContext>(sp => sp.GetService<HubDbContext>());
-        }
+            options
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .EnableSensitiveDataLogging();
+        });
+        services.AddScoped<IHubDbContext>(sp => sp.GetRequiredService<HubDbContext>());
     }
 }

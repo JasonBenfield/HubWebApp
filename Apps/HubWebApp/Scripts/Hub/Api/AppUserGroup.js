@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppUserGroup = void 0;
 var tslib_1 = require("tslib");
-var AppApiGroup_1 = require("XtiShared/AppApiGroup");
+var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/AppApiGroup");
 var AppUserGroup = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(AppUserGroup, _super);
     function AppUserGroup(events, resourceUrl) {

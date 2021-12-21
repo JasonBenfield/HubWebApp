@@ -1,11 +1,11 @@
 ﻿using XTI_App.Api;
 
-namespace XTI_HubAppApi.Auth
+namespace XTI_HubAppApi.Auth;
+
+public class LoginFailedException : AppException
 {
-    public class LoginFailedException : AppException
+    protected LoginFailedException(string message) 
+        : base(message, "User name or Password was incorrect")
     {
-        protected LoginFailedException(string message) : base(message, "User name or Password was incorrect")
-        {
-        }
     }
 }

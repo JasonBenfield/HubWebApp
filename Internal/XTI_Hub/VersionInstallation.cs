@@ -1,15 +1,13 @@
-﻿using System.Threading.Tasks;
-using XTI_HubDB.Entities;
+﻿using XTI_HubDB.Entities;
 
-namespace XTI_Hub
+namespace XTI_Hub;
+
+public sealed class VersionInstallation : Installation
 {
-    public sealed class VersionInstallation : Installation
+    internal VersionInstallation(AppFactory appFactory, InstallationEntity entity)
+        : base(appFactory, entity)
     {
-        internal VersionInstallation(AppFactory appFactory, InstallationEntity entity) 
-            : base(appFactory, entity)
-        {
-        }
-
-        public Task Start() => StartVersion();
     }
+
+    public Task Start() => StartVersion();
 }

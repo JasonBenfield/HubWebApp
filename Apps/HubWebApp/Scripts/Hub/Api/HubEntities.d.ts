@@ -162,7 +162,7 @@ interface IAppUserModel {
 	Email: string;
 }
 interface INewInstallationRequest {
-	VersionID: number;
+	AppKey: IAppKey;
 	QualifiedMachineName: string;
 }
 interface INewInstallationResult {

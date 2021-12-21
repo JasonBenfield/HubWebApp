@@ -1,49 +1,40 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { DefaultEvent } from "XtiShared/Events";
-import { Row } from "XtiShared/Grid/Row";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { CardLinkListGroup } from "XtiShared/Card/CardLinkListGroup";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { AppListCardView } from "./AppListCardView";
+import { AppListItem } from "./AppListItem";
+import { AppListItemView } from "./AppListItemView";
 
-export class AppListCard extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi,
-        private readonly appRedirectUrl: (appID: number)=> string,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Apps');
-        this.alert = this.addCardAlert().alert;
-        this.apps = this.addLinkListGroup();
-        this.apps.itemClicked.register(this.onAppSelected.bind(this))
-    }
-
-    private onAppSelected(listItem: IListItem) {
-        this._appSelected.invoke(listItem.getData<IAppModel>())
-    }
-
+export class AppListCard {
     private readonly alert: MessageAlert;
-    private readonly apps: CardLinkListGroup;
+    private readonly apps: ListGroup;
 
     private readonly _appSelected = new DefaultEvent<IAppModel>(this);
     readonly appSelected = this._appSelected.handler();
+
+    constructor(
+        private readonly hubApi: HubAppApi,
+        private readonly appRedirectUrl: (appID: number) => string,
+        private readonly view: AppListCardView
+    ) {
+        new CardTitleHeader('Apps', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.apps = new ListGroup(this.view.apps);
+        this.apps.itemClicked.register(this.onAppSelected.bind(this))
+    }
+
+    private onAppSelected(listItem: AppListItem) {
+        this._appSelected.invoke(listItem.app);
+    }
 
     async refresh() {
         let apps = await this.getApps();
         this.apps.setItems(
             apps,
-            (sourceItem, listItem) => {
-                let row = listItem.addContent(new Row());
-                row.addColumn()
-                    .addContent(new TextSpan(sourceItem.AppName));
-                row.addColumn()
-                    .addContent(new TextSpan(sourceItem.Title));
-                row.addColumn()
-                    .addContent(new TextSpan(sourceItem.Type.DisplayText));
-                listItem.setHref(this.appRedirectUrl(sourceItem.ID));
-            }
+            (sourceItem: IAppModel, listItem: AppListItemView) =>
+                new AppListItem(sourceItem, this.appRedirectUrl, listItem)
         );
         if (apps.length === 0) {
             this.alert.danger('No Apps were Found');

@@ -1,16 +1,16 @@
-﻿using System;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_HubAppApi.AppList;
 
 namespace XTI_HubAppApi
 {
     partial class HubAppApi
     {
-        public AppListGroup Apps { get; private set; }
+        private AppListGroup? apps;
+        public AppListGroup Apps { get => apps ?? throw new ArgumentNullException(nameof(apps)); }
 
-        partial void appList(IServiceProvider services)
+        partial void createAppList(IServiceProvider services)
         {
-            Apps = new AppListGroup
+            apps = new AppListGroup
             (
                 source.AddGroup(nameof(Apps), ResourceAccess.AllowAuthenticated()),
                 services

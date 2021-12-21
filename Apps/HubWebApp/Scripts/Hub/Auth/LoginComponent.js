@@ -2,18 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginComponent = exports.LoginResult = void 0;
 var tslib_1 = require("tslib");
-var AsyncCommand_1 = require("XtiShared/Command/AsyncCommand");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var UrlBuilder_1 = require("XtiShared/UrlBuilder");
+var AsyncCommand_1 = require("@jasonbenfield/sharedwebapp/Command/AsyncCommand");
+var UrlBuilder_1 = require("@jasonbenfield/sharedwebapp/UrlBuilder");
 var VerifyLoginForm_1 = require("../Api/VerifyLoginForm");
-var DelayedAction_1 = require("XtiShared/DelayedAction");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var Block_1 = require("XtiShared/Html/Block");
-var MessageAlert_1 = require("XtiShared/MessageAlert");
-var TextCss_1 = require("XtiShared/TextCss");
-var MarginCss_1 = require("XtiShared/MarginCss");
-var ButtonCommandItem_1 = require("XtiShared/Command/ButtonCommandItem");
-var ContextualClass_1 = require("XtiShared/ContextualClass");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var LoginResult = /** @class */ (function () {
     function LoginResult(token) {
         this.token = token;
@@ -21,36 +13,15 @@ var LoginResult = /** @class */ (function () {
     return LoginResult;
 }());
 exports.LoginResult = LoginResult;
-var LoginComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(LoginComponent, _super);
-    function LoginComponent(authApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.authApi = authApi;
-        _this.verifyLoginForm = _this.addContent(new VerifyLoginForm_1.VerifyLoginForm());
-        _this.loginCommand = new AsyncCommand_1.AsyncCommand(_this.login.bind(_this));
-        _this.commandBlock = _this.addContent(new Block_1.Block())
-            .configure(function (b) {
-            b.addCssFrom(new TextCss_1.TextCss().end().cssClass());
-            b.setMargin(MarginCss_1.MarginCss.bottom(3));
-        });
-        _this.alert = _this.addContent(new MessageAlert_1.MessageAlert());
-        _this.addCssName("container");
-        _this.verifyLoginForm.forEachFormGroup(function (fg) {
-            fg.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        });
-        _this.verifyLoginForm.addOffscreenSubmit();
-        _this.verifyLoginForm.submitted.register(_this.onSubmit.bind(_this));
-        _this.verifyLoginForm.executeLayout();
-        new DelayedAction_1.DelayedAction(function () {
-            _this.verifyLoginForm.UserName.setFocus();
-        }, 100).execute();
-        var loginButton = _this.loginCommand.add(_this.commandBlock.addContent(new ButtonCommandItem_1.ButtonCommandItem()));
-        loginButton.setContext(ContextualClass_1.ContextualClass.primary);
-        loginButton.setText('Login');
-        loginButton.icon.solidStyle();
-        loginButton.icon.setName('sign-in-alt');
-        return _this;
+var LoginComponent = /** @class */ (function () {
+    function LoginComponent(authApi, view) {
+        this.authApi = authApi;
+        this.view = view;
+        this.loginCommand = new AsyncCommand_1.AsyncCommand(this.login.bind(this));
+        this.verifyLoginForm = new VerifyLoginForm_1.VerifyLoginForm(this.view.verifyLoginForm);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.view.formSubmitted.register(this.onSubmit.bind(this));
+        this.loginCommand.add(this.view.loginButton);
     }
     LoginComponent.prototype.onSubmit = function () {
         return this.loginCommand.execute();
@@ -118,6 +89,6 @@ var LoginComponent = /** @class */ (function (_super) {
         loginComplete: 'login-complete'
     };
     return LoginComponent;
-}(Block_1.Block));
+}());
 exports.LoginComponent = LoginComponent;
 //# sourceMappingURL=LoginComponent.js.map

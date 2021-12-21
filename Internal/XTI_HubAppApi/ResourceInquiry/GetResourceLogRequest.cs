@@ -1,9 +1,8 @@
-﻿namespace XTI_HubAppApi.ResourceInquiry
+﻿namespace XTI_HubAppApi.ResourceInquiry;
+
+public sealed class GetResourceLogRequest
 {
-    public sealed class GetResourceLogRequest
-    {
-        public string VersionKey { get; set; }
-        public int ResourceID { get; set; }
-        public int HowMany { get; set; }
-    }
+    public string VersionKey { get; set; } = "";
+    public int ResourceID { get; set; }
+    public int HowMany { get; set; }
 }

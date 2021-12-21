@@ -1,63 +1,45 @@
-﻿import { AsyncCommand } from "XtiShared/Command/AsyncCommand";
-import { ColumnCss } from "XtiShared/ColumnCss";
-import { UrlBuilder } from 'XtiShared/UrlBuilder';
+﻿import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
+import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 import { VerifyLoginForm } from "../Api/VerifyLoginForm";
-import { DelayedAction } from 'XtiShared/DelayedAction';
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { Block } from "XtiShared/Html/Block";
-import { MessageAlert } from 'XtiShared/MessageAlert';
-import { TextCss } from 'XtiShared/TextCss';
-import { MarginCss } from "XtiShared/MarginCss";
-import { ButtonCommandItem } from "XtiShared/Command/ButtonCommandItem";
-import { ContextualClass } from "XtiShared/ContextualClass";
+import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
+import { BlockViewModel } from "@jasonbenfield/sharedwebapp/Html/BlockViewModel";
+import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
+import { MessageAlert } from '@jasonbenfield/sharedwebapp/MessageAlert';
+import { TextCss } from '@jasonbenfield/sharedwebapp/TextCss';
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
+import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { HubAppApi } from "../Api/HubAppApi";
+import { LoginComponentView } from "./LoginComponentView";
 
 export class LoginResult {
     constructor(public readonly token: string) {
     }
 }
 
-export class LoginComponent extends Block {
+export class LoginComponent {
     public static readonly ResultKeys = {
         loginComplete: 'login-complete'
     };
 
+    private readonly verifyLoginForm: VerifyLoginForm;
+    private readonly loginCommand = new AsyncCommand(this.login.bind(this));
+    private readonly alert: MessageAlert;
+
     constructor(
         private readonly authApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: LoginComponentView
     ) {
-        super(vm);
-        this.addCssName("container");
-        this.verifyLoginForm.forEachFormGroup(fg => {
-            fg.captionColumn.setColumnCss(ColumnCss.xs(3));
-        });
-        this.verifyLoginForm.addOffscreenSubmit();
-        this.verifyLoginForm.submitted.register(this.onSubmit.bind(this));
-        this.verifyLoginForm.executeLayout();
-        new DelayedAction(() => {
-            this.verifyLoginForm.UserName.setFocus();
-        }, 100).execute();
-        let loginButton = this.loginCommand.add(
-            this.commandBlock.addContent(new ButtonCommandItem())
-        );
-        loginButton.setContext(ContextualClass.primary);
-        loginButton.setText('Login');
-        loginButton.icon.solidStyle();
-        loginButton.icon.setName('sign-in-alt');
+        this.verifyLoginForm = new VerifyLoginForm(this.view.verifyLoginForm);
+        this.alert = new MessageAlert(this.view.alert);
+        this.view.formSubmitted.register(this.onSubmit.bind(this));
+        this.loginCommand.add(this.view.loginButton);
     }
 
     private onSubmit() {
         return this.loginCommand.execute();
     }
-
-    private readonly verifyLoginForm = this.addContent(new VerifyLoginForm());
-    private readonly loginCommand = new AsyncCommand(this.login.bind(this));
-    private readonly commandBlock = this.addContent(new Block())
-        .configure(b => {
-            b.addCssFrom(new TextCss().end().cssClass());
-            b.setMargin(MarginCss.bottom(3));
-        });
-    private readonly alert = this.addContent(new MessageAlert());
 
     private async login() {
         this.alert.info('Verifying login...');

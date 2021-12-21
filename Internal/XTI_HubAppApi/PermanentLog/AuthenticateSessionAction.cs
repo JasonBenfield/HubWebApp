@@ -1,22 +1,20 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_TempLog;
 
-namespace XTI_HubAppApi.PermanentLog
+namespace XTI_HubAppApi.PermanentLog;
+
+public sealed class AuthenticateSessionAction : AppAction<AuthenticateSessionModel, EmptyActionResult>
 {
-    public sealed class AuthenticateSessionAction : AppAction<AuthenticateSessionModel, EmptyActionResult>
+    private readonly PermanentLog permanentLog;
+
+    public AuthenticateSessionAction(PermanentLog permanentLog)
     {
-        private readonly PermanentLog permanentLog;
+        this.permanentLog = permanentLog;
+    }
 
-        public AuthenticateSessionAction(PermanentLog permanentLog)
-        {
-            this.permanentLog = permanentLog;
-        }
-
-        public async Task<EmptyActionResult> Execute(AuthenticateSessionModel model)
-        {
-            await permanentLog.AuthenticateSession(model);
-            return new EmptyActionResult();
-        }
+    public async Task<EmptyActionResult> Execute(AuthenticateSessionModel model)
+    {
+        await permanentLog.AuthenticateSession(model);
+        return new EmptyActionResult();
     }
 }

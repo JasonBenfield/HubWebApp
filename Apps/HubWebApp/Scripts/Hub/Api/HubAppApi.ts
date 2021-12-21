@@ -1,7 +1,7 @@
 // Generated code
 
-import { AppApi } from "XtiShared/AppApi";
-import { AppApiEvents } from "XtiShared/AppApiEvents";
+import { AppApi } from "@jasonbenfield/sharedwebapp/AppApi";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/AppApiEvents";
 import { UserGroup } from "./UserGroup";
 import { UserCacheGroup } from "./UserCacheGroup";
 import { AuthGroup } from "./AuthGroup";

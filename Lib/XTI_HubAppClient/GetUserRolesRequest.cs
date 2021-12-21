@@ -1,13 +1,8 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class GetUserRolesRequest
 {
-    public sealed partial class GetUserRolesRequest
-    {
-        public int UserID { get; set; }
+    public int UserID { get; set; }
 
-        public int ModifierID { get; set; }
-    }
+    public int ModifierID { get; set; }
 }

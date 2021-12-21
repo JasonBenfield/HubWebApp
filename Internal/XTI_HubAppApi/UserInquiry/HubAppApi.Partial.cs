@@ -1,16 +1,20 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.UserInquiry;
 
 namespace XTI_HubAppApi
 {
     partial class HubAppApi
     {
-        public UserInquiryGroup UserInquiry { get; private set; }
+        private UserInquiryGroup? userInquiry;
 
-        partial void userInquiry(IServiceProvider services)
+        public UserInquiryGroup UserInquiry
         {
-            UserInquiry = new UserInquiryGroup
+            get => userInquiry ?? throw new ArgumentNullException(nameof(userInquiry));
+        }
+
+        partial void createUserInquiry(IServiceProvider services)
+        {
+            userInquiry = new UserInquiryGroup
             (
                 source.AddGroup(nameof(UserInquiry), Access.WithAllowed(HubInfo.Roles.ViewUser)),
                 services

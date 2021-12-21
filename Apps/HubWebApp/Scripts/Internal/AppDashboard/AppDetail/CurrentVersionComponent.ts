@@ -1,36 +1,20 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { Row } from "XtiShared/Grid/Row";
-import { ColumnCss } from "XtiShared/ColumnCss";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
 
-export class CurrentVersionComponent extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi, 
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Version');
-        this.alert = this.addCardAlert().alert;
-        let row = this.addCardBody()
-            .addContent(new Row());
-        this.versionKey = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan());
-        this.version = row.addColumn()
-            .addContent(new TextSpan());
-    }
-
+export class CurrentVersionComponent {
     private readonly alert: MessageAlert;
-    private readonly versionKey: TextSpan;
-    private readonly version: TextSpan;
+
+    constructor(private readonly hubApi: HubAppApi, private readonly view: CurrentVersionComponentView) {
+        new CardTitleHeader('Version', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+    }
 
     async refresh() {
         let currentVersion = await this.getCurrentVersion();
-        this.versionKey.setText(currentVersion.VersionKey);
-        this.version.setText(`${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`);
+        this.view.setVersionKey(currentVersion.VersionKey);
+        this.view.setVersion(`${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`);
     }
 
     private async getCurrentVersion() {

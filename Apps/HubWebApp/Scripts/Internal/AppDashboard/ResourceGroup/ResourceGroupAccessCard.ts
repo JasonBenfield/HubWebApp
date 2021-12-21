@@ -1,24 +1,24 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
+import { RoleAccessListItemView } from "../RoleAccessListItemView";
 
-export class ResourceGroupAccessCard extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Permissions');
-        this.alert = this.addCardAlert().alert;
-    }
-
+export class ResourceGroupAccessCard {
     private readonly alert: MessageAlert;
-    private readonly accessItems: CardButtonListGroup;
+    private readonly accessItems: ListGroup;
 
     private groupID: number;
+
+    constructor(
+        private readonly hubApi: HubAppApi,
+        private readonly view: ResourceAccessCardView
+    ) {
+        new CardTitleHeader('Permissions', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+    }
 
     setGroupID(groupID: number) {
         this.groupID = groupID;
@@ -28,9 +28,8 @@ export class ResourceGroupAccessCard extends Card {
         let accessItems = await this.getRoleAccessItems();
         this.accessItems.setItems(
             accessItems,
-            (sourceItem, listItem) => {
-                listItem.addContent(new RoleAccessListItem(sourceItem));
-            }
+            (sourceItem: IRoleAccessItem, listItem: RoleAccessListItemView) =>
+                new RoleAccessListItem(sourceItem, listItem)
         );
         if (accessItems.length === 0) {
             this.alert.danger('No Roles were Found');

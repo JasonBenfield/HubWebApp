@@ -1,8 +1,7 @@
-﻿namespace XTI_HubAppApi.AppUserMaintenance
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
+
+public sealed class UserRoleRequest
 {
-    public sealed class UserRoleRequest
-    {
-        public int UserID { get; set; }
-        public int RoleID { get; set; }
-    }
+    public int UserID { get; set; }
+    public int RoleID { get; set; }
 }

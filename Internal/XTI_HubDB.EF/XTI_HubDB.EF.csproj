@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_Core.EF" Version="1.9.4" />
-    <PackageReference Include="XTI_DB" Version="1.9.4" />
+    <PackageReference Include="XTI_Core.EF" Version="1.10.2" />
+    <PackageReference Include="XTI_DB" Version="1.10.2" />
   </ItemGroup>
 
   <ItemGroup>

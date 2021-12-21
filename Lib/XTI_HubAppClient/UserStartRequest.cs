@@ -1,11 +1,6 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class UserStartRequest
 {
-    public sealed partial class UserStartRequest
-    {
-        public string ReturnUrl { get; set; }
-    }
+    public string ReturnUrl { get; set; } = "";
 }

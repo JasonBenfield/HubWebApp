@@ -1,67 +1,60 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { ButtonListGroup } from "XtiShared/ListGroup/ButtonListGroup";
-import { ButtonListItemViewModel } from "XtiShared/ListGroup/ButtonListItemViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { Card } from "XtiShared/Card/Card";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { DropDownFormGroup } from "@jasonbenfield/sharedwebapp/Forms/DropDownFormGroup";
+import { SelectOption } from "@jasonbenfield/sharedwebapp/Html/SelectOption";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { HubTheme } from "../../HubTheme";
 import { EditUserModifierListItem } from "./EditUserModifierListItem";
-import { Result } from "../../../../Imports/Shared/Result";
-import { DropDownFormGroup } from "../../../../Imports/Shared/Forms/DropDownFormGroup";
-import { SelectOption } from "../../../../Imports/Shared/Html/SelectOption";
+import { EditUserModifierListItemView } from "./EditUserModifierListItemView";
+import { UserModCategoryPanelView } from "./UserModCategoryPanelView";
 
-export class UserModCategoryPanel extends Block {
-    public static ResultKeys = {
-        backRequested: 'back-requested'
-    };
+interface Results {
+    backRequested?: {};
+}
+
+export class UserModCategoryPanelResult {
+    static get backRequested() { return new UserModCategoryPanelResult({ backRequested: {} }); }
+
+    private constructor(private readonly results: Results) { }
+
+    get backRequested() { return this.results.backRequested; }
+}
+
+export class UserModCategoryPanel {
+    private readonly alert: MessageAlert;
+    private readonly userModifiers: ListGroup;
+    private readonly hasAccessToAll: DropDownFormGroup<boolean>;
+    private userID: number;
+    private readonly awaitable = new Awaitable<UserModCategoryPanelResult>();
+    private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: UserModCategoryPanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        let card = flexFill.addContent(new Card());
-        card.addCardTitleHeader('Edit User Modifiers');
-        this.alert = card.addCardAlert().alert;
-        let body = card.addCardBody();
-        this.hasAccessToAll = body.addContent(new DropDownFormGroup<boolean>('', 'HasAccessToAll'));
+        new CardTitleHeader('Edit User Modifiers', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.hasAccessToAll = new DropDownFormGroup<boolean>('', 'HasAccessToAll', this.view.hasAccessToAll);
         this.hasAccessToAll.setCaption('Has Access to All Modifiers?');
         this.hasAccessToAll.setItems(
             new SelectOption(true, 'Yes'),
             new SelectOption(false, 'No')
         );
         this.hasAccessToAll.valueChanged.register(this.onHasAccessToAllChanged.bind(this));
-        this.userModifiers = card.addButtonListGroup(
-            (itemVM: ButtonListItemViewModel) => new EditUserModifierListItem(this.hubApi, itemVM)
-        );
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        );
+        this.userModifiers = new ListGroup(this.view.userModifiers);
+        this.backCommand.add(this.view.backButton);
     }
 
     private onHasAccessToAllChanged(hasAccessToAll: boolean) {
         if (hasAccessToAll) {
-            this.userModifiers.hide();
+            this.view.hideUserModifiers();
         }
         else {
-            this.userModifiers.show();
+            this.view.showUserModifiers();
         }
     }
-
-    private readonly alert: MessageAlert;
-    private readonly userModifiers: ButtonListGroup;
-    private readonly hasAccessToAll: DropDownFormGroup<boolean>;
-
-    private userID: number;
 
     setUserID(userID: number) {
         this.userID = userID;
@@ -79,9 +72,11 @@ export class UserModCategoryPanel extends Block {
         sourceItems.sort(this.compare.bind(this));
         this.userModifiers.setItems(
             sourceItems,
-            (sourceItem, listItem: EditUserModifierListItem) => {
+            (sourceItem: IAppRoleModel, view: EditUserModifierListItemView) => {
+                let listItem = new EditUserModifierListItem(this.hubApi, view);
                 listItem.setUserID(this.userID);
                 listItem.withAssignedModifier(sourceItem);
+                return listItem;
             }
         );
     }
@@ -119,17 +114,13 @@ export class UserModCategoryPanel extends Block {
         return access;
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    private readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
         this.awaitable.resolve(
-            new Result(UserModCategoryPanel.ResultKeys.backRequested)
+            UserModCategoryPanelResult.backRequested
         );
     }
 }

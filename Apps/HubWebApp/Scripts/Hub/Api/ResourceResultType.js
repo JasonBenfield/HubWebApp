@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceResultType = exports.ResourceResultTypes = void 0;
 var tslib_1 = require("tslib");
 // Generated code
-var NumericValue_1 = require("XtiShared/NumericValue");
-var NumericValues_1 = require("XtiShared/NumericValues");
+var NumericValue_1 = require("@jasonbenfield/sharedwebapp/NumericValue");
+var NumericValues_1 = require("@jasonbenfield/sharedwebapp/NumericValues");
 var ResourceResultTypes = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(ResourceResultTypes, _super);
     function ResourceResultTypes(None, View, PartialView, Redirect, Json) {

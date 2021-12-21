@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using XTI_HubDB.Entities;
 
-namespace XTI_HubDB.EF
-{
-    public sealed class AppEventEntityConfiguration : IEntityTypeConfiguration<AppEventEntity>
+namespace XTI_HubDB.EF;
+
+public sealed class AppEventEntityConfiguration : IEntityTypeConfiguration<AppEventEntity>
     {
         public void Configure(EntityTypeBuilder<AppEventEntity> builder)
         {
@@ -23,4 +23,3 @@ namespace XTI_HubDB.EF
             builder.ToTable("Events");
         }
     }
-}

@@ -2,19 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MostRecentErrorEventListCard = void 0;
 var tslib_1 = require("tslib");
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EventListItem_1 = require("../EventListItem");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var MostRecentErrorEventListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(MostRecentErrorEventListCard, _super);
-    function MostRecentErrorEventListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addCardTitleHeader('Most Recent Errors');
-        _this.alert = _this.addCardAlert().alert;
-        _this.errorEvents = _this.addButtonListGroup();
-        return _this;
+var MostRecentErrorEventListCard = /** @class */ (function () {
+    function MostRecentErrorEventListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('Most Recent Errors', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.errorEvents = new ListGroup_1.ListGroup(this.view.errorEvents);
     }
     MostRecentErrorEventListCard.prototype.setResourceID = function (resourceID) {
         this.resourceID = resourceID;
@@ -28,7 +26,7 @@ var MostRecentErrorEventListCard = /** @class */ (function (_super) {
                     case 1:
                         errorEvents = _a.sent();
                         this.errorEvents.setItems(errorEvents, function (sourceItem, listItem) {
-                            listItem.addContent(new EventListItem_1.EventListItem(sourceItem));
+                            return new EventListItem_1.EventListItem(sourceItem, listItem);
                         });
                         if (errorEvents.length === 0) {
                             this.alert.danger('No Errors were Found');
@@ -66,6 +64,6 @@ var MostRecentErrorEventListCard = /** @class */ (function (_super) {
         });
     };
     return MostRecentErrorEventListCard;
-}(Card_1.Card));
+}());
 exports.MostRecentErrorEventListCard = MostRecentErrorEventListCard;
 //# sourceMappingURL=MostRecentErrorEventListCard.js.map

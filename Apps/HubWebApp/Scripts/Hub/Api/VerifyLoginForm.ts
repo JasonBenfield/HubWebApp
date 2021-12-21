@@ -1,10 +1,12 @@
 // Generated code
-import { BaseForm } from 'XtiShared/Forms/BaseForm';
-import { FormComponentViewModel } from 'XtiShared/Html/FormComponentViewModel';
+import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
+import { VerifyLoginFormView } from './VerifyLoginFormView';
 
 export class VerifyLoginForm extends BaseForm {
-	constructor(vm: FormComponentViewModel = new FormComponentViewModel()) {
-		super('VerifyLoginForm', vm);
+	protected readonly view: VerifyLoginFormView;
+
+	constructor(view: VerifyLoginFormView) {
+		super('VerifyLoginForm', view);
 		this.UserName.setCaption('User Name');
 		this.UserName.constraints.mustNotBeNull();
 		this.UserName.constraints.mustNotBeWhitespace('Must not be blank');
@@ -15,6 +17,6 @@ export class VerifyLoginForm extends BaseForm {
 		this.Password.setMaxLength(100);
 		this.Password.protect();
 	}
-	readonly UserName = this.addTextInputFormGroup('UserName');
-	readonly Password = this.addTextInputFormGroup('Password');
+	readonly UserName = this.addTextInputFormGroup('UserName', this.view.UserName);
+	readonly Password = this.addTextInputFormGroup('Password', this.view.Password);
 }

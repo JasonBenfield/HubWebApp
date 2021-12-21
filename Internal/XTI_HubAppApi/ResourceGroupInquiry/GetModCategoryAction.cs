@@ -1,27 +1,25 @@
-﻿using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.ResourceGroupInquiry
+namespace XTI_HubAppApi.ResourceGroupInquiry;
+
+public sealed class GetModCategoryAction : AppAction<GetResourceGroupModCategoryRequest, ModifierCategoryModel>
 {
-    public sealed class GetModCategoryAction : AppAction<GetResourceGroupModCategoryRequest, ModifierCategoryModel>
+    private readonly AppFromPath appFromPath;
+
+    public GetModCategoryAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetModCategoryAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ModifierCategoryModel> Execute(GetResourceGroupModCategoryRequest model)
-        {
-            var app = await appFromPath.Value();
-            var versionKey = AppVersionKey.Parse(model.VersionKey);
-            var version = await app.Version(versionKey);
-            var group = await version.ResourceGroup(model.GroupID);
-            var modCategory = await group.ModCategory();
-            return modCategory.ToModel();
-        }
+    public async Task<ModifierCategoryModel> Execute(GetResourceGroupModCategoryRequest model)
+    {
+        var app = await appFromPath.Value();
+        var versionKey = AppVersionKey.Parse(model.VersionKey);
+        var version = await app.Version(versionKey);
+        var group = await version.ResourceGroup(model.GroupID);
+        var modCategory = await group.ModCategory();
+        return modCategory.ToModel();
     }
 }

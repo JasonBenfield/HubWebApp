@@ -1,8 +1,7 @@
-﻿namespace XTI_HubAppApi.AppUserInquiry
+﻿namespace XTI_HubAppApi.AppUserInquiry;
+
+public sealed class GetUserRoleAccessRequest
 {
-    public sealed class GetUserRoleAccessRequest
-    {
-        public int UserID { get; set; }
-        public int ModifierID { get; set; }
-    }
+    public int UserID { get; set; }
+    public int ModifierID { get; set; }
 }

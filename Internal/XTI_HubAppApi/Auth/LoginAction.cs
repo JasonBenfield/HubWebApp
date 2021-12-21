@@ -1,51 +1,47 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using XTI_App.Api;
 using XTI_WebApp;
 using XTI_WebApp.Api;
 
-namespace XTI_HubAppApi.Auth
+namespace XTI_HubAppApi.Auth;
+
+public sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
 {
-    public sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
+    private readonly Authentication auth;
+    private readonly IAnonClient anonClient;
+
+    public LoginAction(Authentication auth, IAnonClient anonClient)
     {
-        private readonly Authentication auth;
-        private readonly IAnonClient anonClient;
+        this.auth = auth;
+        this.anonClient = anonClient;
+    }
 
-        public LoginAction(Authentication auth, IAnonClient anonClient)
+    public async Task<WebRedirectResult> Execute(LoginModel model)
+    {
+        await auth.Authenticate(model.Credentials.UserName, model.Credentials.Password);
+        anonClient.Load();
+        anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
+        var startUrl = model.StartUrl;
+        if (string.IsNullOrWhiteSpace(startUrl))
         {
-            this.auth = auth;
-            this.anonClient = anonClient;
+            startUrl = "~/User";
         }
-
-        public async Task<WebRedirectResult> Execute(LoginModel model)
+        else
         {
-            await auth.Authenticate(model.Credentials.UserName, model.Credentials.Password);
-            anonClient.Load();
-            anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-            var startUrl = model.StartUrl;
-            if (string.IsNullOrWhiteSpace(startUrl))
+            startUrl = HttpUtility.UrlDecode(startUrl);
+        }
+        if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
+        {
+            if (startUrl.Contains("?"))
             {
-                startUrl = "~/User";
+                startUrl += "&";
             }
             else
             {
-                startUrl = HttpUtility.UrlDecode(startUrl);
+                startUrl += "?";
             }
-            if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
-            {
-                if (startUrl.Contains("?"))
-                {
-                    startUrl += "&";
-                }
-                else
-                {
-                    startUrl += "?";
-                }
-                startUrl += $"returnUrl={model.ReturnUrl}";
-            }
-            return new WebRedirectResult(startUrl);
+            startUrl += $"returnUrl={model.ReturnUrl}";
         }
+        return new WebRedirectResult(startUrl);
     }
-
 }

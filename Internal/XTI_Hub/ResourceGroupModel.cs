@@ -1,10 +1,12 @@
-﻿namespace XTI_Hub
+﻿namespace XTI_Hub;
+
+public sealed class ResourceGroupModel
 {
-    public sealed class ResourceGroupModel
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public bool IsAnonymousAllowed { get; set; }
-        public int ModCategoryID { get; set; }
-    }
+    public int ID { get; set; }
+
+    public string Name { get; set; } = "";
+
+    public bool IsAnonymousAllowed { get; set; }
+
+    public int ModCategoryID { get; set; }
 }

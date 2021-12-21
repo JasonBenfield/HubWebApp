@@ -1,49 +1,53 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserModCategoryPanel = void 0;
+exports.UserModCategoryPanel = exports.UserModCategoryPanelResult = void 0;
 var tslib_1 = require("tslib");
-var Awaitable_1 = require("XtiShared/Awaitable");
-var Command_1 = require("XtiShared/Command/Command");
-var Block_1 = require("XtiShared/Html/Block");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
-var Card_1 = require("XtiShared/Card/Card");
-var HubTheme_1 = require("../../HubTheme");
+var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
+var DropDownFormGroup_1 = require("@jasonbenfield/sharedwebapp/Forms/DropDownFormGroup");
+var SelectOption_1 = require("@jasonbenfield/sharedwebapp/Html/SelectOption");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EditUserModifierListItem_1 = require("./EditUserModifierListItem");
-var Result_1 = require("../../../../Imports/Shared/Result");
-var DropDownFormGroup_1 = require("../../../../Imports/Shared/Forms/DropDownFormGroup");
-var SelectOption_1 = require("../../../../Imports/Shared/Html/SelectOption");
-var UserModCategoryPanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserModCategoryPanel, _super);
-    function UserModCategoryPanel(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.awaitable = new Awaitable_1.Awaitable();
-        _this.backCommand = new Command_1.Command(_this.back.bind(_this));
-        _this.height100();
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        var card = flexFill.addContent(new Card_1.Card());
-        card.addCardTitleHeader('Edit User Modifiers');
-        _this.alert = card.addCardAlert().alert;
-        var body = card.addCardBody();
-        _this.hasAccessToAll = body.addContent(new DropDownFormGroup_1.DropDownFormGroup('', 'HasAccessToAll'));
-        _this.hasAccessToAll.setCaption('Has Access to All Modifiers?');
-        _this.hasAccessToAll.setItems(new SelectOption_1.SelectOption(true, 'Yes'), new SelectOption_1.SelectOption(false, 'No'));
-        _this.hasAccessToAll.valueChanged.register(_this.onHasAccessToAllChanged.bind(_this));
-        _this.userModifiers = card.addButtonListGroup(function (itemVM) { return new EditUserModifierListItem_1.EditUserModifierListItem(_this.hubApi, itemVM); });
-        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
-        _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton()));
-        return _this;
+var UserModCategoryPanelResult = /** @class */ (function () {
+    function UserModCategoryPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(UserModCategoryPanelResult, "backRequested", {
+        get: function () { return new UserModCategoryPanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserModCategoryPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserModCategoryPanelResult;
+}());
+exports.UserModCategoryPanelResult = UserModCategoryPanelResult;
+var UserModCategoryPanel = /** @class */ (function () {
+    function UserModCategoryPanel(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.backCommand = new Command_1.Command(this.back.bind(this));
+        new CardTitleHeader_1.CardTitleHeader('Edit User Modifiers', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.hasAccessToAll = new DropDownFormGroup_1.DropDownFormGroup('', 'HasAccessToAll', this.view.hasAccessToAll);
+        this.hasAccessToAll.setCaption('Has Access to All Modifiers?');
+        this.hasAccessToAll.setItems(new SelectOption_1.SelectOption(true, 'Yes'), new SelectOption_1.SelectOption(false, 'No'));
+        this.hasAccessToAll.valueChanged.register(this.onHasAccessToAllChanged.bind(this));
+        this.userModifiers = new ListGroup_1.ListGroup(this.view.userModifiers);
+        this.backCommand.add(this.view.backButton);
     }
     UserModCategoryPanel.prototype.onHasAccessToAllChanged = function (hasAccessToAll) {
         if (hasAccessToAll) {
-            this.userModifiers.hide();
+            this.view.hideUserModifiers();
         }
         else {
-            this.userModifiers.show();
+            this.view.showUserModifiers();
         }
     };
     UserModCategoryPanel.prototype.setUserID = function (userID) {
@@ -68,9 +72,11 @@ var UserModCategoryPanel = /** @class */ (function (_super) {
                             sourceItems.push(role);
                         }
                         sourceItems.sort(this.compare.bind(this));
-                        this.userModifiers.setItems(sourceItems, function (sourceItem, listItem) {
+                        this.userModifiers.setItems(sourceItems, function (sourceItem, view) {
+                            var listItem = new EditUserModifierListItem_1.EditUserModifierListItem(_this.hubApi, view);
                             listItem.setUserID(_this.userID);
                             listItem.withAssignedModifier(sourceItem);
+                            return listItem;
                         });
                         return [2 /*return*/];
                 }
@@ -127,12 +133,9 @@ var UserModCategoryPanel = /** @class */ (function (_super) {
         return this.awaitable.start();
     };
     UserModCategoryPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(UserModCategoryPanel.ResultKeys.backRequested));
-    };
-    UserModCategoryPanel.ResultKeys = {
-        backRequested: 'back-requested'
+        this.awaitable.resolve(UserModCategoryPanelResult.backRequested);
     };
     return UserModCategoryPanel;
-}(Block_1.Block));
+}());
 exports.UserModCategoryPanel = UserModCategoryPanel;
 //# sourceMappingURL=UserModCategoryPanel.js.map

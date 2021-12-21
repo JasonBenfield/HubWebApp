@@ -1,7 +1,7 @@
-﻿import { ButtonCommandItem } from "XtiShared/Command/ButtonCommandItem";
-import { ContextualClass } from "XtiShared/ContextualClass";
-import { Toolbar } from "XtiShared/Html/Toolbar";
-import { PaddingCss } from "XtiShared/PaddingCss";
+﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
+import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
+import { Toolbar } from "@jasonbenfield/sharedwebapp/Html/Toolbar";
+import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 
 export class HubTheme {
     public static readonly instance = new HubTheme();

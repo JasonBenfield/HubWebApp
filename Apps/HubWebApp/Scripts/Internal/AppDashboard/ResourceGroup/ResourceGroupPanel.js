@@ -1,55 +1,73 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResourceGroupPanel = void 0;
+exports.ResourceGroupPanel = exports.ResourceGroupPanelResult = void 0;
 var tslib_1 = require("tslib");
-var Awaitable_1 = require("XtiShared/Awaitable");
-var Result_1 = require("XtiShared/Result");
-var Command_1 = require("XtiShared/Command/Command");
+var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
+var ModCategoryComponent_1 = require("./ModCategoryComponent");
+var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
+var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
 var ResourceGroupAccessCard_1 = require("./ResourceGroupAccessCard");
 var ResourceGroupComponent_1 = require("./ResourceGroupComponent");
 var ResourceListCard_1 = require("./ResourceListCard");
-var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
-var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
-var ModCategoryComponent_1 = require("./ModCategoryComponent");
-var Block_1 = require("XtiShared/Html/Block");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
-var MarginCss_1 = require("XtiShared/MarginCss");
-var HubTheme_1 = require("../../HubTheme");
-var ResourceGroupPanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroupPanel, _super);
-    function ResourceGroupPanel(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.awaitable = new Awaitable_1.Awaitable();
-        _this.backCommand = new Command_1.Command(_this.back.bind(_this));
-        _this.height100();
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        _this.resourceGroupComponent = flexFill.addContent(new ResourceGroupComponent_1.ResourceGroupComponent(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.modCategoryComponent = flexFill.addContent(new ModCategoryComponent_1.ModCategoryComponent(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.modCategoryComponent.clicked.register(_this.onModCategoryClicked.bind(_this));
-        _this.roleAccessCard = flexFill.addContent(new ResourceGroupAccessCard_1.ResourceGroupAccessCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.resourceListCard = flexFill.addContent(new ResourceListCard_1.ResourceListCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.resourceListCard.resourceSelected.register(_this.onResourceSelected.bind(_this));
-        _this.mostRecentRequestListCard = flexFill.addContent(new MostRecentRequestListCard_1.MostRecentRequestListCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.mostRecentErrorEventListCard = flexFill.addContent(new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(_this.hubApi)).configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
-        _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton())).configure(function (b) { return b.setText('App'); });
-        return _this;
+var ResourceGroupPanelResult = /** @class */ (function () {
+    function ResourceGroupPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(ResourceGroupPanelResult, "backRequested", {
+        get: function () { return new ResourceGroupPanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    ResourceGroupPanelResult.resourceSelected = function (resource) {
+        return new ResourceGroupPanelResult({
+            resourceSelected: { resource: resource }
+        });
+    };
+    ResourceGroupPanelResult.modCategorySelected = function (modCategory) {
+        return new ResourceGroupPanelResult({
+            modCategorySelected: { modCategory: modCategory }
+        });
+    };
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "resourceSelected", {
+        get: function () { return this.results.resourceSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "modCategorySelected", {
+        get: function () { return this.results.modCategorySelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return ResourceGroupPanelResult;
+}());
+exports.ResourceGroupPanelResult = ResourceGroupPanelResult;
+var ResourceGroupPanel = /** @class */ (function () {
+    function ResourceGroupPanel(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this.backCommand = new Command_1.Command(this.back.bind(this));
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.resourceGroupComponent = new ResourceGroupComponent_1.ResourceGroupComponent(this.hubApi, this.view.resourceGroupComponent);
+        this.modCategoryComponent = new ModCategoryComponent_1.ModCategoryComponent(this.hubApi, this.view.modCategoryComponent);
+        this.modCategoryComponent.clicked.register(this.onModCategoryClicked.bind(this));
+        this.roleAccessCard = new ResourceGroupAccessCard_1.ResourceGroupAccessCard(this.hubApi, this.view.roleAccessCard);
+        this.resourceListCard = new ResourceListCard_1.ResourceListCard(this.hubApi, this.view.resourceListCard);
+        this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
+        this.mostRecentRequestListCard = new MostRecentRequestListCard_1.MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.backCommand.add(this.view.backButton);
     }
     ResourceGroupPanel.prototype.onModCategoryClicked = function (modCategory) {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.modCategorySelected, modCategory));
+        this.awaitable.resolve(ResourceGroupPanelResult.modCategorySelected(modCategory));
     };
     ResourceGroupPanel.prototype.onResourceSelected = function (resource) {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.resourceSelected, resource));
+        this.awaitable.resolve(ResourceGroupPanelResult.resourceSelected(resource));
     };
     ResourceGroupPanel.prototype.setGroupID = function (groupID) {
         this.resourceGroupComponent.setGroupID(groupID);
@@ -79,14 +97,16 @@ var ResourceGroupPanel = /** @class */ (function (_super) {
         return this.awaitable.start();
     };
     ResourceGroupPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourceGroupPanelResult.backRequested);
     };
+    ResourceGroupPanel.prototype.activate = function () { this.view.show(); };
+    ResourceGroupPanel.prototype.deactivate = function () { this.view.hide(); };
     ResourceGroupPanel.ResultKeys = {
         backRequested: 'back-requested',
         resourceSelected: 'resource-selected',
         modCategorySelected: 'mod-category-selected'
     };
     return ResourceGroupPanel;
-}(Block_1.Block));
+}());
 exports.ResourceGroupPanel = ResourceGroupPanel;
 //# sourceMappingURL=ResourceGroupPanel.js.map

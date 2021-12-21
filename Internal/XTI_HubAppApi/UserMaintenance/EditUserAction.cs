@@ -1,33 +1,29 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_Core;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.UserMaintenance
+namespace XTI_HubAppApi.UserMaintenance;
+
+public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
 {
-    public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
+    private readonly AppFactory factory;
+
+    public EditUserAction(AppFactory factory)
     {
-        private readonly AppFactory factory;
+        this.factory = factory;
+    }
 
-        public EditUserAction(AppFactory factory)
+    public async Task<EmptyActionResult> Execute(EditUserForm model)
+    {
+        var userID = model.UserID.Value() ?? 0;
+        var user = await factory.Users.User(userID);
+        var name = new PersonName(model.PersonName.Value() ?? "");
+        if (string.IsNullOrWhiteSpace(name))
         {
-            this.factory = factory;
+            name = new PersonName(user.UserName().Value);
         }
-
-        public async Task<EmptyActionResult> Execute(EditUserForm model)
-        {
-            var userID = model.UserID.Value();
-            var user = await factory.Users.User(userID.Value);
-            var name = new PersonName(model.PersonName.Value());
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                name = new PersonName(user.UserName());
-            }
-            var email = new EmailAddress(model.Email.Value());
-            await user.Edit(name, email);
-            return new EmptyActionResult();
-        }
+        var email = new EmailAddress(model.Email.Value() ?? "");
+        await user.Edit(name, email);
+        return new EmptyActionResult();
     }
 }

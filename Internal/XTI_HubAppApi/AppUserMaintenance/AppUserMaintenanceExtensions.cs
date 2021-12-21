@@ -1,14 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_HubAppApi.AppUserMaintenance;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi;
+
+internal static class AppUserMaintenanceExtensions
 {
-    internal static class AppUserMaintenanceExtensions
+    public static void AddAppUserMaintenanceGroupServices(this IServiceCollection services)
     {
-        public static void AddAppUserMaintenanceGroupServices(this IServiceCollection services)
-        {
-            services.AddScoped<AssignRoleAction>();
-            services.AddScoped<UnassignRoleAction>();
-        }
+        services.AddScoped<AssignRoleAction>();
+        services.AddScoped<UnassignRoleAction>();
     }
 }

@@ -1,71 +1,86 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Result } from "XtiShared/Result";
-import { Command } from "XtiShared/Command/Command";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ModCategoryComponent } from "./ModCategoryComponent";
+import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
+import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceGroupAccessCard } from "./ResourceGroupAccessCard";
 import { ResourceGroupComponent } from "./ResourceGroupComponent";
+import { ResourceGroupPanelView } from "./ResourceGroupPanelView";
 import { ResourceListCard } from "./ResourceListCard";
-import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
-import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
-import { ModCategoryComponent } from "./ModCategoryComponent";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { Toolbar } from "XtiShared/Html/Toolbar";
-import { ButtonCommandItem } from "XtiShared/Command/ButtonCommandItem";
-import { ContextualClass } from "XtiShared/ContextualClass";
-import { MarginCss } from "XtiShared/MarginCss";
-import { PaddingCss } from "XtiShared/PaddingCss";
-import { HubTheme } from "../../HubTheme";
 
-export class ResourceGroupPanel extends Block {
+interface Results {
+    backRequested?: {};
+    resourceSelected?: { resource: IResourceModel; };
+    modCategorySelected?: { modCategory: IModifierCategoryModel };
+}
+
+export class ResourceGroupPanelResult {
+    static get backRequested() { return new ResourceGroupPanelResult({ backRequested: {} }); }
+
+    static resourceSelected(resource: IResourceModel) {
+        return new ResourceGroupPanelResult({
+            resourceSelected: { resource: resource }
+        });
+    }
+
+    static modCategorySelected(modCategory: IModifierCategoryModel) {
+        return new ResourceGroupPanelResult({
+            modCategorySelected: { modCategory: modCategory }
+        });
+    }
+
+    private constructor(private readonly results: Results) {
+    }
+
+    get backRequested() { return this.results.backRequested; }
+
+    get resourceSelected() { return this.results.resourceSelected; }
+
+    get modCategorySelected() { return this.results.modCategorySelected; }
+}
+
+export class ResourceGroupPanel implements IPanel {
     public static readonly ResultKeys = {
         backRequested: 'back-requested',
         resourceSelected: 'resource-selected',
         modCategorySelected: 'mod-category-selected'
     };
 
+    private readonly resourceGroupComponent: ResourceGroupComponent;
+    private readonly modCategoryComponent: ModCategoryComponent;
+    private readonly roleAccessCard: ResourceGroupAccessCard;
+    private readonly resourceListCard: ResourceListCard;
+    private readonly mostRecentRequestListCard: MostRecentRequestListCard;
+    private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
+    private readonly backCommand = new Command(this.back.bind(this));
+    private readonly awaitable = new Awaitable<ResourceGroupPanelResult>();
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ResourceGroupPanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.resourceGroupComponent = flexFill.addContent(new ResourceGroupComponent(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.modCategoryComponent = flexFill.addContent(new ModCategoryComponent(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        this.resourceGroupComponent = new ResourceGroupComponent(this.hubApi, this.view.resourceGroupComponent);
+        this.modCategoryComponent = new ModCategoryComponent(this.hubApi, this.view.modCategoryComponent);
         this.modCategoryComponent.clicked.register(
             this.onModCategoryClicked.bind(this)
         );
-        this.roleAccessCard = flexFill.addContent(new ResourceGroupAccessCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.resourceListCard = flexFill.addContent(new ResourceListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        this.roleAccessCard = new ResourceGroupAccessCard(this.hubApi, this.view.roleAccessCard);
+        this.resourceListCard = new ResourceListCard(this.hubApi, this.view.resourceListCard);
         this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
-        this.mostRecentRequestListCard = flexFill.addContent(new MostRecentRequestListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.mostRecentErrorEventListCard = flexFill.addContent(
-            new MostRecentErrorEventListCard(this.hubApi)
-        ).configure(b => b.setMargin(MarginCss.bottom(3)));
-
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        ).configure(b => b.setText('App'));
+        this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.backCommand.add(this.view.backButton);
     }
 
     private onModCategoryClicked(modCategory: IModifierCategoryModel) {
         this.awaitable.resolve(
-            new Result(ResourceGroupPanel.ResultKeys.modCategorySelected, modCategory)
+            ResourceGroupPanelResult.modCategorySelected(modCategory)
         );
     }
 
     private onResourceSelected(resource: IResourceModel) {
-        this.awaitable.resolve(new Result(ResourceGroupPanel.ResultKeys.resourceSelected, resource));
+        this.awaitable.resolve(ResourceGroupPanelResult.resourceSelected(resource));
     }
 
     setGroupID(groupID: number) {
@@ -76,13 +91,6 @@ export class ResourceGroupPanel extends Block {
         this.mostRecentRequestListCard.setGroupID(groupID);
         this.mostRecentErrorEventListCard.setGroupID(groupID);
     }
-
-    private readonly resourceGroupComponent: ResourceGroupComponent;
-    private readonly modCategoryComponent: ModCategoryComponent;
-    private readonly roleAccessCard: ResourceGroupAccessCard;
-    private readonly resourceListCard: ResourceListCard;
-    private readonly mostRecentRequestListCard: MostRecentRequestListCard;
-    private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
 
     async refresh() {
         let tasks: Promise<any>[] = [
@@ -96,15 +104,15 @@ export class ResourceGroupPanel extends Block {
         return Promise.all(tasks);
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    private readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
-        this.awaitable.resolve(new Result(ResourceGroupPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourceGroupPanelResult.backRequested);
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

@@ -27,7 +27,7 @@ namespace XTI_HubAppClient
             var appModifier = await appContext.GetModifierKey();
             var request = new GetResourceGroupModCategoryRequest
             {
-                VersionKey = versionKey,
+                VersionKey = versionKey.Value,
                 GroupID = ID.Value
             };
             var modCategory = await hubClient.ResourceGroup.GetModCategory(appModifier, request);
@@ -39,7 +39,7 @@ namespace XTI_HubAppClient
             var appModifier = await appContext.GetModifierKey();
             var request = new GetResourceGroupResourceRequest
             {
-                VersionKey = versionKey,
+                VersionKey = versionKey.Value,
                 GroupID = ID.Value,
                 ResourceName = name.Value
             };

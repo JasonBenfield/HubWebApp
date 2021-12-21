@@ -1,21 +1,11 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class LogBatchModel
 {
-    public sealed partial class LogBatchModel
-    {
-        public StartSessionModel[] StartSessions { get; set; }
-
-        public StartRequestModel[] StartRequests { get; set; }
-
-        public LogEventModel[] LogEvents { get; set; }
-
-        public EndRequestModel[] EndRequests { get; set; }
-
-        public AuthenticateSessionModel[] AuthenticateSessions { get; set; }
-
-        public EndSessionModel[] EndSessions { get; set; }
-    }
+    public StartSessionModel[] StartSessions { get; set; } = new StartSessionModel[0];
+    public StartRequestModel[] StartRequests { get; set; } = new StartRequestModel[0];
+    public LogEventModel[] LogEvents { get; set; } = new LogEventModel[0];
+    public EndRequestModel[] EndRequests { get; set; } = new EndRequestModel[0];
+    public AuthenticateSessionModel[] AuthenticateSessions { get; set; } = new AuthenticateSessionModel[0];
+    public EndSessionModel[] EndSessions { get; set; } = new EndSessionModel[0];
 }

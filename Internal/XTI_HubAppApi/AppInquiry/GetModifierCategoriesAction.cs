@@ -1,24 +1,21 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using XTI_App.Api;
 using XTI_Hub;
-using XTI_App.Api;
 
-namespace XTI_HubAppApi.AppInquiry
+namespace XTI_HubAppApi.AppInquiry;
+
+public sealed class GetModifierCategoriesAction : AppAction<EmptyRequest, ModifierCategoryModel[]>
 {
-    public sealed class GetModifierCategoriesAction : AppAction<EmptyRequest, ModifierCategoryModel[]>
+    private readonly AppFromPath appFromPath;
+
+    public GetModifierCategoriesAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetModifierCategoriesAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ModifierCategoryModel[]> Execute(EmptyRequest model)
-        {
-            var app = await appFromPath.Value();
-            var modCategories = await app.ModCategories();
-            return modCategories.Select(modCat => modCat.ToModel()).ToArray();
-        }
+    public async Task<ModifierCategoryModel[]> Execute(EmptyRequest model)
+    {
+        var app = await appFromPath.Value();
+        var modCategories = await app.ModCategories();
+        return modCategories.Select(modCat => modCat.ToModel()).ToArray();
     }
 }
