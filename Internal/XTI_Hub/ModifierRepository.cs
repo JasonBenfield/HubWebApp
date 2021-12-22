@@ -1,121 +1,140 @@
-﻿using XTI_HubDB.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_HubDB.Entities;
 
-namespace XTI_Hub
+namespace XTI_Hub;
+
+public sealed class ModifierRepository
 {
-    public sealed class ModifierRepository
+    private readonly AppFactory factory;
+
+    internal ModifierRepository(AppFactory factory)
     {
-        private readonly AppFactory factory;
-
-        internal ModifierRepository(AppFactory factory)
-        {
-            this.factory = factory;
-        }
-
-        internal async Task<Modifier> AddOrUpdate(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
-        {
-            var record = await factory.DB
-                .Modifiers.Retrieve()
-                .FirstOrDefaultAsync
-                (
-                    m => m.CategoryID == category.ID.Value && m.ModKey == modKey.Value
-                );
-            if (record == null)
-            {
-                record = await Add(category, modKey, targetID, displayText);
-            }
-            return factory.Modifier(record);
-        }
-
-        private async Task<ModifierEntity> Add(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
-        {
-            var record = new ModifierEntity
-            {
-                CategoryID = category.ID.Value,
-                ModKey = modKey.Value,
-                TargetKey = targetID,
-                DisplayText = displayText
-            };
-            await factory.DB.Modifiers.Create(record);
-            return record;
-        }
-
-        internal Task<Modifier[]> Modifiers(ModifierCategory category)
-        {
-            return modifiersForCategory(category)
-                .Select(m => factory.Modifier(m))
-                .ToArrayAsync();
-        }
-
-        public async Task<Modifier> Modifier(int modifierID)
-        {
-            var record = await factory.DB
-                .Modifiers
-                .Retrieve()
-                .Where(m => m.ID == modifierID)
-                .FirstOrDefaultAsync();
-            return factory.Modifier(record);
-        }
-
-        internal async Task<Modifier> Modifier(ModifierCategory modCategory, ModifierKey modKey)
-        {
-            if
-            (
-                !modCategory.Name().Equals(ModifierCategoryName.Default)
-                && modKey.Equals(ModifierKey.Default)
-            )
-            {
-                var app = await modCategory.App();
-                modCategory = await app.ModCategory(ModifierCategoryName.Default);
-            }
-            var record = await factory.DB
-                .Modifiers
-                .Retrieve()
-                .Where(m => m.CategoryID == modCategory.ID.Value && m.ModKey == modKey.Value)
-                .FirstOrDefaultAsync();
-            if (record == null)
-            {
-                record = await factory.DB
-                    .Modifiers
-                    .Retrieve()
-                    .Where(m => m.ModKey == ModifierKey.Default.Value)
-                    .FirstOrDefaultAsync();
-            }
-            return factory.Modifier(record);
-        }
-
-        internal async Task<Modifier> ModifierForApp(App app, int modifierID)
-        {
-            var categoryIDs = factory.DB
-                .ModifierCategories
-                .Retrieve()
-                .Where(modCat => modCat.AppID == app.ID.Value)
-                .Select(modCat => modCat.ID);
-            var record = await factory.DB
-                .Modifiers
-                .Retrieve()
-                .Where(m => categoryIDs.Any(id => id == m.CategoryID) && m.ID == modifierID)
-                .FirstOrDefaultAsync();
-            return factory.Modifier(record);
-        }
-
-        internal async Task<Modifier> Modifier(ModifierCategory category, string targetKey)
-        {
-            var record = await modifiersForCategory(category)
-                .Where(m => m.TargetKey == targetKey)
-                .FirstOrDefaultAsync();
-            return factory.Modifier(record);
-        }
-
-        private IQueryable<ModifierEntity> modifiersForCategory(ModifierCategory modCategory)
-        {
-            return factory.DB
-                .Modifiers
-                .Retrieve()
-                .Where(m => m.CategoryID == modCategory.ID.Value);
-        }
+        this.factory = factory;
     }
+
+    internal async Task<Modifier> AddOrUpdateByModKey(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
+    {
+        var record = await GetModifierByModKey(category, modKey);
+        if (record == null)
+        {
+            record = await Add(category, modKey, targetID, displayText);
+        }
+        return factory.Modifier(record);
+    }
+
+    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, string targetKey, string displayText)
+    {
+        var record = await GetModifierByTargetKey(category, targetKey);
+        if (record == null)
+        {
+            record = await Add(category, ModifierKey.Generate(), targetKey, displayText);
+        }
+        return factory.Modifier(record);
+    }
+
+    private async Task<ModifierEntity> Add(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
+    {
+        var record = new ModifierEntity
+        {
+            CategoryID = category.ID.Value,
+            ModKey = modKey.Value,
+            TargetKey = targetID,
+            DisplayText = displayText
+        };
+        await factory.DB.Modifiers.Create(record);
+        return record;
+    }
+
+    internal Task<Modifier[]> Modifiers(ModifierCategory category) =>
+        modifiersForCategory(category)
+            .Select(m => factory.Modifier(m))
+            .ToArrayAsync();
+
+    internal async Task<Modifier> ModifierByModKey(ModifierCategory modCategory, ModifierKey modKey)
+    {
+        if
+        (
+            !modCategory.Name().Equals(ModifierCategoryName.Default)
+            && modKey.Equals(ModifierKey.Default)
+        )
+        {
+            var app = await modCategory.App();
+            modCategory = await app.ModCategory(ModifierCategoryName.Default);
+        }
+        var record = await GetModifierByModKey(modCategory, modKey);
+        return factory.Modifier
+        (
+            record ?? throw new ModifierNotFoundException(modKey, modCategory)
+        );
+    }
+
+    private Task<ModifierEntity?> GetModifierByModKey(ModifierCategory modCategory, ModifierKey modKey) =>
+        factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => m.CategoryID == modCategory.ID.Value && m.ModKey == modKey.Value)
+            .FirstOrDefaultAsync();
+
+    internal async Task<Modifier> ModifierOrDefault(ModifierCategory modCategory, ModifierKey modKey)
+    {
+        var app = await modCategory.App();
+        if
+        (
+            !modCategory.Name().Equals(ModifierCategoryName.Default)
+            && modKey.Equals(ModifierKey.Default)
+        )
+        {
+            modCategory = await app.ModCategory(ModifierCategoryName.Default);
+        }
+        var record = await GetModifierByModKey(modCategory, modKey);
+        Modifier mod;
+        if (record == null)
+        {
+            mod = await app.DefaultModifier();
+        }
+        else
+        {
+            mod = factory.Modifier(record);
+        }
+        return mod;
+    }
+
+    internal async Task<Modifier> ModifierForApp(App app, int modifierID)
+    {
+        var categoryIDs = factory.DB
+            .ModifierCategories
+            .Retrieve()
+            .Where(modCat => modCat.AppID == app.ID.Value)
+            .Select(modCat => modCat.ID);
+        var record = await factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => categoryIDs.Any(id => id == m.CategoryID) && m.ID == modifierID)
+            .FirstOrDefaultAsync();
+        return factory.Modifier
+        (
+            record ?? throw new ModifierNotFoundException(modifierID, app)
+        );
+    }
+
+    internal async Task<Modifier> ModifierByTargetKey(ModifierCategory category, string targetKey)
+    {
+        var record = await GetModifierByTargetKey(category, targetKey);
+        return factory.Modifier
+        (
+            record ?? throw new ModifierNotFoundException(targetKey, category)
+        );
+    }
+
+    private Task<ModifierEntity?> GetModifierByTargetKey(ModifierCategory category, string targetKey) =>
+        modifiersForCategory(category)
+            .Where(m => m.TargetKey == targetKey)
+            .FirstOrDefaultAsync();
+
+    private IQueryable<ModifierEntity> modifiersForCategory(ModifierCategory modCategory) =>
+        factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => m.CategoryID == modCategory.ID.Value);
 }

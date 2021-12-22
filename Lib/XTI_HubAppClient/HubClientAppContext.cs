@@ -9,7 +9,7 @@ namespace XTI_HubAppClient
         private readonly HubAppClient hubClient;
         private readonly AppKey appKey;
         private readonly AppVersionKey versionKey;
-        private string modKey;
+        private string modKey = "";
 
         public HubClientAppContext(HubAppClient hubClient, AppKey appKey, AppVersionKey versionKey)
         {
@@ -28,7 +28,7 @@ namespace XTI_HubAppClient
         public async Task<IAppVersion> Version()
         {
             var modKey = await GetModifierKey();
-            var version = await hubClient.Version.GetVersion(modKey, versionKey);
+            var version = await hubClient.Version.GetVersion(modKey, versionKey.Value);
             return new HubClientVersion(hubClient, this, version);
         }
 

@@ -1,49 +1,29 @@
-﻿import { MessageAlert } from "XtiShared/MessageAlert";
-import { CardAlert } from "XtiShared/Card/CardAlert";
-import { ColumnCss } from "XtiShared/ColumnCss";
-import { Row } from "XtiShared/Grid/Row";
-import { TextSpan } from "XtiShared/Html/TextSpan";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { CardTitleHeader } from "XtiShared/Card/CardTitleHeader";
-import { CardBody } from "XtiShared/Card/CardBody";
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
+import { UserComponentView } from "./UserComponentView";
 
-export class UserComponent extends Card {
+export class UserComponent {
+    private userID: number;
+    private readonly alert: MessageAlert;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: UserComponentView
     ) {
-        super(vm);
-        this.addContent(new CardTitleHeader('User'));
-        this.alert = this.addContent(new CardAlert()).alert;
-        this.cardBody = this.addContent(new CardBody());
-        let row = this.cardBody.addContent(new Row());
-        this.userName = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan('User'));
-        this.fullName = row.addColumn()
-            .addContent(new TextSpan());
-        this.cardBody.hide();
+        new CardTitleHeader('User', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
     }
-
-    private readonly cardBody: CardBody;
-    private readonly userName: TextSpan;
-    private readonly fullName: TextSpan;
-
-    private userID: number;
 
     setUserID(userID) {
         this.userID = userID;
     }
 
-    private readonly alert: MessageAlert;
-
     async refresh() {
         let user = await this.getUser(this.userID);
-        this.userName.setText(user.UserName);
-        this.fullName.setText(user.Name);
-        this.cardBody.show();
+        this.view.setUserName(user.UserName);
+        this.view.setFullName(user.Name);
+        this.view.showCardBody();
     }
 
     private async getUser(userID: number) {

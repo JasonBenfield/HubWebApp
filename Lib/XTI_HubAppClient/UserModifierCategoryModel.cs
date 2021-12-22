@@ -1,13 +1,7 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class UserModifierCategoryModel
 {
-    public sealed partial class UserModifierCategoryModel
-    {
-        public ModifierCategoryModel ModCategory { get; set; }
-
-        public ModifierModel[] Modifiers { get; set; }
-    }
+    public ModifierCategoryModel ModCategory { get; set; } = new ModifierCategoryModel();
+    public ModifierModel[] Modifiers { get; set; } = new ModifierModel[0];
 }

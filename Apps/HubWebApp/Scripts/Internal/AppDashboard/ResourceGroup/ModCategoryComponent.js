@@ -2,33 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModCategoryComponent = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var ModCategoryComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModCategoryComponent, _super);
-    function ModCategoryComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._clicked = new Events_1.DefaultEvent(_this);
-        _this.clicked = _this._clicked.handler();
-        _this.addCardTitleHeader('Modifier Category');
-        _this.alert = _this.addCardAlert().alert;
-        _this.listGroup = _this.addButtonListGroup();
-        _this.modCategoryName = _this.listGroup
-            .addItem()
-            .addContent(new TextSpan_1.TextSpan());
-        _this.listGroup.itemClicked.register(_this.onClicked.bind(_this));
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var ModCategoryComponent = /** @class */ (function () {
+    function ModCategoryComponent(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._clicked = new Events_1.DefaultEvent(this);
+        this.clicked = this._clicked.handler();
+        new CardTitleHeader_1.CardTitleHeader('Modifier Category', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.view.clicked.register(this.onClicked.bind(this));
     }
     ModCategoryComponent.prototype.onClicked = function () {
         this._clicked.invoke(this.modCategory);
     };
     ModCategoryComponent.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;
-        this.listGroup.hide();
+        this.view.hideModCategory();
     };
     ModCategoryComponent.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -40,8 +32,8 @@ var ModCategoryComponent = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.getModCategory(this.groupID)];
                     case 1:
                         _a.modCategory = _b.sent();
-                        this.modCategoryName.setText(this.modCategory.Name);
-                        this.listGroup.show();
+                        this.view.setModCategoryName(this.modCategory.Name);
+                        this.view.showModCategory();
                         return [2 /*return*/];
                 }
             });
@@ -74,6 +66,6 @@ var ModCategoryComponent = /** @class */ (function (_super) {
         });
     };
     return ModCategoryComponent;
-}(Card_1.Card));
+}());
 exports.ModCategoryComponent = ModCategoryComponent;
 //# sourceMappingURL=ModCategoryComponent.js.map

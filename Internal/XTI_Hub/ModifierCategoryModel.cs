@@ -1,8 +1,7 @@
-﻿namespace XTI_Hub
+﻿namespace XTI_Hub;
+
+public sealed class ModifierCategoryModel
 {
-    public sealed class ModifierCategoryModel
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-    }
+    public int ID { get; set; }
+    public string Name { get; set; } = "";
 }

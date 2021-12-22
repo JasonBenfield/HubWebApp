@@ -1,22 +1,20 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_TempLog;
 
-namespace XTI_HubAppApi.PermanentLog
+namespace XTI_HubAppApi.PermanentLog;
+
+public sealed class EndSessionAction : AppAction<EndSessionModel, EmptyActionResult>
 {
-    public sealed class EndSessionAction : AppAction<EndSessionModel, EmptyActionResult>
+    private readonly PermanentLog permanentLog;
+
+    public EndSessionAction(PermanentLog permanentLog)
     {
-        private readonly PermanentLog permanentLog;
+        this.permanentLog = permanentLog;
+    }
 
-        public EndSessionAction(PermanentLog permanentLog)
-        {
-            this.permanentLog = permanentLog;
-        }
-
-        public async Task<EmptyActionResult> Execute(EndSessionModel model)
-        {
-            await permanentLog.EndSession(model);
-            return new EmptyActionResult();
-        }
+    public async Task<EmptyActionResult> Execute(EndSessionModel model)
+    {
+        await permanentLog.EndSession(model);
+        return new EmptyActionResult();
     }
 }

@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "XtiShared/AppApiGroup";
-import { AppApiAction } from "XtiShared/AppApiAction";
-import { AppApiView } from "XtiShared/AppApiView";
-import { AppApiEvents } from "XtiShared/AppApiEvents";
-import { AppResourceUrl } from "XtiShared/AppResourceUrl";
+import { AppApiGroup } from "@jasonbenfield/sharedwebapp/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/AppApiEvents";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/AppResourceUrl";
 
 export class ResourceGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {

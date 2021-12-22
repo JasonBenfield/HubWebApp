@@ -2,30 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupComponent = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var Row_1 = require("XtiShared/Grid/Row");
-var ResourceGroupComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroupComponent, _super);
-    function ResourceGroupComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addCardTitleHeader('Resource Group');
-        _this.alert = _this.addCardAlert().alert;
-        var listGroup = _this.addListGroup();
-        var row = listGroup
-            .addItem()
-            .addContent(new Row_1.Row());
-        _this.groupName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        _this.anonListItem = listGroup.addItem();
-        _this.anonListItem.addContent(new Row_1.Row())
-            .addColumn()
-            .addContent(new TextSpan_1.TextSpan('Anonymous is Allowed'));
-        _this.anonListItem.hide();
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var ResourceGroupComponent = /** @class */ (function () {
+    function ResourceGroupComponent(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('Resource Group', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.view.hideAnonMessage();
     }
     ResourceGroupComponent.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;
@@ -38,12 +23,12 @@ var ResourceGroupComponent = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getResourceGroup(this.groupID)];
                     case 1:
                         group = _a.sent();
-                        this.groupName.setText(group.Name);
+                        this.view.setGroupName(group.Name);
                         if (group.IsAnonymousAllowed) {
-                            this.anonListItem.show();
+                            this.view.showAnonMessage();
                         }
                         else {
-                            this.anonListItem.hide();
+                            this.view.hideAnonMessage();
                         }
                         return [2 /*return*/];
                 }
@@ -77,6 +62,6 @@ var ResourceGroupComponent = /** @class */ (function (_super) {
         });
     };
     return ResourceGroupComponent;
-}(Card_1.Card));
+}());
 exports.ResourceGroupComponent = ResourceGroupComponent;
 //# sourceMappingURL=ResourceGroupComponent.js.map

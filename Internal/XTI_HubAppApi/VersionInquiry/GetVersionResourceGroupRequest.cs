@@ -1,8 +1,7 @@
-﻿namespace XTI_HubAppApi.VersionInquiry
+﻿namespace XTI_HubAppApi.VersionInquiry;
+
+public sealed class GetVersionResourceGroupRequest
 {
-    public sealed class GetVersionResourceGroupRequest
-    {
-        public string VersionKey { get; set; }
-        public string GroupName { get; set; }
-    }
+    public string VersionKey { get; set; } = "";
+    public string GroupName { get; set; } = "";
 }

@@ -1,25 +1,28 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.ResourceGroupInquiry;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public ResourceGroupInquiryGroup ResourceGroup { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void resourceGroup(IServiceProvider services)
-        {
-            ResourceGroup = new ResourceGroupInquiryGroup
+partial class HubAppApi
+{
+    private ResourceGroupInquiryGroup? resourceGroup;
+
+    public ResourceGroupInquiryGroup ResourceGroup
+    {
+        get => resourceGroup ?? throw new ArgumentNullException(nameof(resourceGroup));
+    }
+
+    partial void createResourceGroup(IServiceProvider services)
+    {
+        resourceGroup = new ResourceGroupInquiryGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(ResourceGroup),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.ViewApp)
-                ),
-                services
-            );
-        }
+                nameof(ResourceGroup),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.ViewApp)
+            ),
+            services
+        );
     }
 }

@@ -1,13 +1,7 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class UserRoleAccessModel
 {
-    public sealed partial class UserRoleAccessModel
-    {
-        public AppRoleModel[] UnassignedRoles { get; set; }
-
-        public AppRoleModel[] AssignedRoles { get; set; }
-    }
+    public AppRoleModel[] UnassignedRoles { get; set; } = new AppRoleModel[0];
+    public AppRoleModel[] AssignedRoles { get; set; } = new AppRoleModel[0];
 }

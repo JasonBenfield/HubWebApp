@@ -12,10 +12,6 @@
     "target": "es5",
     "importHelpers": true,
     "baseUrl": ".",
-    "paths": {
-      "XtiShared/*": [ "../../Imports/Shared/*" ],
-      "XtiAuthenticator/*": [ "../../Imports/Authenticator/*" ]
-    },
     "typeRoots": [
       "../../node_modules/@types"
     ]

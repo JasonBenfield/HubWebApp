@@ -2,48 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserComponent = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Command_1 = require("XtiShared/Command/Command");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var Row_1 = require("XtiShared/Grid/Row");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var FormGroup_1 = require("XtiShared/Html/FormGroup");
-var TextCss_1 = require("XtiShared/TextCss");
-var HubTheme_1 = require("../../HubTheme");
-var UserComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserComponent, _super);
-    function UserComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._editRequested = new Events_1.DefaultEvent(_this);
-        _this.editRequested = _this._editRequested.handler();
-        _this.editCommand = new Command_1.Command(_this.requestEdit.bind(_this));
-        _this.setName(UserComponent.name);
-        var headerRow = _this.addCardHeader()
-            .addContent(new Row_1.Row());
-        headerRow.addColumn()
-            .addContent(new TextSpan_1.TextSpan('User'));
-        var editButton = _this.editCommand.add(headerRow.addColumn()
-            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(HubTheme_1.HubTheme.instance.cardHeader.editButton()));
-        _this.alert = _this.addCardAlert().alert;
-        var body = _this.addCardBody();
-        _this.userName = _this.addBodyRow(body, 'User Name');
-        _this.fullName = _this.addBodyRow(body, 'Name');
-        _this.email = _this.addBodyRow(body, 'Email');
-        return _this;
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var UserComponent = /** @class */ (function () {
+    function UserComponent(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._editRequested = new Events_1.DefaultEvent(this);
+        this.editRequested = this._editRequested.handler();
+        this.editCommand = new Command_1.Command(this.requestEdit.bind(this));
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.editCommand.add(this.view.editButton);
     }
-    UserComponent.prototype.addBodyRow = function (body, caption) {
-        var row = body.addContent(new FormGroup_1.FormGroup());
-        row.captionColumn.addContent(new TextSpan_1.TextSpan(caption));
-        row.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
-        row.valueColumn.setTextCss(new TextCss_1.TextCss().truncate());
-        return row.valueColumn.addContent(new TextSpan_1.TextSpan())
-            .configure(function (ts) { return ts.addCssName('form-control-plaintext'); });
-    };
     UserComponent.prototype.setUserID = function (userID) {
         this.userID = userID;
     };
@@ -58,12 +29,9 @@ var UserComponent = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getUser(this.userID)];
                     case 1:
                         user = _a.sent();
-                        this.userName.setText(user.UserName);
-                        this.userName.setTitleFromText();
-                        this.fullName.setText(user.Name);
-                        this.fullName.setTitleFromText();
-                        this.email.setText(user.Email);
-                        this.email.setTitleFromText();
+                        this.view.setUserName(user.UserName);
+                        this.view.setFullName(user.Name);
+                        this.view.setEmail(user.Email);
                         return [2 /*return*/];
                 }
             });
@@ -93,6 +61,6 @@ var UserComponent = /** @class */ (function (_super) {
         });
     };
     return UserComponent;
-}(Card_1.Card));
+}());
 exports.UserComponent = UserComponent;
 //# sourceMappingURL=UserComponent.js.map

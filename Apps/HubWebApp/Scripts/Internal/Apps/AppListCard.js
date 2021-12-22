@@ -2,28 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppListCard = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var Events_1 = require("XtiShared/Events");
-var Row_1 = require("XtiShared/Grid/Row");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var AppListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppListCard, _super);
-    function AppListCard(hubApi, appRedirectUrl, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.appRedirectUrl = appRedirectUrl;
-        _this._appSelected = new Events_1.DefaultEvent(_this);
-        _this.appSelected = _this._appSelected.handler();
-        _this.addCardTitleHeader('Apps');
-        _this.alert = _this.addCardAlert().alert;
-        _this.apps = _this.addLinkListGroup();
-        _this.apps.itemClicked.register(_this.onAppSelected.bind(_this));
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var AppListItem_1 = require("./AppListItem");
+var AppListCard = /** @class */ (function () {
+    function AppListCard(hubApi, appRedirectUrl, view) {
+        this.hubApi = hubApi;
+        this.appRedirectUrl = appRedirectUrl;
+        this.view = view;
+        this._appSelected = new Events_1.DefaultEvent(this);
+        this.appSelected = this._appSelected.handler();
+        new CardTitleHeader_1.CardTitleHeader('Apps', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.apps = new ListGroup_1.ListGroup(this.view.apps);
+        this.apps.itemClicked.register(this.onAppSelected.bind(this));
     }
     AppListCard.prototype.onAppSelected = function (listItem) {
-        this._appSelected.invoke(listItem.getData());
+        this._appSelected.invoke(listItem.app);
     };
     AppListCard.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -35,14 +32,7 @@ var AppListCard = /** @class */ (function (_super) {
                     case 1:
                         apps = _a.sent();
                         this.apps.setItems(apps, function (sourceItem, listItem) {
-                            var row = listItem.addContent(new Row_1.Row());
-                            row.addColumn()
-                                .addContent(new TextSpan_1.TextSpan(sourceItem.AppName));
-                            row.addColumn()
-                                .addContent(new TextSpan_1.TextSpan(sourceItem.Title));
-                            row.addColumn()
-                                .addContent(new TextSpan_1.TextSpan(sourceItem.Type.DisplayText));
-                            listItem.setHref(_this.appRedirectUrl(sourceItem.ID));
+                            return new AppListItem_1.AppListItem(sourceItem, _this.appRedirectUrl, listItem);
                         });
                         if (apps.length === 0) {
                             this.alert.danger('No Apps were Found');
@@ -76,6 +66,6 @@ var AppListCard = /** @class */ (function (_super) {
         });
     };
     return AppListCard;
-}(Card_1.Card));
+}());
 exports.AppListCard = AppListCard;
 //# sourceMappingURL=AppListCard.js.map

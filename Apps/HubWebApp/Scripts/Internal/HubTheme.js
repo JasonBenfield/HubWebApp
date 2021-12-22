@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HubTheme = void 0;
-var ButtonCommandItem_1 = require("XtiShared/Command/ButtonCommandItem");
-var ContextualClass_1 = require("XtiShared/ContextualClass");
-var Toolbar_1 = require("XtiShared/Html/Toolbar");
-var PaddingCss_1 = require("XtiShared/PaddingCss");
+var ButtonCommandItem_1 = require("@jasonbenfield/sharedwebapp/Command/ButtonCommandItem");
+var ContextualClass_1 = require("@jasonbenfield/sharedwebapp/ContextualClass");
+var Toolbar_1 = require("@jasonbenfield/sharedwebapp/Html/Toolbar");
+var PaddingCss_1 = require("@jasonbenfield/sharedwebapp/PaddingCss");
 var HubTheme = /** @class */ (function () {
     function HubTheme() {
         this.cardHeader = {

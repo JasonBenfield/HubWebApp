@@ -1,25 +1,32 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using HubWebApp.Extensions;
 using XTI_Configuration.Extensions;
+using XTI_WebApp.Extensions;
 
-namespace HubWebApp
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.UseXtiConfiguration(builder.Environment, new string[0]);
+
+builder.Services.AddResponseCaching();
+builder.Services.ConfigureXtiCookieAndTokenAuthentication(builder.Environment, builder.Configuration);
+builder.Services.AddServicesForHub(builder.Environment, builder.Configuration);
+
+var app = builder.Build();
+
+if ( app.Environment.IsDevOrTest())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration
-                (
-                    (hostingContext, config) => config.UseXtiConfiguration(hostingContext.HostingEnvironment, args)
-                )
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+    app.UseDeveloperExceptionPage();
 }
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseResponseCaching();
+app.UseXti();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute
+    (
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+});
+await app.RunAsync();

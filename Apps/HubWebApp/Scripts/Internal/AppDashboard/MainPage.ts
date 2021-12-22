@@ -1,32 +1,32 @@
-﻿import { Startup } from 'xtistart';
+﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
+import { WebPage } from '@jasonbenfield/sharedwebapp/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { XtiUrl } from 'XtiShared/XtiUrl';
-import { WebPage } from 'XtiShared/WebPage';
-import { SingleActivePanel } from '../Panel/SingleActivePanel';
+import { Apis } from '../../Hub/Apis';
 import { AppDetailPanel } from './AppDetail/AppDetailPanel';
-import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
-import { ResourcePanel } from './Resource/ResourcePanel';
+import { MainPageView } from './MainPageView';
 import { ModCategoryPanel } from './ModCategory/ModCategoryPanel';
-import { PageFrame } from 'XtiShared/PageFrame';
-import { Panel } from '../Panel/Panel';
-import { PaddingCss } from 'XtiShared/PaddingCss';
+import { ResourcePanel } from './Resource/ResourcePanel';
+import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
 
 class MainPage {
-    constructor(private readonly page: PageFrame) {
-        this.page.content.setPadding(PaddingCss.top(3));
-        this.hubApi = this.page.api<HubAppApi>(HubAppApi);
-        this.appDetailPanel = this.page.addContent(
-            this.panels.add(new AppDetailPanel(this.hubApi))
-        );
-        this.resourceGroupPanel = this.page.addContent(
-            this.panels.add(new ResourceGroupPanel(this.hubApi))
-        );
-        this.resourcePanel = this.page.addContent(
-            this.panels.add(new ResourcePanel(this.hubApi))
-        );
-        this.modCategoryPanel = this.page.addContent(
-            this.panels.add(new ModCategoryPanel(this.hubApi))
-        );
+    private readonly view: MainPageView;
+    private readonly hubApi: HubAppApi;
+    private readonly panels: SingleActivePanel;
+    private readonly appDetailPanel: AppDetailPanel;
+    private readonly resourceGroupPanel: ResourceGroupPanel;
+    private readonly resourcePanel: ResourcePanel;
+    private readonly modCategoryPanel: ModCategoryPanel;
+
+    constructor(page: PageFrameView) {
+        this.view = new MainPageView(page);
+        this.hubApi = new Apis(page.modalError).hub();
+        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubApi, this.view.appDetailPanel));
+        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));
+        this.resourcePanel = this.panels.add(new ResourcePanel(this.hubApi, this.view.resourcePanel));
+        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubApi, this.view.modCategoryPanel));
         if (XtiUrl.current.path.modifier) {
             this.activateAppDetailPanel();
         }
@@ -35,73 +35,61 @@ class MainPage {
         }
     }
 
-    private readonly hubApi: HubAppApi;
-    private readonly panels = new SingleActivePanel();
-    private readonly appDetailPanel: Panel<AppDetailPanel>;
-    private readonly resourceGroupPanel: Panel<ResourceGroupPanel>;
-    private readonly resourcePanel: Panel<ResourcePanel>;
-    private readonly modCategoryPanel: Panel<ModCategoryPanel>;
-
     private async activateAppDetailPanel() {
         this.panels.activate(this.appDetailPanel);
-        this.appDetailPanel.content.refresh();
-        let result = await this.appDetailPanel.content.start();
-        if (result.key === AppDetailPanel.ResultKeys.backRequested) {
+        this.appDetailPanel.refresh();
+        let result = await this.appDetailPanel.start();
+        if (result.backRequested) {
             this.hubApi.Apps.Index.open({});
         }
-        else if (result.key === AppDetailPanel.ResultKeys.resourceGroupSelected) {
-            let resourceGroup: IResourceGroupModel = result.data;
-            this.activateResourceGroupPanel(resourceGroup.ID);
+        else if (result.resourceGroupSelected) {
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
         }
-        else if (result.key === AppDetailPanel.ResultKeys.modCategorySelected) {
-            let modCategory: IModifierCategoryModel = result.data;
-            this.activateModCategoryPanel(modCategory.ID);
+        else if (result.modCategorySelected) {
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
         }
     }
 
     private async activateResourceGroupPanel(groupID?: number) {
         this.panels.activate(this.resourceGroupPanel);
         if (groupID) {
-            this.resourceGroupPanel.content.setGroupID(groupID);
+            this.resourceGroupPanel.setGroupID(groupID);
         }
-        this.resourceGroupPanel.content.refresh();
-        let result = await this.resourceGroupPanel.content.start();
-        if (result.key === ResourceGroupPanel.ResultKeys.backRequested) {
+        this.resourceGroupPanel.refresh();
+        let result = await this.resourceGroupPanel.start();
+        if (result.backRequested) {
             this.activateAppDetailPanel();
         }
-        else if (result.key === ResourceGroupPanel.ResultKeys.resourceSelected) {
-            let resource: IResourceModel = result.data;
-            this.activateResourcePanel(resource.ID);
+        else if (result.resourceSelected) {
+            this.activateResourcePanel(result.resourceSelected.resource.ID);
         }
-        else if (result.key === ResourceGroupPanel.ResultKeys.modCategorySelected) {
-            let modCategory: IModifierCategoryModel = result.data;
-            this.activateModCategoryPanel(modCategory.ID);
+        else if (result.modCategorySelected) {
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
         }
     }
 
     private async activateResourcePanel(resourceID?: number) {
         this.panels.activate(this.resourcePanel);
         if (resourceID) {
-            this.resourcePanel.content.setResourceID(resourceID);
+            this.resourcePanel.setResourceID(resourceID);
         }
-        this.resourcePanel.content.refresh();
-        let result = await this.resourcePanel.content.start();
-        if (result.key === ResourcePanel.ResultKeys.backRequested) {
+        this.resourcePanel.refresh();
+        let result = await this.resourcePanel.start();
+        if (result.backRequested) {
             this.activateResourceGroupPanel();
         }
     }
 
     private async activateModCategoryPanel(modCategoryID: number) {
         this.panels.activate(this.modCategoryPanel);
-        this.modCategoryPanel.content.setModCategoryID(modCategoryID);
-        this.modCategoryPanel.content.refresh();
-        let result = await this.modCategoryPanel.content.start();
-        if (result.key === ModCategoryPanel.ResultKeys.backRequested) {
+        this.modCategoryPanel.setModCategoryID(modCategoryID);
+        this.modCategoryPanel.refresh();
+        let result = await this.modCategoryPanel.start();
+        if (result.backRequested) {
             this.activateAppDetailPanel();
         }
-        else if (result.key === ModCategoryPanel.ResultKeys.resourceGroupSelected) {
-            let resourceGroup: IResourceGroupModel = result.data;
-            this.activateResourceGroupPanel(resourceGroup.ID);
+        else if (result.resourceGroupSelected) {
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
         }
     }
 }

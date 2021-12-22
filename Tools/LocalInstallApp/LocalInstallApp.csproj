@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -10,17 +12,17 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.7.37" />
-    <PackageReference Include="XTI_App.Extensions" Version="1.7.37" />
-    <PackageReference Include="XTI_Configuration.Extensions" Version="1.9.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.8.7" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.7" />
+    <PackageReference Include="XTI_Configuration.Extensions" Version="1.10.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
-    <PackageReference Include="XTI_SecretsToolApi" Version="1.7.13" />
-    <PackageReference Include="XTI_Secrets.Extensions" Version="1.7.13" />
-    <PackageReference Include="XTI_Processes" Version="1.0.1" />
-    <PackageReference Include="XTI_Git.GitLib" Version="1.1.11" />
-    <PackageReference Include="XTI_GitHub.Web" Version="1.1.11" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
+    <PackageReference Include="XTI_SecretsToolApi" Version="1.8.2" />
+    <PackageReference Include="XTI_Secrets.Extensions" Version="1.8.2" />
+    <PackageReference Include="XTI_Processes" Version="1.1.1" />
+    <PackageReference Include="XTI_Git.GitLib" Version="1.2.3" />
+    <PackageReference Include="XTI_GitHub.Web" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>

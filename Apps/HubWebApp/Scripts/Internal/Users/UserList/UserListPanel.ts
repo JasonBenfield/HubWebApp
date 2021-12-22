@@ -1,45 +1,49 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { Result } from "XtiShared/Result";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { UserListCard } from "./UserListCard";
+import { UserListPanelView } from "./UserListPanelView";
 
-export class UserListPanel extends Block {
-    public static readonly ResultKeys = {
-        userSelected: 'user-selected'
-    };
+interface Results {
+    userSelected?: { user: IAppUserModel};
+}
+
+export class UserListPanelResult {
+    static userSelected(user: IAppUserModel) {
+        return new UserListPanelResult({ userSelected: { user: user} });
+    }
+
+    private constructor(private readonly results: Results) { }
+
+    get userSelected() { return this.results.userSelected; }
+}
+
+export class UserListPanel implements IPanel {
+    private readonly userListCard: UserListCard;
+    private readonly awaitable = new Awaitable<UserListPanelResult>();
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: UserListPanelView
     ) {
-        super(vm);
-        this.height100();
-        this.setName(UserListPanel.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.userListCard = flexFill.container.addContent(new UserListCard(this.hubApi));
+        this.userListCard = new UserListCard(this.hubApi, this.view.userListCard);
         this.userListCard.userSelected.register(this.onUserSelected.bind(this));
     }
 
     private onUserSelected(user: IAppUserModel) {
         this.awaitable.resolve(
-            new Result(UserListPanel.ResultKeys.userSelected, user)
+            UserListPanelResult.userSelected(user)
         );
     }
-
-    private readonly userListCard: UserListCard;
 
     refresh() {
         return this.userListCard.refresh();
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

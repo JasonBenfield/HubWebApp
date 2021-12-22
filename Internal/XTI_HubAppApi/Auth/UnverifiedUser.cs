@@ -1,30 +1,33 @@
-﻿using System.Threading.Tasks;
+﻿using XTI_App.Abstractions;
 using XTI_Hub;
-using XTI_App.Abstractions;
 
-namespace XTI_HubAppApi.Auth
+namespace XTI_HubAppApi.Auth;
+
+public sealed class UnverifiedUser
 {
-    public sealed class UnverifiedUser
+    private readonly AppFactory factory;
+
+    public UnverifiedUser(AppFactory factory)
     {
-        public UnverifiedUser(AppFactory factory)
-        {
-            this.factory = factory;
-        }
+        this.factory = factory;
+    }
 
-        private readonly AppFactory factory;
-
-        public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword)
+    public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword)
+    {
+        AppUser user;
+        var userExists = await factory.Users.UserNameExists(userName);
+        if (userExists && !userName.Equals(AppUserName.Anon))
         {
-            var user = await factory.Users.User(userName);
-            if (!user.Exists())
-            {
-                throw new UserNotFoundException(userName.DisplayText);
-            }
+            user = await factory.Users.UserByUserName(userName);
             if (!user.IsPasswordCorrect(hashedPassword))
             {
                 throw new PasswordIncorrectException(userName.DisplayText);
             }
-            return user;
         }
+        else
+        {
+            throw new UserNotFoundException(userName.DisplayText);
+        }
+        return user;
     }
 }

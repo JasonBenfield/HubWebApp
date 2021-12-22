@@ -1,25 +1,25 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.ModCategoryInquiry;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public ModCategoryGroup ModCategory { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void modCategory(IServiceProvider services)
-        {
-            ModCategory = new ModCategoryGroup
+partial class HubAppApi
+{
+    private ModCategoryGroup? modCategory;
+
+    public ModCategoryGroup ModCategory { get => modCategory ?? throw new ArgumentNullException(nameof(modCategory)); }
+
+    partial void createModCategory(IServiceProvider services)
+    {
+        modCategory = new ModCategoryGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(ModCategory),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.ViewApp)
-                ),
-                services
-            );
-        }
+                nameof(ModCategory),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.ViewApp)
+            ),
+            services
+        );
     }
 }

@@ -1,47 +1,44 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { ButtonListGroup } from "XtiShared/ListGroup/ButtonListGroup";
-import { ButtonListItemViewModel } from "XtiShared/ListGroup/ButtonListItemViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { Result } from "XtiShared/Result";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { EditUserRoleListItem } from "./EditUserRoleListItem";
-import { HubTheme } from "../../HubTheme";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
+import { EditUserRoleListItemView } from "./EditUserRoleListItemView";
+import { UserRolePanelView } from "./UserRolePanelView";
 
-export class UserRolePanel extends Block {
-    public static ResultKeys = {
-        backRequested: 'back-requested'
-    };
+interface Results {
+    backRequested?: {};
+}
+
+export class UserRolePanelResult {
+    static get backRequested() {
+        return new UserRolePanelResult({ backRequested: {} });
+    }
+
+    private constructor(private readonly results: Results) {
+    }
+
+    get backRequested() { return this.results.backRequested; }
+}
+
+export class UserRolePanel implements IPanel {
+    private readonly alert: MessageAlert;
+    private readonly userRoles: ListGroup;
+    private userID: number;
+    private readonly awaitable = new Awaitable<UserRolePanelResult>();
+    private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: UserRolePanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        let card = flexFill.addContent(new Card());
-        card.addCardTitleHeader('Edit User Roles');
-        this.alert = card.addCardAlert().alert;
-        this.userRoles = card.addButtonListGroup(
-            (itemVM: ButtonListItemViewModel) => new EditUserRoleListItem(this.hubApi, itemVM)
-        );
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        );
+        new CardTitleHeader('Edit User Roles', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.userRoles = new ListGroup(this.view.userRoles);
+        this.backCommand.add(this.view.backButton);
     }
-
-    private readonly alert: MessageAlert;
-    private readonly userRoles: ButtonListGroup;
-
-    private userID: number;
 
     setUserID(userID: number) {
         this.userID = userID;
@@ -59,9 +56,10 @@ export class UserRolePanel extends Block {
         sourceItems.sort(this.compare.bind(this));
         this.userRoles.setItems(
             sourceItems,
-            (sourceItem, listItem: EditUserRoleListItem) => {
+            (role: IAppRoleModel, view: EditUserRoleListItemView) => {
+                let listItem = new EditUserRoleListItem(this.hubApi, view);
                 listItem.setUserID(this.userID);
-                listItem.withAssignedRole(sourceItem);
+                listItem.withAssignedRole(role);
             }
         );
     }
@@ -99,17 +97,15 @@ export class UserRolePanel extends Block {
         return access;
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    private readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
-        this.awaitable.resolve(
-            new Result(UserRolePanel.ResultKeys.backRequested)
-        );
+        this.awaitable.resolve(UserRolePanelResult.backRequested);
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

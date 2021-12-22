@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HubAppApi = void 0;
 var tslib_1 = require("tslib");
-var AppApi_1 = require("XtiShared/AppApi");
+var AppApi_1 = require("@jasonbenfield/sharedwebapp/AppApi");
 var UserGroup_1 = require("./UserGroup");
 var UserCacheGroup_1 = require("./UserCacheGroup");
 var AuthGroup_1 = require("./AuthGroup");
@@ -47,7 +47,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
+    HubAppApi.DefaultVersion = 'V63';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

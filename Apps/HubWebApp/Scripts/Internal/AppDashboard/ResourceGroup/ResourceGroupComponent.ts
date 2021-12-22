@@ -1,49 +1,34 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { Row } from "XtiShared/Grid/Row";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ResourceGroupComponentView } from "./ResourceGroupComponentView";
 
-export class ResourceGroupComponent extends Card {
+export class ResourceGroupComponent {
+    private groupID: number;
+
+    private readonly alert: MessageAlert;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ResourceGroupComponentView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Resource Group');
-        this.alert = this.addCardAlert().alert;
-        let listGroup = this.addListGroup();
-        let row = listGroup
-            .addItem()
-            .addContent(new Row());
-        this.groupName = row.addColumn()
-            .addContent(new TextSpan());
-        this.anonListItem = listGroup.addItem();
-        this.anonListItem.addContent(new Row())
-            .addColumn()
-            .addContent(new TextSpan('Anonymous is Allowed'));
-        this.anonListItem.hide();
+        new CardTitleHeader('Resource Group', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.view.hideAnonMessage();
     }
-
-    private groupID: number;
 
     setGroupID(groupID: number) {
         this.groupID = groupID;
     }
 
-    private readonly alert: MessageAlert;
-    private readonly groupName: TextSpan;
-    private readonly anonListItem: IListItem;
-
     async refresh() {
         let group = await this.getResourceGroup(this.groupID);
-        this.groupName.setText(group.Name);
+        this.view.setGroupName(group.Name);
         if (group.IsAnonymousAllowed) {
-            this.anonListItem.show();
+            this.view.showAnonMessage();
         }
         else {
-            this.anonListItem.hide();
+            this.view.hideAnonMessage();
         }
     }
 

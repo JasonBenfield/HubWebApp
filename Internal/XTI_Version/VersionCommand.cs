@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using XTI_VersionToolApi;
+﻿using XTI_VersionToolApi;
 
-namespace XTI_Version
+namespace XTI_Version;
+
+public interface VersionCommand
 {
-    public interface VersionCommand
-    {
-        Task Execute(VersionToolOptions options);
-    }
+    Task Execute(VersionToolOptions options);
 }

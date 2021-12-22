@@ -1,13 +1,7 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class PublishVersionRequest
 {
-    public sealed partial class PublishVersionRequest
-    {
-        public AppKey AppKey { get; set; }
-
-        public string VersionKey { get; set; }
-    }
+    public AppKey AppKey { get; set; } = new AppKey();
+    public string VersionKey { get; set; } = "";
 }

@@ -1,35 +1,27 @@
-﻿using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.ResourceGroupInquiry
+namespace XTI_HubAppApi.ResourceGroupInquiry;
+
+public sealed class GetResourceAction : AppAction<GetResourceGroupResourceRequest, ResourceModel>
 {
-    public sealed class GetResourceGroupResourceRequest
+    private readonly AppFromPath appFromPath;
+
+    public GetResourceAction(AppFromPath appFromPath)
     {
-        public string VersionKey { get; set; }
-        public int GroupID { get; set; }
-        public string ResourceName { get; set; }
+        this.appFromPath = appFromPath;
     }
-    public sealed class GetResourceAction : AppAction<GetResourceGroupResourceRequest, ResourceModel>
+
+    public async Task<ResourceModel> Execute(GetResourceGroupResourceRequest model)
     {
-        private readonly AppFromPath appFromPath;
-
-        public GetResourceAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ResourceModel> Execute(GetResourceGroupResourceRequest model)
-        {
-            var app = await appFromPath.Value();
-            var versionKey = AppVersionKey.Parse(model.VersionKey);
-            var version = await app.Version(versionKey);
-            var group = await version.ResourceGroup(model.GroupID);
-            var resourceName = new ResourceName(model.ResourceName);
-            var resource = await group.Resource(resourceName);
-            var resourceModel = resource.ToModel();
-            return resourceModel;
-        }
+        var app = await appFromPath.Value();
+        var versionKey = AppVersionKey.Parse(model.VersionKey);
+        var version = await app.Version(versionKey);
+        var group = await version.ResourceGroup(model.GroupID);
+        var resourceName = new ResourceName(model.ResourceName);
+        var resource = await group.ResourceByName(resourceName);
+        var resourceModel = resource.ToModel();
+        return resourceModel;
     }
 }

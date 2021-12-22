@@ -1,47 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResourcePanel = void 0;
-var tslib_1 = require("tslib");
-var Awaitable_1 = require("XtiShared/Awaitable");
-var Command_1 = require("XtiShared/Command/Command");
-var Block_1 = require("XtiShared/Html/Block");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
-var MarginCss_1 = require("XtiShared/MarginCss");
-var Result_1 = require("XtiShared/Result");
-var HubTheme_1 = require("../../HubTheme");
+exports.ResourcePanel = exports.ResourcePanelResult = void 0;
+var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
 var MostRecentErrorEventListCard_1 = require("./MostRecentErrorEventListCard");
 var MostRecentRequestListCard_1 = require("./MostRecentRequestListCard");
 var ResourceAccessCard_1 = require("./ResourceAccessCard");
 var ResourceComponent_1 = require("./ResourceComponent");
-var ResourcePanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourcePanel, _super);
-    function ResourcePanel(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.awaitable = new Awaitable_1.Awaitable();
-        _this.backCommand = new Command_1.Command(_this.back.bind(_this));
-        _this.height100();
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        _this.resourceComponent = flexFill
-            .addContent(new ResourceComponent_1.ResourceComponent(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.resourceAccessCard = flexFill
-            .addContent(new ResourceAccessCard_1.ResourceAccessCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.mostRecentRequestListCard = flexFill
-            .addContent(new MostRecentRequestListCard_1.MostRecentRequestListCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        _this.mostRecentErrorEventListCard = flexFill
-            .addContent(new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(_this.hubApi))
-            .configure(function (b) { return b.setMargin(MarginCss_1.MarginCss.bottom(3)); });
-        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
-        var backButton = _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton()));
-        backButton.setText('Resource Group');
-        return _this;
+var ResourcePanelResult = /** @class */ (function () {
+    function ResourcePanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(ResourcePanelResult, "backRequested", {
+        get: function () { return new ResourcePanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourcePanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    return ResourcePanelResult;
+}());
+exports.ResourcePanelResult = ResourcePanelResult;
+var ResourcePanel = /** @class */ (function () {
+    function ResourcePanel(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.backCommand = new Command_1.Command(this.back.bind(this));
+        this.resourceComponent = new ResourceComponent_1.ResourceComponent(this.hubApi, this.view.resourceComponent);
+        this.resourceAccessCard = new ResourceAccessCard_1.ResourceAccessCard(this.hubApi, this.view.resourceAccessCard);
+        this.mostRecentRequestListCard = new MostRecentRequestListCard_1.MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.backCommand.add(this.view.backButton);
     }
     ResourcePanel.prototype.setResourceID = function (resourceID) {
         this.resourceComponent.setResourceID(resourceID);
@@ -62,12 +55,11 @@ var ResourcePanel = /** @class */ (function (_super) {
         return this.awaitable.start();
     };
     ResourcePanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(ResourcePanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourcePanelResult.backRequested);
     };
-    ResourcePanel.ResultKeys = {
-        backRequested: 'back-requested'
-    };
+    ResourcePanel.prototype.activate = function () { this.view.show(); };
+    ResourcePanel.prototype.deactivate = function () { this.view.hide(); };
     return ResourcePanel;
-}(Block_1.Block));
+}());
 exports.ResourcePanel = ResourcePanel;
 //# sourceMappingURL=ResourcePanel.js.map

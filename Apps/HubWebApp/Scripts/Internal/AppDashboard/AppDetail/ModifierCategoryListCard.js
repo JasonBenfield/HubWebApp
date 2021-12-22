@@ -2,27 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModifierCategoryListCard = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Card_1 = require("XtiShared/Card/Card");
-var Row_1 = require("XtiShared/Grid/Row");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var ModifierCategoryListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModifierCategoryListCard, _super);
-    function ModifierCategoryListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._modCategorySelected = new Events_1.DefaultEvent(_this);
-        _this.modCategorySelected = _this._modCategorySelected.handler();
-        _this.addCardTitleHeader('Modifier Categories');
-        _this.alert = _this.addCardAlert().alert;
-        _this.modCategories = _this.addButtonListGroup();
-        _this.modCategories.itemClicked.register(_this.onItemSelected.bind(_this));
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var ModifierCategoryListItem_1 = require("./ModifierCategoryListItem");
+var ModifierCategoryListCard = /** @class */ (function () {
+    function ModifierCategoryListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._modCategorySelected = new Events_1.DefaultEvent(this);
+        this.modCategorySelected = this._modCategorySelected.handler();
+        new CardTitleHeader_1.CardTitleHeader('Modifier Categories', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.modCategories = new ListGroup_1.ListGroup(this.view.modCategories);
+        this.modCategories.itemClicked.register(this.onItemSelected.bind(this));
     }
     ModifierCategoryListCard.prototype.onItemSelected = function (item) {
-        this._modCategorySelected.invoke(item.getData());
+        this._modCategorySelected.invoke(item.modCategory);
     };
     ModifierCategoryListCard.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -32,11 +29,8 @@ var ModifierCategoryListCard = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getModCategories()];
                     case 1:
                         modCategories = _a.sent();
-                        this.modCategories.setItems(modCategories, function (sourceItem, listItem) {
-                            listItem.setData(sourceItem);
-                            listItem.addContent(new Row_1.Row())
-                                .addColumn()
-                                .addContent(new TextSpan_1.TextSpan(sourceItem.Name));
+                        this.modCategories.setItems(modCategories, function (modCategory, itemView) {
+                            return new ModifierCategoryListItem_1.ModifierCategoryListItem(modCategory, itemView);
                         });
                         if (modCategories.length === 0) {
                             this.alert.danger('No Modifier Categories were Found');
@@ -70,6 +64,6 @@ var ModifierCategoryListCard = /** @class */ (function (_super) {
         });
     };
     return ModifierCategoryListCard;
-}(Card_1.Card));
+}());
 exports.ModifierCategoryListCard = ModifierCategoryListCard;
 //# sourceMappingURL=ModifierCategoryListCard.js.map

@@ -3,15 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VerifyLoginForm = void 0;
 var tslib_1 = require("tslib");
 // Generated code
-var BaseForm_1 = require("XtiShared/Forms/BaseForm");
-var FormComponentViewModel_1 = require("XtiShared/Html/FormComponentViewModel");
+var BaseForm_1 = require("@jasonbenfield/sharedwebapp/Forms/BaseForm");
 var VerifyLoginForm = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(VerifyLoginForm, _super);
-    function VerifyLoginForm(vm) {
-        if (vm === void 0) { vm = new FormComponentViewModel_1.FormComponentViewModel(); }
-        var _this = _super.call(this, 'VerifyLoginForm', vm) || this;
-        _this.UserName = _this.addTextInputFormGroup('UserName');
-        _this.Password = _this.addTextInputFormGroup('Password');
+    function VerifyLoginForm(view) {
+        var _this = _super.call(this, 'VerifyLoginForm', view) || this;
+        _this.UserName = _this.addTextInputFormGroup('UserName', _this.view.UserName);
+        _this.Password = _this.addTextInputFormGroup('Password', _this.view.Password);
         _this.UserName.setCaption('User Name');
         _this.UserName.constraints.mustNotBeNull();
         _this.UserName.constraints.mustNotBeWhitespace('Must not be blank');

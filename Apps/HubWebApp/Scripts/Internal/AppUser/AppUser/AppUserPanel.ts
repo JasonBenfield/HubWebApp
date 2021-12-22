@@ -1,60 +1,69 @@
-﻿import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { Result } from "XtiShared/Result";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { AppUserPanelView } from "./AppUserPanelView";
 import { UserComponent } from "./UserComponent";
-import { UserRoleListCard } from "./UserRoleListCard";
-import { HubTheme } from "../../HubTheme";
-import { MarginCss } from "XtiShared/MarginCss";
 import { UserModCategoryListCard } from "./UserModCategoryListCard";
+import { UserRoleListCard } from "./UserRoleListCard";
 
-export class AppUserPanel extends Block {
-    static readonly ResultKeys = {
-        backRequested: 'back-requested',
-        editUserRolesRequested: 'edit-user-roles-requested',
-        editUserModCategoryRequested: 'edit-user-mod-category-requested'
-    };
+interface Results {
+    backRequested?: {};
+    editUserRolesRequested?: {};
+    editUserModCategoryRequested?: { userModCategory: IUserModifierCategoryModel; };
+}
+
+export class AppUserPanelResult {
+    static get backRequested() {
+        return new AppUserPanelResult({ backRequested: {} });
+    }
+
+    static get editUserRolesRequested() {
+        return new AppUserPanelResult({ editUserRolesRequested: {} });
+    }
+
+    static editUserModCategoryRequested(userModCategory: IUserModifierCategoryModel) {
+        return new AppUserPanelResult({
+            editUserModCategoryRequested: { userModCategory: userModCategory }
+        });
+    }
+
+    private constructor(private readonly results: Results) { }
+
+    get backRequested() { return this.results.backRequested; }
+
+    get editUserRolesRequested() { return this.results.editUserRolesRequested; }
+
+    get editUserModCategoryRequested() { return this.results.editUserModCategoryRequested; }
+}
+
+export class AppUserPanel implements IPanel {
+    private readonly userComponent: UserComponent;
+    private readonly userRoles: UserRoleListCard;
+    private readonly userModCategories: UserModCategoryListCard;
+    private readonly awaitable = new Awaitable<AppUserPanelResult>();
+    private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: AppUserPanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.userComponent = flexFill.addContent(new UserComponent(this.hubApi))
-            .configure(c => c.setMargin(MarginCss.bottom(3)));
-        this.userRoles = flexFill.addContent(new UserRoleListCard(this.hubApi))
-            .configure(c => c.setMargin(MarginCss.bottom(3)));
+        this.userComponent = new UserComponent(this.hubApi, this.view.userComponent);
+        this.userRoles = new UserRoleListCard(this.hubApi, this.view.userRoles);
         this.userRoles.editRequested.register(this.onEditUserRolesRequested.bind(this));
-        this.userModCategories = flexFill.addContent(new UserModCategoryListCard(this.hubApi));
+        this.userModCategories = new UserModCategoryListCard(this.hubApi, this.view.userModCategories);
         this.userModCategories.editRequested.register(this.onEditUserModCategoryRequested.bind(this));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        ).configure(b => b.setText('User'));
+        this.backCommand.add(this.view.backButton);
     }
 
     private onEditUserRolesRequested() {
-        this.awaitable.resolve(
-            new Result(AppUserPanel.ResultKeys.editUserRolesRequested)
-        );
+        this.awaitable.resolve(AppUserPanelResult.editUserRolesRequested);
     }
 
     private onEditUserModCategoryRequested(userModCategory: IUserModifierCategoryModel) {
         this.awaitable.resolve(
-            new Result(AppUserPanel.ResultKeys.editUserModCategoryRequested, userModCategory)
+            AppUserPanelResult.editUserModCategoryRequested(userModCategory)
         );
     }
-
-    private readonly userComponent: UserComponent;
-    private readonly userRoles: UserRoleListCard;
-    private readonly userModCategories: UserModCategoryListCard;
 
     setUserID(userID: number) {
         this.userComponent.setUserID(userID);
@@ -71,17 +80,17 @@ export class AppUserPanel extends Block {
         return Promise.all(promises);
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    private readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
         this.awaitable.resolve(
-            new Result(AppUserPanel.ResultKeys.backRequested)
+            AppUserPanelResult.backRequested
         );
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

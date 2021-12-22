@@ -1,54 +1,43 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { MarginCss } from "XtiShared/MarginCss";
-import { Result } from "XtiShared/Result";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { HubTheme } from "../../HubTheme";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceAccessCard } from "./ResourceAccessCard";
 import { ResourceComponent } from "./ResourceComponent";
+import { ResourcePanelView } from "./ResourcePanelView";
 
-export class ResourcePanel extends Block {
-    public static readonly ResultKeys = {
-        backRequested: 'back-requested'
-    };
+interface Results {
+    backRequested: {};
+}
 
-    constructor(
-        private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.resourceComponent = flexFill
-            .addContent(new ResourceComponent(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.resourceAccessCard = flexFill
-            .addContent(new ResourceAccessCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.mostRecentRequestListCard = flexFill
-            .addContent(new MostRecentRequestListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.mostRecentErrorEventListCard = flexFill
-            .addContent(new MostRecentErrorEventListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        let backButton = this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        );
-        backButton.setText('Resource Group');
+export class ResourcePanelResult {
+    static get backRequested() { return new ResourcePanelResult({ backRequested: {} }); }
+
+    private constructor(private readonly results: Results) {
     }
 
+    get backRequested() { return this.results.backRequested; }
+}
+
+export class ResourcePanel implements IPanel {
     private readonly resourceComponent: ResourceComponent;
     private readonly resourceAccessCard: ResourceAccessCard;
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
+    private readonly awaitable = new Awaitable<ResourcePanelResult>();
+    readonly backCommand = new Command(this.back.bind(this));
+
+    constructor(
+        private readonly hubApi: HubAppApi,
+        private readonly view: ResourcePanelView
+    ) {
+        this.resourceComponent = new ResourceComponent(this.hubApi, this.view.resourceComponent);
+        this.resourceAccessCard = new ResourceAccessCard(this.hubApi, this.view.resourceAccessCard);
+        this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.backCommand.add(this.view.backButton);
+    }
 
     setResourceID(resourceID: number) {
         this.resourceComponent.setResourceID(resourceID);
@@ -67,15 +56,15 @@ export class ResourcePanel extends Block {
         return Promise.all(promises);
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
-        this.awaitable.resolve(new Result(ResourcePanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourcePanelResult.backRequested);
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

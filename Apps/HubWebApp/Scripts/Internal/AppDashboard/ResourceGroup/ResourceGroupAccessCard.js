@@ -2,18 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupAccessCard = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
-var ResourceGroupAccessCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroupAccessCard, _super);
-    function ResourceGroupAccessCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addCardTitleHeader('Permissions');
-        _this.alert = _this.addCardAlert().alert;
-        return _this;
+var ResourceGroupAccessCard = /** @class */ (function () {
+    function ResourceGroupAccessCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('Permissions', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
     }
     ResourceGroupAccessCard.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;
@@ -27,7 +24,7 @@ var ResourceGroupAccessCard = /** @class */ (function (_super) {
                     case 1:
                         accessItems = _a.sent();
                         this.accessItems.setItems(accessItems, function (sourceItem, listItem) {
-                            listItem.addContent(new RoleAccessListItem_1.RoleAccessListItem(sourceItem));
+                            return new RoleAccessListItem_1.RoleAccessListItem(sourceItem, listItem);
                         });
                         if (accessItems.length === 0) {
                             this.alert.danger('No Roles were Found');
@@ -72,6 +69,6 @@ var ResourceGroupAccessCard = /** @class */ (function (_super) {
         });
     };
     return ResourceGroupAccessCard;
-}(Card_1.Card));
+}());
 exports.ResourceGroupAccessCard = ResourceGroupAccessCard;
 //# sourceMappingURL=ResourceGroupAccessCard.js.map

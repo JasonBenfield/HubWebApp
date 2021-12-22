@@ -1,19 +1,12 @@
-﻿import { FormattedDate } from "XtiShared/FormattedDate";
-import { Row } from "XtiShared/Grid/Row";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { TextSpan } from "XtiShared/Html/TextSpan";
+﻿import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
+import { RequestExpandedListItemView } from "./RequestExpandedListItemView";
 
-export class RequestExpandedListItem extends Row {
-    constructor(req: IAppRequestExpandedModel, vm: BlockViewModel = new BlockViewModel()) {
-        super(vm);
+export class RequestExpandedListItem {
+    constructor(req: IAppRequestExpandedModel, view: RequestExpandedListItemView) {
         let timeStarted = new FormattedDate(req.TimeStarted).formatDateTime();
-        this.addColumn()
-            .addContent(new TextSpan(timeStarted));
-        this.addColumn()
-            .addContent(new TextSpan(req.GroupName));
-        this.addColumn()
-            .addContent(new TextSpan(req.ActionName));
-        this.addColumn()
-            .addContent(new TextSpan(req.UserName));
+        view.setTimeStarted(timeStarted);
+        view.setGroupName(req.GroupName);
+        view.setActionName(req.ActionName);
+        view.setUserName(req.UserName);
     }
 }

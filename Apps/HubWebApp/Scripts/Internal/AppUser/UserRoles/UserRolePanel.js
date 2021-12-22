@@ -1,35 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRolePanel = void 0;
+exports.UserRolePanel = exports.UserRolePanelResult = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var Block_1 = require("XtiShared/Html/Block");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var Awaitable_1 = require("XtiShared/Awaitable");
-var Command_1 = require("XtiShared/Command/Command");
-var Result_1 = require("XtiShared/Result");
+var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EditUserRoleListItem_1 = require("./EditUserRoleListItem");
-var HubTheme_1 = require("../../HubTheme");
-var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
-var UserRolePanel = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserRolePanel, _super);
-    function UserRolePanel(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.awaitable = new Awaitable_1.Awaitable();
-        _this.backCommand = new Command_1.Command(_this.back.bind(_this));
-        _this.height100();
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        var card = flexFill.addContent(new Card_1.Card());
-        card.addCardTitleHeader('Edit User Roles');
-        _this.alert = card.addCardAlert().alert;
-        _this.userRoles = card.addButtonListGroup(function (itemVM) { return new EditUserRoleListItem_1.EditUserRoleListItem(_this.hubApi, itemVM); });
-        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
-        _this.backCommand.add(toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton()));
-        return _this;
+var UserRolePanelResult = /** @class */ (function () {
+    function UserRolePanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(UserRolePanelResult, "backRequested", {
+        get: function () {
+            return new UserRolePanelResult({ backRequested: {} });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserRolePanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserRolePanelResult;
+}());
+exports.UserRolePanelResult = UserRolePanelResult;
+var UserRolePanel = /** @class */ (function () {
+    function UserRolePanel(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.backCommand = new Command_1.Command(this.back.bind(this));
+        new CardTitleHeader_1.CardTitleHeader('Edit User Roles', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.userRoles = new ListGroup_1.ListGroup(this.view.userRoles);
+        this.backCommand.add(this.view.backButton);
     }
     UserRolePanel.prototype.setUserID = function (userID) {
         this.userID = userID;
@@ -53,9 +60,10 @@ var UserRolePanel = /** @class */ (function (_super) {
                             sourceItems.push(role);
                         }
                         sourceItems.sort(this.compare.bind(this));
-                        this.userRoles.setItems(sourceItems, function (sourceItem, listItem) {
+                        this.userRoles.setItems(sourceItems, function (role, view) {
+                            var listItem = new EditUserRoleListItem_1.EditUserRoleListItem(_this.hubApi, view);
                             listItem.setUserID(_this.userID);
-                            listItem.withAssignedRole(sourceItem);
+                            listItem.withAssignedRole(role);
                         });
                         return [2 /*return*/];
                 }
@@ -112,12 +120,11 @@ var UserRolePanel = /** @class */ (function (_super) {
         return this.awaitable.start();
     };
     UserRolePanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(UserRolePanel.ResultKeys.backRequested));
+        this.awaitable.resolve(UserRolePanelResult.backRequested);
     };
-    UserRolePanel.ResultKeys = {
-        backRequested: 'back-requested'
-    };
+    UserRolePanel.prototype.activate = function () { this.view.show(); };
+    UserRolePanel.prototype.deactivate = function () { this.view.hide(); };
     return UserRolePanel;
-}(Block_1.Block));
+}());
 exports.UserRolePanel = UserRolePanel;
 //# sourceMappingURL=UserRolePanel.js.map

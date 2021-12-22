@@ -1,8 +1,7 @@
-﻿namespace XTI_HubDB.Entities
+﻿namespace XTI_HubDB.Entities;
+
+public sealed class InstallLocationEntity
 {
-    public sealed class InstallLocationEntity
-    {
-        public int ID { get; set; }
-        public string QualifiedMachineName { get; set; } = "";
-    }
+    public int ID { get; set; }
+    public string QualifiedMachineName { get; set; } = "";
 }

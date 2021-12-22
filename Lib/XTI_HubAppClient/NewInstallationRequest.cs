@@ -1,13 +1,7 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class NewInstallationRequest
 {
-    public sealed partial class NewInstallationRequest
-    {
-        public int VersionID { get; set; }
-
-        public string QualifiedMachineName { get; set; }
-    }
+    public AppKey AppKey { get; set; } = new AppKey();
+    public string QualifiedMachineName { get; set; } = "";
 }

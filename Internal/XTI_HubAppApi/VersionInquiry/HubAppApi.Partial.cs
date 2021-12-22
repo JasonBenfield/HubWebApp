@@ -1,25 +1,28 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.VersionInquiry;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public VersionInquiryGroup Version { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void version(IServiceProvider services)
-        {
-            Version = new VersionInquiryGroup
+partial class HubAppApi
+{
+    private VersionInquiryGroup? version;
+
+    public VersionInquiryGroup Version
+    {
+        get=>version ?? throw new ArgumentNullException(nameof(version));
+    }
+
+    partial void createVersion(IServiceProvider services)
+    {
+        version = new VersionInquiryGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(Version),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.ViewApp)
-                ),
-                services
-            );
-        }
+                nameof(Version),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.ViewApp)
+            ),
+            services
+        );
     }
 }

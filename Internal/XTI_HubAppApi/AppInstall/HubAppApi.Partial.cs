@@ -1,25 +1,25 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.AppInstall;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public InstallGroup Install { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void install(IServiceProvider services)
-        {
-            Install = new InstallGroup
+partial class HubAppApi
+{
+    private InstallGroup? install;
+
+    public InstallGroup Install { get=>install ?? throw new ArgumentNullException(nameof(install)); }
+
+    partial void createInstall(IServiceProvider services)
+    {
+        install = new InstallGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(Install),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.Installer)
-                ),
-                services
-            );
-        }
+                nameof(Install),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.Installer)
+            ),
+            services
+        );
     }
 }

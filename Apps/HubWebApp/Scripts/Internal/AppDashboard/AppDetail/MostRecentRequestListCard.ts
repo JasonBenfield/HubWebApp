@@ -1,31 +1,30 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
+import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
+import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
 
-export class MostRecentRequestListCard extends Card {
+export class MostRecentRequestListCard {
+    private readonly alert: MessageAlert;
+    private readonly requests: ListGroup;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: MostRecentRequestListCardView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Most Recent Requests');
-        this.alert = this.addCardAlert().alert;
-        this.requests = this.addButtonListGroup();
+        new CardTitleHeader('Most Recent Requests', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.requests = new ListGroup(this.view.requests);
     }
-
-    private readonly alert: MessageAlert;
-    private readonly requests: CardButtonListGroup;
 
     async refresh() {
         let requests = await this.getRequests();
         this.requests.setItems(
             requests,
-            (sourceItem, listItem) => {
-                listItem.addContent(new RequestExpandedListItem(sourceItem));
-            }
+            (sourceItem: IAppRequestExpandedModel, listItem: RequestExpandedListItemView) =>
+                new RequestExpandedListItem(sourceItem, listItem)
         );
         if (requests.length === 0) {
             this.alert.danger('No Requests were Found');

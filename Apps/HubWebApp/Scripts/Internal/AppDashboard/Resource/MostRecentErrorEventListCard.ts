@@ -1,25 +1,25 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { EventListItem } from "../EventListItem";
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
+import { EventListItemView } from "../EventListItemView";
+import { MostRecentErrorEventListCardView } from "../MostRecentErrorEventListCardView";
 
-export class MostRecentErrorEventListCard extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Most Recent Errors');
-        this.alert = this.addCardAlert().alert;
-        this.errorEvents = this.addButtonListGroup();
-    }
-
+export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
-    private readonly errorEvents: CardButtonListGroup;
+    private readonly errorEvents: ListGroup;
 
     private resourceID: number;
+
+    constructor(
+        private readonly hubApi: HubAppApi,
+        private readonly view: MostRecentErrorEventListCardView
+    ) {
+        new CardTitleHeader('Most Recent Errors', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.errorEvents = new ListGroup(this.view.errorEvents);
+    }
 
     setResourceID(resourceID: number) {
         this.resourceID = resourceID;
@@ -29,9 +29,8 @@ export class MostRecentErrorEventListCard extends Card {
         let errorEvents = await this.getErrorEvents();
         this.errorEvents.setItems(
             errorEvents,
-            (sourceItem, listItem) => {
-                listItem.addContent(new EventListItem(sourceItem));
-            }
+            (sourceItem: IAppEventModel, listItem: EventListItemView) =>
+                new EventListItem(sourceItem, listItem)
         );
         if (errorEvents.length === 0) {
             this.alert.danger('No Errors were Found');

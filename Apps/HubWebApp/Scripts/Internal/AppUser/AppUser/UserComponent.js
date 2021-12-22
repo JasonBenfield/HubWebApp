@@ -2,31 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserComponent = void 0;
 var tslib_1 = require("tslib");
-var CardAlert_1 = require("XtiShared/Card/CardAlert");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var Row_1 = require("XtiShared/Grid/Row");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var CardTitleHeader_1 = require("XtiShared/Card/CardTitleHeader");
-var CardBody_1 = require("XtiShared/Card/CardBody");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var UserComponent = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserComponent, _super);
-    function UserComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addContent(new CardTitleHeader_1.CardTitleHeader('User'));
-        _this.alert = _this.addContent(new CardAlert_1.CardAlert()).alert;
-        _this.cardBody = _this.addContent(new CardBody_1.CardBody());
-        var row = _this.cardBody.addContent(new Row_1.Row());
-        _this.userName = row.addColumn()
-            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(new TextSpan_1.TextSpan('User'));
-        _this.fullName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        _this.cardBody.hide();
-        return _this;
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
+var UserComponent = /** @class */ (function () {
+    function UserComponent(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('User', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
     }
     UserComponent.prototype.setUserID = function (userID) {
         this.userID = userID;
@@ -39,9 +22,9 @@ var UserComponent = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, this.getUser(this.userID)];
                     case 1:
                         user = _a.sent();
-                        this.userName.setText(user.UserName);
-                        this.fullName.setText(user.Name);
-                        this.cardBody.show();
+                        this.view.setUserName(user.UserName);
+                        this.view.setFullName(user.Name);
+                        this.view.showCardBody();
                         return [2 /*return*/];
                 }
             });
@@ -71,6 +54,6 @@ var UserComponent = /** @class */ (function (_super) {
         });
     };
     return UserComponent;
-}(Card_1.Card));
+}());
 exports.UserComponent = UserComponent;
 //# sourceMappingURL=UserComponent.js.map

@@ -1,64 +1,66 @@
-﻿import { Startup } from 'xtistart';
+﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { UserListPanel } from './UserList/UserListPanel';
-import { SingleActivePanel } from '../Panel/SingleActivePanel';
+import { Apis } from '../../Hub/Apis';
+import { MainPageView } from './MainPageView';
 import { UserPanel } from './User/UserPanel';
 import { UserEditPanel } from './UserEdit/UserEditPanel';
-import { PageFrame } from 'XtiShared/PageFrame';
-import { PaddingCss } from 'XtiShared/PaddingCss';
+import { UserListPanel } from './UserList/UserListPanel';
 
 class MainPage {
-    constructor(private readonly page: PageFrame) {
-        this.page.content.setPadding(PaddingCss.top(3));
+    private readonly view: MainPageView;
+    private readonly hubApi: HubAppApi;
+    private readonly panels: SingleActivePanel;
+    private readonly userListPanel: UserListPanel;
+    private readonly userPanel: UserPanel;
+    private readonly userEditPanel: UserEditPanel;
+
+    constructor(page: PageFrameView) {
+        this.view = new MainPageView(page);
+        this.hubApi = new Apis(page.modalError).hub();
+        this.panels = new SingleActivePanel();
+        this.userListPanel = this.panels.add(new UserListPanel(this.hubApi, this.view.userListPanel));
+        this.userPanel = this.panels.add(new UserPanel(this.hubApi, this.view.userPanel));
+        this.userEditPanel = this.panels.add(new UserEditPanel(this.hubApi, this.view.userEditPanel));
         this.activateUserListPanel();
     }
 
-    private readonly hubApi = this.page.api(HubAppApi);
-    private readonly panels = new SingleActivePanel();
-    private readonly userListPanel = this.page.addContent(
-        this.panels.add(new UserListPanel(this.hubApi))
-    );
-    private readonly userPanel = this.page.addContent(
-        this.panels.add(new UserPanel(this.hubApi))
-    );
-    private readonly userEditPanel = this.page.addContent(
-        this.panels.add(new UserEditPanel(this.hubApi))
-    );
 
     private async activateUserListPanel() {
         this.panels.activate(this.userListPanel);
-        this.userListPanel.content.refresh();
-        let result = await this.userListPanel.content.start();
-        if (result.key === UserListPanel.ResultKeys.userSelected) {
-            let user: IAppUserModel = result.data;
-            this.activateUserPanel(user.ID);
+        this.userListPanel.refresh();
+        let result = await this.userListPanel.start();
+        if (result.userSelected) {
+            this.activateUserPanel(result.userSelected.user.ID);
         }
     }
 
     private async activateUserPanel(userID: number) {
         this.panels.activate(this.userPanel);
-        this.userPanel.content.setUserID(userID);
-        this.userPanel.content.refresh();
-        let result = await this.userPanel.content.start();
-        if (result.key === UserPanel.ResultKeys.backRequested) {
+        this.userPanel.setUserID(userID);
+        this.userPanel.refresh();
+        let result = await this.userPanel.start();
+        if (result.backRequested) {
             this.activateUserListPanel();
         }
-        else if (result.key === UserPanel.ResultKeys.editRequested) {
+        else if (result.editRequested) {
             this.activateUserEditPanel(userID);
         }
-        else if (result.key === UserPanel.ResultKeys.appSelected) {
-            let app: IAppModel = result.data;
-            this.hubApi.UserInquiry.RedirectToAppUser.open({ UserID: userID, AppID: app.ID });
+        else if (result.appSelected) {
+            this.hubApi.UserInquiry.RedirectToAppUser.open({
+                UserID: userID,
+                AppID: result.appSelected.app.ID
+            });
         }
     }
 
     private async activateUserEditPanel(userID: number) {
         this.panels.activate(this.userEditPanel);
-        this.userEditPanel.content.setUserID(userID);
-        this.userEditPanel.content.refresh();
-        let result = await this.userEditPanel.content.start();
-        if (result.key === UserEditPanel.ResultKeys.canceled ||
-            result.key === UserEditPanel.ResultKeys.saved) {
+        this.userEditPanel.setUserID(userID);
+        this.userEditPanel.refresh();
+        let result = await this.userEditPanel.start();
+        if (result.canceled || result.saved) {
             this.activateUserPanel(userID);
         }
     }

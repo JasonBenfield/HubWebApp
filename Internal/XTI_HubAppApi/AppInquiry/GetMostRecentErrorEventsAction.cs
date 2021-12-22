@@ -1,24 +1,21 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using XTI_App.Api;
 using XTI_Hub;
-using XTI_App.Api;
 
-namespace XTI_HubAppApi.AppInquiry
+namespace XTI_HubAppApi.AppInquiry;
+
+public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppEventModel[]>
 {
-    public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppEventModel[]>
+    private readonly AppFromPath appFromPath;
+
+    public GetMostRecentErrorEventsAction(AppFromPath appFromPath)
     {
-        private readonly AppFromPath appFromPath;
+        this.appFromPath = appFromPath;
+    }
 
-        public GetMostRecentErrorEventsAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<AppEventModel[]> Execute(int howMany)
-        {
-            var app = await appFromPath.Value();
-            var events = await app.MostRecentErrorEvents(howMany);
-            return events.Select(evt => evt.ToModel()).ToArray();
-        }
+    public async Task<AppEventModel[]> Execute(int howMany)
+    {
+        var app = await appFromPath.Value();
+        var events = await app.MostRecentErrorEvents(howMany);
+        return events.Select(evt => evt.ToModel()).ToArray();
     }
 }

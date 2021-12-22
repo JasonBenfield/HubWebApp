@@ -1,30 +1,27 @@
-﻿using XTI_HubAppApi.Auth;
-using System.Threading.Tasks;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_Core;
 
-namespace XTI_HubAppApi.Auth
+namespace XTI_HubAppApi.Auth;
+
+public sealed class LoginModelValidation : AppActionValidation<LoginModel>
 {
-    public sealed class LoginModelValidation : AppActionValidation<LoginModel>
+    public Task Validate(ErrorList errors, LoginModel model)
     {
-        public Task Validate(ErrorList errors, LoginModel model)
-        {
-            return new LoginValidation().Validate(errors, model.Credentials ?? new LoginCredentials());
-        }
+        return new LoginValidation().Validate(errors, model.Credentials ?? new LoginCredentials());
     }
-    public sealed class LoginValidation : AppActionValidation<LoginCredentials>
+}
+public sealed class LoginValidation : AppActionValidation<LoginCredentials>
+{
+    public Task Validate(ErrorList errors, LoginCredentials model)
     {
-        public Task Validate(ErrorList errors, LoginCredentials model)
+        if (string.IsNullOrWhiteSpace(model.UserName))
         {
-            if (string.IsNullOrWhiteSpace(model.UserName))
-            {
-                errors.Add(AuthErrors.UserNameIsRequired, "User Name", nameof(model.UserName));
-            }
-            if (string.IsNullOrWhiteSpace(model.Password))
-            {
-                errors.Add(AuthErrors.PasswordIsRequired, "Password", nameof(model.Password));
-            }
-            return Task.CompletedTask;
+            errors.Add(AuthErrors.UserNameIsRequired, "User Name", nameof(model.UserName));
         }
+        if (string.IsNullOrWhiteSpace(model.Password))
+        {
+            errors.Add(AuthErrors.PasswordIsRequired, "Password", nameof(model.Password));
+        }
+        return Task.CompletedTask;
     }
 }

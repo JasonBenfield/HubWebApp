@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-using XTI_Git;
+﻿using XTI_Git;
 using XTI_GitHub;
 
-namespace XTI_Version
+namespace XTI_Version;
+
+public interface GitFactory
 {
-    public interface GitFactory
-    {
-        Task<XtiGitRepository> CreateGitRepo();
-        Task<XtiGitHubRepository> CreateGitHubRepo(string ownerName, string repoName);
-    }
+    Task<IXtiGitRepository> CreateGitRepo();
+    Task<XtiGitHubRepository> CreateGitHubRepo(string ownerName, string repoName);
 }

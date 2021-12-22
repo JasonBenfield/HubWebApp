@@ -1,25 +1,25 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.AppPublish;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public PublishGroup Publish { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void publish(IServiceProvider services)
-        {
-            Publish = new PublishGroup
+partial class HubAppApi
+{
+    private PublishGroup? publish;
+
+    public PublishGroup Publish { get=>publish ?? throw new ArgumentNullException(nameof(publish)); }
+
+    partial void createPublish(IServiceProvider services)
+    {
+        publish = new PublishGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(Publish),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.Publisher)
-                ),
-                services
-            );
-        }
+                nameof(Publish),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.Publisher)
+            ),
+            services
+        );
     }
 }

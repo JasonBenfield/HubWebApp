@@ -2,19 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MostRecentRequestListCard = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var RequestExpandedListItem_1 = require("../RequestExpandedListItem");
-var MostRecentRequestListCard = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(MostRecentRequestListCard, _super);
-    function MostRecentRequestListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.addCardTitleHeader('Most Recent Requests');
-        _this.alert = _this.addCardAlert().alert;
-        _this.requests = _this.addButtonListGroup();
-        return _this;
+var MostRecentRequestListCard = /** @class */ (function () {
+    function MostRecentRequestListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new CardTitleHeader_1.CardTitleHeader('Most Recent Requests', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.requests = new ListGroup_1.ListGroup(this.view.requests);
     }
     MostRecentRequestListCard.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -25,7 +23,7 @@ var MostRecentRequestListCard = /** @class */ (function (_super) {
                     case 1:
                         requests = _a.sent();
                         this.requests.setItems(requests, function (sourceItem, listItem) {
-                            listItem.addContent(new RequestExpandedListItem_1.RequestExpandedListItem(sourceItem));
+                            return new RequestExpandedListItem_1.RequestExpandedListItem(sourceItem, listItem);
                         });
                         if (requests.length === 0) {
                             this.alert.danger('No Requests were Found');
@@ -59,6 +57,6 @@ var MostRecentRequestListCard = /** @class */ (function (_super) {
         });
     };
     return MostRecentRequestListCard;
-}(Card_1.Card));
+}());
 exports.MostRecentRequestListCard = MostRecentRequestListCard;
 //# sourceMappingURL=MostRecentRequestListCard.js.map

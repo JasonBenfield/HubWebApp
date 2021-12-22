@@ -1,31 +1,24 @@
-﻿using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_Hub;
 
-namespace XTI_HubAppApi.ResourceGroupInquiry
+namespace XTI_HubAppApi.ResourceGroupInquiry;
+
+public sealed class GetResourceGroupAction : AppAction<GetResourceGroupRequest, ResourceGroupModel>
 {
-    public sealed class GetResourceGroupRequest
+    private readonly AppFromPath appFromPath;
+
+    public GetResourceGroupAction(AppFromPath appFromPath)
     {
-        public string VersionKey { get; set; }
-        public int GroupID { get; set; }
+        this.appFromPath = appFromPath;
     }
-    public sealed class GetResourceGroupAction : AppAction<GetResourceGroupRequest, ResourceGroupModel>
+
+    public async Task<ResourceGroupModel> Execute(GetResourceGroupRequest model)
     {
-        private readonly AppFromPath appFromPath;
-
-        public GetResourceGroupAction(AppFromPath appFromPath)
-        {
-            this.appFromPath = appFromPath;
-        }
-
-        public async Task<ResourceGroupModel> Execute(GetResourceGroupRequest model)
-        {
-            var app = await appFromPath.Value();
-            var versionKey = AppVersionKey.Parse(model.VersionKey);
-            var version = await app.Version(versionKey);
-            var group = await version.ResourceGroup(model.GroupID);
-            return group.ToModel();
-        }
+        var app = await appFromPath.Value();
+        var versionKey = AppVersionKey.Parse(model.VersionKey);
+        var version = await app.Version(versionKey);
+        var group = await version.ResourceGroup(model.GroupID);
+        return group.ToModel();
     }
 }

@@ -1,25 +1,27 @@
-﻿using System;
-using XTI_Hub;
+﻿using XTI_Hub;
 using XTI_HubAppApi.AppUserMaintenance;
 
-namespace XTI_HubAppApi
-{
-    partial class HubAppApi
-    {
-        public AppUserMaintenanceGroup AppUserMaintenance { get; private set; }
+namespace XTI_HubAppApi;
 
-        partial void appUserMaintenance(IServiceProvider services)
-        {
-            AppUserMaintenance = new AppUserMaintenanceGroup
+partial class HubAppApi
+{
+    private AppUserMaintenanceGroup? appUserMaintenance;
+    public AppUserMaintenanceGroup AppUserMaintenance
+    {
+        get => appUserMaintenance ?? throw new ArgumentNullException(nameof(appUserMaintenance));
+    }
+
+    partial void createAppUserMaintenance(IServiceProvider services)
+    {
+        appUserMaintenance = new AppUserMaintenanceGroup
+        (
+            source.AddGroup
             (
-                source.AddGroup
-                (
-                    nameof(AppUserMaintenance),
-                    HubInfo.ModCategories.Apps,
-                    Access.WithAllowed(HubInfo.Roles.EditUser)
-                ),
-                services
-            );
-        }
+                nameof(AppUserMaintenance),
+                HubInfo.ModCategories.Apps,
+                Access.WithAllowed(HubInfo.Roles.EditUser)
+            ),
+            services
+        );
     }
 }

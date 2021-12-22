@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
-namespace XTI_HubDB.EF
+namespace XTI_HubDB.EF;
+
+public sealed class HubDbReset
 {
-    public sealed class HubDbReset
+    private readonly HubDbContext hubDbContext;
+
+    public HubDbReset(HubDbContext hubDbContext)
     {
-        private readonly HubDbContext hubDbContext;
+        this.hubDbContext = hubDbContext;
+    }
 
-        public HubDbReset(HubDbContext hubDbContext)
-        {
-            this.hubDbContext = hubDbContext;
-        }
-
-        public async Task Run()
-        {
-            await hubDbContext.Database.ExecuteSqlRawAsync
-            (
-                @"
+    public async Task Run()
+    {
+        await hubDbContext.Database.ExecuteSqlRawAsync
+        (
+            @"
 exec sp_MSForEachTable 'IF OBJECT_ID(''?'') <> ISNULL(OBJECT_ID(''[dbo].[__EFMigrationsHistory]''),0) ALTER TABLE ? NOCHECK CONSTRAINT all';
 
 exec sp_MSForEachTable '
@@ -29,7 +28,6 @@ exec sp_MSForEachTable 'IF OBJECT_ID(''?'') <> ISNULL(OBJECT_ID(''[dbo].[__EFMig
 
 exec sp_MSForEachTable 'IF OBJECT_ID(''?'') <> ISNULL(OBJECT_ID(''[dbo].[__EFMigrationsHistory]''),0) DBCC CHECKIDENT(''?'', RESEED, 0)';
 "
-            );
-        }
+        );
     }
 }
