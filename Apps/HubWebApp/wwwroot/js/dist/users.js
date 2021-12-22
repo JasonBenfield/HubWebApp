@@ -253,7 +253,7 @@ var BaseForm_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Forms/BaseF
 var EditUserForm = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(EditUserForm, _super);
     function EditUserForm(view) {
-        var _this = _super.call(this, '', view) || this;
+        var _this = _super.call(this, 'EditUserForm', view) || this;
         _this.UserID = _this.addHiddenNumberFormGroup('UserID', _this.view.UserID);
         _this.PersonName = _this.addTextInputFormGroup('PersonName', _this.view.PersonName);
         _this.Email = _this.addTextInputFormGroup('Email', _this.view.Email);
@@ -287,7 +287,7 @@ var EditUserFormView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(EditUserFormView, _super);
     function EditUserFormView() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.UserID = _this.addHiddenFormGroup();
+        _this.UserID = _this.addInputFormGroup();
         _this.PersonName = _this.addInputFormGroup();
         _this.Email = _this.addInputFormGroup();
         return _this;
@@ -355,7 +355,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
+    HubAppApi.DefaultVersion = 'V63';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;
@@ -1171,7 +1171,7 @@ exports.MainPageView = MainPageView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserEditPanel = void 0;
+exports.UserEditPanel = exports.UserEditPanelResult = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var CardTitleHeader_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Card/CardTitleHeader */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeader.js");
@@ -1179,8 +1179,34 @@ var AsyncCommand_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
 var DelayedAction_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/DelayedAction */ "./node_modules/@jasonbenfield/sharedwebapp/DelayedAction.js");
 var MessageAlert_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MessageAlert */ "./node_modules/@jasonbenfield/sharedwebapp/MessageAlert.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var EditUserForm_1 = __webpack_require__(/*! ../../../Hub/Api/EditUserForm */ "./Scripts/Hub/Api/EditUserForm.js");
+var UserEditPanelResult = /** @class */ (function () {
+    function UserEditPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(UserEditPanelResult, "canceled", {
+        get: function () { return new UserEditPanelResult({ canceled: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult, "saved", {
+        get: function () { return new UserEditPanelResult({ saved: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult.prototype, "canceled", {
+        get: function () { return this.results.canceled; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult.prototype, "saved", {
+        get: function () { return this.results.saved; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserEditPanelResult;
+}());
+exports.UserEditPanelResult = UserEditPanelResult;
 var UserEditPanel = /** @class */ (function () {
     function UserEditPanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -1242,7 +1268,7 @@ var UserEditPanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     UserEditPanel.prototype.cancel = function () {
-        this.awaitable.resolve(new Result_1.Result(UserEditPanel.ResultKeys.canceled));
+        this.awaitable.resolve(UserEditPanelResult.canceled);
     };
     UserEditPanel.prototype.save = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -1253,7 +1279,7 @@ var UserEditPanel = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         if (result.succeeded()) {
-                            this.awaitable.resolve(new Result_1.Result(UserEditPanel.ResultKeys.saved));
+                            this.awaitable.resolve(UserEditPanelResult.saved);
                         }
                         return [2 /*return*/];
                 }
@@ -1262,10 +1288,6 @@ var UserEditPanel = /** @class */ (function () {
     };
     UserEditPanel.prototype.activate = function () { this.view.show(); };
     UserEditPanel.prototype.deactivate = function () { this.view.hide(); };
-    UserEditPanel.ResultKeys = {
-        canceled: 'canceled',
-        saved: 'saved'
-    };
     return UserEditPanel;
 }());
 exports.UserEditPanel = UserEditPanel;
@@ -1285,6 +1307,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserEditPanelView = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var CardView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Card/CardView */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardView.js");
+var ColumnCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
 var Block_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var FlexColumn_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumn */ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumn.js");
 var FlexColumnFill_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumnFill */ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumnFill.js");
@@ -1311,7 +1334,8 @@ var UserEditPanelView = /** @class */ (function (_super) {
         _this.editUserForm.addOffscreenSubmit();
         _this.editUserForm.executeLayout();
         _this.editUserForm.forEachFormGroup(function (fg) {
-            fg.captionColumn.setTextCss(new TextCss_1.TextCss().end().bold());
+            fg.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
+            fg.captionColumn.setTextCss(new TextCss_1.TextCss().end());
         });
         return _this;
     }
@@ -1499,10 +1523,24 @@ exports.UserListItemView = UserListItemView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserListPanel = void 0;
+exports.UserListPanel = exports.UserListPanelResult = void 0;
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var UserListCard_1 = __webpack_require__(/*! ./UserListCard */ "./Scripts/Internal/Users/UserList/UserListCard.js");
+var UserListPanelResult = /** @class */ (function () {
+    function UserListPanelResult(results) {
+        this.results = results;
+    }
+    UserListPanelResult.userSelected = function (user) {
+        return new UserListPanelResult({ userSelected: { user: user } });
+    };
+    Object.defineProperty(UserListPanelResult.prototype, "userSelected", {
+        get: function () { return this.results.userSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserListPanelResult;
+}());
+exports.UserListPanelResult = UserListPanelResult;
 var UserListPanel = /** @class */ (function () {
     function UserListPanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -1512,7 +1550,7 @@ var UserListPanel = /** @class */ (function () {
         this.userListCard.userSelected.register(this.onUserSelected.bind(this));
     }
     UserListPanel.prototype.onUserSelected = function (user) {
-        this.awaitable.resolve(new Result_1.Result(UserListPanel.ResultKeys.userSelected, user));
+        this.awaitable.resolve(UserListPanelResult.userSelected(user));
     };
     UserListPanel.prototype.refresh = function () {
         return this.userListCard.refresh();
@@ -1522,9 +1560,6 @@ var UserListPanel = /** @class */ (function () {
     };
     UserListPanel.prototype.activate = function () { this.view.show(); };
     UserListPanel.prototype.deactivate = function () { this.view.hide(); };
-    UserListPanel.ResultKeys = {
-        userSelected: 'user-selected'
-    };
     return UserListPanel;
 }());
 exports.UserListPanel = UserListPanel;
@@ -1708,12 +1743,44 @@ exports.UserComponentView = UserComponentView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserPanel = void 0;
+exports.UserPanel = exports.UserPanelResult = void 0;
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var AppListCard_1 = __webpack_require__(/*! ../../Apps/AppListCard */ "./Scripts/Internal/Apps/AppListCard.js");
 var UserComponent_1 = __webpack_require__(/*! ./UserComponent */ "./Scripts/Internal/Users/User/UserComponent.js");
+var UserPanelResult = /** @class */ (function () {
+    function UserPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(UserPanelResult, "backRequested", {
+        get: function () { return new UserPanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    UserPanelResult.appSelected = function (app) {
+        return new UserPanelResult({ appSelected: { app: app } });
+    };
+    UserPanelResult.editRequested = function (userID) {
+        return new UserPanelResult({ editRequested: { userID: userID } });
+    };
+    Object.defineProperty(UserPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserPanelResult.prototype, "appSelected", {
+        get: function () { return this.results.appSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserPanelResult.prototype, "editRequested", {
+        get: function () { return this.results.editRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserPanelResult;
+}());
+exports.UserPanelResult = UserPanelResult;
 var UserPanel = /** @class */ (function () {
     function UserPanel(hubApi, view) {
         var _this = this;
@@ -1731,10 +1798,10 @@ var UserPanel = /** @class */ (function () {
         this.userComponent.editRequested.register(this.onEditRequested.bind(this));
     }
     UserPanel.prototype.onAppSelected = function (app) {
-        this.awaitable.resolve(new Result_1.Result(UserPanel.ResultKeys.appSelected, app));
+        this.awaitable.resolve(UserPanelResult.appSelected(app));
     };
     UserPanel.prototype.onEditRequested = function (userID) {
-        this.awaitable.resolve(new Result_1.Result(UserPanel.ResultKeys.editRequested, userID));
+        this.awaitable.resolve(UserPanelResult.editRequested(userID));
     };
     UserPanel.prototype.setUserID = function (userID) {
         this.userID = userID;
@@ -1751,15 +1818,10 @@ var UserPanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     UserPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(UserPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(UserPanelResult.backRequested);
     };
     UserPanel.prototype.activate = function () { this.view.show(); };
     UserPanel.prototype.deactivate = function () { this.view.hide(); };
-    UserPanel.ResultKeys = {
-        backRequested: 'back-requested',
-        appSelected: 'app-selected',
-        editRequested: 'edit-requested'
-    };
     return UserPanel;
 }());
 exports.UserPanel = UserPanel;
@@ -2155,7 +2217,7 @@ var AppApiAction = /** @class */ (function () {
     AppApiAction.prototype.toString = function () {
         return "AppApiAction " + this.resourceUrl;
     };
-    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,7}\+\d{2}:\d{2}$/;
+    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.?\d{0,7}[\+\-]\d{2}:\d{2})?$/;
     return AppApiAction;
 }());
 exports.AppApiAction = AppApiAction;
@@ -3863,7 +3925,7 @@ var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem *
 var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
 var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
 var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
 var TextHeading5_1 = __webpack_require__(/*! ../Html/TextHeading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js");
 var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js");
@@ -3880,8 +3942,9 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
         _this.errorGroups = [];
         _this.modal = new ModalComponentView_1.ModalComponentView(vm);
         _this.modal.body.setName(ModalErrorComponentView.name);
+        _this.body = _this.modal.body.addContent(new Block_1.Block());
+        _this.body.addCssName('alert alert-danger m-0 rounded-0 border-danger border-left-0 border-right-0');
         _this.title = _this.modal.header.addContent(new TextHeading5_1.TextHeading5(''));
-        _this.hr = _this.modal.body.addContent(new HorizontalRule_1.HorizontalRule());
         var row = _this.modal.footer.addContent(new Row_1.Row());
         row.addColumn();
         var buttonColumn = row.addColumn();
@@ -3896,13 +3959,13 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
     ModalErrorComponentView.prototype.errorGroup = function () {
         var errorGroup = new ModalErrorGroupComponentView_1.ModalErrorGroupComponentView();
         this.errorGroups.push(errorGroup);
-        this.modal.body.addContent(errorGroup);
+        this.body.addContent(errorGroup);
         return errorGroup;
     };
     ModalErrorComponentView.prototype.clearErrorGroups = function () {
         for (var _i = 0, _a = this.errorGroups; _i < _a.length; _i++) {
             var errorGroup = _a[_i];
-            this.modal.body.removeItem(errorGroup);
+            this.body.removeItem(errorGroup);
         }
     };
     ModalErrorComponentView.prototype.setTitle = function (title) {
@@ -3980,6 +4043,7 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
 var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
 var TextHeading4_1 = __webpack_require__(/*! ../Html/TextHeading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js");
 var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
 var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js");
@@ -3989,7 +4053,8 @@ var ModalErrorGroupComponentView = /** @class */ (function (_super) {
         var _this = _super.call(this, new BlockViewModel_1.BlockViewModel()) || this;
         _this.hr = _this.addContent(new HorizontalRule_1.HorizontalRule());
         _this.caption = _this.addContent(new TextHeading4_1.TextHeading4());
-        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }));
+        _this.caption.addCssName('alert-heading');
+        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         return _this;
     }
     ModalErrorGroupComponentView.prototype.showHR = function () { this.hr.show(); };
@@ -4054,15 +4119,15 @@ var ModalErrorListItemView = /** @class */ (function (_super) {
     function ModalErrorListItemView() {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());
-        var col1 = row.addColumn();
-        col1.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        _this.caption = col1.addContent(new TextBlock_1.TextBlock());
+        _this.captionCol = row.addColumn();
+        _this.captionCol.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
+        _this.caption = _this.captionCol.addContent(new TextBlock_1.TextBlock());
         var col2 = row.addColumn();
         _this.message = col2.addContent(new TextBlock_1.TextBlock());
         return _this;
     }
-    ModalErrorListItemView.prototype.hideCaption = function () { this.caption.hide(); };
-    ModalErrorListItemView.prototype.showCaption = function () { this.caption.show(); };
+    ModalErrorListItemView.prototype.hideCaption = function () { this.captionCol.hide(); };
+    ModalErrorListItemView.prototype.showCaption = function () { this.captionCol.show(); };
     ModalErrorListItemView.prototype.setCaption = function (caption) { this.caption.setText(caption); };
     ModalErrorListItemView.prototype.setMessage = function (message) { this.message.setText(message); };
     return ModalErrorListItemView;
@@ -5508,6 +5573,7 @@ var SimpleFieldFormGroup = /** @class */ (function () {
         return this.caption;
     };
     SimpleFieldFormGroup.prototype.setCaption = function (caption) {
+        this.caption = caption;
         this.view.setCaption(caption);
     };
     SimpleFieldFormGroup.prototype.getField = function (name) { return this.getName() === name ? this : null; };
@@ -6679,6 +6745,7 @@ var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewMode
 var HorizontalRule = /** @class */ (function () {
     function HorizontalRule(vm) {
         if (vm === void 0) { vm = new HorizontalRuleViewModel_1.HorizontalRuleViewModel(); }
+        this.vm = vm;
     }
     HorizontalRule.prototype.addToContainer = function (container) {
         return container.addItem(this.vm, this);
@@ -9303,29 +9370,6 @@ var SingleActivePanel = /** @class */ (function () {
 }());
 exports.SingleActivePanel = SingleActivePanel;
 //# sourceMappingURL=SingleActivePanel.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Result.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Result.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Result = void 0;
-var Result = /** @class */ (function () {
-    function Result(key, data) {
-        if (data === void 0) { data = null; }
-        this.key = key;
-        this.data = data;
-    }
-    return Result;
-}());
-exports.Result = Result;
-//# sourceMappingURL=Result.js.map
 
 /***/ }),
 
@@ -47553,7 +47597,7 @@ var MainPage = /** @class */ (function () {
     }
     MainPage.prototype.activateUserListPanel = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var result, user;
+            var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -47562,9 +47606,8 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.userListPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === UserListPanel_1.UserListPanel.ResultKeys.userSelected) {
-                            user = result.data;
-                            this.activateUserPanel(user.ID);
+                        if (result.userSelected) {
+                            this.activateUserPanel(result.userSelected.user.ID);
                         }
                         return [2 /*return*/];
                 }
@@ -47573,7 +47616,7 @@ var MainPage = /** @class */ (function () {
     };
     MainPage.prototype.activateUserPanel = function (userID) {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var result, app;
+            var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -47583,15 +47626,17 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.userPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === UserPanel_1.UserPanel.ResultKeys.backRequested) {
+                        if (result.backRequested) {
                             this.activateUserListPanel();
                         }
-                        else if (result.key === UserPanel_1.UserPanel.ResultKeys.editRequested) {
+                        else if (result.editRequested) {
                             this.activateUserEditPanel(userID);
                         }
-                        else if (result.key === UserPanel_1.UserPanel.ResultKeys.appSelected) {
-                            app = result.data;
-                            this.hubApi.UserInquiry.RedirectToAppUser.open({ UserID: userID, AppID: app.ID });
+                        else if (result.appSelected) {
+                            this.hubApi.UserInquiry.RedirectToAppUser.open({
+                                UserID: userID,
+                                AppID: result.appSelected.app.ID
+                            });
                         }
                         return [2 /*return*/];
                 }
@@ -47610,8 +47655,7 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.userEditPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === UserEditPanel_1.UserEditPanel.ResultKeys.canceled ||
-                            result.key === UserEditPanel_1.UserEditPanel.ResultKeys.saved) {
+                        if (result.canceled || result.saved) {
                             this.activateUserPanel(userID);
                         }
                         return [2 /*return*/];

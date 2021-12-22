@@ -1,8 +1,9 @@
 // Generated code
 
-import { AppApiAction } from "@jasonbenfield/sharedwebapp/AppApiAction";
-import { AppApiEvents } from "@jasonbenfield/sharedwebapp/AppApiEvents";
 import { AppApiGroup } from "@jasonbenfield/sharedwebapp/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/AppApiEvents";
 import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/AppResourceUrl";
 
 export class AppUserMaintenanceGroup extends AppApiGroup {

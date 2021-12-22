@@ -47,7 +47,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
+    HubAppApi.DefaultVersion = 'V63';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

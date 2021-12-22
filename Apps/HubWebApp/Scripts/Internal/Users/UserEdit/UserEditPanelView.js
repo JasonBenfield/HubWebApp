@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserEditPanelView = void 0;
 var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
+var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var Block_1 = require("@jasonbenfield/sharedwebapp/Html/Block");
 var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
@@ -29,7 +30,8 @@ var UserEditPanelView = /** @class */ (function (_super) {
         _this.editUserForm.addOffscreenSubmit();
         _this.editUserForm.executeLayout();
         _this.editUserForm.forEachFormGroup(function (fg) {
-            fg.captionColumn.setTextCss(new TextCss_1.TextCss().end().bold());
+            fg.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
+            fg.captionColumn.setTextCss(new TextCss_1.TextCss().end());
         });
         return _this;
     }

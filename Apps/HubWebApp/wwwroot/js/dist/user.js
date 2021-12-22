@@ -1,6 +1,829 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./Scripts/Hub/Api/AppGroup.js":
+/*!*************************************!*\
+  !*** ./Scripts/Hub/Api/AppGroup.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AppGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppGroup, _super);
+    function AppGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'App') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetAppAction = _this.createAction('GetApp', 'Get App');
+        _this.GetRolesAction = _this.createAction('GetRoles', 'Get Roles');
+        _this.GetRoleAction = _this.createAction('GetRole', 'Get Role');
+        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        _this.GetModifierCategoriesAction = _this.createAction('GetModifierCategories', 'Get Modifier Categories');
+        _this.GetModifierCategoryAction = _this.createAction('GetModifierCategory', 'Get Modifier Category');
+        _this.GetDefaultModiiferAction = _this.createAction('GetDefaultModiifer', 'Get Default Modiifer');
+        return _this;
+    }
+    AppGroup.prototype.GetApp = function (errorOptions) {
+        return this.GetAppAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetRoles = function (errorOptions) {
+        return this.GetRolesAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetRole = function (model, errorOptions) {
+        return this.GetRoleAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetResourceGroups = function (errorOptions) {
+        return this.GetResourceGroupsAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetModifierCategories = function (errorOptions) {
+        return this.GetModifierCategoriesAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetModifierCategory = function (model, errorOptions) {
+        return this.GetModifierCategoryAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetDefaultModiifer = function (errorOptions) {
+        return this.GetDefaultModiiferAction.execute({}, errorOptions || {});
+    };
+    return AppGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppGroup = AppGroup;
+//# sourceMappingURL=AppGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppUserGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/AppUserGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppUserGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AppUserGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppUserGroup, _super);
+    function AppUserGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AppUser') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetUserRolesAction = _this.createAction('GetUserRoles', 'Get User Roles');
+        _this.GetUserRoleAccessAction = _this.createAction('GetUserRoleAccess', 'Get User Role Access');
+        _this.GetUserModCategoriesAction = _this.createAction('GetUserModCategories', 'Get User Mod Categories');
+        return _this;
+    }
+    AppUserGroup.prototype.GetUserRoles = function (model, errorOptions) {
+        return this.GetUserRolesAction.execute(model, errorOptions || {});
+    };
+    AppUserGroup.prototype.GetUserRoleAccess = function (model, errorOptions) {
+        return this.GetUserRoleAccessAction.execute(model, errorOptions || {});
+    };
+    AppUserGroup.prototype.GetUserModCategories = function (model, errorOptions) {
+        return this.GetUserModCategoriesAction.execute(model, errorOptions || {});
+    };
+    return AppUserGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppUserGroup = AppUserGroup;
+//# sourceMappingURL=AppUserGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js":
+/*!****************************************************!*\
+  !*** ./Scripts/Hub/Api/AppUserMaintenanceGroup.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppUserMaintenanceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AppUserMaintenanceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppUserMaintenanceGroup, _super);
+    function AppUserMaintenanceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AppUserMaintenance') || this;
+        _this.AssignRoleAction = _this.createAction('AssignRole', 'Assign Role');
+        _this.UnassignRoleAction = _this.createAction('UnassignRole', 'Unassign Role');
+        return _this;
+    }
+    AppUserMaintenanceGroup.prototype.AssignRole = function (model, errorOptions) {
+        return this.AssignRoleAction.execute(model, errorOptions || {});
+    };
+    AppUserMaintenanceGroup.prototype.UnassignRole = function (model, errorOptions) {
+        return this.UnassignRoleAction.execute(model, errorOptions || {});
+    };
+    return AppUserMaintenanceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppUserMaintenanceGroup = AppUserMaintenanceGroup;
+//# sourceMappingURL=AppUserMaintenanceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppsGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/AppsGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppsGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AppsGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppsGroup, _super);
+    function AppsGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
+        _this.Index = _this.createView('Index');
+        _this.AllAction = _this.createAction('All', 'All');
+        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
+        _this.RedirectToApp = _this.createView('RedirectToApp');
+        return _this;
+    }
+    AppsGroup.prototype.All = function (errorOptions) {
+        return this.AllAction.execute({}, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
+        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
+    };
+    return AppsGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppsGroup = AppsGroup;
+//# sourceMappingURL=AppsGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AuthApiGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/AuthApiGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthApiGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AuthApiGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AuthApiGroup, _super);
+    function AuthApiGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AuthApi') || this;
+        _this.AuthenticateAction = _this.createAction('Authenticate', 'Authenticate');
+        return _this;
+    }
+    AuthApiGroup.prototype.Authenticate = function (model, errorOptions) {
+        return this.AuthenticateAction.execute(model, errorOptions || {});
+    };
+    return AuthApiGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AuthApiGroup = AuthApiGroup;
+//# sourceMappingURL=AuthApiGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AuthGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/AuthGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var AuthGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AuthGroup, _super);
+    function AuthGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Auth') || this;
+        _this.Index = _this.createView('Index');
+        _this.VerifyLoginAction = _this.createAction('VerifyLogin', 'Verify Login');
+        _this.VerifyLoginForm = _this.createView('VerifyLoginForm');
+        _this.Login = _this.createView('Login');
+        _this.Logout = _this.createView('Logout');
+        return _this;
+    }
+    AuthGroup.prototype.VerifyLogin = function (model, errorOptions) {
+        return this.VerifyLoginAction.execute(model, errorOptions || {});
+    };
+    return AuthGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AuthGroup = AuthGroup;
+//# sourceMappingURL=AuthGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/HubAppApi.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/HubAppApi.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HubAppApi = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApi_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApi */ "./node_modules/@jasonbenfield/sharedwebapp/AppApi.js");
+var UserGroup_1 = __webpack_require__(/*! ./UserGroup */ "./Scripts/Hub/Api/UserGroup.js");
+var UserCacheGroup_1 = __webpack_require__(/*! ./UserCacheGroup */ "./Scripts/Hub/Api/UserCacheGroup.js");
+var AuthGroup_1 = __webpack_require__(/*! ./AuthGroup */ "./Scripts/Hub/Api/AuthGroup.js");
+var AuthApiGroup_1 = __webpack_require__(/*! ./AuthApiGroup */ "./Scripts/Hub/Api/AuthApiGroup.js");
+var PermanentLogGroup_1 = __webpack_require__(/*! ./PermanentLogGroup */ "./Scripts/Hub/Api/PermanentLogGroup.js");
+var AppsGroup_1 = __webpack_require__(/*! ./AppsGroup */ "./Scripts/Hub/Api/AppsGroup.js");
+var AppGroup_1 = __webpack_require__(/*! ./AppGroup */ "./Scripts/Hub/Api/AppGroup.js");
+var InstallGroup_1 = __webpack_require__(/*! ./InstallGroup */ "./Scripts/Hub/Api/InstallGroup.js");
+var PublishGroup_1 = __webpack_require__(/*! ./PublishGroup */ "./Scripts/Hub/Api/PublishGroup.js");
+var VersionGroup_1 = __webpack_require__(/*! ./VersionGroup */ "./Scripts/Hub/Api/VersionGroup.js");
+var ResourceGroupGroup_1 = __webpack_require__(/*! ./ResourceGroupGroup */ "./Scripts/Hub/Api/ResourceGroupGroup.js");
+var ResourceGroup_1 = __webpack_require__(/*! ./ResourceGroup */ "./Scripts/Hub/Api/ResourceGroup.js");
+var ModCategoryGroup_1 = __webpack_require__(/*! ./ModCategoryGroup */ "./Scripts/Hub/Api/ModCategoryGroup.js");
+var UsersGroup_1 = __webpack_require__(/*! ./UsersGroup */ "./Scripts/Hub/Api/UsersGroup.js");
+var UserInquiryGroup_1 = __webpack_require__(/*! ./UserInquiryGroup */ "./Scripts/Hub/Api/UserInquiryGroup.js");
+var AppUserGroup_1 = __webpack_require__(/*! ./AppUserGroup */ "./Scripts/Hub/Api/AppUserGroup.js");
+var AppUserMaintenanceGroup_1 = __webpack_require__(/*! ./AppUserMaintenanceGroup */ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js");
+var UserMaintenanceGroup_1 = __webpack_require__(/*! ./UserMaintenanceGroup */ "./Scripts/Hub/Api/UserMaintenanceGroup.js");
+var HubAppApi = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(HubAppApi, _super);
+    function HubAppApi(events, baseUrl, version) {
+        if (version === void 0) { version = ''; }
+        var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
+        _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
+        _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
+        _this.Auth = _this.addGroup(function (evts, resourceUrl) { return new AuthGroup_1.AuthGroup(evts, resourceUrl); });
+        _this.AuthApi = _this.addGroup(function (evts, resourceUrl) { return new AuthApiGroup_1.AuthApiGroup(evts, resourceUrl); });
+        _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
+        _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
+        _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
+        _this.Install = _this.addGroup(function (evts, resourceUrl) { return new InstallGroup_1.InstallGroup(evts, resourceUrl); });
+        _this.Publish = _this.addGroup(function (evts, resourceUrl) { return new PublishGroup_1.PublishGroup(evts, resourceUrl); });
+        _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
+        _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
+        _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
+        _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
+        _this.Users = _this.addGroup(function (evts, resourceUrl) { return new UsersGroup_1.UsersGroup(evts, resourceUrl); });
+        _this.UserInquiry = _this.addGroup(function (evts, resourceUrl) { return new UserInquiryGroup_1.UserInquiryGroup(evts, resourceUrl); });
+        _this.AppUser = _this.addGroup(function (evts, resourceUrl) { return new AppUserGroup_1.AppUserGroup(evts, resourceUrl); });
+        _this.AppUserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new AppUserMaintenanceGroup_1.AppUserMaintenanceGroup(evts, resourceUrl); });
+        _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
+        return _this;
+    }
+    HubAppApi.DefaultVersion = 'V63';
+    return HubAppApi;
+}(AppApi_1.AppApi));
+exports.HubAppApi = HubAppApi;
+//# sourceMappingURL=HubAppApi.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/InstallGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/InstallGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InstallGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var InstallGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(InstallGroup, _super);
+    function InstallGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Install') || this;
+        _this.RegisterAppAction = _this.createAction('RegisterApp', 'Register App');
+        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
+        _this.AddSystemUserAction = _this.createAction('AddSystemUser', 'Add System User');
+        _this.NewInstallationAction = _this.createAction('NewInstallation', 'New Installation');
+        _this.BeginCurrentInstallationAction = _this.createAction('BeginCurrentInstallation', 'Begin Current Installation');
+        _this.BeginVersionInstallationAction = _this.createAction('BeginVersionInstallation', 'Begin Version Installation');
+        _this.InstalledAction = _this.createAction('Installed', 'Installed');
+        return _this;
+    }
+    InstallGroup.prototype.RegisterApp = function (model, errorOptions) {
+        return this.RegisterAppAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.GetVersion = function (model, errorOptions) {
+        return this.GetVersionAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.AddSystemUser = function (model, errorOptions) {
+        return this.AddSystemUserAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.NewInstallation = function (model, errorOptions) {
+        return this.NewInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.BeginCurrentInstallation = function (model, errorOptions) {
+        return this.BeginCurrentInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.BeginVersionInstallation = function (model, errorOptions) {
+        return this.BeginVersionInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.Installed = function (model, errorOptions) {
+        return this.InstalledAction.execute(model, errorOptions || {});
+    };
+    return InstallGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.InstallGroup = InstallGroup;
+//# sourceMappingURL=InstallGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ModCategoryGroup.js":
+/*!*********************************************!*\
+  !*** ./Scripts/Hub/Api/ModCategoryGroup.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ModCategoryGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var ModCategoryGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ModCategoryGroup, _super);
+    function ModCategoryGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'ModCategory') || this;
+        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
+        _this.GetModifiersAction = _this.createAction('GetModifiers', 'Get Modifiers');
+        _this.GetModifierAction = _this.createAction('GetModifier', 'Get Modifier');
+        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
+        return _this;
+    }
+    ModCategoryGroup.prototype.GetModCategory = function (model, errorOptions) {
+        return this.GetModCategoryAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetModifiers = function (model, errorOptions) {
+        return this.GetModifiersAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetModifier = function (model, errorOptions) {
+        return this.GetModifierAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetResourceGroups = function (model, errorOptions) {
+        return this.GetResourceGroupsAction.execute(model, errorOptions || {});
+    };
+    return ModCategoryGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ModCategoryGroup = ModCategoryGroup;
+//# sourceMappingURL=ModCategoryGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/PermanentLogGroup.js":
+/*!**********************************************!*\
+  !*** ./Scripts/Hub/Api/PermanentLogGroup.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PermanentLogGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var PermanentLogGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(PermanentLogGroup, _super);
+    function PermanentLogGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'PermanentLog') || this;
+        _this.LogBatchAction = _this.createAction('LogBatch', 'Log Batch');
+        _this.StartSessionAction = _this.createAction('StartSession', 'Start Session');
+        _this.StartRequestAction = _this.createAction('StartRequest', 'Start Request');
+        _this.EndRequestAction = _this.createAction('EndRequest', 'End Request');
+        _this.EndSessionAction = _this.createAction('EndSession', 'End Session');
+        _this.LogEventAction = _this.createAction('LogEvent', 'Log Event');
+        _this.AuthenticateSessionAction = _this.createAction('AuthenticateSession', 'Authenticate Session');
+        _this.EndExpiredSessionsAction = _this.createAction('EndExpiredSessions', 'End Expired Sessions');
+        return _this;
+    }
+    PermanentLogGroup.prototype.LogBatch = function (model, errorOptions) {
+        return this.LogBatchAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.StartSession = function (model, errorOptions) {
+        return this.StartSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.StartRequest = function (model, errorOptions) {
+        return this.StartRequestAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndRequest = function (model, errorOptions) {
+        return this.EndRequestAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndSession = function (model, errorOptions) {
+        return this.EndSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.LogEvent = function (model, errorOptions) {
+        return this.LogEventAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.AuthenticateSession = function (model, errorOptions) {
+        return this.AuthenticateSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndExpiredSessions = function (errorOptions) {
+        return this.EndExpiredSessionsAction.execute({}, errorOptions || {});
+    };
+    return PermanentLogGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.PermanentLogGroup = PermanentLogGroup;
+//# sourceMappingURL=PermanentLogGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/PublishGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/PublishGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PublishGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var PublishGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(PublishGroup, _super);
+    function PublishGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Publish') || this;
+        _this.NewVersionAction = _this.createAction('NewVersion', 'New Version');
+        _this.BeginPublishAction = _this.createAction('BeginPublish', 'Begin Publish');
+        _this.EndPublishAction = _this.createAction('EndPublish', 'End Publish');
+        _this.GetVersionsAction = _this.createAction('GetVersions', 'Get Versions');
+        return _this;
+    }
+    PublishGroup.prototype.NewVersion = function (model, errorOptions) {
+        return this.NewVersionAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.BeginPublish = function (model, errorOptions) {
+        return this.BeginPublishAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.EndPublish = function (model, errorOptions) {
+        return this.EndPublishAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.GetVersions = function (model, errorOptions) {
+        return this.GetVersionsAction.execute(model, errorOptions || {});
+    };
+    return PublishGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.PublishGroup = PublishGroup;
+//# sourceMappingURL=PublishGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ResourceGroup.js":
+/*!******************************************!*\
+  !*** ./Scripts/Hub/Api/ResourceGroup.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ResourceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var ResourceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ResourceGroup, _super);
+    function ResourceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Resource') || this;
+        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
+        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        return _this;
+    }
+    ResourceGroup.prototype.GetResource = function (model, errorOptions) {
+        return this.GetResourceAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetRoleAccess = function (model, errorOptions) {
+        return this.GetRoleAccessAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    return ResourceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ResourceGroup = ResourceGroup;
+//# sourceMappingURL=ResourceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ResourceGroupGroup.js":
+/*!***********************************************!*\
+  !*** ./Scripts/Hub/Api/ResourceGroupGroup.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ResourceGroupGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var ResourceGroupGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ResourceGroupGroup, _super);
+    function ResourceGroupGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'ResourceGroup') || this;
+        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
+        _this.GetResourcesAction = _this.createAction('GetResources', 'Get Resources');
+        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
+        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
+        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        return _this;
+    }
+    ResourceGroupGroup.prototype.GetResourceGroup = function (model, errorOptions) {
+        return this.GetResourceGroupAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetResources = function (model, errorOptions) {
+        return this.GetResourcesAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetResource = function (model, errorOptions) {
+        return this.GetResourceAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetRoleAccess = function (model, errorOptions) {
+        return this.GetRoleAccessAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetModCategory = function (model, errorOptions) {
+        return this.GetModCategoryAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    return ResourceGroupGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ResourceGroupGroup = ResourceGroupGroup;
+//# sourceMappingURL=ResourceGroupGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserCacheGroup.js":
+/*!*******************************************!*\
+  !*** ./Scripts/Hub/Api/UserCacheGroup.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserCacheGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var UserCacheGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserCacheGroup, _super);
+    function UserCacheGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserCache') || this;
+        _this.ClearCacheAction = _this.createAction('ClearCache', 'Clear Cache');
+        return _this;
+    }
+    UserCacheGroup.prototype.ClearCache = function (model, errorOptions) {
+        return this.ClearCacheAction.execute(model, errorOptions || {});
+    };
+    return UserCacheGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserCacheGroup = UserCacheGroup;
+//# sourceMappingURL=UserCacheGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/UserGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var UserGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserGroup, _super);
+    function UserGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'User') || this;
+        _this.Index = _this.createView('Index');
+        return _this;
+    }
+    return UserGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserGroup = UserGroup;
+//# sourceMappingURL=UserGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserInquiryGroup.js":
+/*!*********************************************!*\
+  !*** ./Scripts/Hub/Api/UserInquiryGroup.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserInquiryGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var UserInquiryGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserInquiryGroup, _super);
+    function UserInquiryGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserInquiry') || this;
+        _this.GetUserAction = _this.createAction('GetUser', 'Get User');
+        _this.GetUserByUserNameAction = _this.createAction('GetUserByUserName', 'Get User By User Name');
+        _this.GetCurrentUserAction = _this.createAction('GetCurrentUser', 'Get Current User');
+        _this.RedirectToAppUser = _this.createView('RedirectToAppUser');
+        return _this;
+    }
+    UserInquiryGroup.prototype.GetUser = function (model, errorOptions) {
+        return this.GetUserAction.execute(model, errorOptions || {});
+    };
+    UserInquiryGroup.prototype.GetUserByUserName = function (model, errorOptions) {
+        return this.GetUserByUserNameAction.execute(model, errorOptions || {});
+    };
+    UserInquiryGroup.prototype.GetCurrentUser = function (errorOptions) {
+        return this.GetCurrentUserAction.execute({}, errorOptions || {});
+    };
+    return UserInquiryGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserInquiryGroup = UserInquiryGroup;
+//# sourceMappingURL=UserInquiryGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserMaintenanceGroup.js":
+/*!*************************************************!*\
+  !*** ./Scripts/Hub/Api/UserMaintenanceGroup.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserMaintenanceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var UserMaintenanceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserMaintenanceGroup, _super);
+    function UserMaintenanceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserMaintenance') || this;
+        _this.EditUserAction = _this.createAction('EditUser', 'Edit User');
+        _this.GetUserForEditAction = _this.createAction('GetUserForEdit', 'Get User For Edit');
+        return _this;
+    }
+    UserMaintenanceGroup.prototype.EditUser = function (model, errorOptions) {
+        return this.EditUserAction.execute(model, errorOptions || {});
+    };
+    UserMaintenanceGroup.prototype.GetUserForEdit = function (model, errorOptions) {
+        return this.GetUserForEditAction.execute(model, errorOptions || {});
+    };
+    return UserMaintenanceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserMaintenanceGroup = UserMaintenanceGroup;
+//# sourceMappingURL=UserMaintenanceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UsersGroup.js":
+/*!***************************************!*\
+  !*** ./Scripts/Hub/Api/UsersGroup.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UsersGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var UsersGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UsersGroup, _super);
+    function UsersGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Users') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetUsersAction = _this.createAction('GetUsers', 'Get Users');
+        _this.GetSystemUsersAction = _this.createAction('GetSystemUsers', 'Get System Users');
+        _this.AddUserAction = _this.createAction('AddUser', 'Add User');
+        return _this;
+    }
+    UsersGroup.prototype.GetUsers = function (errorOptions) {
+        return this.GetUsersAction.execute({}, errorOptions || {});
+    };
+    UsersGroup.prototype.GetSystemUsers = function (model, errorOptions) {
+        return this.GetSystemUsersAction.execute(model, errorOptions || {});
+    };
+    UsersGroup.prototype.AddUser = function (model, errorOptions) {
+        return this.AddUserAction.execute(model, errorOptions || {});
+    };
+    return UsersGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UsersGroup = UsersGroup;
+//# sourceMappingURL=UsersGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/VersionGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/VersionGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.VersionGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
+var VersionGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(VersionGroup, _super);
+    function VersionGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Version') || this;
+        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
+        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
+        return _this;
+    }
+    VersionGroup.prototype.GetVersion = function (model, errorOptions) {
+        return this.GetVersionAction.execute(model, errorOptions || {});
+    };
+    VersionGroup.prototype.GetResourceGroup = function (model, errorOptions) {
+        return this.GetResourceGroupAction.execute(model, errorOptions || {});
+    };
+    return VersionGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.VersionGroup = VersionGroup;
+//# sourceMappingURL=VersionGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Apis.js":
+/*!*****************************!*\
+  !*** ./Scripts/Hub/Apis.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Apis = void 0;
+var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiFactory */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js");
+var ModalErrorComponent_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Error/ModalErrorComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js");
+var HubAppApi_1 = __webpack_require__(/*! ../Hub/Api/HubAppApi */ "./Scripts/Hub/Api/HubAppApi.js");
+var Apis = /** @class */ (function () {
+    function Apis(modalError) {
+        this.modalError = new ModalErrorComponent_1.ModalErrorComponent(modalError);
+    }
+    Apis.prototype.hub = function () {
+        var apiFactory = new AppApiFactory_1.AppApiFactory(HubAppApi_1.HubAppApi, this.modalError);
+        return apiFactory.api(HubAppApi_1.HubAppApi);
+    };
+    return Apis;
+}());
+exports.Apis = Apis;
+//# sourceMappingURL=Apis.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/Alert.js":
 /*!***********************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/Alert.js ***!
@@ -190,6 +1013,409 @@ exports.AlignCss = AlignCss;
 
 /***/ }),
 
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApi.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApi.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApi = void 0;
+var AppResourceUrl_1 = __webpack_require__(/*! ./AppResourceUrl */ "./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js");
+var XtiUrl_1 = __webpack_require__(/*! ./XtiUrl */ "./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js");
+var AppApi = /** @class */ (function () {
+    function AppApi(events, baseUrl, app, version) {
+        this.events = events;
+        this.groups = {};
+        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, version, XtiUrl_1.XtiUrl.current.path.modifier, pageContext.CacheBust);
+    }
+    Object.defineProperty(AppApi.prototype, "name", {
+        get: function () { return this.resourceUrl.path.app; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AppApi.prototype, "url", {
+        get: function () { return this.resourceUrl.relativeUrl; },
+        enumerable: false,
+        configurable: true
+    });
+    AppApi.prototype.addGroup = function (createGroup) {
+        var group = createGroup(this.events, this.resourceUrl);
+        this.groups[group.name] = group;
+        return group;
+    };
+    AppApi.prototype.toString = function () {
+        return "AppApi " + this.resourceUrl;
+    };
+    return AppApi;
+}());
+exports.AppApi = AppApi;
+//# sourceMappingURL=AppApi.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiAction = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var HttpClient_1 = __webpack_require__(/*! ./HttpClient */ "./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js");
+var JsonText_1 = __webpack_require__(/*! ./JsonText */ "./node_modules/@jasonbenfield/sharedwebapp/JsonText.js");
+var AppApiError_1 = __webpack_require__(/*! ./AppApiError */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js");
+var ErrorModel_1 = __webpack_require__(/*! ./ErrorModel */ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js");
+var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var AppApiAction = /** @class */ (function () {
+    function AppApiAction(events, resourceUrl, actionName, friendlyName) {
+        this.events = events;
+        this.friendlyName = friendlyName;
+        this.resourceUrl = resourceUrl.withAction(actionName);
+    }
+    AppApiAction.prototype.execute = function (data, errorOptions) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var jsonText, postResult, result, apiError, errors, rawErrors, message;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        jsonText = new JsonText_1.JsonText(data).toString();
+                        return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.resourceUrl.url.value(), jsonText)];
+                    case 1:
+                        postResult = _a.sent();
+                        result = postResult && postResult.result && postResult.result.Data;
+                        if (postResult.isSuccessful()) {
+                            if (typeof result === 'string') {
+                                if (AppApiAction.dateRegex.test(result)) {
+                                    result = new Date(Date.parse(result));
+                                }
+                            }
+                            else {
+                                this.parseDates(result);
+                            }
+                        }
+                        else {
+                            errors = [];
+                            if (result) {
+                                rawErrors = result;
+                                errors = new Enumerable_1.MappedArray(rawErrors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
+                            }
+                            else if (postResult.status === 404) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Found', '', '', this)];
+                            }
+                            else if (postResult.status === 401) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Authenticated', '', '', this)];
+                            }
+                            else if (postResult.status === 403) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Authorized', '', '', this)];
+                            }
+                            else {
+                                message = 'An error occurred';
+                                if (postResult.status !== 500) {
+                                    message += " (" + postResult.status + ")";
+                                }
+                                errors = [new ErrorModel_1.ErrorModel(message, '', '', this)];
+                            }
+                            apiError = new AppApiError_1.AppApiError(errors, postResult.status, this.friendlyName, errorOptions.caption || '');
+                        }
+                        if (apiError) {
+                            if (!errorOptions.preventDefault) {
+                                this.events.handleError(apiError);
+                            }
+                            throw apiError;
+                        }
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    AppApiAction.prototype.parseDates = function (obj) {
+        if (obj) {
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                for (var i = 0; i < obj.length; i++) {
+                    var el = obj[i];
+                    if (typeof el === 'string') {
+                        if (AppApiAction.dateRegex.test(el)) {
+                            obj[i] = new Date(Date.parse(el));
+                        }
+                    }
+                    else {
+                        this.parseDates(el);
+                    }
+                }
+            }
+            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
+                for (var prop in obj) {
+                    if (prop) {
+                        var value = obj[prop];
+                        if (typeof value === 'string') {
+                            if (AppApiAction.dateRegex.test(value)) {
+                                obj[prop] = new Date(Date.parse(value));
+                            }
+                        }
+                        else {
+                            this.parseDates(value);
+                        }
+                    }
+                }
+            }
+        }
+        return obj;
+    };
+    AppApiAction.prototype.toString = function () {
+        return "AppApiAction " + this.resourceUrl;
+    };
+    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.?\d{0,7}[\+\-]\d{2}:\d{2})?$/;
+    return AppApiAction;
+}());
+exports.AppApiAction = AppApiAction;
+//# sourceMappingURL=AppApiAction.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiError = void 0;
+var ErrorModel_1 = __webpack_require__(/*! ./ErrorModel */ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js");
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
+var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var AppApiError = /** @class */ (function () {
+    function AppApiError(errors, _status, _location, _caption) {
+        this._status = _status;
+        this._location = _location;
+        this._caption = _caption;
+        this._errors = new Enumerable_1.MappedArray(errors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
+    }
+    AppApiError.prototype.getErrors = function () {
+        return this._errors;
+    };
+    AppApiError.prototype.isValidationError = function () {
+        return this._status === 400;
+    };
+    AppApiError.prototype.isAuthenticationError = function () {
+        return this._status === 401;
+    };
+    AppApiError.prototype.isCanceled = function () {
+        return this._status === 999;
+    };
+    AppApiError.prototype.getCaption = function () {
+        return this._caption || "Unable to " + this._location;
+    };
+    AppApiError.prototype.toString = function () {
+        var caption = this.getCaption();
+        var joined = new JoinedStrings_1.JoinedStrings('\n', this.getErrors()).toString();
+        return caption + "\nstatus: " + this._status + "\n" + joined;
+    };
+    return AppApiError;
+}());
+exports.AppApiError = AppApiError;
+//# sourceMappingURL=AppApiError.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiEvents = void 0;
+var AppApiEvents = /** @class */ (function () {
+    function AppApiEvents(handleError) {
+        this.handleError = handleError;
+    }
+    return AppApiEvents;
+}());
+exports.AppApiEvents = AppApiEvents;
+//# sourceMappingURL=AppApiEvents.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiFactory = void 0;
+var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js");
+var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "./node_modules/@jasonbenfield/sharedwebapp/ConsoleLog.js");
+var HostEnvironment_1 = __webpack_require__(/*! ./HostEnvironment */ "./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js");
+var AppApiFactory = /** @class */ (function () {
+    function AppApiFactory(_defaultApiType, modalError) {
+        this._defaultApiType = _defaultApiType;
+        this.modalError = modalError;
+    }
+    AppApiFactory.prototype.api = function (apiCtor) {
+        var _this = this;
+        var api;
+        var events = new AppApiEvents_1.AppApiEvents(function (err) {
+            new ConsoleLog_1.ConsoleLog().error(err.toString());
+            _this.modalError.show(err.getErrors(), err.getCaption());
+        });
+        if (apiCtor === this._defaultApiType) {
+            api = new apiCtor(events, location.protocol + "//" + location.host, 'Current');
+        }
+        else {
+            var hostEnvironment = new HostEnvironment_1.HostEnvironment();
+            api = new apiCtor(events, pageContext.BaseUrl, hostEnvironment.isProduction ? '' : 'Current');
+        }
+        return api;
+    };
+    return AppApiFactory;
+}());
+exports.AppApiFactory = AppApiFactory;
+//# sourceMappingURL=AppApiFactory.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiGroup = void 0;
+var AppApiAction_1 = __webpack_require__(/*! ./AppApiAction */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js");
+var AppApiView_1 = __webpack_require__(/*! ./AppApiView */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js");
+var AppApiGroup = /** @class */ (function () {
+    function AppApiGroup(events, resourceUrl, name) {
+        this.events = events;
+        this.name = name;
+        this.resourceUrl = resourceUrl.withGroup(name);
+    }
+    AppApiGroup.prototype.createView = function (name) {
+        return new AppApiView_1.AppApiView(this.resourceUrl, name);
+    };
+    AppApiGroup.prototype.createAction = function (name, friendlyName) {
+        return new AppApiAction_1.AppApiAction(this.events, this.resourceUrl, name, friendlyName);
+    };
+    AppApiGroup.prototype.toString = function () {
+        return "AppApiGroup " + this.resourceUrl;
+    };
+    return AppApiGroup;
+}());
+exports.AppApiGroup = AppApiGroup;
+//# sourceMappingURL=AppApiGroup.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiView = void 0;
+var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
+var WebPage_1 = __webpack_require__(/*! ./WebPage */ "./node_modules/@jasonbenfield/sharedwebapp/WebPage.js");
+var AppApiView = /** @class */ (function () {
+    function AppApiView(resourceUrl, actionName) {
+        this.url = resourceUrl.withAction(actionName).url.value();
+    }
+    AppApiView.prototype.getUrl = function (data) {
+        var model;
+        if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
+            model = { model: data };
+        }
+        else {
+            model = data;
+        }
+        var urlBuilder = new UrlBuilder_1.UrlBuilder(this.url);
+        urlBuilder.addQueryFromObject(model);
+        return urlBuilder;
+    };
+    AppApiView.prototype.open = function (data) {
+        var webPage = this.createWebPage(data);
+        webPage.open();
+    };
+    AppApiView.prototype.openWindow = function (data) {
+        var webPage = this.createWebPage(data);
+        webPage.openWindow();
+    };
+    AppApiView.prototype.createWebPage = function (data) {
+        var urlBuilder = this.getUrl(data);
+        return new WebPage_1.WebPage(urlBuilder);
+    };
+    return AppApiView;
+}());
+exports.AppApiView = AppApiView;
+//# sourceMappingURL=AppApiView.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppResourceUrl = void 0;
+var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js");
+var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
+var AppResourceUrl = /** @class */ (function () {
+    function AppResourceUrl(baseUrl, path, cacheBust) {
+        this.baseUrl = baseUrl;
+        this.path = path;
+        this.cacheBust = cacheBust;
+        this.url = new UrlBuilder_1.UrlBuilder(baseUrl)
+            .addPart(path.format())
+            .addQuery('cacheBust', cacheBust)
+            .url;
+    }
+    AppResourceUrl.app = function (baseUrl, appKey, version, modifier, cacheBust) {
+        return new AppResourceUrl(baseUrl, XtiPath_1.XtiPath.app(appKey, version, modifier), cacheBust);
+    };
+    Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
+        get: function () {
+            return new UrlBuilder_1.UrlBuilder("/" + this.path.format());
+        },
+        enumerable: false,
+        configurable: true
+    });
+    AppResourceUrl.prototype.withGroup = function (group) {
+        return new AppResourceUrl(this.baseUrl, this.path.withGroup(group), this.cacheBust);
+    };
+    AppResourceUrl.prototype.withAction = function (action) {
+        return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
+    };
+    AppResourceUrl.prototype.toString = function () {
+        return this.url.value();
+    };
+    return AppResourceUrl;
+}());
+exports.AppResourceUrl = AppResourceUrl;
+//# sourceMappingURL=AppResourceUrl.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js":
 /*!***************************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js ***!
@@ -294,6 +1520,132 @@ exports.ColumnCss = ColumnCss;
 
 /***/ }),
 
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AsyncCommand = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var ButtonCommandItem_1 = __webpack_require__(/*! ./ButtonCommandItem */ "./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js");
+var AsyncCommand = /** @class */ (function () {
+    function AsyncCommand(action) {
+        this.action = action;
+        this.items = [];
+        this.isMultiExecutionAllowed = false;
+        this.isEnabled = true;
+        this.executionCount = 0;
+        this.inProgressAnimation = null;
+    }
+    AsyncCommand.prototype.configure = function (action) {
+        action(this);
+        return this;
+    };
+    AsyncCommand.prototype.addButton = function (vm) {
+        return this.add(new ButtonCommandItem_1.ButtonCommandItem(vm));
+    };
+    AsyncCommand.prototype.add = function (item) {
+        var _this = this;
+        this.items.push(item);
+        item.executeRequested.register(function (context) { return _this.execute(context); });
+        return item;
+    };
+    AsyncCommand.prototype.animateIconWhenInProgress = function (inProgressAnimation) {
+        this.inProgressAnimation = inProgressAnimation;
+    };
+    AsyncCommand.prototype.icons = function (action) {
+        this.forEachItem(function (c) {
+            action(c.icon);
+        });
+    };
+    AsyncCommand.prototype.forEachItem = function (action) {
+        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
+            var item = _a[_i];
+            action(item);
+        }
+    };
+    AsyncCommand.prototype.activate = function () {
+        this.forEachItem(function (c) { return c.setActive(); });
+    };
+    AsyncCommand.prototype.deactivate = function () {
+        this.forEachItem(function (c) { return c.setInactive(); });
+    };
+    AsyncCommand.prototype.allowMultiExecution = function () {
+        this.isMultiExecutionAllowed = true;
+    };
+    AsyncCommand.prototype.show = function () {
+        this.forEachItem(function (c) { return c.show(); });
+    };
+    AsyncCommand.prototype.hide = function () {
+        this.forEachItem(function (c) { return c.hide(); });
+    };
+    AsyncCommand.prototype.enable = function () {
+        this.isEnabled = true;
+        this.updateIsEnabled();
+    };
+    AsyncCommand.prototype.disable = function () {
+        this.updateIsEnabled();
+    };
+    AsyncCommand.prototype.updateIsEnabled = function () {
+        var isEnabled = this.isEnabled && this.executionCount === 0;
+        if (isEnabled) {
+            this.forEachItem(function (c) { return c.enable(); });
+        }
+        else {
+            this.forEachItem(function (c) { return c.disable(); });
+        }
+    };
+    AsyncCommand.prototype.execute = function (context) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var canExecute;
+            var _this = this;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        canExecute = this.canExecute();
+                        if (!canExecute) return [3 /*break*/, 4];
+                        this.executionCount++;
+                        if (this.inProgressAnimation) {
+                            this.icons(function (i) {
+                                i.startAnimation(_this.inProgressAnimation);
+                            });
+                        }
+                        this.updateIsEnabled();
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, , 3, 4]);
+                        return [4 /*yield*/, this.action(context)];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        this.executionCount--;
+                        this.updateIsEnabled();
+                        if (this.inProgressAnimation) {
+                            this.icons(function (i) {
+                                i.stopAnimation();
+                            });
+                        }
+                        return [7 /*endfinally*/];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AsyncCommand.prototype.canExecute = function () {
+        return this.isEnabled && (this.isMultiExecutionAllowed || this.executionCount === 0);
+    };
+    return AsyncCommand;
+}());
+exports.AsyncCommand = AsyncCommand;
+//# sourceMappingURL=AsyncCommand.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js":
 /*!*******************************************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js ***!
@@ -361,6 +1713,40 @@ var ButtonCommandItem = /** @class */ (function (_super) {
 }(Button_1.Button));
 exports.ButtonCommandItem = ButtonCommandItem;
 //# sourceMappingURL=ButtonCommandItem.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Command = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AsyncCommand_1 = __webpack_require__(/*! ./AsyncCommand */ "./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js");
+var Command = /** @class */ (function (_super) {
+    tslib_1.__extends(Command, _super);
+    function Command(action) {
+        return _super.call(this, function (c) {
+            return new Promise(function (resolve, reject) {
+                try {
+                    action(c);
+                    resolve({});
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
+        }) || this;
+    }
+    return Command;
+}(AsyncCommand_1.AsyncCommand));
+exports.Command = Command;
+//# sourceMappingURL=Command.js.map
 
 /***/ }),
 
@@ -1056,6 +2442,97 @@ exports.EnumerableRange = EnumerableRange;
 
 /***/ }),
 
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ErrorModel = void 0;
+var ErrorModel = /** @class */ (function () {
+    function ErrorModel(Message, Caption, Source, context) {
+        if (Caption === void 0) { Caption = ''; }
+        if (Source === void 0) { Source = ''; }
+        this.Message = Message;
+        this.Caption = Caption;
+        this.Source = Source;
+        this.context = context;
+    }
+    ErrorModel.prototype.toString = function () {
+        var str = '';
+        if (this.Source) {
+            str += this.Source + ", ";
+        }
+        str += this.Message;
+        return str;
+    };
+    return ErrorModel;
+}());
+exports.ErrorModel = ErrorModel;
+//# sourceMappingURL=ErrorModel.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ModalErrorComponent = void 0;
+var Command_1 = __webpack_require__(/*! ../Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var ModalErrorGroupComponent_1 = __webpack_require__(/*! ./ModalErrorGroupComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js");
+var ModalErrorComponent = /** @class */ (function () {
+    function ModalErrorComponent(view) {
+        this.view = view;
+        this.errorGroups = [];
+        this._errorSelected = new Events_1.DefaultEvent(this);
+        this.errorSelected = this._errorSelected.handler();
+        this.view.closed.register(this.onClosed.bind(this));
+        new Command_1.Command(this.hide.bind(this)).add(this.view.okButton);
+    }
+    ModalErrorComponent.prototype.onClosed = function () {
+        this.clearErrors();
+    };
+    ModalErrorComponent.prototype.show = function (errors, caption) {
+        if (caption === void 0) { caption = ''; }
+        var group = new ModalErrorGroupComponent_1.ModalErrorGroupComponent(this.view.errorGroup());
+        group.errorSelected.register(this.onErrorSelected.bind(this));
+        group.load(caption, errors, this.errorGroups.length === 0);
+        this.errorGroups.push(group);
+        if (errors.length === 1) {
+            this.view.setTitle('An error occurred');
+        }
+        else {
+            this.view.setTitle('Errors occurred');
+        }
+        this.view.showModal();
+    };
+    ModalErrorComponent.prototype.hide = function () {
+        this.clearErrors();
+        this.view.hideModal();
+    };
+    ModalErrorComponent.prototype.onErrorSelected = function (errorListItem) {
+        this._errorSelected.invoke(errorListItem.error);
+    };
+    ModalErrorComponent.prototype.clearErrors = function () {
+        this.errorGroups.splice(0, this.errorGroups.length);
+        this.view.clearErrorGroups();
+    };
+    return ModalErrorComponent;
+}());
+exports.ModalErrorComponent = ModalErrorComponent;
+//# sourceMappingURL=ModalErrorComponent.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView.js":
 /*!***********************************************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView.js ***!
@@ -1072,7 +2549,7 @@ var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem *
 var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
 var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
 var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
 var TextHeading5_1 = __webpack_require__(/*! ../Html/TextHeading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js");
 var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js");
@@ -1089,8 +2566,9 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
         _this.errorGroups = [];
         _this.modal = new ModalComponentView_1.ModalComponentView(vm);
         _this.modal.body.setName(ModalErrorComponentView.name);
+        _this.body = _this.modal.body.addContent(new Block_1.Block());
+        _this.body.addCssName('alert alert-danger m-0 rounded-0 border-danger border-left-0 border-right-0');
         _this.title = _this.modal.header.addContent(new TextHeading5_1.TextHeading5(''));
-        _this.hr = _this.modal.body.addContent(new HorizontalRule_1.HorizontalRule());
         var row = _this.modal.footer.addContent(new Row_1.Row());
         row.addColumn();
         var buttonColumn = row.addColumn();
@@ -1105,13 +2583,13 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
     ModalErrorComponentView.prototype.errorGroup = function () {
         var errorGroup = new ModalErrorGroupComponentView_1.ModalErrorGroupComponentView();
         this.errorGroups.push(errorGroup);
-        this.modal.body.addContent(errorGroup);
+        this.body.addContent(errorGroup);
         return errorGroup;
     };
     ModalErrorComponentView.prototype.clearErrorGroups = function () {
         for (var _i = 0, _a = this.errorGroups; _i < _a.length; _i++) {
             var errorGroup = _a[_i];
-            this.modal.body.removeItem(errorGroup);
+            this.body.removeItem(errorGroup);
         }
     };
     ModalErrorComponentView.prototype.setTitle = function (title) {
@@ -1130,6 +2608,51 @@ exports.ModalErrorComponentView = ModalErrorComponentView;
 
 /***/ }),
 
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ModalErrorGroupComponent = void 0;
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var ListGroup_1 = __webpack_require__(/*! ../ListGroup/ListGroup */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js");
+var ModalErrorListItem_1 = __webpack_require__(/*! ./ModalErrorListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js");
+var ModalErrorGroupComponent = /** @class */ (function () {
+    function ModalErrorGroupComponent(view) {
+        this.view = view;
+        this._errorSelected = new Events_1.DefaultEvent(this);
+        this.errorSelected = this._errorSelected.handler();
+        this.errors = new ListGroup_1.ListGroup(this.view.errors);
+        this.errors.itemClicked.register(this.onErrorClicked.bind(this));
+    }
+    ModalErrorGroupComponent.prototype.onErrorClicked = function (errorListItem) {
+        this._errorSelected.invoke(errorListItem.error);
+    };
+    ModalErrorGroupComponent.prototype.load = function (caption, errors, isFirst) {
+        if (isFirst) {
+            this.view.hideHR();
+        }
+        else {
+            this.view.showHR();
+        }
+        this.view.setCaption(caption);
+        var anyCaptions = new Enumerable_1.Any(new Enumerable_1.FilteredArray(errors, function (e) { return Boolean(e.Caption); })).value();
+        this.errors.setItems(errors, function (e, itemView) {
+            return new ModalErrorListItem_1.ModalErrorListItem(e, itemView, anyCaptions);
+        });
+    };
+    return ModalErrorGroupComponent;
+}());
+exports.ModalErrorGroupComponent = ModalErrorGroupComponent;
+//# sourceMappingURL=ModalErrorGroupComponent.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponentView.js":
 /*!****************************************************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponentView.js ***!
@@ -1144,6 +2667,7 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
 var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
 var TextHeading4_1 = __webpack_require__(/*! ../Html/TextHeading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js");
 var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
 var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js");
@@ -1153,7 +2677,8 @@ var ModalErrorGroupComponentView = /** @class */ (function (_super) {
         var _this = _super.call(this, new BlockViewModel_1.BlockViewModel()) || this;
         _this.hr = _this.addContent(new HorizontalRule_1.HorizontalRule());
         _this.caption = _this.addContent(new TextHeading4_1.TextHeading4());
-        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }));
+        _this.caption.addCssName('alert-heading');
+        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         return _this;
     }
     ModalErrorGroupComponentView.prototype.showHR = function () { this.hr.show(); };
@@ -1165,6 +2690,35 @@ var ModalErrorGroupComponentView = /** @class */ (function (_super) {
 }(Block_1.Block));
 exports.ModalErrorGroupComponentView = ModalErrorGroupComponentView;
 //# sourceMappingURL=ModalErrorGroupComponentView.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ModalErrorListItem = void 0;
+var ModalErrorListItem = /** @class */ (function () {
+    function ModalErrorListItem(error, view, isCaptionVisible) {
+        this.error = error;
+        view.setCaption(error.Caption);
+        view.setMessage(error.Message);
+        if (isCaptionVisible) {
+            view.showCaption();
+        }
+        else {
+            view.hideCaption();
+        }
+    }
+    return ModalErrorListItem;
+}());
+exports.ModalErrorListItem = ModalErrorListItem;
+//# sourceMappingURL=ModalErrorListItem.js.map
 
 /***/ }),
 
@@ -1189,15 +2743,15 @@ var ModalErrorListItemView = /** @class */ (function (_super) {
     function ModalErrorListItemView() {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());
-        var col1 = row.addColumn();
-        col1.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        _this.caption = col1.addContent(new TextBlock_1.TextBlock());
+        _this.captionCol = row.addColumn();
+        _this.captionCol.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
+        _this.caption = _this.captionCol.addContent(new TextBlock_1.TextBlock());
         var col2 = row.addColumn();
         _this.message = col2.addContent(new TextBlock_1.TextBlock());
         return _this;
     }
-    ModalErrorListItemView.prototype.hideCaption = function () { this.caption.hide(); };
-    ModalErrorListItemView.prototype.showCaption = function () { this.caption.show(); };
+    ModalErrorListItemView.prototype.hideCaption = function () { this.captionCol.hide(); };
+    ModalErrorListItemView.prototype.showCaption = function () { this.captionCol.show(); };
     ModalErrorListItemView.prototype.setCaption = function (caption) { this.caption.setText(caption); };
     ModalErrorListItemView.prototype.setMessage = function (message) { this.message.setText(message); };
     return ModalErrorListItemView;
@@ -1590,6 +3144,30 @@ var Row = /** @class */ (function (_super) {
 }(HtmlComponent_1.HtmlComponent));
 exports.Row = Row;
 //# sourceMappingURL=Row.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HostEnvironment = void 0;
+var HostEnvironment = /** @class */ (function () {
+    function HostEnvironment() {
+        this.isTest = pageContext.EnvironmentName === 'Test';
+        this.isDevelopment = pageContext.EnvironmentName === 'Development';
+        this.isStaging = pageContext.EnvironmentName === 'Staging';
+        this.isProduction = pageContext.EnvironmentName === 'Production';
+    }
+    return HostEnvironment;
+}());
+exports.HostEnvironment = HostEnvironment;
+//# sourceMappingURL=HostEnvironment.js.map
 
 /***/ }),
 
@@ -2155,6 +3733,7 @@ var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewMode
 var HorizontalRule = /** @class */ (function () {
     function HorizontalRule(vm) {
         if (vm === void 0) { vm = new HorizontalRuleViewModel_1.HorizontalRuleViewModel(); }
+        this.vm = vm;
     }
     HorizontalRule.prototype.addToContainer = function (container) {
         return container.addItem(this.vm, this);
@@ -2540,6 +4119,42 @@ var LinkViewModel = /** @class */ (function (_super) {
 }(HtmlComponentViewModel_1.HtmlComponentViewModel));
 exports.LinkViewModel = LinkViewModel;
 //# sourceMappingURL=LinkViewModel.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListBlockViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
+var template = __webpack_require__(/*! ./ListBlock.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html");
+var ListBlockViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(ListBlockViewModel, _super);
+    function ListBlockViewModel() {
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('list-block', template)) || this;
+        _this._itemClicked = new Events_1.DefaultEvent(_this);
+        _this.itemClicked = _this._itemClicked.handler();
+        _this.items = ko.observableArray([]);
+        _this.hasItems = ko.observable(false);
+        return _this;
+    }
+    ListBlockViewModel.prototype.click = function (item) {
+        this._itemClicked.invoke(item);
+    };
+    return ListBlockViewModel;
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
+exports.ListBlockViewModel = ListBlockViewModel;
+//# sourceMappingURL=ListBlockViewModel.js.map
 
 /***/ }),
 
@@ -3076,6 +4691,84 @@ exports.UnorderedListViewModel = UnorderedListViewModel;
 
 /***/ }),
 
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HttpClient = exports.HttpPostResult = void 0;
+var HttpPostResult = /** @class */ (function () {
+    function HttpPostResult(result, url, status, responseText) {
+        this.result = result;
+        this.url = url;
+        this.status = status;
+        this.responseText = responseText;
+    }
+    HttpPostResult.prototype.isSuccessful = function () {
+        return this.status === 200;
+    };
+    HttpPostResult.prototype.toString = function () {
+        return this.url + "\r\n" + this.status + "\r\n" + this.responseText + "\r\n" + this.result;
+    };
+    return HttpPostResult;
+}());
+exports.HttpPostResult = HttpPostResult;
+var HttpClient = /** @class */ (function () {
+    function HttpClient() {
+    }
+    HttpClient.prototype.get = function (url) {
+        return this.execute('GET', url);
+    };
+    HttpClient.prototype.post = function (url, data) {
+        return this.execute('POST', url, data);
+    };
+    HttpClient.prototype.execute = function (method, url, body) {
+        return new Promise(function (resolve) {
+            function reqListener() {
+                console.log(this.responseText);
+            }
+            var oReq = new XMLHttpRequest();
+            oReq.withCredentials = true;
+            oReq.onreadystatechange = function () {
+                if (oReq.readyState == 4) {
+                    var result = void 0;
+                    if (method === 'GET') {
+                        result = oReq.responseText;
+                    }
+                    else if (!/^\s*[{\[]\s*.*[\]}]\s*$/.test(oReq.responseText)) {
+                        var responseText = oReq.responseText;
+                        if (!responseText) {
+                            responseText = 'null';
+                        }
+                        responseText = "{ \"data\": " + responseText + " }";
+                        var dataResult = JSON.parse(responseText);
+                        result = dataResult.data;
+                    }
+                    else {
+                        result = JSON.parse(oReq.responseText);
+                    }
+                    resolve(new HttpPostResult(result, url, oReq.status, oReq.responseText));
+                }
+            };
+            oReq.addEventListener("load", reqListener.bind(oReq));
+            oReq.open(method, url);
+            if (method === 'POST') {
+                oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            }
+            oReq.send(body);
+        });
+    };
+    return HttpClient;
+}());
+exports.HttpClient = HttpClient;
+//# sourceMappingURL=HttpClient.js.map
+
+/***/ }),
+
 /***/ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js ***!
@@ -3116,6 +4809,59 @@ var JoinedStrings = /** @class */ (function () {
 }());
 exports.JoinedStrings = JoinedStrings;
 //# sourceMappingURL=JoinedStrings.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/JsonText.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/JsonText.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JsonText = void 0;
+var JsonText = /** @class */ (function () {
+    function JsonText(data) {
+        this.formatDates(data);
+        this.value = JSON.stringify(data);
+    }
+    JsonText.prototype.formatDates = function (obj) {
+        if (obj) {
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                for (var i = 0; i < obj.length; i++) {
+                    var el = obj[i];
+                    if (el instanceof Date) {
+                        obj[i] = el.toISOString();
+                    }
+                    else {
+                        this.formatDates(el);
+                    }
+                }
+            }
+            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
+                for (var prop in obj) {
+                    if (prop) {
+                        var value = obj[prop];
+                        if (value instanceof Date) {
+                            obj[prop] = value.toISOString();
+                        }
+                        else {
+                            this.formatDates(value);
+                        }
+                    }
+                }
+            }
+        }
+    };
+    JsonText.prototype.toString = function () {
+        return this.value;
+    };
+    return JsonText;
+}());
+exports.JsonText = JsonText;
+//# sourceMappingURL=JsonText.js.map
 
 /***/ }),
 
@@ -3264,6 +5010,68 @@ var LinkListItemViewModel = /** @class */ (function (_super) {
 }(LinkViewModel_1.LinkViewModel));
 exports.LinkListItemViewModel = LinkListItemViewModel;
 //# sourceMappingURL=LinkListItemViewModel.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListGroup = void 0;
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var ListItemWithView = /** @class */ (function () {
+    function ListItemWithView(listItem, view) {
+        this.listItem = listItem;
+        this.view = view;
+    }
+    return ListItemWithView;
+}());
+var ListGroup = /** @class */ (function () {
+    function ListGroup(view) {
+        this.view = view;
+        this.itemsWithView = [];
+        this._itemClicked = new Events_1.DefaultEvent(this);
+        this.itemClicked = this._itemClicked.handler();
+        this.view.itemClicked.register(this.onItemClicked.bind(this));
+    }
+    ListGroup.prototype.onItemClicked = function (itemVM) {
+        var item = new Enumerable_1.First(new Enumerable_1.FilteredArray(this.itemsWithView, function (itemWithView) { return itemWithView.view === itemVM; })).value();
+        this._itemClicked.invoke(item && item.listItem);
+    };
+    ListGroup.prototype.clearItems = function () {
+        for (var _i = 0, _a = this.itemsWithView; _i < _a.length; _i++) {
+            var itemWithView = _a[_i];
+            itemWithView.view.removeFromList(this.view);
+        }
+        this.itemsWithView.splice(0, this.itemsWithView.length);
+    };
+    ListGroup.prototype.addItem = function (sourceItem, createItem) {
+        var itemView = this.view.createItemView(sourceItem);
+        var item = createItem(sourceItem, itemView);
+        this.itemsWithView.push(new ListItemWithView(item, itemView));
+        itemView.addToList(this.view);
+        return item;
+    };
+    ListGroup.prototype.setItems = function (sourceItems, createItem) {
+        this.clearItems();
+        var items = [];
+        for (var _i = 0, sourceItems_1 = sourceItems; _i < sourceItems_1.length; _i++) {
+            var sourceItem = sourceItems_1[_i];
+            var item = this.addItem(sourceItem, createItem);
+            items.push(item);
+        }
+        return items;
+    };
+    return ListGroup;
+}());
+exports.ListGroup = ListGroup;
+//# sourceMappingURL=ListGroup.js.map
 
 /***/ }),
 
@@ -5108,6 +6916,103 @@ var WebPage = /** @class */ (function () {
 }());
 exports.WebPage = WebPage;
 //# sourceMappingURL=WebPage.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.XtiPath = void 0;
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
+var XtiPath = /** @class */ (function () {
+    function XtiPath(app, version, group, action, modifier) {
+        this.app = app ? app : '';
+        this.version = version ? version : '';
+        this.group = group ? group : '';
+        this.action = action ? action : '';
+        this.modifier = modifier ? modifier : '';
+        var parts = [this.app, this.version];
+        if (this.group) {
+            parts.push(this.group);
+            if (this.action) {
+                parts.push(this.action);
+                if (this.modifier) {
+                    parts.push(this.modifier);
+                }
+            }
+        }
+        this.value = new JoinedStrings_1.JoinedStrings('/', parts).value();
+    }
+    XtiPath.app = function (appKey, version, modifier) {
+        return new XtiPath(appKey, version, '', '', modifier);
+    };
+    XtiPath.prototype.withGroup = function (group) {
+        return new XtiPath(this.app, this.version, group, '', this.modifier);
+    };
+    XtiPath.prototype.withAction = function (action) {
+        return new XtiPath(this.app, this.version, this.group, action, this.modifier);
+    };
+    XtiPath.prototype.format = function () {
+        return this.value;
+    };
+    XtiPath.prototype.equals = function (other) {
+        if (other) {
+            return this.value === other.value;
+        }
+        return false;
+    };
+    XtiPath.prototype.toString = function () {
+        return this.value;
+    };
+    return XtiPath;
+}());
+exports.XtiPath = XtiPath;
+//# sourceMappingURL=XtiPath.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.XtiUrl = void 0;
+var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js");
+var XtiUrl = /** @class */ (function () {
+    function XtiUrl(url) {
+        if (url === void 0) { url = location.href; }
+        var protocolIndex = url.indexOf('//');
+        var slashIndex = url.indexOf('/', protocolIndex + 2);
+        this.baseUrl = url.substring(0, slashIndex);
+        var endIndex = url.indexOf('?');
+        if (endIndex < 0) {
+            endIndex = url.indexOf('#');
+            if (endIndex < 0) {
+                endIndex = url.length;
+            }
+        }
+        else {
+            endIndex = url.length;
+        }
+        var path = url.substring(slashIndex + 1, endIndex);
+        var split = path.split('/');
+        this.path = new XtiPath_1.XtiPath(split[0], split[1], split[2], split[3], split[4]);
+    }
+    XtiUrl.current = new XtiUrl(location.href);
+    return XtiUrl;
+}());
+exports.XtiUrl = XtiUrl;
+//# sourceMappingURL=XtiUrl.js.map
 
 /***/ }),
 
@@ -13577,6 +15482,19 @@ module.exports = code;
 
 // Module
 var code = "<!-- ko if: isVisible -->\r\n<a data-bind=\"\r\n        attr: { \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name,\r\n            href: href\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</a>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html ***!
+  \**********************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    delegatedEvent: { event: 'click', selector: 'button,a,li', callback: click },\r\n    foreach: items\">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
 // Exports
 module.exports = code;
 
@@ -42322,7 +44240,9 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var UserPage_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/User/UserPage */ "./node_modules/@jasonbenfield/sharedwebapp/User/UserPage.js");
 var Startup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Startup */ "./node_modules/@jasonbenfield/sharedwebapp/Startup.js");
-new UserPage_1.UserPage(new Startup_1.Startup().build(), null);
+var Apis_1 = __webpack_require__(/*! ../../Hub/Apis */ "./Scripts/Hub/Apis.js");
+var pageFrame = new Startup_1.Startup().build();
+new UserPage_1.UserPage(pageFrame, new Apis_1.Apis(pageFrame.modalError).hub());
 
 })();
 

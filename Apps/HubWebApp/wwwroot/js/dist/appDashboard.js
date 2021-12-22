@@ -293,7 +293,7 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
+    HubAppApi.DefaultVersion = 'V63';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;
@@ -987,17 +987,55 @@ exports.AppComponentView = AppComponentView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppDetailPanel = void 0;
+exports.AppDetailPanel = exports.AppDetailPanelResult = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var AppComponent_1 = __webpack_require__(/*! ./AppComponent */ "./Scripts/Internal/AppDashboard/AppDetail/AppComponent.js");
 var CurrentVersionComponent_1 = __webpack_require__(/*! ./CurrentVersionComponent */ "./Scripts/Internal/AppDashboard/AppDetail/CurrentVersionComponent.js");
 var ModifierCategoryListCard_1 = __webpack_require__(/*! ./ModifierCategoryListCard */ "./Scripts/Internal/AppDashboard/AppDetail/ModifierCategoryListCard.js");
 var MostRecentErrorEventListCard_1 = __webpack_require__(/*! ./MostRecentErrorEventListCard */ "./Scripts/Internal/AppDashboard/AppDetail/MostRecentErrorEventListCard.js");
 var MostRecentRequestListCard_1 = __webpack_require__(/*! ./MostRecentRequestListCard */ "./Scripts/Internal/AppDashboard/AppDetail/MostRecentRequestListCard.js");
 var ResourceGroupListCard_1 = __webpack_require__(/*! ./ResourceGroupListCard */ "./Scripts/Internal/AppDashboard/AppDetail/ResourceGroupListCard.js");
+var AppDetailPanelResult = /** @class */ (function () {
+    function AppDetailPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(AppDetailPanelResult, "backRequested", {
+        get: function () {
+            return new AppDetailPanelResult({ backRequested: {} });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    AppDetailPanelResult.resourceGroupSelected = function (resourceGroup) {
+        return new AppDetailPanelResult({
+            resourceGroupSelected: { resourceGroup: resourceGroup }
+        });
+    };
+    AppDetailPanelResult.modCategorySelected = function (modCategory) {
+        return new AppDetailPanelResult({
+            modCategorySelected: { modCategory: modCategory }
+        });
+    };
+    Object.defineProperty(AppDetailPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AppDetailPanelResult.prototype, "resourceGroupSelected", {
+        get: function () { return this.results.resourceGroupSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AppDetailPanelResult.prototype, "modCategorySelected", {
+        get: function () { return this.results.modCategorySelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return AppDetailPanelResult;
+}());
+exports.AppDetailPanelResult = AppDetailPanelResult;
 var AppDetailPanel = /** @class */ (function () {
     function AppDetailPanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -1015,10 +1053,10 @@ var AppDetailPanel = /** @class */ (function () {
         this.backCommand.add(this.view.backButton);
     }
     AppDetailPanel.prototype.onResourceGroupSelected = function (resourceGroup) {
-        this.awaitable.resolve(new Result_1.Result(AppDetailPanel.ResultKeys.resourceGroupSelected, resourceGroup));
+        this.awaitable.resolve(AppDetailPanelResult.resourceGroupSelected(resourceGroup));
     };
     AppDetailPanel.prototype.onModCategorySelected = function (modCategory) {
-        this.awaitable.resolve(new Result_1.Result(AppDetailPanel.ResultKeys.modCategorySelected, modCategory));
+        this.awaitable.resolve(AppDetailPanelResult.modCategorySelected(modCategory));
     };
     AppDetailPanel.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -1037,18 +1075,13 @@ var AppDetailPanel = /** @class */ (function () {
         });
     };
     AppDetailPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(AppDetailPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(AppDetailPanelResult.backRequested);
     };
     AppDetailPanel.prototype.start = function () {
         return this.awaitable.start();
     };
     AppDetailPanel.prototype.activate = function () { this.view.show(); };
     AppDetailPanel.prototype.deactivate = function () { this.view.hide(); };
-    AppDetailPanel.ResultKeys = {
-        backRequested: 'back-requested',
-        resourceGroupSelected: 'resource-group-selected',
-        modCategorySelected: 'mod-category-selected'
-    };
     return AppDetailPanel;
 }());
 exports.AppDetailPanel = AppDetailPanel;
@@ -1904,13 +1937,41 @@ exports.ModCategoryComponentView = ModCategoryComponentView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ModCategoryPanel = void 0;
+exports.ModCategoryPanel = exports.ModCategoryPanelResult = void 0;
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var ModCategoryComponent_1 = __webpack_require__(/*! ./ModCategoryComponent */ "./Scripts/Internal/AppDashboard/ModCategory/ModCategoryComponent.js");
 var ModifierListCard_1 = __webpack_require__(/*! ./ModifierListCard */ "./Scripts/Internal/AppDashboard/ModCategory/ModifierListCard.js");
 var ResourceGroupListCard_1 = __webpack_require__(/*! ./ResourceGroupListCard */ "./Scripts/Internal/AppDashboard/ModCategory/ResourceGroupListCard.js");
+var ModCategoryPanelResult = /** @class */ (function () {
+    function ModCategoryPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(ModCategoryPanelResult, "backRequested", {
+        get: function () {
+            return new ModCategoryPanelResult({ backRequested: {} });
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ModCategoryPanelResult.resourceGroupSelected = function (resourceGroup) {
+        return new ModCategoryPanelResult({
+            resourceGroupSelected: { resourceGroup: resourceGroup }
+        });
+    };
+    Object.defineProperty(ModCategoryPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ModCategoryPanelResult.prototype, "resourceGroupSelected", {
+        get: function () { return this.results.resourceGroupSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return ModCategoryPanelResult;
+}());
+exports.ModCategoryPanelResult = ModCategoryPanelResult;
 var ModCategoryPanel = /** @class */ (function () {
     function ModCategoryPanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -1924,7 +1985,7 @@ var ModCategoryPanel = /** @class */ (function () {
         this.resourceGroupListCard.resourceGroupSelected.register(this.onResourceGroupSelected.bind(this));
     }
     ModCategoryPanel.prototype.onResourceGroupSelected = function (resourceGroup) {
-        this.awaitable.resolve(new Result_1.Result(ModCategoryPanel.ResultKeys.resourceGroupSelected, resourceGroup));
+        this.awaitable.resolve(ModCategoryPanelResult.resourceGroupSelected(resourceGroup));
     };
     ModCategoryPanel.prototype.setModCategoryID = function (categoryID) {
         this.modCategoryComponent.setModCategoryID(categoryID);
@@ -1943,14 +2004,10 @@ var ModCategoryPanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     ModCategoryPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(ModCategoryPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ModCategoryPanelResult.backRequested);
     };
     ModCategoryPanel.prototype.activate = function () { this.view.show(); };
     ModCategoryPanel.prototype.deactivate = function () { this.view.hide(); };
-    ModCategoryPanel.ResultKeys = {
-        backRequested: 'back-requested',
-        resourceGroupSelected: 'resource-group-selected'
-    };
     return ModCategoryPanel;
 }());
 exports.ModCategoryPanel = ModCategoryPanel;
@@ -2983,17 +3040,53 @@ exports.ResourceGroupComponentView = ResourceGroupComponentView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ResourceGroupPanel = void 0;
+exports.ResourceGroupPanel = exports.ResourceGroupPanelResult = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var ModCategoryComponent_1 = __webpack_require__(/*! ./ModCategoryComponent */ "./Scripts/Internal/AppDashboard/ResourceGroup/ModCategoryComponent.js");
 var MostRecentErrorEventListCard_1 = __webpack_require__(/*! ./MostRecentErrorEventListCard */ "./Scripts/Internal/AppDashboard/ResourceGroup/MostRecentErrorEventListCard.js");
 var MostRecentRequestListCard_1 = __webpack_require__(/*! ./MostRecentRequestListCard */ "./Scripts/Internal/AppDashboard/ResourceGroup/MostRecentRequestListCard.js");
 var ResourceGroupAccessCard_1 = __webpack_require__(/*! ./ResourceGroupAccessCard */ "./Scripts/Internal/AppDashboard/ResourceGroup/ResourceGroupAccessCard.js");
 var ResourceGroupComponent_1 = __webpack_require__(/*! ./ResourceGroupComponent */ "./Scripts/Internal/AppDashboard/ResourceGroup/ResourceGroupComponent.js");
 var ResourceListCard_1 = __webpack_require__(/*! ./ResourceListCard */ "./Scripts/Internal/AppDashboard/ResourceGroup/ResourceListCard.js");
+var ResourceGroupPanelResult = /** @class */ (function () {
+    function ResourceGroupPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(ResourceGroupPanelResult, "backRequested", {
+        get: function () { return new ResourceGroupPanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    ResourceGroupPanelResult.resourceSelected = function (resource) {
+        return new ResourceGroupPanelResult({
+            resourceSelected: { resource: resource }
+        });
+    };
+    ResourceGroupPanelResult.modCategorySelected = function (modCategory) {
+        return new ResourceGroupPanelResult({
+            modCategorySelected: { modCategory: modCategory }
+        });
+    };
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "resourceSelected", {
+        get: function () { return this.results.resourceSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourceGroupPanelResult.prototype, "modCategorySelected", {
+        get: function () { return this.results.modCategorySelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return ResourceGroupPanelResult;
+}());
+exports.ResourceGroupPanelResult = ResourceGroupPanelResult;
 var ResourceGroupPanel = /** @class */ (function () {
     function ResourceGroupPanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -3011,10 +3104,10 @@ var ResourceGroupPanel = /** @class */ (function () {
         this.backCommand.add(this.view.backButton);
     }
     ResourceGroupPanel.prototype.onModCategoryClicked = function (modCategory) {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.modCategorySelected, modCategory));
+        this.awaitable.resolve(ResourceGroupPanelResult.modCategorySelected(modCategory));
     };
     ResourceGroupPanel.prototype.onResourceSelected = function (resource) {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.resourceSelected, resource));
+        this.awaitable.resolve(ResourceGroupPanelResult.resourceSelected(resource));
     };
     ResourceGroupPanel.prototype.setGroupID = function (groupID) {
         this.resourceGroupComponent.setGroupID(groupID);
@@ -3044,7 +3137,7 @@ var ResourceGroupPanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     ResourceGroupPanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(ResourceGroupPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourceGroupPanelResult.backRequested);
     };
     ResourceGroupPanel.prototype.activate = function () { this.view.show(); };
     ResourceGroupPanel.prototype.deactivate = function () { this.view.hide(); };
@@ -3689,14 +3782,30 @@ exports.ResourceComponentView = ResourceComponentView;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ResourcePanel = void 0;
+exports.ResourcePanel = exports.ResourcePanelResult = void 0;
 var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
 var Command_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Result_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Result */ "./node_modules/@jasonbenfield/sharedwebapp/Result.js");
 var MostRecentErrorEventListCard_1 = __webpack_require__(/*! ./MostRecentErrorEventListCard */ "./Scripts/Internal/AppDashboard/Resource/MostRecentErrorEventListCard.js");
 var MostRecentRequestListCard_1 = __webpack_require__(/*! ./MostRecentRequestListCard */ "./Scripts/Internal/AppDashboard/Resource/MostRecentRequestListCard.js");
 var ResourceAccessCard_1 = __webpack_require__(/*! ./ResourceAccessCard */ "./Scripts/Internal/AppDashboard/Resource/ResourceAccessCard.js");
 var ResourceComponent_1 = __webpack_require__(/*! ./ResourceComponent */ "./Scripts/Internal/AppDashboard/Resource/ResourceComponent.js");
+var ResourcePanelResult = /** @class */ (function () {
+    function ResourcePanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(ResourcePanelResult, "backRequested", {
+        get: function () { return new ResourcePanelResult({ backRequested: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ResourcePanelResult.prototype, "backRequested", {
+        get: function () { return this.results.backRequested; },
+        enumerable: false,
+        configurable: true
+    });
+    return ResourcePanelResult;
+}());
+exports.ResourcePanelResult = ResourcePanelResult;
 var ResourcePanel = /** @class */ (function () {
     function ResourcePanel(hubApi, view) {
         this.hubApi = hubApi;
@@ -3728,13 +3837,10 @@ var ResourcePanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     ResourcePanel.prototype.back = function () {
-        this.awaitable.resolve(new Result_1.Result(ResourcePanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ResourcePanelResult.backRequested);
     };
     ResourcePanel.prototype.activate = function () { this.view.show(); };
     ResourcePanel.prototype.deactivate = function () { this.view.hide(); };
-    ResourcePanel.ResultKeys = {
-        backRequested: 'back-requested'
-    };
     return ResourcePanel;
 }());
 exports.ResourcePanel = ResourcePanel;
@@ -4292,7 +4398,7 @@ var AppApiAction = /** @class */ (function () {
     AppApiAction.prototype.toString = function () {
         return "AppApiAction " + this.resourceUrl;
     };
-    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,7}\+\d{2}:\d{2}$/;
+    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.?\d{0,7}[\+\-]\d{2}:\d{2})?$/;
     return AppApiAction;
 }());
 exports.AppApiAction = AppApiAction;
@@ -5884,7 +5990,7 @@ var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem *
 var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
 var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
 var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
 var TextHeading5_1 = __webpack_require__(/*! ../Html/TextHeading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js");
 var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js");
@@ -5901,8 +6007,9 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
         _this.errorGroups = [];
         _this.modal = new ModalComponentView_1.ModalComponentView(vm);
         _this.modal.body.setName(ModalErrorComponentView.name);
+        _this.body = _this.modal.body.addContent(new Block_1.Block());
+        _this.body.addCssName('alert alert-danger m-0 rounded-0 border-danger border-left-0 border-right-0');
         _this.title = _this.modal.header.addContent(new TextHeading5_1.TextHeading5(''));
-        _this.hr = _this.modal.body.addContent(new HorizontalRule_1.HorizontalRule());
         var row = _this.modal.footer.addContent(new Row_1.Row());
         row.addColumn();
         var buttonColumn = row.addColumn();
@@ -5917,13 +6024,13 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
     ModalErrorComponentView.prototype.errorGroup = function () {
         var errorGroup = new ModalErrorGroupComponentView_1.ModalErrorGroupComponentView();
         this.errorGroups.push(errorGroup);
-        this.modal.body.addContent(errorGroup);
+        this.body.addContent(errorGroup);
         return errorGroup;
     };
     ModalErrorComponentView.prototype.clearErrorGroups = function () {
         for (var _i = 0, _a = this.errorGroups; _i < _a.length; _i++) {
             var errorGroup = _a[_i];
-            this.modal.body.removeItem(errorGroup);
+            this.body.removeItem(errorGroup);
         }
     };
     ModalErrorComponentView.prototype.setTitle = function (title) {
@@ -6001,6 +6108,7 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
 var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
 var TextHeading4_1 = __webpack_require__(/*! ../Html/TextHeading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js");
 var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
 var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js");
@@ -6010,7 +6118,8 @@ var ModalErrorGroupComponentView = /** @class */ (function (_super) {
         var _this = _super.call(this, new BlockViewModel_1.BlockViewModel()) || this;
         _this.hr = _this.addContent(new HorizontalRule_1.HorizontalRule());
         _this.caption = _this.addContent(new TextHeading4_1.TextHeading4());
-        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }));
+        _this.caption.addCssName('alert-heading');
+        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         return _this;
     }
     ModalErrorGroupComponentView.prototype.showHR = function () { this.hr.show(); };
@@ -6075,15 +6184,15 @@ var ModalErrorListItemView = /** @class */ (function (_super) {
     function ModalErrorListItemView() {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());
-        var col1 = row.addColumn();
-        col1.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        _this.caption = col1.addContent(new TextBlock_1.TextBlock());
+        _this.captionCol = row.addColumn();
+        _this.captionCol.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
+        _this.caption = _this.captionCol.addContent(new TextBlock_1.TextBlock());
         var col2 = row.addColumn();
         _this.message = col2.addContent(new TextBlock_1.TextBlock());
         return _this;
     }
-    ModalErrorListItemView.prototype.hideCaption = function () { this.caption.hide(); };
-    ModalErrorListItemView.prototype.showCaption = function () { this.caption.show(); };
+    ModalErrorListItemView.prototype.hideCaption = function () { this.captionCol.hide(); };
+    ModalErrorListItemView.prototype.showCaption = function () { this.captionCol.show(); };
     ModalErrorListItemView.prototype.setCaption = function (caption) { this.caption.setText(caption); };
     ModalErrorListItemView.prototype.setMessage = function (message) { this.message.setText(message); };
     return ModalErrorListItemView;
@@ -7163,6 +7272,7 @@ var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewMode
 var HorizontalRule = /** @class */ (function () {
     function HorizontalRule(vm) {
         if (vm === void 0) { vm = new HorizontalRuleViewModel_1.HorizontalRuleViewModel(); }
+        this.vm = vm;
     }
     HorizontalRule.prototype.addToContainer = function (container) {
         return container.addItem(this.vm, this);
@@ -9594,29 +9704,6 @@ var PageViewModel = /** @class */ (function (_super) {
 }(ComponentViewModel_1.ComponentViewModel));
 exports.PageViewModel = PageViewModel;
 //# sourceMappingURL=PageViewModel.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Result.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Result.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Result = void 0;
-var Result = /** @class */ (function () {
-    function Result(key, data) {
-        if (data === void 0) { data = null; }
-        this.key = key;
-        this.data = data;
-    }
-    return Result;
-}());
-exports.Result = Result;
-//# sourceMappingURL=Result.js.map
 
 /***/ }),
 
@@ -47773,9 +47860,9 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var Startup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Startup */ "./node_modules/@jasonbenfield/sharedwebapp/Startup.js");
 var WebPage_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/WebPage */ "./node_modules/@jasonbenfield/sharedwebapp/WebPage.js");
 var XtiUrl_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/XtiUrl */ "./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js");
-var Startup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Startup */ "./node_modules/@jasonbenfield/sharedwebapp/Startup.js");
 var Apis_1 = __webpack_require__(/*! ../../Hub/Apis */ "./Scripts/Hub/Apis.js");
 var AppDetailPanel_1 = __webpack_require__(/*! ./AppDetail/AppDetailPanel */ "./Scripts/Internal/AppDashboard/AppDetail/AppDetailPanel.js");
 var MainPageView_1 = __webpack_require__(/*! ./MainPageView */ "./Scripts/Internal/AppDashboard/MainPageView.js");
@@ -47799,7 +47886,7 @@ var MainPage = /** @class */ (function () {
     }
     MainPage.prototype.activateAppDetailPanel = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var result, resourceGroup, modCategory;
+            var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -47808,16 +47895,14 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.appDetailPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === AppDetailPanel_1.AppDetailPanel.ResultKeys.backRequested) {
+                        if (result.backRequested) {
                             this.hubApi.Apps.Index.open({});
                         }
-                        else if (result.key === AppDetailPanel_1.AppDetailPanel.ResultKeys.resourceGroupSelected) {
-                            resourceGroup = result.data;
-                            this.activateResourceGroupPanel(resourceGroup.ID);
+                        else if (result.resourceGroupSelected) {
+                            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
                         }
-                        else if (result.key === AppDetailPanel_1.AppDetailPanel.ResultKeys.modCategorySelected) {
-                            modCategory = result.data;
-                            this.activateModCategoryPanel(modCategory.ID);
+                        else if (result.modCategorySelected) {
+                            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
                         }
                         return [2 /*return*/];
                 }
@@ -47826,7 +47911,7 @@ var MainPage = /** @class */ (function () {
     };
     MainPage.prototype.activateResourceGroupPanel = function (groupID) {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var result, resource, modCategory;
+            var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -47838,16 +47923,14 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.resourceGroupPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === ResourceGroupPanel_1.ResourceGroupPanel.ResultKeys.backRequested) {
+                        if (result.backRequested) {
                             this.activateAppDetailPanel();
                         }
-                        else if (result.key === ResourceGroupPanel_1.ResourceGroupPanel.ResultKeys.resourceSelected) {
-                            resource = result.data;
-                            this.activateResourcePanel(resource.ID);
+                        else if (result.resourceSelected) {
+                            this.activateResourcePanel(result.resourceSelected.resource.ID);
                         }
-                        else if (result.key === ResourceGroupPanel_1.ResourceGroupPanel.ResultKeys.modCategorySelected) {
-                            modCategory = result.data;
-                            this.activateModCategoryPanel(modCategory.ID);
+                        else if (result.modCategorySelected) {
+                            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
                         }
                         return [2 /*return*/];
                 }
@@ -47868,7 +47951,7 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.resourcePanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === ResourcePanel_1.ResourcePanel.ResultKeys.backRequested) {
+                        if (result.backRequested) {
                             this.activateResourceGroupPanel();
                         }
                         return [2 /*return*/];
@@ -47878,7 +47961,7 @@ var MainPage = /** @class */ (function () {
     };
     MainPage.prototype.activateModCategoryPanel = function (modCategoryID) {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var result, resourceGroup;
+            var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -47888,12 +47971,11 @@ var MainPage = /** @class */ (function () {
                         return [4 /*yield*/, this.modCategoryPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.key === ModCategoryPanel_1.ModCategoryPanel.ResultKeys.backRequested) {
+                        if (result.backRequested) {
                             this.activateAppDetailPanel();
                         }
-                        else if (result.key === ModCategoryPanel_1.ModCategoryPanel.ResultKeys.resourceGroupSelected) {
-                            resourceGroup = result.data;
-                            this.activateResourceGroupPanel(resourceGroup.ID);
+                        else if (result.resourceGroupSelected) {
+                            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
                         }
                         return [2 /*return*/];
                 }

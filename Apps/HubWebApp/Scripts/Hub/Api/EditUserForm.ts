@@ -4,9 +4,9 @@ import { EditUserFormView } from './EditUserFormView';
 
 export class EditUserForm extends BaseForm {
 	protected readonly view: EditUserFormView;
-
+	
 	constructor(view: EditUserFormView) {
-		super('', view);
+		super('EditUserForm', view);
 		this.UserID.setCaption('User ID');
 		this.UserID.constraints.mustNotBeNull();
 		this.PersonName.setCaption('Person Name');

@@ -1,5 +1,6 @@
 ﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
+import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
 import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
 import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
@@ -37,7 +38,8 @@ export class UserEditPanelView extends Block {
         this.editUserForm.addOffscreenSubmit();
         this.editUserForm.executeLayout();
         this.editUserForm.forEachFormGroup(fg => {
-            fg.captionColumn.setTextCss(new TextCss().end().bold());
+            fg.captionColumn.setColumnCss(ColumnCss.xs(4));
+            fg.captionColumn.setTextCss(new TextCss().end());
         });
     }
 }

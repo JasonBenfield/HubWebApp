@@ -25,7 +25,7 @@ public sealed partial class HubAppClient : AppClient
         UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
     }
 
-    public const string DefaultVersion = "V1169";
+    public const string DefaultVersion = "V63";
     public UserGroup User { get; }
 
     public UserCacheGroup UserCache { get; }

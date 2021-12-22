@@ -1037,7 +1037,7 @@ var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem *
 var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
 var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
 var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
 var TextHeading5_1 = __webpack_require__(/*! ../Html/TextHeading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js");
 var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js");
@@ -1054,8 +1054,9 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
         _this.errorGroups = [];
         _this.modal = new ModalComponentView_1.ModalComponentView(vm);
         _this.modal.body.setName(ModalErrorComponentView.name);
+        _this.body = _this.modal.body.addContent(new Block_1.Block());
+        _this.body.addCssName('alert alert-danger m-0 rounded-0 border-danger border-left-0 border-right-0');
         _this.title = _this.modal.header.addContent(new TextHeading5_1.TextHeading5(''));
-        _this.hr = _this.modal.body.addContent(new HorizontalRule_1.HorizontalRule());
         var row = _this.modal.footer.addContent(new Row_1.Row());
         row.addColumn();
         var buttonColumn = row.addColumn();
@@ -1070,13 +1071,13 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
     ModalErrorComponentView.prototype.errorGroup = function () {
         var errorGroup = new ModalErrorGroupComponentView_1.ModalErrorGroupComponentView();
         this.errorGroups.push(errorGroup);
-        this.modal.body.addContent(errorGroup);
+        this.body.addContent(errorGroup);
         return errorGroup;
     };
     ModalErrorComponentView.prototype.clearErrorGroups = function () {
         for (var _i = 0, _a = this.errorGroups; _i < _a.length; _i++) {
             var errorGroup = _a[_i];
-            this.modal.body.removeItem(errorGroup);
+            this.body.removeItem(errorGroup);
         }
     };
     ModalErrorComponentView.prototype.setTitle = function (title) {
@@ -1109,6 +1110,7 @@ var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.j
 var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
 var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
 var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
 var TextHeading4_1 = __webpack_require__(/*! ../Html/TextHeading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js");
 var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
 var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js");
@@ -1118,7 +1120,8 @@ var ModalErrorGroupComponentView = /** @class */ (function (_super) {
         var _this = _super.call(this, new BlockViewModel_1.BlockViewModel()) || this;
         _this.hr = _this.addContent(new HorizontalRule_1.HorizontalRule());
         _this.caption = _this.addContent(new TextHeading4_1.TextHeading4());
-        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }));
+        _this.caption.addCssName('alert-heading');
+        _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         return _this;
     }
     ModalErrorGroupComponentView.prototype.showHR = function () { this.hr.show(); };
@@ -1154,15 +1157,15 @@ var ModalErrorListItemView = /** @class */ (function (_super) {
     function ModalErrorListItemView() {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());
-        var col1 = row.addColumn();
-        col1.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        _this.caption = col1.addContent(new TextBlock_1.TextBlock());
+        _this.captionCol = row.addColumn();
+        _this.captionCol.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
+        _this.caption = _this.captionCol.addContent(new TextBlock_1.TextBlock());
         var col2 = row.addColumn();
         _this.message = col2.addContent(new TextBlock_1.TextBlock());
         return _this;
     }
-    ModalErrorListItemView.prototype.hideCaption = function () { this.caption.hide(); };
-    ModalErrorListItemView.prototype.showCaption = function () { this.caption.show(); };
+    ModalErrorListItemView.prototype.hideCaption = function () { this.captionCol.hide(); };
+    ModalErrorListItemView.prototype.showCaption = function () { this.captionCol.show(); };
     ModalErrorListItemView.prototype.setCaption = function (caption) { this.caption.setText(caption); };
     ModalErrorListItemView.prototype.setMessage = function (message) { this.message.setText(message); };
     return ModalErrorListItemView;
@@ -2120,6 +2123,7 @@ var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewMode
 var HorizontalRule = /** @class */ (function () {
     function HorizontalRule(vm) {
         if (vm === void 0) { vm = new HorizontalRuleViewModel_1.HorizontalRuleViewModel(); }
+        this.vm = vm;
     }
     HorizontalRule.prototype.addToContainer = function (container) {
         return container.addItem(this.vm, this);
@@ -2505,6 +2509,42 @@ var LinkViewModel = /** @class */ (function (_super) {
 }(HtmlComponentViewModel_1.HtmlComponentViewModel));
 exports.LinkViewModel = LinkViewModel;
 //# sourceMappingURL=LinkViewModel.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListBlockViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
+var template = __webpack_require__(/*! ./ListBlock.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html");
+var ListBlockViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(ListBlockViewModel, _super);
+    function ListBlockViewModel() {
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('list-block', template)) || this;
+        _this._itemClicked = new Events_1.DefaultEvent(_this);
+        _this.itemClicked = _this._itemClicked.handler();
+        _this.items = ko.observableArray([]);
+        _this.hasItems = ko.observable(false);
+        return _this;
+    }
+    ListBlockViewModel.prototype.click = function (item) {
+        this._itemClicked.invoke(item);
+    };
+    return ListBlockViewModel;
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
+exports.ListBlockViewModel = ListBlockViewModel;
+//# sourceMappingURL=ListBlockViewModel.js.map
 
 /***/ }),
 
@@ -13341,6 +13381,19 @@ module.exports = code;
 
 // Module
 var code = "<!-- ko if: isVisible -->\r\n<a data-bind=\"\r\n        attr: { \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name,\r\n            href: href\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</a>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html ***!
+  \**********************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    delegatedEvent: { event: 'click', selector: 'button,a,li', callback: click },\r\n    foreach: items\">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
 // Exports
 module.exports = code;
 

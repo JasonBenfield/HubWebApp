@@ -4,7 +4,7 @@ import { VerifyLoginFormView } from './VerifyLoginFormView';
 
 export class VerifyLoginForm extends BaseForm {
 	protected readonly view: VerifyLoginFormView;
-
+	
 	constructor(view: VerifyLoginFormView) {
 		super('VerifyLoginForm', view);
 		this.UserName.setCaption('User Name');

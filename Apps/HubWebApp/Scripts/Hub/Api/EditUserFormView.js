@@ -8,7 +8,7 @@ var EditUserFormView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(EditUserFormView, _super);
     function EditUserFormView() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.UserID = _this.addHiddenFormGroup();
+        _this.UserID = _this.addInputFormGroup();
         _this.PersonName = _this.addInputFormGroup();
         _this.Email = _this.addInputFormGroup();
         return _this;
