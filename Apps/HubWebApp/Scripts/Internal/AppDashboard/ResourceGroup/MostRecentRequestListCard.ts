@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -16,7 +16,7 @@ export class MostRecentRequestListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: MostRecentRequestListCardView
     ) {
-        new CardTitleHeader('Most Recent Requests', this.view.titleHeader);
+        new TextBlock('Most Recent Requests', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.requests = new ListGroup(this.view.requests);
     }

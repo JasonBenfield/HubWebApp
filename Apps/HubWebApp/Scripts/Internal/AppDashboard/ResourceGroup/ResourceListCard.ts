@@ -1,5 +1,5 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -20,7 +20,7 @@ export class ResourceListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceListCardView
     ) {
-        new CardTitleHeader('Resources', this.view.titleHeader);
+        new TextBlock('Resources', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.resources = new ListGroup(this.view.resources);
         this.resources.itemClicked.register(this.onItemSelected.bind(this));

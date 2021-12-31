@@ -1,50 +1,48 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+
+internal sealed class HubClientResourceGroup : IResourceGroup
 {
-    internal sealed class HubClientResourceGroup : IResourceGroup
+    private readonly HubAppClient hubClient;
+    private readonly HubClientAppContext appContext;
+    private readonly XTI_App.Abstractions.AppVersionKey versionKey;
+    private readonly ResourceGroupName name;
+
+    public HubClientResourceGroup(HubAppClient hubClient, HubClientAppContext appContext, XTI_App.Abstractions.AppVersionKey versionKey, ResourceGroupModel model)
     {
-        private readonly HubAppClient hubClient;
-        private readonly HubClientAppContext appContext;
-        private readonly AppVersionKey versionKey;
-        private readonly ResourceGroupName name;
+        this.hubClient = hubClient;
+        this.appContext = appContext;
+        this.versionKey = versionKey;
+        ID = new EntityID(model.ID);
+        name = new ResourceGroupName(model.Name);
+    }
 
-        public HubClientResourceGroup(HubAppClient hubClient, HubClientAppContext appContext, AppVersionKey versionKey, ResourceGroupModel model)
+    public EntityID ID { get; }
+    public ResourceGroupName Name() => name;
+
+    public async Task<IModifierCategory> ModCategory()
+    {
+        var appModifier = await appContext.GetModifierKey();
+        var request = new GetResourceGroupModCategoryRequest
         {
-            this.hubClient = hubClient;
-            this.appContext = appContext;
-            this.versionKey = versionKey;
-            ID = new EntityID(model.ID);
-            name = new ResourceGroupName(model.Name);
-        }
+            VersionKey = versionKey.Value,
+            GroupID = ID.Value
+        };
+        var modCategory = await hubClient.ResourceGroup.GetModCategory(appModifier, request);
+        return new HubClientModifierCategory(hubClient, appContext, modCategory);
+    }
 
-        public EntityID ID { get; }
-        public ResourceGroupName Name() => name;
-
-        public async Task<IModifierCategory> ModCategory()
+    public async Task<IResource> Resource(ResourceName name)
+    {
+        var appModifier = await appContext.GetModifierKey();
+        var request = new GetResourceGroupResourceRequest
         {
-            var appModifier = await appContext.GetModifierKey();
-            var request = new GetResourceGroupModCategoryRequest
-            {
-                VersionKey = versionKey.Value,
-                GroupID = ID.Value
-            };
-            var modCategory = await hubClient.ResourceGroup.GetModCategory(appModifier, request);
-            return new HubClientModifierCategory(hubClient, appContext, modCategory);
-        }
-
-        public async Task<IResource> Resource(ResourceName name)
-        {
-            var appModifier = await appContext.GetModifierKey();
-            var request = new GetResourceGroupResourceRequest
-            {
-                VersionKey = versionKey.Value,
-                GroupID = ID.Value,
-                ResourceName = name.Value
-            };
-            var resource = await hubClient.ResourceGroup.GetResource(appModifier, request);
-            return new HubClientResource(resource);
-        }
+            VersionKey = versionKey.Value,
+            GroupID = ID.Value,
+            ResourceName = name.Value
+        };
+        var resource = await hubClient.ResourceGroup.GetResource(appModifier, request);
+        return new HubClientResource(resource);
     }
 }

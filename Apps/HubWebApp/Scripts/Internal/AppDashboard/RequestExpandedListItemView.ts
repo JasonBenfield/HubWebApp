@@ -1,31 +1,23 @@
 ﻿import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpan } from "@jasonbenfield/sharedwebapp/Html/TextSpan";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
 
 export class RequestExpandedListItemView extends ListGroupItemView {
-    private readonly timeStarted: TextSpan;
-    private readonly groupName: TextSpan;
-    private readonly actionName: TextSpan;
-    private readonly userName: TextSpan;
+    readonly timeStarted: TextSpanView;
+    readonly groupName: TextSpanView;
+    readonly actionName: TextSpanView;
+    readonly userName: TextSpanView;
 
     constructor() {
         super();
         let row = this.addContent(new Row());
         this.timeStarted = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.groupName = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.actionName = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.userName = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
     }
-
-    setTimeStarted(timeStarted: string) { this.timeStarted.setText(timeStarted); }
-
-    setGroupName(groupName: string) { this.groupName.setText(groupName); }
-
-    setActionName(actionName: string) { this.actionName.setText(actionName); }
-
-    setUserName(userName: string) { this.userName.setText(userName); }
 }

@@ -1,23 +1,29 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
+﻿import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { AppComponentView } from "./AppComponentView";
 
 export class AppComponent extends CardView {
     private readonly alert: MessageAlert;
+    private readonly appName: TextBlock;
+    private readonly appTitle: TextBlock;
+    private readonly appType: TextBlock;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: AppComponentView) {
+    constructor(private readonly hubApi: HubAppApi, view: AppComponentView) {
         super();
-        new CardTitleHeader('App', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        new TextBlock('App', view.titleHeader);
+        this.alert = new MessageAlert(view.alert);
+        this.appName = new TextBlock('', view.appName);
+        this.appTitle = new TextBlock('', view.appTitle);
+        this.appType = new TextBlock('', view.appType);
     }
 
     async refresh() {
         let app = await this.getApp();
-        this.view.setAppName(app.AppName);
-        this.view.setAppTitle(app.Title);
-        this.view.setAppType(app.Type.DisplayText);
+        this.appName.setText(app.AppName);
+        this.appTitle.setText(app.Title);
+        this.appType.setText(app.Type.DisplayText);
     }
 
     private async getApp() {

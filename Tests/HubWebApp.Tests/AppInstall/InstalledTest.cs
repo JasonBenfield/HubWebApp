@@ -1,16 +1,11 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using XTI_App.Api;
+using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
-using Microsoft.Extensions.DependencyInjection;
 using XTI_HubDB.Entities;
-using Microsoft.EntityFrameworkCore;
-using XTI_Hub;
 
 namespace HubWebApp.Tests;
 
@@ -22,7 +17,7 @@ sealed class InstalledTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -37,8 +32,7 @@ sealed class InstalledTest
         });
         await tester.Execute
         (
-            new InstalledRequest(newInstResult.CurrentInstallationID),
-            adminUser
+            new InstalledRequest(newInstResult.CurrentInstallationID)
         );
         var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
         Assert.That
@@ -55,7 +49,7 @@ sealed class InstalledTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -70,8 +64,7 @@ sealed class InstalledTest
         });
         await tester.Execute
         (
-            new InstalledRequest(newInstResult.VersionInstallationID),
-            adminUser
+            new InstalledRequest(newInstResult.VersionInstallationID)
         );
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
         Assert.That

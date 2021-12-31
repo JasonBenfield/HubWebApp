@@ -28,7 +28,17 @@ internal sealed class HubTestHost
         var sp = scope.ServiceProvider;
         var setup = sp.GetRequiredService<IAppSetup>();
         await setup.Run(AppVersionKey.Current);
-        var adminUser = await addAdminUser(sp);
+        var factory = sp.GetRequiredService<AppFactory>();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var defaultModifier = await hubApp.DefaultModifier();
+        var defaultFakeSetup = scope.ServiceProvider.GetRequiredService<DefaultFakeSetup>();
+        await defaultFakeSetup.Run(AppVersionKey.Current);
+        //defaultFakeSetup.App.SetDefaultModifierID(defaultModifier.ID);
+        defaultFakeSetup.App.AddModCategory(HubInfo.ModCategories.Apps);
+        var userContext = scope.ServiceProvider.GetRequiredService<FakeUserContext>();
+        var adminUser = await addAdminUser(scope.ServiceProvider);
+        var fakeAdminUser = userContext.AddUser(adminUser);
+        fakeAdminUser.AddRole(HubInfo.Roles.Admin);
         return sp;
     }
 

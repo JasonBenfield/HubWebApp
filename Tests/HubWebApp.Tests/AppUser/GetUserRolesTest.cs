@@ -1,7 +1,9 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Hub;
 using XTI_HubAppApi.AppUserInquiry;
+using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -11,20 +13,39 @@ internal sealed class GetUserRolesTest
     public async Task ShouldGetUserRoles()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
         var adminRole = await tester.AdminRole();
-        await adminUser.AddRole(adminRole, hubAppModifier);
+        var user = await addUser(tester, "someone"); 
         var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await adminUser.AddRole(viewUserRole, hubAppModifier);
+        await user.AddRole(viewUserRole, hubAppModifier);
         var request = new GetUserRolesRequest
         {
-            UserID = adminUser.ID.Value,
+            UserID = user.ID.Value,
             ModifierID = hubAppModifier.ID.Value
         };
-        var roles = await tester.Execute(request, adminUser, hubAppModifier.ModKey());
-        Assert.That(roles.Select(r => new AppRoleName(r.Name)), Has.One.EqualTo(HubInfo.Roles.ViewUser), "Should get user roles");
+        var roles = await tester.Execute(request, hubAppModifier.ModKey());
+        Assert.That
+        (
+            roles.Select(r => new AppRoleName(r.Name)), 
+            Has.One.EqualTo(HubInfo.Roles.ViewUser), 
+            "Should get user roles"
+        );
+    }
+
+    private async Task<AppUser> addUser(IHubActionTester tester, string userName)
+    {
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        addUserTester.LoginAsAdmin();
+        var userID = await addUserTester.Execute(new AddUserModel
+        {
+            UserName = userName,
+            Password = "Password12345"
+        });
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        return user;
     }
 
     private async Task<HubActionTester<GetUserRolesRequest, AppRoleModel[]>> setup()

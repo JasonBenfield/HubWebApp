@@ -1,17 +1,13 @@
-using HubWebApp.Fakes;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_App.Fakes;
+using XTI_App.Extensions;
 using XTI_Core;
-using XTI_Core.Fakes;
 using XTI_Hub;
-using XTI_HubAppApi;
+using XTI_HubAppApi.UserList;
 using XTI_TempLog;
 using XTI_WebApp.Api;
-using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests;
 
@@ -20,10 +16,10 @@ internal sealed class LogoutTest
     [Test]
     public async Task ShouldEndSession()
     {
-        var services = await setup();
-        await execute(services);
-        var tempLog = services.GetRequiredService<TempLog>();
-        var clock = services.GetRequiredService<IClock>();
+        var tester = await setup();
+        await tester.Execute(new EmptyRequest());
+        var tempLog = tester.Services.GetRequiredService<TempLog>();
+        var clock = tester.Services.GetRequiredService<IClock>();
         var endSessionFiles = tempLog.EndSessionFiles(clock.Now().AddMinutes(1)).ToArray();
         Assert.That
         (
@@ -36,48 +32,45 @@ internal sealed class LogoutTest
     [Test]
     public async Task ShouldRedirectToLogin()
     {
-        var services = await setup();
-        var result = await execute(services);
+        var tester = await setup();
+        var result = await tester.Execute(new EmptyRequest());
         Assert.That
         (
-            result.Data.Url,
+            result.Url,
             Is.EqualTo("/Hub/Current/Auth"),
             "Should redirect to login"
         );
     }
 
-    private async Task<IServiceProvider> setup()
+    private async Task<HubActionTester<EmptyRequest, WebRedirectResult>> setup()
     {
-        var host = Host.CreateDefaultBuilder()
-            .ConfigureServices
-            (
-                (hostContext, services) =>
-                {
-                    services.AddFakesForXtiWebApp(hostContext.Configuration);
-                    services.AddFakesForHubWebApp(hostContext.Configuration);
-                }
-            )
-            .Build();
-        var scope = host.Services.CreateScope();
-        var sp = scope.ServiceProvider;
-        var hubSetup = sp.GetRequiredService<IAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
-        var api = sp.GetRequiredService<HubAppApi>();
-        var appFactory = sp.GetRequiredService<AppFactory>();
-        await appFactory.Users.Add
+        var host = new HubTestHost();
+        var services = await host.Setup
         (
-            new AppUserName("test.user"),
-            new FakeHashedPassword("Password12345"),
-            DateTime.UtcNow
+            (hc, s) =>
+            {
+                s.AddScoped<IAppContext>(sp => sp.GetRequiredService<CachedAppContext>());
+                s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
+            }
         );
-        var tempLogSession = sp.GetRequiredService<TempLogSession>();
+        var tester = HubActionTester.Create(services, hubApi => hubApi.Auth.Logout);
+        await addUser(tester, "test.user", "Password12345");
+        var tempLogSession = services.GetRequiredService<TempLogSession>();
         await tempLogSession.StartSession();
-        return sp;
+        return tester;
     }
 
-    private static Task<ResultContainer<WebRedirectResult>> execute(IServiceProvider services)
+    private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
-        var api = services.GetRequiredService<HubAppApi>();
-        return api.Auth.Logout.Execute(new EmptyRequest());
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        addUserTester.LoginAsAdmin();
+        var userID = await addUserTester.Execute(new AddUserModel
+        {
+            UserName = userName,
+            Password = password
+        });
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        return user;
     }
 }

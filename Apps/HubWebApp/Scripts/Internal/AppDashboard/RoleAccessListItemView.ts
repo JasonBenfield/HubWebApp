@@ -2,13 +2,13 @@
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { FaIcon } from "@jasonbenfield/sharedwebapp/FaIcon";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpan } from "@jasonbenfield/sharedwebapp/Html/TextSpan";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 
 export class RoleAccessListItemView extends ListGroupItemView {
-    private icon: FaIcon;
-    private roleName: TextSpan;
+    private readonly icon: FaIcon;
+    readonly roleName: TextSpanView;
 
     constructor() {
         super();
@@ -19,7 +19,7 @@ export class RoleAccessListItemView extends ListGroupItemView {
         this.icon.regularStyle();
         this.icon.makeFixedWidth();
         this.roleName = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
     }
 
     allowAccess() {
@@ -40,6 +40,4 @@ export class RoleAccessListItemView extends ListGroupItemView {
             ).cssClass()
         );
     }
-
-    setRoleName(roleName: string) { this.roleName.setText(roleName); }
 }

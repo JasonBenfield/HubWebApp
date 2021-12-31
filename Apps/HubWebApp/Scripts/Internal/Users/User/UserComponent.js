@@ -4,6 +4,7 @@ exports.UserComponent = void 0;
 var tslib_1 = require("tslib");
 var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextValueFormGroup_1 = require("@jasonbenfield/sharedwebapp/Html/TextValueFormGroup");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var UserComponent = /** @class */ (function () {
     function UserComponent(hubApi, view) {
@@ -13,6 +14,15 @@ var UserComponent = /** @class */ (function () {
         this.editRequested = this._editRequested.handler();
         this.editCommand = new Command_1.Command(this.requestEdit.bind(this));
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.userName = new TextValueFormGroup_1.TextValueFormGroup(view.userName);
+        this.userName.setCaption('User Name');
+        this.userName.syncValueTitleWithText();
+        this.fullName = new TextValueFormGroup_1.TextValueFormGroup(view.fullName);
+        this.fullName.setCaption('Name');
+        this.fullName.syncValueTitleWithText();
+        this.email = new TextValueFormGroup_1.TextValueFormGroup(view.email);
+        this.email.setCaption('Email');
+        this.email.syncValueTitleWithText();
         this.editCommand.add(this.view.editButton);
     }
     UserComponent.prototype.setUserID = function (userID) {
@@ -29,9 +39,9 @@ var UserComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getUser(this.userID)];
                     case 1:
                         user = _a.sent();
-                        this.view.setUserName(user.UserName);
-                        this.view.setFullName(user.Name);
-                        this.view.setEmail(user.Email);
+                        this.userName.setValue(user.UserName);
+                        this.fullName.setValue(user.Name);
+                        this.email.setValue(user.Email);
                         return [2 /*return*/];
                 }
             });

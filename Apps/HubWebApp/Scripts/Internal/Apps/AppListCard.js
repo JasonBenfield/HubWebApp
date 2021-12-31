@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppListCard = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var AppListItem_1 = require("./AppListItem");
@@ -14,7 +14,7 @@ var AppListCard = /** @class */ (function () {
         this.view = view;
         this._appSelected = new Events_1.DefaultEvent(this);
         this.appSelected = this._appSelected.handler();
-        new CardTitleHeader_1.CardTitleHeader('Apps', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Apps', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
         this.apps = new ListGroup_1.ListGroup(this.view.apps);
         this.apps.itemClicked.register(this.onAppSelected.bind(this));

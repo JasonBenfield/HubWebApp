@@ -7,63 +7,138 @@ var Url_1 = require("@jasonbenfield/sharedwebapp/Url");
 var WebPage_1 = require("@jasonbenfield/sharedwebapp/WebPage");
 var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/XtiUrl");
 var Apis_1 = require("../../Hub/Apis");
-var AppUserPanel_1 = require("./AppUser/AppUserPanel");
+var AddRolePanel_1 = require("./AddRolePanel");
+var AppUserDataPanel_1 = require("./AppUserDataPanel");
 var MainPageView_1 = require("./MainPageView");
-var UserRolePanel_1 = require("./UserRoles/UserRolePanel");
+var SelectModCategoryPanel_1 = require("./SelectModCategoryPanel");
+var SelectModifierPanel_1 = require("./SelectModifierPanel");
+var UserRolesPanel_1 = require("./UserRolesPanel");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
-        this.panels = new SingleActivePanel_1.SingleActivePanel();
         this.view = new MainPageView_1.MainPageView(page);
         this.hubApi = new Apis_1.Apis(page.modalError).hub();
-        this.appUserPanel = this.panels.add(new AppUserPanel_1.AppUserPanel(this.hubApi, this.view.appUserPanel));
-        this.userRolePanel = this.panels.add(new UserRolePanel_1.UserRolePanel(this.hubApi, this.view.userRolePanel));
-        var userID = Url_1.Url.current().getQueryValue('userID');
-        if (XtiUrl_1.XtiUrl.current.path.modifier && userID) {
-            this.activateAppUserPanel(Number(userID));
+        this.panels = new SingleActivePanel_1.SingleActivePanel();
+        this.appUserDataPanel = this.panels.add(new AppUserDataPanel_1.AppUserDataPanel(this.hubApi, this.view.appUserDataPanel));
+        this.selectModCategoryPanel = this.panels.add(new SelectModCategoryPanel_1.SelectModCategoryPanel(this.hubApi, this.view.selectModCategoryPanel));
+        this.selectModifierPanel = this.panels.add(new SelectModifierPanel_1.SelectModifierPanel(this.hubApi, this.view.selectModifierPanel));
+        this.userRolesPanel = this.panels.add(new UserRolesPanel_1.UserRolesPanel(this.hubApi, this.view.userRolesPanel));
+        this.addRolePanel = this.panels.add(new AddRolePanel_1.AddRolePanel(this.hubApi, this.view.addRolePanel));
+        var userIDValue = Url_1.Url.current().getQueryValue('userID');
+        if (XtiUrl_1.XtiUrl.current.path.modifier && userIDValue) {
+            var userID = Number(userIDValue);
+            this.activateStartPanel(userID);
         }
         else {
             new WebPage_1.WebPage(this.hubApi.Users.Index.getUrl({})).open();
         }
     }
-    MainPage.prototype.activateAppUserPanel = function (userID) {
+    MainPage.prototype.activateStartPanel = function (userID) {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.panels.activate(this.appUserPanel);
-                        this.appUserPanel.setUserID(userID);
-                        this.appUserPanel.refresh();
-                        return [4 /*yield*/, this.appUserPanel.start()];
+                        this.panels.activate(this.appUserDataPanel);
+                        return [4 /*yield*/, this.appUserDataPanel.start(userID)];
                     case 1:
                         result = _a.sent();
-                        if (result.backRequested) {
-                            this.hubApi.Users.Index.open({});
-                        }
-                        else if (result.editUserRolesRequested) {
-                            this.activateUserRolePanel(userID);
-                        }
-                        else if (result.editUserModCategoryRequested) {
+                        if (result.done) {
+                            this.userRolesPanel.setAppUserOptions(result.done.appUserOptions);
+                            this.userRolesPanel.setDefaultModifier();
+                            this.addRolePanel.setAppUserOptions(result.done.appUserOptions);
+                            this.addRolePanel.setDefaultModifier();
+                            this.activateUserRolesPanel();
                         }
                         return [2 /*return*/];
                 }
             });
         });
     };
-    MainPage.prototype.activateUserRolePanel = function (userID) {
+    MainPage.prototype.activateSelectModCategoryPanel = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var result;
             return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.panels.activate(this.userRolePanel);
-                        this.userRolePanel.setUserID(userID);
-                        this.userRolePanel.refresh();
-                        return [4 /*yield*/, this.userRolePanel.start()];
+                        this.panels.activate(this.selectModCategoryPanel);
+                        return [4 /*yield*/, this.selectModCategoryPanel.start()];
                     case 1:
                         result = _a.sent();
-                        if (result.backRequested) {
-                            this.activateAppUserPanel(userID);
+                        if (result.defaultModSelected) {
+                            this.userRolesPanel.setDefaultModifier();
+                            this.addRolePanel.setDefaultModifier();
+                        }
+                        else if (result.modCategorySelected) {
+                            this.selectModifierPanel.setModCategory(result.modCategorySelected.modCategory);
+                            this.userRolesPanel.setModCategory(result.modCategorySelected.modCategory);
+                            this.activateSelectModifierPanel();
+                        }
+                        else if (result.back) {
+                            this.activateUserRolesPanel();
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MainPage.prototype.activateSelectModifierPanel = function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var result;
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.panels.activate(this.selectModifierPanel);
+                        return [4 /*yield*/, this.selectModifierPanel.start()];
+                    case 1:
+                        result = _a.sent();
+                        if (result.modifierSelected) {
+                            this.userRolesPanel.setModifier(result.modifierSelected.modifier);
+                            this.addRolePanel.setModifier(result.modifierSelected.modifier);
+                            this.activateUserRolesPanel();
+                        }
+                        else if (result.back) {
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MainPage.prototype.activateUserRolesPanel = function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var result;
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.panels.activate(this.userRolesPanel);
+                        return [4 /*yield*/, this.userRolesPanel.start()];
+                    case 1:
+                        result = _a.sent();
+                        if (result.addRequested) {
+                            this.activateAddRolePanel();
+                        }
+                        else if (result.modifierRequested) {
+                            this.activateSelectModCategoryPanel();
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MainPage.prototype.activateAddRolePanel = function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var result;
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.panels.activate(this.addRolePanel);
+                        return [4 /*yield*/, this.addRolePanel.start()];
+                    case 1:
+                        result = _a.sent();
+                        if (result.back) {
+                            this.activateUserRolesPanel();
+                        }
+                        else if (result.roleSelected) {
+                            this.activateUserRolesPanel();
                         }
                         return [2 /*return*/];
                 }

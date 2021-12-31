@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceListItem = void 0;
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ResourceResultType_1 = require("../../../Hub/Api/ResourceResultType");
 var ResourceListItem = /** @class */ (function () {
     function ResourceListItem(resource, view) {
         this.resource = resource;
-        view.setResourceName(resource.Name);
+        new TextBlock_1.TextBlock(resource.Name, view.resourceName);
         var resultType = ResourceResultType_1.ResourceResultType.values.value(resource.ResultType.Value);
         var resultTypeText;
         if (resultType.equalsAny(ResourceResultType_1.ResourceResultType.values.None, ResourceResultType_1.ResourceResultType.values.Json)) {
@@ -14,7 +15,7 @@ var ResourceListItem = /** @class */ (function () {
         else {
             resultTypeText = resultType.DisplayText;
         }
-        view.setResultType(resultTypeText);
+        new TextBlock_1.TextBlock(resultTypeText, view.resultType);
     }
     return ResourceListItem;
 }());

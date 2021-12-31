@@ -1,5 +1,5 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -18,7 +18,7 @@ export class UserListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: UserListCardView
     ) {
-        new CardTitleHeader('Users', this.view.titleHeader);
+        new TextBlock('Users', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.users = new ListGroup(this.view.users);
         this.users.itemClicked.register(this.onUserClicked.bind(this));

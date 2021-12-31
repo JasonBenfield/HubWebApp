@@ -6,7 +6,7 @@ var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var ContextualClass_1 = require("@jasonbenfield/sharedwebapp/ContextualClass");
 var FaIcon_1 = require("@jasonbenfield/sharedwebapp/FaIcon");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
-var TextSpan_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpan");
+var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView");
 var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var RoleAccessListItemView = /** @class */ (function (_super) {
@@ -20,7 +20,7 @@ var RoleAccessListItemView = /** @class */ (function (_super) {
         _this.icon.regularStyle();
         _this.icon.makeFixedWidth();
         _this.roleName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         return _this;
     }
     RoleAccessListItemView.prototype.allowAccess = function () {
@@ -35,7 +35,6 @@ var RoleAccessListItemView = /** @class */ (function (_super) {
             ? ContextualClass_1.ContextualClass.success
             : ContextualClass_1.ContextualClass.danger).cssClass());
     };
-    RoleAccessListItemView.prototype.setRoleName = function (roleName) { this.roleName.setText(roleName); };
     return RoleAccessListItemView;
 }(ListGroupItemView_1.ListGroupItemView));
 exports.RoleAccessListItemView = RoleAccessListItemView;

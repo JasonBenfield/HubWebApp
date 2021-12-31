@@ -5,8 +5,8 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
-var FormGroupView_1 = require("@jasonbenfield/sharedwebapp/Html/FormGroupView");
-var TextSpan_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpan");
+var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
+var TextValueFormGroupView_1 = require("@jasonbenfield/sharedwebapp/Html/TextValueFormGroupView");
 var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var HubTheme_1 = require("../../HubTheme");
 var UserComponentView = /** @class */ (function (_super) {
@@ -17,30 +17,23 @@ var UserComponentView = /** @class */ (function (_super) {
         var headerRow = _this.addCardHeader()
             .addContent(new Row_1.Row());
         headerRow.addColumn()
-            .addContent(new TextSpan_1.TextSpan('User'));
+            .addContent(new TextSpanView_1.TextSpanView())
+            .configure(function (ts) { return ts.setText('User'); });
         _this.editButton = headerRow.addColumn()
             .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
             .addContent(HubTheme_1.HubTheme.instance.cardHeader.editButton());
         _this.alert = _this.addCardAlert().alert;
         var body = _this.addCardBody();
-        _this.userName = _this.addBodyRow(body, 'User Name');
-        _this.userName.syncTitleWithText();
-        _this.fullName = _this.addBodyRow(body, 'Name');
-        _this.fullName.syncTitleWithText();
-        _this.email = _this.addBodyRow(body, 'Email');
-        _this.email.syncTitleWithText();
+        _this.userName = _this.addBodyRow(body);
+        _this.fullName = _this.addBodyRow(body);
+        _this.email = _this.addBodyRow(body);
         return _this;
     }
-    UserComponentView.prototype.setUserName = function (userName) { this.userName.setText(userName); };
-    UserComponentView.prototype.setFullName = function (fullName) { this.fullName.setText(fullName); };
-    UserComponentView.prototype.setEmail = function (email) { this.email.setText(email); };
-    UserComponentView.prototype.addBodyRow = function (body, caption) {
-        var formGroup = body.addContent(new FormGroupView_1.FormGroupView());
-        formGroup.captionColumn.addContent(new TextSpan_1.TextSpan(caption));
+    UserComponentView.prototype.addBodyRow = function (body) {
+        var formGroup = body.addContent(new TextValueFormGroupView_1.TextValueFormGroupView());
         formGroup.captionColumn.setColumnCss(ColumnCss_1.ColumnCss.xs(4));
         formGroup.valueColumn.setTextCss(new TextCss_1.TextCss().truncate());
-        return formGroup.valueColumn.addContent(new TextSpan_1.TextSpan())
-            .configure(function (ts) { return ts.addCssName('form-control-plaintext'); });
+        return formGroup;
     };
     return UserComponentView;
 }(CardView_1.CardView));

@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
-var TextSpan_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpan");
+var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ResourceGroupComponentView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(ResourceGroupComponentView, _super);
     function ResourceGroupComponentView() {
@@ -17,12 +17,13 @@ var ResourceGroupComponentView = /** @class */ (function (_super) {
         listGroup.addItem(listItem);
         var row = listItem.addContent(new Row_1.Row());
         _this.groupName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         _this.anonListItem = new ListItem_1.ListItem();
         listGroup.addItem(_this.anonListItem);
         _this.anonListItem.addContent(new Row_1.Row())
             .addColumn()
-            .addContent(new TextSpan_1.TextSpan('Anonymous is Allowed'));
+            .addContent(new TextSpanView_1.TextSpanView())
+            .configure(function (ts) { return ts.setText('Anonymous is Allowed'); });
         return _this;
     }
     ResourceGroupComponentView.prototype.showAnonMessage = function () {
@@ -31,7 +32,6 @@ var ResourceGroupComponentView = /** @class */ (function (_super) {
     ResourceGroupComponentView.prototype.hideAnonMessage = function () {
         this.anonListItem.hide();
     };
-    ResourceGroupComponentView.prototype.setGroupName = function (groupName) { this.groupName.setText(groupName); };
     return ResourceGroupComponentView;
 }(CardView_1.CardView));
 exports.ResourceGroupComponentView = ResourceGroupComponentView;

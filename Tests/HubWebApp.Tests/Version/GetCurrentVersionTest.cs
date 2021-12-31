@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Hub;
 
@@ -10,27 +11,19 @@ internal sealed class GetCurrentVersionTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(AppVersionKey.Current.Value);
-    }
-
-    [Test]
-    public async Task ShouldThrowError_WhenModifierIsNotFound()
-    {
-        var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsNotFound(AppVersionKey.Current.Value);
+        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(AppVersionKey.Current.Value);
     }
 
     [Test]
     public async Task ShouldGetCurrentVersion()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
-        var adminRole = await tester.AdminRole();
+        tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
-        await adminUser.AddRole(adminRole, hubAppModifier);
-        var hubApp = await tester.HubApp();
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var currentVersion = await hubApp.CurrentVersion();
-        var currentVersionModel = await tester.Execute(AppVersionKey.Current.Value, adminUser, hubAppModifier.ModKey());
+        var currentVersionModel = await tester.Execute(AppVersionKey.Current.Value, hubAppModifier.ModKey());
         Assert.That(currentVersionModel?.ID, Is.EqualTo(currentVersion.ID.Value), "Should get current version");
         var version = currentVersion.Version();
         Assert.That(currentVersionModel?.Major, Is.EqualTo(version.Major), "Should get current version");

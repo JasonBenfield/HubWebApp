@@ -1,10 +1,10 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
 import { RoleAccessListItemView } from "../RoleAccessListItemView";
-import { ResourceAccessCardView } from "../ResourceAccessCardView";
 
 export class ResourceAccessCard {
     private readonly alert: MessageAlert;
@@ -16,7 +16,7 @@ export class ResourceAccessCard {
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceAccessCardView
     ) {
-        new CardTitleHeader('Permissions', this.view.titleHeader);
+        new TextBlock('Permissions', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.accessItems = new ListGroup(this.view.accessItems);
     }

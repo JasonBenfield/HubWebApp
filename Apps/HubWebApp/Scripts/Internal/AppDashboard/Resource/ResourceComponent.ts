@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceResultType } from '../../../Hub/Api/ResourceResultType';
@@ -7,25 +7,29 @@ import { ResourceComponentView } from "./ResourceComponentView";
 export class ResourceComponent {
     private readonly alert: MessageAlert;
     private resourceID: number;
+    private readonly resourceName: TextBlock;
+    private readonly resultType: TextBlock;
 
     constructor(
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceComponentView
     ) {
-        new CardTitleHeader('Resource', this.view.titleHeader);
+        new TextBlock('Resource', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
+        this.resourceName = new TextBlock('', view.resourceName);
+        this.resultType = new TextBlock('', view.resultType);
     }
 
     setResourceID(resourceID: number) {
         this.resourceID = resourceID;
-        this.view.setResourceName('');
-        this.view.setResultType('');
+        this.resourceName.setText('');
+        this.resultType.setText('');
         this.view.hideAnon();
     }
 
     async refresh() {
         let resource = await this.getResource(this.resourceID);
-        this.view.setResourceName(resource.Name);
+        this.resourceName.setText(resource.Name);
         if (resource.IsAnonymousAllowed) {
             this.view.showAnon();
         }
@@ -42,7 +46,7 @@ export class ResourceComponent {
         else {
             resultTypeText = resultType.DisplayText;
         }
-        this.view.setResultType(resultTypeText);
+        this.resultType.setText(resultTypeText);
     }
 
     private async getResource(resourceID: number) {

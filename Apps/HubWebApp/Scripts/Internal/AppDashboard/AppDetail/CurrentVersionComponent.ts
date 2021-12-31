@@ -1,20 +1,26 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
 
 export class CurrentVersionComponent {
     private readonly alert: MessageAlert;
+    private readonly versionKey: TextBlock;
+    private readonly version: TextBlock;
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: CurrentVersionComponentView) {
-        new CardTitleHeader('Version', this.view.titleHeader);
+        new TextBlock('Version', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
+        this.versionKey = new TextBlock('', this.view.versionKey);
+        this.version = new TextBlock('', this.view.version);
     }
 
     async refresh() {
         let currentVersion = await this.getCurrentVersion();
-        this.view.setVersionKey(currentVersion.VersionKey);
-        this.view.setVersion(`${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`);
+        this.versionKey.setText(currentVersion.VersionKey);
+        this.version.setText(
+            `${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`
+        );
     }
 
     private async getCurrentVersion() {

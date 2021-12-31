@@ -22,9 +22,9 @@ public class AppUserController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserRoleAccessModel>> GetUserRoleAccess([FromBody] GetUserRoleAccessRequest model)
+    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] GetUnassignedRolesRequest model)
     {
-        return api.Group("AppUser").Action<GetUserRoleAccessRequest, UserRoleAccessModel>("GetUserRoleAccess").Execute(model);
+        return api.Group("AppUser").Action<GetUnassignedRolesRequest, AppRoleModel[]>("GetUnassignedRoles").Execute(model);
     }
 
     [HttpPost]

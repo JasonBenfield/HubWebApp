@@ -11,13 +11,13 @@ sealed class NewVersionTest
     public async Task ShouldCreateNewPatch()
     {
         var tester = await setup();
+        tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
             VersionType = AppVersionType.Values.Patch
         };
-        var adminUser = await tester.AdminUser();
-        var newVersion = await tester.Execute(model, adminUser);
+        var newVersion = await tester.Execute(model);
         Assert.That(newVersion.Status, Is.EqualTo(AppVersionStatus.Values.New));
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Patch));
     }
@@ -31,8 +31,8 @@ sealed class NewVersionTest
             AppKey = HubInfo.AppKey,
             VersionType = AppVersionType.Values.Minor
         };
-        var adminUser = await tester.AdminUser();
-        var newVersion = await tester.Execute(model, adminUser);
+        tester.LoginAsAdmin();
+        var newVersion = await tester.Execute(model);
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Minor), "Should start new minor version");
     }
 
@@ -45,8 +45,8 @@ sealed class NewVersionTest
             AppKey = HubInfo.AppKey,
             VersionType = AppVersionType.Values.Major
         };
-        var adminUser = await tester.AdminUser();
-        var newVersion = await tester.Execute(model, adminUser);
+        tester.LoginAsAdmin();
+        var newVersion = await tester.Execute(model);
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Major), "Should start new major version");
     }
 

@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Fakes;
 using XTI_Hub;
 using XTI_HubAppApi;
-using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -25,60 +24,43 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         this.tester = tester;
     }
 
-    public async Task ShouldThrowError_WhenModifierIsBlank(TModel model)
+    public void ShouldThrowError_WhenModifierIsBlank(TModel model)
     {
-        var adminUser = await tester.AdminUser();
-        var ex = Assert.ThrowsAsync<Exception>(() => tester.Execute(model, adminUser));
+        var adminUser = tester.LoginAsAdmin();
+        var ex = Assert.ThrowsAsync<Exception>(() => tester.Execute(model));
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
-    public async Task ShouldThrowError_WhenModifierIsNotFound(TModel model)
+    public void ShouldThrowError_WhenModifierIsNotFound(TModel model)
     {
-        var adminUser = await tester.AdminUser();
+        var adminUser = tester.LoginAsAdmin();
         var modKey = new ModifierKey("NotFound");
-        Assert.ThrowsAsync<ModifierNotFoundException>(() => tester.Execute(model, adminUser, modKey));
+        Assert.ThrowsAsync<ModifierNotFoundException>(() => tester.Execute(model, modKey));
     }
 
-    public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser(TModel model, Modifier modifier)
+    public void ShouldThrowError_WhenModifierIsNotAssignedToUser(TModel model, Modifier modifier)
     {
-        var loggedInUser = await addUser(tester, "assertions_user");
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
+        var loggedInUser = tester.Login();
+        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
     }
 
-    public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser(TModel model, AppRole role, Modifier modifier)
+    public void ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser(TModel model, AppRoleName role, FakeModifier modifier)
     {
-        var loggedInUser = await addUser(tester, "assertions_user");
-        await loggedInUser.AddRole(role);
-        var denyAccessRole = await tester.DenyAccessRole();
-        await loggedInUser.AddRole(denyAccessRole, modifier);
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
+        var loggedInUser = tester.Login(role);
+        loggedInUser.AddRole(modifier, AppRoleName.DenyAccess);
+        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
     }
 
-    public async Task ShouldThrowError_WhenRoleIsNotAssignedToUser(TModel model)
+    public void ShouldThrowError_WhenRoleIsNotAssignedToUser(TModel model)
     {
-        var loggedInUser = await addUser(tester, "assertions_user");
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser));
+        var loggedInUser = tester.Login();
+        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model));
     }
 
-    public async Task ShouldThrowError_WhenModifiedRoleIsNotAssignedToUser(TModel model, Modifier modifier)
+    public void ShouldThrowError_WhenModifiedRoleIsNotAssignedToUser(TModel model, FakeModifier modifier)
     {
-        var loggedInUser = await addUser(tester, "assertions_user");
-        var denyAccessRole = await tester.DenyAccessRole();
-        await loggedInUser.AddRole(denyAccessRole, modifier);
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
-    }
-
-    private async Task<AppUser> addUser(HubActionTester<TModel, TResult> tester, string userName)
-    {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
-        var adminUser = await addUserTester.AdminUser();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        }, adminUser);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
-        return user;
+        var loggedInUser = tester.Login();
+        loggedInUser.AddRole(modifier, AppRoleName.DenyAccess);
+        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
     }
 }

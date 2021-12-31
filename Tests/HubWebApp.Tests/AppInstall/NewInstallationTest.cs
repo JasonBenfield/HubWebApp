@@ -14,14 +14,13 @@ sealed class NewInstallationTest
     public async Task ShouldAddInstallLocation()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var installLocations = await getInstallLocations(tester);
         Assert.That(installLocations.Length, Is.EqualTo(1), "Should add install location");
         Assert.That(installLocations[0].QualifiedMachineName, Is.EqualTo(request.QualifiedMachineName), "Should add install location");
@@ -31,15 +30,14 @@ sealed class NewInstallationTest
     public async Task ShouldNotAddInstallLocationWithDuplicateQualifiedMachineName()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
+        await tester.Execute(request);
         var installLocations = await getInstallLocations(tester);
         Assert.That(installLocations.Length, Is.EqualTo(1), "Should not add duplicate install location");
     }
@@ -50,13 +48,13 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var currentInstallation = await getCurrentInstallation(tester);
         Assert.That(currentInstallation?.VersionID, Is.EqualTo(version.ID.Value), "Should add current installation");
         var installLocations = await getInstallLocations(tester);
@@ -67,14 +65,13 @@ sealed class NewInstallationTest
     public async Task ShouldAddCurrentInstallationWithInstallPendingStatus()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var currentInstallation = await getCurrentInstallation(tester);
         Assert.That(currentInstallation?.Status, Is.EqualTo(InstallStatus.Values.InstallPending.Value), "Should add current installation with install pending status");
     }
@@ -85,14 +82,14 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
+        await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var installations = await db.Installations.Retrieve().ToArrayAsync();
         var currentInstallations = installations.Where(inst => inst.IsCurrent).ToArray();
@@ -105,13 +102,13 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var versionInstallation = await getVersionInstallation(tester, version);
         Assert.That
         (
@@ -127,14 +124,14 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
+        await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var installations = await db.Installations.Retrieve().ToArrayAsync();
         var versionInstallations = installations
@@ -149,13 +146,13 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var versionInstallation = await getVersionInstallation(tester, version);
         await db.Installations.Update
@@ -163,7 +160,7 @@ sealed class NewInstallationTest
             versionInstallation,
             inst => inst.Status = InstallStatus.Values.InstallStarted.Value
         );
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         versionInstallation = await getVersionInstallation(tester, version);
         Assert.That
         (

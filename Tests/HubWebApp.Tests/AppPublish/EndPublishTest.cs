@@ -27,8 +27,8 @@ internal sealed class EndPublishTest
             VersionKey = AppVersionKey.Parse(newVersion.VersionKey)
         };
         await hubApi.Publish.BeginPublish.Invoke(request);
-        var adminUser = await tester.AdminUser();
-        var version = await tester.Execute(request, adminUser);
+        tester.LoginAsAdmin();
+        var version = await tester.Execute(request);
         Assert.That(version.Status, Is.EqualTo(AppVersionStatus.Values.Current), "Should set status to current when published");
     }
 

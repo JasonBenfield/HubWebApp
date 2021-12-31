@@ -1,9 +1,10 @@
-﻿import { ResourceResultType } from "../../../Hub/Api/ResourceResultType";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { ResourceResultType } from "../../../Hub/Api/ResourceResultType";
 import { ResourceListItemView } from "./ResourceListItemView";
 
 export class ResourceListItem {
     constructor(readonly resource: IResourceModel, view: ResourceListItemView) {
-        view.setResourceName(resource.Name);
+        new TextBlock(resource.Name, view.resourceName);
         let resultType = ResourceResultType.values.value(resource.ResultType.Value);
         let resultTypeText: string;
         if (
@@ -14,6 +15,6 @@ export class ResourceListItem {
         else {
             resultTypeText = resultType.DisplayText;
         }
-        view.setResultType(resultTypeText);
+        new TextBlock(resultTypeText, view.resultType);
     }
 }

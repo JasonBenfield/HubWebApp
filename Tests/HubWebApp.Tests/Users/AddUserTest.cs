@@ -18,12 +18,12 @@ internal sealed class AddUserTest
     public async Task ShouldRequireUserName()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var model = createModel();
         model.UserName = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => tester.Execute(model, adminUser)
+            () => tester.Execute(model)
         );
         Assert.That
         (
@@ -37,12 +37,12 @@ internal sealed class AddUserTest
     public async Task ShouldRequirePassword()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var model = createModel();
         model.Password = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => tester.Execute(model, adminUser)
+            () => tester.Execute(model)
         );
         Assert.That
         (
@@ -56,9 +56,9 @@ internal sealed class AddUserTest
     public async Task ShouldAddUser()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var model = createModel();
-        await tester.Execute(model, adminUser);
+        await tester.Execute(model);
         var factory = tester.Services.GetRequiredService<AppFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(model.UserName));
         Assert.That(user.UserName(), Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
@@ -68,9 +68,9 @@ internal sealed class AddUserTest
     public async Task ShouldHashPassword()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var model = createModel();
-        var userID = await tester.Execute(model, adminUser);
+        var userID = await tester.Execute(model);
         var hubDbContext = tester.Services.GetRequiredService<HubDbContext>();
         var user = await hubDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
         Assert.That(user?.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");

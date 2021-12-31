@@ -28,14 +28,14 @@ internal sealed class BeginPublishTest
             VersionKey = version.VersionKey,
             Versions = new AppVersionModel[0]
         });
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var versionKey = AppVersionKey.Parse(version.VersionKey);
         var request = new PublishVersionRequest
         {
             AppKey = HubInfo.AppKey,
             VersionKey = versionKey
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         version = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
             AppKey = HubInfo.AppKey,

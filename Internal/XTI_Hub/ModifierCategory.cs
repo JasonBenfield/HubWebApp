@@ -24,8 +24,8 @@ public sealed class ModifierCategory : IModifierCategory
     public Task<Modifier> AddOrUpdateModifier(string targetKey, string displayText)
         => factory.Modifiers.AddOrUpdateByTargetKey(this, targetKey, displayText);
 
-    async Task<IModifier> IModifierCategory.Modifier(ModifierKey modKey)
-        => await ModifierByModKey(modKey);
+    async Task<IModifier> IModifierCategory.ModifierOrDefault(ModifierKey modKey)
+        => await ModifierByModKeyOrDefault(modKey);
 
     public Task<Modifier> ModifierByModKey(ModifierKey modKey) => factory.Modifiers.ModifierByModKey(this, modKey);
 

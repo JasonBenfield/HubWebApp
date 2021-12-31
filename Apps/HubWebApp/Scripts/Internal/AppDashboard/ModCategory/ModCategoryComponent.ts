@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
@@ -6,13 +6,15 @@ import { ModCategoryComponentView } from "./ModCategoryComponentView";
 export class ModCategoryComponent {
     private modCategoryID: number;
     private readonly alert: MessageAlert;
+    private readonly modCategoryName: TextBlock;
 
     constructor(
         private readonly hubApi: HubAppApi,
         private readonly view: ModCategoryComponentView
     ) {
-        new CardTitleHeader('Modifier Category', this.view.titleHeader);
+        new TextBlock('Modifier Category', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
+        this.modCategoryName = new TextBlock('', this.view.modCategoryName);
     }
 
     setModCategoryID(modCategoryID: number) {
@@ -21,7 +23,7 @@ export class ModCategoryComponent {
 
     async refresh() {
         let modCategory = await this.getModCategory(this.modCategoryID);
-        this.view.setModCategoryName(modCategory.Name);
+        this.modCategoryName.setText(modCategory.Name);
     }
 
     private async getModCategory(modCategoryID: number) {

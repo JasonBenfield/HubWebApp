@@ -10,8 +10,8 @@ internal sealed class AllAppsTest
     public async Task ShouldGetAllApps_WhenUserIsAdmin()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
-        var apps = await tester.Execute(new EmptyRequest(), adminUser);
+        tester.LoginAsAdmin();
+        var apps = await tester.Execute(new EmptyRequest());
         var appNames = apps.Select(a => a.AppName);
         Assert.That
         (
@@ -25,13 +25,12 @@ internal sealed class AllAppsTest
     public async Task ShouldOnlyGetAllowedApps()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
-        var app = await tester.HubApp();
-        var adminRole = await tester.AdminRole();
-        await adminUser.RemoveRole(adminRole);
+        var adminUser = tester.LoginAsAdmin();
+        var app = tester.HubApp();
+        adminUser.RemoveRole(HubInfo.Roles.Admin);
         var hubAppModifier = await tester.HubAppModifier();
-        await adminUser.AddRole(adminRole, hubAppModifier);
-        var apps = await tester.Execute(new EmptyRequest(), adminUser);
+        adminUser.AddRole(await tester.FakeHubAppModifier(), HubInfo.Roles.Admin);
+        var apps = await tester.Execute(new EmptyRequest());
         var appNames = apps.Select(a => a.AppName);
         Assert.That
         (

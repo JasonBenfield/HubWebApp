@@ -5,8 +5,21 @@ var ButtonCommandItem_1 = require("@jasonbenfield/sharedwebapp/Command/ButtonCom
 var ContextualClass_1 = require("@jasonbenfield/sharedwebapp/ContextualClass");
 var Toolbar_1 = require("@jasonbenfield/sharedwebapp/Html/Toolbar");
 var PaddingCss_1 = require("@jasonbenfield/sharedwebapp/PaddingCss");
+var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var HubTheme = /** @class */ (function () {
     function HubTheme() {
+        this.listItem = {
+            deleteButton: function () {
+                return new ButtonCommandItem_1.ButtonCommandItem()
+                    .configure(function (b) {
+                    b.icon.setName('times');
+                    b.icon.addCssFrom(new TextCss_1.TextCss().context(ContextualClass_1.ContextualClass.danger).cssClass());
+                    b.useOutlineStyle();
+                    b.setText('');
+                    b.setTitle('Delete');
+                });
+            }
+        };
         this.cardHeader = {
             editButton: function () {
                 return new ButtonCommandItem_1.ButtonCommandItem()
@@ -16,6 +29,16 @@ var HubTheme = /** @class */ (function () {
                     b.useOutlineStyle();
                     b.setText('Edit');
                     b.setTitle('Edit');
+                });
+            },
+            addButton: function () {
+                return new ButtonCommandItem_1.ButtonCommandItem()
+                    .configure(function (b) {
+                    b.icon.setName('plus');
+                    b.setContext(ContextualClass_1.ContextualClass.primary);
+                    b.useOutlineStyle();
+                    b.setText('Add');
+                    b.setTitle('Add');
                 });
             }
         };

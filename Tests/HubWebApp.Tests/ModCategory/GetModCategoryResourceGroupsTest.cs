@@ -10,11 +10,11 @@ sealed class GetModCategoryResourceGroupsTest
     public async Task ShouldGetResourceGroups()
     {
         var tester = await setup();
+        tester.LoginAsAdmin();
         var app = await tester.HubApp();
         var appsModCategory = await app.ModCategory(HubInfo.ModCategories.Apps);
         var hubAppModifier = await tester.HubAppModifier();
-        var adminUser = await tester.AdminUser();
-        var resourceGroups = await tester.Execute(appsModCategory.ID.Value, adminUser, hubAppModifier.ModKey());
+        var resourceGroups = await tester.Execute(appsModCategory.ID.Value, hubAppModifier.ModKey());
         Assert.That
         (
             resourceGroups.Select(g => g.Name),

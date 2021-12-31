@@ -60,8 +60,6 @@ public sealed class App : IApp
     public Task<AppRole> Role(int roleID) =>
         factory.Roles.Role(this, roleID);
 
-    async Task<IAppRole> IApp.Role(AppRoleName roleName) => await Role(roleName);
-
     public Task<AppRole> Role(AppRoleName roleName) =>
         factory.Roles.Role(this, roleName);
 

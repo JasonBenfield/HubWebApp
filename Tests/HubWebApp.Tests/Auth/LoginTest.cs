@@ -5,11 +5,13 @@ using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Extensions;
 using XTI_App.Fakes;
 using XTI_Core;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
+using XTI_HubAppApi.UserList;
 using XTI_TempLog;
 using XTI_WebApp;
 using XTI_WebApp.Api;
@@ -22,12 +24,12 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequireUserName()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
         model.Credentials.UserName = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => execute(services, model)
+            () => tester.Execute(model)
         );
         Assert.That
         (
@@ -40,12 +42,12 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequirePassword()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
         model.Credentials.Password = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => execute(services, model)
+            () => tester.Execute(model)
         );
         Assert.That
         (
@@ -58,37 +60,37 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequireCorrectPassword()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
         model.Credentials.Password = "Incorrect";
         Assert.ThrowsAsync<PasswordIncorrectException>
         (
-            () => execute(services, model)
+            () => tester.Execute(model)
         );
     }
 
     [Test]
     public async Task ShouldVerifyCorrectPassword()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
-        var result = await execute(services, model);
-        Assert.That(result.Data.Url, Is.EqualTo("~/User"), "Should redirect to start if password is correct");
+        var result = await tester.Execute(model);
+        Assert.That(result.Url, Is.EqualTo("~/User"), "Should redirect to start if password is correct");
     }
 
     [Test]
     public async Task ShouldAuthenticateSession()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
-        await execute(services, model);
-        var tempLog = services.GetRequiredService<TempLog>();
-        var clock = services.GetRequiredService<IClock>();
+        await tester.Execute(model);
+        var tempLog = tester.Services.GetRequiredService<TempLog>();
+        var clock = tester.Services.GetRequiredService<IClock>();
         var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
         Assert.That(authSessionFiles.Length, Is.EqualTo(1), "Should authenticate session");
         var serializedAuthSession = await authSessionFiles[0].Read();
         var authSession = XtiSerializer.Deserialize<AuthenticateSessionModel>(serializedAuthSession);
-        var appFactory = services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<AppFactory>();
         var user = await appFactory.Users.UserByUserName(new AppUserName(model.Credentials.UserName));
         Assert.That(authSession.UserName, Is.EqualTo(user.UserName().Value), "Should authenticate session");
     }
@@ -96,67 +98,61 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldClearSessionForAnonUser()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
-        await execute(services, model);
-        var anonClient = services.GetRequiredService<IAnonClient>();
+        await tester.Execute(model);
+        var anonClient = tester.Services.GetRequiredService<IAnonClient>();
         Assert.That(anonClient.SessionKey, Is.EqualTo(""), "Should clear session for anon client after authenticating");
     }
 
     [Test]
     public async Task ShouldResetCache()
     {
-        var services = await setup();
+        var tester = await setup();
         var model = createLoginModel();
-        var appFactory = services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<AppFactory>();
         var user = await appFactory.Users.UserByUserName(new AppUserName(model.Credentials.UserName));
-        var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+        var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
             User = new FakeHttpUser().Create("", user)
         };
-        await execute(services, model);
-        var userContext = services.GetRequiredService<IUserContext>();
+        await tester.Execute(model);
+        var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
-        await execute(services, model);
+        await tester.Execute(model);
         var secondCachedUser = await userContext.User();
         Assert.That(ReferenceEquals(firstCachedUser, secondCachedUser), Is.False, "Should reset cache after login");
     }
 
-    private async Task<IServiceProvider> setup()
+    private async Task<HubActionTester<LoginModel, WebRedirectResult>> setup()
     {
-        var host = Host.CreateDefaultBuilder()
-            .ConfigureServices
-            (
-                (hostContext, services) =>
-                {
-                    services.AddFakesForHubWebApp(hostContext.Configuration);
-                }
-            )
-            .Build();
-        var scope = host.Services.CreateScope();
-        var sp = scope.ServiceProvider;
-        var hubSetup = sp.GetRequiredService<IAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
-        var appFactory = sp.GetRequiredService<AppFactory>();
-        var model = createLoginModel();
-        await appFactory.Users.Add
+        var host = new HubTestHost();
+        var services = await host.Setup
         (
-            new AppUserName(model.Credentials.UserName),
-            new FakeHashedPassword(model.Credentials.Password),
-            DateTime.UtcNow
+            (hc, s) =>
+            {
+                s.AddScoped<IAppContext>(sp => sp.GetRequiredService<CachedAppContext>());
+                s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
+            }
         );
-        var user = await appFactory.Users.UserByUserName(new AppUserName(model.Credentials.UserName));
-        var app = await appFactory.Apps.App(HubInfo.AppKey);
-        var tempLogSession = sp.GetRequiredService<TempLogSession>();
-        await tempLogSession.StartSession();
-        return sp;
+        var tester = HubActionTester.Create(services, hubApi => hubApi.Auth.Login);
+        await addUser(tester, "xartogg", "Password12345");
+        return tester;
     }
 
-    private static Task<ResultContainer<WebRedirectResult>> execute(IServiceProvider services, LoginModel model)
+    private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
-        var api = services.GetRequiredService<HubAppApi>();
-        return api.Auth.Login.Execute(model);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        addUserTester.LoginAsAdmin();
+        var userID = await addUserTester.Execute(new AddUserModel
+        {
+            UserName = userName,
+            Password = password
+        });
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        return user;
     }
 
     private LoginModel createLoginModel()
@@ -165,7 +161,7 @@ internal sealed class LoginTest
             Credentials = new LoginCredentials
             {
                 UserName = "xartogg",
-                Password = "password"
+                Password = "Password12345"
             }
         };
 }

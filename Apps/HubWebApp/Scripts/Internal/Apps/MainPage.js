@@ -8,11 +8,10 @@ var AppListPanel_1 = require("./AppListPanel");
 var MainPageView_1 = require("./MainPageView");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
-        this.page = page;
-        this.view = new MainPageView_1.MainPageView(page);
-        this.hubApi = new Apis_1.Apis(this.page.modalError).hub();
-        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
-        this.appListPanel = new AppListPanel_1.AppListPanel(this.hubApi, this.view.appListPanel);
+        var view = new MainPageView_1.MainPageView(page);
+        this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
+        this.appListPanel = new AppListPanel_1.AppListPanel(this.hubApi, view.appListPanel);
         this.activateAppListPanel();
     }
     MainPage.prototype.activateAppListPanel = function () {

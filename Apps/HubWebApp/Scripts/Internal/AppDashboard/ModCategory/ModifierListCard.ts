@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -15,7 +15,7 @@ export class ModifierListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: ModifierListCardView
     ) {
-        new CardTitleHeader('Modifiers', this.view.titleHeader);
+        new TextBlock('Modifiers', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.modifiers = new ListGroup(this.view.modifiers);
     }

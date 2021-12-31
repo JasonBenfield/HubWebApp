@@ -5,7 +5,7 @@ $script:hubConfig = [PSCustomObject]@{
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
-    AppsToImport = "Shared"
+    AppsToImport = ""
 }
 
 function Hub-NewVersion {

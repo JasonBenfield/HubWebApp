@@ -19,8 +19,8 @@ public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         var app = await appFromPath.Value();
         var role = await app.Role(model.RoleID);
         var user = await appFactory.Users.User(model.UserID);
-        var defaultModifier = await app.DefaultModifier();
-        await user.AddRole(role, defaultModifier);
+        var modifier = await app.Modifier(model.ModifierID);
+        await user.AddRole(role, modifier);
         return role.ID.Value;
     }
 }

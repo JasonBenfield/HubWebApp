@@ -23,7 +23,13 @@ public sealed class Modifier : IModifier
 
     public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID.Value == record.CategoryID;
 
-    async Task<IModifier> IModifier.DefaultModifier() => await DefaultModifier();
+    public Task SetDisplayText(string displayText)
+    {
+        return factory.DB.Modifiers.Update(record, r =>
+        {
+            r.DisplayText = displayText;
+        });
+    }
 
     public async Task<Modifier> DefaultModifier()
     {
@@ -44,14 +50,6 @@ public sealed class Modifier : IModifier
             defaultModifier = await app.DefaultModifier();
         }
         return defaultModifier;
-    }
-
-    public Task SetDisplayText(string displayText)
-    {
-        return factory.DB.Modifiers.Update(record, r =>
-        {
-            r.DisplayText = displayText;
-        });
     }
 
     public ModifierModel ToModel() => new ModifierModel

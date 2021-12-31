@@ -15,9 +15,10 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationStatusToInstallStarted()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -30,7 +31,7 @@ sealed class BeginCurrentInstallationTest
             AppKey = HubInfo.AppKey,
             VersionKey = version.Key().Value
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
         Assert.That
         (
@@ -44,9 +45,10 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldReturnInstallationID()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -59,7 +61,7 @@ sealed class BeginCurrentInstallationTest
             AppKey = HubInfo.AppKey,
             VersionKey = version.Key().Value
         };
-        var installationID = await tester.Execute(request, adminUser);
+        var installationID = await tester.Execute(request);
         Assert.That
         (
             installationID,
@@ -72,15 +74,14 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationVersion()
     {
         var tester = await setup();
-        var hubApp = await tester.HubApp();
-        var adminUser = await tester.AdminUser();
+        var factory = tester.Services.GetRequiredService<AppFactory>();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         await newInstallation(tester, new NewInstallationRequest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
         var nextVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
@@ -108,7 +109,7 @@ sealed class BeginCurrentInstallationTest
             AppKey = HubInfo.AppKey,
             VersionKey = nextVersion.Key().Value
         };
-        var installationID = await tester.Execute(request, adminUser);
+        var installationID = await tester.Execute(request);
         var currentInstallation = await getInstallation(tester, installationID);
         Assert.That
         (

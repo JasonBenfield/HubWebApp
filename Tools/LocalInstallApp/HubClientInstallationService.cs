@@ -19,7 +19,11 @@ internal sealed class HubClientInstallationService : InstallationService
         {
             AppKey = new AppKey
             {
-                Name = appKey.Name.Value,
+                Name = new AppName
+                {
+                    Value = appKey.Name.Value,
+                    DisplayText = appKey.Name.DisplayText
+                },
                 Type = AppType.Values.Value(appKey.Type.Value)
             },
             VersionKey = installVersionKey.Value,
@@ -34,7 +38,11 @@ internal sealed class HubClientInstallationService : InstallationService
         {
             AppKey = new AppKey
             {
-                Name = appKey.Name.Value,
+                Name = new AppName
+                {
+                    Value = appKey.Name.Value,
+                    DisplayText = appKey.Name.DisplayText
+                },
                 Type = AppType.Values.Value(appKey.Type.Value)
             },
             VersionKey = versionKey.Value,

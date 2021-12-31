@@ -1,5 +1,5 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
@@ -8,6 +8,7 @@ export class ModCategoryComponent {
     private groupID: number;
 
     private readonly alert: MessageAlert;
+    private readonly modCategoryName: TextBlock;
 
     private modCategory: IModifierCategoryModel;
 
@@ -18,8 +19,9 @@ export class ModCategoryComponent {
         private readonly hubApi: HubAppApi,
         private readonly view: ModCategoryComponentView
     ) {
-        new CardTitleHeader('Modifier Category', this.view.titleHeader);
+        new TextBlock('Modifier Category', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
+        this.modCategoryName = new TextBlock('', this.view.modCategoryName);
         this.view.clicked.register(this.onClicked.bind(this));
     }
 
@@ -34,7 +36,7 @@ export class ModCategoryComponent {
 
     async refresh() {
         this.modCategory = await this.getModCategory(this.groupID);
-        this.view.setModCategoryName(this.modCategory.Name);
+        this.modCategoryName.setText(this.modCategory.Name);
         this.view.showModCategory();
     }
 

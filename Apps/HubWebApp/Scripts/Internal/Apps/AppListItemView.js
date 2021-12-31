@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppListItemView = void 0;
 var tslib_1 = require("tslib");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
-var TextSpan_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpan");
+var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var LinkListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView");
 var LinkListItemViewModel_1 = require("@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel");
 var AppListItemView = /** @class */ (function (_super) {
@@ -12,16 +12,13 @@ var AppListItemView = /** @class */ (function (_super) {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());
         _this.appName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         _this.appTitle = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         _this.appType = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         return _this;
     }
-    AppListItemView.prototype.setAppName = function (appName) { this.appName.setText(appName); };
-    AppListItemView.prototype.setAppTitle = function (appTitle) { this.appTitle.setText(appTitle); };
-    AppListItemView.prototype.setAppType = function (displayText) { this.appType.setText(displayText); };
     return AppListItemView;
 }(LinkListGroupItemView_1.LinkListGroupItemView));
 exports.AppListItemView = AppListItemView;
