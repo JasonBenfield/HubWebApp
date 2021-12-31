@@ -31,7 +31,9 @@ public static class HubClientExtensions
             var xtiTokenFactory = sp.GetRequiredService<IXtiTokenFactory>();
             var appOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value;
             var env = sp.GetRequiredService<IHostEnvironment>();
-            var versionKey = env.IsProduction() ? "" : AppVersionKey.Current.Value;
+            var versionKey = env.IsProduction() 
+                ? "" 
+                : XTI_App.Abstractions.AppVersionKey.Current.Value;
             return new HubAppClient(httpClientFactory, xtiTokenFactory, appOptions.BaseUrl, versionKey);
         });
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());

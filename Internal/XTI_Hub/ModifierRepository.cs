@@ -51,6 +51,14 @@ public sealed class ModifierRepository
             .Select(m => factory.Modifier(m))
             .ToArrayAsync();
 
+    internal async Task<Modifier> Modifier(int id)
+    {
+        var entity = await factory.DB
+            .Modifiers.Retrieve()
+            .Where(m => m.ID == id).FirstOrDefaultAsync();
+        return factory.Modifier(entity ?? throw new Exception($"Modifier {id} not found"));
+    }
+
     internal async Task<Modifier> ModifierByModKey(ModifierCategory modCategory, ModifierKey modKey)
     {
         if

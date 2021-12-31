@@ -2,20 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceComponent = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ResourceResultType_1 = require("../../../Hub/Api/ResourceResultType");
 var ResourceComponent = /** @class */ (function () {
     function ResourceComponent(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Resource', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Resource', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.resourceName = new TextBlock_1.TextBlock('', view.resourceName);
+        this.resultType = new TextBlock_1.TextBlock('', view.resultType);
     }
     ResourceComponent.prototype.setResourceID = function (resourceID) {
         this.resourceID = resourceID;
-        this.view.setResourceName('');
-        this.view.setResultType('');
+        this.resourceName.setText('');
+        this.resultType.setText('');
         this.view.hideAnon();
     };
     ResourceComponent.prototype.refresh = function () {
@@ -26,7 +28,7 @@ var ResourceComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getResource(this.resourceID)];
                     case 1:
                         resource = _a.sent();
-                        this.view.setResourceName(resource.Name);
+                        this.resourceName.setText(resource.Name);
                         if (resource.IsAnonymousAllowed) {
                             this.view.showAnon();
                         }
@@ -40,7 +42,7 @@ var ResourceComponent = /** @class */ (function () {
                         else {
                             resultTypeText = resultType.DisplayText;
                         }
-                        this.view.setResultType(resultTypeText);
+                        this.resultType.setText(resultTypeText);
                         return [2 /*return*/];
                 }
             });

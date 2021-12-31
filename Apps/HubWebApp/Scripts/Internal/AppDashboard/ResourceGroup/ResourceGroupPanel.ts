@@ -41,12 +41,6 @@ export class ResourceGroupPanelResult {
 }
 
 export class ResourceGroupPanel implements IPanel {
-    public static readonly ResultKeys = {
-        backRequested: 'back-requested',
-        resourceSelected: 'resource-selected',
-        modCategorySelected: 'mod-category-selected'
-    };
-
     private readonly resourceGroupComponent: ResourceGroupComponent;
     private readonly modCategoryComponent: ModCategoryComponent;
     private readonly roleAccessCard: ResourceGroupAccessCard;

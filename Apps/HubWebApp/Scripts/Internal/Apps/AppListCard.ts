@@ -1,5 +1,5 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../Hub/Api/HubAppApi";
@@ -19,7 +19,7 @@ export class AppListCard {
         private readonly appRedirectUrl: (appID: number) => string,
         private readonly view: AppListCardView
     ) {
-        new CardTitleHeader('Apps', this.view.titleHeader);
+        new TextBlock('Apps', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.apps = new ListGroup(this.view.apps);
         this.apps.itemClicked.register(this.onAppSelected.bind(this))

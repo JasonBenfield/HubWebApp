@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleAccessListItem = void 0;
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var RoleAccessListItem = /** @class */ (function () {
     function RoleAccessListItem(accessItem, view) {
         if (accessItem.isAllowed) {
@@ -9,7 +10,7 @@ var RoleAccessListItem = /** @class */ (function () {
         else {
             view.denyAccess();
         }
-        view.setRoleName(accessItem.role.Name);
+        new TextBlock_1.TextBlock(accessItem.role.Name, view.roleName);
     }
     return RoleAccessListItem;
 }());

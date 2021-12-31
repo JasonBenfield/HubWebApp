@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
@@ -18,7 +16,7 @@ sealed class BeginVersionInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -31,7 +29,7 @@ sealed class BeginVersionInstallationTest
             AppKey = HubInfo.AppKey,
             VersionKey = version.Key().Value
         };
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
         Assert.That
         (
@@ -47,7 +45,7 @@ sealed class BeginVersionInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -60,7 +58,7 @@ sealed class BeginVersionInstallationTest
             AppKey = HubInfo.AppKey,
             VersionKey = version.Key().Value
         };
-        var installationID = await tester.Execute(request, adminUser);
+        var installationID = await tester.Execute(request);
         Assert.That
         (
             installationID,

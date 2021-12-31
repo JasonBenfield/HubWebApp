@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserEditPanel = exports.UserEditPanelResult = void 0;
 var tslib_1 = require("tslib");
 var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
 var AsyncCommand_1 = require("@jasonbenfield/sharedwebapp/Command/AsyncCommand");
 var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
 var DelayedAction_1 = require("@jasonbenfield/sharedwebapp/DelayedAction");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EditUserForm_1 = require("../../../Hub/Api/EditUserForm");
 var UserEditPanelResult = /** @class */ (function () {
@@ -46,7 +46,7 @@ var UserEditPanel = /** @class */ (function () {
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
         this.cancelCommand.add(this.view.cancelButton);
         this.saveCommand.add(this.view.saveButton);
-        new CardTitleHeader_1.CardTitleHeader('Edit User', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Edit User', this.view.titleHeader);
         this.editUserForm = new EditUserForm_1.EditUserForm(this.view.editUserForm);
     }
     UserEditPanel.prototype.setUserID = function (userID) {

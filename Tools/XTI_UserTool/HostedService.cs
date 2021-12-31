@@ -128,11 +128,7 @@ internal sealed class HostedService : IHostedService
             {
                 if (!string.IsNullOrWhiteSpace(roleName))
                 {
-                    var role = await app.Role(new AppRoleName(roleName));
-                    if (role.Exists())
-                    {
-                        roles.Add(role);
-                    }
+                    await app.AddRoleIfNotFound(new AppRoleName(roleName));
                 }
             }
         }

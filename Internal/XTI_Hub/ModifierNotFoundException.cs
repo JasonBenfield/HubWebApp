@@ -24,7 +24,7 @@ namespace XTI_Hub
         public ModifierNotFoundException(ModifierKey modKey, ModifierCategory category)
             : base
             (
-                $"Modifier with mod key '{modKey.DisplayText}' not found category '{category.Name().DisplayText}'",
+                $"Modifier with mod key '{modKey.DisplayText}' not found for category '{category.Name().DisplayText}'",
                 displayMessage
             )
         {

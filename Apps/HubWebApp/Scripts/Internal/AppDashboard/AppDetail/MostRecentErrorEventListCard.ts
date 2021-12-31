@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -11,7 +11,7 @@ export class MostRecentErrorEventListCard {
     private readonly errorEvents: ListGroup;
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: MostRecentErrorEventListCardView) {
-        new CardTitleHeader('Most Recent Errors', this.view.titleHeader);
+        new TextBlock('Most Recent Errors', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.errorEvents = new ListGroup(this.view.errorEvents);
     }

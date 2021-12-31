@@ -10,28 +10,19 @@ internal sealed class GetAppTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
-    }
-
-    [Test]
-    public async Task ShouldThrowError_WhenModifierIsNotFound()
-    {
-        var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsNotFound(new EmptyRequest());
+        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
     }
 
     [Test]
     public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser()
     {
         var tester = await setup();
-        var app = await tester.HubApp();
-        var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
-        var modifier = await tester.HubAppModifier();
-        await AccessAssertions.Create(tester)
+        var modifier = await tester.FakeHubAppModifier();
+        AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser
             (
                 new EmptyRequest(),
-                viewAppRole,
+                HubInfo.Roles.ViewApp,
                 modifier
             );
     }
@@ -40,11 +31,9 @@ internal sealed class GetAppTest
     public async Task ShouldGetApp()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
-        var adminRole = await tester.AdminRole();
+        tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
-        await adminUser.AddRole(adminRole, hubAppModifier);
-        var app = await tester.Execute(new EmptyRequest(), adminUser, hubAppModifier.ModKey());
+        var app = await tester.Execute(new EmptyRequest(), hubAppModifier.ModKey());
         Assert.That(app?.Title, Is.EqualTo("Hub"), "Should get app");
     }
 

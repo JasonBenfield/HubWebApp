@@ -20,7 +20,7 @@ namespace XTI_HubAppClient
         public EntityID ID { get; }
         public ModifierCategoryName Name() => name;
 
-        public async Task<IModifier> Modifier(ModifierKey modKey)
+        public async Task<IModifier> ModifierOrDefault(ModifierKey modKey)
         {
             var appModifier = await appContext.GetModifierKey();
             var request = new GetModCategoryModifierRequest

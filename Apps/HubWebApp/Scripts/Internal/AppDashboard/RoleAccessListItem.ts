@@ -1,4 +1,5 @@
-﻿import { RoleAccessListItemView } from "./RoleAccessListItemView";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { RoleAccessListItemView } from "./RoleAccessListItemView";
 
 export class RoleAccessListItem {
     constructor(accessItem: IRoleAccessItem, view: RoleAccessListItemView) {
@@ -8,6 +9,6 @@ export class RoleAccessListItem {
         else {
             view.denyAccess();
         }
-        view.setRoleName(accessItem.role.Name);
+        new TextBlock(accessItem.role.Name, view.roleName);
     }
 }

@@ -30,7 +30,7 @@ public sealed class PublishProcess
         this.repoOwner = repoOwner;
     }
 
-    public async Task Run(AppKey appKey, string appsToImport, string repoOwner, string repoName)
+    public async Task Run(AppKey appKey, string repoOwner, string repoName)
     {
         var versionToolOutput = await getVersionKey(appKey);
         var buildVersionKey = AppVersionKey.Parse(versionToolOutput.VersionKey);
@@ -69,9 +69,9 @@ public sealed class PublishProcess
         await publishSetup(appKey, versionKey);
         if (appKey.Type.Equals(AppType.Values.WebApp))
         {
-            await buildWebApp(appKey, buildVersionKey, appsToImport);
+            await buildWebApp(appKey, buildVersionKey);
+            await runDotnetBuild();
             await runDotNetPublish(appKey, versionKey);
-            await new PublishNpmProcess(hostEnv, xtiFolder).Run(appKey, versionKey, packageVersion);
         }
         else if (appKey.Type.Equals(AppType.Values.Service))
         {
@@ -80,8 +80,10 @@ public sealed class PublishProcess
         }
         else
         {
+            await buildWebApp(appKey, buildVersionKey);
             await runDotnetBuild();
         }
+        await new PublishNpmProcess(hostEnv, xtiFolder).Run(appKey, versionKey, packageVersion);
         if (!appKey.Type.Equals(AppType.Values.Package) && hostEnv.IsProduction())
         {
             if (release == null) { throw new Exception("Release not found"); }
@@ -158,9 +160,9 @@ public sealed class PublishProcess
         result.EnsureExitCodeIsZero();
     }
 
-    private async Task buildWebApp(AppKey appKey, AppVersionKey versionKey, string appsToImport)
+    private async Task buildWebApp(AppKey appKey, AppVersionKey versionKey)
     {
-        var builder = new BuildWebProcess(appKey, versionKey, hostEnv, appsToImport);
+        var builder = new BuildWebProcess(appKey, versionKey);
         await builder.Build();
     }
 

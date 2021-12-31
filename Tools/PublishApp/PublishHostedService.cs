@@ -37,7 +37,7 @@ internal sealed class PublishHostedService : IHostedService
                 options.RepoOwner
             );
             var appKey = new AppKey(new AppName(options.AppName), AppType.Values.Value(options.AppType));
-            await publishProcess.Run(appKey, options.AppsToImport, options.RepoOwner, options.RepoName);
+            await publishProcess.Run(appKey, options.RepoOwner, options.RepoName);
             if (!appKey.Type.Equals(AppType.Values.Package) && !options.NoInstall)
             {
                 await publishProcess.RunInstall(appKey, options.DestinationMachine);

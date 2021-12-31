@@ -11,20 +11,20 @@ export class AppUserGroup extends AppApiGroup {
 		super(events, resourceUrl, 'AppUser');
 		this.Index = this.createView<number>('Index');
 		this.GetUserRolesAction = this.createAction<IGetUserRolesRequest,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
-		this.GetUserRoleAccessAction = this.createAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>('GetUserRoleAccess', 'Get User Role Access');
+		this.GetUnassignedRolesAction = this.createAction<IGetUnassignedRolesRequest,IAppRoleModel[]>('GetUnassignedRoles', 'Get Unassigned Roles');
 		this.GetUserModCategoriesAction = this.createAction<number,IUserModifierCategoryModel[]>('GetUserModCategories', 'Get User Mod Categories');
 	}
 	
 	readonly Index: AppApiView<number>;
 	readonly GetUserRolesAction: AppApiAction<IGetUserRolesRequest,IAppRoleModel[]>;
-	readonly GetUserRoleAccessAction: AppApiAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>;
+	readonly GetUnassignedRolesAction: AppApiAction<IGetUnassignedRolesRequest,IAppRoleModel[]>;
 	readonly GetUserModCategoriesAction: AppApiAction<number,IUserModifierCategoryModel[]>;
 	
 	GetUserRoles(model: IGetUserRolesRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserRolesAction.execute(model, errorOptions || {});
 	}
-	GetUserRoleAccess(model: IGetUserRoleAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserRoleAccessAction.execute(model, errorOptions || {});
+	GetUnassignedRoles(model: IGetUnassignedRolesRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUnassignedRolesAction.execute(model, errorOptions || {});
 	}
 	GetUserModCategories(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetUserModCategoriesAction.execute(model, errorOptions || {});

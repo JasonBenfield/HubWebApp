@@ -7,15 +7,14 @@ import { AppListPanel } from './AppListPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage {
-    private readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
     private readonly appListPanel: AppListPanel;
 
-    constructor(private readonly page: PageFrameView) {
-        this.view = new MainPageView(page);
-        this.hubApi = new Apis(this.page.modalError).hub();
-        this.page.content.setPadding(PaddingCss.top(3));
-        this.appListPanel = new AppListPanel(this.hubApi, this.view.appListPanel);
+    constructor(page: PageFrameView) {
+        let view = new MainPageView(page);
+        this.hubApi = new Apis(page.modalError).hub();
+        page.content.setPadding(PaddingCss.top(3));
+        this.appListPanel = new AppListPanel(this.hubApi, view.appListPanel);
         this.activateAppListPanel();
     }
 

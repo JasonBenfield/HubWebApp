@@ -2,14 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurrentVersionComponent = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var CurrentVersionComponent = /** @class */ (function () {
     function CurrentVersionComponent(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Version', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Version', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.versionKey = new TextBlock_1.TextBlock('', this.view.versionKey);
+        this.version = new TextBlock_1.TextBlock('', this.view.version);
     }
     CurrentVersionComponent.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -19,8 +21,8 @@ var CurrentVersionComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getCurrentVersion()];
                     case 1:
                         currentVersion = _a.sent();
-                        this.view.setVersionKey(currentVersion.VersionKey);
-                        this.view.setVersion("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
+                        this.versionKey.setText(currentVersion.VersionKey);
+                        this.version.setText("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
                         return [2 /*return*/];
                 }
             });

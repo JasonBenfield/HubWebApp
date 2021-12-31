@@ -1,4 +1,4 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceGroupComponentView } from "./ResourceGroupComponentView";
@@ -7,13 +7,15 @@ export class ResourceGroupComponent {
     private groupID: number;
 
     private readonly alert: MessageAlert;
+    private readonly groupName: TextBlock;
 
     constructor(
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceGroupComponentView
     ) {
-        new CardTitleHeader('Resource Group', this.view.titleHeader);
+        new TextBlock('Resource Group', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
+        this.groupName = new TextBlock('', this.view.groupName);
         this.view.hideAnonMessage();
     }
 
@@ -23,7 +25,7 @@ export class ResourceGroupComponent {
 
     async refresh() {
         let group = await this.getResourceGroup(this.groupID);
-        this.view.setGroupName(group.Name);
+        this.groupName.setText(group.Name);
         if (group.IsAnonymousAllowed) {
             this.view.showAnonMessage();
         }

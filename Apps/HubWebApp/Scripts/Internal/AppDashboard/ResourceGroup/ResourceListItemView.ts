@@ -1,23 +1,19 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpan } from "@jasonbenfield/sharedwebapp/Html/TextSpan";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
 
 export class ResourceListItemView extends ButtonListGroupItemView {
-    private readonly resourceName: TextSpan;
-    private readonly resultType: TextSpan;
+    readonly resourceName: TextSpanView;
+    readonly resultType: TextSpanView;
 
     constructor() {
         super();
         let row = this.addContent(new Row());
         this.resourceName = row.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs(8)))
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.resultType = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
     }
-
-    setResourceName(name: string) { this.resourceName.setText(name); }
-
-    setResultType(resultType: string) { this.resultType.setText(resultType); }
 }

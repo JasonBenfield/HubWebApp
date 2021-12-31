@@ -14,9 +14,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddWebApp()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         Assert.That(app.Key(), Is.EqualTo(FakeInfo.AppKey), "Should add app");
         Assert.That(app.Title, Is.EqualTo(FakeInfo.AppKey.Name.DisplayText), "Should set app title");
@@ -46,9 +46,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddCurrentVersion()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var currentVersion = await app.CurrentVersion();
         Assert.That(currentVersion.IsCurrent(), Is.True, "Should add current version");
@@ -58,9 +58,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddRoles()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var roleNames = new[]
         {
@@ -78,9 +78,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddUnknownApp()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<AppFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
         Assert.That(app.ID.IsValid(), Is.True, "Should add unknown app");
@@ -90,9 +90,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddUnknownResourceGroup()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<AppFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
         var version = await app.CurrentVersion();
@@ -104,9 +104,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddUnknownResource()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<AppFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
         var version = await app.CurrentVersion();
@@ -119,9 +119,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddResourceGroupsFromAppTemplateGroups()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var groups = (await version.ResourceGroups()).ToArray();
@@ -147,9 +147,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddAllowedGroupRoleFromAppGroupTemplate()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups())
@@ -167,9 +167,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddResourcesFromAppTemplateActions()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(new ResourceGroupName("employee"));
@@ -186,9 +186,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddAllowedResourceRoleFromActionTemplate()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups()).First(g => g.Name().Equals("Employee"));
@@ -206,9 +206,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddDefaultModifierCategory()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var modCategory = await app.ModCategory(ModifierCategoryName.Default);
         Assert.That
@@ -223,9 +223,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAddDefaultModifierCategoryToApp()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var category = await app.ModCategory(ModifierCategoryName.Default);
         Assert.That(category.ID.IsValid(), Is.True, "Should add default modifier to app");
@@ -235,9 +235,9 @@ public sealed class RegisterAppTest
     public async Task ShouldSetModifierCategoryForGroup()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
@@ -249,9 +249,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAllowAnonymousForResourceGroup()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
@@ -263,9 +263,9 @@ public sealed class RegisterAppTest
     public async Task ShouldDenyAnonymousForResourceGroup()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
@@ -277,9 +277,9 @@ public sealed class RegisterAppTest
     public async Task ShouldAllowAnonymousForResource()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
@@ -292,9 +292,9 @@ public sealed class RegisterAppTest
     public async Task ShouldDenyAnonymousForResource()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var request = createRequest(tester);
-        await tester.Execute(request, adminUser);
+        await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));

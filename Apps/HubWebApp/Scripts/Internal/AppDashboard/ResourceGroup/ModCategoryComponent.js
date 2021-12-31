@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModCategoryComponent = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModCategoryComponent = /** @class */ (function () {
     function ModCategoryComponent(hubApi, view) {
@@ -11,8 +11,9 @@ var ModCategoryComponent = /** @class */ (function () {
         this.view = view;
         this._clicked = new Events_1.DefaultEvent(this);
         this.clicked = this._clicked.handler();
-        new CardTitleHeader_1.CardTitleHeader('Modifier Category', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Modifier Category', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.modCategoryName = new TextBlock_1.TextBlock('', this.view.modCategoryName);
         this.view.clicked.register(this.onClicked.bind(this));
     }
     ModCategoryComponent.prototype.onClicked = function () {
@@ -32,7 +33,7 @@ var ModCategoryComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.getModCategory(this.groupID)];
                     case 1:
                         _a.modCategory = _b.sent();
-                        this.view.setModCategoryName(this.modCategory.Name);
+                        this.modCategoryName.setText(this.modCategory.Name);
                         this.view.showModCategory();
                         return [2 /*return*/];
                 }

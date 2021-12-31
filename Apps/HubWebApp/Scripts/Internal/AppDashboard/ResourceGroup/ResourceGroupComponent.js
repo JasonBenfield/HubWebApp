@@ -2,14 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupComponent = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ResourceGroupComponent = /** @class */ (function () {
     function ResourceGroupComponent(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Resource Group', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Resource Group', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.groupName = new TextBlock_1.TextBlock('', this.view.groupName);
         this.view.hideAnonMessage();
     }
     ResourceGroupComponent.prototype.setGroupID = function (groupID) {
@@ -23,7 +24,7 @@ var ResourceGroupComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getResourceGroup(this.groupID)];
                     case 1:
                         group = _a.sent();
-                        this.view.setGroupName(group.Name);
+                        this.groupName.setText(group.Name);
                         if (group.IsAnonymousAllowed) {
                             this.view.showAnonMessage();
                         }

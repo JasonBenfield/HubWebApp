@@ -40,12 +40,12 @@ public sealed class AppUser : IAppUser
         return factory.DB.UserRoles.Create(record);
     }
 
-    public async Task RemoveRole(AppRole role)
+    public async Task RemoveRole(Modifier modifier, AppRole role)
     {
         var userRole = await factory.DB
             .UserRoles
             .Retrieve()
-            .Where(ur => ur.UserID == ID.Value && ur.RoleID == role.ID.Value)
+            .Where(ur => ur.UserID == ID.Value && ur.ModifierID == modifier.ID.Value && ur.RoleID == role.ID.Value)
             .FirstOrDefaultAsync();
         if (userRole != null)
         {
@@ -64,7 +64,12 @@ public sealed class AppUser : IAppUser
         var roles = await ExplicitlyAssignedRoles(modifier);
         if (!roles.Any() && !modifier.ModKey().Equals(ModifierKey.Default))
         {
-            var defaultModifier = await modifier.DefaultModifier();
+            var mod = modifier as Modifier;
+            if(mod == null)
+            {
+                mod = await factory.Modifiers.Modifier(modifier.ID.Value);
+            }
+            var defaultModifier = await mod.DefaultModifier();
             roles = await ExplicitlyAssignedRoles(defaultModifier);
         }
         return roles;

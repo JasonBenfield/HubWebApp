@@ -5,7 +5,7 @@ var Block_1 = require("@jasonbenfield/sharedwebapp/Html/Block");
 var Container_1 = require("@jasonbenfield/sharedwebapp/Html/Container");
 var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
-var TextHeading1_1 = require("@jasonbenfield/sharedwebapp/Html/TextHeading1");
+var TextHeading1View_1 = require("@jasonbenfield/sharedwebapp/Html/TextHeading1View");
 var PaddingCss_1 = require("@jasonbenfield/sharedwebapp/PaddingCss");
 var LoginComponentView_1 = require("./LoginComponentView");
 var LoginPageView = /** @class */ (function () {
@@ -15,7 +15,8 @@ var LoginPageView = /** @class */ (function () {
         flexColumn
             .addContent(new Block_1.Block())
             .addContent(new Container_1.Container())
-            .addContent(new TextHeading1_1.TextHeading1('Login'));
+            .addContent(new TextHeading1View_1.TextHeading1View())
+            .configure(function (th) { return th.setText('Login'); });
         this.loginComponent = flexColumn
             .addContent(new FlexColumnFill_1.FlexColumnFill())
             .container

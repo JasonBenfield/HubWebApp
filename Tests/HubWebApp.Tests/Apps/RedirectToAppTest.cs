@@ -9,9 +9,9 @@ internal sealed class RedirectToAppTest
     public async Task ShouldAddModifierToUrl()
     {
         var tester = await setup();
-        var adminUser = await tester.AdminUser();
+        tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
-        var result = await tester.Execute(hubApp.ID.Value, adminUser);
+        var result = await tester.Execute(hubApp.ID.Value);
         var hubAppModifier = await tester.HubAppModifier();
         Assert.That
         (

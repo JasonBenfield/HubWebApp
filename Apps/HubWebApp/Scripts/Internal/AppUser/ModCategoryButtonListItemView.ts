@@ -1,13 +1,11 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
 import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
 
 export class ModCategoryButtonListItemView extends ButtonListGroupItemView {
-    private readonly categoryName: TextBlock;
+    readonly categoryName: TextBlockView;
 
     constructor() {
         super();
-        this.categoryName = this.addContent(new TextBlock);
+        this.categoryName = this.addContent(new TextBlockView);
     }
-
-    setCategoryName(name: string) { this.categoryName.setText(name); }
 }

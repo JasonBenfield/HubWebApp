@@ -1,5 +1,5 @@
-﻿import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -18,7 +18,7 @@ export class ModifierCategoryListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: ModifierCategoryListCardView
     ) {
-        new CardTitleHeader('Modifier Categories', this.view.titleHeader);
+        new TextBlock('Modifier Categories', this.view.titleHeader);
         this.alert = new MessageAlert(this.view.alert);
         this.modCategories = new ListGroup(this.view.modCategories);
         this.modCategories.itemClicked.register(this.onItemSelected.bind(this));

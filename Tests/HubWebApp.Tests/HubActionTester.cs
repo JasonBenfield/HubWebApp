@@ -20,7 +20,6 @@ internal static class HubActionTester
 internal interface IHubActionTester
 {
     IServiceProvider Services { get; }
-    Task<AppUser> AdminUser();
     HubActionTester<TOtherModel, TOtherResult> Create<TOtherModel, TOtherResult>(Func<HubAppApi, AppApiAction<TOtherModel, TOtherResult>> getAction);
     Task<App> HubApp();
     Task<Modifier> HubAppModifier();
@@ -50,12 +49,35 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
 
     public IServiceProvider Services { get; }
 
-    public async Task AddRole(AppUser user, AppRoleName roleName)
+    public FakeAppUser LoginAsAdmin()
     {
-        var app = await HubApp();
-        var role = await app.Role(roleName);
-        await user.AddRole(role);
+        var userContext = Services.GetRequiredService<FakeUserContext>();
+        var user = userContext.User(new AppUserName("hubadmin"));
+        userContext.SetCurrentUser(user.UserName());
+        return user;
     }
+
+    public FakeAppUser Login(params AppRoleName[]? roleNames)
+    {
+        var appContext = Services.GetRequiredService<FakeAppContext>();
+        var defaultModifier = appContext.App().DefaultModifier();
+        return Login(defaultModifier, roleNames);
+    }
+
+    public FakeAppUser Login(FakeModifier modifier, params AppRoleName[]? roleNames)
+    {
+        var userContext = Services.GetRequiredService<FakeUserContext>();
+        var user = userContext.AddUser(new AppUserName("loggedinUser"));
+        if(roleNames != null)
+        {
+            user.AddRoles(modifier, roleNames);
+        }
+        userContext.SetCurrentUser(user.UserName());
+        return user;
+    }
+
+    public void AddRole(FakeAppUser user, AppRoleName roleName)=>
+        user.AddRole(roleName);
 
     public Task<App> HubApp()
     {
@@ -63,38 +85,46 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return factory.Apps.App(HubInfo.AppKey);
     }
 
-    public Task<AppUser> AdminUser()
+    private FakeApp FakeHubApp()
     {
-        var factory = Services.GetRequiredService<AppFactory>();
-        return factory.Users.UserByUserName(new AppUserName("hubadmin"));
+        var appContext = Services.GetRequiredService<FakeAppContext>();
+        return appContext.App();
     }
 
     public async Task<AppRole> AdminRole()
     {
         var app = await HubApp();
-        var adminRole = await app.Role(AppRoleName.Admin);
-        return adminRole;
-    }
-
-    public async Task<AppRole> DenyAccessRole()
-    {
-        var app = await HubApp();
-        var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
-        return denyAccessRole;
+        var role = await app.Role(AppRoleName.Admin);
+        return role;
     }
 
     public async Task<Modifier> HubAppModifier()
     {
         var hubApp = await HubApp();
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var hubAppModifier = await appsModCategory.ModifierByTargetID(hubApp.ID.Value);
+        var hubAppModifier = await appsModCategory.AddOrUpdateModifier
+        (
+            hubApp.ID.Value.ToString(),
+            hubApp.Key().Name.DisplayText
+        );
+        var fakeApp = FakeHubApp();
+        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Apps);
+        modCategory.AddModifier(hubAppModifier.ID, hubAppModifier.ModKey(), hubApp.ID.Value.ToString());
         return hubAppModifier;
     }
 
-    public Task<TResult> Execute(TModel model, AppUser user) =>
-        Execute(model, user, ModifierKey.Default);
+    public async Task<FakeModifier> FakeHubAppModifier()
+    {
+        var modifier = await HubAppModifier();
+        var fakeApp = FakeHubApp();
+        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Apps);
+        return modCategory.ModifierOrDefault(modifier.ModKey());
+    }
 
-    public async Task<TResult> Execute(TModel model, AppUser user, ModifierKey modKey)
+    public Task<TResult> Execute(TModel model) =>
+        Execute(model, ModifierKey.Default);
+
+    public async Task<TResult> Execute(TModel model, ModifierKey modKey)
     {
         var appContext = Services.GetRequiredService<IAppContext>();
         var httpContextAccessor = Services.GetRequiredService<IHttpContextAccessor>();
@@ -105,7 +135,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
                 RequestServices = Services
             };
         }
-        httpContextAccessor.HttpContext.User = new FakeHttpUser().Create("Session-Key", user);
+        //httpContextAccessor.HttpContext.User = new FakeHttpUser().Create("Session-Key", user);
         var appApiFactory = Services.GetRequiredService<AppApiFactory>();
         var hubApiForSuperUser = (HubAppApi)appApiFactory.CreateForSuperUser();
         var actionForSuperUser = getAction(hubApiForSuperUser);
@@ -126,7 +156,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var apiUser = new AppApiUser(appContext, userContext, pathAccessor);
         var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
         var action = getAction(hubApi);
-        var result = await action.Execute(model);
-        return result.Data;
+        var result = await action.Invoke(model);
+        return result;
     }
 }

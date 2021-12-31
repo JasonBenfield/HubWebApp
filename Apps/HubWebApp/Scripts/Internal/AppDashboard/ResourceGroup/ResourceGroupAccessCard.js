@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupAccessCard = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceGroupAccessCard = /** @class */ (function () {
     function ResourceGroupAccessCard(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Permissions', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Permissions', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
     }
     ResourceGroupAccessCard.prototype.setGroupID = function (groupID) {

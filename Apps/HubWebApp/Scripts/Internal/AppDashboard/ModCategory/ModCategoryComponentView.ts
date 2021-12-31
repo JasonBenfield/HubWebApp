@@ -1,14 +1,14 @@
 ﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { ListItem } from "@jasonbenfield/sharedwebapp/Html/ListItem";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
 import { UnorderedList } from "@jasonbenfield/sharedwebapp/Html/UnorderedList";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 
 export class ModCategoryComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: MessageAlertView;
-    private readonly modCategoryName: TextBlock;
+    readonly modCategoryName: TextBlockView;
 
     constructor() {
         super();
@@ -18,8 +18,6 @@ export class ModCategoryComponentView extends CardView {
         this.addCardBody()
             .addContent(new UnorderedList())
             .addItem(listItem);
-        this.modCategoryName = listItem.addContent(new TextBlock());
+        this.modCategoryName = listItem.addContent(new TextBlockView());
     }
-
-    setModCategoryName(categoryName: string) { this.modCategoryName.setText(categoryName); }
 }

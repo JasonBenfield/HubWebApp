@@ -72,8 +72,12 @@ interface IAppModel {
 	Title: string;
 }
 interface IAppKey {
-	Name: string;
+	Name: IAppName;
 	Type: IAppType;
+}
+interface IAppName {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -148,7 +152,11 @@ interface IAppApiActionTemplateModel {
 }
 interface IGetVersionRequest {
 	AppKey: IAppKey;
-	VersionKey: string;
+	VersionKey: IAppVersionKey;
+}
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
 }
 interface IAddSystemUserRequest {
 	AppKey: IAppKey;
@@ -183,7 +191,7 @@ interface INewVersionRequest {
 }
 interface IPublishVersionRequest {
 	AppKey: IAppKey;
-	VersionKey: string;
+	VersionKey: IAppVersionKey;
 }
 interface IGetVersionResourceGroupRequest {
 	VersionKey: string;
@@ -250,13 +258,9 @@ interface IGetUserRolesRequest {
 	UserID: number;
 	ModifierID: number;
 }
-interface IGetUserRoleAccessRequest {
+interface IGetUnassignedRolesRequest {
 	UserID: number;
 	ModifierID: number;
-}
-interface IUserRoleAccessModel {
-	UnassignedRoles: IAppRoleModel[];
-	AssignedRoles: IAppRoleModel[];
 }
 interface IUserModifierCategoryModel {
 	ModCategory: IModifierCategoryModel;
@@ -264,6 +268,7 @@ interface IUserModifierCategoryModel {
 }
 interface IUserRoleRequest {
 	UserID: number;
+	ModifierID: number;
 	RoleID: number;
 }
 interface IAppType {

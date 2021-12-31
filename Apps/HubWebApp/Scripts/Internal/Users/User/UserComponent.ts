@@ -1,5 +1,7 @@
 ﻿import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Html/TextValueFormGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { UserComponentView } from "./UserComponentView";
@@ -10,12 +12,24 @@ export class UserComponent {
     readonly editRequested = this._editRequested.handler();
     private readonly editCommand = new Command(this.requestEdit.bind(this));
     private readonly alert: MessageAlert;
+    private readonly userName: TextValueFormGroup;
+    private readonly fullName: TextValueFormGroup;
+    private readonly email: TextValueFormGroup;
 
     constructor(
         private readonly hubApi: HubAppApi,
         private readonly view: UserComponentView
     ) {
         this.alert = new MessageAlert(this.view.alert);
+        this.userName = new TextValueFormGroup(view.userName);
+        this.userName.setCaption('User Name');
+        this.userName.syncValueTitleWithText();
+        this.fullName = new TextValueFormGroup(view.fullName);
+        this.fullName.setCaption('Name');
+        this.fullName.syncValueTitleWithText();
+        this.email = new TextValueFormGroup(view.email);
+        this.email.setCaption('Email');
+        this.email.syncValueTitleWithText();
         this.editCommand.add(this.view.editButton);
     }
 
@@ -29,9 +43,9 @@ export class UserComponent {
 
     async refresh() {
         let user = await this.getUser(this.userID);
-        this.view.setUserName(user.UserName);
-        this.view.setFullName(user.Name);
-        this.view.setEmail(user.Email);
+        this.userName.setValue(user.UserName);
+        this.fullName.setValue(user.Name);
+        this.email.setValue(user.Email);
     }
 
     private async getUser(userID: number) {

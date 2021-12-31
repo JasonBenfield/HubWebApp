@@ -6,7 +6,7 @@ var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
-var TextSpan_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpan");
+var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ResourceComponentView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(ResourceComponentView, _super);
     function ResourceComponentView() {
@@ -19,19 +19,18 @@ var ResourceComponentView = /** @class */ (function (_super) {
         var row = listItem.addContent(new Row_1.Row());
         _this.resourceName = row.addColumn()
             .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         _this.resultType = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+            .addContent(new TextSpanView_1.TextSpanView());
         _this.anonListItem = new ListItem_1.ListItem();
         listGroup.addItem(_this.anonListItem);
         _this.anonListItem.addContent(new Row_1.Row())
             .addColumn()
-            .addContent(new TextSpan_1.TextSpan('Anonymous is Allowed'));
+            .addContent(new TextSpanView_1.TextSpanView())
+            .configure(function (ts) { return ts.setText('Anonymous is Allowed'); });
         _this.anonListItem.hide();
         return _this;
     }
-    ResourceComponentView.prototype.setResourceName = function (resourceName) { this.resourceName.setText(resourceName); };
-    ResourceComponentView.prototype.setResultType = function (resultType) { this.resultType.setText(resultType); };
     ResourceComponentView.prototype.showAnon = function () {
         this.anonListItem.show();
     };

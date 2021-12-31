@@ -18,8 +18,6 @@ public sealed class AppRole : IAppRole
     public EntityID ID { get; }
     public AppRoleName Name() => new AppRoleName(record.Name);
 
-    public bool Exists() => ID.IsValid();
-
     public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
 
     internal Task Deactivate(DateTimeOffset timeDeactivated)

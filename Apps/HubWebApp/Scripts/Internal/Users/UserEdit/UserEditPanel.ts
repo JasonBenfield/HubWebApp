@@ -1,8 +1,8 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { CardTitleHeader } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeader";
 import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
 import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { EditUserForm } from '../../../Hub/Api/EditUserForm';
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -41,7 +41,7 @@ export class UserEditPanel implements IPanel {
         this.alert = new MessageAlert(this.view.alert);
         this.cancelCommand.add(this.view.cancelButton);
         this.saveCommand.add(this.view.saveButton);
-        new CardTitleHeader('Edit User', this.view.titleHeader);
+        new TextBlock('Edit User', this.view.titleHeader);
         this.editUserForm = new EditUserForm(this.view.editUserForm);
     }
 

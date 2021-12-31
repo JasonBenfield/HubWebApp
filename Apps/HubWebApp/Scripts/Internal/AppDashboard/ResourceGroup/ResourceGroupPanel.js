@@ -101,11 +101,6 @@ var ResourceGroupPanel = /** @class */ (function () {
     };
     ResourceGroupPanel.prototype.activate = function () { this.view.show(); };
     ResourceGroupPanel.prototype.deactivate = function () { this.view.hide(); };
-    ResourceGroupPanel.ResultKeys = {
-        backRequested: 'back-requested',
-        resourceSelected: 'resource-selected',
-        modCategorySelected: 'mod-category-selected'
-    };
     return ResourceGroupPanel;
 }());
 exports.ResourceGroupPanel = ResourceGroupPanel;

@@ -33,6 +33,7 @@ public sealed class AppRoleRepository
     {
         return factory.DB.Roles.Retrieve()
             .Where(r => r.AppID == app.ID.Value)
+            .OrderBy(r => r.Name)
             .Select(r => factory.Role(r))
             .ToArrayAsync();
     }
@@ -44,7 +45,7 @@ public sealed class AppRoleRepository
             .FirstOrDefaultAsync();
         return factory.Role
         (
-            record 
+            record
             ?? throw new Exception($"Role {roleID} not found for app '{app.Key().Name.DisplayText} {app.Key().Type.DisplayText}'")
         );
     }
@@ -85,6 +86,7 @@ public sealed class AppRoleRepository
             .Roles
             .Retrieve()
             .Where(r => roleIDs.Any(id => id == r.ID))
+            .OrderBy(r => r.Name)
             .Select(r => factory.Role(r))
             .ToArrayAsync();
     }
@@ -97,6 +99,7 @@ public sealed class AppRoleRepository
             .Roles
             .Retrieve()
             .Where(r => appID.Any(id => id == r.AppID) && !roleIDs.Any(id => id == r.ID))
+            .OrderBy(r => r.Name)
             .Select(r => factory.Role(r))
             .ToArrayAsync();
     }
@@ -109,6 +112,7 @@ public sealed class AppRoleRepository
             .Roles
             .Retrieve()
             .Where(r => appID.Any(id => id == r.AppID) && roleIDs.Any(id => id == r.ID))
+            .OrderBy(r => r.Name)
             .Select(r => factory.Role(r))
             .ToArrayAsync();
     }
@@ -154,6 +158,7 @@ public sealed class AppRoleRepository
             .Roles
             .Retrieve()
             .Where(r => roleIDs.Any(id => id == r.ID))
+            .OrderBy(r => r.Name)
             .Select(r => factory.Role(r))
             .ToArrayAsync();
     }

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModifierListCard = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModifierListItem_1 = require("./ModifierListItem");
@@ -10,7 +10,7 @@ var ModifierListCard = /** @class */ (function () {
     function ModifierListCard(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Modifiers', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Modifiers', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
         this.modifiers = new ListGroup_1.ListGroup(this.view.modifiers);
     }

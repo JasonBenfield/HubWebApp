@@ -1,36 +1,26 @@
 ﻿import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpan } from "@jasonbenfield/sharedwebapp/Html/TextSpan";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 
 export class EventListItemView extends ListGroupItemView {
-    private readonly timeOccurred: TextSpan;
-    private readonly severity: TextSpan;
-    private readonly caption: TextSpan;
-    private readonly message: TextSpan;
+    readonly timeOccurred: TextSpanView;
+    readonly severity: TextSpanView;
+    readonly caption: TextSpanView;
+    readonly message: TextSpanView;
 
     constructor() {
         super();
         let row = this.addContent(new Row());
         this.timeOccurred = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.severity = row.addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
         this.caption = row.addColumn()
             .configure(c => c.addCssFrom(new TextCss().truncate().cssClass()))
-            .addContent(new TextSpan());
-            this.caption.syncTitleWithText();
+            .addContent(new TextSpanView());
         this.message = row.addColumn()
             .configure(c => c.addCssFrom(new TextCss().truncate().cssClass()))
-            .addContent(new TextSpan());
-        this.message.syncTitleWithText();
+            .addContent(new TextSpanView());
     }
-
-    setTimeOccurred(timeOccurred: string) { this.timeOccurred.setText(timeOccurred); }
-
-    setSeverity(severity: string) { this.severity.setText(severity); }
-
-    setCaption(caption: string) { this.caption.setText(caption); }
-
-    setMessage(message: string) { this.message.setText(message); }
 }

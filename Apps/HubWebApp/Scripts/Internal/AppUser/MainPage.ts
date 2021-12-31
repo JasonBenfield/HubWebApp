@@ -6,55 +6,114 @@ import { WebPage } from '@jasonbenfield/sharedwebapp/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { Apis } from '../../Hub/Apis';
-import { AppUserPanel } from './AppUser/AppUserPanel';
+import { AddRolePanel } from './AddRolePanel';
+import { AppUserDataPanel } from './AppUserDataPanel';
 import { MainPageView } from './MainPageView';
-import { UserRolePanel } from './UserRoles/UserRolePanel';
+import { SelectModCategoryPanel } from './SelectModCategoryPanel';
+import { SelectModifierPanel } from './SelectModifierPanel';
+import { UserRolesPanel } from './UserRolesPanel';
 
 class MainPage {
     private readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
 
-    private readonly panels = new SingleActivePanel();
-    private readonly appUserPanel: AppUserPanel;
-    private readonly userRolePanel: UserRolePanel;
-
+    private readonly panels: SingleActivePanel;
+    private readonly appUserDataPanel: AppUserDataPanel;
+    private readonly selectModCategoryPanel: SelectModCategoryPanel;
+    private readonly selectModifierPanel: SelectModifierPanel;
+    private readonly userRolesPanel: UserRolesPanel;
+    private readonly addRolePanel: AddRolePanel;
 
     constructor(page: PageFrameView) {
         this.view = new MainPageView(page);
         this.hubApi = new Apis(page.modalError).hub();
-        this.appUserPanel = this.panels.add(new AppUserPanel(this.hubApi, this.view.appUserPanel));
-        this.userRolePanel = this.panels.add(new UserRolePanel(this.hubApi, this.view.userRolePanel));
-        let userID = Url.current().getQueryValue('userID');
-        if (XtiUrl.current.path.modifier && userID) {
-            this.activateAppUserPanel(Number(userID));
+        this.panels = new SingleActivePanel();
+        this.appUserDataPanel = this.panels.add(
+            new AppUserDataPanel(this.hubApi, this.view.appUserDataPanel)
+        );
+        this.selectModCategoryPanel = this.panels.add(
+            new SelectModCategoryPanel(this.hubApi, this.view.selectModCategoryPanel)
+        );
+        this.selectModifierPanel = this.panels.add(
+            new SelectModifierPanel(this.hubApi, this.view.selectModifierPanel)
+        );
+        this.userRolesPanel = this.panels.add(
+            new UserRolesPanel(this.hubApi, this.view.userRolesPanel)
+        );
+        this.addRolePanel = this.panels.add(
+            new AddRolePanel(this.hubApi, this.view.addRolePanel)
+        );
+        let userIDValue = Url.current().getQueryValue('userID');
+        if (XtiUrl.current.path.modifier && userIDValue) {
+            let userID = Number(userIDValue);
+            this.activateStartPanel(userID);
         }
         else {
             new WebPage(this.hubApi.Users.Index.getUrl({})).open();
         }
     }
 
-    private async activateAppUserPanel(userID: number) {
-        this.panels.activate(this.appUserPanel);
-        this.appUserPanel.setUserID(userID);
-        this.appUserPanel.refresh();
-        let result = await this.appUserPanel.start();
-        if (result.backRequested) {
-            this.hubApi.Users.Index.open({});
-        }
-        else if (result.editUserRolesRequested) {
-            this.activateUserRolePanel(userID);
-        }
-        else if (result.editUserModCategoryRequested) {
+    private async activateStartPanel(userID: number) {
+        this.panels.activate(this.appUserDataPanel);
+        let result = await this.appUserDataPanel.start(userID);
+        if (result.done) {
+            this.userRolesPanel.setAppUserOptions(result.done.appUserOptions);
+            this.userRolesPanel.setDefaultModifier();
+            this.addRolePanel.setAppUserOptions(result.done.appUserOptions);
+            this.addRolePanel.setDefaultModifier();
+            this.activateUserRolesPanel();
         }
     }
 
-    private async activateUserRolePanel(userID: number) {
-        this.panels.activate(this.userRolePanel);
-        this.userRolePanel.setUserID(userID);
-        this.userRolePanel.refresh();
-        let result = await this.userRolePanel.start();
-        if (result.backRequested) {
-            this.activateAppUserPanel(userID);
+    private async activateSelectModCategoryPanel() {
+        this.panels.activate(this.selectModCategoryPanel);
+        let result = await this.selectModCategoryPanel.start();
+        if (result.defaultModSelected) {
+            this.userRolesPanel.setDefaultModifier();
+            this.addRolePanel.setDefaultModifier();
+        }
+        else if (result.modCategorySelected) {
+            this.selectModifierPanel.setModCategory(result.modCategorySelected.modCategory);
+            this.userRolesPanel.setModCategory(result.modCategorySelected.modCategory);
+            this.activateSelectModifierPanel();
+        }
+        else if (result.back) {
+            this.activateUserRolesPanel();
+        }
+    }
+
+    private async activateSelectModifierPanel() {
+        this.panels.activate(this.selectModifierPanel);
+        let result = await this.selectModifierPanel.start();
+        if (result.modifierSelected) {
+            this.userRolesPanel.setModifier(result.modifierSelected.modifier);
+            this.addRolePanel.setModifier(result.modifierSelected.modifier);
+            this.activateUserRolesPanel();
+        }
+        else if (result.back) {
+
+        }
+    }
+
+    private async activateUserRolesPanel() {
+        this.panels.activate(this.userRolesPanel);
+        let result = await this.userRolesPanel.start();
+        if (result.addRequested) {
+            this.activateAddRolePanel();
+        }
+        else if (result.modifierRequested) {
+            this.activateSelectModCategoryPanel();
+        }
+    }
+
+    private async activateAddRolePanel() {
+        this.panels.activate(this.addRolePanel);
+        let result = await this.addRolePanel.start();
+        if (result.back) {
+            this.activateUserRolesPanel();
+        }
+        else if (result.roleSelected) {
+            this.activateUserRolesPanel();
         }
     }
 }

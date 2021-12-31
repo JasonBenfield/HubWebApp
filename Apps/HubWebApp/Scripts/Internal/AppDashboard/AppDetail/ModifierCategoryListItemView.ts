@@ -1,16 +1,14 @@
 ﻿import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpan } from "@jasonbenfield/sharedwebapp/Html/TextSpan";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
 
 export class ModifierCategoryListItemView extends ButtonListGroupItemView {
-    private readonly categoryName: TextSpan;
+    readonly categoryName: TextSpanView;
 
     constructor() {
         super();
         this.categoryName = this.addContent(new Row())
             .addColumn()
-            .addContent(new TextSpan());
+            .addContent(new TextSpanView());
     }
-
-    setCategoryName(name: string) { this.categoryName.setText(name); }
 }

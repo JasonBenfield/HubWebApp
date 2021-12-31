@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Fakes;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
@@ -30,8 +31,16 @@ public static class FakeExtensions
         services.AddScoped(_ => HubInfo.AppKey);
         services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
         services.AddScoped<AccessForLogin, FakeAccessForLogin>();
-        services.AddScoped<ISourceAppContext, DefaultAppContext>();
-        services.AddScoped<ISourceUserContext, WebUserContext>();
-        services.AddScoped<ISourceUserContext, WebUserContext>();
+        services.AddScoped
+        (
+            sp => new DefaultFakeSetup
+            (
+                sp.GetRequiredService<AppApiFactory>(),
+                sp.GetRequiredService<FakeAppContext>(),
+                "Hub"
+            )
+        );
+        //services.AddScoped<ISourceAppContext, DefaultAppContext>();
+        //services.AddScoped<ISourceUserContext, WebUserContext>();
     }
 }

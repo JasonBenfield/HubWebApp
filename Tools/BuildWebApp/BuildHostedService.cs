@@ -44,11 +44,10 @@ internal sealed class BuildHostedService : IHostedService
             var builder = new BuildWebProcess
             (
                 appKey, 
-                AppVersionKey.Parse(versionKey), 
-                hostEnv, 
-                options.AppsToImport
+                AppVersionKey.Parse(versionKey)
             );
             await builder.Build();
+            await runDotnetBuild();
         }
         catch (Exception ex)
         {
@@ -107,6 +106,16 @@ internal sealed class BuildHostedService : IHostedService
         var result = await versionToolProcess.Run();
         result.EnsureExitCodeIsZero();
         return result;
+    }
+
+    private static async Task runDotnetBuild()
+    {
+        var result = await new WinProcess("dotnet")
+              .WriteOutputToConsole()
+              .UseArgumentNameDelimiter("")
+              .AddArgument("build")
+              .Run();
+        result.EnsureExitCodeIsZero();
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

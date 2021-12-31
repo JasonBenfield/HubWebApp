@@ -2,16 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectModCategoryPanelView = void 0;
 var tslib_1 = require("tslib");
+var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var Block_1 = require("@jasonbenfield/sharedwebapp/Html/Block");
 var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
-var ListBlockViewModel_1 = require("@jasonbenfield/sharedwebapp/Html/ListBlockViewModel");
-var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
-var UnorderedList_1 = require("@jasonbenfield/sharedwebapp/Html/UnorderedList");
+var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
+var TextBlockView_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlockView");
 var ButtonListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView");
 var ListGroupView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupView");
 var MarginCss_1 = require("@jasonbenfield/sharedwebapp/MarginCss");
-var PaddingCss_1 = require("@jasonbenfield/sharedwebapp/PaddingCss");
 var HubTheme_1 = require("../HubTheme");
 var ModCategoryButtonListItemView_1 = require("./ModCategoryButtonListItemView");
 var SelectModCategoryPanelView = /** @class */ (function (_super) {
@@ -19,17 +18,22 @@ var SelectModCategoryPanelView = /** @class */ (function (_super) {
     function SelectModCategoryPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();
+        _this.setName(SelectModCategoryPanelView.name);
         var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
         var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        flexFill.setPadding(PaddingCss_1.PaddingCss.top(3));
         _this.defaultModListItem = new ButtonListGroupItemView_1.ButtonListGroupItemView();
         _this.defaultModClicked = _this.defaultModListItem.clicked;
-        _this.defaultModListItem.addContent(new TextBlock_1.TextBlock('Default Modifier'));
-        var defaultModList = flexFill.addContent(new UnorderedList_1.UnorderedList());
+        _this.defaultModListItem
+            .addContent(new TextBlockView_1.TextBlockView())
+            .configure(function (tb) { return tb.setText('Default Modifier'); });
+        var defaultModList = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ListItem_1.ListItem(); }));
         defaultModList.addItem(_this.defaultModListItem);
         defaultModList.setMargin(MarginCss_1.MarginCss.bottom(3));
-        _this.modCategories = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModCategoryButtonListItemView_1.ModCategoryButtonListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
-        _this.modCategories.setMargin(MarginCss_1.MarginCss.bottom(3));
+        var card = flexFill.addContent(new CardView_1.CardView());
+        _this.titleHeader = card.addCardTitleHeader();
+        _this.alert = card.addCardAlert().alert;
+        _this.modCategories = card.addBlockListGroup(function () { return new ModCategoryButtonListItemView_1.ModCategoryButtonListItemView(); });
+        card.setMargin(MarginCss_1.MarginCss.bottom(3));
         var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
         _this.backButton = toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton());
         return _this;

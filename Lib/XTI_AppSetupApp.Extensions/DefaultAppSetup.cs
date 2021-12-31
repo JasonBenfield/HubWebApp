@@ -17,7 +17,7 @@ public sealed class DefaultAppSetup : IAppSetup
         this.versionReader = versionReader;
     }
 
-    public async Task Run(AppVersionKey versionKey)
+    public async Task Run(XTI_App.Abstractions.AppVersionKey versionKey)
     {
         var versions = await versionReader.Versions();
         var template = apiFactory.CreateTemplate();
@@ -36,7 +36,11 @@ public sealed class DefaultAppSetup : IAppSetup
         {
             AppKey = new XTI_HubAppClient.AppKey
             {
-                Name = model.AppKey.Name.Value,
+                Name = new XTI_HubAppClient.AppName 
+                { 
+                    Value = model.AppKey.Name.Value,
+                    DisplayText = model.AppKey.Name.DisplayText
+                },
                 Type = XTI_HubAppClient.AppType.Values.Value(model.AppKey.Type.Value)
             },
             GroupTemplates = model.GroupTemplates

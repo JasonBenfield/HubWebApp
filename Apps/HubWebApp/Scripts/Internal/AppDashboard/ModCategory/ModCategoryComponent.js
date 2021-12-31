@@ -2,14 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModCategoryComponent = void 0;
 var tslib_1 = require("tslib");
-var CardTitleHeader_1 = require("@jasonbenfield/sharedwebapp/Card/CardTitleHeader");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModCategoryComponent = /** @class */ (function () {
     function ModCategoryComponent(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new CardTitleHeader_1.CardTitleHeader('Modifier Category', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Modifier Category', this.view.titleHeader);
         this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.modCategoryName = new TextBlock_1.TextBlock('', this.view.modCategoryName);
     }
     ModCategoryComponent.prototype.setModCategoryID = function (modCategoryID) {
         this.modCategoryID = modCategoryID;
@@ -22,7 +23,7 @@ var ModCategoryComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getModCategory(this.modCategoryID)];
                     case 1:
                         modCategory = _a.sent();
-                        this.view.setModCategoryName(modCategory.Name);
+                        this.modCategoryName.setText(modCategory.Name);
                         return [2 /*return*/];
                 }
             });

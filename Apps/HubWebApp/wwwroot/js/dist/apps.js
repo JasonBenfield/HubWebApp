@@ -1,1126 +1,20 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./Scripts/Hub/Api/AppGroup.js":
-/*!*************************************!*\
-  !*** ./Scripts/Hub/Api/AppGroup.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AppGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppGroup, _super);
-    function AppGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'App') || this;
-        _this.Index = _this.createView('Index');
-        _this.GetAppAction = _this.createAction('GetApp', 'Get App');
-        _this.GetRolesAction = _this.createAction('GetRoles', 'Get Roles');
-        _this.GetRoleAction = _this.createAction('GetRole', 'Get Role');
-        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
-        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
-        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
-        _this.GetModifierCategoriesAction = _this.createAction('GetModifierCategories', 'Get Modifier Categories');
-        _this.GetModifierCategoryAction = _this.createAction('GetModifierCategory', 'Get Modifier Category');
-        _this.GetDefaultModiiferAction = _this.createAction('GetDefaultModiifer', 'Get Default Modiifer');
-        return _this;
-    }
-    AppGroup.prototype.GetApp = function (errorOptions) {
-        return this.GetAppAction.execute({}, errorOptions || {});
-    };
-    AppGroup.prototype.GetRoles = function (errorOptions) {
-        return this.GetRolesAction.execute({}, errorOptions || {});
-    };
-    AppGroup.prototype.GetRole = function (model, errorOptions) {
-        return this.GetRoleAction.execute(model, errorOptions || {});
-    };
-    AppGroup.prototype.GetResourceGroups = function (errorOptions) {
-        return this.GetResourceGroupsAction.execute({}, errorOptions || {});
-    };
-    AppGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
-        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
-    };
-    AppGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
-        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
-    };
-    AppGroup.prototype.GetModifierCategories = function (errorOptions) {
-        return this.GetModifierCategoriesAction.execute({}, errorOptions || {});
-    };
-    AppGroup.prototype.GetModifierCategory = function (model, errorOptions) {
-        return this.GetModifierCategoryAction.execute(model, errorOptions || {});
-    };
-    AppGroup.prototype.GetDefaultModiifer = function (errorOptions) {
-        return this.GetDefaultModiiferAction.execute({}, errorOptions || {});
-    };
-    return AppGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AppGroup = AppGroup;
-//# sourceMappingURL=AppGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/AppUserGroup.js":
-/*!*****************************************!*\
-  !*** ./Scripts/Hub/Api/AppUserGroup.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppUserGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AppUserGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppUserGroup, _super);
-    function AppUserGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'AppUser') || this;
-        _this.Index = _this.createView('Index');
-        _this.GetUserRolesAction = _this.createAction('GetUserRoles', 'Get User Roles');
-        _this.GetUserRoleAccessAction = _this.createAction('GetUserRoleAccess', 'Get User Role Access');
-        _this.GetUserModCategoriesAction = _this.createAction('GetUserModCategories', 'Get User Mod Categories');
-        return _this;
-    }
-    AppUserGroup.prototype.GetUserRoles = function (model, errorOptions) {
-        return this.GetUserRolesAction.execute(model, errorOptions || {});
-    };
-    AppUserGroup.prototype.GetUserRoleAccess = function (model, errorOptions) {
-        return this.GetUserRoleAccessAction.execute(model, errorOptions || {});
-    };
-    AppUserGroup.prototype.GetUserModCategories = function (model, errorOptions) {
-        return this.GetUserModCategoriesAction.execute(model, errorOptions || {});
-    };
-    return AppUserGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AppUserGroup = AppUserGroup;
-//# sourceMappingURL=AppUserGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js":
-/*!****************************************************!*\
-  !*** ./Scripts/Hub/Api/AppUserMaintenanceGroup.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppUserMaintenanceGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AppUserMaintenanceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppUserMaintenanceGroup, _super);
-    function AppUserMaintenanceGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'AppUserMaintenance') || this;
-        _this.AssignRoleAction = _this.createAction('AssignRole', 'Assign Role');
-        _this.UnassignRoleAction = _this.createAction('UnassignRole', 'Unassign Role');
-        return _this;
-    }
-    AppUserMaintenanceGroup.prototype.AssignRole = function (model, errorOptions) {
-        return this.AssignRoleAction.execute(model, errorOptions || {});
-    };
-    AppUserMaintenanceGroup.prototype.UnassignRole = function (model, errorOptions) {
-        return this.UnassignRoleAction.execute(model, errorOptions || {});
-    };
-    return AppUserMaintenanceGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AppUserMaintenanceGroup = AppUserMaintenanceGroup;
-//# sourceMappingURL=AppUserMaintenanceGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/AppsGroup.js":
-/*!**************************************!*\
-  !*** ./Scripts/Hub/Api/AppsGroup.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppsGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AppsGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppsGroup, _super);
-    function AppsGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
-        _this.Index = _this.createView('Index');
-        _this.AllAction = _this.createAction('All', 'All');
-        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
-        _this.RedirectToApp = _this.createView('RedirectToApp');
-        return _this;
-    }
-    AppsGroup.prototype.All = function (errorOptions) {
-        return this.AllAction.execute({}, errorOptions || {});
-    };
-    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
-        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
-    };
-    return AppsGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AppsGroup = AppsGroup;
-//# sourceMappingURL=AppsGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/AuthApiGroup.js":
-/*!*****************************************!*\
-  !*** ./Scripts/Hub/Api/AuthApiGroup.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AuthApiGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AuthApiGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AuthApiGroup, _super);
-    function AuthApiGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'AuthApi') || this;
-        _this.AuthenticateAction = _this.createAction('Authenticate', 'Authenticate');
-        return _this;
-    }
-    AuthApiGroup.prototype.Authenticate = function (model, errorOptions) {
-        return this.AuthenticateAction.execute(model, errorOptions || {});
-    };
-    return AuthApiGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AuthApiGroup = AuthApiGroup;
-//# sourceMappingURL=AuthApiGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/AuthGroup.js":
-/*!**************************************!*\
-  !*** ./Scripts/Hub/Api/AuthGroup.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AuthGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var AuthGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AuthGroup, _super);
-    function AuthGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Auth') || this;
-        _this.Index = _this.createView('Index');
-        _this.VerifyLoginAction = _this.createAction('VerifyLogin', 'Verify Login');
-        _this.VerifyLoginForm = _this.createView('VerifyLoginForm');
-        _this.Login = _this.createView('Login');
-        _this.Logout = _this.createView('Logout');
-        return _this;
-    }
-    AuthGroup.prototype.VerifyLogin = function (model, errorOptions) {
-        return this.VerifyLoginAction.execute(model, errorOptions || {});
-    };
-    return AuthGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.AuthGroup = AuthGroup;
-//# sourceMappingURL=AuthGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/HubAppApi.js":
-/*!**************************************!*\
-  !*** ./Scripts/Hub/Api/HubAppApi.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.HubAppApi = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApi_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApi */ "./node_modules/@jasonbenfield/sharedwebapp/AppApi.js");
-var UserGroup_1 = __webpack_require__(/*! ./UserGroup */ "./Scripts/Hub/Api/UserGroup.js");
-var UserCacheGroup_1 = __webpack_require__(/*! ./UserCacheGroup */ "./Scripts/Hub/Api/UserCacheGroup.js");
-var AuthGroup_1 = __webpack_require__(/*! ./AuthGroup */ "./Scripts/Hub/Api/AuthGroup.js");
-var AuthApiGroup_1 = __webpack_require__(/*! ./AuthApiGroup */ "./Scripts/Hub/Api/AuthApiGroup.js");
-var PermanentLogGroup_1 = __webpack_require__(/*! ./PermanentLogGroup */ "./Scripts/Hub/Api/PermanentLogGroup.js");
-var AppsGroup_1 = __webpack_require__(/*! ./AppsGroup */ "./Scripts/Hub/Api/AppsGroup.js");
-var AppGroup_1 = __webpack_require__(/*! ./AppGroup */ "./Scripts/Hub/Api/AppGroup.js");
-var InstallGroup_1 = __webpack_require__(/*! ./InstallGroup */ "./Scripts/Hub/Api/InstallGroup.js");
-var PublishGroup_1 = __webpack_require__(/*! ./PublishGroup */ "./Scripts/Hub/Api/PublishGroup.js");
-var VersionGroup_1 = __webpack_require__(/*! ./VersionGroup */ "./Scripts/Hub/Api/VersionGroup.js");
-var ResourceGroupGroup_1 = __webpack_require__(/*! ./ResourceGroupGroup */ "./Scripts/Hub/Api/ResourceGroupGroup.js");
-var ResourceGroup_1 = __webpack_require__(/*! ./ResourceGroup */ "./Scripts/Hub/Api/ResourceGroup.js");
-var ModCategoryGroup_1 = __webpack_require__(/*! ./ModCategoryGroup */ "./Scripts/Hub/Api/ModCategoryGroup.js");
-var UsersGroup_1 = __webpack_require__(/*! ./UsersGroup */ "./Scripts/Hub/Api/UsersGroup.js");
-var UserInquiryGroup_1 = __webpack_require__(/*! ./UserInquiryGroup */ "./Scripts/Hub/Api/UserInquiryGroup.js");
-var AppUserGroup_1 = __webpack_require__(/*! ./AppUserGroup */ "./Scripts/Hub/Api/AppUserGroup.js");
-var AppUserMaintenanceGroup_1 = __webpack_require__(/*! ./AppUserMaintenanceGroup */ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js");
-var UserMaintenanceGroup_1 = __webpack_require__(/*! ./UserMaintenanceGroup */ "./Scripts/Hub/Api/UserMaintenanceGroup.js");
-var HubAppApi = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(HubAppApi, _super);
-    function HubAppApi(events, baseUrl, version) {
-        if (version === void 0) { version = ''; }
-        var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
-        _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
-        _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
-        _this.Auth = _this.addGroup(function (evts, resourceUrl) { return new AuthGroup_1.AuthGroup(evts, resourceUrl); });
-        _this.AuthApi = _this.addGroup(function (evts, resourceUrl) { return new AuthApiGroup_1.AuthApiGroup(evts, resourceUrl); });
-        _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
-        _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
-        _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
-        _this.Install = _this.addGroup(function (evts, resourceUrl) { return new InstallGroup_1.InstallGroup(evts, resourceUrl); });
-        _this.Publish = _this.addGroup(function (evts, resourceUrl) { return new PublishGroup_1.PublishGroup(evts, resourceUrl); });
-        _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
-        _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
-        _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
-        _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
-        _this.Users = _this.addGroup(function (evts, resourceUrl) { return new UsersGroup_1.UsersGroup(evts, resourceUrl); });
-        _this.UserInquiry = _this.addGroup(function (evts, resourceUrl) { return new UserInquiryGroup_1.UserInquiryGroup(evts, resourceUrl); });
-        _this.AppUser = _this.addGroup(function (evts, resourceUrl) { return new AppUserGroup_1.AppUserGroup(evts, resourceUrl); });
-        _this.AppUserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new AppUserMaintenanceGroup_1.AppUserMaintenanceGroup(evts, resourceUrl); });
-        _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
-        return _this;
-    }
-    HubAppApi.DefaultVersion = 'V63';
-    return HubAppApi;
-}(AppApi_1.AppApi));
-exports.HubAppApi = HubAppApi;
-//# sourceMappingURL=HubAppApi.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/InstallGroup.js":
-/*!*****************************************!*\
-  !*** ./Scripts/Hub/Api/InstallGroup.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.InstallGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var InstallGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(InstallGroup, _super);
-    function InstallGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Install') || this;
-        _this.RegisterAppAction = _this.createAction('RegisterApp', 'Register App');
-        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
-        _this.AddSystemUserAction = _this.createAction('AddSystemUser', 'Add System User');
-        _this.NewInstallationAction = _this.createAction('NewInstallation', 'New Installation');
-        _this.BeginCurrentInstallationAction = _this.createAction('BeginCurrentInstallation', 'Begin Current Installation');
-        _this.BeginVersionInstallationAction = _this.createAction('BeginVersionInstallation', 'Begin Version Installation');
-        _this.InstalledAction = _this.createAction('Installed', 'Installed');
-        return _this;
-    }
-    InstallGroup.prototype.RegisterApp = function (model, errorOptions) {
-        return this.RegisterAppAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.GetVersion = function (model, errorOptions) {
-        return this.GetVersionAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.AddSystemUser = function (model, errorOptions) {
-        return this.AddSystemUserAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.NewInstallation = function (model, errorOptions) {
-        return this.NewInstallationAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.BeginCurrentInstallation = function (model, errorOptions) {
-        return this.BeginCurrentInstallationAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.BeginVersionInstallation = function (model, errorOptions) {
-        return this.BeginVersionInstallationAction.execute(model, errorOptions || {});
-    };
-    InstallGroup.prototype.Installed = function (model, errorOptions) {
-        return this.InstalledAction.execute(model, errorOptions || {});
-    };
-    return InstallGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.InstallGroup = InstallGroup;
-//# sourceMappingURL=InstallGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/ModCategoryGroup.js":
-/*!*********************************************!*\
-  !*** ./Scripts/Hub/Api/ModCategoryGroup.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ModCategoryGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var ModCategoryGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModCategoryGroup, _super);
-    function ModCategoryGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'ModCategory') || this;
-        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
-        _this.GetModifiersAction = _this.createAction('GetModifiers', 'Get Modifiers');
-        _this.GetModifierAction = _this.createAction('GetModifier', 'Get Modifier');
-        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
-        return _this;
-    }
-    ModCategoryGroup.prototype.GetModCategory = function (model, errorOptions) {
-        return this.GetModCategoryAction.execute(model, errorOptions || {});
-    };
-    ModCategoryGroup.prototype.GetModifiers = function (model, errorOptions) {
-        return this.GetModifiersAction.execute(model, errorOptions || {});
-    };
-    ModCategoryGroup.prototype.GetModifier = function (model, errorOptions) {
-        return this.GetModifierAction.execute(model, errorOptions || {});
-    };
-    ModCategoryGroup.prototype.GetResourceGroups = function (model, errorOptions) {
-        return this.GetResourceGroupsAction.execute(model, errorOptions || {});
-    };
-    return ModCategoryGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.ModCategoryGroup = ModCategoryGroup;
-//# sourceMappingURL=ModCategoryGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/PermanentLogGroup.js":
-/*!**********************************************!*\
-  !*** ./Scripts/Hub/Api/PermanentLogGroup.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PermanentLogGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var PermanentLogGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(PermanentLogGroup, _super);
-    function PermanentLogGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'PermanentLog') || this;
-        _this.LogBatchAction = _this.createAction('LogBatch', 'Log Batch');
-        _this.StartSessionAction = _this.createAction('StartSession', 'Start Session');
-        _this.StartRequestAction = _this.createAction('StartRequest', 'Start Request');
-        _this.EndRequestAction = _this.createAction('EndRequest', 'End Request');
-        _this.EndSessionAction = _this.createAction('EndSession', 'End Session');
-        _this.LogEventAction = _this.createAction('LogEvent', 'Log Event');
-        _this.AuthenticateSessionAction = _this.createAction('AuthenticateSession', 'Authenticate Session');
-        _this.EndExpiredSessionsAction = _this.createAction('EndExpiredSessions', 'End Expired Sessions');
-        return _this;
-    }
-    PermanentLogGroup.prototype.LogBatch = function (model, errorOptions) {
-        return this.LogBatchAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.StartSession = function (model, errorOptions) {
-        return this.StartSessionAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.StartRequest = function (model, errorOptions) {
-        return this.StartRequestAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.EndRequest = function (model, errorOptions) {
-        return this.EndRequestAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.EndSession = function (model, errorOptions) {
-        return this.EndSessionAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.LogEvent = function (model, errorOptions) {
-        return this.LogEventAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.AuthenticateSession = function (model, errorOptions) {
-        return this.AuthenticateSessionAction.execute(model, errorOptions || {});
-    };
-    PermanentLogGroup.prototype.EndExpiredSessions = function (errorOptions) {
-        return this.EndExpiredSessionsAction.execute({}, errorOptions || {});
-    };
-    return PermanentLogGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.PermanentLogGroup = PermanentLogGroup;
-//# sourceMappingURL=PermanentLogGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/PublishGroup.js":
-/*!*****************************************!*\
-  !*** ./Scripts/Hub/Api/PublishGroup.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PublishGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var PublishGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(PublishGroup, _super);
-    function PublishGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Publish') || this;
-        _this.NewVersionAction = _this.createAction('NewVersion', 'New Version');
-        _this.BeginPublishAction = _this.createAction('BeginPublish', 'Begin Publish');
-        _this.EndPublishAction = _this.createAction('EndPublish', 'End Publish');
-        _this.GetVersionsAction = _this.createAction('GetVersions', 'Get Versions');
-        return _this;
-    }
-    PublishGroup.prototype.NewVersion = function (model, errorOptions) {
-        return this.NewVersionAction.execute(model, errorOptions || {});
-    };
-    PublishGroup.prototype.BeginPublish = function (model, errorOptions) {
-        return this.BeginPublishAction.execute(model, errorOptions || {});
-    };
-    PublishGroup.prototype.EndPublish = function (model, errorOptions) {
-        return this.EndPublishAction.execute(model, errorOptions || {});
-    };
-    PublishGroup.prototype.GetVersions = function (model, errorOptions) {
-        return this.GetVersionsAction.execute(model, errorOptions || {});
-    };
-    return PublishGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.PublishGroup = PublishGroup;
-//# sourceMappingURL=PublishGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/ResourceGroup.js":
-/*!******************************************!*\
-  !*** ./Scripts/Hub/Api/ResourceGroup.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ResourceGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var ResourceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroup, _super);
-    function ResourceGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Resource') || this;
-        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
-        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
-        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
-        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
-        return _this;
-    }
-    ResourceGroup.prototype.GetResource = function (model, errorOptions) {
-        return this.GetResourceAction.execute(model, errorOptions || {});
-    };
-    ResourceGroup.prototype.GetRoleAccess = function (model, errorOptions) {
-        return this.GetRoleAccessAction.execute(model, errorOptions || {});
-    };
-    ResourceGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
-        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
-    };
-    ResourceGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
-        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
-    };
-    return ResourceGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.ResourceGroup = ResourceGroup;
-//# sourceMappingURL=ResourceGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/ResourceGroupGroup.js":
-/*!***********************************************!*\
-  !*** ./Scripts/Hub/Api/ResourceGroupGroup.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ResourceGroupGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var ResourceGroupGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroupGroup, _super);
-    function ResourceGroupGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'ResourceGroup') || this;
-        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
-        _this.GetResourcesAction = _this.createAction('GetResources', 'Get Resources');
-        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
-        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
-        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
-        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
-        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
-        return _this;
-    }
-    ResourceGroupGroup.prototype.GetResourceGroup = function (model, errorOptions) {
-        return this.GetResourceGroupAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetResources = function (model, errorOptions) {
-        return this.GetResourcesAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetResource = function (model, errorOptions) {
-        return this.GetResourceAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetRoleAccess = function (model, errorOptions) {
-        return this.GetRoleAccessAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetModCategory = function (model, errorOptions) {
-        return this.GetModCategoryAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
-        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
-    };
-    ResourceGroupGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
-        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
-    };
-    return ResourceGroupGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.ResourceGroupGroup = ResourceGroupGroup;
-//# sourceMappingURL=ResourceGroupGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/UserCacheGroup.js":
-/*!*******************************************!*\
-  !*** ./Scripts/Hub/Api/UserCacheGroup.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserCacheGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var UserCacheGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserCacheGroup, _super);
-    function UserCacheGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'UserCache') || this;
-        _this.ClearCacheAction = _this.createAction('ClearCache', 'Clear Cache');
-        return _this;
-    }
-    UserCacheGroup.prototype.ClearCache = function (model, errorOptions) {
-        return this.ClearCacheAction.execute(model, errorOptions || {});
-    };
-    return UserCacheGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.UserCacheGroup = UserCacheGroup;
-//# sourceMappingURL=UserCacheGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/UserGroup.js":
-/*!**************************************!*\
-  !*** ./Scripts/Hub/Api/UserGroup.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var UserGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserGroup, _super);
-    function UserGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'User') || this;
-        _this.Index = _this.createView('Index');
-        return _this;
-    }
-    return UserGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.UserGroup = UserGroup;
-//# sourceMappingURL=UserGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/UserInquiryGroup.js":
-/*!*********************************************!*\
-  !*** ./Scripts/Hub/Api/UserInquiryGroup.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserInquiryGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var UserInquiryGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserInquiryGroup, _super);
-    function UserInquiryGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'UserInquiry') || this;
-        _this.GetUserAction = _this.createAction('GetUser', 'Get User');
-        _this.GetUserByUserNameAction = _this.createAction('GetUserByUserName', 'Get User By User Name');
-        _this.GetCurrentUserAction = _this.createAction('GetCurrentUser', 'Get Current User');
-        _this.RedirectToAppUser = _this.createView('RedirectToAppUser');
-        return _this;
-    }
-    UserInquiryGroup.prototype.GetUser = function (model, errorOptions) {
-        return this.GetUserAction.execute(model, errorOptions || {});
-    };
-    UserInquiryGroup.prototype.GetUserByUserName = function (model, errorOptions) {
-        return this.GetUserByUserNameAction.execute(model, errorOptions || {});
-    };
-    UserInquiryGroup.prototype.GetCurrentUser = function (errorOptions) {
-        return this.GetCurrentUserAction.execute({}, errorOptions || {});
-    };
-    return UserInquiryGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.UserInquiryGroup = UserInquiryGroup;
-//# sourceMappingURL=UserInquiryGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/UserMaintenanceGroup.js":
-/*!*************************************************!*\
-  !*** ./Scripts/Hub/Api/UserMaintenanceGroup.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserMaintenanceGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var UserMaintenanceGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserMaintenanceGroup, _super);
-    function UserMaintenanceGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'UserMaintenance') || this;
-        _this.EditUserAction = _this.createAction('EditUser', 'Edit User');
-        _this.GetUserForEditAction = _this.createAction('GetUserForEdit', 'Get User For Edit');
-        return _this;
-    }
-    UserMaintenanceGroup.prototype.EditUser = function (model, errorOptions) {
-        return this.EditUserAction.execute(model, errorOptions || {});
-    };
-    UserMaintenanceGroup.prototype.GetUserForEdit = function (model, errorOptions) {
-        return this.GetUserForEditAction.execute(model, errorOptions || {});
-    };
-    return UserMaintenanceGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.UserMaintenanceGroup = UserMaintenanceGroup;
-//# sourceMappingURL=UserMaintenanceGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/UsersGroup.js":
-/*!***************************************!*\
-  !*** ./Scripts/Hub/Api/UsersGroup.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UsersGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var UsersGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UsersGroup, _super);
-    function UsersGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Users') || this;
-        _this.Index = _this.createView('Index');
-        _this.GetUsersAction = _this.createAction('GetUsers', 'Get Users');
-        _this.GetSystemUsersAction = _this.createAction('GetSystemUsers', 'Get System Users');
-        _this.AddUserAction = _this.createAction('AddUser', 'Add User');
-        return _this;
-    }
-    UsersGroup.prototype.GetUsers = function (errorOptions) {
-        return this.GetUsersAction.execute({}, errorOptions || {});
-    };
-    UsersGroup.prototype.GetSystemUsers = function (model, errorOptions) {
-        return this.GetSystemUsersAction.execute(model, errorOptions || {});
-    };
-    UsersGroup.prototype.AddUser = function (model, errorOptions) {
-        return this.AddUserAction.execute(model, errorOptions || {});
-    };
-    return UsersGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.UsersGroup = UsersGroup;
-//# sourceMappingURL=UsersGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Api/VersionGroup.js":
-/*!*****************************************!*\
-  !*** ./Scripts/Hub/Api/VersionGroup.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// Generated code
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.VersionGroup = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiGroup */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js");
-var VersionGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(VersionGroup, _super);
-    function VersionGroup(events, resourceUrl) {
-        var _this = _super.call(this, events, resourceUrl, 'Version') || this;
-        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
-        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
-        return _this;
-    }
-    VersionGroup.prototype.GetVersion = function (model, errorOptions) {
-        return this.GetVersionAction.execute(model, errorOptions || {});
-    };
-    VersionGroup.prototype.GetResourceGroup = function (model, errorOptions) {
-        return this.GetResourceGroupAction.execute(model, errorOptions || {});
-    };
-    return VersionGroup;
-}(AppApiGroup_1.AppApiGroup));
-exports.VersionGroup = VersionGroup;
-//# sourceMappingURL=VersionGroup.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Hub/Apis.js":
-/*!*****************************!*\
-  !*** ./Scripts/Hub/Apis.js ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Apis = void 0;
-var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiFactory */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js");
-var ModalErrorComponent_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Error/ModalErrorComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js");
-var HubAppApi_1 = __webpack_require__(/*! ../Hub/Api/HubAppApi */ "./Scripts/Hub/Api/HubAppApi.js");
-var Apis = /** @class */ (function () {
-    function Apis(modalError) {
-        this.modalError = new ModalErrorComponent_1.ModalErrorComponent(modalError);
-    }
-    Apis.prototype.hub = function () {
-        var apiFactory = new AppApiFactory_1.AppApiFactory(HubAppApi_1.HubAppApi, this.modalError);
-        return apiFactory.api(HubAppApi_1.HubAppApi);
-    };
-    return Apis;
-}());
-exports.Apis = Apis;
-//# sourceMappingURL=Apis.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListCard.js":
-/*!**********************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListCard.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListCard = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var CardTitleHeader_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Card/CardTitleHeader */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeader.js");
-var Events_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var ListGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/ListGroup */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js");
-var MessageAlert_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MessageAlert */ "./node_modules/@jasonbenfield/sharedwebapp/MessageAlert.js");
-var AppListItem_1 = __webpack_require__(/*! ./AppListItem */ "./Scripts/Internal/Apps/AppListItem.js");
-var AppListCard = /** @class */ (function () {
-    function AppListCard(hubApi, appRedirectUrl, view) {
-        this.hubApi = hubApi;
-        this.appRedirectUrl = appRedirectUrl;
-        this.view = view;
-        this._appSelected = new Events_1.DefaultEvent(this);
-        this.appSelected = this._appSelected.handler();
-        new CardTitleHeader_1.CardTitleHeader('Apps', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
-        this.apps = new ListGroup_1.ListGroup(this.view.apps);
-        this.apps.itemClicked.register(this.onAppSelected.bind(this));
-    }
-    AppListCard.prototype.onAppSelected = function (listItem) {
-        this._appSelected.invoke(listItem.app);
-    };
-    AppListCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var apps;
-            var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getApps()];
-                    case 1:
-                        apps = _a.sent();
-                        this.apps.setItems(apps, function (sourceItem, listItem) {
-                            return new AppListItem_1.AppListItem(sourceItem, _this.appRedirectUrl, listItem);
-                        });
-                        if (apps.length === 0) {
-                            this.alert.danger('No Apps were Found');
-                        }
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    AppListCard.prototype.getApps = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var apps;
-            var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hubApi.Apps.All()];
-                                    case 1:
-                                        apps = _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, apps];
-                }
-            });
-        });
-    };
-    return AppListCard;
-}());
-exports.AppListCard = AppListCard;
-//# sourceMappingURL=AppListCard.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListCardView.js":
-/*!**************************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListCardView.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListCardView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var CardView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Card/CardView */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardView.js");
-var AppListItemView_1 = __webpack_require__(/*! ./AppListItemView */ "./Scripts/Internal/Apps/AppListItemView.js");
-var AppListCardView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppListCardView, _super);
-    function AppListCardView() {
-        var _this = _super.call(this) || this;
-        _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
-        _this.apps = _this.addBlockListGroup(function () { return new AppListItemView_1.AppListItemView(); });
-        return _this;
-    }
-    return AppListCardView;
-}(CardView_1.CardView));
-exports.AppListCardView = AppListCardView;
-//# sourceMappingURL=AppListCardView.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListItem.js":
-/*!**********************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListItem.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListItem = void 0;
-var AppListItem = /** @class */ (function () {
-    function AppListItem(app, appRedirectUrl, view) {
-        this.app = app;
-        view.setAppName(app.AppName);
-        view.setAppTitle(app.Title);
-        view.setAppType(app.Type.DisplayText);
-        view.setHref(appRedirectUrl(app.ID));
-    }
-    return AppListItem;
-}());
-exports.AppListItem = AppListItem;
-//# sourceMappingURL=AppListItem.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListItemView.js":
-/*!**************************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListItemView.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListItemView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Row_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var TextSpan_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
-var LinkListGroupItemView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView.js");
-var LinkListItemViewModel_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel.js");
-var AppListItemView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppListItemView, _super);
-    function AppListItemView() {
-        var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
-        var row = _this.addContent(new Row_1.Row());
-        _this.appName = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        _this.appTitle = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        _this.appType = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
-        return _this;
-    }
-    AppListItemView.prototype.setAppName = function (appName) { this.appName.setText(appName); };
-    AppListItemView.prototype.setAppTitle = function (appTitle) { this.appTitle.setText(appTitle); };
-    AppListItemView.prototype.setAppType = function (displayText) { this.appType.setText(displayText); };
-    return AppListItemView;
-}(LinkListGroupItemView_1.LinkListGroupItemView));
-exports.AppListItemView = AppListItemView;
-//# sourceMappingURL=AppListItemView.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListPanel.js":
-/*!***********************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListPanel.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListPanel = exports.AppListPanelResult = void 0;
-var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js");
-var AppListCard_1 = __webpack_require__(/*! ./AppListCard */ "./Scripts/Internal/Apps/AppListCard.js");
-var AppListPanelResult = /** @class */ (function () {
-    function AppListPanelResult(results) {
-        this.results = results;
-    }
-    AppListPanelResult.appSelected = function (app) {
-        return new AppListPanelResult({ appSelected: { app: app } });
-    };
-    Object.defineProperty(AppListPanelResult.prototype, "appSelected", {
-        get: function () { return this.results.appSelected; },
-        enumerable: false,
-        configurable: true
-    });
-    return AppListPanelResult;
-}());
-exports.AppListPanelResult = AppListPanelResult;
-var AppListPanel = /** @class */ (function () {
-    function AppListPanel(hubApi, view) {
-        var _this = this;
-        this.hubApi = hubApi;
-        this.view = view;
-        this.awaitable = new Awaitable_1.Awaitable();
-        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (appID) { return _this.hubApi.Apps.RedirectToApp.getUrl(appID).toString(); }, this.view.appListCard);
-        this.appListCard.appSelected.register(this.onAppSelected.bind(this));
-    }
-    AppListPanel.prototype.onAppSelected = function (app) {
-        this.awaitable.resolve(AppListPanelResult.appSelected(app));
-    };
-    AppListPanel.prototype.refresh = function () {
-        return this.appListCard.refresh();
-    };
-    AppListPanel.prototype.start = function () {
-        return this.awaitable.start();
-    };
-    AppListPanel.ResultKeys = {};
-    return AppListPanel;
-}());
-exports.AppListPanel = AppListPanel;
-//# sourceMappingURL=AppListPanel.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/AppListPanelView.js":
-/*!***************************************************!*\
-  !*** ./Scripts/Internal/Apps/AppListPanelView.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppListPanelView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var FlexColumn_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumn */ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumn.js");
-var FlexColumnFill_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumnFill */ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumnFill.js");
-var AppListCardView_1 = __webpack_require__(/*! ./AppListCardView */ "./Scripts/Internal/Apps/AppListCardView.js");
-var AppListPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppListPanelView, _super);
-    function AppListPanelView() {
-        var _this = _super.call(this) || this;
-        _this.height100();
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        _this.appListCard = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill())
-            .addContent(new AppListCardView_1.AppListCardView());
-        return _this;
-    }
-    return AppListPanelView;
-}(Block_1.Block));
-exports.AppListPanelView = AppListPanelView;
-//# sourceMappingURL=AppListPanelView.js.map
-
-/***/ }),
-
-/***/ "./Scripts/Internal/Apps/MainPageView.js":
-/*!***********************************************!*\
-  !*** ./Scripts/Internal/Apps/MainPageView.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MainPageView = void 0;
-var PaddingCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/PaddingCss */ "./node_modules/@jasonbenfield/sharedwebapp/PaddingCss.js");
-var AppListPanelView_1 = __webpack_require__(/*! ./AppListPanelView */ "./Scripts/Internal/Apps/AppListPanelView.js");
-var MainPageView = /** @class */ (function () {
-    function MainPageView(page) {
-        this.page = page;
-        this.appListPanel = this.page.content.addContent(new AppListPanelView_1.AppListPanelView());
-        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
-    }
-    return MainPageView;
-}());
-exports.MainPageView = MainPageView;
-//# sourceMappingURL=MainPageView.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Alert.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Alert.js ***!
-  \***********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Alert.js":
+/*!******************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Alert.js ***!
+  \******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Alert = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var Block_1 = __webpack_require__(/*! ./Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Block_1 = __webpack_require__(/*! ./Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
 var Alert = /** @class */ (function (_super) {
     tslib_1.__extends(Alert, _super);
     function Alert(vm) {
@@ -1142,17 +36,17 @@ exports.Alert = Alert;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AlignCss.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AlignCss.js ***!
-  \**************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/AlignCss.js":
+/*!*********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/AlignCss.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AlignCss = exports.AlignContentCssType = exports.AlignCssType = void 0;
-var CssClass_1 = __webpack_require__(/*! ./CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var AlignCssType = /** @class */ (function () {
     function AlignCssType(type) {
         this.type = type;
@@ -1296,222 +190,10 @@ exports.AlignCss = AlignCss;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApi.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApi.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppApi = void 0;
-var AppResourceUrl_1 = __webpack_require__(/*! ./AppResourceUrl */ "./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js");
-var XtiUrl_1 = __webpack_require__(/*! ./XtiUrl */ "./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js");
-var AppApi = /** @class */ (function () {
-    function AppApi(events, baseUrl, app, version) {
-        this.events = events;
-        this.groups = {};
-        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, version, XtiUrl_1.XtiUrl.current.path.modifier, pageContext.CacheBust);
-    }
-    Object.defineProperty(AppApi.prototype, "name", {
-        get: function () { return this.resourceUrl.path.app; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(AppApi.prototype, "url", {
-        get: function () { return this.resourceUrl.relativeUrl; },
-        enumerable: false,
-        configurable: true
-    });
-    AppApi.prototype.addGroup = function (createGroup) {
-        var group = createGroup(this.events, this.resourceUrl);
-        this.groups[group.name] = group;
-        return group;
-    };
-    AppApi.prototype.toString = function () {
-        return "AppApi " + this.resourceUrl;
-    };
-    return AppApi;
-}());
-exports.AppApi = AppApi;
-//# sourceMappingURL=AppApi.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js ***!
-  \******************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppApiAction = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HttpClient_1 = __webpack_require__(/*! ./HttpClient */ "./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js");
-var JsonText_1 = __webpack_require__(/*! ./JsonText */ "./node_modules/@jasonbenfield/sharedwebapp/JsonText.js");
-var AppApiError_1 = __webpack_require__(/*! ./AppApiError */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js");
-var ErrorModel_1 = __webpack_require__(/*! ./ErrorModel */ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js");
-var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
-var AppApiAction = /** @class */ (function () {
-    function AppApiAction(events, resourceUrl, actionName, friendlyName) {
-        this.events = events;
-        this.friendlyName = friendlyName;
-        this.resourceUrl = resourceUrl.withAction(actionName);
-    }
-    AppApiAction.prototype.execute = function (data, errorOptions) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var jsonText, postResult, result, apiError, errors, rawErrors, message;
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        jsonText = new JsonText_1.JsonText(data).toString();
-                        return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.resourceUrl.url.value(), jsonText)];
-                    case 1:
-                        postResult = _a.sent();
-                        result = postResult && postResult.result && postResult.result.Data;
-                        if (postResult.isSuccessful()) {
-                            if (typeof result === 'string') {
-                                if (AppApiAction.dateRegex.test(result)) {
-                                    result = new Date(Date.parse(result));
-                                }
-                            }
-                            else {
-                                this.parseDates(result);
-                            }
-                        }
-                        else {
-                            errors = [];
-                            if (result) {
-                                rawErrors = result;
-                                errors = new Enumerable_1.MappedArray(rawErrors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
-                            }
-                            else if (postResult.status === 404) {
-                                errors = [new ErrorModel_1.ErrorModel('Not Found', '', '', this)];
-                            }
-                            else if (postResult.status === 401) {
-                                errors = [new ErrorModel_1.ErrorModel('Not Authenticated', '', '', this)];
-                            }
-                            else if (postResult.status === 403) {
-                                errors = [new ErrorModel_1.ErrorModel('Not Authorized', '', '', this)];
-                            }
-                            else {
-                                message = 'An error occurred';
-                                if (postResult.status !== 500) {
-                                    message += " (" + postResult.status + ")";
-                                }
-                                errors = [new ErrorModel_1.ErrorModel(message, '', '', this)];
-                            }
-                            apiError = new AppApiError_1.AppApiError(errors, postResult.status, this.friendlyName, errorOptions.caption || '');
-                        }
-                        if (apiError) {
-                            if (!errorOptions.preventDefault) {
-                                this.events.handleError(apiError);
-                            }
-                            throw apiError;
-                        }
-                        return [2 /*return*/, result];
-                }
-            });
-        });
-    };
-    AppApiAction.prototype.parseDates = function (obj) {
-        if (obj) {
-            if (Object.prototype.toString.call(obj) === '[object Array]') {
-                for (var i = 0; i < obj.length; i++) {
-                    var el = obj[i];
-                    if (typeof el === 'string') {
-                        if (AppApiAction.dateRegex.test(el)) {
-                            obj[i] = new Date(Date.parse(el));
-                        }
-                    }
-                    else {
-                        this.parseDates(el);
-                    }
-                }
-            }
-            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
-                for (var prop in obj) {
-                    if (prop) {
-                        var value = obj[prop];
-                        if (typeof value === 'string') {
-                            if (AppApiAction.dateRegex.test(value)) {
-                                obj[prop] = new Date(Date.parse(value));
-                            }
-                        }
-                        else {
-                            this.parseDates(value);
-                        }
-                    }
-                }
-            }
-        }
-        return obj;
-    };
-    AppApiAction.prototype.toString = function () {
-        return "AppApiAction " + this.resourceUrl;
-    };
-    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.?\d{0,7}[\+\-]\d{2}:\d{2})?$/;
-    return AppApiAction;
-}());
-exports.AppApiAction = AppApiAction;
-//# sourceMappingURL=AppApiAction.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiError.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppApiError = void 0;
-var ErrorModel_1 = __webpack_require__(/*! ./ErrorModel */ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js");
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
-var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
-var AppApiError = /** @class */ (function () {
-    function AppApiError(errors, _status, _location, _caption) {
-        this._status = _status;
-        this._location = _location;
-        this._caption = _caption;
-        this._errors = new Enumerable_1.MappedArray(errors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
-    }
-    AppApiError.prototype.getErrors = function () {
-        return this._errors;
-    };
-    AppApiError.prototype.isValidationError = function () {
-        return this._status === 400;
-    };
-    AppApiError.prototype.isAuthenticationError = function () {
-        return this._status === 401;
-    };
-    AppApiError.prototype.isCanceled = function () {
-        return this._status === 999;
-    };
-    AppApiError.prototype.getCaption = function () {
-        return this._caption || "Unable to " + this._location;
-    };
-    AppApiError.prototype.toString = function () {
-        var caption = this.getCaption();
-        var joined = new JoinedStrings_1.JoinedStrings('\n', this.getErrors()).toString();
-        return caption + "\nstatus: " + this._status + "\n" + joined;
-    };
-    return AppApiError;
-}());
-exports.AppApiError = AppApiError;
-//# sourceMappingURL=AppApiError.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js ***!
+  \*************************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1529,19 +211,19 @@ exports.AppApiEvents = AppApiEvents;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiFactory.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppApiFactory = void 0;
-var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiEvents.js");
-var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "./node_modules/@jasonbenfield/sharedwebapp/ConsoleLog.js");
-var HostEnvironment_1 = __webpack_require__(/*! ./HostEnvironment */ "./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js");
+var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js");
+var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
+var HostEnvironment_1 = __webpack_require__(/*! ./HostEnvironment */ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js");
 var AppApiFactory = /** @class */ (function () {
     function AppApiFactory(_defaultApiType, modalError) {
         this._defaultApiType = _defaultApiType;
@@ -1570,139 +252,10 @@ exports.AppApiFactory = AppApiFactory;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiGroup.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppApiGroup = void 0;
-var AppApiAction_1 = __webpack_require__(/*! ./AppApiAction */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiAction.js");
-var AppApiView_1 = __webpack_require__(/*! ./AppApiView */ "./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js");
-var AppApiGroup = /** @class */ (function () {
-    function AppApiGroup(events, resourceUrl, name) {
-        this.events = events;
-        this.name = name;
-        this.resourceUrl = resourceUrl.withGroup(name);
-    }
-    AppApiGroup.prototype.createView = function (name) {
-        return new AppApiView_1.AppApiView(this.resourceUrl, name);
-    };
-    AppApiGroup.prototype.createAction = function (name, friendlyName) {
-        return new AppApiAction_1.AppApiAction(this.events, this.resourceUrl, name, friendlyName);
-    };
-    AppApiGroup.prototype.toString = function () {
-        return "AppApiGroup " + this.resourceUrl;
-    };
-    return AppApiGroup;
-}());
-exports.AppApiGroup = AppApiGroup;
-//# sourceMappingURL=AppApiGroup.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppApiView.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppApiView = void 0;
-var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
-var WebPage_1 = __webpack_require__(/*! ./WebPage */ "./node_modules/@jasonbenfield/sharedwebapp/WebPage.js");
-var AppApiView = /** @class */ (function () {
-    function AppApiView(resourceUrl, actionName) {
-        this.url = resourceUrl.withAction(actionName).url.value();
-    }
-    AppApiView.prototype.getUrl = function (data) {
-        var model;
-        if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
-            model = { model: data };
-        }
-        else {
-            model = data;
-        }
-        var urlBuilder = new UrlBuilder_1.UrlBuilder(this.url);
-        urlBuilder.addQueryFromObject(model);
-        return urlBuilder;
-    };
-    AppApiView.prototype.open = function (data) {
-        var webPage = this.createWebPage(data);
-        webPage.open();
-    };
-    AppApiView.prototype.openWindow = function (data) {
-        var webPage = this.createWebPage(data);
-        webPage.openWindow();
-    };
-    AppApiView.prototype.createWebPage = function (data) {
-        var urlBuilder = this.getUrl(data);
-        return new WebPage_1.WebPage(urlBuilder);
-    };
-    return AppApiView;
-}());
-exports.AppApiView = AppApiView;
-//# sourceMappingURL=AppApiView.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/AppResourceUrl.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AppResourceUrl = void 0;
-var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js");
-var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
-var AppResourceUrl = /** @class */ (function () {
-    function AppResourceUrl(baseUrl, path, cacheBust) {
-        this.baseUrl = baseUrl;
-        this.path = path;
-        this.cacheBust = cacheBust;
-        this.url = new UrlBuilder_1.UrlBuilder(baseUrl)
-            .addPart(path.format())
-            .addQuery('cacheBust', cacheBust)
-            .url;
-    }
-    AppResourceUrl.app = function (baseUrl, appKey, version, modifier, cacheBust) {
-        return new AppResourceUrl(baseUrl, XtiPath_1.XtiPath.app(appKey, version, modifier), cacheBust);
-    };
-    Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
-        get: function () {
-            return new UrlBuilder_1.UrlBuilder("/" + this.path.format());
-        },
-        enumerable: false,
-        configurable: true
-    });
-    AppResourceUrl.prototype.withGroup = function (group) {
-        return new AppResourceUrl(this.baseUrl, this.path.withGroup(group), this.cacheBust);
-    };
-    AppResourceUrl.prototype.withAction = function (action) {
-        return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
-    };
-    AppResourceUrl.prototype.toString = function () {
-        return this.url.value();
-    };
-    return AppResourceUrl;
-}());
-exports.AppResourceUrl = AppResourceUrl;
-//# sourceMappingURL=AppResourceUrl.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Awaitable.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Awaitable.js":
+/*!**********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Awaitable.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1736,20 +289,20 @@ exports.Awaitable = Awaitable;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardAlertView.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Card/CardAlertView.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardAlertView.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Card/CardAlertView.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CardAlertView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var MessageAlertView_1 = __webpack_require__(/*! ../MessageAlertView */ "./node_modules/@jasonbenfield/sharedwebapp/MessageAlertView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var MessageAlertView_1 = __webpack_require__(/*! ../MessageAlertView */ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlertView.js");
 var CardAlertView = /** @class */ (function (_super) {
     tslib_1.__extends(CardAlertView, _super);
     function CardAlertView(vm) {
@@ -1767,110 +320,84 @@ exports.CardAlertView = CardAlertView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardHeader.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Card/CardHeader.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardHeaderView.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Card/CardHeaderView.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CardHeader = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var CardHeader = /** @class */ (function (_super) {
-    tslib_1.__extends(CardHeader, _super);
-    function CardHeader(vm) {
+exports.CardHeaderView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var CardHeaderView = /** @class */ (function (_super) {
+    tslib_1.__extends(CardHeaderView, _super);
+    function CardHeaderView(vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
         _this.vm.css('card-header');
         return _this;
     }
-    return CardHeader;
+    return CardHeaderView;
 }(Block_1.Block));
-exports.CardHeader = CardHeader;
-//# sourceMappingURL=CardHeader.js.map
+exports.CardHeaderView = CardHeaderView;
+//# sourceMappingURL=CardHeaderView.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeader.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeader.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CardTitleHeader = void 0;
-var CardTitleHeader = /** @class */ (function () {
-    function CardTitleHeader(title, view) {
-        if (title === void 0) { title = ''; }
-        this.view = view;
-        this.view.setText(title);
-    }
-    CardTitleHeader.prototype.setText = function (text) {
-        this.view.setText(text);
-    };
-    return CardTitleHeader;
-}());
-exports.CardTitleHeader = CardTitleHeader;
-//# sourceMappingURL=CardTitleHeader.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView.js ***!
-  \******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardTitleHeaderView.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Card/CardTitleHeaderView.js ***!
+  \*************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CardTitleHeaderView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var CardHeader_1 = __webpack_require__(/*! ./CardHeader */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardHeader.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var TextBlockView_1 = __webpack_require__(/*! ../Html/TextBlockView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockView.js");
+var CardHeaderView_1 = __webpack_require__(/*! ./CardHeaderView */ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardHeaderView.js");
 var CardTitleHeaderView = /** @class */ (function (_super) {
     tslib_1.__extends(CardTitleHeaderView, _super);
     function CardTitleHeaderView(vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.textBlock = _this.addContent(new TextBlock_1.TextBlock());
+        _this.textBlock = _this.addContent(new TextBlockView_1.TextBlockView());
         return _this;
     }
     CardTitleHeaderView.prototype.setText = function (text) {
         this.textBlock.setText(text);
     };
     return CardTitleHeaderView;
-}(CardHeader_1.CardHeader));
+}(CardHeaderView_1.CardHeaderView));
 exports.CardTitleHeaderView = CardTitleHeaderView;
 //# sourceMappingURL=CardTitleHeaderView.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardView.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Card/CardView.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardView.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Card/CardView.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CardView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
-var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
-var CardAlertView_1 = __webpack_require__(/*! ./CardAlertView */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardAlertView.js");
-var CardHeader_1 = __webpack_require__(/*! ./CardHeader */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardHeader.js");
-var CardTitleHeaderView_1 = __webpack_require__(/*! ./CardTitleHeaderView */ "./node_modules/@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlockViewModel.js");
+var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupView.js");
+var CardAlertView_1 = __webpack_require__(/*! ./CardAlertView */ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardAlertView.js");
+var CardHeaderView_1 = __webpack_require__(/*! ./CardHeaderView */ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardHeaderView.js");
+var CardTitleHeaderView_1 = __webpack_require__(/*! ./CardTitleHeaderView */ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardTitleHeaderView.js");
 var CardView = /** @class */ (function (_super) {
     tslib_1.__extends(CardView, _super);
     function CardView(vm) {
@@ -1883,7 +410,7 @@ var CardView = /** @class */ (function (_super) {
         return this.addContent(new CardTitleHeaderView_1.CardTitleHeaderView());
     };
     CardView.prototype.addCardHeader = function () {
-        return this.addContent(new CardHeader_1.CardHeader());
+        return this.addContent(new CardHeaderView_1.CardHeaderView());
     };
     CardView.prototype.addCardAlert = function () {
         return this.addContent(new CardAlertView_1.CardAlertView());
@@ -1912,17 +439,17 @@ exports.CardView = CardView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js":
+/*!**********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ColumnCss = exports.ColumnCssForBreakpoint = void 0;
-var CssClass_1 = __webpack_require__(/*! ./CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var ColumnCssForBreakpoint = /** @class */ (function () {
     function ColumnCssForBreakpoint(breakpoint, size) {
         this.breakpoint = breakpoint;
@@ -2016,18 +543,18 @@ exports.ColumnCss = ColumnCss;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js ***!
-  \**************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Command/AsyncCommand.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Command/AsyncCommand.js ***!
+  \*********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AsyncCommand = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ButtonCommandItem_1 = __webpack_require__(/*! ./ButtonCommandItem */ "./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ButtonCommandItem_1 = __webpack_require__(/*! ./ButtonCommandItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/ButtonCommandItem.js");
 var AsyncCommand = /** @class */ (function () {
     function AsyncCommand(action) {
         this.action = action;
@@ -2142,35 +669,33 @@ exports.AsyncCommand = AsyncCommand;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js ***!
-  \*******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Command/ButtonCommandItem.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Command/ButtonCommandItem.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ButtonCommandItem = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js");
-var Button_1 = __webpack_require__(/*! ../Html/Button */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Button.js");
-var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var FaIcon_1 = __webpack_require__(/*! ../FaIcon */ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.js");
-var MarginCss_1 = __webpack_require__(/*! ../MarginCss */ "./node_modules/@jasonbenfield/sharedwebapp/MarginCss.js");
-var TextSpan_1 = __webpack_require__(/*! ../Html/TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js");
+var Button_1 = __webpack_require__(/*! ../Html/Button */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var FaIcon_1 = __webpack_require__(/*! ../FaIcon */ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js");
+var MarginCss_1 = __webpack_require__(/*! ../MarginCss */ "../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js");
+var TextSpanView_1 = __webpack_require__(/*! ../Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
 var ButtonCommandItem = /** @class */ (function (_super) {
     tslib_1.__extends(ButtonCommandItem, _super);
     function ButtonCommandItem(vm) {
         if (vm === void 0) { vm = new ButtonViewModel_1.ButtonViewModel(); }
         var _this = _super.call(this, vm) || this;
         _this.executeRequested = _this.clicked;
-        _this.icon = new FaIcon_1.FaIcon().addToContainer(_this)
-            .configure(function (icon) {
-            icon.setMargin(MarginCss_1.MarginCss.end(1));
-        });
-        _this.textSpan = new TextSpan_1.TextSpan().addToContainer(_this);
         _this.active = '';
+        _this.icon = new FaIcon_1.FaIcon().addToContainer(_this);
+        _this.icon.setMargin(MarginCss_1.MarginCss.end(1));
+        _this.textSpan = new TextSpanView_1.TextSpanView().addToContainer(_this);
         vm.type('button');
         _this.addCssName('btn');
         _this.setContext(ContextualClass_1.ContextualClass.default);
@@ -2212,18 +737,18 @@ exports.ButtonCommandItem = ButtonCommandItem;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Command/Command.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Command/Command.js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Command = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AsyncCommand_1 = __webpack_require__(/*! ./AsyncCommand */ "./node_modules/@jasonbenfield/sharedwebapp/Command/AsyncCommand.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AsyncCommand_1 = __webpack_require__(/*! ./AsyncCommand */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/AsyncCommand.js");
 var Command = /** @class */ (function (_super) {
     tslib_1.__extends(Command, _super);
     function Command(action) {
@@ -2246,17 +771,17 @@ exports.Command = Command;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js":
+/*!******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ComponentTemplate = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var ComponentTemplate = /** @class */ (function () {
     function ComponentTemplate(name, html) {
         this.name = name;
@@ -2274,17 +799,17 @@ exports.ComponentTemplate = ComponentTemplate;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ComponentViewModel = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var ComponentViewModel = /** @class */ (function () {
     function ComponentViewModel(componentTemplate) {
         this.componentName = ko.observable('');
@@ -2298,10 +823,10 @@ exports.ComponentViewModel = ComponentViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ConsoleLog.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ConsoleLog.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2327,10 +852,10 @@ exports.ConsoleLog = ConsoleLog;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2418,17 +943,17 @@ exports.ContextualClass = ContextualClass;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/CssClass.js ***!
-  \**************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js":
+/*!*********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CssClass = void 0;
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
 var CssClass = /** @class */ (function () {
     function CssClass() {
         var initialNames = [];
@@ -2447,7 +972,12 @@ var CssClass = /** @class */ (function () {
     };
     CssClass.prototype.addFrom = function (cssClass) {
         if (cssClass) {
-            this.addName(cssClass.value);
+            if (cssClass instanceof CssClass) {
+                this.addName(cssClass.value);
+            }
+            else {
+                this.addName(cssClass.cssClass().toString());
+            }
         }
         return this;
     };
@@ -2552,17 +1082,46 @@ exports.CssClass = CssClass;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/DelayedAction.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/DelayedAction.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/DebouncedAction.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/DebouncedAction.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DebouncedAction = void 0;
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var DebouncedAction = /** @class */ (function () {
+    function DebouncedAction(func, wait) {
+        this.debounced = _.debounce(func, wait);
+    }
+    DebouncedAction.prototype.execute = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        return this.debounced.apply(this, args);
+    };
+    return DebouncedAction;
+}());
+exports.DebouncedAction = DebouncedAction;
+//# sourceMappingURL=DebouncedAction.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/DelayedAction.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/DelayedAction.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DelayedAction = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
 var DelayedAction = /** @class */ (function () {
     function DelayedAction(func, wait) {
         this.func = func;
@@ -2593,18 +1152,18 @@ exports.DelayedAction = DelayedAction;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/DelegatedEventBindingHandler.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/DelegatedEventBindingHandler.js ***!
-  \**********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/DelegatedEventBindingHandler.js":
+/*!*****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/DelegatedEventBindingHandler.js ***!
+  \*****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DelegatedEventBindingHandler = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var $ = __webpack_require__(/*! jquery */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/jquery/dist/jquery.js");
 var DelegatedEventBindingHandler = /** @class */ (function () {
     function DelegatedEventBindingHandler() {
     }
@@ -2646,19 +1205,19 @@ exports.DelegatedEventBindingHandler = DelegatedEventBindingHandler;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/DropdownBindingHandler.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/DropdownBindingHandler.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/DropdownBindingHandler.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/DropdownBindingHandler.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownBindingHandler = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var bootstrap_1 = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
-var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var bootstrap_1 = __webpack_require__(/*! bootstrap */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/bootstrap/dist/js/bootstrap.esm.js");
+var $ = __webpack_require__(/*! jquery */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/jquery/dist/jquery.js");
 var DropdownBindingHandler = /** @class */ (function () {
     function DropdownBindingHandler() {
     }
@@ -2687,24 +1246,24 @@ exports.DropdownBindingHandler = DropdownBindingHandler;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownBlock = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js");
-var UnorderedList_1 = __webpack_require__(/*! ../Html/UnorderedList */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.js");
-var DropdownBlockViewModel_1 = __webpack_require__(/*! ./DropdownBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlockViewModel.js");
-var DropdownButton_1 = __webpack_require__(/*! ./DropdownButton */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownButton.js");
-var DropdownLinkItem_1 = __webpack_require__(/*! ./DropdownLinkItem */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownLinkItem.js");
-var DropdownSpanItem_1 = __webpack_require__(/*! ./DropdownSpanItem */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownSpanItem.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var UnorderedList_1 = __webpack_require__(/*! ../Html/UnorderedList */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.js");
+var DropdownBlockViewModel_1 = __webpack_require__(/*! ./DropdownBlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlockViewModel.js");
+var DropdownButton_1 = __webpack_require__(/*! ./DropdownButton */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownButton.js");
+var DropdownLinkItem_1 = __webpack_require__(/*! ./DropdownLinkItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js");
+var DropdownSpanItem_1 = __webpack_require__(/*! ./DropdownSpanItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownSpanItem.js");
 var DropdownBlock = /** @class */ (function (_super) {
     tslib_1.__extends(DropdownBlock, _super);
     function DropdownBlock(createItemView, vm) {
@@ -2731,22 +1290,22 @@ exports.DropdownBlock = DropdownBlock;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlockViewModel.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlockViewModel.js ***!
-  \*************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlockViewModel.js":
+/*!********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlockViewModel.js ***!
+  \********************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownBlockViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js");
-var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js");
-var template = __webpack_require__(/*! ./DropdownBlock.html */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.html");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js");
+var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js");
+var template = __webpack_require__(/*! ./DropdownBlock.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.html");
 var DropdownBlockViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(DropdownBlockViewModel, _super);
     function DropdownBlockViewModel() {
@@ -2765,19 +1324,19 @@ exports.DropdownBlockViewModel = DropdownBlockViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownButton.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownButton.js ***!
-  \*****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownButton.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownButton.js ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownButton = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Button_1 = __webpack_require__(/*! ../Html/Button */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Button.js");
-var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Button_1 = __webpack_require__(/*! ../Html/Button */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.js");
+var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js");
 var DropdownButton = /** @class */ (function (_super) {
     tslib_1.__extends(DropdownButton, _super);
     function DropdownButton(vm) {
@@ -2794,26 +1353,26 @@ exports.DropdownButton = DropdownButton;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownLinkItem.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownLinkItem.js ***!
-  \*******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownLinkItem = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Link_1 = __webpack_require__(/*! ../Html/Link */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Link.js");
-var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js");
-var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var LinkView_1 = __webpack_require__(/*! ../Html/LinkView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkView.js");
+var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js");
 var DropdownLinkItem = /** @class */ (function (_super) {
     tslib_1.__extends(DropdownLinkItem, _super);
     function DropdownLinkItem(vm) {
         if (vm === void 0) { vm = new ListItemViewModel_1.ListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.link = new Link_1.Link().addToContainer(_this)
+        _this.link = new LinkView_1.LinkView().addToContainer(_this)
             .configure(function (l) {
             l.addCssName('dropdown-item');
         });
@@ -2826,20 +1385,20 @@ exports.DropdownLinkItem = DropdownLinkItem;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownSpanItem.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownSpanItem.js ***!
-  \*******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownSpanItem.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownSpanItem.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropdownSpanItem = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Span_1 = __webpack_require__(/*! ../Html/Span */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Span.js");
-var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js");
-var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Span_1 = __webpack_require__(/*! ../Html/Span */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.js");
+var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js");
 var DropdownSpanItem = /** @class */ (function (_super) {
     tslib_1.__extends(DropdownSpanItem, _super);
     function DropdownSpanItem(vm) {
@@ -2858,17 +1417,17 @@ exports.DropdownSpanItem = DropdownSpanItem;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EnumerableRange = exports.Any = exports.First = exports.FilteredArray = exports.MappedArray = exports.EnumerableArray = void 0;
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
 var EnumerableArray = /** @class */ (function () {
     function EnumerableArray(source) {
         this.source = source;
@@ -2938,59 +1497,27 @@ exports.EnumerableRange = EnumerableRange;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ErrorModel.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ErrorModel = void 0;
-var ErrorModel = /** @class */ (function () {
-    function ErrorModel(Message, Caption, Source, context) {
-        if (Caption === void 0) { Caption = ''; }
-        if (Source === void 0) { Source = ''; }
-        this.Message = Message;
-        this.Caption = Caption;
-        this.Source = Source;
-        this.context = context;
-    }
-    ErrorModel.prototype.toString = function () {
-        var str = '';
-        if (this.Source) {
-            str += this.Source + ", ";
-        }
-        str += this.Message;
-        return str;
-    };
-    return ErrorModel;
-}());
-exports.ErrorModel = ErrorModel;
-//# sourceMappingURL=ErrorModel.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponent.js ***!
-  \*******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorComponent = void 0;
-var Command_1 = __webpack_require__(/*! ../Command/Command */ "./node_modules/@jasonbenfield/sharedwebapp/Command/Command.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var ModalErrorGroupComponent_1 = __webpack_require__(/*! ./ModalErrorGroupComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js");
+var Command_1 = __webpack_require__(/*! ../Command/Command */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/Command.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var ModalErrorGroupComponent_1 = __webpack_require__(/*! ./ModalErrorGroupComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponent.js");
 var ModalErrorComponent = /** @class */ (function () {
     function ModalErrorComponent(view) {
         this.view = view;
         this.errorGroups = [];
         this._errorSelected = new Events_1.DefaultEvent(this);
         this.errorSelected = this._errorSelected.handler();
+        this.title = new TextBlock_1.TextBlock('', view.title);
         this.view.closed.register(this.onClosed.bind(this));
         new Command_1.Command(this.hide.bind(this)).add(this.view.okButton);
     }
@@ -3004,10 +1531,10 @@ var ModalErrorComponent = /** @class */ (function () {
         group.load(caption, errors, this.errorGroups.length === 0);
         this.errorGroups.push(group);
         if (errors.length === 1) {
-            this.view.setTitle('An error occurred');
+            this.title.setText('An error occurred');
         }
         else {
-            this.view.setTitle('Errors occurred');
+            this.title.setText('Errors occurred');
         }
         this.view.showModal();
     };
@@ -3015,8 +1542,8 @@ var ModalErrorComponent = /** @class */ (function () {
         this.clearErrors();
         this.view.hideModal();
     };
-    ModalErrorComponent.prototype.onErrorSelected = function (errorListItem) {
-        this._errorSelected.invoke(errorListItem.error);
+    ModalErrorComponent.prototype.onErrorSelected = function (error) {
+        this._errorSelected.invoke(error);
     };
     ModalErrorComponent.prototype.clearErrors = function () {
         this.errorGroups.splice(0, this.errorGroups.length);
@@ -3029,29 +1556,29 @@ exports.ModalErrorComponent = ModalErrorComponent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView.js ***!
-  \***********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js":
+/*!******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js ***!
+  \******************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorComponentView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
-var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem */ "./node_modules/@jasonbenfield/sharedwebapp/Command/ButtonCommandItem.js");
-var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var TextHeading5_1 = __webpack_require__(/*! ../Html/TextHeading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js");
-var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js");
-var ModalComponentViewModel_1 = __webpack_require__(/*! ../Modal/ModalComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentViewModel.js");
-var TextCss_1 = __webpack_require__(/*! ../TextCss */ "./node_modules/@jasonbenfield/sharedwebapp/TextCss.js");
-var ModalErrorGroupComponentView_1 = __webpack_require__(/*! ./ModalErrorGroupComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponentView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/ButtonCommandItem.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var Row_1 = __webpack_require__(/*! ../Grid/Row */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var TextHeading5View_1 = __webpack_require__(/*! ../Html/TextHeading5View */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading5View.js");
+var ModalComponentView_1 = __webpack_require__(/*! ../Modal/ModalComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentView.js");
+var ModalComponentViewModel_1 = __webpack_require__(/*! ../Modal/ModalComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentViewModel.js");
+var TextCss_1 = __webpack_require__(/*! ../TextCss */ "../../../../Published/Development/Packages/Shared/Current/npm/TextCss.js");
+var ModalErrorGroupComponentView_1 = __webpack_require__(/*! ./ModalErrorGroupComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponentView.js");
 var ModalErrorComponentView = /** @class */ (function (_super) {
     tslib_1.__extends(ModalErrorComponentView, _super);
     function ModalErrorComponentView(vm) {
@@ -3064,7 +1591,7 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
         _this.modal.body.setName(ModalErrorComponentView.name);
         _this.body = _this.modal.body.addContent(new Block_1.Block());
         _this.body.addCssName('alert alert-danger m-0 rounded-0 border-danger border-left-0 border-right-0');
-        _this.title = _this.modal.header.addContent(new TextHeading5_1.TextHeading5(''));
+        _this.title = _this.modal.header.addContent(new TextHeading5View_1.TextHeading5View());
         var row = _this.modal.footer.addContent(new Row_1.Row());
         row.addColumn();
         var buttonColumn = row.addColumn();
@@ -3088,9 +1615,6 @@ var ModalErrorComponentView = /** @class */ (function (_super) {
             this.body.removeItem(errorGroup);
         }
     };
-    ModalErrorComponentView.prototype.setTitle = function (title) {
-        this.title.setText(title);
-    };
     ModalErrorComponentView.prototype.showModal = function () {
         this.modal.showModal();
     };
@@ -3104,25 +1628,27 @@ exports.ModalErrorComponentView = ModalErrorComponentView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js":
-/*!************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponent.js ***!
-  \************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponent.js":
+/*!*******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponent.js ***!
+  \*******************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorGroupComponent = void 0;
-var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var ListGroup_1 = __webpack_require__(/*! ../ListGroup/ListGroup */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js");
-var ModalErrorListItem_1 = __webpack_require__(/*! ./ModalErrorListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js");
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var ListGroup_1 = __webpack_require__(/*! ../ListGroup/ListGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroup.js");
+var ModalErrorListItem_1 = __webpack_require__(/*! ./ModalErrorListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItem.js");
 var ModalErrorGroupComponent = /** @class */ (function () {
     function ModalErrorGroupComponent(view) {
         this.view = view;
         this._errorSelected = new Events_1.DefaultEvent(this);
         this.errorSelected = this._errorSelected.handler();
+        this.caption = new TextBlock_1.TextBlock('', view.caption);
         this.errors = new ListGroup_1.ListGroup(this.view.errors);
         this.errors.itemClicked.register(this.onErrorClicked.bind(this));
     }
@@ -3136,7 +1662,7 @@ var ModalErrorGroupComponent = /** @class */ (function () {
         else {
             this.view.showHR();
         }
-        this.view.setCaption(caption);
+        this.caption.setText(caption);
         var anyCaptions = new Enumerable_1.Any(new Enumerable_1.FilteredArray(errors, function (e) { return Boolean(e.Caption); })).value();
         this.errors.setItems(errors, function (e, itemView) {
             return new ModalErrorListItem_1.ModalErrorListItem(e, itemView, anyCaptions);
@@ -3149,39 +1675,36 @@ exports.ModalErrorGroupComponent = ModalErrorGroupComponent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponentView.js":
-/*!****************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorGroupComponentView.js ***!
-  \****************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponentView.js":
+/*!***********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorGroupComponentView.js ***!
+  \***********************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorGroupComponentView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js");
-var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js");
-var TextHeading4_1 = __webpack_require__(/*! ../Html/TextHeading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js");
-var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js");
-var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var HorizontalRule_1 = __webpack_require__(/*! ../Html/HorizontalRule */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.js");
+var ListBlockViewModel_1 = __webpack_require__(/*! ../Html/ListBlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlockViewModel.js");
+var TextHeading4View_1 = __webpack_require__(/*! ../Html/TextHeading4View */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading4View.js");
+var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupView.js");
+var ModalErrorListItemView_1 = __webpack_require__(/*! ./ModalErrorListItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItemView.js");
 var ModalErrorGroupComponentView = /** @class */ (function (_super) {
     tslib_1.__extends(ModalErrorGroupComponentView, _super);
     function ModalErrorGroupComponentView() {
         var _this = _super.call(this, new BlockViewModel_1.BlockViewModel()) || this;
         _this.hr = _this.addContent(new HorizontalRule_1.HorizontalRule());
-        _this.caption = _this.addContent(new TextHeading4_1.TextHeading4());
+        _this.caption = _this.addContent(new TextHeading4View_1.TextHeading4View());
         _this.caption.addCssName('alert-heading');
         _this.errors = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModalErrorListItemView_1.ModalErrorListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         return _this;
     }
     ModalErrorGroupComponentView.prototype.showHR = function () { this.hr.show(); };
     ModalErrorGroupComponentView.prototype.hideHR = function () { this.hr.hide(); };
-    ModalErrorGroupComponentView.prototype.setCaption = function (caption) {
-        this.caption.setText(caption);
-    };
     return ModalErrorGroupComponentView;
 }(Block_1.Block));
 exports.ModalErrorGroupComponentView = ModalErrorGroupComponentView;
@@ -3189,21 +1712,22 @@ exports.ModalErrorGroupComponentView = ModalErrorGroupComponentView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItem.js ***!
-  \******************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItem.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItem.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorListItem = void 0;
+var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
 var ModalErrorListItem = /** @class */ (function () {
     function ModalErrorListItem(error, view, isCaptionVisible) {
         this.error = error;
-        view.setCaption(error.Caption);
-        view.setMessage(error.Message);
+        new TextBlock_1.TextBlock(error.Caption, view.caption);
+        new TextBlock_1.TextBlock(error.Message, view.message);
         if (isCaptionVisible) {
             view.showCaption();
         }
@@ -3218,22 +1742,22 @@ exports.ModalErrorListItem = ModalErrorListItem;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorListItemView.js ***!
-  \**********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItemView.js":
+/*!*****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorListItemView.js ***!
+  \*****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalErrorListItemView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
-var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js");
-var LinkListGroupItemView_1 = __webpack_require__(/*! ../ListGroup/LinkListGroupItemView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView.js");
-var LinkListItemViewModel_1 = __webpack_require__(/*! ../ListGroup/LinkListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var Row_1 = __webpack_require__(/*! ../Grid/Row */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js");
+var TextBlockView_1 = __webpack_require__(/*! ../Html/TextBlockView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockView.js");
+var LinkListGroupItemView_1 = __webpack_require__(/*! ../ListGroup/LinkListGroupItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListGroupItemView.js");
+var LinkListItemViewModel_1 = __webpack_require__(/*! ../ListGroup/LinkListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListItemViewModel.js");
 var ModalErrorListItemView = /** @class */ (function (_super) {
     tslib_1.__extends(ModalErrorListItemView, _super);
     function ModalErrorListItemView() {
@@ -3241,15 +1765,13 @@ var ModalErrorListItemView = /** @class */ (function (_super) {
         var row = _this.addContent(new Row_1.Row());
         _this.captionCol = row.addColumn();
         _this.captionCol.setColumnCss(ColumnCss_1.ColumnCss.xs(3));
-        _this.caption = _this.captionCol.addContent(new TextBlock_1.TextBlock());
+        _this.caption = _this.captionCol.addContent(new TextBlockView_1.TextBlockView());
         var col2 = row.addColumn();
-        _this.message = col2.addContent(new TextBlock_1.TextBlock());
+        _this.message = col2.addContent(new TextBlockView_1.TextBlockView());
         return _this;
     }
     ModalErrorListItemView.prototype.hideCaption = function () { this.captionCol.hide(); };
     ModalErrorListItemView.prototype.showCaption = function () { this.captionCol.show(); };
-    ModalErrorListItemView.prototype.setCaption = function (caption) { this.caption.setText(caption); };
-    ModalErrorListItemView.prototype.setMessage = function (message) { this.message.setText(message); };
     return ModalErrorListItemView;
 }(LinkListGroupItemView_1.LinkListGroupItemView));
 exports.ModalErrorListItemView = ModalErrorListItemView;
@@ -3257,18 +1779,18 @@ exports.ModalErrorListItemView = ModalErrorListItemView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Events.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Events.js ***!
-  \************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js":
+/*!*******************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Events.js ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SimpleEvent = exports.DefaultEventHandler = exports.DefaultEvent = exports.ArrayItemEventCollection = exports.EventCollection = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
 var EventCollection = /** @class */ (function () {
     function EventCollection() {
         this._events = [];
@@ -3404,22 +1926,22 @@ exports.SimpleEvent = SimpleEvent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/FaIcon.js ***!
-  \************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js":
+/*!*******************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FaIcon = exports.FaIconNames = exports.FaIconViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ./ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var template = __webpack_require__(/*! ./FaIcon.html */ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.html");
-var HtmlComponent_1 = __webpack_require__(/*! ./Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./Html/HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ./ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var template = __webpack_require__(/*! ./FaIcon.html */ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.html");
+var HtmlComponent_1 = __webpack_require__(/*! ./Html/HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./Html/HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
 var FaIconViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(FaIconViewModel, _super);
     function FaIconViewModel() {
@@ -3520,20 +2042,20 @@ exports.FaIcon = FaIcon;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Column.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Grid/Column.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Column = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
 var Column = /** @class */ (function (_super) {
     tslib_1.__extends(Column, _super);
     function Column(vm) {
@@ -3553,20 +2075,20 @@ exports.Column = Column;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Grid/LabelColumn.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Grid/LabelColumn.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/LabelColumn.js":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Grid/LabelColumn.js ***!
+  \*****************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LabelColumn = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
-var Label_1 = __webpack_require__(/*! ../Html/Label */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Label.js");
-var LabelViewModel_1 = __webpack_require__(/*! ../Html/LabelViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/LabelViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var Label_1 = __webpack_require__(/*! ../Html/Label */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.js");
+var LabelViewModel_1 = __webpack_require__(/*! ../Html/LabelViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LabelViewModel.js");
 var LabelColumn = /** @class */ (function (_super) {
     tslib_1.__extends(LabelColumn, _super);
     function LabelColumn(vm) {
@@ -3586,24 +2108,24 @@ exports.LabelColumn = LabelColumn;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js ***!
-  \**************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js":
+/*!*********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Row = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var FaIcon_1 = __webpack_require__(/*! ../FaIcon */ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js");
-var Column_1 = __webpack_require__(/*! ./Column */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Column.js");
-var LabelColumn_1 = __webpack_require__(/*! ./LabelColumn */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/LabelColumn.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var FaIcon_1 = __webpack_require__(/*! ../FaIcon */ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var Column_1 = __webpack_require__(/*! ./Column */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js");
+var LabelColumn_1 = __webpack_require__(/*! ./LabelColumn */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/LabelColumn.js");
+var TextColumn_1 = __webpack_require__(/*! ./TextColumn */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/TextColumn.js");
 var Row = /** @class */ (function (_super) {
     tslib_1.__extends(Row, _super);
     function Row(vm) {
@@ -3620,10 +2142,9 @@ var Row = /** @class */ (function (_super) {
         config && config(icon);
         return column;
     };
-    Row.prototype.addTextColumn = function (text) {
-        if (text === void 0) { text = ''; }
+    Row.prototype.addTextColumn = function () {
         var column = this.addColumn();
-        column.addContent(new TextBlock_1.TextBlock(text));
+        column.addContent(new TextColumn_1.TextColumn());
         return column;
     };
     Row.prototype.addColumn = function () {
@@ -3643,10 +2164,45 @@ exports.Row = Row;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/HostEnvironment.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/TextColumn.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Grid/TextColumn.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextColumn = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var TextSpanView_1 = __webpack_require__(/*! ../Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var TextColumn = /** @class */ (function (_super) {
+    tslib_1.__extends(TextColumn, _super);
+    function TextColumn(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.setColumnCss(ColumnCss_1.ColumnCss.xs());
+        _this.addCssName('col-form-label');
+        _this.textSpan = _this.addContent(new TextSpanView_1.TextSpanView());
+        return _this;
+    }
+    TextColumn.prototype.setColumnCss = function (columnCss) {
+        this.replaceCssName(this.columnCss && this.columnCss.toString(), columnCss && columnCss.toString());
+    };
+    return TextColumn;
+}(Block_1.Block));
+exports.TextColumn = TextColumn;
+//# sourceMappingURL=TextColumn.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3667,18 +2223,18 @@ exports.HostEnvironment = HostEnvironment;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js ***!
-  \*****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AggregateComponent = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
 var AggregateComponent = /** @class */ (function () {
     function AggregateComponent(vm) {
         this.vm = vm;
@@ -3786,21 +2342,21 @@ exports.AggregateComponent = AggregateComponent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js":
-/*!**************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js ***!
-  \**************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js":
+/*!*********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js ***!
+  \*********************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AggregateComponentViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js");
-var template = __webpack_require__(/*! ./AggregateComponent.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.html");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js");
+var template = __webpack_require__(/*! ./AggregateComponent.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.html");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var AggregateComponentViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(AggregateComponentViewModel, _super);
     function AggregateComponentViewModel() {
@@ -3817,19 +2373,19 @@ exports.AggregateComponentViewModel = AggregateComponentViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Block = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Block = /** @class */ (function (_super) {
     tslib_1.__extends(Block, _super);
     function Block(vm) {
@@ -3861,22 +2417,22 @@ exports.Block = Block;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlockViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./Block.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Block.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var BlockViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(BlockViewModel, _super);
     function BlockViewModel() {
@@ -3892,26 +2448,26 @@ exports.BlockViewModel = BlockViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Button.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Button.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.js ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Button = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ButtonViewModel_1 = __webpack_require__(/*! ./ButtonViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ButtonViewModel_1 = __webpack_require__(/*! ./ButtonViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Button = /** @class */ (function (_super) {
     tslib_1.__extends(Button, _super);
     function Button(vm) {
         if (vm === void 0) { vm = new ButtonViewModel_1.ButtonViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.clicked = _this.vm.clicked;
         _this.isOutline = false;
+        _this.clicked = _this.vm.clicked;
         vm.type('button');
         _this.addCssName('btn');
         return _this;
@@ -3941,23 +2497,23 @@ exports.Button = Button;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ButtonViewModel.js ***!
-  \**************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js ***!
+  \*********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ButtonViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var template = __webpack_require__(/*! ./Button.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Button.html");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./Button.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.html");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var ButtonViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ButtonViewModel, _super);
     function ButtonViewModel() {
@@ -3982,19 +2538,19 @@ exports.ButtonViewModel = ButtonViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Container.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Container.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Container.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Container.js ***!
+  \***************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Container = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ./Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
 var Container = /** @class */ (function (_super) {
     tslib_1.__extends(Container, _super);
     function Container(vm) {
@@ -4019,19 +2575,19 @@ exports.Container = Container;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumn.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumn.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumn.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumn.js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FlexColumn = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ./Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
 var FlexColumn = /** @class */ (function (_super) {
     tslib_1.__extends(FlexColumn, _super);
     function FlexColumn(vm) {
@@ -4047,22 +2603,22 @@ exports.FlexColumn = FlexColumn;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumnFill.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumnFill.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumnFill.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumnFill.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FlexColumnFill = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var Block_1 = __webpack_require__(/*! ./Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var Container_1 = __webpack_require__(/*! ./Container */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Container.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Container_1 = __webpack_require__(/*! ./Container */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Container.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
 var FlexColumnFill = /** @class */ (function (_super) {
     tslib_1.__extends(FlexColumnFill, _super);
     function FlexColumnFill(vm) {
@@ -4089,20 +2645,20 @@ exports.FlexColumnFill = FlexColumnFill;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading1 = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var Heading1ViewModel_1 = __webpack_require__(/*! ./Heading1ViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1ViewModel.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var Heading1ViewModel_1 = __webpack_require__(/*! ./Heading1ViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1ViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Heading1 = /** @class */ (function (_super) {
     tslib_1.__extends(Heading1, _super);
     function Heading1(vm) {
@@ -4116,21 +2672,21 @@ exports.Heading1 = Heading1;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1ViewModel.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1ViewModel.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1ViewModel.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1ViewModel.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading1ViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./Heading1.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Heading1.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var Heading1ViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(Heading1ViewModel, _super);
     function Heading1ViewModel() {
@@ -4145,20 +2701,20 @@ exports.Heading1ViewModel = Heading1ViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading4 = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var Heading4ViewModel_1 = __webpack_require__(/*! ./Heading4ViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4ViewModel.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var Heading4ViewModel_1 = __webpack_require__(/*! ./Heading4ViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4ViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Heading4 = /** @class */ (function (_super) {
     tslib_1.__extends(Heading4, _super);
     function Heading4(vm) {
@@ -4172,21 +2728,21 @@ exports.Heading4 = Heading4;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4ViewModel.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4ViewModel.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4ViewModel.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4ViewModel.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading4ViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./Heading4.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Heading4.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var Heading4ViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(Heading4ViewModel, _super);
     function Heading4ViewModel() {
@@ -4201,20 +2757,20 @@ exports.Heading4ViewModel = Heading4ViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading5 = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var Heading5ViewModel_1 = __webpack_require__(/*! ./Heading5ViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5ViewModel.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var Heading5ViewModel_1 = __webpack_require__(/*! ./Heading5ViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5ViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Heading5 = /** @class */ (function (_super) {
     tslib_1.__extends(Heading5, _super);
     function Heading5(vm) {
@@ -4228,21 +2784,21 @@ exports.Heading5 = Heading5;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5ViewModel.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5ViewModel.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5ViewModel.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5ViewModel.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Heading5ViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./Heading5.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Heading5.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var Heading5ViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(Heading5ViewModel, _super);
     function Heading5ViewModel() {
@@ -4257,17 +2813,17 @@ exports.Heading5ViewModel = Heading5ViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HorizontalRule = void 0;
-var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRuleViewModel.js");
+var HorizontalRuleViewModel_1 = __webpack_require__(/*! ./HorizontalRuleViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRuleViewModel.js");
 var HorizontalRule = /** @class */ (function () {
     function HorizontalRule(vm) {
         if (vm === void 0) { vm = new HorizontalRuleViewModel_1.HorizontalRuleViewModel(); }
@@ -4295,21 +2851,21 @@ exports.HorizontalRule = HorizontalRule;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRuleViewModel.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRuleViewModel.js ***!
-  \**********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRuleViewModel.js":
+/*!*****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRuleViewModel.js ***!
+  \*****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HorizontalRuleViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js");
-var template = __webpack_require__(/*! ./HorizontalRule.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.html");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js");
+var template = __webpack_require__(/*! ./HorizontalRule.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.html");
 var HorizontalRuleViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(HorizontalRuleViewModel, _super);
     function HorizontalRuleViewModel() {
@@ -4324,17 +2880,17 @@ exports.HorizontalRuleViewModel = HorizontalRuleViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HtmlComponent = void 0;
-var CssClass_1 = __webpack_require__(/*! ../CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var CssClass_1 = __webpack_require__(/*! ../CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var HtmlComponent = /** @class */ (function () {
     function HtmlComponent(vm) {
         this.vm = vm;
@@ -4423,19 +2979,19 @@ exports.HtmlComponent = HtmlComponent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HtmlComponentViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var HtmlComponentViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(HtmlComponentViewModel, _super);
     function HtmlComponentViewModel(template) {
@@ -4454,19 +3010,19 @@ exports.HtmlComponentViewModel = HtmlComponentViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HtmlContainerComponent = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
 var HtmlContainerComponent = /** @class */ (function (_super) {
     tslib_1.__extends(HtmlContainerComponent, _super);
     function HtmlContainerComponent(vm, content) {
@@ -4509,20 +3065,20 @@ exports.HtmlContainerComponent = HtmlContainerComponent;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Label.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Label.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Label = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var LabelViewModel_1 = __webpack_require__(/*! ./LabelViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/LabelViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var LabelViewModel_1 = __webpack_require__(/*! ./LabelViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LabelViewModel.js");
 var Label = /** @class */ (function (_super) {
     tslib_1.__extends(Label, _super);
     function Label(vm) {
@@ -4544,22 +3100,22 @@ exports.Label = Label;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/LabelViewModel.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/LabelViewModel.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LabelViewModel.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/LabelViewModel.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LabelViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var template = __webpack_require__(/*! ./Label.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Label.html");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./Label.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.html");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var LabelViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(LabelViewModel, _super);
     function LabelViewModel() {
@@ -4575,70 +3131,61 @@ exports.LabelViewModel = LabelViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Link.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Link.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkView.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkView.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Link = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var WebPage_1 = __webpack_require__(/*! ../WebPage */ "./node_modules/@jasonbenfield/sharedwebapp/WebPage.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
-var LinkViewModel_1 = __webpack_require__(/*! ./LinkViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/LinkViewModel.js");
-var Link = /** @class */ (function (_super) {
-    tslib_1.__extends(Link, _super);
-    function Link(vm) {
+exports.LinkView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
+var LinkViewModel_1 = __webpack_require__(/*! ./LinkViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkViewModel.js");
+var LinkView = /** @class */ (function (_super) {
+    tslib_1.__extends(LinkView, _super);
+    function LinkView(vm) {
         if (vm === void 0) { vm = new LinkViewModel_1.LinkViewModel(); }
         var _this = _super.call(this, vm, new AggregateComponent_1.AggregateComponent(vm.content)) || this;
         _this.clicked = _this.vm.clicked;
-        _this.setHref('javascript:;');
-        _this.clicked.register(_this.onClick.bind(_this));
         return _this;
     }
-    Link.prototype.onClick = function () {
-        if (this.href && this.href !== 'javascript:;') {
-            new WebPage_1.WebPage(this.href).open();
-        }
-    };
-    Link.prototype.setHref = function (href) {
-        this.href = href;
+    LinkView.prototype.setHref = function (href) {
         this.vm.href(href);
     };
-    Link.prototype.enable = function () {
+    LinkView.prototype.enable = function () {
         this.vm.isEnabled(true);
     };
-    Link.prototype.disable = function () {
+    LinkView.prototype.disable = function () {
         this.vm.isEnabled(false);
     };
-    return Link;
+    return LinkView;
 }(HtmlContainerComponent_1.HtmlContainerComponent));
-exports.Link = Link;
-//# sourceMappingURL=Link.js.map
+exports.LinkView = LinkView;
+//# sourceMappingURL=LinkView.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/LinkViewModel.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/LinkViewModel.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkViewModel.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkViewModel.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LinkViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var template = __webpack_require__(/*! ./Link.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Link.html");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./Link.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Link.html");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var LinkViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(LinkViewModel, _super);
     function LinkViewModel() {
@@ -4660,22 +3207,22 @@ exports.LinkViewModel = LinkViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlockViewModel.js ***!
-  \*****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlockViewModel.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlockViewModel.js ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListBlockViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var template = __webpack_require__(/*! ./ListBlock.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var template = __webpack_require__(/*! ./ListBlock.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlock.html");
 var ListBlockViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ListBlockViewModel, _super);
     function ListBlockViewModel() {
@@ -4696,27 +3243,25 @@ exports.ListBlockViewModel = ListBlockViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListItem = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
-var ListItemViewModel_1 = __webpack_require__(/*! ./ListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
+var ListItemViewModel_1 = __webpack_require__(/*! ./ListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js");
 var ListItem = /** @class */ (function (_super) {
     tslib_1.__extends(ListItem, _super);
     function ListItem(vm) {
         if (vm === void 0) { vm = new ListItemViewModel_1.ListItemViewModel(); }
         return _super.call(this, vm) || this;
     }
-    ListItem.prototype.getData = function () { return this.data; };
-    ListItem.prototype.setData = function (data) { this.data = data; };
     ListItem.prototype.addToList = function (list) {
         list.addFromListItem(this.vm, this);
         return this;
@@ -4732,21 +3277,21 @@ exports.ListItem = ListItem;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListItemViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var template = __webpack_require__(/*! ./ListItem.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var template = __webpack_require__(/*! ./ListItem.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var ListItemViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ListItemViewModel, _super);
     function ListItemViewModel() {
@@ -4762,20 +3307,20 @@ exports.ListItemViewModel = ListItemViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Small.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Small.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Small = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var SmallViewModel_1 = __webpack_require__(/*! ./SmallViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/SmallViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var SmallViewModel_1 = __webpack_require__(/*! ./SmallViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SmallViewModel.js");
 var Small = /** @class */ (function (_super) {
     tslib_1.__extends(Small, _super);
     function Small(vm) {
@@ -4794,21 +3339,21 @@ exports.Small = Small;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/SmallViewModel.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/SmallViewModel.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SmallViewModel.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/SmallViewModel.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SmallViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var template = __webpack_require__(/*! ./Small.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Small.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var template = __webpack_require__(/*! ./Small.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var SmallViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(SmallViewModel, _super);
     function SmallViewModel() {
@@ -4823,20 +3368,20 @@ exports.SmallViewModel = SmallViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Span.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Span.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.js":
+/*!**********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Span = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var SpanViewModel_1 = __webpack_require__(/*! ./SpanViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/SpanViewModel.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var SpanViewModel_1 = __webpack_require__(/*! ./SpanViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SpanViewModel.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Span = /** @class */ (function (_super) {
     tslib_1.__extends(Span, _super);
     function Span(vm) {
@@ -4850,21 +3395,21 @@ exports.Span = Span;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/SpanViewModel.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/SpanViewModel.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SpanViewModel.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/SpanViewModel.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SpanViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./Span.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Span.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Span.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
 var SpanViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(SpanViewModel, _super);
     function SpanViewModel() {
@@ -4879,63 +3424,89 @@ exports.SpanViewModel = SpanViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TextBlock = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var TextBlockViewModel_1 = __webpack_require__(/*! ./TextBlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlockViewModel.js");
-var TextBlock = /** @class */ (function (_super) {
-    tslib_1.__extends(TextBlock, _super);
-    function TextBlock(text, vm) {
-        if (text === void 0) { text = ''; }
-        if (vm === void 0) { vm = new TextBlockViewModel_1.TextBlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.setText(text);
-        return _this;
+var TextBlock = /** @class */ (function () {
+    function TextBlock(text, view) {
+        this.view = view;
+        this.setText(text);
     }
     TextBlock.prototype.setText = function (text) {
         this.text = text;
-        this.vm.text(text);
+        this.view.setText(text);
     };
+    TextBlock.prototype.setTitle = function (title) { this.view.setTitle(title); };
     TextBlock.prototype.syncTitleWithText = function (format) {
         this.formatTitle = format || (function (text) { return text; });
         this.updateTitleFromText();
     };
     TextBlock.prototype.updateTitleFromText = function () {
         if (this.formatTitle) {
-            this.vm.title(this.formatTitle(this.text));
+            this.setTitle(this.formatTitle(this.text));
         }
     };
     return TextBlock;
-}(HtmlComponent_1.HtmlComponent));
+}());
 exports.TextBlock = TextBlock;
 //# sourceMappingURL=TextBlock.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlockViewModel.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlockViewModel.js ***!
-  \*****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockView.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockView.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextBlockView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var TextBlockViewModel_1 = __webpack_require__(/*! ./TextBlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockViewModel.js");
+var TextBlockView = /** @class */ (function (_super) {
+    tslib_1.__extends(TextBlockView, _super);
+    function TextBlockView(vm) {
+        if (vm === void 0) { vm = new TextBlockViewModel_1.TextBlockViewModel(); }
+        return _super.call(this, vm) || this;
+    }
+    TextBlockView.prototype.setText = function (text) {
+        this.vm.text(text);
+    };
+    TextBlockView.prototype.setTitle = function (title) {
+        this.vm.title(title);
+    };
+    return TextBlockView;
+}(HtmlComponent_1.HtmlComponent));
+exports.TextBlockView = TextBlockView;
+//# sourceMappingURL=TextBlockView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockViewModel.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockViewModel.js ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TextBlockViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./TextBlock.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./TextBlock.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var TextBlockViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(TextBlockViewModel, _super);
     function TextBlockViewModel() {
@@ -4950,166 +3521,150 @@ exports.TextBlockViewModel = TextBlockViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading4.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading4View.js":
+/*!**********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading4View.js ***!
+  \**********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TextHeading4 = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Heading4_1 = __webpack_require__(/*! ./Heading4 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.js");
-var Heading4ViewModel_1 = __webpack_require__(/*! ./Heading4ViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4ViewModel.js");
-var TextSpan_1 = __webpack_require__(/*! ./TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
-var TextHeading4 = /** @class */ (function (_super) {
-    tslib_1.__extends(TextHeading4, _super);
-    function TextHeading4(text, vm) {
-        if (text === void 0) { text = ''; }
+exports.TextHeading4View = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Heading4_1 = __webpack_require__(/*! ./Heading4 */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.js");
+var Heading4ViewModel_1 = __webpack_require__(/*! ./Heading4ViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4ViewModel.js");
+var TextSpanView_1 = __webpack_require__(/*! ./TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var TextHeading4View = /** @class */ (function (_super) {
+    tslib_1.__extends(TextHeading4View, _super);
+    function TextHeading4View(vm) {
         if (vm === void 0) { vm = new Heading4ViewModel_1.Heading4ViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.textSpan = _this.addContent(new TextSpan_1.TextSpan());
-        _this.setText(text);
+        _this.textSpan = _this.addContent(new TextSpanView_1.TextSpanView());
         return _this;
     }
-    TextHeading4.prototype.setText = function (text) {
-        this.textSpan.setText(text);
-    };
-    return TextHeading4;
+    TextHeading4View.prototype.setText = function (text) { this.textSpan.setText(text); };
+    TextHeading4View.prototype.setTitle = function (title) { this.textSpan.setTitle(title); };
+    return TextHeading4View;
 }(Heading4_1.Heading4));
-exports.TextHeading4 = TextHeading4;
-//# sourceMappingURL=TextHeading4.js.map
+exports.TextHeading4View = TextHeading4View;
+//# sourceMappingURL=TextHeading4View.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextHeading5.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading5View.js":
+/*!**********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextHeading5View.js ***!
+  \**********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TextHeading5 = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Heading5_1 = __webpack_require__(/*! ./Heading5 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.js");
-var Heading5ViewModel_1 = __webpack_require__(/*! ./Heading5ViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5ViewModel.js");
-var TextSpan_1 = __webpack_require__(/*! ./TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
-var TextHeading5 = /** @class */ (function (_super) {
-    tslib_1.__extends(TextHeading5, _super);
-    function TextHeading5(text, vm) {
-        if (text === void 0) { text = ''; }
+exports.TextHeading5View = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Heading5_1 = __webpack_require__(/*! ./Heading5 */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.js");
+var Heading5ViewModel_1 = __webpack_require__(/*! ./Heading5ViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5ViewModel.js");
+var TextSpanView_1 = __webpack_require__(/*! ./TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var TextHeading5View = /** @class */ (function (_super) {
+    tslib_1.__extends(TextHeading5View, _super);
+    function TextHeading5View(vm) {
         if (vm === void 0) { vm = new Heading5ViewModel_1.Heading5ViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.textSpan = _this.addContent(new TextSpan_1.TextSpan());
-        _this.setText(text);
+        _this.textSpan = _this.addContent(new TextSpanView_1.TextSpanView());
         return _this;
     }
-    TextHeading5.prototype.setText = function (text) {
-        this.textSpan.setText(text);
-    };
-    return TextHeading5;
+    TextHeading5View.prototype.setText = function (text) { this.textSpan.setText(text); };
+    TextHeading5View.prototype.setTitle = function (title) { this.textSpan.setTitle(title); };
+    return TextHeading5View;
 }(Heading5_1.Heading5));
-exports.TextHeading5 = TextHeading5;
-//# sourceMappingURL=TextHeading5.js.map
+exports.TextHeading5View = TextHeading5View;
+//# sourceMappingURL=TextHeading5View.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSmall.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextSmall.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSmallView.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSmallView.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TextSmall = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Small_1 = __webpack_require__(/*! ./Small */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Small.js");
-var SmallViewModel_1 = __webpack_require__(/*! ./SmallViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/SmallViewModel.js");
-var TextSpan_1 = __webpack_require__(/*! ./TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
-var TextSmall = /** @class */ (function (_super) {
-    tslib_1.__extends(TextSmall, _super);
-    function TextSmall(text, vm) {
-        if (text === void 0) { text = ''; }
+exports.TextSmallView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Small_1 = __webpack_require__(/*! ./Small */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.js");
+var SmallViewModel_1 = __webpack_require__(/*! ./SmallViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SmallViewModel.js");
+var TextSpanView_1 = __webpack_require__(/*! ./TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var TextSmallView = /** @class */ (function (_super) {
+    tslib_1.__extends(TextSmallView, _super);
+    function TextSmallView(vm) {
         if (vm === void 0) { vm = new SmallViewModel_1.SmallViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.textSpan = _this.addContent(new TextSpan_1.TextSpan());
-        _this.setText(text);
+        _this.textSpan = _this.addContent(new TextSpanView_1.TextSpanView());
         return _this;
     }
-    TextSmall.prototype.setText = function (text) {
+    TextSmallView.prototype.setText = function (text) {
         this.textSpan.setText(text);
     };
-    return TextSmall;
+    TextSmallView.prototype.setTitle = function (title) {
+        this.textSpan.setTitle(title);
+    };
+    return TextSmallView;
 }(Small_1.Small));
-exports.TextSmall = TextSmall;
-//# sourceMappingURL=TextSmall.js.map
+exports.TextSmallView = TextSmallView;
+//# sourceMappingURL=TextSmallView.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js":
+/*!******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TextSpan = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var TextSpanViewModel_1 = __webpack_require__(/*! ./TextSpanViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpanViewModel.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var TextSpan = /** @class */ (function (_super) {
-    tslib_1.__extends(TextSpan, _super);
-    function TextSpan(text, vm) {
-        if (text === void 0) { text = ''; }
+exports.TextSpanView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var TextSpanViewModel_1 = __webpack_require__(/*! ./TextSpanViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanViewModel.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var TextSpanView = /** @class */ (function (_super) {
+    tslib_1.__extends(TextSpanView, _super);
+    function TextSpanView(vm) {
         if (vm === void 0) { vm = new TextSpanViewModel_1.TextSpanViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.setText(text);
-        return _this;
+        return _super.call(this, vm) || this;
     }
-    TextSpan.prototype.setText = function (text) {
-        this.text = text;
+    TextSpanView.prototype.setText = function (text) {
         this.vm.text(text);
-        this.updateTitleFromText();
     };
-    TextSpan.prototype.syncTitleWithText = function (format) {
-        this.formatTitle = format || (function (text) { return text; });
-        this.updateTitleFromText();
+    TextSpanView.prototype.setTitle = function (title) {
+        this.vm.title(title);
     };
-    TextSpan.prototype.updateTitleFromText = function () {
-        if (this.formatTitle) {
-            this.vm.title(this.formatTitle(this.text));
-        }
-    };
-    return TextSpan;
+    return TextSpanView;
 }(HtmlComponent_1.HtmlComponent));
-exports.TextSpan = TextSpan;
-//# sourceMappingURL=TextSpan.js.map
+exports.TextSpanView = TextSpanView;
+//# sourceMappingURL=TextSpanView.js.map
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpanViewModel.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpanViewModel.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanViewModel.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanViewModel.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TextSpanViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
-var template = __webpack_require__(/*! ./TextSpan.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./TextSpan.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpan.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
 var TextSpanViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(TextSpanViewModel, _super);
     function TextSpanViewModel() {
@@ -5124,23 +3679,23 @@ exports.TextSpanViewModel = TextSpanViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Toolbar.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Toolbar.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Toolbar.js":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Toolbar.js ***!
+  \*************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Toolbar = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "./node_modules/@jasonbenfield/sharedwebapp/ColumnCss.js");
-var Row_1 = __webpack_require__(/*! ../Grid/Row */ "./node_modules/@jasonbenfield/sharedwebapp/Grid/Row.js");
-var Block_1 = __webpack_require__(/*! ./Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var Container_1 = __webpack_require__(/*! ./Container */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Container.js");
-var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ColumnCss_1 = __webpack_require__(/*! ../ColumnCss */ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js");
+var Row_1 = __webpack_require__(/*! ../Grid/Row */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js");
+var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Container_1 = __webpack_require__(/*! ./Container */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Container.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
 var Toolbar = /** @class */ (function (_super) {
     tslib_1.__extends(Toolbar, _super);
     function Toolbar(vm) {
@@ -5165,20 +3720,20 @@ exports.Toolbar = Toolbar;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.js ***!
+  \*******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UnorderedList = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var BaseListView_1 = __webpack_require__(/*! ../ListGroup/BaseListView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListView.js");
-var ListItem_1 = __webpack_require__(/*! ./ListItem */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.js");
-var UnorderedListViewModel_1 = __webpack_require__(/*! ./UnorderedListViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BaseListView_1 = __webpack_require__(/*! ../ListGroup/BaseListView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListView.js");
+var ListItem_1 = __webpack_require__(/*! ./ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var UnorderedListViewModel_1 = __webpack_require__(/*! ./UnorderedListViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js");
 var UnorderedList = /** @class */ (function (_super) {
     tslib_1.__extends(UnorderedList, _super);
     function UnorderedList(createItemView, vm) {
@@ -5193,22 +3748,22 @@ exports.UnorderedList = UnorderedList;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UnorderedListViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var template = __webpack_require__(/*! ./UnorderedList.html */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./UnorderedList.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
 var UnorderedListViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(UnorderedListViewModel, _super);
     function UnorderedListViewModel() {
@@ -5229,95 +3784,17 @@ exports.UnorderedListViewModel = UnorderedListViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/HttpClient.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.HttpClient = exports.HttpPostResult = void 0;
-var HttpPostResult = /** @class */ (function () {
-    function HttpPostResult(result, url, status, responseText) {
-        this.result = result;
-        this.url = url;
-        this.status = status;
-        this.responseText = responseText;
-    }
-    HttpPostResult.prototype.isSuccessful = function () {
-        return this.status === 200;
-    };
-    HttpPostResult.prototype.toString = function () {
-        return this.url + "\r\n" + this.status + "\r\n" + this.responseText + "\r\n" + this.result;
-    };
-    return HttpPostResult;
-}());
-exports.HttpPostResult = HttpPostResult;
-var HttpClient = /** @class */ (function () {
-    function HttpClient() {
-    }
-    HttpClient.prototype.get = function (url) {
-        return this.execute('GET', url);
-    };
-    HttpClient.prototype.post = function (url, data) {
-        return this.execute('POST', url, data);
-    };
-    HttpClient.prototype.execute = function (method, url, body) {
-        return new Promise(function (resolve) {
-            function reqListener() {
-                console.log(this.responseText);
-            }
-            var oReq = new XMLHttpRequest();
-            oReq.withCredentials = true;
-            oReq.onreadystatechange = function () {
-                if (oReq.readyState == 4) {
-                    var result = void 0;
-                    if (method === 'GET') {
-                        result = oReq.responseText;
-                    }
-                    else if (!/^\s*[{\[]\s*.*[\]}]\s*$/.test(oReq.responseText)) {
-                        var responseText = oReq.responseText;
-                        if (!responseText) {
-                            responseText = 'null';
-                        }
-                        responseText = "{ \"data\": " + responseText + " }";
-                        var dataResult = JSON.parse(responseText);
-                        result = dataResult.data;
-                    }
-                    else {
-                        result = JSON.parse(oReq.responseText);
-                    }
-                    resolve(new HttpPostResult(result, url, oReq.status, oReq.responseText));
-                }
-            };
-            oReq.addEventListener("load", reqListener.bind(oReq));
-            oReq.open(method, url);
-            if (method === 'POST') {
-                oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            }
-            oReq.send(body);
-        });
-    };
-    return HttpClient;
-}());
-exports.HttpClient = HttpClient;
-//# sourceMappingURL=HttpClient.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JoinedStrings = void 0;
-var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
+var Enumerable_1 = __webpack_require__(/*! ./Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
 var JoinedStrings = /** @class */ (function () {
     function JoinedStrings(separator, arr, format) {
         this.separator = separator;
@@ -5350,71 +3827,18 @@ exports.JoinedStrings = JoinedStrings;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/JsonText.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/JsonText.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.JsonText = void 0;
-var JsonText = /** @class */ (function () {
-    function JsonText(data) {
-        this.formatDates(data);
-        this.value = JSON.stringify(data);
-    }
-    JsonText.prototype.formatDates = function (obj) {
-        if (obj) {
-            if (Object.prototype.toString.call(obj) === '[object Array]') {
-                for (var i = 0; i < obj.length; i++) {
-                    var el = obj[i];
-                    if (el instanceof Date) {
-                        obj[i] = el.toISOString();
-                    }
-                    else {
-                        this.formatDates(el);
-                    }
-                }
-            }
-            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
-                for (var prop in obj) {
-                    if (prop) {
-                        var value = obj[prop];
-                        if (value instanceof Date) {
-                            obj[prop] = value.toISOString();
-                        }
-                        else {
-                            this.formatDates(value);
-                        }
-                    }
-                }
-            }
-        }
-    };
-    JsonText.prototype.toString = function () {
-        return this.value;
-    };
-    return JsonText;
-}());
-exports.JsonText = JsonText;
-//# sourceMappingURL=JsonText.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListGroupView.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListGroupView.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListGroupView.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListGroupView.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BaseListGroupView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var BaseListView_1 = __webpack_require__(/*! ./BaseListView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BaseListView_1 = __webpack_require__(/*! ./BaseListView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListView.js");
 var BaseListGroupView = /** @class */ (function (_super) {
     tslib_1.__extends(BaseListGroupView, _super);
     function BaseListGroupView(createItemView, vm) {
@@ -5432,20 +3856,20 @@ exports.BaseListGroupView = BaseListGroupView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListView.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListView.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListView.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListView.js ***!
+  \***********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BaseListView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
-var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js");
 var BaseListView = /** @class */ (function (_super) {
     tslib_1.__extends(BaseListView, _super);
     function BaseListView(createItemView, vm) {
@@ -5487,26 +3911,26 @@ exports.BaseListView = BaseListView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView.js ***!
-  \*************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListGroupItemView.js":
+/*!********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListGroupItemView.js ***!
+  \********************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LinkListGroupItemView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Link_1 = __webpack_require__(/*! ../Html/Link */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Link.js");
-var LinkListItemViewModel_1 = __webpack_require__(/*! ./LinkListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel.js");
-var ListGroupItemView_1 = __webpack_require__(/*! ./ListGroupItemView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var LinkView_1 = __webpack_require__(/*! ../Html/LinkView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkView.js");
+var LinkListItemViewModel_1 = __webpack_require__(/*! ./LinkListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListItemViewModel.js");
+var ListGroupItemView_1 = __webpack_require__(/*! ./ListGroupItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupItemView.js");
 var LinkListGroupItemView = /** @class */ (function (_super) {
     tslib_1.__extends(LinkListGroupItemView, _super);
     function LinkListGroupItemView(vm) {
         if (vm === void 0) { vm = new LinkListItemViewModel_1.LinkListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.link = new Link_1.Link(vm);
+        _this.link = new LinkView_1.LinkView(vm);
         return _this;
     }
     LinkListGroupItemView.prototype.setHref = function (href) {
@@ -5525,18 +3949,18 @@ exports.LinkListGroupItemView = LinkListGroupItemView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel.js ***!
-  \*************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListItemViewModel.js":
+/*!********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListItemViewModel.js ***!
+  \********************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LinkListItemViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var LinkViewModel_1 = __webpack_require__(/*! ../Html/LinkViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/LinkViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var LinkViewModel_1 = __webpack_require__(/*! ../Html/LinkViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/LinkViewModel.js");
 var LinkListItemViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(LinkListItemViewModel, _super);
     function LinkListItemViewModel() {
@@ -5551,18 +3975,18 @@ exports.LinkListItemViewModel = LinkListItemViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroup.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroup.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroup.js ***!
+  \********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListGroup = void 0;
-var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "./node_modules/@jasonbenfield/sharedwebapp/Enumerable.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
 var ListItemWithView = /** @class */ (function () {
     function ListItemWithView(listItem, view) {
         this.listItem = listItem;
@@ -5613,37 +4037,35 @@ exports.ListGroup = ListGroup;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupItemView.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupItemView.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListGroupItemView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var AggregateComponent_1 = __webpack_require__(/*! ../Html/AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponent.js");
-var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItemViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var AggregateComponent_1 = __webpack_require__(/*! ../Html/AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var HtmlComponent_1 = __webpack_require__(/*! ../Html/HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var ListItemViewModel_1 = __webpack_require__(/*! ../Html/ListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItemViewModel.js");
 var ListGroupItemView = /** @class */ (function (_super) {
     tslib_1.__extends(ListGroupItemView, _super);
     function ListGroupItemView(vm) {
         if (vm === void 0) { vm = new ListItemViewModel_1.ListItemViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.content = new AggregateComponent_1.AggregateComponent(_this.vm.content);
         _this.contextClass = ContextualClass_1.ContextualClass.default;
         _this.active = '';
+        _this.content = new AggregateComponent_1.AggregateComponent(_this.vm.content);
         _this.addCssName('list-group-item');
         if (vm.isClickable) {
             _this.addCssName('list-group-item-action');
         }
         return _this;
     }
-    ListGroupItemView.prototype.getData = function () { return this.data; };
-    ListGroupItemView.prototype.setData = function (data) { this.data = data; };
     ListGroupItemView.prototype.addToList = function (list) {
         list.addFromListItem(this.vm, this);
         return this;
@@ -5656,13 +4078,13 @@ var ListGroupItemView = /** @class */ (function (_super) {
         return item.addToContainer(this.content);
     };
     ListGroupItemView.prototype.setContext = function (contextClass) {
-        var newCss = this.getCss(contextClass);
-        this.replaceCssName(this.getCss(this.contextClass), newCss);
+        var newCss = this.getListGroupItemContextCss(contextClass);
+        this.replaceCssName(this.getListGroupItemContextCss(this.contextClass), newCss);
         this.contextClass = contextClass;
     };
-    ListGroupItemView.prototype.getCss = function (contextClass) {
+    ListGroupItemView.prototype.getListGroupItemContextCss = function (contextClass) {
         return contextClass && !contextClass.equals(ContextualClass_1.ContextualClass.default) ?
-            contextClass.toString() : '';
+            contextClass.append('list-group-item').toString() : '';
     };
     ListGroupItemView.prototype.activate = function () {
         this.setActive('active');
@@ -5684,19 +4106,19 @@ exports.ListGroupItemView = ListGroupItemView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/ListGroup/ListGroupView.js ***!
-  \*****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupView.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupView.js ***!
+  \************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListGroupView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedListViewModel.js");
-var BaseListGroupView_1 = __webpack_require__(/*! ./BaseListGroupView */ "./node_modules/@jasonbenfield/sharedwebapp/ListGroup/BaseListGroupView.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js");
+var BaseListGroupView_1 = __webpack_require__(/*! ./BaseListGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/BaseListGroupView.js");
 var ListGroupView = /** @class */ (function (_super) {
     tslib_1.__extends(ListGroupView, _super);
     function ListGroupView(createItemView, vm) {
@@ -5710,17 +4132,17 @@ exports.ListGroupView = ListGroupView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/MarginCss.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/MarginCss.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js":
+/*!**********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js ***!
+  \**********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MarginCss = void 0;
-var CssClass_1 = __webpack_require__(/*! ./CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var MarginCss = /** @class */ (function () {
     function MarginCss() {
         this.css = new CssClass_1.CssClass;
@@ -5828,29 +4250,32 @@ exports.MarginCss = MarginCss;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/MessageAlert.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/MessageAlert.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlert.js":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/MessageAlert.js ***!
+  \*************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MessageAlert = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var Events_1 = __webpack_require__(/*! ./Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var DebouncedAction_1 = __webpack_require__(/*! ./DebouncedAction */ "../../../../Published/Development/Packages/Shared/Current/npm/DebouncedAction.js");
+var Events_1 = __webpack_require__(/*! ./Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var TextBlock_1 = __webpack_require__(/*! ./Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
 var MessageAlert = /** @class */ (function () {
     function MessageAlert(view) {
         var _this = this;
         this.view = view;
         this._messageChanged = new Events_1.DefaultEvent(this);
         this.messageChanged = this._messageChanged.handler();
-        this.debouncedSetMessage = _.debounce(function (message) {
+        this.debouncedSetMessage = new DebouncedAction_1.DebouncedAction(function (message) {
             _this.updateVmMessage(message);
         }, 500);
+        this.textBlock = new TextBlock_1.TextBlock('', view.textBlock);
     }
     Object.defineProperty(MessageAlert.prototype, "message", {
         get: function () {
@@ -5879,6 +4304,7 @@ var MessageAlert = /** @class */ (function () {
     };
     MessageAlert.prototype.infoAction = function (message, a) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var result;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5888,12 +4314,12 @@ var MessageAlert = /** @class */ (function () {
                         _a.trys.push([1, , 3, 4]);
                         return [4 /*yield*/, a()];
                     case 2:
-                        _a.sent();
+                        result = _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
                         this.clear();
                         return [7 /*endfinally*/];
-                    case 4: return [2 /*return*/];
+                    case 4: return [2 /*return*/, result];
                 }
             });
         });
@@ -5912,10 +4338,10 @@ var MessageAlert = /** @class */ (function () {
         if (this._message) {
             this.updateVmMessage(this._message);
         }
-        this.debouncedSetMessage(this._message);
+        this.debouncedSetMessage.execute(this._message);
     };
     MessageAlert.prototype.updateVmMessage = function (message) {
-        this.view.setMessage(message);
+        this.textBlock.setText(message);
         if (message) {
             this.view.show();
         }
@@ -5930,36 +4356,33 @@ exports.MessageAlert = MessageAlert;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/MessageAlertView.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/MessageAlertView.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlertView.js":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/MessageAlertView.js ***!
+  \*****************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MessageAlertView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Alert_1 = __webpack_require__(/*! ./Alert */ "./node_modules/@jasonbenfield/sharedwebapp/Alert.js");
-var Block_1 = __webpack_require__(/*! ./Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var BlockViewModel_1 = __webpack_require__(/*! ./Html/BlockViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/BlockViewModel.js");
-var TextBlock_1 = __webpack_require__(/*! ./Html/TextBlock */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Alert_1 = __webpack_require__(/*! ./Alert */ "../../../../Published/Development/Packages/Shared/Current/npm/Alert.js");
+var Block_1 = __webpack_require__(/*! ./Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var TextBlockView_1 = __webpack_require__(/*! ./Html/TextBlockView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlockView.js");
 var MessageAlertView = /** @class */ (function (_super) {
     tslib_1.__extends(MessageAlertView, _super);
     function MessageAlertView(vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
         _this.alert = new Alert_1.Alert(_this.vm);
-        _this.textBlock = new TextBlock_1.TextBlock().addToContainer(_this.alert.content);
+        _this.textBlock = new TextBlockView_1.TextBlockView().addToContainer(_this.alert.content);
         _this.addCssName('alert');
         return _this;
     }
     MessageAlertView.prototype.setContext = function (context) {
         this.alert.setContext(context);
-    };
-    MessageAlertView.prototype.setMessage = function (message) {
-        this.textBlock.setText(message);
     };
     return MessageAlertView;
 }(Block_1.Block));
@@ -5968,18 +4391,18 @@ exports.MessageAlertView = MessageAlertView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalBindingHandler.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalBindingHandler.js ***!
-  \*******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalBindingHandler.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalBindingHandler.js ***!
+  \**************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalBindingHandler = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var bootstrap_1 = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var bootstrap_1 = __webpack_require__(/*! bootstrap */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/bootstrap/dist/js/bootstrap.esm.js");
 var ModalBindingHandler = /** @class */ (function () {
     function ModalBindingHandler() {
     }
@@ -6036,20 +4459,20 @@ exports.ModalBindingHandler = ModalBindingHandler;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentView.js ***!
-  \******************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentView.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentView.js ***!
+  \*************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalComponentView = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var Block_1 = __webpack_require__(/*! ../Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var HtmlContainerComponent_1 = __webpack_require__(/*! ../Html/HtmlContainerComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlContainerComponent.js");
-var ModalComponentViewModel_1 = __webpack_require__(/*! ./ModalComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ../Html/HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
+var ModalComponentViewModel_1 = __webpack_require__(/*! ./ModalComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentViewModel.js");
 var ModalComponentView = /** @class */ (function (_super) {
     tslib_1.__extends(ModalComponentView, _super);
     function ModalComponentView(vm) {
@@ -6095,23 +4518,23 @@ exports.ModalComponentView = ModalComponentView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentViewModel.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentViewModel.js ***!
-  \***********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentViewModel.js":
+/*!******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentViewModel.js ***!
+  \******************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalComponentViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var template = __webpack_require__(/*! ./ModalComponent.html */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponent.html");
-var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ModalOptionsViewModel_1 = __webpack_require__(/*! ./ModalOptionsViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalOptionsViewModel.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ../Html/AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
-var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/HtmlComponentViewModel.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./ModalComponent.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponent.html");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ModalOptionsViewModel_1 = __webpack_require__(/*! ./ModalOptionsViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalOptionsViewModel.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ../Html/AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ../Html/HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
 var ModalComponentViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(ModalComponentViewModel, _super);
     function ModalComponentViewModel() {
@@ -6129,18 +4552,18 @@ exports.ModalComponentViewModel = ModalComponentViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalOptionsViewModel.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalOptionsViewModel.js ***!
-  \*********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalOptionsViewModel.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalOptionsViewModel.js ***!
+  \****************************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ModalOptionsViewModel = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var Events_1 = __webpack_require__(/*! ../Events */ "./node_modules/@jasonbenfield/sharedwebapp/Events.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
 var ModalOptionsViewModel = /** @class */ (function () {
     function ModalOptionsViewModel() {
         this.command = ko.observable('');
@@ -6158,10 +4581,10 @@ exports.ModalOptionsViewModel = ModalOptionsViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -6187,17 +4610,17 @@ exports.NamedValue = NamedValue;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/PaddingCss.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/PaddingCss.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaddingCss = void 0;
-var CssClass_1 = __webpack_require__(/*! ./CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var PaddingCss = /** @class */ (function () {
     function PaddingCss() {
         this.css = new CssClass_1.CssClass;
@@ -6302,32 +4725,32 @@ exports.PaddingCss = PaddingCss;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/PageFrameView.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/PageFrameView.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/PageFrameView.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/PageFrameView.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageFrameView = void 0;
-var AlignCss_1 = __webpack_require__(/*! ./AlignCss */ "./node_modules/@jasonbenfield/sharedwebapp/AlignCss.js");
-var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var DropdownBlock_1 = __webpack_require__(/*! ./Dropdown/DropdownBlock */ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.js");
-var ModalErrorComponentView_1 = __webpack_require__(/*! ./Error/ModalErrorComponentView */ "./node_modules/@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView.js");
-var FaIcon_1 = __webpack_require__(/*! ./FaIcon */ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.js");
-var AggregateComponent_1 = __webpack_require__(/*! ./Html/AggregateComponent */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.js");
-var Block_1 = __webpack_require__(/*! ./Html/Block */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.js");
-var FlexColumn_1 = __webpack_require__(/*! ./Html/FlexColumn */ "./node_modules/@jasonbenfield/sharedwebapp/Html/FlexColumn.js");
-var Heading1_1 = __webpack_require__(/*! ./Html/Heading1 */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.js");
-var TextSmall_1 = __webpack_require__(/*! ./Html/TextSmall */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSmall.js");
-var TextSpan_1 = __webpack_require__(/*! ./Html/TextSpan */ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.js");
-var Toolbar_1 = __webpack_require__(/*! ./Html/Toolbar */ "./node_modules/@jasonbenfield/sharedwebapp/Html/Toolbar.js");
-var PaddingCss_1 = __webpack_require__(/*! ./PaddingCss */ "./node_modules/@jasonbenfield/sharedwebapp/PaddingCss.js");
-var PageLoader_1 = __webpack_require__(/*! ./PageLoader */ "./node_modules/@jasonbenfield/sharedwebapp/PageLoader.js");
-var PageViewModel_1 = __webpack_require__(/*! ./PageViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/PageViewModel.js");
-var TextCss_1 = __webpack_require__(/*! ./TextCss */ "./node_modules/@jasonbenfield/sharedwebapp/TextCss.js");
+var AlignCss_1 = __webpack_require__(/*! ./AlignCss */ "../../../../Published/Development/Packages/Shared/Current/npm/AlignCss.js");
+var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var DropdownBlock_1 = __webpack_require__(/*! ./Dropdown/DropdownBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.js");
+var ModalErrorComponentView_1 = __webpack_require__(/*! ./Error/ModalErrorComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js");
+var FaIcon_1 = __webpack_require__(/*! ./FaIcon */ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./Html/AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var Block_1 = __webpack_require__(/*! ./Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var FlexColumn_1 = __webpack_require__(/*! ./Html/FlexColumn */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumn.js");
+var Heading1_1 = __webpack_require__(/*! ./Html/Heading1 */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.js");
+var TextSmallView_1 = __webpack_require__(/*! ./Html/TextSmallView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSmallView.js");
+var TextSpanView_1 = __webpack_require__(/*! ./Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var Toolbar_1 = __webpack_require__(/*! ./Html/Toolbar */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Toolbar.js");
+var PaddingCss_1 = __webpack_require__(/*! ./PaddingCss */ "../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js");
+var PageLoader_1 = __webpack_require__(/*! ./PageLoader */ "../../../../Published/Development/Packages/Shared/Current/npm/PageLoader.js");
+var PageViewModel_1 = __webpack_require__(/*! ./PageViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/PageViewModel.js");
+var TextCss_1 = __webpack_require__(/*! ./TextCss */ "../../../../Published/Development/Packages/Shared/Current/npm/TextCss.js");
 var PageFrameView = /** @class */ (function () {
     function PageFrameView(vm) {
         if (vm === void 0) { vm = new PageViewModel_1.PageViewModel(); }
@@ -6343,8 +4766,10 @@ var PageFrameView = /** @class */ (function () {
         this.toolbar.setPadding(PaddingCss_1.PaddingCss.xs(3));
         this.toolbar.columnStart.setTextCss(new TextCss_1.TextCss().context(ContextualClass_1.ContextualClass.light));
         var heading = this.toolbar.columnStart.addContent(new Heading1_1.Heading1());
-        this.appTitle = heading.addContent(new TextSpan_1.TextSpan(pageContext.AppTitle));
-        this.pageTitle = heading.addContent(new TextSmall_1.TextSmall(pageContext.PageTitle));
+        this.appTitle = heading.addContent(new TextSpanView_1.TextSpanView());
+        this.appTitle.setText(pageContext.AppTitle);
+        this.pageTitle = heading.addContent(new TextSmallView_1.TextSmallView());
+        this.pageTitle.setText(pageContext.PageTitle);
         this.toolbar.columnEnd.addCssFrom(new AlignCss_1.AlignCss().self(function (a) { return a.xs('center'); }).cssClass());
         var dropdown = this.toolbar.columnEnd.addContent(new DropdownBlock_1.DropdownBlock());
         if (!pageContext.IsAuthenticated) {
@@ -6353,12 +4778,14 @@ var PageFrameView = /** @class */ (function () {
         dropdown.button.setContext(ContextualClass_1.ContextualClass.light);
         dropdown.button.useOutlineStyle();
         dropdown.button.addContent(new FaIcon_1.FaIcon('user'));
-        dropdown
+        var userName = dropdown
             .addSpanItem()
             .span
-            .addContent(new TextSpan_1.TextSpan(pageContext.UserName));
+            .addContent(new TextSpanView_1.TextSpanView());
+        userName.setText(pageContext.UserName);
         this.logoutMenuItem = dropdown.addLinkItem();
-        this.logoutMenuItem.link.addContent(new TextSpan_1.TextSpan('Logout'));
+        var logoutTextSpan = this.logoutMenuItem.link.addContent(new TextSpanView_1.TextSpanView());
+        logoutTextSpan.setText('Logout');
         this.logoutMenuItem.link.setHref(pageContext.BaseUrl + "/Hub/Current/Auth/Logout");
         this.content = frame.addContent(new Block_1.Block());
         this.content.flexFill();
@@ -6404,41 +4831,41 @@ exports.PageFrameView = PageFrameView;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/PageLoader.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/PageLoader.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/PageLoader.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/PageLoader.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageLoader = void 0;
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-__webpack_require__(/*! ./Styles/default.scss */ "./node_modules/@jasonbenfield/sharedwebapp/Styles/default.scss");
-__webpack_require__(/*! @fortawesome/fontawesome-free/css/all.css */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/css/all.css");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.eot */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.svg */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.woff */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2 */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.eot */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.svg */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.woff */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2 */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.eot */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.svg */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.woff */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff");
-__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2 */ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2");
-__webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var SubmitBindingHandler_1 = __webpack_require__(/*! ./SubmitBindingHandler */ "./node_modules/@jasonbenfield/sharedwebapp/SubmitBindingHandler.js");
-var ModalBindingHandler_1 = __webpack_require__(/*! ./Modal/ModalBindingHandler */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalBindingHandler.js");
-var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
-var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "./node_modules/@jasonbenfield/sharedwebapp/ConsoleLog.js");
-var DropdownBindingHandler_1 = __webpack_require__(/*! ./DropdownBindingHandler */ "./node_modules/@jasonbenfield/sharedwebapp/DropdownBindingHandler.js");
-var DelegatedEventBindingHandler_1 = __webpack_require__(/*! ./DelegatedEventBindingHandler */ "./node_modules/@jasonbenfield/sharedwebapp/DelegatedEventBindingHandler.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+__webpack_require__(/*! ./Styles/default.scss */ "../../../../Published/Development/Packages/Shared/Current/npm/Styles/default.scss");
+__webpack_require__(/*! @fortawesome/fontawesome-free/css/all.css */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/css/all.css");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.eot */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.svg */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.woff */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2 */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.eot */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.svg */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.woff */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2 */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.eot */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.svg */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.woff */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff");
+__webpack_require__(/*! @fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2 */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2");
+__webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var SubmitBindingHandler_1 = __webpack_require__(/*! ./SubmitBindingHandler */ "../../../../Published/Development/Packages/Shared/Current/npm/SubmitBindingHandler.js");
+var ModalBindingHandler_1 = __webpack_require__(/*! ./Modal/ModalBindingHandler */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalBindingHandler.js");
+var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
+var DropdownBindingHandler_1 = __webpack_require__(/*! ./DropdownBindingHandler */ "../../../../Published/Development/Packages/Shared/Current/npm/DropdownBindingHandler.js");
+var DelegatedEventBindingHandler_1 = __webpack_require__(/*! ./DelegatedEventBindingHandler */ "../../../../Published/Development/Packages/Shared/Current/npm/DelegatedEventBindingHandler.js");
 var PageLoader = /** @class */ (function () {
     function PageLoader() {
     }
@@ -6532,22 +4959,22 @@ exports.PageLoader = PageLoader;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/PageViewModel.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/PageViewModel.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/PageViewModel.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/PageViewModel.js ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageViewModel = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ComponentTemplate_1 = __webpack_require__(/*! ./ComponentTemplate */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentTemplate.js");
-var ComponentViewModel_1 = __webpack_require__(/*! ./ComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/ComponentViewModel.js");
-var AggregateComponentViewModel_1 = __webpack_require__(/*! ./Html/AggregateComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponentViewModel.js");
-var ModalComponentViewModel_1 = __webpack_require__(/*! ./Modal/ModalComponentViewModel */ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponentViewModel.js");
-var template = __webpack_require__(/*! ./Page.html */ "./node_modules/@jasonbenfield/sharedwebapp/Page.html");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ./ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ComponentViewModel_1 = __webpack_require__(/*! ./ComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./Html/AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
+var ModalComponentViewModel_1 = __webpack_require__(/*! ./Modal/ModalComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponentViewModel.js");
+var template = __webpack_require__(/*! ./Page.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Page.html");
 var PageViewModel = /** @class */ (function (_super) {
     tslib_1.__extends(PageViewModel, _super);
     function PageViewModel() {
@@ -6563,17 +4990,17 @@ exports.PageViewModel = PageViewModel;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Startup.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Startup.js ***!
-  \*************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Startup.js":
+/*!********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Startup.js ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Startup = void 0;
-var PageFrameView_1 = __webpack_require__(/*! ./PageFrameView */ "./node_modules/@jasonbenfield/sharedwebapp/PageFrameView.js");
+var PageFrameView_1 = __webpack_require__(/*! ./PageFrameView */ "../../../../Published/Development/Packages/Shared/Current/npm/PageFrameView.js");
 var Startup = /** @class */ (function () {
     function Startup() {
     }
@@ -6589,20 +5016,20 @@ exports.Startup = Startup;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/SubmitBindingHandler.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/SubmitBindingHandler.js ***!
-  \**************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/SubmitBindingHandler.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/SubmitBindingHandler.js ***!
+  \*********************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubmitBindingHandler = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var ko = __webpack_require__(/*! knockout */ "./node_modules/knockout/build/output/knockout-latest.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var DelayedAction_1 = __webpack_require__(/*! ./DelayedAction */ "./node_modules/@jasonbenfield/sharedwebapp/DelayedAction.js");
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var DelayedAction_1 = __webpack_require__(/*! ./DelayedAction */ "../../../../Published/Development/Packages/Shared/Current/npm/DelayedAction.js");
 var SubmitBindingHandler = /** @class */ (function () {
     function SubmitBindingHandler() {
         this.init = this.init.bind(this);
@@ -6656,18 +5083,18 @@ exports.SubmitBindingHandler = SubmitBindingHandler;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/TextCss.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/TextCss.js ***!
-  \*************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/TextCss.js":
+/*!********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/TextCss.js ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TextCss = void 0;
-var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "./node_modules/@jasonbenfield/sharedwebapp/ContextualClass.js");
-var CssClass_1 = __webpack_require__(/*! ./CssClass */ "./node_modules/@jasonbenfield/sharedwebapp/CssClass.js");
+var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
 var TextCss = /** @class */ (function () {
     function TextCss() {
         this.aligns = {};
@@ -6741,18 +5168,18 @@ exports.TextCss = TextCss;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Url.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Url.js ***!
-  \*********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Url.js":
+/*!****************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Url.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Url = void 0;
-var UrlHash_1 = __webpack_require__(/*! ./UrlHash */ "./node_modules/@jasonbenfield/sharedwebapp/UrlHash.js");
-var UrlQuery_1 = __webpack_require__(/*! ./UrlQuery */ "./node_modules/@jasonbenfield/sharedwebapp/UrlQuery.js");
+var UrlHash_1 = __webpack_require__(/*! ./UrlHash */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlHash.js");
+var UrlQuery_1 = __webpack_require__(/*! ./UrlQuery */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlQuery.js");
 var Url = /** @class */ (function () {
     function Url(baseUrl) {
         this.url = baseUrl;
@@ -6815,20 +5242,20 @@ exports.Url = Url;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js ***!
+  \***********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UrlBuilder = void 0;
-var UrlQueryBuilder_1 = __webpack_require__(/*! ./UrlQueryBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlQueryBuilder.js");
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
-var Url_1 = __webpack_require__(/*! ./Url */ "./node_modules/@jasonbenfield/sharedwebapp/Url.js");
-var UrlHashBuilder_1 = __webpack_require__(/*! ./UrlHashBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlHashBuilder.js");
+var UrlQueryBuilder_1 = __webpack_require__(/*! ./UrlQueryBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlQueryBuilder.js");
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
+var Url_1 = __webpack_require__(/*! ./Url */ "../../../../Published/Development/Packages/Shared/Current/npm/Url.js");
+var UrlHashBuilder_1 = __webpack_require__(/*! ./UrlHashBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlHashBuilder.js");
 var UrlBuilder = /** @class */ (function () {
     function UrlBuilder(baseUrl) {
         var url = baseUrl;
@@ -6974,19 +5401,19 @@ exports.UrlBuilder = UrlBuilder;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/UrlHash.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/UrlHash.js ***!
-  \*************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/UrlHash.js":
+/*!********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/UrlHash.js ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UrlHash = void 0;
-var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
+var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
 var UrlHash = /** @class */ (function () {
     function UrlHash(hash) {
         this.hashValues = [];
@@ -7041,19 +5468,19 @@ exports.UrlHash = UrlHash;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/UrlHashBuilder.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/UrlHashBuilder.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/UrlHashBuilder.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/UrlHashBuilder.js ***!
+  \***************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UrlHashBuilder = void 0;
-var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var UrlHash_1 = __webpack_require__(/*! ./UrlHash */ "./node_modules/@jasonbenfield/sharedwebapp/UrlHash.js");
+var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var UrlHash_1 = __webpack_require__(/*! ./UrlHash */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlHash.js");
 var UrlHashBuilder = /** @class */ (function () {
     function UrlHashBuilder(hash) {
         if (typeof hash === 'string') {
@@ -7165,19 +5592,19 @@ exports.UrlHashBuilder = UrlHashBuilder;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/UrlQuery.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/UrlQuery.js ***!
-  \**************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/UrlQuery.js":
+/*!*********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/UrlQuery.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UrlQuery = void 0;
-var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
+var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
 var UrlQuery = /** @class */ (function () {
     function UrlQuery(query) {
         this.queryValues = [];
@@ -7228,19 +5655,19 @@ exports.UrlQuery = UrlQuery;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/UrlQueryBuilder.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/UrlQueryBuilder.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/UrlQueryBuilder.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/UrlQueryBuilder.js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UrlQueryBuilder = void 0;
-var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "./node_modules/@jasonbenfield/sharedwebapp/NamedValue.js");
-var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-var UrlQuery_1 = __webpack_require__(/*! ./UrlQuery */ "./node_modules/@jasonbenfield/sharedwebapp/UrlQuery.js");
+var NamedValue_1 = __webpack_require__(/*! ./NamedValue */ "../../../../Published/Development/Packages/Shared/Current/npm/NamedValue.js");
+var _ = __webpack_require__(/*! lodash */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js");
+var UrlQuery_1 = __webpack_require__(/*! ./UrlQuery */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlQuery.js");
 var UrlQueryBuilder = /** @class */ (function () {
     function UrlQueryBuilder(query) {
         if (typeof query === 'string') {
@@ -7352,151 +5779,10 @@ exports.UrlQueryBuilder = UrlQueryBuilder;
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/WebPage.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/WebPage.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.WebPage = void 0;
-var Url_1 = __webpack_require__(/*! ./Url */ "./node_modules/@jasonbenfield/sharedwebapp/Url.js");
-var UrlBuilder_1 = __webpack_require__(/*! ./UrlBuilder */ "./node_modules/@jasonbenfield/sharedwebapp/UrlBuilder.js");
-var WebPage = /** @class */ (function () {
-    function WebPage(url) {
-        if (url instanceof UrlBuilder_1.UrlBuilder) {
-            this.url = url.value();
-        }
-        else if (url instanceof Url_1.Url) {
-            this.url = url.value();
-        }
-        else {
-            this.url = url;
-        }
-    }
-    WebPage.prototype.open = function () {
-        window.location.href = this.url;
-    };
-    WebPage.prototype.transfer = function () {
-        window.location.replace(this.url);
-    };
-    WebPage.prototype.openWindow = function () {
-        window.open(this.url);
-    };
-    WebPage.prototype.openForPrint = function () {
-        window.open(this.url, 'new_window', 'location=0,status=0,toolbar=0,menubar=0,height=5,width=5,' +
-            'resizable=0,scrollbars=0,titlebar=0');
-    };
-    return WebPage;
-}());
-exports.WebPage = WebPage;
-//# sourceMappingURL=WebPage.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.XtiPath = void 0;
-var JoinedStrings_1 = __webpack_require__(/*! ./JoinedStrings */ "./node_modules/@jasonbenfield/sharedwebapp/JoinedStrings.js");
-var XtiPath = /** @class */ (function () {
-    function XtiPath(app, version, group, action, modifier) {
-        this.app = app ? app : '';
-        this.version = version ? version : '';
-        this.group = group ? group : '';
-        this.action = action ? action : '';
-        this.modifier = modifier ? modifier : '';
-        var parts = [this.app, this.version];
-        if (this.group) {
-            parts.push(this.group);
-            if (this.action) {
-                parts.push(this.action);
-                if (this.modifier) {
-                    parts.push(this.modifier);
-                }
-            }
-        }
-        this.value = new JoinedStrings_1.JoinedStrings('/', parts).value();
-    }
-    XtiPath.app = function (appKey, version, modifier) {
-        return new XtiPath(appKey, version, '', '', modifier);
-    };
-    XtiPath.prototype.withGroup = function (group) {
-        return new XtiPath(this.app, this.version, group, '', this.modifier);
-    };
-    XtiPath.prototype.withAction = function (action) {
-        return new XtiPath(this.app, this.version, this.group, action, this.modifier);
-    };
-    XtiPath.prototype.format = function () {
-        return this.value;
-    };
-    XtiPath.prototype.equals = function (other) {
-        if (other) {
-            return this.value === other.value;
-        }
-        return false;
-    };
-    XtiPath.prototype.toString = function () {
-        return this.value;
-    };
-    return XtiPath;
-}());
-exports.XtiPath = XtiPath;
-//# sourceMappingURL=XtiPath.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/XtiUrl.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.XtiUrl = void 0;
-var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "./node_modules/@jasonbenfield/sharedwebapp/XtiPath.js");
-var XtiUrl = /** @class */ (function () {
-    function XtiUrl(url) {
-        if (url === void 0) { url = location.href; }
-        var protocolIndex = url.indexOf('//');
-        var slashIndex = url.indexOf('/', protocolIndex + 2);
-        this.baseUrl = url.substring(0, slashIndex);
-        var endIndex = url.indexOf('?');
-        if (endIndex < 0) {
-            endIndex = url.indexOf('#');
-            if (endIndex < 0) {
-                endIndex = url.length;
-            }
-        }
-        else {
-            endIndex = url.length;
-        }
-        var path = url.substring(slashIndex + 1, endIndex);
-        var split = path.split('/');
-        this.path = new XtiPath_1.XtiPath(split[0], split[1], split[2], split[3], split[4]);
-    }
-    XtiUrl.current = new XtiUrl(location.href);
-    return XtiUrl;
-}());
-exports.XtiUrl = XtiUrl;
-//# sourceMappingURL=XtiUrl.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@popperjs/core/lib/createPopper.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/createPopper.js ***!
-  \*********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/createPopper.js":
+/*!*********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/createPopper.js ***!
+  \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7506,20 +5792,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createPopper": () => (/* binding */ createPopper),
 /* harmony export */   "detectOverflow": () => (/* reexport safe */ _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_13__["default"])
 /* harmony export */ });
-/* harmony import */ var _dom_utils_getCompositeRect_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./dom-utils/getCompositeRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js");
-/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./dom-utils/getLayoutRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
-/* harmony import */ var _dom_utils_listScrollParents_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dom-utils/listScrollParents.js */ "./node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js");
-/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dom-utils/getOffsetParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
-/* harmony import */ var _dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./dom-utils/getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
-/* harmony import */ var _utils_orderModifiers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/orderModifiers.js */ "./node_modules/@popperjs/core/lib/utils/orderModifiers.js");
-/* harmony import */ var _utils_debounce_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils/debounce.js */ "./node_modules/@popperjs/core/lib/utils/debounce.js");
-/* harmony import */ var _utils_validateModifiers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/validateModifiers.js */ "./node_modules/@popperjs/core/lib/utils/validateModifiers.js");
-/* harmony import */ var _utils_uniqueBy_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/uniqueBy.js */ "./node_modules/@popperjs/core/lib/utils/uniqueBy.js");
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _utils_mergeByName_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/mergeByName.js */ "./node_modules/@popperjs/core/lib/utils/mergeByName.js");
-/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils/detectOverflow.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom-utils/instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _dom_utils_getCompositeRect_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./dom-utils/getCompositeRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js");
+/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./dom-utils/getLayoutRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
+/* harmony import */ var _dom_utils_listScrollParents_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dom-utils/listScrollParents.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js");
+/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dom-utils/getOffsetParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
+/* harmony import */ var _dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./dom-utils/getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _utils_orderModifiers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/orderModifiers.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/orderModifiers.js");
+/* harmony import */ var _utils_debounce_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils/debounce.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/debounce.js");
+/* harmony import */ var _utils_validateModifiers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/validateModifiers.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/validateModifiers.js");
+/* harmony import */ var _utils_uniqueBy_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/uniqueBy.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/uniqueBy.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _utils_mergeByName_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/mergeByName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergeByName.js");
+/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils/detectOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom-utils/instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
 
 
 
@@ -7570,7 +5856,7 @@ function popperGenerator(generatorOptions) {
     var state = {
       placement: 'bottom',
       orderedModifiers: [],
-      options: Object.assign(Object.assign({}, DEFAULT_OPTIONS), defaultOptions),
+      options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
       modifiersData: {},
       elements: {
         reference: reference,
@@ -7583,9 +5869,10 @@ function popperGenerator(generatorOptions) {
     var isDestroyed = false;
     var instance = {
       state: state,
-      setOptions: function setOptions(options) {
+      setOptions: function setOptions(setOptionsAction) {
+        var options = typeof setOptionsAction === 'function' ? setOptionsAction(state.options) : setOptionsAction;
         cleanupModifierEffects();
-        state.options = Object.assign(Object.assign(Object.assign({}, defaultOptions), state.options), options);
+        state.options = Object.assign({}, defaultOptions, state.options, options);
         state.scrollParents = {
           reference: (0,_dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__.isElement)(reference) ? (0,_dom_utils_listScrollParents_js__WEBPACK_IMPORTED_MODULE_1__["default"])(reference) : reference.contextElement ? (0,_dom_utils_listScrollParents_js__WEBPACK_IMPORTED_MODULE_1__["default"])(reference.contextElement) : [],
           popper: (0,_dom_utils_listScrollParents_js__WEBPACK_IMPORTED_MODULE_1__["default"])(popper)
@@ -7781,10 +6068,10 @@ var createPopper = /*#__PURE__*/popperGenerator(); // eslint-disable-next-line i
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/contains.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/contains.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/contains.js":
+/*!***************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/contains.js ***!
+  \***************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7792,7 +6079,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ contains)
 /* harmony export */ });
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
 
 function contains(parent, child) {
   var rootNode = child.getRootNode && child.getRootNode(); // First, attempt with faster native method
@@ -7819,10 +6106,10 @@ function contains(parent, child) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js ***!
-  \****************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js":
+/*!****************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js ***!
+  \****************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7830,26 +6117,51 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getBoundingClientRect)
 /* harmony export */ });
-function getBoundingClientRect(element) {
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
+
+function getBoundingClientRect(element, includeScale) {
+  if (includeScale === void 0) {
+    includeScale = false;
+  }
+
   var rect = element.getBoundingClientRect();
+  var scaleX = 1;
+  var scaleY = 1;
+
+  if ((0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__.isHTMLElement)(element) && includeScale) {
+    var offsetHeight = element.offsetHeight;
+    var offsetWidth = element.offsetWidth; // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
+    // Fallback to 1 in case both values are `0`
+
+    if (offsetWidth > 0) {
+      scaleX = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_1__.round)(rect.width) / offsetWidth || 1;
+    }
+
+    if (offsetHeight > 0) {
+      scaleY = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_1__.round)(rect.height) / offsetHeight || 1;
+    }
+  }
+
   return {
-    width: rect.width,
-    height: rect.height,
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom,
-    left: rect.left,
-    x: rect.left,
-    y: rect.top
+    width: rect.width / scaleX,
+    height: rect.height / scaleY,
+    top: rect.top / scaleY,
+    right: rect.right / scaleX,
+    bottom: rect.bottom / scaleY,
+    left: rect.left / scaleX,
+    x: rect.left / scaleX,
+    y: rect.top / scaleY
   };
 }
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7857,19 +6169,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getClippingRect)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _getViewportRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getViewportRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js");
-/* harmony import */ var _getDocumentRect_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getDocumentRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js");
-/* harmony import */ var _listScrollParents_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./listScrollParents.js */ "./node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js");
-/* harmony import */ var _getOffsetParent_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./getOffsetParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
-/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getParentNode.js */ "./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
-/* harmony import */ var _contains_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./contains.js */ "./node_modules/@popperjs/core/lib/dom-utils/contains.js");
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/rectToClientRect.js */ "./node_modules/@popperjs/core/lib/utils/rectToClientRect.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _getViewportRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getViewportRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js");
+/* harmony import */ var _getDocumentRect_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getDocumentRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js");
+/* harmony import */ var _listScrollParents_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./listScrollParents.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js");
+/* harmony import */ var _getOffsetParent_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./getOffsetParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
+/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getParentNode.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
+/* harmony import */ var _contains_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./contains.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/contains.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/rectToClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/rectToClientRect.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
 
 
 
@@ -7898,7 +6212,7 @@ function getInnerBoundingClientRect(element) {
 }
 
 function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === _enums_js__WEBPACK_IMPORTED_MODULE_1__.viewport ? (0,_utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_getViewportRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])(element)) : (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__.isHTMLElement)(clippingParent) ? getInnerBoundingClientRect(clippingParent) : (0,_utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_getDocumentRect_js__WEBPACK_IMPORTED_MODULE_5__["default"])((0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_6__["default"])(element)));
+  return clippingParent === _enums_js__WEBPACK_IMPORTED_MODULE_1__.viewport ? (0,_utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_getViewportRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])(element)) : (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__.isElement)(clippingParent) ? getInnerBoundingClientRect(clippingParent) : (0,_utils_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_getDocumentRect_js__WEBPACK_IMPORTED_MODULE_5__["default"])((0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_6__["default"])(element)));
 } // A "clipping parent" is an overflowable container with the characteristic of
 // clipping (or hiding) overflowing elements with a position different from
 // `initial`
@@ -7915,7 +6229,7 @@ function getClippingParents(element) {
 
 
   return clippingParents.filter(function (clippingParent) {
-    return (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__.isElement)(clippingParent) && (0,_contains_js__WEBPACK_IMPORTED_MODULE_11__["default"])(clippingParent, clipperElement) && (0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_12__["default"])(clippingParent) !== 'body';
+    return (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__.isElement)(clippingParent) && (0,_contains_js__WEBPACK_IMPORTED_MODULE_11__["default"])(clippingParent, clipperElement) && (0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_12__["default"])(clippingParent) !== 'body' && (canEscapeClipping ? (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_9__["default"])(clippingParent).position !== 'static' : true);
   });
 } // Gets the maximum area that the element is visible in due to any number of
 // clipping parents
@@ -7927,10 +6241,10 @@ function getClippingRect(element, boundary, rootBoundary) {
   var firstClippingParent = clippingParents[0];
   var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
     var rect = getClientRectFromMixedType(element, clippingParent);
-    accRect.top = Math.max(rect.top, accRect.top);
-    accRect.right = Math.min(rect.right, accRect.right);
-    accRect.bottom = Math.min(rect.bottom, accRect.bottom);
-    accRect.left = Math.max(rect.left, accRect.left);
+    accRect.top = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_13__.max)(rect.top, accRect.top);
+    accRect.right = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_13__.min)(rect.right, accRect.right);
+    accRect.bottom = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_13__.min)(rect.bottom, accRect.bottom);
+    accRect.left = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_13__.max)(rect.left, accRect.left);
     return accRect;
   }, getClientRectFromMixedType(element, firstClippingParent));
   clippingRect.width = clippingRect.right - clippingRect.left;
@@ -7942,10 +6256,10 @@ function getClippingRect(element, boundary, rootBoundary) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js":
+/*!***********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js ***!
+  \***********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7953,30 +6267,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getCompositeRect)
 /* harmony export */ });
-/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
-/* harmony import */ var _getNodeScroll_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getNodeScroll.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js");
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./isScrollParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
+/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
+/* harmony import */ var _getNodeScroll_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./getNodeScroll.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isScrollParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
 
 
 
 
 
 
- // Returns the composite rect of an element relative to its offsetParent.
+
+
+
+function isElementScaled(element) {
+  var rect = element.getBoundingClientRect();
+  var scaleX = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(rect.width) / element.offsetWidth || 1;
+  var scaleY = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(rect.height) / element.offsetHeight || 1;
+  return scaleX !== 1 || scaleY !== 1;
+} // Returns the composite rect of an element relative to its offsetParent.
 // Composite means it takes into account transforms as well as layout.
+
 
 function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
   if (isFixed === void 0) {
     isFixed = false;
   }
 
-  var documentElement = (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_0__["default"])(offsetParent);
-  var rect = (0,_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_1__["default"])(elementOrVirtualElement);
-  var isOffsetParentAnElement = (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_2__.isHTMLElement)(offsetParent);
+  var isOffsetParentAnElement = (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_1__.isHTMLElement)(offsetParent);
+  var offsetParentIsScaled = (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_1__.isHTMLElement)(offsetParent) && isElementScaled(offsetParent);
+  var documentElement = (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__["default"])(offsetParent);
+  var rect = (0,_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])(elementOrVirtualElement, offsetParentIsScaled);
   var scroll = {
     scrollLeft: 0,
     scrollTop: 0
@@ -7987,17 +6312,17 @@ function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
   };
 
   if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
-    if ((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent) !== 'body' || // https://github.com/popperjs/popper-core/issues/1078
-    (0,_isScrollParent_js__WEBPACK_IMPORTED_MODULE_4__["default"])(documentElement)) {
-      scroll = (0,_getNodeScroll_js__WEBPACK_IMPORTED_MODULE_5__["default"])(offsetParent);
+    if ((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_4__["default"])(offsetParent) !== 'body' || // https://github.com/popperjs/popper-core/issues/1078
+    (0,_isScrollParent_js__WEBPACK_IMPORTED_MODULE_5__["default"])(documentElement)) {
+      scroll = (0,_getNodeScroll_js__WEBPACK_IMPORTED_MODULE_6__["default"])(offsetParent);
     }
 
-    if ((0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_2__.isHTMLElement)(offsetParent)) {
-      offsets = (0,_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent);
+    if ((0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_1__.isHTMLElement)(offsetParent)) {
+      offsets = (0,_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent, true);
       offsets.x += offsetParent.clientLeft;
       offsets.y += offsetParent.clientTop;
     } else if (documentElement) {
-      offsets.x = (0,_getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_6__["default"])(documentElement);
+      offsets.x = (0,_getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_7__["default"])(documentElement);
     }
   }
 
@@ -8011,10 +6336,10 @@ function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js":
+/*!***********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js ***!
+  \***********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8022,7 +6347,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getComputedStyle)
 /* harmony export */ });
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
 
 function getComputedStyle(element) {
   return (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])(element).getComputedStyle(element);
@@ -8030,10 +6355,10 @@ function getComputedStyle(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js ***!
-  \*************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js":
+/*!*************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js ***!
+  \*************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8041,7 +6366,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getDocumentElement)
 /* harmony export */ });
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
 
 function getDocumentElement(element) {
   // $FlowFixMe[incompatible-return]: assume body is always available
@@ -8051,10 +6376,10 @@ function getDocumentElement(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8062,10 +6387,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getDocumentRect)
 /* harmony export */ });
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
-/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
-/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getWindowScroll.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
+/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getWindowScroll.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
 
 
 
@@ -8073,16 +6400,18 @@ __webpack_require__.r(__webpack_exports__);
 // of the `<html>` and `<body>` rect bounds if horizontally scrollable
 
 function getDocumentRect(element) {
+  var _element$ownerDocumen;
+
   var html = (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
   var winScroll = (0,_getWindowScroll_js__WEBPACK_IMPORTED_MODULE_1__["default"])(element);
-  var body = element.ownerDocument.body;
-  var width = Math.max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
-  var height = Math.max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
-  var x = -winScroll.scrollLeft + (0,_getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_2__["default"])(element);
+  var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+  var width = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.max)(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+  var height = (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.max)(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+  var x = -winScroll.scrollLeft + (0,_getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_3__["default"])(element);
   var y = -winScroll.scrollTop;
 
-  if ((0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_3__["default"])(body || html).direction === 'rtl') {
-    x += Math.max(html.clientWidth, body ? body.clientWidth : 0) - width;
+  if ((0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_4__["default"])(body || html).direction === 'rtl') {
+    x += (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.max)(html.clientWidth, body ? body.clientWidth : 0) - width;
   }
 
   return {
@@ -8095,10 +6424,10 @@ function getDocumentRect(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js ***!
-  \***************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js":
+/*!***************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js ***!
+  \***************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8115,10 +6444,10 @@ function getHTMLElementScroll(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8126,23 +6455,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getLayoutRect)
 /* harmony export */ });
-// Returns the layout rect of an element relative to its offsetParent. Layout
+/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
+ // Returns the layout rect of an element relative to its offsetParent. Layout
 // means it doesn't take into account transforms.
+
 function getLayoutRect(element) {
+  var clientRect = (0,_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__["default"])(element); // Use the clientRect sizes if it's not been transformed.
+  // Fixes https://github.com/popperjs/popper-core/issues/1223
+
+  var width = element.offsetWidth;
+  var height = element.offsetHeight;
+
+  if (Math.abs(clientRect.width - width) <= 1) {
+    width = clientRect.width;
+  }
+
+  if (Math.abs(clientRect.height - height) <= 1) {
+    height = clientRect.height;
+  }
+
   return {
     x: element.offsetLeft,
     y: element.offsetTop,
-    width: element.offsetWidth,
-    height: element.offsetHeight
+    width: width,
+    height: height
   };
 }
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js":
+/*!******************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js ***!
+  \******************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8156,10 +6501,10 @@ function getNodeName(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8167,10 +6512,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getNodeScroll)
 /* harmony export */ });
-/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScroll.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _getHTMLElementScroll_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getHTMLElementScroll.js */ "./node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js");
+/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScroll.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _getHTMLElementScroll_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getHTMLElementScroll.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js");
 
 
 
@@ -8185,10 +6530,10 @@ function getNodeScroll(node) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8196,14 +6541,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getOffsetParent)
 /* harmony export */ });
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _isTableElement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./isTableElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/isTableElement.js");
-/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getParentNode.js */ "./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _isTableElement_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isTableElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isTableElement.js");
+/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getParentNode.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
 
 
 
@@ -8217,29 +6560,32 @@ function getTrueOffsetParent(element) {
     return null;
   }
 
-  var offsetParent = element.offsetParent;
-
-  if (offsetParent) {
-    var html = (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__["default"])(offsetParent);
-
-    if ((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent) === 'body' && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent).position === 'static' && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(html).position !== 'static') {
-      return html;
-    }
-  }
-
-  return offsetParent;
+  return element.offsetParent;
 } // `.offsetParent` reports `null` for fixed elements, while absolute elements
 // return the containing block
 
 
 function getContainingBlock(element) {
-  var currentNode = (0,_getParentNode_js__WEBPACK_IMPORTED_MODULE_4__["default"])(element);
+  var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
+  var isIE = navigator.userAgent.indexOf('Trident') !== -1;
+
+  if (isIE && (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__.isHTMLElement)(element)) {
+    // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
+    var elementCss = (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(element);
+
+    if (elementCss.position === 'fixed') {
+      return null;
+    }
+  }
+
+  var currentNode = (0,_getParentNode_js__WEBPACK_IMPORTED_MODULE_2__["default"])(element);
 
   while ((0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__.isHTMLElement)(currentNode) && ['html', 'body'].indexOf((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(currentNode)) < 0) {
     var css = (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(currentNode); // This is non-exhaustive but covers the most common CSS properties that
     // create a containing block.
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
 
-    if (css.transform !== 'none' || css.perspective !== 'none' || css.willChange && css.willChange !== 'auto') {
+    if (css.transform !== 'none' || css.perspective !== 'none' || css.contain === 'paint' || ['transform', 'perspective'].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === 'filter' || isFirefox && css.filter && css.filter !== 'none') {
       return currentNode;
     } else {
       currentNode = currentNode.parentNode;
@@ -8252,14 +6598,14 @@ function getContainingBlock(element) {
 
 
 function getOffsetParent(element) {
-  var window = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_5__["default"])(element);
+  var window = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_4__["default"])(element);
   var offsetParent = getTrueOffsetParent(element);
 
-  while (offsetParent && (0,_isTableElement_js__WEBPACK_IMPORTED_MODULE_6__["default"])(offsetParent) && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent).position === 'static') {
+  while (offsetParent && (0,_isTableElement_js__WEBPACK_IMPORTED_MODULE_5__["default"])(offsetParent) && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent).position === 'static') {
     offsetParent = getTrueOffsetParent(offsetParent);
   }
 
-  if (offsetParent && (0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent) === 'body' && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent).position === 'static') {
+  if (offsetParent && ((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent) === 'html' || (0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_3__["default"])(offsetParent) === 'body' && (0,_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_1__["default"])(offsetParent).position === 'static')) {
     return window;
   }
 
@@ -8268,10 +6614,10 @@ function getOffsetParent(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8279,8 +6625,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getParentNode)
 /* harmony export */ });
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+
 
 
 function getParentNode(element) {
@@ -8292,21 +6640,20 @@ function getParentNode(element) {
     // $FlowFixMe[incompatible-return]
     // $FlowFixMe[prop-missing]
     element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
-    element.parentNode || // DOM Element detected
-    // $FlowFixMe[incompatible-return]: need a better way to handle this...
-    element.host || // ShadowRoot detected
+    element.parentNode || ( // DOM Element detected
+    (0,_instanceOf_js__WEBPACK_IMPORTED_MODULE_1__.isShadowRoot)(element) ? element.host : null) || // ShadowRoot detected
     // $FlowFixMe[incompatible-call]: HTMLElement is a Node
-    (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__["default"])(element) // fallback
+    (0,_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_2__["default"])(element) // fallback
 
   );
 }
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8314,10 +6661,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getScrollParent)
 /* harmony export */ });
-/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getParentNode.js */ "./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
-/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./isScrollParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getParentNode.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
+/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./isScrollParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _instanceOf_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
 
 
 
@@ -8337,10 +6684,10 @@ function getScrollParent(node) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8348,9 +6695,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getViewportRect)
 /* harmony export */ });
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _getWindowScrollBarX_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScrollBarX.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js");
 
 
 
@@ -8394,10 +6741,10 @@ function getViewportRect(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getWindow.js ***!
-  \****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js":
+/*!****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js ***!
+  \****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8405,10 +6752,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getWindow)
 /* harmony export */ });
-/*:: import type { Window } from '../types'; */
-
-/*:: declare function getWindow(node: Node | Window): Window; */
 function getWindow(node) {
+  if (node == null) {
+    return window;
+  }
+
   if (node.toString() !== '[object Window]') {
     var ownerDocument = node.ownerDocument;
     return ownerDocument ? ownerDocument.defaultView || window : window;
@@ -8419,10 +6767,10 @@ function getWindow(node) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8430,7 +6778,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getWindowScroll)
 /* harmony export */ });
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
 
 function getWindowScroll(node) {
   var win = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])(node);
@@ -8444,10 +6792,10 @@ function getWindowScroll(node) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js ***!
-  \**************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js":
+/*!**************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js ***!
+  \**************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8455,9 +6803,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ getWindowScrollBarX)
 /* harmony export */ });
-/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
-/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScroll.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
+/* harmony import */ var _getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBoundingClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
+/* harmony import */ var _getDocumentElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _getWindowScroll_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindowScroll.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js");
 
 
 
@@ -8474,10 +6822,10 @@ function getWindowScrollBarX(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js":
+/*!*****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js ***!
+  \*****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8487,28 +6835,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "isHTMLElement": () => (/* binding */ isHTMLElement),
 /* harmony export */   "isShadowRoot": () => (/* binding */ isShadowRoot)
 /* harmony export */ });
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
 
-/*:: declare function isElement(node: mixed): boolean %checks(node instanceof
-  Element); */
 
 function isElement(node) {
   var OwnElement = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])(node).Element;
   return node instanceof OwnElement || node instanceof Element;
 }
-/*:: declare function isHTMLElement(node: mixed): boolean %checks(node instanceof
-  HTMLElement); */
-
 
 function isHTMLElement(node) {
   var OwnElement = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])(node).HTMLElement;
   return node instanceof OwnElement || node instanceof HTMLElement;
 }
-/*:: declare function isShadowRoot(node: mixed): boolean %checks(node instanceof
-  ShadowRoot); */
-
 
 function isShadowRoot(node) {
+  // IE 11 has no ShadowRoot
+  if (typeof ShadowRoot === 'undefined') {
+    return false;
+  }
+
   var OwnElement = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_0__["default"])(node).ShadowRoot;
   return node instanceof OwnElement || node instanceof ShadowRoot;
 }
@@ -8517,10 +6862,10 @@ function isShadowRoot(node) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js":
+/*!*********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js ***!
+  \*********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8528,7 +6873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ isScrollParent)
 /* harmony export */ });
-/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _getComputedStyle_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
 
 function isScrollParent(element) {
   // Firefox wants us to check `-x` and `-y` variations as well
@@ -8542,10 +6887,10 @@ function isScrollParent(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/isTableElement.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/isTableElement.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isTableElement.js":
+/*!*********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isTableElement.js ***!
+  \*********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8553,7 +6898,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ isTableElement)
 /* harmony export */ });
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
 
 function isTableElement(element) {
   return ['table', 'td', 'th'].indexOf((0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_0__["default"])(element)) >= 0;
@@ -8561,10 +6906,10 @@ function isTableElement(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js ***!
-  \************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js":
+/*!************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js ***!
+  \************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8572,12 +6917,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ listScrollParents)
 /* harmony export */ });
-/* harmony import */ var _getScrollParent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getScrollParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js");
-/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getParentNode.js */ "./node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
-/* harmony import */ var _getNodeName_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
-/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./isScrollParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
-
+/* harmony import */ var _getScrollParent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getScrollParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js");
+/* harmony import */ var _getParentNode_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getParentNode.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js");
+/* harmony import */ var _getWindow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _isScrollParent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./isScrollParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js");
 
 
 
@@ -8590,25 +6933,27 @@ reference element's position.
 */
 
 function listScrollParents(element, list) {
+  var _element$ownerDocumen;
+
   if (list === void 0) {
     list = [];
   }
 
   var scrollParent = (0,_getScrollParent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(element);
-  var isBody = (0,_getNodeName_js__WEBPACK_IMPORTED_MODULE_1__["default"])(scrollParent) === 'body';
-  var win = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_2__["default"])(scrollParent);
-  var target = isBody ? [win].concat(win.visualViewport || [], (0,_isScrollParent_js__WEBPACK_IMPORTED_MODULE_3__["default"])(scrollParent) ? scrollParent : []) : scrollParent;
+  var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
+  var win = (0,_getWindow_js__WEBPACK_IMPORTED_MODULE_1__["default"])(scrollParent);
+  var target = isBody ? [win].concat(win.visualViewport || [], (0,_isScrollParent_js__WEBPACK_IMPORTED_MODULE_2__["default"])(scrollParent) ? scrollParent : []) : scrollParent;
   var updatedList = list.concat(target);
   return isBody ? updatedList : // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
-  updatedList.concat(listScrollParents((0,_getParentNode_js__WEBPACK_IMPORTED_MODULE_4__["default"])(target)));
+  updatedList.concat(listScrollParents((0,_getParentNode_js__WEBPACK_IMPORTED_MODULE_3__["default"])(target)));
 }
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/enums.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/enums.js ***!
-  \**************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js":
+/*!**************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js ***!
+  \**************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8673,10 +7018,10 @@ var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, 
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/index.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/index.js ***!
-  \**************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/index.js":
+/*!**************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/index.js ***!
+  \**************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8721,12 +7066,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createPopper": () => (/* reexport safe */ _popper_js__WEBPACK_IMPORTED_MODULE_4__.createPopper),
 /* harmony export */   "createPopperLite": () => (/* reexport safe */ _popper_lite_js__WEBPACK_IMPORTED_MODULE_5__.createPopper)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _modifiers_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/index.js */ "./node_modules/@popperjs/core/lib/modifiers/index.js");
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/createPopper.js");
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _popper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./popper.js */ "./node_modules/@popperjs/core/lib/popper.js");
-/* harmony import */ var _popper_lite_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./popper-lite.js */ "./node_modules/@popperjs/core/lib/popper-lite.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _modifiers_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/index.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/index.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/createPopper.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _popper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./popper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper.js");
+/* harmony import */ var _popper_lite_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./popper-lite.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper-lite.js");
 
  // eslint-disable-next-line import/no-unused-modules
 
@@ -8738,10 +7083,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/applyStyles.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/applyStyles.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/applyStyles.js":
+/*!******************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/applyStyles.js ***!
+  \******************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8749,8 +7094,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _dom_utils_getNodeName_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dom-utils/getNodeName.js */ "./node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
-/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _dom_utils_getNodeName_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dom-utils/getNodeName.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js");
+/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
 
  // This modifier takes the styles prepared by the `computeStyles` modifier
 // and applies them to the HTMLElements such as popper and arrow
@@ -8797,6 +7142,7 @@ function effect(_ref2) {
     reference: {}
   };
   Object.assign(state.elements.popper.style, initialStyles.popper);
+  state.styles = initialStyles;
 
   if (state.elements.arrow) {
     Object.assign(state.elements.arrow.style, initialStyles.arrow);
@@ -8837,10 +7183,10 @@ function effect(_ref2) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/arrow.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/arrow.js ***!
-  \************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/arrow.js":
+/*!************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/arrow.js ***!
+  \************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8848,16 +7194,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dom-utils/getLayoutRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
-/* harmony import */ var _dom_utils_contains_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../dom-utils/contains.js */ "./node_modules/@popperjs/core/lib/dom-utils/contains.js");
-/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
-/* harmony import */ var _utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/getMainAxisFromPlacement.js */ "./node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
-/* harmony import */ var _utils_within_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/within.js */ "./node_modules/@popperjs/core/lib/utils/within.js");
-/* harmony import */ var _utils_mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/mergePaddingObject.js */ "./node_modules/@popperjs/core/lib/utils/mergePaddingObject.js");
-/* harmony import */ var _utils_expandToHashMap_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/expandToHashMap.js */ "./node_modules/@popperjs/core/lib/utils/expandToHashMap.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../dom-utils/getLayoutRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
+/* harmony import */ var _dom_utils_contains_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../dom-utils/contains.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/contains.js");
+/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
+/* harmony import */ var _utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/getMainAxisFromPlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
+/* harmony import */ var _utils_within_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/within.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/within.js");
+/* harmony import */ var _utils_mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/mergePaddingObject.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergePaddingObject.js");
+/* harmony import */ var _utils_expandToHashMap_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/expandToHashMap.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/expandToHashMap.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
 
 
 
@@ -8869,15 +7215,23 @@ __webpack_require__.r(__webpack_exports__);
 
  // eslint-disable-next-line import/no-unused-modules
 
+var toPaddingObject = function toPaddingObject(padding, state) {
+  padding = typeof padding === 'function' ? padding(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : padding;
+  return (0,_utils_mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_0__["default"])(typeof padding !== 'number' ? padding : (0,_utils_expandToHashMap_js__WEBPACK_IMPORTED_MODULE_1__["default"])(padding, _enums_js__WEBPACK_IMPORTED_MODULE_2__.basePlacements));
+};
+
 function arrow(_ref) {
   var _state$modifiersData$;
 
   var state = _ref.state,
-      name = _ref.name;
+      name = _ref.name,
+      options = _ref.options;
   var arrowElement = state.elements.arrow;
   var popperOffsets = state.modifiersData.popperOffsets;
-  var basePlacement = (0,_utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__["default"])(state.placement);
-  var axis = (0,_utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_1__["default"])(basePlacement);
+  var basePlacement = (0,_utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_3__["default"])(state.placement);
+  var axis = (0,_utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_4__["default"])(basePlacement);
   var isVertical = [_enums_js__WEBPACK_IMPORTED_MODULE_2__.left, _enums_js__WEBPACK_IMPORTED_MODULE_2__.right].indexOf(basePlacement) >= 0;
   var len = isVertical ? 'height' : 'width';
 
@@ -8885,13 +7239,13 @@ function arrow(_ref) {
     return;
   }
 
-  var paddingObject = state.modifiersData[name + "#persistent"].padding;
-  var arrowRect = (0,_dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])(arrowElement);
+  var paddingObject = toPaddingObject(options.padding, state);
+  var arrowRect = (0,_dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_5__["default"])(arrowElement);
   var minProp = axis === 'y' ? _enums_js__WEBPACK_IMPORTED_MODULE_2__.top : _enums_js__WEBPACK_IMPORTED_MODULE_2__.left;
   var maxProp = axis === 'y' ? _enums_js__WEBPACK_IMPORTED_MODULE_2__.bottom : _enums_js__WEBPACK_IMPORTED_MODULE_2__.right;
   var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets[axis] - state.rects.popper[len];
   var startDiff = popperOffsets[axis] - state.rects.reference[axis];
-  var arrowOffsetParent = (0,_dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_4__["default"])(arrowElement);
+  var arrowOffsetParent = (0,_dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_6__["default"])(arrowElement);
   var clientSize = arrowOffsetParent ? axis === 'y' ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
   var centerToReference = endDiff / 2 - startDiff / 2; // Make sure the arrow doesn't overflow the popper if the center point is
   // outside of the popper bounds
@@ -8899,7 +7253,7 @@ function arrow(_ref) {
   var min = paddingObject[minProp];
   var max = clientSize - arrowRect[len] - paddingObject[maxProp];
   var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
-  var offset = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_5__["default"])(min, center, max); // Prevents breaking syntax highlighting...
+  var offset = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_7__.within)(min, center, max); // Prevents breaking syntax highlighting...
 
   var axisProp = axis;
   state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset, _state$modifiersData$.centerOffset = offset - center, _state$modifiersData$);
@@ -8907,12 +7261,9 @@ function arrow(_ref) {
 
 function effect(_ref2) {
   var state = _ref2.state,
-      options = _ref2.options,
-      name = _ref2.name;
+      options = _ref2.options;
   var _options$element = options.element,
-      arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element,
-      _options$padding = options.padding,
-      padding = _options$padding === void 0 ? 0 : _options$padding;
+      arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element;
 
   if (arrowElement == null) {
     return;
@@ -8928,12 +7279,12 @@ function effect(_ref2) {
   }
 
   if (true) {
-    if (!(0,_dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_6__.isHTMLElement)(arrowElement)) {
+    if (!(0,_dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_8__.isHTMLElement)(arrowElement)) {
       console.error(['Popper: "arrow" element must be an HTMLElement (not an SVGElement).', 'To use an SVG arrow, wrap it in an HTMLElement that will be used as', 'the arrow.'].join(' '));
     }
   }
 
-  if (!(0,_dom_utils_contains_js__WEBPACK_IMPORTED_MODULE_7__["default"])(state.elements.popper, arrowElement)) {
+  if (!(0,_dom_utils_contains_js__WEBPACK_IMPORTED_MODULE_9__["default"])(state.elements.popper, arrowElement)) {
     if (true) {
       console.error(['Popper: "arrow" modifier\'s `element` must be a child of the popper', 'element.'].join(' '));
     }
@@ -8942,9 +7293,6 @@ function effect(_ref2) {
   }
 
   state.elements.arrow = arrowElement;
-  state.modifiersData[name + "#persistent"] = {
-    padding: (0,_utils_mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_8__["default"])(typeof padding !== 'number' ? padding : (0,_utils_expandToHashMap_js__WEBPACK_IMPORTED_MODULE_9__["default"])(padding, _enums_js__WEBPACK_IMPORTED_MODULE_2__.basePlacements))
-  };
 } // eslint-disable-next-line import/no-unused-modules
 
 
@@ -8960,10 +7308,10 @@ function effect(_ref2) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/computeStyles.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/computeStyles.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/computeStyles.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/computeStyles.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8972,12 +7320,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "mapToStyles": () => (/* binding */ mapToStyles),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
-/* harmony import */ var _dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dom-utils/getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
-/* harmony import */ var _dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dom-utils/getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dom-utils/getComputedStyle.js */ "./node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
+/* harmony import */ var _dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dom-utils/getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dom-utils/getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../dom-utils/getComputedStyle.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _utils_getVariation_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/getVariation.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
+
 
 
 
@@ -9000,8 +7352,8 @@ function roundOffsetsByDPR(_ref) {
   var win = window;
   var dpr = win.devicePixelRatio || 1;
   return {
-    x: Math.round(x * dpr) / dpr || 0,
-    y: Math.round(y * dpr) / dpr || 0
+    x: (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(x * dpr) / dpr || 0,
+    y: (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(y * dpr) / dpr || 0
   };
 }
 
@@ -9011,13 +7363,15 @@ function mapToStyles(_ref2) {
   var popper = _ref2.popper,
       popperRect = _ref2.popperRect,
       placement = _ref2.placement,
+      variation = _ref2.variation,
       offsets = _ref2.offsets,
       position = _ref2.position,
       gpuAcceleration = _ref2.gpuAcceleration,
       adaptive = _ref2.adaptive,
-      roundOffsets = _ref2.roundOffsets;
+      roundOffsets = _ref2.roundOffsets,
+      isFixed = _ref2.isFixed;
 
-  var _ref3 = roundOffsets ? roundOffsetsByDPR(offsets) : offsets,
+  var _ref3 = roundOffsets === true ? roundOffsetsByDPR(offsets) : typeof roundOffsets === 'function' ? roundOffsets(offsets) : offsets,
       _ref3$x = _ref3.x,
       x = _ref3$x === void 0 ? 0 : _ref3$x,
       _ref3$y = _ref3.y,
@@ -9025,29 +7379,40 @@ function mapToStyles(_ref2) {
 
   var hasX = offsets.hasOwnProperty('x');
   var hasY = offsets.hasOwnProperty('y');
-  var sideX = _enums_js__WEBPACK_IMPORTED_MODULE_0__.left;
-  var sideY = _enums_js__WEBPACK_IMPORTED_MODULE_0__.top;
+  var sideX = _enums_js__WEBPACK_IMPORTED_MODULE_1__.left;
+  var sideY = _enums_js__WEBPACK_IMPORTED_MODULE_1__.top;
   var win = window;
 
   if (adaptive) {
-    var offsetParent = (0,_dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_1__["default"])(popper);
+    var offsetParent = (0,_dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_2__["default"])(popper);
+    var heightProp = 'clientHeight';
+    var widthProp = 'clientWidth';
 
-    if (offsetParent === (0,_dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_2__["default"])(popper)) {
-      offsetParent = (0,_dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_3__["default"])(popper);
+    if (offsetParent === (0,_dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_3__["default"])(popper)) {
+      offsetParent = (0,_dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_4__["default"])(popper);
+
+      if ((0,_dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_5__["default"])(offsetParent).position !== 'static' && position === 'absolute') {
+        heightProp = 'scrollHeight';
+        widthProp = 'scrollWidth';
+      }
     } // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
 
-    /*:: offsetParent = (offsetParent: Element); */
 
+    offsetParent = offsetParent;
 
-    if (placement === _enums_js__WEBPACK_IMPORTED_MODULE_0__.top) {
-      sideY = _enums_js__WEBPACK_IMPORTED_MODULE_0__.bottom;
-      y -= offsetParent.clientHeight - popperRect.height;
+    if (placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.top || (placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.left || placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.right) && variation === _enums_js__WEBPACK_IMPORTED_MODULE_1__.end) {
+      sideY = _enums_js__WEBPACK_IMPORTED_MODULE_1__.bottom;
+      var offsetY = isFixed && win.visualViewport ? win.visualViewport.height : // $FlowFixMe[prop-missing]
+      offsetParent[heightProp];
+      y -= offsetY - popperRect.height;
       y *= gpuAcceleration ? 1 : -1;
     }
 
-    if (placement === _enums_js__WEBPACK_IMPORTED_MODULE_0__.left) {
-      sideX = _enums_js__WEBPACK_IMPORTED_MODULE_0__.right;
-      x -= offsetParent.clientWidth - popperRect.width;
+    if (placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.left || (placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.top || placement === _enums_js__WEBPACK_IMPORTED_MODULE_1__.bottom) && variation === _enums_js__WEBPACK_IMPORTED_MODULE_1__.end) {
+      sideX = _enums_js__WEBPACK_IMPORTED_MODULE_1__.right;
+      var offsetX = isFixed && win.visualViewport ? win.visualViewport.width : // $FlowFixMe[prop-missing]
+      offsetParent[widthProp];
+      x -= offsetX - popperRect.width;
       x *= gpuAcceleration ? 1 : -1;
     }
   }
@@ -9059,10 +7424,10 @@ function mapToStyles(_ref2) {
   if (gpuAcceleration) {
     var _Object$assign;
 
-    return Object.assign(Object.assign({}, commonStyles), {}, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
   }
 
-  return Object.assign(Object.assign({}, commonStyles), {}, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
+  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
 }
 
 function computeStyles(_ref4) {
@@ -9076,7 +7441,7 @@ function computeStyles(_ref4) {
       roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
 
   if (true) {
-    var transitionProperty = (0,_dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_4__["default"])(state.elements.popper).transitionProperty || '';
+    var transitionProperty = (0,_dom_utils_getComputedStyle_js__WEBPACK_IMPORTED_MODULE_5__["default"])(state.elements.popper).transitionProperty || '';
 
     if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
       return transitionProperty.indexOf(property) >= 0;
@@ -9086,14 +7451,16 @@ function computeStyles(_ref4) {
   }
 
   var commonStyles = {
-    placement: (0,_utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_5__["default"])(state.placement),
+    placement: (0,_utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_6__["default"])(state.placement),
+    variation: (0,_utils_getVariation_js__WEBPACK_IMPORTED_MODULE_7__["default"])(state.placement),
     popper: state.elements.popper,
     popperRect: state.rects.popper,
-    gpuAcceleration: gpuAcceleration
+    gpuAcceleration: gpuAcceleration,
+    isFixed: state.options.strategy === 'fixed'
   };
 
   if (state.modifiersData.popperOffsets != null) {
-    state.styles.popper = Object.assign(Object.assign({}, state.styles.popper), mapToStyles(Object.assign(Object.assign({}, commonStyles), {}, {
+    state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
       offsets: state.modifiersData.popperOffsets,
       position: state.options.strategy,
       adaptive: adaptive,
@@ -9102,7 +7469,7 @@ function computeStyles(_ref4) {
   }
 
   if (state.modifiersData.arrow != null) {
-    state.styles.arrow = Object.assign(Object.assign({}, state.styles.arrow), mapToStyles(Object.assign(Object.assign({}, commonStyles), {}, {
+    state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
       offsets: state.modifiersData.arrow,
       position: 'absolute',
       adaptive: false,
@@ -9110,7 +7477,7 @@ function computeStyles(_ref4) {
     })));
   }
 
-  state.attributes.popper = Object.assign(Object.assign({}, state.attributes.popper), {}, {
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
     'data-popper-placement': state.placement
   });
 } // eslint-disable-next-line import/no-unused-modules
@@ -9126,10 +7493,10 @@ function computeStyles(_ref4) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/eventListeners.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/eventListeners.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/eventListeners.js":
+/*!*********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/eventListeners.js ***!
+  \*********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9137,7 +7504,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dom-utils/getWindow.js */ "./node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
+/* harmony import */ var _dom_utils_getWindow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../dom-utils/getWindow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getWindow.js");
  // eslint-disable-next-line import/no-unused-modules
 
 var passive = {
@@ -9190,10 +7557,10 @@ function effect(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/flip.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/flip.js ***!
-  \***********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/flip.js":
+/*!***********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/flip.js ***!
+  \***********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9201,13 +7568,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_getOppositePlacement_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/getOppositePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getOppositePlacement.js");
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _utils_getOppositeVariationPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getOppositeVariationPlacement.js */ "./node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js");
-/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _utils_computeAutoPlacement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/computeAutoPlacement.js */ "./node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _utils_getVariation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/getVariation.js */ "./node_modules/@popperjs/core/lib/utils/getVariation.js");
+/* harmony import */ var _utils_getOppositePlacement_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/getOppositePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositePlacement.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _utils_getOppositeVariationPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getOppositeVariationPlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js");
+/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _utils_computeAutoPlacement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/computeAutoPlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _utils_getVariation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/getVariation.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js");
 
 
 
@@ -9358,10 +7725,10 @@ function flip(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/hide.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/hide.js ***!
-  \***********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/hide.js":
+/*!***********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/hide.js ***!
+  \***********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9369,8 +7736,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
 
 
 
@@ -9418,7 +7785,7 @@ function hide(_ref) {
     isReferenceHidden: isReferenceHidden,
     hasPopperEscaped: hasPopperEscaped
   };
-  state.attributes.popper = Object.assign(Object.assign({}, state.attributes.popper), {}, {
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
     'data-popper-reference-hidden': isReferenceHidden,
     'data-popper-escaped': hasPopperEscaped
   });
@@ -9435,10 +7802,10 @@ function hide(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/index.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/index.js ***!
-  \************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/index.js":
+/*!************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/index.js ***!
+  \************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9454,15 +7821,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "popperOffsets": () => (/* reexport safe */ _popperOffsets_js__WEBPACK_IMPORTED_MODULE_7__["default"]),
 /* harmony export */   "preventOverflow": () => (/* reexport safe */ _preventOverflow_js__WEBPACK_IMPORTED_MODULE_8__["default"])
 /* harmony export */ });
-/* harmony import */ var _applyStyles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./applyStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
-/* harmony import */ var _arrow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./arrow.js */ "./node_modules/@popperjs/core/lib/modifiers/arrow.js");
-/* harmony import */ var _computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./computeStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
-/* harmony import */ var _eventListeners_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./eventListeners.js */ "./node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
-/* harmony import */ var _flip_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./flip.js */ "./node_modules/@popperjs/core/lib/modifiers/flip.js");
-/* harmony import */ var _hide_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hide.js */ "./node_modules/@popperjs/core/lib/modifiers/hide.js");
-/* harmony import */ var _offset_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./offset.js */ "./node_modules/@popperjs/core/lib/modifiers/offset.js");
-/* harmony import */ var _popperOffsets_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./popperOffsets.js */ "./node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
-/* harmony import */ var _preventOverflow_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./preventOverflow.js */ "./node_modules/@popperjs/core/lib/modifiers/preventOverflow.js");
+/* harmony import */ var _applyStyles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./applyStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
+/* harmony import */ var _arrow_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./arrow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/arrow.js");
+/* harmony import */ var _computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./computeStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
+/* harmony import */ var _eventListeners_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./eventListeners.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
+/* harmony import */ var _flip_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./flip.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/flip.js");
+/* harmony import */ var _hide_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hide.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/hide.js");
+/* harmony import */ var _offset_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./offset.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/offset.js");
+/* harmony import */ var _popperOffsets_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./popperOffsets.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
+/* harmony import */ var _preventOverflow_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./preventOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js");
 
 
 
@@ -9475,10 +7842,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/offset.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/offset.js ***!
-  \*************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/offset.js":
+/*!*************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/offset.js ***!
+  \*************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9487,15 +7854,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "distanceAndSkiddingToXY": () => (/* binding */ distanceAndSkiddingToXY),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
 
+ // eslint-disable-next-line import/no-unused-modules
 
 function distanceAndSkiddingToXY(placement, rects, offset) {
   var basePlacement = (0,_utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__["default"])(placement);
   var invertDistance = [_enums_js__WEBPACK_IMPORTED_MODULE_1__.left, _enums_js__WEBPACK_IMPORTED_MODULE_1__.top].indexOf(basePlacement) >= 0 ? -1 : 1;
 
-  var _ref = typeof offset === 'function' ? offset(Object.assign(Object.assign({}, rects), {}, {
+  var _ref = typeof offset === 'function' ? offset(Object.assign({}, rects, {
     placement: placement
   })) : offset,
       skidding = _ref[0],
@@ -9545,10 +7913,10 @@ function offset(_ref2) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/popperOffsets.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/popperOffsets.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9556,7 +7924,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _utils_computeOffsets_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/computeOffsets.js */ "./node_modules/@popperjs/core/lib/utils/computeOffsets.js");
+/* harmony import */ var _utils_computeOffsets_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/computeOffsets.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeOffsets.js");
 
 
 function popperOffsets(_ref) {
@@ -9585,10 +7953,10 @@ function popperOffsets(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/modifiers/preventOverflow.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/modifiers/preventOverflow.js ***!
-  \**********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js":
+/*!**********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js ***!
+  \**********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9596,16 +7964,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getMainAxisFromPlacement.js */ "./node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
-/* harmony import */ var _utils_getAltAxis_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/getAltAxis.js */ "./node_modules/@popperjs/core/lib/utils/getAltAxis.js");
-/* harmony import */ var _utils_within_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/within.js */ "./node_modules/@popperjs/core/lib/utils/within.js");
-/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/getLayoutRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
-/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "./node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
-/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _utils_getVariation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/getVariation.js */ "./node_modules/@popperjs/core/lib/utils/getVariation.js");
-/* harmony import */ var _utils_getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/getFreshSideObject.js */ "./node_modules/@popperjs/core/lib/utils/getFreshSideObject.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _utils_getBasePlacement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _utils_getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getMainAxisFromPlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
+/* harmony import */ var _utils_getAltAxis_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/getAltAxis.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getAltAxis.js");
+/* harmony import */ var _utils_within_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/within.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/within.js");
+/* harmony import */ var _dom_utils_getLayoutRect_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/getLayoutRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js");
+/* harmony import */ var _dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../dom-utils/getOffsetParent.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js");
+/* harmony import */ var _utils_detectOverflow_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/detectOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _utils_getVariation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/getVariation.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js");
+/* harmony import */ var _utils_getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/getFreshSideObject.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getFreshSideObject.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
 
 
 
@@ -9647,9 +8017,17 @@ function preventOverflow(_ref) {
   var popperOffsets = state.modifiersData.popperOffsets;
   var referenceRect = state.rects.reference;
   var popperRect = state.rects.popper;
-  var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign(Object.assign({}, state.rects), {}, {
+  var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign({}, state.rects, {
     placement: state.placement
   })) : tetherOffset;
+  var normalizedTetherOffsetValue = typeof tetherOffsetValue === 'number' ? {
+    mainAxis: tetherOffsetValue,
+    altAxis: tetherOffsetValue
+  } : Object.assign({
+    mainAxis: 0,
+    altAxis: 0
+  }, tetherOffsetValue);
+  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
   var data = {
     x: 0,
     y: 0
@@ -9660,12 +8038,14 @@ function preventOverflow(_ref) {
   }
 
   if (checkMainAxis) {
+    var _offsetModifierState$;
+
     var mainSide = mainAxis === 'y' ? _enums_js__WEBPACK_IMPORTED_MODULE_5__.top : _enums_js__WEBPACK_IMPORTED_MODULE_5__.left;
     var altSide = mainAxis === 'y' ? _enums_js__WEBPACK_IMPORTED_MODULE_5__.bottom : _enums_js__WEBPACK_IMPORTED_MODULE_5__.right;
     var len = mainAxis === 'y' ? 'height' : 'width';
     var offset = popperOffsets[mainAxis];
-    var min = popperOffsets[mainAxis] + overflow[mainSide];
-    var max = popperOffsets[mainAxis] - overflow[altSide];
+    var min = offset + overflow[mainSide];
+    var max = offset - overflow[altSide];
     var additive = tether ? -popperRect[len] / 2 : 0;
     var minLen = variation === _enums_js__WEBPACK_IMPORTED_MODULE_5__.start ? referenceRect[len] : popperRect[len];
     var maxLen = variation === _enums_js__WEBPACK_IMPORTED_MODULE_5__.start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
@@ -9684,31 +8064,43 @@ function preventOverflow(_ref) {
     // reference is not overflowing as well (e.g. virtual elements with no
     // width or height)
 
-    var arrowLen = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__["default"])(0, referenceRect[len], arrowRect[len]);
-    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - tetherOffsetValue : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
-    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + tetherOffsetValue : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
+    var arrowLen = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__.within)(0, referenceRect[len], arrowRect[len]);
+    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
+    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
     var arrowOffsetParent = state.elements.arrow && (0,_dom_utils_getOffsetParent_js__WEBPACK_IMPORTED_MODULE_9__["default"])(state.elements.arrow);
     var clientOffset = arrowOffsetParent ? mainAxis === 'y' ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
-    var offsetModifierValue = state.modifiersData.offset ? state.modifiersData.offset[state.placement][mainAxis] : 0;
-    var tetherMin = popperOffsets[mainAxis] + minOffset - offsetModifierValue - clientOffset;
-    var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
-    var preventedOffset = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__["default"])(tether ? Math.min(min, tetherMin) : min, offset, tether ? Math.max(max, tetherMax) : max);
+    var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
+    var tetherMin = offset + minOffset - offsetModifierValue - clientOffset;
+    var tetherMax = offset + maxOffset - offsetModifierValue;
+    var preventedOffset = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__.within)(tether ? (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_10__.min)(min, tetherMin) : min, offset, tether ? (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_10__.max)(max, tetherMax) : max);
     popperOffsets[mainAxis] = preventedOffset;
     data[mainAxis] = preventedOffset - offset;
   }
 
   if (checkAltAxis) {
+    var _offsetModifierState$2;
+
     var _mainSide = mainAxis === 'x' ? _enums_js__WEBPACK_IMPORTED_MODULE_5__.top : _enums_js__WEBPACK_IMPORTED_MODULE_5__.left;
 
     var _altSide = mainAxis === 'x' ? _enums_js__WEBPACK_IMPORTED_MODULE_5__.bottom : _enums_js__WEBPACK_IMPORTED_MODULE_5__.right;
 
     var _offset = popperOffsets[altAxis];
 
+    var _len = altAxis === 'y' ? 'height' : 'width';
+
     var _min = _offset + overflow[_mainSide];
 
     var _max = _offset - overflow[_altSide];
 
-    var _preventedOffset = (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__["default"])(_min, _offset, _max);
+    var isOriginSide = [_enums_js__WEBPACK_IMPORTED_MODULE_5__.top, _enums_js__WEBPACK_IMPORTED_MODULE_5__.left].indexOf(basePlacement) !== -1;
+
+    var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
+
+    var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
+
+    var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
+
+    var _preventedOffset = tether && isOriginSide ? (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__.withinMaxClamp)(_tetherMin, _offset, _tetherMax) : (0,_utils_within_js__WEBPACK_IMPORTED_MODULE_8__.within)(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
 
     popperOffsets[altAxis] = _preventedOffset;
     data[altAxis] = _preventedOffset - _offset;
@@ -9728,10 +8120,10 @@ function preventOverflow(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/popper-lite.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/popper-lite.js ***!
-  \********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper-lite.js":
+/*!********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper-lite.js ***!
+  \********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9742,12 +8134,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "defaultModifiers": () => (/* binding */ defaultModifiers),
 /* harmony export */   "detectOverflow": () => (/* reexport safe */ _createPopper_js__WEBPACK_IMPORTED_MODULE_5__["default"])
 /* harmony export */ });
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/createPopper.js");
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _modifiers_eventListeners_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modifiers/eventListeners.js */ "./node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
-/* harmony import */ var _modifiers_popperOffsets_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/popperOffsets.js */ "./node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
-/* harmony import */ var _modifiers_computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modifiers/computeStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
-/* harmony import */ var _modifiers_applyStyles_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modifiers/applyStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/createPopper.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _modifiers_eventListeners_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modifiers/eventListeners.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
+/* harmony import */ var _modifiers_popperOffsets_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/popperOffsets.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
+/* harmony import */ var _modifiers_computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modifiers/computeStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
+/* harmony import */ var _modifiers_applyStyles_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modifiers/applyStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
 
 
 
@@ -9762,10 +8154,10 @@ var createPopper = /*#__PURE__*/(0,_createPopper_js__WEBPACK_IMPORTED_MODULE_4__
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/popper.js":
-/*!***************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/popper.js ***!
-  \***************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper.js":
+/*!***************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper.js ***!
+  \***************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9786,19 +8178,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "popperOffsets": () => (/* reexport safe */ _modifiers_index_js__WEBPACK_IMPORTED_MODULE_12__.popperOffsets),
 /* harmony export */   "preventOverflow": () => (/* reexport safe */ _modifiers_index_js__WEBPACK_IMPORTED_MODULE_12__.preventOverflow)
 /* harmony export */ });
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/createPopper.js");
-/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./createPopper.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _modifiers_eventListeners_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modifiers/eventListeners.js */ "./node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
-/* harmony import */ var _modifiers_popperOffsets_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/popperOffsets.js */ "./node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
-/* harmony import */ var _modifiers_computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modifiers/computeStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
-/* harmony import */ var _modifiers_applyStyles_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modifiers/applyStyles.js */ "./node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
-/* harmony import */ var _modifiers_offset_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modifiers/offset.js */ "./node_modules/@popperjs/core/lib/modifiers/offset.js");
-/* harmony import */ var _modifiers_flip_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modifiers/flip.js */ "./node_modules/@popperjs/core/lib/modifiers/flip.js");
-/* harmony import */ var _modifiers_preventOverflow_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modifiers/preventOverflow.js */ "./node_modules/@popperjs/core/lib/modifiers/preventOverflow.js");
-/* harmony import */ var _modifiers_arrow_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modifiers/arrow.js */ "./node_modules/@popperjs/core/lib/modifiers/arrow.js");
-/* harmony import */ var _modifiers_hide_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modifiers/hide.js */ "./node_modules/@popperjs/core/lib/modifiers/hide.js");
-/* harmony import */ var _popper_lite_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./popper-lite.js */ "./node_modules/@popperjs/core/lib/popper-lite.js");
-/* harmony import */ var _modifiers_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modifiers/index.js */ "./node_modules/@popperjs/core/lib/modifiers/index.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/createPopper.js");
+/* harmony import */ var _createPopper_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./createPopper.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _modifiers_eventListeners_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modifiers/eventListeners.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/eventListeners.js");
+/* harmony import */ var _modifiers_popperOffsets_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modifiers/popperOffsets.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js");
+/* harmony import */ var _modifiers_computeStyles_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modifiers/computeStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/computeStyles.js");
+/* harmony import */ var _modifiers_applyStyles_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modifiers/applyStyles.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/applyStyles.js");
+/* harmony import */ var _modifiers_offset_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modifiers/offset.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/offset.js");
+/* harmony import */ var _modifiers_flip_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modifiers/flip.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/flip.js");
+/* harmony import */ var _modifiers_preventOverflow_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modifiers/preventOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js");
+/* harmony import */ var _modifiers_arrow_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modifiers/arrow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/arrow.js");
+/* harmony import */ var _modifiers_hide_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modifiers/hide.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/hide.js");
+/* harmony import */ var _popper_lite_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./popper-lite.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper-lite.js");
+/* harmony import */ var _modifiers_index_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modifiers/index.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/modifiers/index.js");
 
 
 
@@ -9822,10 +8214,10 @@ var createPopper = /*#__PURE__*/(0,_createPopper_js__WEBPACK_IMPORTED_MODULE_9__
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js":
+/*!***********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js ***!
+  \***********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9833,18 +8225,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ computeAutoPlacement)
 /* harmony export */ });
-/* harmony import */ var _getVariation_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getVariation.js */ "./node_modules/@popperjs/core/lib/utils/getVariation.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _detectOverflow_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./detectOverflow.js */ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js");
-/* harmony import */ var _getBasePlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _getVariation_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getVariation.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _detectOverflow_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./detectOverflow.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js");
+/* harmony import */ var _getBasePlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
 
 
 
 
-
-/*:: type OverflowsMap = { [ComputedPlacement]: number }; */
-
-/*;; type OverflowsMap = { [key in ComputedPlacement]: number }; */
 function computeAutoPlacement(state, options) {
   if (options === void 0) {
     options = {};
@@ -9891,10 +8279,10 @@ function computeAutoPlacement(state, options) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/computeOffsets.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/computeOffsets.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeOffsets.js":
+/*!*****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeOffsets.js ***!
+  \*****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -9902,10 +8290,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ computeOffsets)
 /* harmony export */ });
-/* harmony import */ var _getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBasePlacement.js */ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
-/* harmony import */ var _getVariation_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getVariation.js */ "./node_modules/@popperjs/core/lib/utils/getVariation.js");
-/* harmony import */ var _getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getMainAxisFromPlacement.js */ "./node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _getBasePlacement_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getBasePlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js");
+/* harmony import */ var _getVariation_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getVariation.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js");
+/* harmony import */ var _getMainAxisFromPlacement_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getMainAxisFromPlacement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
 
 
 
@@ -9979,10 +8367,10 @@ function computeOffsets(_ref) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/debounce.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/debounce.js ***!
-  \***********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/debounce.js":
+/*!***********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/debounce.js ***!
+  \***********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10008,10 +8396,10 @@ function debounce(fn) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/detectOverflow.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/detectOverflow.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js":
+/*!*****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/detectOverflow.js ***!
+  \*****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10019,15 +8407,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ detectOverflow)
 /* harmony export */ });
-/* harmony import */ var _dom_utils_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/getBoundingClientRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
-/* harmony import */ var _dom_utils_getClippingRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dom-utils/getClippingRect.js */ "./node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js");
-/* harmony import */ var _dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../dom-utils/getDocumentElement.js */ "./node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
-/* harmony import */ var _computeOffsets_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./computeOffsets.js */ "./node_modules/@popperjs/core/lib/utils/computeOffsets.js");
-/* harmony import */ var _rectToClientRect_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./rectToClientRect.js */ "./node_modules/@popperjs/core/lib/utils/rectToClientRect.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
-/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
-/* harmony import */ var _mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mergePaddingObject.js */ "./node_modules/@popperjs/core/lib/utils/mergePaddingObject.js");
-/* harmony import */ var _expandToHashMap_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./expandToHashMap.js */ "./node_modules/@popperjs/core/lib/utils/expandToHashMap.js");
+/* harmony import */ var _dom_utils_getClippingRect_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../dom-utils/getClippingRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js");
+/* harmony import */ var _dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../dom-utils/getDocumentElement.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js");
+/* harmony import */ var _dom_utils_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dom-utils/getBoundingClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js");
+/* harmony import */ var _computeOffsets_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./computeOffsets.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/computeOffsets.js");
+/* harmony import */ var _rectToClientRect_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./rectToClientRect.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/rectToClientRect.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../dom-utils/instanceOf.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js");
+/* harmony import */ var _mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mergePaddingObject.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergePaddingObject.js");
+/* harmony import */ var _expandToHashMap_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./expandToHashMap.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/expandToHashMap.js");
 
 
 
@@ -10058,18 +8446,17 @@ function detectOverflow(state, options) {
       padding = _options$padding === void 0 ? 0 : _options$padding;
   var paddingObject = (0,_mergePaddingObject_js__WEBPACK_IMPORTED_MODULE_1__["default"])(typeof padding !== 'number' ? padding : (0,_expandToHashMap_js__WEBPACK_IMPORTED_MODULE_2__["default"])(padding, _enums_js__WEBPACK_IMPORTED_MODULE_0__.basePlacements));
   var altContext = elementContext === _enums_js__WEBPACK_IMPORTED_MODULE_0__.popper ? _enums_js__WEBPACK_IMPORTED_MODULE_0__.reference : _enums_js__WEBPACK_IMPORTED_MODULE_0__.popper;
-  var referenceElement = state.elements.reference;
   var popperRect = state.rects.popper;
   var element = state.elements[altBoundary ? altContext : elementContext];
   var clippingClientRect = (0,_dom_utils_getClippingRect_js__WEBPACK_IMPORTED_MODULE_3__["default"])((0,_dom_utils_instanceOf_js__WEBPACK_IMPORTED_MODULE_4__.isElement)(element) ? element : element.contextElement || (0,_dom_utils_getDocumentElement_js__WEBPACK_IMPORTED_MODULE_5__["default"])(state.elements.popper), boundary, rootBoundary);
-  var referenceClientRect = (0,_dom_utils_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_6__["default"])(referenceElement);
+  var referenceClientRect = (0,_dom_utils_getBoundingClientRect_js__WEBPACK_IMPORTED_MODULE_6__["default"])(state.elements.reference);
   var popperOffsets = (0,_computeOffsets_js__WEBPACK_IMPORTED_MODULE_7__["default"])({
     reference: referenceClientRect,
     element: popperRect,
     strategy: 'absolute',
     placement: placement
   });
-  var popperClientRect = (0,_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_8__["default"])(Object.assign(Object.assign({}, popperRect), popperOffsets));
+  var popperClientRect = (0,_rectToClientRect_js__WEBPACK_IMPORTED_MODULE_8__["default"])(Object.assign({}, popperRect, popperOffsets));
   var elementClientRect = elementContext === _enums_js__WEBPACK_IMPORTED_MODULE_0__.popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
   // 0 or negative = within the clipping rect
 
@@ -10095,10 +8482,10 @@ function detectOverflow(state, options) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/expandToHashMap.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/expandToHashMap.js ***!
-  \******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/expandToHashMap.js":
+/*!******************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/expandToHashMap.js ***!
+  \******************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10115,10 +8502,10 @@ function expandToHashMap(value, keys) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/format.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/format.js ***!
-  \*********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/format.js":
+/*!*********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/format.js ***!
+  \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10138,10 +8525,10 @@ function format(str) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getAltAxis.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getAltAxis.js ***!
-  \*************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getAltAxis.js":
+/*!*************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getAltAxis.js ***!
+  \*************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10155,10 +8542,10 @@ function getAltAxis(axis) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getBasePlacement.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getBasePlacement.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js":
+/*!*******************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getBasePlacement.js ***!
+  \*******************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10173,10 +8560,10 @@ function getBasePlacement(placement) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getFreshSideObject.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getFreshSideObject.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getFreshSideObject.js":
+/*!*********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getFreshSideObject.js ***!
+  \*********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10195,10 +8582,10 @@ function getFreshSideObject() {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js ***!
-  \***************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js":
+/*!***************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js ***!
+  \***************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10212,10 +8599,10 @@ function getMainAxisFromPlacement(placement) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getOppositePlacement.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getOppositePlacement.js ***!
-  \***********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositePlacement.js":
+/*!***********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositePlacement.js ***!
+  \***********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10237,10 +8624,10 @@ function getOppositePlacement(placement) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js":
-/*!********************************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js ***!
-  \********************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js ***!
+  \********************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10260,10 +8647,10 @@ function getOppositeVariationPlacement(placement) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/getVariation.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/getVariation.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js":
+/*!***************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getVariation.js ***!
+  \***************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10277,10 +8664,29 @@ function getVariation(placement) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/mergeByName.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/mergeByName.js ***!
-  \**************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js":
+/*!*******************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js ***!
+  \*******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "max": () => (/* binding */ max),
+/* harmony export */   "min": () => (/* binding */ min),
+/* harmony export */   "round": () => (/* binding */ round)
+/* harmony export */ });
+var max = Math.max;
+var min = Math.min;
+var round = Math.round;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergeByName.js":
+/*!**************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergeByName.js ***!
+  \**************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10291,9 +8697,9 @@ __webpack_require__.r(__webpack_exports__);
 function mergeByName(modifiers) {
   var merged = modifiers.reduce(function (merged, current) {
     var existing = merged[current.name];
-    merged[current.name] = existing ? Object.assign(Object.assign(Object.assign({}, existing), current), {}, {
-      options: Object.assign(Object.assign({}, existing.options), current.options),
-      data: Object.assign(Object.assign({}, existing.data), current.data)
+    merged[current.name] = existing ? Object.assign({}, existing, current, {
+      options: Object.assign({}, existing.options, current.options),
+      data: Object.assign({}, existing.data, current.data)
     }) : current;
     return merged;
   }, {}); // IE11 does not support Object.values
@@ -10305,10 +8711,10 @@ function mergeByName(modifiers) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/mergePaddingObject.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/mergePaddingObject.js ***!
-  \*********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergePaddingObject.js":
+/*!*********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/mergePaddingObject.js ***!
+  \*********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10316,18 +8722,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ mergePaddingObject)
 /* harmony export */ });
-/* harmony import */ var _getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getFreshSideObject.js */ "./node_modules/@popperjs/core/lib/utils/getFreshSideObject.js");
+/* harmony import */ var _getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getFreshSideObject.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/getFreshSideObject.js");
 
 function mergePaddingObject(paddingObject) {
-  return Object.assign(Object.assign({}, (0,_getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_0__["default"])()), paddingObject);
+  return Object.assign({}, (0,_getFreshSideObject_js__WEBPACK_IMPORTED_MODULE_0__["default"])(), paddingObject);
 }
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/orderModifiers.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/orderModifiers.js ***!
-  \*****************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/orderModifiers.js":
+/*!*****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/orderModifiers.js ***!
+  \*****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10335,7 +8741,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ orderModifiers)
 /* harmony export */ });
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
  // source: https://stackoverflow.com/questions/49875255
 
 function order(modifiers) {
@@ -10383,10 +8789,10 @@ function orderModifiers(modifiers) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/rectToClientRect.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/rectToClientRect.js ***!
-  \*******************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/rectToClientRect.js":
+/*!*******************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/rectToClientRect.js ***!
+  \*******************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10395,7 +8801,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ rectToClientRect)
 /* harmony export */ });
 function rectToClientRect(rect) {
-  return Object.assign(Object.assign({}, rect), {}, {
+  return Object.assign({}, rect, {
     left: rect.x,
     top: rect.y,
     right: rect.x + rect.width,
@@ -10405,10 +8811,10 @@ function rectToClientRect(rect) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/uniqueBy.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/uniqueBy.js ***!
-  \***********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/uniqueBy.js":
+/*!***********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/uniqueBy.js ***!
+  \***********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10430,10 +8836,10 @@ function uniqueBy(arr, fn) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/validateModifiers.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/validateModifiers.js ***!
-  \********************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/validateModifiers.js":
+/*!********************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/validateModifiers.js ***!
+  \********************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10441,8 +8847,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ validateModifiers)
 /* harmony export */ });
-/* harmony import */ var _format_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./format.js */ "./node_modules/@popperjs/core/lib/utils/format.js");
-/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "./node_modules/@popperjs/core/lib/enums.js");
+/* harmony import */ var _format_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./format.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/format.js");
+/* harmony import */ var _enums_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../enums.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/enums.js");
 
 
 var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
@@ -10450,7 +8856,10 @@ var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" mo
 var VALID_PROPERTIES = ['name', 'enabled', 'phase', 'fn', 'effect', 'requires', 'options'];
 function validateModifiers(modifiers) {
   modifiers.forEach(function (modifier) {
-    Object.keys(modifier).forEach(function (key) {
+    [].concat(Object.keys(modifier), VALID_PROPERTIES) // IE11-compatible replacement for `new Set(iterable)`
+    .filter(function (value, index, self) {
+      return self.indexOf(value) === index;
+    }).forEach(function (key) {
       switch (key) {
         case 'name':
           if (typeof modifier.name !== 'string') {
@@ -10463,6 +8872,8 @@ function validateModifiers(modifiers) {
           if (typeof modifier.enabled !== 'boolean') {
             console.error((0,_format_js__WEBPACK_IMPORTED_MODULE_0__["default"])(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', "\"" + String(modifier.enabled) + "\""));
           }
+
+          break;
 
         case 'phase':
           if (_enums_js__WEBPACK_IMPORTED_MODULE_1__.modifierPhases.indexOf(modifier.phase) < 0) {
@@ -10479,14 +8890,14 @@ function validateModifiers(modifiers) {
           break;
 
         case 'effect':
-          if (typeof modifier.effect !== 'function') {
+          if (modifier.effect != null && typeof modifier.effect !== 'function') {
             console.error((0,_format_js__WEBPACK_IMPORTED_MODULE_0__["default"])(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', "\"" + String(modifier.fn) + "\""));
           }
 
           break;
 
         case 'requires':
-          if (!Array.isArray(modifier.requires)) {
+          if (modifier.requires != null && !Array.isArray(modifier.requires)) {
             console.error((0,_format_js__WEBPACK_IMPORTED_MODULE_0__["default"])(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', "\"" + String(modifier.requires) + "\""));
           }
 
@@ -10522,27 +8933,34 @@ function validateModifiers(modifiers) {
 
 /***/ }),
 
-/***/ "./node_modules/@popperjs/core/lib/utils/within.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@popperjs/core/lib/utils/within.js ***!
-  \*********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/within.js":
+/*!*********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/within.js ***!
+  \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ within)
+/* harmony export */   "within": () => (/* binding */ within),
+/* harmony export */   "withinMaxClamp": () => (/* binding */ withinMaxClamp)
 /* harmony export */ });
+/* harmony import */ var _math_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math.js */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/utils/math.js");
+
 function within(min, value, max) {
-  return Math.max(min, Math.min(value, max));
+  return (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.max)(min, (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.min)(value, max));
+}
+function withinMaxClamp(min, value, max) {
+  var v = within(min, value, max);
+  return v > max ? max : v;
 }
 
 /***/ }),
 
-/***/ "./node_modules/bootstrap/dist/js/bootstrap.esm.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/bootstrap/dist/js/bootstrap.esm.js ***!
-  \*********************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/bootstrap/dist/js/bootstrap.esm.js":
+/*!*********************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/bootstrap/dist/js/bootstrap.esm.js ***!
+  \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -10561,10 +8979,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Toast": () => (/* binding */ Toast),
 /* harmony export */   "Tooltip": () => (/* binding */ Tooltip)
 /* harmony export */ });
-/* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @popperjs/core */ "./node_modules/@popperjs/core/lib/index.js");
-/* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @popperjs/core */ "./node_modules/@popperjs/core/lib/popper.js");
+/* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @popperjs/core */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/index.js");
+/* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @popperjs/core */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@popperjs/core/lib/popper.js");
 /*!
-  * Bootstrap v5.1.1 (https://getbootstrap.com/)
+  * Bootstrap v5.1.3 (https://getbootstrap.com/)
   * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
@@ -10572,7 +8990,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/index.js
+ * Bootstrap (v5.1.3): util/index.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -10883,7 +9301,7 @@ const getNextActiveElement = (list, activeElement, shouldGetNext, isCycleAllowed
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): dom/event-handler.js
+ * Bootstrap (v5.1.3): dom/event-handler.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11171,7 +9589,7 @@ const EventHandler = {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): dom/data.js
+ * Bootstrap (v5.1.3): dom/data.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11182,7 +9600,7 @@ const EventHandler = {
  * ------------------------------------------------------------------------
  */
 const elementMap = new Map();
-var Data = {
+const Data = {
   set(element, key, instance) {
     if (!elementMap.has(element)) {
       elementMap.set(element, new Map());
@@ -11225,7 +9643,7 @@ var Data = {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): base-component.js
+ * Bootstrap (v5.1.3): base-component.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11235,7 +9653,7 @@ var Data = {
  * ------------------------------------------------------------------------
  */
 
-const VERSION = '5.1.1';
+const VERSION = '5.1.3';
 
 class BaseComponent {
   constructor(element) {
@@ -11291,7 +9709,7 @@ class BaseComponent {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/component-functions.js
+ * Bootstrap (v5.1.3): util/component-functions.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11317,7 +9735,7 @@ const enableDismissTrigger = (component, method = 'hide') => {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): alert.js
+ * Bootstrap (v5.1.3): alert.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11406,7 +9824,7 @@ defineJQueryPlugin(Alert);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): button.js
+ * Bootstrap (v5.1.3): button.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11477,7 +9895,7 @@ defineJQueryPlugin(Button);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): dom/manipulator.js
+ * Bootstrap (v5.1.3): dom/manipulator.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11551,7 +9969,7 @@ const Manipulator = {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): dom/selector-engine.js
+ * Bootstrap (v5.1.3): dom/selector-engine.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11621,7 +10039,7 @@ const SelectorEngine = {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): carousel.js
+ * Bootstrap (v5.1.3): carousel.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -11889,7 +10307,7 @@ class Carousel extends BaseComponent {
     };
 
     SelectorEngine.find(SELECTOR_ITEM_IMG, this._element).forEach(itemImg => {
-      EventHandler.on(itemImg, EVENT_DRAG_START, e => e.preventDefault());
+      EventHandler.on(itemImg, EVENT_DRAG_START, event => event.preventDefault());
     });
 
     if (this._pointerEvent) {
@@ -12170,7 +10588,7 @@ defineJQueryPlugin(Carousel);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): collapse.js
+ * Bootstrap (v5.1.3): collapse.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -12201,6 +10619,7 @@ const CLASS_NAME_SHOW$7 = 'show';
 const CLASS_NAME_COLLAPSE = 'collapse';
 const CLASS_NAME_COLLAPSING = 'collapsing';
 const CLASS_NAME_COLLAPSED = 'collapsed';
+const CLASS_NAME_DEEPER_CHILDREN = `:scope .${CLASS_NAME_COLLAPSE} .${CLASS_NAME_COLLAPSE}`;
 const CLASS_NAME_HORIZONTAL = 'collapse-horizontal';
 const WIDTH = 'width';
 const HEIGHT = 'height';
@@ -12270,7 +10689,7 @@ class Collapse extends BaseComponent {
     let activesData;
 
     if (this._config.parent) {
-      const children = SelectorEngine.find(`.${CLASS_NAME_COLLAPSE} .${CLASS_NAME_COLLAPSE}`, this._config.parent);
+      const children = SelectorEngine.find(CLASS_NAME_DEEPER_CHILDREN, this._config.parent);
       actives = SelectorEngine.find(SELECTOR_ACTIVES, this._config.parent).filter(elem => !children.includes(elem)); // remove children if greater depth
     }
 
@@ -12408,7 +10827,7 @@ class Collapse extends BaseComponent {
       return;
     }
 
-    const children = SelectorEngine.find(`.${CLASS_NAME_COLLAPSE} .${CLASS_NAME_COLLAPSE}`, this._config.parent);
+    const children = SelectorEngine.find(CLASS_NAME_DEEPER_CHILDREN, this._config.parent);
     SelectorEngine.find(SELECTOR_DATA_TOGGLE$4, this._config.parent).filter(elem => !children.includes(elem)).forEach(element => {
       const selected = getElementFromSelector(element);
 
@@ -12488,7 +10907,7 @@ defineJQueryPlugin(Collapse);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): dropdown.js
+ * Bootstrap (v5.1.3): dropdown.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -12950,7 +11369,7 @@ defineJQueryPlugin(Dropdown);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/scrollBar.js
+ * Bootstrap (v5.1.3): util/scrollBar.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -13054,8 +11473,8 @@ class ScrollBarHelper {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/backdrop.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v5.1.3): util/backdrop.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 const Default$7 = {
@@ -13178,8 +11597,8 @@ class Backdrop {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/focustrap.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v5.1.3): util/focustrap.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 const Default$6 = {
@@ -13281,7 +11700,7 @@ class FocusTrap {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): modal.js
+ * Bootstrap (v5.1.3): modal.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -13710,8 +12129,8 @@ defineJQueryPlugin(Modal);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): offcanvas.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v5.1.3): offcanvas.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 /**
@@ -13966,42 +12385,42 @@ defineJQueryPlugin(Offcanvas);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): util/sanitizer.js
+ * Bootstrap (v5.1.3): util/sanitizer.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
-const uriAttrs = new Set(['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href']);
+const uriAttributes = new Set(['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href']);
 const ARIA_ATTRIBUTE_PATTERN = /^aria-[\w-]*$/i;
 /**
  * A pattern that recognizes a commonly useful subset of URLs that are safe.
  *
- * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+ * Shoutout to Angular https://github.com/angular/angular/blob/12.2.x/packages/core/src/sanitization/url_sanitizer.ts
  */
 
-const SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^#&/:?]*(?:[#/?]|$))/i;
+const SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file|sms):|[^#&/:?]*(?:[#/?]|$))/i;
 /**
  * A pattern that matches safe data URLs. Only matches image, video and audio types.
  *
- * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+ * Shoutout to Angular https://github.com/angular/angular/blob/12.2.x/packages/core/src/sanitization/url_sanitizer.ts
  */
 
 const DATA_URL_PATTERN = /^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[\d+/a-z]+=*$/i;
 
-const allowedAttribute = (attr, allowedAttributeList) => {
-  const attrName = attr.nodeName.toLowerCase();
+const allowedAttribute = (attribute, allowedAttributeList) => {
+  const attributeName = attribute.nodeName.toLowerCase();
 
-  if (allowedAttributeList.includes(attrName)) {
-    if (uriAttrs.has(attrName)) {
-      return Boolean(SAFE_URL_PATTERN.test(attr.nodeValue) || DATA_URL_PATTERN.test(attr.nodeValue));
+  if (allowedAttributeList.includes(attributeName)) {
+    if (uriAttributes.has(attributeName)) {
+      return Boolean(SAFE_URL_PATTERN.test(attribute.nodeValue) || DATA_URL_PATTERN.test(attribute.nodeValue));
     }
 
     return true;
   }
 
-  const regExp = allowedAttributeList.filter(attrRegex => attrRegex instanceof RegExp); // Check if a regular expression validates the attribute.
+  const regExp = allowedAttributeList.filter(attributeRegex => attributeRegex instanceof RegExp); // Check if a regular expression validates the attribute.
 
   for (let i = 0, len = regExp.length; i < len; i++) {
-    if (regExp[i].test(attrName)) {
+    if (regExp[i].test(attributeName)) {
       return true;
     }
   }
@@ -14053,23 +12472,22 @@ function sanitizeHtml(unsafeHtml, allowList, sanitizeFn) {
 
   const domParser = new window.DOMParser();
   const createdDocument = domParser.parseFromString(unsafeHtml, 'text/html');
-  const allowlistKeys = Object.keys(allowList);
   const elements = [].concat(...createdDocument.body.querySelectorAll('*'));
 
   for (let i = 0, len = elements.length; i < len; i++) {
-    const el = elements[i];
-    const elName = el.nodeName.toLowerCase();
+    const element = elements[i];
+    const elementName = element.nodeName.toLowerCase();
 
-    if (!allowlistKeys.includes(elName)) {
-      el.remove();
+    if (!Object.keys(allowList).includes(elementName)) {
+      element.remove();
       continue;
     }
 
-    const attributeList = [].concat(...el.attributes);
-    const allowedAttributes = [].concat(allowList['*'] || [], allowList[elName] || []);
-    attributeList.forEach(attr => {
-      if (!allowedAttribute(attr, allowedAttributes)) {
-        el.removeAttribute(attr.nodeName);
+    const attributeList = [].concat(...element.attributes);
+    const allowedAttributes = [].concat(allowList['*'] || [], allowList[elementName] || []);
+    attributeList.forEach(attribute => {
+      if (!allowedAttribute(attribute, allowedAttributes)) {
+        element.removeAttribute(attribute.nodeName);
       }
     });
   }
@@ -14079,7 +12497,7 @@ function sanitizeHtml(unsafeHtml, allowList, sanitizeFn) {
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): tooltip.js
+ * Bootstrap (v5.1.3): tooltip.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -14789,7 +13207,7 @@ defineJQueryPlugin(Tooltip);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): popover.js
+ * Bootstrap (v5.1.3): popover.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -14899,7 +13317,7 @@ defineJQueryPlugin(Popover);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): scrollspy.js
+ * Bootstrap (v5.1.3): scrollspy.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15134,7 +13552,7 @@ defineJQueryPlugin(ScrollSpy);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): tab.js
+ * Bootstrap (v5.1.3): tab.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15332,7 +13750,7 @@ defineJQueryPlugin(Tab);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v5.1.1): toast.js
+ * Bootstrap (v5.1.3): toast.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15566,539 +13984,24 @@ defineJQueryPlugin(Toast);
 
 /***/ }),
 
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Styles/default.scss":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Styles/default.scss ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/default.css");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/css/all.css":
-/*!*********************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/css/all.css ***!
-  \*********************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/fontawesome/all.css");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot":
-/*!************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot ***!
-  \************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.eot");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg":
-/*!************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg ***!
-  \************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.svg");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf":
-/*!************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf ***!
-  \************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.ttf");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff":
-/*!*************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff ***!
-  \*************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.woff");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2":
-/*!**************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2 ***!
-  \**************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.woff2");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot":
-/*!*************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot ***!
-  \*************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.eot");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg":
-/*!*************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg ***!
-  \*************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.svg");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf":
-/*!*************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf ***!
-  \*************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.ttf");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff":
-/*!**************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff ***!
-  \**************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.woff");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2":
-/*!***************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2 ***!
-  \***************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.woff2");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot":
-/*!***********************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot ***!
-  \***********************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.eot");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg":
-/*!***********************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg ***!
-  \***********************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.svg");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf":
-/*!***********************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf ***!
-  \***********************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.ttf");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff":
-/*!************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff ***!
-  \************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.woff");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2":
-/*!*************************************************************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2 ***!
-  \*************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.woff2");
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.html":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Dropdown/DropdownBlock.html ***!
-  \******************************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<div class=\"dropdown\">\r\n    <!-- ko with: button -->\r\n    <button data-bind=\"\r\n            dropdown: $data,\r\n            attr: {\r\n                'class': css,\r\n                title: title,\r\n                id: id,\r\n                name: name\r\n            },\r\n            enable: isEnabled\" class=\"dropdown-toggle\" type=\"button\" data-bs-toggle=\"dropdown\" data-toggle=\"dropdown\" aria-expanded=\"false\">\r\n        <!-- ko with: content -->\r\n        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n        <!-- /ko -->\r\n    </button>\r\n    <!-- /ko -->\r\n    <!-- ko with: menu -->\r\n    <ul data-bind=\"\r\n        attr: { 'class': css, title: title, id: id, name: name },\r\n        foreach: items,\r\n        delegatedEvent: { event: 'click', selector: 'li', callback: click }\r\n    \" class=\"dropdown-menu dropdown-menu-right\">\r\n        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    </ul>\r\n    <!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/FaIcon.html":
-/*!**************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/FaIcon.html ***!
-  \**************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<i data-bind=\"class: css\"></i>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.html":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/AggregateComponent.html ***!
-  \*******************************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!--  <span data-bind=\"text: name\"></span> -->\r\n<!-- ko if: isVisible -->\r\n<!-- ko foreach: items -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Block.html":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Block.html ***!
-  \******************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"attr: { 'class': css, title: title, id: id, name: name, role: role }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Button.html":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Button.html ***!
-  \*******************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<button data-bind=\"\r\n        attr: { \r\n            type: type, \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</button>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.html":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading1.html ***!
-  \*********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<h1 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h1>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.html":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading4.html ***!
-  \*********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<h4 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h4>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.html":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Heading5.html ***!
-  \*********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<h5 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h5>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.html":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/HorizontalRule.html ***!
-  \***************************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<hr>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Label.html":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Label.html ***!
-  \******************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<label data-bind=\"attr: { 'class': css, title: title, id: id, name: name, 'for': forTarget }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</label>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Link.html":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Link.html ***!
-  \*****************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<a data-bind=\"\r\n        attr: { \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name,\r\n            href: href\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</a>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListBlock.html ***!
-  \**********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    delegatedEvent: { event: 'click', selector: 'button,a,li', callback: click },\r\n    foreach: items\">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.html":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/ListItem.html ***!
-  \*********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<li data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</li>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Small.html":
-/*!******************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Small.html ***!
-  \******************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<small data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</small>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/Span.html":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/Span.html ***!
-  \*****************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<span data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</span>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.html":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextBlock.html ***!
-  \**********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"attr: { 'class': css, title: title, id: id, name: name }, text: text\"></div>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.html":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/TextSpan.html ***!
-  \*********************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: isVisible -->\r\n<span data-bind=\"attr: { \r\n      'class': css, \r\n      title: title, \r\n      id: id, \r\n      name: name \r\n      }, \r\n      text: text\"></span>\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.html":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Html/UnorderedList.html ***!
-  \**************************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko if: hasItems -->\r\n<!-- ko if: isVisible -->\r\n<ul data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    foreach: items,\r\n    delegatedEvent: { event: 'click', selector: 'li', callback: click }\r\n    \">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</ul>\r\n<!-- /ko -->\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponent.html":
-/*!****************************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Modal/ModalComponent.html ***!
-  \****************************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<div data-bind=\"modal: modalOptions\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\">\n    <!-- ko with: content -->\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\n    <!-- /ko -->\n</div>";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/@jasonbenfield/sharedwebapp/Page.html":
-/*!************************************************************!*\
-  !*** ./node_modules/@jasonbenfield/sharedwebapp/Page.html ***!
-  \************************************************************/
-/***/ ((module) => {
-
-// Module
-var code = "<!-- ko with: content -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->\r\n<!-- ko with: modalError -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->";
-// Exports
-module.exports = code;
-
-/***/ }),
-
-/***/ "./node_modules/jquery/dist/jquery.js":
-/*!********************************************!*\
-  !*** ./node_modules/jquery/dist/jquery.js ***!
-  \********************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/jquery/dist/jquery.js":
+/*!********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/jquery/dist/jquery.js ***!
+  \********************************************************************************************************/
 /***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.5.1
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-05-04T22:49Z
+ * Date: 2021-03-02T17:08Z
  */
 ( function( global, factory ) {
 
@@ -16165,12 +14068,16 @@ var support = {};
 
 var isFunction = function isFunction( obj ) {
 
-      // Support: Chrome <=57, Firefox <=52
-      // In some browsers, typeof returns "function" for HTML <object> elements
-      // (i.e., `typeof document.createElement( "object" ) === "function"`).
-      // We don't want to classify *any* DOM node as a function.
-      return typeof obj === "function" && typeof obj.nodeType !== "number";
-  };
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		// Support: QtWeb <=3.8.5, WebKit <=534.34, wkhtmltopdf tool <=0.12.5
+		// Plus for old WebKit, typeof returns "function" for HTML collections
+		// (e.g., `typeof document.getElementsByTagName("div") === "function"`). (gh-4756)
+		return typeof obj === "function" && typeof obj.nodeType !== "number" &&
+			typeof obj.item !== "function";
+	};
 
 
 var isWindow = function isWindow( obj ) {
@@ -16236,7 +14143,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.5.1",
+	version = "3.6.0",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -16490,7 +14397,7 @@ jQuery.extend( {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
-					[ arr ] : arr
+						[ arr ] : arr
 				);
 			} else {
 				push.call( ret, arr );
@@ -16585,9 +14492,9 @@ if ( typeof Symbol === "function" ) {
 
 // Populate the class2type map
 jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
-function( _i, name ) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-} );
+	function( _i, name ) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	} );
 
 function isArrayLike( obj ) {
 
@@ -16607,14 +14514,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 ( function( window ) {
 var i,
@@ -17197,8 +15104,8 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	var namespace = elem.namespaceURI,
-		docElem = ( elem.ownerDocument || elem ).documentElement;
+	var namespace = elem && elem.namespaceURI,
+		docElem = elem && ( elem.ownerDocument || elem ).documentElement;
 
 	// Support: IE <=8
 	// Assume HTML when documentElement doesn't yet exist, such as inside loading iframes
@@ -19113,9 +17020,9 @@ var rneedsContext = jQuery.expr.match.needsContext;
 
 function nodeName( elem, name ) {
 
-  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+	return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 
-};
+}
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
 
 
@@ -20086,8 +17993,8 @@ jQuery.extend( {
 			resolveContexts = Array( i ),
 			resolveValues = slice.call( arguments ),
 
-			// the master Deferred
-			master = jQuery.Deferred(),
+			// the primary Deferred
+			primary = jQuery.Deferred(),
 
 			// subordinate callback factory
 			updateFunc = function( i ) {
@@ -20095,30 +18002,30 @@ jQuery.extend( {
 					resolveContexts[ i ] = this;
 					resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
 					if ( !( --remaining ) ) {
-						master.resolveWith( resolveContexts, resolveValues );
+						primary.resolveWith( resolveContexts, resolveValues );
 					}
 				};
 			};
 
 		// Single- and empty arguments are adopted like Promise.resolve
 		if ( remaining <= 1 ) {
-			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject,
+			adoptValue( singleValue, primary.done( updateFunc( i ) ).resolve, primary.reject,
 				!remaining );
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
-			if ( master.state() === "pending" ||
+			if ( primary.state() === "pending" ||
 				isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
 
-				return master.then();
+				return primary.then();
 			}
 		}
 
 		// Multiple arguments are aggregated like Promise.all array elements
 		while ( i-- ) {
-			adoptValue( resolveValues[ i ], updateFunc( i ), master.reject );
+			adoptValue( resolveValues[ i ], updateFunc( i ), primary.reject );
 		}
 
-		return master.promise();
+		return primary.promise();
 	}
 } );
 
@@ -20269,8 +18176,8 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 			for ( ; i < len; i++ ) {
 				fn(
 					elems[ i ], key, raw ?
-					value :
-					value.call( elems[ i ], i, fn( elems[ i ], key ) )
+						value :
+						value.call( elems[ i ], i, fn( elems[ i ], key ) )
 				);
 			}
 		}
@@ -21178,10 +19085,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 }
 
 
-var
-	rkeyEvent = /^key/,
-	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
-	rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
+var rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
 function returnTrue() {
 	return true;
@@ -21476,8 +19380,8 @@ jQuery.event = {
 			event = jQuery.event.fix( nativeEvent ),
 
 			handlers = (
-					dataPriv.get( this, "events" ) || Object.create( null )
-				)[ event.type ] || [],
+				dataPriv.get( this, "events" ) || Object.create( null )
+			)[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
@@ -21601,12 +19505,12 @@ jQuery.event = {
 			get: isFunction( hook ) ?
 				function() {
 					if ( this.originalEvent ) {
-							return hook( this.originalEvent );
+						return hook( this.originalEvent );
 					}
 				} :
 				function() {
 					if ( this.originalEvent ) {
-							return this.originalEvent[ name ];
+						return this.originalEvent[ name ];
 					}
 				},
 
@@ -21745,7 +19649,13 @@ function leverageNative( el, type, expectSync ) {
 						// Cancel the outer synthetic event
 						event.stopImmediatePropagation();
 						event.preventDefault();
-						return result.value;
+
+						// Support: Chrome 86+
+						// In Chrome, if an element having a focusout handler is blurred by
+						// clicking outside of it, it invokes the handler synchronously. If
+						// that handler calls `.remove()` on the element, the data is cleared,
+						// leaving `result` undefined. We need to guard against this.
+						return result && result.value;
 					}
 
 				// If this is an inner synthetic event for an event with a bubbling surrogate
@@ -21910,34 +19820,7 @@ jQuery.each( {
 	targetTouches: true,
 	toElement: true,
 	touches: true,
-
-	which: function( event ) {
-		var button = event.button;
-
-		// Add which for key events
-		if ( event.which == null && rkeyEvent.test( event.type ) ) {
-			return event.charCode != null ? event.charCode : event.keyCode;
-		}
-
-		// Add which for click: 1 === left; 2 === middle; 3 === right
-		if ( !event.which && button !== undefined && rmouseEvent.test( event.type ) ) {
-			if ( button & 1 ) {
-				return 1;
-			}
-
-			if ( button & 2 ) {
-				return 3;
-			}
-
-			if ( button & 4 ) {
-				return 2;
-			}
-
-			return 0;
-		}
-
-		return event.which;
-	}
+	which: true
 }, jQuery.event.addProp );
 
 jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateType ) {
@@ -21960,6 +19843,12 @@ jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateTyp
 			leverageNative( this, type );
 
 			// Return non-false to allow normal event-path propagation
+			return true;
+		},
+
+		// Suppress native focus or blur as it's already being fired
+		// in leverageNative.
+		_default: function() {
 			return true;
 		},
 
@@ -22630,6 +20519,10 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 		// set in CSS while `offset*` properties report correct values.
 		// Behavior in IE 9 is more subtle than in newer versions & it passes
 		// some versions of this test; make sure not to make it pass there!
+		//
+		// Support: Firefox 70+
+		// Only Firefox includes border widths
+		// in computed dimensions. (gh-4529)
 		reliableTrDimensions: function() {
 			var table, tr, trChild, trStyle;
 			if ( reliableTrDimensionsVal == null ) {
@@ -22637,9 +20530,22 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				tr = document.createElement( "tr" );
 				trChild = document.createElement( "div" );
 
-				table.style.cssText = "position:absolute;left:-11111px";
+				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
+				tr.style.cssText = "border:1px solid";
+
+				// Support: Chrome 86+
+				// Height set through cssText does not get applied.
+				// Computed height then comes back as 0.
 				tr.style.height = "1px";
 				trChild.style.height = "9px";
+
+				// Support: Android 8 Chrome 86+
+				// In our bodyBackground.html iframe,
+				// display for all div elements is set to "inline",
+				// which causes a problem only in Android 8 Chrome 86.
+				// Ensuring the div is display: block
+				// gets around this issue.
+				trChild.style.display = "block";
 
 				documentElement
 					.appendChild( table )
@@ -22647,7 +20553,9 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 					.appendChild( trChild );
 
 				trStyle = window.getComputedStyle( tr );
-				reliableTrDimensionsVal = parseInt( trStyle.height ) > 3;
+				reliableTrDimensionsVal = ( parseInt( trStyle.height, 10 ) +
+					parseInt( trStyle.borderTopWidth, 10 ) +
+					parseInt( trStyle.borderBottomWidth, 10 ) ) === tr.offsetHeight;
 
 				documentElement.removeChild( table );
 			}
@@ -23111,10 +21019,10 @@ jQuery.each( [ "height", "width" ], function( _i, dimension ) {
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					( !elem.getClientRects().length || !elem.getBoundingClientRect().width ) ?
-						swap( elem, cssShow, function() {
-							return getWidthOrHeight( elem, dimension, extra );
-						} ) :
-						getWidthOrHeight( elem, dimension, extra );
+					swap( elem, cssShow, function() {
+						return getWidthOrHeight( elem, dimension, extra );
+					} ) :
+					getWidthOrHeight( elem, dimension, extra );
 			}
 		},
 
@@ -23173,7 +21081,7 @@ jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
 					swap( elem, { marginLeft: 0 }, function() {
 						return elem.getBoundingClientRect().left;
 					} )
-				) + "px";
+			) + "px";
 		}
 	}
 );
@@ -23312,7 +21220,7 @@ Tween.propHooks = {
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
 			} else if ( tween.elem.nodeType === 1 && (
-					jQuery.cssHooks[ tween.prop ] ||
+				jQuery.cssHooks[ tween.prop ] ||
 					tween.elem.style[ finalPropName( tween.prop ) ] != null ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
@@ -23557,7 +21465,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 			anim.done( function() {
 
-			/* eslint-enable no-loop-func */
+				/* eslint-enable no-loop-func */
 
 				// The final step of a "hide" animation is actually hiding the element
 				if ( !hidden ) {
@@ -23677,7 +21585,7 @@ function Animation( elem, properties, options ) {
 			tweens: [],
 			createTween: function( prop, end ) {
 				var tween = jQuery.Tween( elem, animation.opts, prop, end,
-						animation.opts.specialEasing[ prop ] || animation.opts.easing );
+					animation.opts.specialEasing[ prop ] || animation.opts.easing );
 				animation.tweens.push( tween );
 				return tween;
 			},
@@ -23850,7 +21758,8 @@ jQuery.fn.extend( {
 					anim.stop( true );
 				}
 			};
-			doAnimation.finish = doAnimation;
+
+		doAnimation.finish = doAnimation;
 
 		return empty || optall.queue === false ?
 			this.each( doAnimation ) :
@@ -24490,8 +22399,8 @@ jQuery.fn.extend( {
 				if ( this.setAttribute ) {
 					this.setAttribute( "class",
 						className || value === false ?
-						"" :
-						dataPriv.get( this, "__className__" ) || ""
+							"" :
+							dataPriv.get( this, "__className__" ) || ""
 					);
 				}
 			}
@@ -24506,7 +22415,7 @@ jQuery.fn.extend( {
 		while ( ( elem = this[ i++ ] ) ) {
 			if ( elem.nodeType === 1 &&
 				( " " + stripAndCollapse( getClass( elem ) ) + " " ).indexOf( className ) > -1 ) {
-					return true;
+				return true;
 			}
 		}
 
@@ -24796,9 +22705,7 @@ jQuery.extend( jQuery.event, {
 				special.bindType || type;
 
 			// jQuery handler
-			handle = (
-					dataPriv.get( cur, "events" ) || Object.create( null )
-				)[ event.type ] &&
+			handle = ( dataPriv.get( cur, "events" ) || Object.create( null ) )[ event.type ] &&
 				dataPriv.get( cur, "handle" );
 			if ( handle ) {
 				handle.apply( cur, data );
@@ -24945,7 +22852,7 @@ var rquery = ( /\?/ );
 
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
-	var xml;
+	var xml, parserErrorElem;
 	if ( !data || typeof data !== "string" ) {
 		return null;
 	}
@@ -24954,12 +22861,17 @@ jQuery.parseXML = function( data ) {
 	// IE throws on parseFromString with invalid input.
 	try {
 		xml = ( new window.DOMParser() ).parseFromString( data, "text/xml" );
-	} catch ( e ) {
-		xml = undefined;
-	}
+	} catch ( e ) {}
 
-	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-		jQuery.error( "Invalid XML: " + data );
+	parserErrorElem = xml && xml.getElementsByTagName( "parsererror" )[ 0 ];
+	if ( !xml || parserErrorElem ) {
+		jQuery.error( "Invalid XML: " + (
+			parserErrorElem ?
+				jQuery.map( parserErrorElem.childNodes, function( el ) {
+					return el.textContent;
+				} ).join( "\n" ) :
+				data
+		) );
 	}
 	return xml;
 };
@@ -25060,16 +22972,14 @@ jQuery.fn.extend( {
 			// Can add propHook for "elements" to filter or add form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
-		} )
-		.filter( function() {
+		} ).filter( function() {
 			var type = this.type;
 
 			// Use .is( ":disabled" ) so that fieldset[disabled] works
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
 				( this.checked || !rcheckableType.test( type ) );
-		} )
-		.map( function( _i, elem ) {
+		} ).map( function( _i, elem ) {
 			var val = jQuery( this ).val();
 
 			if ( val == null ) {
@@ -25122,7 +23032,8 @@ var
 
 	// Anchor tag for parsing the document origin
 	originAnchor = document.createElement( "a" );
-	originAnchor.href = location.href;
+
+originAnchor.href = location.href;
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -25503,8 +23414,8 @@ jQuery.extend( {
 			// Context for global events is callbackContext if it is a DOM node or jQuery collection
 			globalEventContext = s.context &&
 				( callbackContext.nodeType || callbackContext.jquery ) ?
-					jQuery( callbackContext ) :
-					jQuery.event,
+				jQuery( callbackContext ) :
+				jQuery.event,
 
 			// Deferreds
 			deferred = jQuery.Deferred(),
@@ -25816,8 +23727,10 @@ jQuery.extend( {
 				response = ajaxHandleResponses( s, jqXHR, responses );
 			}
 
-			// Use a noop converter for missing script
-			if ( !isSuccess && jQuery.inArray( "script", s.dataTypes ) > -1 ) {
+			// Use a noop converter for missing script but not if jsonp
+			if ( !isSuccess &&
+				jQuery.inArray( "script", s.dataTypes ) > -1 &&
+				jQuery.inArray( "json", s.dataTypes ) < 0 ) {
 				s.converters[ "text script" ] = function() {};
 			}
 
@@ -26555,12 +24468,6 @@ jQuery.offset = {
 			options.using.call( elem, props );
 
 		} else {
-			if ( typeof props.top === "number" ) {
-				props.top += "px";
-			}
-			if ( typeof props.left === "number" ) {
-				props.left += "px";
-			}
 			curElem.css( props );
 		}
 	}
@@ -26729,8 +24636,11 @@ jQuery.each( [ "top", "left" ], function( _i, prop ) {
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
-	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
-		function( defaultExtra, funcName ) {
+	jQuery.each( {
+		padding: "inner" + name,
+		content: type,
+		"": "outer" + name
+	}, function( defaultExtra, funcName ) {
 
 		// Margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
@@ -26815,7 +24725,8 @@ jQuery.fn.extend( {
 	}
 } );
 
-jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
+jQuery.each(
+	( "blur focus focusin focusout resize scroll click dblclick " +
 	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
 	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
 	function( _i, name ) {
@@ -26826,7 +24737,8 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 				this.on( name, null, data, fn ) :
 				this.trigger( name );
 		};
-	} );
+	}
+);
 
 
 
@@ -26964,10 +24876,10 @@ return jQuery;
 
 /***/ }),
 
-/***/ "./node_modules/knockout/build/output/knockout-latest.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/knockout/build/output/knockout-latest.js ***!
-  \***************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js":
+/*!***************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js ***!
+  \***************************************************************************************************************************/
 /***/ ((module, exports, __webpack_require__) => {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -27116,10 +25028,10 @@ a+" })()) }}"};this.addTemplate=function(a,b){w.write("<script type='text/html' 
 
 /***/ }),
 
-/***/ "./node_modules/lodash/lodash.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/lodash.js ***!
-  \***************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js":
+/*!***************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/lodash/lodash.js ***!
+  \***************************************************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -44328,6 +42240,1107 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js":
+/*!*****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__extends": () => (/* binding */ __extends),
+/* harmony export */   "__assign": () => (/* binding */ __assign),
+/* harmony export */   "__rest": () => (/* binding */ __rest),
+/* harmony export */   "__decorate": () => (/* binding */ __decorate),
+/* harmony export */   "__param": () => (/* binding */ __param),
+/* harmony export */   "__metadata": () => (/* binding */ __metadata),
+/* harmony export */   "__awaiter": () => (/* binding */ __awaiter),
+/* harmony export */   "__generator": () => (/* binding */ __generator),
+/* harmony export */   "__createBinding": () => (/* binding */ __createBinding),
+/* harmony export */   "__exportStar": () => (/* binding */ __exportStar),
+/* harmony export */   "__values": () => (/* binding */ __values),
+/* harmony export */   "__read": () => (/* binding */ __read),
+/* harmony export */   "__spread": () => (/* binding */ __spread),
+/* harmony export */   "__spreadArrays": () => (/* binding */ __spreadArrays),
+/* harmony export */   "__spreadArray": () => (/* binding */ __spreadArray),
+/* harmony export */   "__await": () => (/* binding */ __await),
+/* harmony export */   "__asyncGenerator": () => (/* binding */ __asyncGenerator),
+/* harmony export */   "__asyncDelegator": () => (/* binding */ __asyncDelegator),
+/* harmony export */   "__asyncValues": () => (/* binding */ __asyncValues),
+/* harmony export */   "__makeTemplateObject": () => (/* binding */ __makeTemplateObject),
+/* harmony export */   "__importStar": () => (/* binding */ __importStar),
+/* harmony export */   "__importDefault": () => (/* binding */ __importDefault),
+/* harmony export */   "__classPrivateFieldGet": () => (/* binding */ __classPrivateFieldGet),
+/* harmony export */   "__classPrivateFieldSet": () => (/* binding */ __classPrivateFieldSet)
+/* harmony export */ });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    }
+    return __assign.apply(this, arguments);
+}
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __param(paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+}
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var __createBinding = Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+});
+
+function __exportStar(m, o) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+/** @deprecated */
+function __spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+
+/** @deprecated */
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+}
+
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+}
+
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+}
+
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+
+var __setModuleDefault = Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+};
+
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+}
+
+function __importDefault(mod) {
+    return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+}
+
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Apis.js":
+/*!*****************************!*\
+  !*** ./Scripts/Hub/Apis.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Apis = void 0;
+var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiFactory */ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js");
+var ModalErrorComponent_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Error/ModalErrorComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js");
+var HubAppApi_1 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module '../Hub/Api/HubAppApi'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var Apis = /** @class */ (function () {
+    function Apis(modalError) {
+        this.modalError = new ModalErrorComponent_1.ModalErrorComponent(modalError);
+    }
+    Apis.prototype.hub = function () {
+        var apiFactory = new AppApiFactory_1.AppApiFactory(HubAppApi_1.HubAppApi, this.modalError);
+        return apiFactory.api(HubAppApi_1.HubAppApi);
+    };
+    return Apis;
+}());
+exports.Apis = Apis;
+//# sourceMappingURL=Apis.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListCard.js":
+/*!**********************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListCard.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListCard = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var Events_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var TextBlock_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var ListGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/ListGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroup.js");
+var MessageAlert_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MessageAlert */ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlert.js");
+var AppListItem_1 = __webpack_require__(/*! ./AppListItem */ "./Scripts/Internal/Apps/AppListItem.js");
+var AppListCard = /** @class */ (function () {
+    function AppListCard(hubApi, appRedirectUrl, view) {
+        this.hubApi = hubApi;
+        this.appRedirectUrl = appRedirectUrl;
+        this.view = view;
+        this._appSelected = new Events_1.DefaultEvent(this);
+        this.appSelected = this._appSelected.handler();
+        new TextBlock_1.TextBlock('Apps', this.view.titleHeader);
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.apps = new ListGroup_1.ListGroup(this.view.apps);
+        this.apps.itemClicked.register(this.onAppSelected.bind(this));
+    }
+    AppListCard.prototype.onAppSelected = function (listItem) {
+        this._appSelected.invoke(listItem.app);
+    };
+    AppListCard.prototype.refresh = function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var apps;
+            var _this = this;
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getApps()];
+                    case 1:
+                        apps = _a.sent();
+                        this.apps.setItems(apps, function (sourceItem, listItem) {
+                            return new AppListItem_1.AppListItem(sourceItem, _this.appRedirectUrl, listItem);
+                        });
+                        if (apps.length === 0) {
+                            this.alert.danger('No Apps were Found');
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AppListCard.prototype.getApps = function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            var apps;
+            var _this = this;
+            return (0, tslib_1.__generator)(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.hubApi.Apps.All()];
+                                    case 1:
+                                        apps = _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, apps];
+                }
+            });
+        });
+    };
+    return AppListCard;
+}());
+exports.AppListCard = AppListCard;
+//# sourceMappingURL=AppListCard.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListCardView.js":
+/*!**************************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListCardView.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListCardView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var CardView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Card/CardView */ "../../../../Published/Development/Packages/Shared/Current/npm/Card/CardView.js");
+var AppListItemView_1 = __webpack_require__(/*! ./AppListItemView */ "./Scripts/Internal/Apps/AppListItemView.js");
+var AppListCardView = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppListCardView, _super);
+    function AppListCardView() {
+        var _this = _super.call(this) || this;
+        _this.titleHeader = _this.addCardTitleHeader();
+        _this.alert = _this.addCardAlert().alert;
+        _this.apps = _this.addBlockListGroup(function () { return new AppListItemView_1.AppListItemView(); });
+        return _this;
+    }
+    return AppListCardView;
+}(CardView_1.CardView));
+exports.AppListCardView = AppListCardView;
+//# sourceMappingURL=AppListCardView.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListItem.js":
+/*!**********************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListItem.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListItem = void 0;
+var TextBlock_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var AppListItem = /** @class */ (function () {
+    function AppListItem(app, appRedirectUrl, view) {
+        this.app = app;
+        new TextBlock_1.TextBlock(app.AppName, view.appName);
+        new TextBlock_1.TextBlock(app.Title, view.appTitle);
+        new TextBlock_1.TextBlock(app.Type.DisplayText, view.appType);
+        view.setHref(appRedirectUrl(app.ID));
+    }
+    return AppListItem;
+}());
+exports.AppListItem = AppListItem;
+//# sourceMappingURL=AppListItem.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListItemView.js":
+/*!**************************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListItemView.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListItemView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var Row_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Grid/Row */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Row.js");
+var TextSpanView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var LinkListGroupItemView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListGroupItemView.js");
+var LinkListItemViewModel_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/LinkListItemViewModel.js");
+var AppListItemView = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppListItemView, _super);
+    function AppListItemView() {
+        var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
+        var row = _this.addContent(new Row_1.Row());
+        _this.appName = row.addColumn()
+            .addContent(new TextSpanView_1.TextSpanView());
+        _this.appTitle = row.addColumn()
+            .addContent(new TextSpanView_1.TextSpanView());
+        _this.appType = row.addColumn()
+            .addContent(new TextSpanView_1.TextSpanView());
+        return _this;
+    }
+    return AppListItemView;
+}(LinkListGroupItemView_1.LinkListGroupItemView));
+exports.AppListItemView = AppListItemView;
+//# sourceMappingURL=AppListItemView.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListPanel.js":
+/*!***********************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListPanel.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListPanel = exports.AppListPanelResult = void 0;
+var Awaitable_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Awaitable */ "../../../../Published/Development/Packages/Shared/Current/npm/Awaitable.js");
+var AppListCard_1 = __webpack_require__(/*! ./AppListCard */ "./Scripts/Internal/Apps/AppListCard.js");
+var AppListPanelResult = /** @class */ (function () {
+    function AppListPanelResult(results) {
+        this.results = results;
+    }
+    AppListPanelResult.appSelected = function (app) {
+        return new AppListPanelResult({ appSelected: { app: app } });
+    };
+    Object.defineProperty(AppListPanelResult.prototype, "appSelected", {
+        get: function () { return this.results.appSelected; },
+        enumerable: false,
+        configurable: true
+    });
+    return AppListPanelResult;
+}());
+exports.AppListPanelResult = AppListPanelResult;
+var AppListPanel = /** @class */ (function () {
+    function AppListPanel(hubApi, view) {
+        var _this = this;
+        this.hubApi = hubApi;
+        this.view = view;
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (appID) { return _this.hubApi.Apps.RedirectToApp.getUrl(appID).toString(); }, this.view.appListCard);
+        this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+    }
+    AppListPanel.prototype.onAppSelected = function (app) {
+        this.awaitable.resolve(AppListPanelResult.appSelected(app));
+    };
+    AppListPanel.prototype.refresh = function () {
+        return this.appListCard.refresh();
+    };
+    AppListPanel.prototype.start = function () {
+        return this.awaitable.start();
+    };
+    AppListPanel.ResultKeys = {};
+    return AppListPanel;
+}());
+exports.AppListPanel = AppListPanel;
+//# sourceMappingURL=AppListPanel.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/AppListPanelView.js":
+/*!***************************************************!*\
+  !*** ./Scripts/Internal/Apps/AppListPanelView.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppListPanelView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var FlexColumn_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumn */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumn.js");
+var FlexColumnFill_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/FlexColumnFill */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FlexColumnFill.js");
+var AppListCardView_1 = __webpack_require__(/*! ./AppListCardView */ "./Scripts/Internal/Apps/AppListCardView.js");
+var AppListPanelView = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppListPanelView, _super);
+    function AppListPanelView() {
+        var _this = _super.call(this) || this;
+        _this.height100();
+        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
+        _this.appListCard = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill())
+            .addContent(new AppListCardView_1.AppListCardView());
+        return _this;
+    }
+    return AppListPanelView;
+}(Block_1.Block));
+exports.AppListPanelView = AppListPanelView;
+//# sourceMappingURL=AppListPanelView.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Internal/Apps/MainPageView.js":
+/*!***********************************************!*\
+  !*** ./Scripts/Internal/Apps/MainPageView.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MainPageView = void 0;
+var PaddingCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/PaddingCss */ "../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js");
+var AppListPanelView_1 = __webpack_require__(/*! ./AppListPanelView */ "./Scripts/Internal/Apps/AppListPanelView.js");
+var MainPageView = /** @class */ (function () {
+    function MainPageView(page) {
+        this.page = page;
+        this.appListPanel = this.page.content.addContent(new AppListPanelView_1.AppListPanelView());
+        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
+    }
+    return MainPageView;
+}());
+exports.MainPageView = MainPageView;
+//# sourceMappingURL=MainPageView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Styles/default.scss":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Styles/default.scss ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/default.css");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/css/all.css":
+/*!****************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/css/all.css ***!
+  \****************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/fontawesome/all.css");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot":
+/*!*******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot ***!
+  \*******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.eot");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg":
+/*!*******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg ***!
+  \*******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.svg");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf":
+/*!*******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf ***!
+  \*******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.ttf");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff ***!
+  \********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.woff");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2":
+/*!*********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2 ***!
+  \*********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-brands-400.woff2");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot ***!
+  \********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.eot");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg ***!
+  \********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.svg");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf ***!
+  \********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.ttf");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff":
+/*!*********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff ***!
+  \*********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.woff");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2":
+/*!**********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2 ***!
+  \**********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-regular-400.woff2");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot":
+/*!******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot ***!
+  \******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.eot");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg":
+/*!******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg ***!
+  \******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.svg");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf":
+/*!******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf ***!
+  \******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.ttf");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff":
+/*!*******************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff ***!
+  \*******************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.woff");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2":
+/*!********************************************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2 ***!
+  \********************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "../../styles/css/webfonts/fa-solid-900.woff2");
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.html":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.html ***!
+  \*************************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div class=\"dropdown\">\r\n    <!-- ko with: button -->\r\n    <button data-bind=\"\r\n            dropdown: $data,\r\n            attr: {\r\n                'class': css,\r\n                title: title,\r\n                id: id,\r\n                name: name\r\n            },\r\n            enable: isEnabled\" class=\"dropdown-toggle\" type=\"button\" data-bs-toggle=\"dropdown\" data-toggle=\"dropdown\" aria-expanded=\"false\">\r\n        <!-- ko with: content -->\r\n        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n        <!-- /ko -->\r\n    </button>\r\n    <!-- /ko -->\r\n    <!-- ko with: menu -->\r\n    <ul data-bind=\"\r\n        attr: { 'class': css, title: title, id: id, name: name },\r\n        foreach: items,\r\n        delegatedEvent: { event: 'click', selector: 'li', callback: click }\r\n    \" class=\"dropdown-menu dropdown-menu-right\">\r\n        <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    </ul>\r\n    <!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.html":
+/*!*********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.html ***!
+  \*********************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<i data-bind=\"class: css\"></i>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.html":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.html ***!
+  \**************************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!--  <span data-bind=\"text: name\"></span> -->\r\n<!-- ko if: isVisible -->\r\n<!-- ko foreach: items -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.html":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.html ***!
+  \*************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"attr: { 'class': css, title: title, id: id, name: name, role: role }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.html":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Button.html ***!
+  \**************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<button data-bind=\"\r\n        attr: { \r\n            type: type, \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</button>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.html":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading1.html ***!
+  \****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<h1 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h1>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.html":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading4.html ***!
+  \****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<h4 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h4>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.html":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Heading5.html ***!
+  \****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<h5 data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</h5>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.html":
+/*!**********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/HorizontalRule.html ***!
+  \**********************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<hr>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.html":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.html ***!
+  \*************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<label data-bind=\"attr: { 'class': css, title: title, id: id, name: name, 'for': forTarget }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</label>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Link.html":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Link.html ***!
+  \************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<a data-bind=\"\r\n        attr: { \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name,\r\n            href: href\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</a>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlock.html":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ListBlock.html ***!
+  \*****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    delegatedEvent: { event: 'click', selector: 'button,a,li', callback: click },\r\n    foreach: items\">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</div>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.html":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.html ***!
+  \****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<li data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</li>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.html":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Small.html ***!
+  \*************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<small data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</small>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.html":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Span.html ***!
+  \************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<span data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</span>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.html":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.html ***!
+  \*****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<div data-bind=\"attr: { 'class': css, title: title, id: id, name: name }, text: text\"></div>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpan.html":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpan.html ***!
+  \****************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<span data-bind=\"attr: { \r\n      'class': css, \r\n      title: title, \r\n      id: id, \r\n      name: name \r\n      }, \r\n      text: text\"></span>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.html":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.html ***!
+  \*********************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: hasItems -->\r\n<!-- ko if: isVisible -->\r\n<ul data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    foreach: items,\r\n    delegatedEvent: { event: 'click', selector: 'li', callback: click }\r\n    \">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</ul>\r\n<!-- /ko -->\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponent.html":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Modal/ModalComponent.html ***!
+  \***********************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<div data-bind=\"modal: modalOptions\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</div>";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Page.html":
+/*!*******************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Page.html ***!
+  \*******************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko with: content -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->\r\n<!-- ko with: modalError -->\r\n<!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
 /***/ "./node_modules/tslib/tslib.es6.js":
 /*!*****************************************!*\
   !*** ./node_modules/tslib/tslib.es6.js ***!
@@ -44716,18 +43729,17 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var PaddingCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/PaddingCss */ "./node_modules/@jasonbenfield/sharedwebapp/PaddingCss.js");
-var Startup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Startup */ "./node_modules/@jasonbenfield/sharedwebapp/Startup.js");
+var PaddingCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/PaddingCss */ "../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js");
+var Startup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Startup */ "../../../../Published/Development/Packages/Shared/Current/npm/Startup.js");
 var Apis_1 = __webpack_require__(/*! ../../Hub/Apis */ "./Scripts/Hub/Apis.js");
 var AppListPanel_1 = __webpack_require__(/*! ./AppListPanel */ "./Scripts/Internal/Apps/AppListPanel.js");
 var MainPageView_1 = __webpack_require__(/*! ./MainPageView */ "./Scripts/Internal/Apps/MainPageView.js");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
-        this.page = page;
-        this.view = new MainPageView_1.MainPageView(page);
-        this.hubApi = new Apis_1.Apis(this.page.modalError).hub();
-        this.page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
-        this.appListPanel = new AppListPanel_1.AppListPanel(this.hubApi, this.view.appListPanel);
+        var view = new MainPageView_1.MainPageView(page);
+        this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        page.content.setPadding(PaddingCss_1.PaddingCss.top(3));
+        this.appListPanel = new AppListPanel_1.AppListPanel(this.hubApi, view.appListPanel);
         this.activateAppListPanel();
     }
     MainPage.prototype.activateAppListPanel = function () {
