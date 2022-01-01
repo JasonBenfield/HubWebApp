@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "@jasonbenfield/sharedwebapp/AppApiGroup";
-import { AppApiAction } from "@jasonbenfield/sharedwebapp/AppApiAction";
-import { AppApiView } from "@jasonbenfield/sharedwebapp/AppApiView";
-import { AppApiEvents } from "@jasonbenfield/sharedwebapp/AppApiEvents";
-import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/AppResourceUrl";
+import { AppApiGroup } from "@jasonbenfield/sharedwebapp/Api/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/Api/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/Api/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 
 export class AppGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {

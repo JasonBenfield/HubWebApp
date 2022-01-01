@@ -1,4 +1,5 @@
-﻿using XTI_Hub.Abstractions;
+﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 
 namespace LocalInstallApp;
@@ -7,44 +8,28 @@ internal sealed class HubClientInstallationService : InstallationService
 {
     private readonly HubAppClient hubClient;
 
-    public HubClientInstallationService(HubAppClient hubClient, XTI_App.Abstractions.AppKey appKey, XTI_App.Abstractions.AppVersionKey installVersionKey, string machineName)
+    public HubClientInstallationService(HubAppClient hubClient, AppKey appKey, AppVersionKey installVersionKey, string machineName)
         : base(appKey, installVersionKey, machineName)
     {
         this.hubClient = hubClient;
     }
 
-    protected override Task<int> _BeginCurrentInstall(XTI_App.Abstractions.AppKey appKey, XTI_App.Abstractions.AppVersionKey installVersionKey, string machineName)
+    protected override Task<int> _BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName)
     {
         var request = new BeginInstallationRequest
         {
-            AppKey = new AppKey
-            {
-                Name = new AppName
-                {
-                    Value = appKey.Name.Value,
-                    DisplayText = appKey.Name.DisplayText
-                },
-                Type = AppType.Values.Value(appKey.Type.Value)
-            },
+            AppKey = appKey,
             VersionKey = installVersionKey.Value,
             QualifiedMachineName = machineName
         };
         return hubClient.Install.BeginCurrentInstallation("", request);
     }
 
-    protected override Task<int> _BeginVersionInstall(XTI_App.Abstractions.AppKey appKey, XTI_App.Abstractions.AppVersionKey versionKey, string machineName)
+    protected override Task<int> _BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName)
     {
         var request = new BeginInstallationRequest
         {
-            AppKey = new AppKey
-            {
-                Name = new AppName
-                {
-                    Value = appKey.Name.Value,
-                    DisplayText = appKey.Name.DisplayText
-                },
-                Type = AppType.Values.Value(appKey.Type.Value)
-            },
+            AppKey = appKey,
             VersionKey = versionKey.Value,
             QualifiedMachineName = machineName
         };

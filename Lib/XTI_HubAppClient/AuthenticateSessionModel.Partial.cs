@@ -1,13 +1,12 @@
 ﻿using XTI_TempLog.Abstractions;
 
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+
+partial class AuthenticateSessionModel : IAuthenticateSessionModel
 {
-    partial class AuthenticateSessionModel : IAuthenticateSessionModel
+    public AuthenticateSessionModel(IAuthenticateSessionModel source)
     {
-        public AuthenticateSessionModel(IAuthenticateSessionModel source)
-        {
-            SessionKey = source.SessionKey;
-            UserName = source.UserName;
-        }
+        SessionKey = source.SessionKey;
+        UserName = source.UserName;
     }
 }

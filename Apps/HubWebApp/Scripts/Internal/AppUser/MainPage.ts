@@ -2,8 +2,8 @@
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { WebPage } from '@jasonbenfield/sharedwebapp/WebPage';
-import { XtiUrl } from '@jasonbenfield/sharedwebapp/XtiUrl';
+import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { Apis } from '../../Hub/Apis';
 import { AddRolePanel } from './AddRolePanel';
@@ -71,6 +71,7 @@ class MainPage {
         if (result.defaultModSelected) {
             this.userRolesPanel.setDefaultModifier();
             this.addRolePanel.setDefaultModifier();
+            this.activateUserRolesPanel();
         }
         else if (result.modCategorySelected) {
             this.selectModifierPanel.setModCategory(result.modCategorySelected.modCategory);
@@ -91,7 +92,7 @@ class MainPage {
             this.activateUserRolesPanel();
         }
         else if (result.back) {
-
+            this.activateUserRolesPanel();
         }
     }
 

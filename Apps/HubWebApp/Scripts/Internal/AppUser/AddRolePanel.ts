@@ -1,4 +1,5 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
@@ -41,7 +42,7 @@ export class AddRolePanel implements IPanel {
     ) {
         new TextBlock('Select Role', view.titleHeader);
         this.awaitable = new Awaitable();
-        this.alert = new MessageAlert(view.alert);
+        this.alert = new CardAlert(view.alert).alert;
         this.roles = new ListGroup(view.roles);
         this.roles.itemClicked.register(this.onRoleClicked.bind(this));
     }

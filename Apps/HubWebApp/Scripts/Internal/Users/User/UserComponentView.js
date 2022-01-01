@@ -22,7 +22,7 @@ var UserComponentView = /** @class */ (function (_super) {
         _this.editButton = headerRow.addColumn()
             .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
             .addContent(HubTheme_1.HubTheme.instance.cardHeader.editButton());
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         var body = _this.addCardBody();
         _this.userName = _this.addBodyRow(body);
         _this.fullName = _this.addBodyRow(body);

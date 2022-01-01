@@ -9,7 +9,7 @@ var ResourceListCardView = /** @class */ (function (_super) {
     function ResourceListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.resources = _this.addBlockListGroup(function () { return new ResourceListItemView_1.ResourceListItemView(); });
         return _this;
     }

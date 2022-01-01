@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HubAppApi = void 0;
 var tslib_1 = require("tslib");
-var AppApi_1 = require("@jasonbenfield/sharedwebapp/AppApi");
+var AppApi_1 = require("@jasonbenfield/sharedwebapp/Api/AppApi");
 var UserGroup_1 = require("./UserGroup");
 var UserCacheGroup_1 = require("./UserCacheGroup");
 var AuthGroup_1 = require("./AuthGroup");

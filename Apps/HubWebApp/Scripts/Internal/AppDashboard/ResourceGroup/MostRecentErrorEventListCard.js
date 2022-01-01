@@ -2,16 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MostRecentErrorEventListCard = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EventListItem_1 = require("../EventListItem");
 var MostRecentErrorEventListCard = /** @class */ (function () {
     function MostRecentErrorEventListCard(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
         new TextBlock_1.TextBlock('Most Recent Errors', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.errorEvents = new ListGroup_1.ListGroup(this.view.errorEvents);
     }
     MostRecentErrorEventListCard.prototype.setGroupID = function (groupID) {

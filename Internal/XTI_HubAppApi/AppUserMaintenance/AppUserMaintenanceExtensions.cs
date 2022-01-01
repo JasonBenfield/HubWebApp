@@ -9,5 +9,7 @@ internal static class AppUserMaintenanceExtensions
     {
         services.AddScoped<AssignRoleAction>();
         services.AddScoped<UnassignRoleAction>();
+        services.AddScoped<DenyAccessAction>();
+        services.AddScoped<AllowAccessAction>();
     }
 }

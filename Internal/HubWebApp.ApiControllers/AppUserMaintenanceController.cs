@@ -20,4 +20,16 @@ public class AppUserMaintenanceController : Controller
     {
         return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> DenyAccess([FromBody] UserModifierKey model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("DenyAccess").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> AllowAccess([FromBody] UserModifierKey model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("AllowAccess").Execute(model);
+    }
 }

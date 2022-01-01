@@ -14,7 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.10.2" />
-    <PackageReference Include="XTI_WebApp.RCL" Version="1.9.1-dev211227224811236" />
+    <PackageReference Include="XTI_WebApp.RCL" Version="1.9.1-dev211231112526160" />
   </ItemGroup>
 
   <ItemGroup>

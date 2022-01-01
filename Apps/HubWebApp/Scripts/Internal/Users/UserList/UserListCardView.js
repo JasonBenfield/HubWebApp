@@ -10,7 +10,7 @@ var UserListCardView = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.setName(UserListCardView.name);
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.users = _this.addBlockListGroup(function () { return new UserListItemView_1.UserListItemView(); });
         return _this;
     }

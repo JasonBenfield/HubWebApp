@@ -1,4 +1,5 @@
-﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
@@ -21,7 +22,7 @@ export class ResourceListCard {
         private readonly view: ResourceListCardView
     ) {
         new TextBlock('Resources', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.resources = new ListGroup(this.view.resources);
         this.resources.itemClicked.register(this.onItemSelected.bind(this));
     }

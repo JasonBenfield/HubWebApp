@@ -1,16 +1,16 @@
-﻿import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
+﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
+import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
 import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
 import { TextValueFormGroupView } from "@jasonbenfield/sharedwebapp/Html/TextValueFormGroupView";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { HubTheme } from "../../HubTheme";
 
 export class UserComponentView extends CardView {
-    readonly alert: MessageAlertView;
+    readonly alert: CardAlertView;
     readonly userName: TextValueFormGroupView;
     readonly fullName: TextValueFormGroupView;
     readonly email: TextValueFormGroupView;
@@ -27,7 +27,7 @@ export class UserComponentView extends CardView {
         this.editButton = headerRow.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
             .addContent(HubTheme.instance.cardHeader.editButton());
-        this.alert = this.addCardAlert().alert;
+        this.alert = this.addCardAlert();
         let body = this.addCardBody();
         this.userName = this.addBodyRow(body);
         this.fullName = this.addBodyRow(body);

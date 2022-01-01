@@ -1,4 +1,5 @@
-﻿import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
+﻿import { CardAlert } from '@jasonbenfield/sharedwebapp/Card/CardAlert';
+import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
 import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -13,7 +14,7 @@ export class AppComponent extends CardView {
     constructor(private readonly hubApi: HubAppApi, view: AppComponentView) {
         super();
         new TextBlock('App', view.titleHeader);
-        this.alert = new MessageAlert(view.alert);
+        this.alert = new CardAlert(view.alert).alert;
         this.appName = new TextBlock('', view.appName);
         this.appTitle = new TextBlock('', view.appTitle);
         this.appType = new TextBlock('', view.appType);

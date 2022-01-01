@@ -11,7 +11,7 @@ var ModCategoryComponentView = /** @class */ (function (_super) {
     function ModCategoryComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         var listItem = new ListItem_1.ListItem();
         _this.addCardBody()
             .addContent(new UnorderedList_1.UnorderedList())

@@ -1,6 +1,6 @@
-﻿import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Html/TextValueFormGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
@@ -20,7 +20,7 @@ export class UserComponent {
         private readonly hubApi: HubAppApi,
         private readonly view: UserComponentView
     ) {
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.userName = new TextValueFormGroup(view.userName);
         this.userName.setCaption('User Name');
         this.userName.syncValueTitleWithText();

@@ -9,7 +9,7 @@ var AppListCardView = /** @class */ (function (_super) {
     function AppListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.apps = _this.addBlockListGroup(function () { return new AppListItemView_1.AppListItemView(); });
         return _this;
     }

@@ -3,7 +3,7 @@ using XTI_Hub;
 
 namespace XTI_HubAppApi.AppUserMaintenance;
 
-public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
+internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
 {
     private readonly AppFromPath appFromPath;
     private readonly AppFactory appFactory;
@@ -20,7 +20,7 @@ public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         var role = await app.Role(model.RoleID);
         var user = await appFactory.Users.User(model.UserID);
         var modifier = await app.Modifier(model.ModifierID);
-        await user.AddRole(role, modifier);
+        await user.Modifier(modifier).AddRole(role);
         return role.ID.Value;
     }
 }

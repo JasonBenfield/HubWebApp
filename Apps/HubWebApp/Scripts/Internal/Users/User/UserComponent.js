@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserComponent = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
 var TextValueFormGroup_1 = require("@jasonbenfield/sharedwebapp/Html/TextValueFormGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var UserComponent = /** @class */ (function () {
     function UserComponent(hubApi, view) {
         this.hubApi = hubApi;
@@ -13,7 +13,7 @@ var UserComponent = /** @class */ (function () {
         this._editRequested = new Events_1.DefaultEvent(this);
         this.editRequested = this._editRequested.handler();
         this.editCommand = new Command_1.Command(this.requestEdit.bind(this));
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.userName = new TextValueFormGroup_1.TextValueFormGroup(view.userName);
         this.userName.setCaption('User Name');
         this.userName.syncValueTitleWithText();

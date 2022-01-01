@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModifierCategoryListCard = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModifierCategoryListItem_1 = require("./ModifierCategoryListItem");
 var ModifierCategoryListCard = /** @class */ (function () {
     function ModifierCategoryListCard(hubApi, view) {
@@ -14,7 +14,7 @@ var ModifierCategoryListCard = /** @class */ (function () {
         this._modCategorySelected = new Events_1.DefaultEvent(this);
         this.modCategorySelected = this._modCategorySelected.handler();
         new TextBlock_1.TextBlock('Modifier Categories', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.modCategories = new ListGroup_1.ListGroup(this.view.modCategories);
         this.modCategories.itemClicked.register(this.onItemSelected.bind(this));
     }

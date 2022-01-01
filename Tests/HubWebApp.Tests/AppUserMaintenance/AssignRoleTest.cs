@@ -1,12 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
-using XTI_App.Abstractions;
-using XTI_App.Fakes;
-using XTI_Hub;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppUserMaintenance;
+﻿using XTI_HubAppApi.AppUserMaintenance;
 using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests;
@@ -26,7 +18,7 @@ internal sealed class AssignRoleTest
     }
 
     [Test]
-    public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser()
+    public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
         var userToEdit = await addUser(tester, "userToEdit");
@@ -36,11 +28,12 @@ internal sealed class AssignRoleTest
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
         var modifier = await tester.FakeHubAppModifier();
         AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser
+            .ShouldThrowError_WhenAccessIsDenied
             (
                 model,
-                HubInfo.Roles.ViewApp,
-                modifier
+                modifier,
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.EditUser
             );
     }
 
@@ -56,7 +49,7 @@ internal sealed class AssignRoleTest
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();
         await tester.Execute(model, hubAppModifier.ModKey());
-        var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
+        var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
             userRoles.Select(r => r.Name()),
@@ -77,7 +70,7 @@ internal sealed class AssignRoleTest
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();
         var userRoleID = await tester.Execute(model, hubAppModifier.ModKey());
-        var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
+        var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
             userRoles.Select(r => r.ID),

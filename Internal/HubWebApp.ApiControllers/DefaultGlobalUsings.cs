@@ -4,6 +4,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using XTI_App.Abstractions;
 global using XTI_App.Api;
 global using XTI_Hub;
+global using XTI_HubAppApi;
 global using XTI_HubAppApi.AppInstall;
 global using XTI_HubAppApi.AppPublish;
 global using XTI_HubAppApi.AppUserInquiry;

@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectModCategoryPanel = exports.SelectModCategoryPanelResult = void 0;
 var tslib_1 = require("tslib");
 var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
 var DelayedAction_1 = require("@jasonbenfield/sharedwebapp/DelayedAction");
 var Enumerable_1 = require("@jasonbenfield/sharedwebapp/Enumerable");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModCategoryListItem_1 = require("./ModCategoryListItem");
 var SelectModCategoryPanelResult = /** @class */ (function () {
     function SelectModCategoryPanelResult(results) {
@@ -51,11 +51,15 @@ var SelectModCategoryPanel = /** @class */ (function () {
         this.view = view;
         this.awaitable = new Awaitable_1.Awaitable();
         new TextBlock_1.TextBlock('Modifier Categories', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.view.defaultModClicked.register(this.onDefaultModifierClicked.bind(this));
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.modCategories = new ListGroup_1.ListGroup(this.view.modCategories);
         this.modCategories.itemClicked.register(this.onModCategoryClicked.bind(this));
         new Command_1.Command(this.back.bind(this)).add(this.view.backButton);
     }
+    SelectModCategoryPanel.prototype.onDefaultModifierClicked = function () {
+        this.awaitable.resolve(SelectModCategoryPanelResult.defaultModSelected());
+    };
     SelectModCategoryPanel.prototype.back = function () {
         this.awaitable.resolve(SelectModCategoryPanelResult.back());
     };

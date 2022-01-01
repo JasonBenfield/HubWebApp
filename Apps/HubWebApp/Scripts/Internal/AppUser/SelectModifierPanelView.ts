@@ -20,7 +20,7 @@ export class SelectModifierPanelView extends Block {
         let flexColumn = this.addContent(new FlexColumn());
         let flexFill = flexColumn.addContent(new FlexColumnFill());
         this.alert = flexFill.addContent(new MessageAlertView());
-        this.modifiers = this.addContent(
+        this.modifiers = flexFill.addContent(
             new ListGroupView(
                 () => new ModifierButtonListItemView(),
                 new ListBlockViewModel()

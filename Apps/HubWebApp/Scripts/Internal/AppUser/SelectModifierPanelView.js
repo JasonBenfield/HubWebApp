@@ -19,7 +19,7 @@ var SelectModifierPanelView = /** @class */ (function (_super) {
         var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
         var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
         _this.alert = flexFill.addContent(new MessageAlertView_1.MessageAlertView());
-        _this.modifiers = _this.addContent(new ListGroupView_1.ListGroupView(function () { return new ModifierButtonListItemView_1.ModifierButtonListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
+        _this.modifiers = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ModifierButtonListItemView_1.ModifierButtonListItemView(); }, new ListBlockViewModel_1.ListBlockViewModel()));
         _this.modifiers.setMargin(MarginCss_1.MarginCss.bottom(3));
         var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
         _this.backButton = toolbar.columnStart.addContent(HubTheme_1.HubTheme.instance.commandToolbar.backButton());

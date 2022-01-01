@@ -9,7 +9,7 @@ var ResourceAccessCardView = /** @class */ (function (_super) {
     function ResourceAccessCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.accessItems = _this.addUnorderedListGroup(function () { return new RoleAccessListItemView_1.RoleAccessListItemView(); });
         return _this;
     }

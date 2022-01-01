@@ -2,16 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppComponent = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var AppComponent = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(AppComponent, _super);
     function AppComponent(hubApi, view) {
         var _this = _super.call(this) || this;
         _this.hubApi = hubApi;
         new TextBlock_1.TextBlock('App', view.titleHeader);
-        _this.alert = new MessageAlert_1.MessageAlert(view.alert);
+        _this.alert = new CardAlert_1.CardAlert(view.alert).alert;
         _this.appName = new TextBlock_1.TextBlock('', view.appName);
         _this.appTitle = new TextBlock_1.TextBlock('', view.appTitle);
         _this.appType = new TextBlock_1.TextBlock('', view.appType);

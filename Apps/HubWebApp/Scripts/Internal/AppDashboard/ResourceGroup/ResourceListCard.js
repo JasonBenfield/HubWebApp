@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceListCard = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ResourceListItem_1 = require("./ResourceListItem");
 var ResourceListCard = /** @class */ (function () {
     function ResourceListCard(hubApi, view) {
@@ -14,7 +14,7 @@ var ResourceListCard = /** @class */ (function () {
         this._resourceSelected = new Events_1.DefaultEvent(this);
         this.resourceSelected = this._resourceSelected.handler();
         new TextBlock_1.TextBlock('Resources', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.resources = new ListGroup_1.ListGroup(this.view.resources);
         this.resources.itemClicked.register(this.onItemSelected.bind(this));
     }

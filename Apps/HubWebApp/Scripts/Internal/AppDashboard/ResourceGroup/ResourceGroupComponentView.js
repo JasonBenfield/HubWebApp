@@ -11,7 +11,7 @@ var ResourceGroupComponentView = /** @class */ (function (_super) {
     function ResourceGroupComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         var listGroup = _this.addUnorderedListGroup();
         var listItem = new ListItem_1.ListItem();
         listGroup.addItem(listItem);

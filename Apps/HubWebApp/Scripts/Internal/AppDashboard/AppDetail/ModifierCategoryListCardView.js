@@ -9,7 +9,7 @@ var ModifierCategoryListCardView = /** @class */ (function (_super) {
     function ModifierCategoryListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.modCategories = _this.addBlockListGroup(function () { return new ModifierCategoryListItemView_1.ModifierCategoryListItemView(); });
         _this.modCategorySelected = _this.modCategories.itemClicked;
         return _this;

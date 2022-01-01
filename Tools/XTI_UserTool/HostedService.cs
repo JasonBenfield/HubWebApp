@@ -142,7 +142,7 @@ internal sealed class HostedService : IHostedService
             var modCategory = await app.ModCategory(new ModifierCategoryName(userOptions.ModCategoryName));
             modifier = await modCategory.ModifierByTargetKey(userOptions.ModKey);
         }
-        var userRoles = (await user.ExplicitlyAssignedRoles(modifier)).ToArray();
+        var userRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
         foreach (var role in roles)
         {
             if (!userRoles.Any(ur => ur.ID.Equals(role.ID)))

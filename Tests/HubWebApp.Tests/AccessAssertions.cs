@@ -1,11 +1,4 @@
-﻿using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Hub;
-using XTI_HubAppApi;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal static class AccessAssertions
 {
@@ -31,36 +24,36 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
-    public void ShouldThrowError_WhenModifierIsNotFound(TModel model)
-    {
-        var adminUser = tester.LoginAsAdmin();
-        var modKey = new ModifierKey("NotFound");
-        Assert.ThrowsAsync<ModifierNotFoundException>(() => tester.Execute(model, modKey));
-    }
-
-    public void ShouldThrowError_WhenModifierIsNotAssignedToUser(TModel model, Modifier modifier)
+    public void ShouldThrowError_WhenAccessIsDenied(TModel model, IModifier modifier, params AppRoleName[] allowedRoles)
     {
         var loggedInUser = tester.Login();
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
+        foreach (var roleName in allowedRoles)
+        {
+            clearUserRoles(loggedInUser, modifier);
+            loggedInUser.AddRole(roleName);
+            Assert.DoesNotThrowAsync(() => tester.Execute(model, modifier.ModKey()));
+        }
+        var roles = tester.FakeHubApp()
+            .Roles()
+            .Select(r => r.Name())
+            .Where(r => !r.Equals(AppRoleName.DenyAccess));
+        var deniedRoles = roles.Except(allowedRoles).ToArray();
+        foreach (var roleName in deniedRoles)
+        {
+            clearUserRoles(loggedInUser, modifier);
+            loggedInUser.AddRole(roleName);
+            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
+        }
+        clearUserRoles(loggedInUser, modifier);
+        loggedInUser.AddRole(AppRoleName.DenyAccess);
     }
 
-    public void ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser(TModel model, AppRoleName role, FakeModifier modifier)
+    private static void clearUserRoles(FakeAppUser loggedInUser, IModifier modifier)
     {
-        var loggedInUser = tester.Login(role);
-        loggedInUser.AddRole(modifier, AppRoleName.DenyAccess);
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
-    }
-
-    public void ShouldThrowError_WhenRoleIsNotAssignedToUser(TModel model)
-    {
-        var loggedInUser = tester.Login();
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model));
-    }
-
-    public void ShouldThrowError_WhenModifiedRoleIsNotAssignedToUser(TModel model, FakeModifier modifier)
-    {
-        var loggedInUser = tester.Login();
-        loggedInUser.AddRole(modifier, AppRoleName.DenyAccess);
-        Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
+        var existingRoles = loggedInUser.Roles(modifier);
+        foreach (var existingRole in existingRoles)
+        {
+            loggedInUser.RemoveRole(existingRole);
+        }
     }
 }

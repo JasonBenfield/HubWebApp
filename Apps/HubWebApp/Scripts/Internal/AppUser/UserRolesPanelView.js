@@ -30,6 +30,7 @@ var UserRolesPanelView = /** @class */ (function (_super) {
         var userHeading = flexFill.addContent(new Heading1_1.Heading1());
         _this.personName = userHeading.addContent(new TextSpanView_1.TextSpanView());
         _this.userName = userHeading.addContent(new TextSmallView_1.TextSmallView());
+        userHeading.setMargin(MarginCss_1.MarginCss.bottom(3));
         var appHeading = flexFill.addContent(new Heading3_1.Heading3());
         _this.appName = appHeading.addContent(new TextSpanView_1.TextSpanView());
         _this.appType = appHeading.addContent(new TextSmallView_1.TextSmallView());
@@ -49,19 +50,41 @@ var UserRolesPanelView = /** @class */ (function (_super) {
             .addContent(HubTheme_1.HubTheme.instance.cardHeader.addButton());
         _this.addButton.setTitle('Add Role');
         var body = card.addCardBody();
-        var bodyContainer = body.addContent(new NavView_1.NavView());
-        bodyContainer.pills();
-        bodyContainer.setFlexCss(new FlexCss_1.FlexCss().column().fill());
-        _this.selectModifierButton = bodyContainer.addContent(new ButtonCommandItem_1.ButtonCommandItem());
-        _this.selectModifierButton.addCssName('nav-link');
-        _this.selectModifierButton.icon.setName('hand-pointer');
-        _this.selectModifierButton.icon.regularStyle();
-        _this.selectModifierButton.setText('Select modifier');
-        _this.selectModifierButton.setTextCss(new TextCss_1.TextCss().start());
-        _this.alert = card.addCardAlert().alert;
+        var navPills = body.addContent(new NavView_1.NavView());
+        navPills.pills();
+        navPills.setFlexCss(new FlexCss_1.FlexCss().column().fill());
+        _this.selectModifierButton = _this.addNavLinkButton(navPills);
+        _this.selectModifierButton.icon.setName('pencil-alt');
+        _this.selectModifierButton.icon.solidStyle();
+        _this.selectModifierButton.setText('Select Different Modifier');
+        _this.allowAccessButton = _this.addNavLinkButton(navPills);
+        _this.allowAccessButton.icon.setName('check');
+        _this.allowAccessButton.icon.solidStyle();
+        _this.allowAccessButton.setText('Allow Access');
+        _this.denyAccessButton = _this.addNavLinkButton(navPills);
+        _this.denyAccessButton.icon.setName('ban');
+        _this.denyAccessButton.icon.solidStyle();
+        _this.denyAccessButton.setText('Deny Access');
+        _this.alert = card.addCardAlert();
         _this.userRoles = card.addBlockListGroup(function () { return new UserRoleListItemView_1.UserRoleListItemView(); });
+        card.setMargin(MarginCss_1.MarginCss.bottom(3));
+        _this.defaultUserRolesCard = flexFill.addContent(new CardView_1.CardView());
+        _this.defaultUserRolesTitle = _this.defaultUserRolesCard.addCardTitleHeader();
+        _this.defaultUserRoles = _this.defaultUserRolesCard.addUnorderedListGroup(function () { return new UserRoleListItemView_1.UserRoleListItemView(); });
         return _this;
     }
+    UserRolesPanelView.prototype.addNavLinkButton = function (navPills) {
+        var navLinkButton = navPills.addContent(new ButtonCommandItem_1.ButtonCommandItem());
+        navLinkButton.addCssName('nav-link');
+        navLinkButton.setTextCss(new TextCss_1.TextCss().start());
+        return navLinkButton;
+    };
+    UserRolesPanelView.prototype.showDefaultUserRoles = function () {
+        this.defaultUserRolesCard.show();
+    };
+    UserRolesPanelView.prototype.hideDefaultUserRoles = function () {
+        this.defaultUserRolesCard.hide();
+    };
     return UserRolesPanelView;
 }(Block_1.Block));
 exports.UserRolesPanelView = UserRolesPanelView;

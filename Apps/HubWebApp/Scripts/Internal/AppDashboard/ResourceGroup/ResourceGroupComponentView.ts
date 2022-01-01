@@ -1,4 +1,5 @@
-﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
+﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
+import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
 import { ListItem } from "@jasonbenfield/sharedwebapp/Html/ListItem";
@@ -7,14 +8,14 @@ import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 
 export class ResourceGroupComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
-    readonly alert: MessageAlertView;
+    readonly alert: CardAlertView;
     readonly groupName: TextSpanView;
     private readonly anonListItem: ListItem;
 
     constructor() {
         super();
         this.titleHeader = this.addCardTitleHeader();
-        this.alert = this.addCardAlert().alert;
+        this.alert = this.addCardAlert();
         let listGroup = this.addUnorderedListGroup();
         let listItem = new ListItem();
         listGroup.addItem(listItem);

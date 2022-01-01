@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModCategoryComponent = void 0;
 var tslib_1 = require("tslib");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var ModCategoryComponent = /** @class */ (function () {
     function ModCategoryComponent(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
         new TextBlock_1.TextBlock('Modifier Category', this.view.titleHeader);
-        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
         this.modCategoryName = new TextBlock_1.TextBlock('', this.view.modCategoryName);
     }
     ModCategoryComponent.prototype.setModCategoryID = function (modCategoryID) {

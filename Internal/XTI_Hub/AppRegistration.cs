@@ -113,10 +113,10 @@ public sealed class AppRegistration
         var hubAdminRole = await hubApp.Role(AppRoleName.Admin);
         foreach (var systemUser in systemUsers)
         {
-            var assignedRoles = await systemUser.AssignedRoles(appModifier);
+            var assignedRoles = await systemUser.Modifier(appModifier).AssignedRoles();
             if (!assignedRoles.Any(r => r.ID.Equals(hubAdminRole.ID)))
             {
-                await systemUser.AddRole(hubAdminRole, appModifier);
+                await systemUser.Modifier(appModifier).AddRole(hubAdminRole);
             }
         }
     }
@@ -128,7 +128,7 @@ public sealed class AppRegistration
         var manageCacheRole = await app.AddRoleIfNotFound(AppRoleName.ManageUserCache);
         foreach (var hubSystemUser in hubSystemUsers)
         {
-            var assignedRoles = await hubSystemUser.AssignedRoles(defaultModifier);
+            var assignedRoles = await hubSystemUser.Modifier(defaultModifier).AssignedRoles();
             if (!assignedRoles.Any(r => r.ID.Equals(manageCacheRole.ID)))
             {
                 await hubSystemUser.AddRole(manageCacheRole);

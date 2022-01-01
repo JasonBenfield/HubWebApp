@@ -12,6 +12,9 @@ var UserRoleListItem = /** @class */ (function () {
         new TextBlock_1.TextBlock(role.Name, view.roleName);
         view.deleteButton.clicked.register(this.onDeleteButtonClicked.bind(this), this);
     }
+    UserRoleListItem.prototype.hideDeleteButton = function () {
+        this.view.deleteButton.hide();
+    };
     UserRoleListItem.prototype.onDeleteButtonClicked = function () {
         this._deleteButtonClicked.invoke(this.role);
     };

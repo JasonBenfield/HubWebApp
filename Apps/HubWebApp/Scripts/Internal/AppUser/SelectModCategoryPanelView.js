@@ -6,6 +6,7 @@ var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var Block_1 = require("@jasonbenfield/sharedwebapp/Html/Block");
 var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
+var ListBlockViewModel_1 = require("@jasonbenfield/sharedwebapp/Html/ListBlockViewModel");
 var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
 var TextBlockView_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlockView");
 var ButtonListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView");
@@ -22,16 +23,16 @@ var SelectModCategoryPanelView = /** @class */ (function (_super) {
         var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
         var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
         _this.defaultModListItem = new ButtonListGroupItemView_1.ButtonListGroupItemView();
-        _this.defaultModClicked = _this.defaultModListItem.clicked;
         _this.defaultModListItem
             .addContent(new TextBlockView_1.TextBlockView())
             .configure(function (tb) { return tb.setText('Default Modifier'); });
-        var defaultModList = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ListItem_1.ListItem(); }));
+        var defaultModList = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ListItem_1.ListItem(); }, new ListBlockViewModel_1.ListBlockViewModel()));
+        _this.defaultModClicked = defaultModList.itemClicked;
         defaultModList.addItem(_this.defaultModListItem);
         defaultModList.setMargin(MarginCss_1.MarginCss.bottom(3));
         var card = flexFill.addContent(new CardView_1.CardView());
         _this.titleHeader = card.addCardTitleHeader();
-        _this.alert = card.addCardAlert().alert;
+        _this.alert = card.addCardAlert();
         _this.modCategories = card.addBlockListGroup(function () { return new ModCategoryButtonListItemView_1.ModCategoryButtonListItemView(); });
         card.setMargin(MarginCss_1.MarginCss.bottom(3));
         var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());

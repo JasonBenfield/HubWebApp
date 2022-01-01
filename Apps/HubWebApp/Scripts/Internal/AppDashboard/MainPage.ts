@@ -1,8 +1,8 @@
 ﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
-import { WebPage } from '@jasonbenfield/sharedwebapp/WebPage';
-import { XtiUrl } from '@jasonbenfield/sharedwebapp/XtiUrl';
+import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
 import { Apis } from '../../Hub/Apis';
 import { AppDetailPanel } from './AppDetail/AppDetailPanel';

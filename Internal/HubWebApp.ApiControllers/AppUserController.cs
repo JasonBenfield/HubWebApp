@@ -16,15 +16,15 @@ public class AppUserController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest model)
+    public Task<ResultContainer<UserAccessModel>> GetUserAccess([FromBody] UserModifierKey model)
     {
-        return api.Group("AppUser").Action<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").Execute(model);
+        return api.Group("AppUser").Action<UserModifierKey, UserAccessModel>("GetUserAccess").Execute(model);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] GetUnassignedRolesRequest model)
+    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] UserModifierKey model)
     {
-        return api.Group("AppUser").Action<GetUnassignedRolesRequest, AppRoleModel[]>("GetUnassignedRoles").Execute(model);
+        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model);
     }
 
     [HttpPost]

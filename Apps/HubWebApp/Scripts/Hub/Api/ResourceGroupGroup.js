@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupGroup = void 0;
 var tslib_1 = require("tslib");
-var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/AppApiGroup");
+var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var ResourceGroupGroup = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(ResourceGroupGroup, _super);
     function ResourceGroupGroup(events, resourceUrl) {
