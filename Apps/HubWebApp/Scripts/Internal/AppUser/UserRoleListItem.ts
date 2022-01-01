@@ -11,6 +11,10 @@ export class UserRoleListItem {
         view.deleteButton.clicked.register(this.onDeleteButtonClicked.bind(this), this);
     }
 
+    hideDeleteButton() {
+        this.view.deleteButton.hide();
+    }
+
     private onDeleteButtonClicked() {
         this._deleteButtonClicked.invoke(this.role);
     }

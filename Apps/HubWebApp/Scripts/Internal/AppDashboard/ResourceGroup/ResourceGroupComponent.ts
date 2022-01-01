@@ -1,4 +1,5 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceGroupComponentView } from "./ResourceGroupComponentView";
@@ -14,7 +15,7 @@ export class ResourceGroupComponent {
         private readonly view: ResourceGroupComponentView
     ) {
         new TextBlock('Resource Group', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.groupName = new TextBlock('', this.view.groupName);
         this.view.hideAnonMessage();
     }

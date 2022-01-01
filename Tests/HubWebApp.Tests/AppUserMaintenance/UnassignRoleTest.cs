@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Hub;
-using XTI_HubAppApi.AppUserMaintenance;
+﻿using XTI_HubAppApi.AppUserMaintenance;
 using XTI_HubAppApi.UserList;
 
 namespace HubWebApp.Tests;
@@ -30,6 +24,32 @@ internal sealed class UnassignRoleTest
     }
 
     [Test]
+    public async Task ShouldThrowError_WhenAccessIsDenied()
+    {
+        var tester = await setup();
+        var userToEdit = await addUser(tester, "userToEdit");
+        var viewAppRole = await getViewAppRole(tester);
+        var app = await tester.HubApp();
+        var defaultModifier = await app.DefaultModifier();
+        await assignRole(tester, userToEdit, viewAppRole);
+        var request = new UserRoleRequest
+        {
+            UserID = userToEdit.ID.Value,
+            ModifierID = defaultModifier.ID.Value,
+            RoleID = viewAppRole.ID.Value
+        };
+        var modifier = await tester.FakeHubAppModifier();
+        AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenAccessIsDenied
+            (
+                request,
+                modifier,
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.EditUser
+            );
+    }
+
+    [Test]
     public async Task ShouldUnassignRoleFromUser()
     {
         var tester = await setup();
@@ -47,8 +67,8 @@ internal sealed class UnassignRoleTest
             UserID = userToEdit.ID.Value
         };
         var hubAppModifier = await tester.HubAppModifier();
-        await tester.Execute(request,  hubAppModifier.ModKey());
-        var userRoles = await userToEdit.AssignedRoles(hubAppModifier);
+        await tester.Execute(request, hubAppModifier.ModKey());
+        var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
             userRoles.Select(r => r.Name()),
@@ -90,7 +110,7 @@ internal sealed class UnassignRoleTest
             {
                 UserName = userName,
                 Password = "Password12345"
-            }, 
+            },
             ModifierKey.Default
         );
         var factory = tester.Services.GetRequiredService<AppFactory>();

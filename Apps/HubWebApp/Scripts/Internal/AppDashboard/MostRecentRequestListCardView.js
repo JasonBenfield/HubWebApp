@@ -9,7 +9,7 @@ var MostRecentRequestListCardView = /** @class */ (function (_super) {
     function MostRecentRequestListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.requests = _this.addBlockListGroup(function () { return new RequestExpandedListItemView_1.RequestExpandedListItemView(); });
         return _this;
     }

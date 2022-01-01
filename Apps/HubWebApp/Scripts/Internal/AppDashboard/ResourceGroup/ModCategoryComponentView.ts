@@ -1,4 +1,5 @@
-﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
+﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
+import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { ListItem } from "@jasonbenfield/sharedwebapp/Html/ListItem";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
@@ -7,7 +8,7 @@ import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 
 export class ModCategoryComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
-    readonly alert: MessageAlertView;
+    readonly alert: CardAlertView;
     private readonly listGroup: ListGroupView;
     readonly modCategoryName: TextSpanView;
     readonly clicked: IEventHandler<any>;
@@ -15,7 +16,7 @@ export class ModCategoryComponentView extends CardView {
     constructor() {
         super();
         this.titleHeader = this.addCardTitleHeader();
-        this.alert = this.addCardAlert().alert;
+        this.alert = this.addCardAlert();
         this.listGroup = this.addBlockListGroup();
         let listItem = new ListItem();
         this.listGroup.addItem(listItem)

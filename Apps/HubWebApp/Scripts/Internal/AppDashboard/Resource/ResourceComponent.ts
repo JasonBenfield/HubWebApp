@@ -1,4 +1,5 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceResultType } from '../../../Hub/Api/ResourceResultType';
@@ -15,7 +16,7 @@ export class ResourceComponent {
         private readonly view: ResourceComponentView
     ) {
         new TextBlock('Resource', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.resourceName = new TextBlock('', view.resourceName);
         this.resultType = new TextBlock('', view.resultType);
     }

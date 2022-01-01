@@ -12,8 +12,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.8.11-dev211230074618493" />
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.11-dev211230074618493" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.8.11" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.11" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.10.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />

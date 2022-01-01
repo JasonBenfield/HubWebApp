@@ -1,4 +1,5 @@
-﻿import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
@@ -20,7 +21,7 @@ export class AppListCard {
         private readonly view: AppListCardView
     ) {
         new TextBlock('Apps', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.apps = new ListGroup(this.view.apps);
         this.apps.itemClicked.register(this.onAppSelected.bind(this))
     }

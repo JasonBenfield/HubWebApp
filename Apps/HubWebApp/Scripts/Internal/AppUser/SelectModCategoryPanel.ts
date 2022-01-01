@@ -1,4 +1,5 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
 import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { FilteredArray } from "@jasonbenfield/sharedwebapp/Enumerable";
@@ -52,10 +53,15 @@ export class SelectModCategoryPanel implements IPanel {
         private readonly view: SelectModCategoryPanelView
     ) {
         new TextBlock('Modifier Categories', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.view.defaultModClicked.register(this.onDefaultModifierClicked.bind(this));
+        this.alert = new CardAlert(this.view.alert).alert;
         this.modCategories = new ListGroup(this.view.modCategories);
         this.modCategories.itemClicked.register(this.onModCategoryClicked.bind(this));
         new Command(this.back.bind(this)).add(this.view.backButton);
+    }
+
+    private onDefaultModifierClicked() {
+        this.awaitable.resolve(SelectModCategoryPanelResult.defaultModSelected());
     }
 
     private back() {

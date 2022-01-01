@@ -4,8 +4,8 @@ var tslib_1 = require("tslib");
 var SingleActivePanel_1 = require("@jasonbenfield/sharedwebapp/Panel/SingleActivePanel");
 var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
 var Url_1 = require("@jasonbenfield/sharedwebapp/Url");
-var WebPage_1 = require("@jasonbenfield/sharedwebapp/WebPage");
-var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/XtiUrl");
+var WebPage_1 = require("@jasonbenfield/sharedwebapp/Api/WebPage");
+var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/Api/XtiUrl");
 var Apis_1 = require("../../Hub/Apis");
 var AddRolePanel_1 = require("./AddRolePanel");
 var AppUserDataPanel_1 = require("./AppUserDataPanel");
@@ -67,6 +67,7 @@ var MainPage = /** @class */ (function () {
                         if (result.defaultModSelected) {
                             this.userRolesPanel.setDefaultModifier();
                             this.addRolePanel.setDefaultModifier();
+                            this.activateUserRolesPanel();
                         }
                         else if (result.modCategorySelected) {
                             this.selectModifierPanel.setModCategory(result.modCategorySelected.modCategory);
@@ -97,6 +98,7 @@ var MainPage = /** @class */ (function () {
                             this.activateUserRolesPanel();
                         }
                         else if (result.back) {
+                            this.activateUserRolesPanel();
                         }
                         return [2 /*return*/];
                 }

@@ -1,8 +1,4 @@
-﻿using NUnit.Framework;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal sealed class GetAppTest
 {
@@ -14,16 +10,17 @@ internal sealed class GetAppTest
     }
 
     [Test]
-    public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser()
+    public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
         var modifier = await tester.FakeHubAppModifier();
         AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser
+            .ShouldThrowError_WhenAccessIsDenied
             (
                 new EmptyRequest(),
-                HubInfo.Roles.ViewApp,
-                modifier
+                modifier,
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.ViewApp
             );
     }
 

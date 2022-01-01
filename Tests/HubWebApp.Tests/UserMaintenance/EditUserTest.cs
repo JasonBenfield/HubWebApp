@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_HubAppApi.UserList;
+﻿using XTI_HubAppApi.UserList;
 using XTI_HubAppApi.UserMaintenance;
 
 namespace HubWebApp.Tests;
@@ -18,7 +13,13 @@ internal sealed class EditUserTest
         var userToEdit = await addUser(tester, "userToEdit");
         var form = createEditUserForm(userToEdit);
         AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenRoleIsNotAssignedToUser(form);
+            .ShouldThrowError_WhenAccessIsDenied
+            (
+                form,
+                tester.FakeHubApp().DefaultModifier(),
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.EditUser
+            );
     }
 
     [Test]

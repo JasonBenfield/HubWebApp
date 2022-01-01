@@ -1,5 +1,8 @@
-﻿using XTI_App.Api;
+﻿using XTI_App.Abstractions;
+using XTI_App.Api;
+using XTI_Core;
 using XTI_Hub;
+using XTI_HubAppApi.Auth;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi;
@@ -73,4 +76,25 @@ public sealed partial class HubAppApi : WebAppApiWrapper
 
     partial void createUserMaintenance(IServiceProvider services);
 
+    protected override void ConfigureTemplate(AppApiTemplate template)
+    {
+        base.ConfigureTemplate(template);
+        template.ExcludeValueTemplates(IsValueTemplateExcluded);
+    }
+
+    private static bool IsValueTemplateExcluded(ValueTemplate templ, ApiCodeGenerators codeGenerator)
+    {
+        if(codeGenerator == ApiCodeGenerators.Dotnet)
+        {
+            return templ.DataType == typeof(LoginCredentials)
+                || templ.DataType == typeof(AppKey)
+                || templ.DataType == typeof(AppVersionKey)
+                || templ.DataType == typeof(AppEventSeverity)
+                || templ.DataType == typeof(AppType)
+                || templ.DataType == typeof(AppVersionStatus)
+                || templ.DataType == typeof(AppVersionType)
+                || templ.DataType == typeof(ResourceResultType);
+        }
+        return false;
+    }
 }

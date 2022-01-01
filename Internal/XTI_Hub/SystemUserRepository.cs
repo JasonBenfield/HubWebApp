@@ -48,14 +48,14 @@ public sealed class SystemUserRepository
         var app = await factory.Apps.AddOrUpdate(appKey, now);
         var systemRole = await app.AddRoleIfNotFound(AppRoleName.System);
         var modifier = await app.DefaultModifier();
-        var assignedRoles = await systemUser.AssignedRoles(modifier);
+        var assignedRoles = await systemUser.Modifier(modifier).AssignedRoles();
         if (!assignedRoles.Any(r => r.ID.Equals(systemRole.ID)))
         {
             await systemUser.AddRole(systemRole);
         }
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var hubDefaultModifier = await hubApp.DefaultModifier();
-        var hubAssignedRoles = await systemUser.AssignedRoles(hubDefaultModifier);
+        var hubAssignedRoles = await systemUser.Modifier(hubDefaultModifier).AssignedRoles();
         var publisherRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.Publisher);
         if (!hubAssignedRoles.Any(r => r.ID.Equals(publisherRole.ID)))
         {

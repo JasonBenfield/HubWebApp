@@ -1,11 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Hub;
-using XTI_HubAppApi;
-using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests;
 
@@ -85,7 +78,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return factory.Apps.App(HubInfo.AppKey);
     }
 
-    private FakeApp FakeHubApp()
+    public FakeApp FakeHubApp()
     {
         var appContext = Services.GetRequiredService<FakeAppContext>();
         return appContext.App();

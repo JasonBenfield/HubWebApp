@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddRolePanel = exports.AddRolePanelResult = void 0;
 var tslib_1 = require("tslib");
 var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var DelayedAction_1 = require("@jasonbenfield/sharedwebapp/DelayedAction");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var RoleListItem_1 = require("./RoleListItem");
 var AddRolePanelResult = /** @class */ (function () {
     function AddRolePanelResult(results) {
@@ -33,7 +33,7 @@ var AddRolePanel = /** @class */ (function () {
         this.view = view;
         new TextBlock_1.TextBlock('Select Role', view.titleHeader);
         this.awaitable = new Awaitable_1.Awaitable();
-        this.alert = new MessageAlert_1.MessageAlert(view.alert);
+        this.alert = new CardAlert_1.CardAlert(view.alert).alert;
         this.roles = new ListGroup_1.ListGroup(view.roles);
         this.roles.itemClicked.register(this.onRoleClicked.bind(this));
     }

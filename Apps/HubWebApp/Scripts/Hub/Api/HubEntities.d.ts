@@ -254,13 +254,13 @@ interface IRedirectToAppUserRequest {
 	AppID: number;
 	UserID: number;
 }
-interface IGetUserRolesRequest {
+interface IUserModifierKey {
 	UserID: number;
 	ModifierID: number;
 }
-interface IGetUnassignedRolesRequest {
-	UserID: number;
-	ModifierID: number;
+interface IUserAccessModel {
+	HasAccess: boolean;
+	AssignedRoles: IAppRoleModel[];
 }
 interface IUserModifierCategoryModel {
 	ModCategory: IModifierCategoryModel;

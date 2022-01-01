@@ -6,6 +6,7 @@ namespace XTI_HubAppApi;
 partial class HubAppApi
 {
     private AppUserMaintenanceGroup? appUserMaintenance;
+
     public AppUserMaintenanceGroup AppUserMaintenance
     {
         get => appUserMaintenance ?? throw new ArgumentNullException(nameof(appUserMaintenance));

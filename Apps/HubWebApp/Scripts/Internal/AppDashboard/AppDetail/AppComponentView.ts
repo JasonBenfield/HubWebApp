@@ -3,10 +3,10 @@ import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
 import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
 import { TextSpanView } from '@jasonbenfield/sharedwebapp/Html/TextSpanView';
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
+import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
 
 export class AppComponentView extends CardView {
-    readonly alert: MessageAlertView;
+    readonly alert: CardAlertView;
     readonly titleHeader: CardTitleHeaderView;
     readonly appName: TextSpanView;
     readonly appTitle: TextSpanView;
@@ -15,7 +15,7 @@ export class AppComponentView extends CardView {
     constructor() {
         super();
         this.titleHeader = this.addCardTitleHeader();
-        this.alert = this.addCardAlert().alert;
+        this.alert = this.addCardAlert();
         let row = this.addCardBody()
             .addContent(new Row());
         this.appName = row.addColumn()

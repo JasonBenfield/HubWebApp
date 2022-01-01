@@ -11,7 +11,7 @@ var AppComponentView = /** @class */ (function (_super) {
     function AppComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         var row = _this.addCardBody()
             .addContent(new Row_1.Row());
         _this.appName = row.addColumn()

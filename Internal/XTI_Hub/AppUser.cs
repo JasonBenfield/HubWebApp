@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -26,57 +25,22 @@ public sealed class AppUser : IAppUser
     {
         var app = await role.App();
         var modifier = await app.DefaultModifier();
-        await AddRole(role, modifier);
+        await Modifier(modifier).AddRole(role);
     }
 
-    public Task AddRole(AppRole role, Modifier modifier)
-    {
-        var record = new AppUserRoleEntity
-        {
-            UserID = ID.Value,
-            RoleID = role.ID.Value,
-            ModifierID = modifier.ID.Value
-        };
-        return factory.DB.UserRoles.Create(record);
-    }
-
-    public async Task RemoveRole(Modifier modifier, AppRole role)
-    {
-        var userRole = await factory.DB
-            .UserRoles
-            .Retrieve()
-            .Where(ur => ur.UserID == ID.Value && ur.ModifierID == modifier.ID.Value && ur.RoleID == role.ID.Value)
-            .FirstOrDefaultAsync();
-        if (userRole != null)
-        {
-            await factory.DB.UserRoles.Delete(userRole);
-        }
-    }
+    public AppUserModifier Modifier(Modifier modifier) =>
+        new AppUserModifier(factory, this, modifier);
 
     async Task<IAppRole[]> IAppUser.Roles(IModifier modifier)
-        => await AssignedRoles(modifier);
-
-    public Task<AppRole[]> ExplicitlyUnassignedRoles(Modifier modifier)
-        => factory.Roles.RolesNotAssignedToUser(this, modifier);
-
-    public async Task<AppRole[]> AssignedRoles(IModifier modifier)
     {
-        var roles = await ExplicitlyAssignedRoles(modifier);
-        if (!roles.Any() && !modifier.ModKey().Equals(ModifierKey.Default))
+        var mod = modifier as Modifier;
+        if (mod == null)
         {
-            var mod = modifier as Modifier;
-            if(mod == null)
-            {
-                mod = await factory.Modifiers.Modifier(modifier.ID.Value);
-            }
-            var defaultModifier = await mod.DefaultModifier();
-            roles = await ExplicitlyAssignedRoles(defaultModifier);
+            mod = await factory.Modifiers.Modifier(modifier.ID.Value);
         }
+        var roles = await Modifier(mod).AssignedRoles();
         return roles;
     }
-
-    public Task<AppRole[]> ExplicitlyAssignedRoles(IModifier modifier)
-        => factory.Roles.RolesAssignedToUser(this, modifier);
 
     public Task ChangePassword(IHashedPassword password)
         => factory.DB.Users.Update(record, u => u.Password = password.Value());

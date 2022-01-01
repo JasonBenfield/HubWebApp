@@ -6,7 +6,6 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../Hub/Api/HubAppApi";
 import { ModifierButtonListItemView } from "./ModifierButtonListItemView";
 import { ModifierListItem } from "./ModifierListItem";
-import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
 import { SelectModifierPanelView } from "./SelectModifierPanelView";
 
 interface Results {

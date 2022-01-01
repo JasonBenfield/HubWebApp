@@ -25,7 +25,7 @@ internal sealed class GetUserModCategoriesTest
         var user = await addUser(tester, "some.user");
         var adminRole = await tester.AdminRole();
         var hubAppModifier = await tester.HubAppModifier();
-        await user.AddRole(adminRole, hubAppModifier);
+        await user.Modifier(hubAppModifier).AddRole(adminRole);
         var modCategories = await tester.Execute(user.ID.Value, hubAppModifier.ModKey());
         Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(1), "Should have access to one modifier");
         Assert.That(modCategories[0].Modifiers[0].ModKey, Is.EqualTo(hubAppModifier.ModKey()), "Should have access to one modifier");
@@ -58,6 +58,6 @@ internal sealed class GetUserModCategoriesTest
         var viewUserRole = await app.Role(HubInfo.Roles.ViewUser);
         await user.AddRole(viewUserRole);
         var hubAppModifier = await tester.HubAppModifier();
-        await user.AddRole(viewUserRole, hubAppModifier);
+        await user.Modifier(hubAppModifier).AddRole(viewUserRole);
     }
 }

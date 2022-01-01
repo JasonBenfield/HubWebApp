@@ -6,7 +6,7 @@ public sealed partial class AppUserGroup : AppClientGroup
     {
     }
 
-    public Task<AppRoleModel[]> GetUserRoles(string modifier, GetUserRolesRequest model) => Post<AppRoleModel[], GetUserRolesRequest>("GetUserRoles", modifier, model);
-    public Task<AppRoleModel[]> GetUnassignedRoles(string modifier, GetUnassignedRolesRequest model) => Post<AppRoleModel[], GetUnassignedRolesRequest>("GetUnassignedRoles", modifier, model);
+    public Task<UserAccessModel> GetUserAccess(string modifier, UserModifierKey model) => Post<UserAccessModel, UserModifierKey>("GetUserAccess", modifier, model);
+    public Task<AppRoleModel[]> GetUnassignedRoles(string modifier, UserModifierKey model) => Post<AppRoleModel[], UserModifierKey>("GetUnassignedRoles", modifier, model);
     public Task<UserModifierCategoryModel[]> GetUserModCategories(string modifier, int model) => Post<UserModifierCategoryModel[], int>("GetUserModCategories", modifier, model);
 }

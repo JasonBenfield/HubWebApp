@@ -190,10 +190,222 @@ exports.AlignCss = AlignCss;
 
 /***/ }),
 
-/***/ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js":
-/*!*************************************************************************************!*\
-  !*** ../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js ***!
-  \*************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApi.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApi.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApi = void 0;
+var AppResourceUrl_1 = __webpack_require__(/*! ./AppResourceUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js");
+var XtiUrl_1 = __webpack_require__(/*! ./XtiUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiUrl.js");
+var AppApi = /** @class */ (function () {
+    function AppApi(events, baseUrl, app, version) {
+        this.events = events;
+        this.groups = {};
+        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, version, XtiUrl_1.XtiUrl.current.path.modifier, pageContext.CacheBust);
+    }
+    Object.defineProperty(AppApi.prototype, "name", {
+        get: function () { return this.resourceUrl.path.app; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AppApi.prototype, "url", {
+        get: function () { return this.resourceUrl.relativeUrl; },
+        enumerable: false,
+        configurable: true
+    });
+    AppApi.prototype.addGroup = function (createGroup) {
+        var group = createGroup(this.events, this.resourceUrl);
+        this.groups[group.name] = group;
+        return group;
+    };
+    AppApi.prototype.toString = function () {
+        return "AppApi " + this.resourceUrl;
+    };
+    return AppApi;
+}());
+exports.AppApi = AppApi;
+//# sourceMappingURL=AppApi.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiAction.js":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiAction.js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiAction = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HttpClient_1 = __webpack_require__(/*! ./HttpClient */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/HttpClient.js");
+var JsonText_1 = __webpack_require__(/*! ./JsonText */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/JsonText.js");
+var AppApiError_1 = __webpack_require__(/*! ./AppApiError */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiError.js");
+var ErrorModel_1 = __webpack_require__(/*! ../ErrorModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js");
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var AppApiAction = /** @class */ (function () {
+    function AppApiAction(events, resourceUrl, actionName, friendlyName) {
+        this.events = events;
+        this.friendlyName = friendlyName;
+        this.resourceUrl = resourceUrl.withAction(actionName);
+    }
+    AppApiAction.prototype.execute = function (data, errorOptions) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var jsonText, postResult, result, apiError, errors, rawErrors, message;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        jsonText = new JsonText_1.JsonText(data).toString();
+                        return [4 /*yield*/, new HttpClient_1.HttpClient().post(this.resourceUrl.url.value(), jsonText)];
+                    case 1:
+                        postResult = _a.sent();
+                        result = postResult && postResult.result && postResult.result.Data;
+                        if (postResult.isSuccessful()) {
+                            if (typeof result === 'string') {
+                                if (AppApiAction.dateRegex.test(result)) {
+                                    result = new Date(Date.parse(result));
+                                }
+                            }
+                            else {
+                                this.parseDates(result);
+                            }
+                        }
+                        else {
+                            errors = [];
+                            if (result) {
+                                rawErrors = result;
+                                errors = new Enumerable_1.MappedArray(rawErrors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
+                            }
+                            else if (postResult.status === 404) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Found', '', '', this)];
+                            }
+                            else if (postResult.status === 401) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Authenticated', '', '', this)];
+                            }
+                            else if (postResult.status === 403) {
+                                errors = [new ErrorModel_1.ErrorModel('Not Authorized', '', '', this)];
+                            }
+                            else {
+                                message = 'An error occurred';
+                                if (postResult.status !== 500) {
+                                    message += " (" + postResult.status + ")";
+                                }
+                                errors = [new ErrorModel_1.ErrorModel(message, '', '', this)];
+                            }
+                            apiError = new AppApiError_1.AppApiError(errors, postResult.status, this.friendlyName, errorOptions.caption || '');
+                        }
+                        if (apiError) {
+                            if (!errorOptions.preventDefault) {
+                                this.events.handleError(apiError);
+                            }
+                            throw apiError;
+                        }
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    AppApiAction.prototype.parseDates = function (obj) {
+        if (obj) {
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                for (var i = 0; i < obj.length; i++) {
+                    var el = obj[i];
+                    if (typeof el === 'string') {
+                        if (AppApiAction.dateRegex.test(el)) {
+                            obj[i] = new Date(Date.parse(el));
+                        }
+                    }
+                    else {
+                        this.parseDates(el);
+                    }
+                }
+            }
+            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
+                for (var prop in obj) {
+                    if (prop) {
+                        var value = obj[prop];
+                        if (typeof value === 'string') {
+                            if (AppApiAction.dateRegex.test(value)) {
+                                obj[prop] = new Date(Date.parse(value));
+                            }
+                        }
+                        else {
+                            this.parseDates(value);
+                        }
+                    }
+                }
+            }
+        }
+        return obj;
+    };
+    AppApiAction.prototype.toString = function () {
+        return "AppApiAction " + this.resourceUrl;
+    };
+    AppApiAction.dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.?\d{0,7}[\+\-]\d{2}:\d{2})?$/;
+    return AppApiAction;
+}());
+exports.AppApiAction = AppApiAction;
+//# sourceMappingURL=AppApiAction.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiError.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiError.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiError = void 0;
+var ErrorModel_1 = __webpack_require__(/*! ../ErrorModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js");
+var JoinedStrings_1 = __webpack_require__(/*! ../JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var AppApiError = /** @class */ (function () {
+    function AppApiError(errors, _status, _location, _caption) {
+        this._status = _status;
+        this._location = _location;
+        this._caption = _caption;
+        this._errors = new Enumerable_1.MappedArray(errors, function (e) { return new ErrorModel_1.ErrorModel(e.Message, e.Caption, e.Source); }).value();
+    }
+    AppApiError.prototype.getErrors = function () {
+        return this._errors;
+    };
+    AppApiError.prototype.isValidationError = function () {
+        return this._status === 400;
+    };
+    AppApiError.prototype.isAuthenticationError = function () {
+        return this._status === 401;
+    };
+    AppApiError.prototype.isCanceled = function () {
+        return this._status === 999;
+    };
+    AppApiError.prototype.getCaption = function () {
+        return this._caption || "Unable to " + this._location;
+    };
+    AppApiError.prototype.toString = function () {
+        var caption = this.getCaption();
+        var joined = new JoinedStrings_1.JoinedStrings('\n', this.getErrors()).toString();
+        return caption + "\nstatus: " + this._status + "\n" + joined;
+    };
+    return AppApiError;
+}());
+exports.AppApiError = AppApiError;
+//# sourceMappingURL=AppApiError.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiEvents.js":
+/*!*****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiEvents.js ***!
+  \*****************************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -211,19 +423,19 @@ exports.AppApiEvents = AppApiEvents;
 
 /***/ }),
 
-/***/ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js":
-/*!**************************************************************************************!*\
-  !*** ../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js ***!
-  \**************************************************************************************/
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiFactory.js":
+/*!******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiFactory.js ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppApiFactory = void 0;
-var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiEvents.js");
-var ConsoleLog_1 = __webpack_require__(/*! ./ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
-var HostEnvironment_1 = __webpack_require__(/*! ./HostEnvironment */ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js");
+var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiEvents.js");
+var ConsoleLog_1 = __webpack_require__(/*! ../ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
+var HostEnvironment_1 = __webpack_require__(/*! ../HostEnvironment */ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js");
 var AppApiFactory = /** @class */ (function () {
     function AppApiFactory(_defaultApiType, modalError) {
         this._defaultApiType = _defaultApiType;
@@ -249,6 +461,407 @@ var AppApiFactory = /** @class */ (function () {
 }());
 exports.AppApiFactory = AppApiFactory;
 //# sourceMappingURL=AppApiFactory.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiGroup = void 0;
+var AppApiAction_1 = __webpack_require__(/*! ./AppApiAction */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiAction.js");
+var AppApiView_1 = __webpack_require__(/*! ./AppApiView */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiView.js");
+var AppApiGroup = /** @class */ (function () {
+    function AppApiGroup(events, resourceUrl, name) {
+        this.events = events;
+        this.name = name;
+        this.resourceUrl = resourceUrl.withGroup(name);
+    }
+    AppApiGroup.prototype.createView = function (name) {
+        return new AppApiView_1.AppApiView(this.resourceUrl, name);
+    };
+    AppApiGroup.prototype.createAction = function (name, friendlyName) {
+        return new AppApiAction_1.AppApiAction(this.events, this.resourceUrl, name, friendlyName);
+    };
+    AppApiGroup.prototype.toString = function () {
+        return "AppApiGroup " + this.resourceUrl;
+    };
+    return AppApiGroup;
+}());
+exports.AppApiGroup = AppApiGroup;
+//# sourceMappingURL=AppApiGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiView.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiView.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppApiView = void 0;
+var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var WebPage_1 = __webpack_require__(/*! ./WebPage */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/WebPage.js");
+var AppApiView = /** @class */ (function () {
+    function AppApiView(resourceUrl, actionName) {
+        this.url = resourceUrl.withAction(actionName).url.value();
+    }
+    AppApiView.prototype.getUrl = function (data) {
+        var model;
+        if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
+            model = { model: data };
+        }
+        else {
+            model = data;
+        }
+        var urlBuilder = new UrlBuilder_1.UrlBuilder(this.url);
+        urlBuilder.addQueryFromObject(model);
+        return urlBuilder;
+    };
+    AppApiView.prototype.open = function (data) {
+        var webPage = this.createWebPage(data);
+        webPage.open();
+    };
+    AppApiView.prototype.openWindow = function (data) {
+        var webPage = this.createWebPage(data);
+        webPage.openWindow();
+    };
+    AppApiView.prototype.createWebPage = function (data) {
+        var urlBuilder = this.getUrl(data);
+        return new WebPage_1.WebPage(urlBuilder);
+    };
+    return AppApiView;
+}());
+exports.AppApiView = AppApiView;
+//# sourceMappingURL=AppApiView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppResourceUrl = void 0;
+var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js");
+var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var AppResourceUrl = /** @class */ (function () {
+    function AppResourceUrl(baseUrl, path, cacheBust) {
+        this.baseUrl = baseUrl;
+        this.path = path;
+        this.cacheBust = cacheBust;
+        this.url = new UrlBuilder_1.UrlBuilder(baseUrl)
+            .addPart(path.format())
+            .addQuery('cacheBust', cacheBust)
+            .url;
+    }
+    AppResourceUrl.app = function (baseUrl, appKey, version, modifier, cacheBust) {
+        return new AppResourceUrl(baseUrl, XtiPath_1.XtiPath.app(appKey, version, modifier), cacheBust);
+    };
+    Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
+        get: function () {
+            return new UrlBuilder_1.UrlBuilder("/" + this.path.format());
+        },
+        enumerable: false,
+        configurable: true
+    });
+    AppResourceUrl.prototype.withGroup = function (group) {
+        return new AppResourceUrl(this.baseUrl, this.path.withGroup(group), this.cacheBust);
+    };
+    AppResourceUrl.prototype.withAction = function (action) {
+        return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
+    };
+    AppResourceUrl.prototype.toString = function () {
+        return this.url.value();
+    };
+    return AppResourceUrl;
+}());
+exports.AppResourceUrl = AppResourceUrl;
+//# sourceMappingURL=AppResourceUrl.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/HttpClient.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/HttpClient.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HttpClient = exports.HttpPostResult = void 0;
+var HttpPostResult = /** @class */ (function () {
+    function HttpPostResult(result, url, status, responseText) {
+        this.result = result;
+        this.url = url;
+        this.status = status;
+        this.responseText = responseText;
+    }
+    HttpPostResult.prototype.isSuccessful = function () {
+        return this.status === 200;
+    };
+    HttpPostResult.prototype.toString = function () {
+        return this.url + "\r\n" + this.status + "\r\n" + this.responseText + "\r\n" + this.result;
+    };
+    return HttpPostResult;
+}());
+exports.HttpPostResult = HttpPostResult;
+var HttpClient = /** @class */ (function () {
+    function HttpClient() {
+    }
+    HttpClient.prototype.get = function (url) {
+        return this.execute('GET', url);
+    };
+    HttpClient.prototype.post = function (url, data) {
+        return this.execute('POST', url, data);
+    };
+    HttpClient.prototype.execute = function (method, url, body) {
+        return new Promise(function (resolve) {
+            function reqListener() {
+                console.log(this.responseText);
+            }
+            var oReq = new XMLHttpRequest();
+            oReq.withCredentials = true;
+            oReq.onreadystatechange = function () {
+                if (oReq.readyState == 4) {
+                    var result = void 0;
+                    if (method === 'GET') {
+                        result = oReq.responseText;
+                    }
+                    else if (!/^\s*[{\[]\s*.*[\]}]\s*$/.test(oReq.responseText)) {
+                        var responseText = oReq.responseText;
+                        if (!responseText) {
+                            responseText = 'null';
+                        }
+                        responseText = "{ \"data\": " + responseText + " }";
+                        var dataResult = JSON.parse(responseText);
+                        result = dataResult.data;
+                    }
+                    else {
+                        result = JSON.parse(oReq.responseText);
+                    }
+                    resolve(new HttpPostResult(result, url, oReq.status, oReq.responseText));
+                }
+            };
+            oReq.addEventListener("load", reqListener.bind(oReq));
+            oReq.open(method, url);
+            if (method === 'POST') {
+                oReq.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            }
+            oReq.send(body);
+        });
+    };
+    return HttpClient;
+}());
+exports.HttpClient = HttpClient;
+//# sourceMappingURL=HttpClient.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/JsonText.js":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/JsonText.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JsonText = void 0;
+var JsonText = /** @class */ (function () {
+    function JsonText(data) {
+        this.formatDates(data);
+        this.value = JSON.stringify(data);
+    }
+    JsonText.prototype.formatDates = function (obj) {
+        if (obj) {
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                for (var i = 0; i < obj.length; i++) {
+                    var el = obj[i];
+                    if (el instanceof Date) {
+                        obj[i] = el.toISOString();
+                    }
+                    else {
+                        this.formatDates(el);
+                    }
+                }
+            }
+            else if (typeof (obj) !== 'string' && typeof (obj) !== 'boolean' && typeof (obj) !== 'number') {
+                for (var prop in obj) {
+                    if (prop) {
+                        var value = obj[prop];
+                        if (value instanceof Date) {
+                            obj[prop] = value.toISOString();
+                        }
+                        else {
+                            this.formatDates(value);
+                        }
+                    }
+                }
+            }
+        }
+    };
+    JsonText.prototype.toString = function () {
+        return this.value;
+    };
+    return JsonText;
+}());
+exports.JsonText = JsonText;
+//# sourceMappingURL=JsonText.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/WebPage.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/WebPage.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WebPage = void 0;
+var Url_1 = __webpack_require__(/*! ../Url */ "../../../../Published/Development/Packages/Shared/Current/npm/Url.js");
+var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var WebPage = /** @class */ (function () {
+    function WebPage(url) {
+        if (url instanceof UrlBuilder_1.UrlBuilder) {
+            this.url = url.value();
+        }
+        else if (url instanceof Url_1.Url) {
+            this.url = url.value();
+        }
+        else {
+            this.url = url;
+        }
+    }
+    WebPage.prototype.open = function () {
+        window.location.href = this.url;
+    };
+    WebPage.prototype.transfer = function () {
+        window.location.replace(this.url);
+    };
+    WebPage.prototype.openWindow = function () {
+        window.open(this.url);
+    };
+    WebPage.prototype.openForPrint = function () {
+        window.open(this.url, 'new_window', 'location=0,status=0,toolbar=0,menubar=0,height=5,width=5,' +
+            'resizable=0,scrollbars=0,titlebar=0');
+    };
+    return WebPage;
+}());
+exports.WebPage = WebPage;
+//# sourceMappingURL=WebPage.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.XtiPath = void 0;
+var JoinedStrings_1 = __webpack_require__(/*! ../JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
+var XtiPath = /** @class */ (function () {
+    function XtiPath(app, version, group, action, modifier) {
+        this.app = app ? app : '';
+        this.version = version ? version : '';
+        this.group = group ? group : '';
+        this.action = action ? action : '';
+        this.modifier = modifier ? modifier : '';
+        var parts = [this.app, this.version];
+        if (this.group) {
+            parts.push(this.group);
+            if (this.action) {
+                parts.push(this.action);
+                if (this.modifier) {
+                    parts.push(this.modifier);
+                }
+            }
+        }
+        this.value = new JoinedStrings_1.JoinedStrings('/', parts).value();
+    }
+    XtiPath.app = function (appKey, version, modifier) {
+        return new XtiPath(appKey, version, '', '', modifier);
+    };
+    XtiPath.prototype.withGroup = function (group) {
+        return new XtiPath(this.app, this.version, group, '', this.modifier);
+    };
+    XtiPath.prototype.withAction = function (action) {
+        return new XtiPath(this.app, this.version, this.group, action, this.modifier);
+    };
+    XtiPath.prototype.format = function () {
+        return this.value;
+    };
+    XtiPath.prototype.equals = function (other) {
+        if (other) {
+            return this.value === other.value;
+        }
+        return false;
+    };
+    XtiPath.prototype.toString = function () {
+        return this.value;
+    };
+    return XtiPath;
+}());
+exports.XtiPath = XtiPath;
+//# sourceMappingURL=XtiPath.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiUrl.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiUrl.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.XtiUrl = void 0;
+var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js");
+var XtiUrl = /** @class */ (function () {
+    function XtiUrl(url) {
+        if (url === void 0) { url = location.href; }
+        var protocolIndex = url.indexOf('//');
+        var slashIndex = url.indexOf('/', protocolIndex + 2);
+        this.baseUrl = url.substring(0, slashIndex);
+        var endIndex = url.indexOf('?');
+        if (endIndex < 0) {
+            endIndex = url.indexOf('#');
+            if (endIndex < 0) {
+                endIndex = url.length;
+            }
+        }
+        else {
+            endIndex = url.length;
+        }
+        var path = url.substring(slashIndex + 1, endIndex);
+        var split = path.split('/');
+        this.path = new XtiPath_1.XtiPath(split[0], split[1], split[2], split[3], split[4]);
+    }
+    XtiUrl.current = new XtiUrl(location.href);
+    return XtiUrl;
+}());
+exports.XtiUrl = XtiUrl;
+//# sourceMappingURL=XtiUrl.js.map
 
 /***/ }),
 
@@ -1166,6 +1779,93 @@ exports.DropdownButton = DropdownButton;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.js":
+/*!***************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DropdownComponent = void 0;
+var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var UnorderedList_1 = __webpack_require__(/*! ../Html/UnorderedList */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedList.js");
+var DropdownButton_1 = __webpack_require__(/*! ./DropdownButton */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownButton.js");
+var DropdownComponentViewModel_1 = __webpack_require__(/*! ./DropdownComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponentViewModel.js");
+var DropdownLinkItem_1 = __webpack_require__(/*! ./DropdownLinkItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js");
+var DropdownSpanItem_1 = __webpack_require__(/*! ./DropdownSpanItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownSpanItem.js");
+var DropdownComponent = /** @class */ (function () {
+    function DropdownComponent(createItemView, vm) {
+        if (createItemView === void 0) { createItemView = (function () { return new ListItem_1.ListItem(); }); }
+        if (vm === void 0) { vm = new DropdownComponentViewModel_1.DropdownComponentViewModel(); }
+        this.createItemView = createItemView;
+        this.vm = vm;
+        this.button = new DropdownButton_1.DropdownButton(this.vm.button);
+        this.menu = new UnorderedList_1.UnorderedList(this.createItemView, this.vm.menu);
+        this.menu.addCssName('dropdown-menu dropdown-menu-right');
+    }
+    DropdownComponent.prototype.addToContainer = function (container) {
+        return container.addItem(this.vm, this);
+    };
+    DropdownComponent.prototype.insertIntoContainer = function (container, index) {
+        return container.insertItem(index, this.vm, this);
+    };
+    DropdownComponent.prototype.removeFromContainer = function (container) {
+        return container.removeItem(this);
+    };
+    DropdownComponent.prototype.addSpanItem = function () {
+        return new DropdownSpanItem_1.DropdownSpanItem().addToList(this.menu);
+    };
+    DropdownComponent.prototype.addLinkItem = function () {
+        return new DropdownLinkItem_1.DropdownLinkItem().addToList(this.menu);
+    };
+    DropdownComponent.prototype.show = function () {
+        this.vm.isVisible(true);
+    };
+    DropdownComponent.prototype.hide = function () {
+        this.vm.isVisible(false);
+    };
+    return DropdownComponent;
+}());
+exports.DropdownComponent = DropdownComponent;
+//# sourceMappingURL=DropdownComponent.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponentViewModel.js":
+/*!************************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponentViewModel.js ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DropdownComponentViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ComponentViewModel_1 = __webpack_require__(/*! ../ComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentViewModel.js");
+var ButtonViewModel_1 = __webpack_require__(/*! ../Html/ButtonViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ButtonViewModel.js");
+var UnorderedListViewModel_1 = __webpack_require__(/*! ../Html/UnorderedListViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/UnorderedListViewModel.js");
+var template = __webpack_require__(/*! ./DropdownComponent.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.html");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var DropdownComponentViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(DropdownComponentViewModel, _super);
+    function DropdownComponentViewModel() {
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('dropdown-component', template)) || this;
+        _this.isVisible = ko.observable(true);
+        _this.button = new ButtonViewModel_1.ButtonViewModel();
+        _this.menu = new UnorderedListViewModel_1.UnorderedListViewModel();
+        return _this;
+    }
+    return DropdownComponentViewModel;
+}(ComponentViewModel_1.ComponentViewModel));
+exports.DropdownComponentViewModel = DropdownComponentViewModel;
+//# sourceMappingURL=DropdownComponentViewModel.js.map
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js":
 /*!**************************************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownLinkItem.js ***!
@@ -1307,6 +2007,40 @@ var EnumerableRange = /** @class */ (function () {
 }());
 exports.EnumerableRange = EnumerableRange;
 //# sourceMappingURL=Enumerable.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ErrorModel = void 0;
+var ErrorModel = /** @class */ (function () {
+    function ErrorModel(Message, Caption, Source, context) {
+        if (Caption === void 0) { Caption = ''; }
+        if (Source === void 0) { Source = ''; }
+        this.Message = Message;
+        this.Caption = Caption;
+        this.Source = Source;
+        this.context = context;
+    }
+    ErrorModel.prototype.toString = function () {
+        var str = '';
+        if (this.Source) {
+            str += this.Source + ", ";
+        }
+        str += this.Message;
+        return str;
+    };
+    return ErrorModel;
+}());
+exports.ErrorModel = ErrorModel;
+//# sourceMappingURL=ErrorModel.js.map
 
 /***/ }),
 
@@ -1855,6 +2589,1675 @@ exports.FaIcon = FaIcon;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/FlexCss.js":
+/*!********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/FlexCss.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FlexWrap = exports.FlexDirection = exports.FlexFill = exports.FlexCss = void 0;
+var CssClass_1 = __webpack_require__(/*! ./CssClass */ "../../../../Published/Development/Packages/Shared/Current/npm/CssClass.js");
+var FlexCss = /** @class */ (function () {
+    function FlexCss() {
+        this._direction = new FlexDirection();
+        this._fill = new FlexFill();
+        this._wrap = new FlexWrap();
+    }
+    FlexCss.prototype.direction = function (configure) {
+        configure(this._direction);
+    };
+    FlexCss.prototype.row = function () {
+        this._direction.xs('row');
+        return this;
+    };
+    FlexCss.prototype.column = function () {
+        this._direction.xs('column');
+        return this;
+    };
+    FlexCss.prototype.fill = function (configure) {
+        if (configure) {
+            configure(this._fill);
+        }
+        else {
+            this._fill.xs();
+        }
+        return this;
+    };
+    FlexCss.prototype.wrap = function (configure) {
+        if (configure) {
+            configure(this._wrap);
+        }
+        else {
+            this._wrap.xs('wrap');
+        }
+        return this;
+    };
+    FlexCss.prototype.wrapReverse = function () {
+        this._wrap.xs('wrap-reverse');
+        return this;
+    };
+    FlexCss.prototype.nowrap = function () {
+        this._wrap.xs('nowrap');
+        return this;
+    };
+    FlexCss.prototype.cssClass = function () {
+        var cssClass = new CssClass_1.CssClass();
+        cssClass.addFrom(this._direction.getCssClass());
+        cssClass.addFrom(this._fill.getCssClass());
+        cssClass.addFrom(this._wrap.getCssClass());
+        return cssClass;
+    };
+    return FlexCss;
+}());
+exports.FlexCss = FlexCss;
+var FlexFill = /** @class */ (function () {
+    function FlexFill() {
+        this.fill = {};
+    }
+    FlexFill.prototype.xs = function () {
+        this.fill.xs = true;
+        return this;
+    };
+    FlexFill.prototype.sm = function () {
+        this.fill.sm = true;
+        return this;
+    };
+    FlexFill.prototype.md = function () {
+        this.fill.md = true;
+        return this;
+    };
+    FlexFill.prototype.lg = function () {
+        this.fill.lg = true;
+        return this;
+    };
+    FlexFill.prototype.xl = function () {
+        this.fill.xl = true;
+        return this;
+    };
+    FlexFill.prototype.xxl = function () {
+        this.fill.xxl = true;
+        return this;
+    };
+    FlexFill.prototype.getCssClass = function () {
+        var cssClass = new CssClass_1.CssClass();
+        cssClass.addName(this.cssClassName('xs'));
+        cssClass.addName(this.cssClassName('sm'));
+        cssClass.addName(this.cssClassName('md'));
+        cssClass.addName(this.cssClassName('lg'));
+        cssClass.addName(this.cssClassName('xl'));
+        cssClass.addName(this.cssClassName('xxl'));
+        return cssClass;
+    };
+    FlexFill.prototype.cssClassName = function (breakpoint) {
+        var value = this.fill[breakpoint];
+        if (value) {
+            var breakpointPart = breakpoint === 'xs' ? '' : "-" + breakpoint;
+            return "flex" + breakpointPart + "-fill";
+        }
+        return '';
+    };
+    return FlexFill;
+}());
+exports.FlexFill = FlexFill;
+var FlexDirection = /** @class */ (function () {
+    function FlexDirection(xs) {
+        this.dir = {};
+        this.xs(xs);
+    }
+    FlexDirection.prototype.xs = function (value) {
+        this.dir.xs = value;
+        return this;
+    };
+    FlexDirection.prototype.sm = function (value) {
+        this.dir.sm = value;
+        return this;
+    };
+    FlexDirection.prototype.md = function (value) {
+        this.dir.md = value;
+        return this;
+    };
+    FlexDirection.prototype.lg = function (value) {
+        this.dir.lg = value;
+        return this;
+    };
+    FlexDirection.prototype.xl = function (value) {
+        this.dir.xl = value;
+        return this;
+    };
+    FlexDirection.prototype.xxl = function (value) {
+        this.dir.xxl = value;
+        return this;
+    };
+    FlexDirection.prototype.reverse = function () {
+        this.isReversed = true;
+        return this;
+    };
+    FlexDirection.prototype.getCssClass = function () {
+        var cssClass = new CssClass_1.CssClass();
+        cssClass.addName(this.cssClassName('xs'));
+        cssClass.addName(this.cssClassName('sm'));
+        cssClass.addName(this.cssClassName('md'));
+        cssClass.addName(this.cssClassName('lg'));
+        cssClass.addName(this.cssClassName('xl'));
+        cssClass.addName(this.cssClassName('xxl'));
+        return cssClass;
+    };
+    FlexDirection.prototype.cssClassName = function (breakpoint) {
+        var value = this.dir[breakpoint];
+        if (value) {
+            var breakpointPart = breakpoint === 'xs' ? '' : "-" + breakpoint;
+            var reversePart = this.isReversed ? '-reverse' : '';
+            return "flex" + breakpointPart + "-" + value + reversePart;
+        }
+        return '';
+    };
+    return FlexDirection;
+}());
+exports.FlexDirection = FlexDirection;
+var FlexWrap = /** @class */ (function () {
+    function FlexWrap(xs) {
+        this.wrap = {};
+        this.xs(xs);
+    }
+    FlexWrap.prototype.xs = function (value) {
+        this.wrap.xs = value;
+        return this;
+    };
+    FlexWrap.prototype.sm = function (value) {
+        this.wrap.sm = value;
+        return this;
+    };
+    FlexWrap.prototype.md = function (value) {
+        this.wrap.md = value;
+        return this;
+    };
+    FlexWrap.prototype.lg = function (value) {
+        this.wrap.lg = value;
+        return this;
+    };
+    FlexWrap.prototype.xl = function (value) {
+        this.wrap.xl = value;
+        return this;
+    };
+    FlexWrap.prototype.xxl = function (value) {
+        this.wrap.xxl = value;
+        return this;
+    };
+    FlexWrap.prototype.getCssClass = function () {
+        var cssClass = new CssClass_1.CssClass();
+        cssClass.addName(this.cssClassName('xs'));
+        cssClass.addName(this.cssClassName('sm'));
+        cssClass.addName(this.cssClassName('md'));
+        cssClass.addName(this.cssClassName('lg'));
+        cssClass.addName(this.cssClassName('xl'));
+        cssClass.addName(this.cssClassName('xxl'));
+        return cssClass;
+    };
+    FlexWrap.prototype.cssClassName = function (breakpoint) {
+        var value = this.wrap[breakpoint];
+        if (value) {
+            var breakpointPart = breakpoint === 'xs' ? '' : "-" + breakpoint;
+            return "flex" + breakpointPart + "-" + value;
+        }
+        return '';
+    };
+    return FlexWrap;
+}());
+exports.FlexWrap = FlexWrap;
+//# sourceMappingURL=FlexCss.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseForm.js":
+/*!***************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseForm.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BaseForm = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var AppApiError_1 = __webpack_require__(/*! ../Api/AppApiError */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiError.js");
+var ConsoleLog_1 = __webpack_require__(/*! ../ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
+var ModalErrorComponent_1 = __webpack_require__(/*! ../Error/ModalErrorComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js");
+var ErrorModel_1 = __webpack_require__(/*! ../ErrorModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js");
+var ErrorList_1 = __webpack_require__(/*! ./ErrorList */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorList.js");
+var FormGroupCollection_1 = __webpack_require__(/*! ./FormGroupCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupCollection.js");
+var FormSaveResult_1 = __webpack_require__(/*! ./FormSaveResult */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormSaveResult.js");
+var BaseForm = /** @class */ (function () {
+    function BaseForm(name, view) {
+        this.name = name;
+        this.view = view;
+        this.formGroups = new FormGroupCollection_1.FormGroupCollection(name);
+        this.modalError = new ModalErrorComponent_1.ModalErrorComponent(this.view.modalError);
+        this.modalError.errorSelected.register(this.onErrorSelected.bind(this));
+    }
+    BaseForm.prototype.onErrorSelected = function (error) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var field;
+            return tslib_1.__generator(this, function (_a) {
+                this.modalError.hide();
+                field = this.getField(error.Source);
+                if (field) {
+                    if (field.setFocus) {
+                        field.setFocus();
+                    }
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    BaseForm.prototype.forEachFormGroup = function (action) {
+        this.formGroups.forEach(action);
+    };
+    BaseForm.prototype.getName = function () { return this.name; };
+    BaseForm.prototype.getField = function (name) {
+        if (name) {
+            if (this.getName() === name) {
+                return this;
+            }
+            return this.formGroups.getField(name);
+        }
+        return null;
+    };
+    BaseForm.prototype.addHiddenTextFormGroup = function (name, view) {
+        return this.formGroups.addHiddenTextFormGroup(name, view);
+    };
+    BaseForm.prototype.addHiddenNumberFormGroup = function (name, view) {
+        return this.formGroups.addHiddenNumberFormGroup(name, view);
+    };
+    BaseForm.prototype.addHiddenDateFormGroup = function (name, view) {
+        return this.formGroups.addHiddenDateFormGroup(name, view);
+    };
+    BaseForm.prototype.addTextInputFormGroup = function (name, view) {
+        return this.formGroups.addTextInputFormGroup(name, view);
+    };
+    BaseForm.prototype.addNumberInputFormGroup = function (name, view) {
+        return this.formGroups.addNumberInputFormGroup(name, view);
+    };
+    BaseForm.prototype.addDateInputFormGroup = function (name, view) {
+        return this.formGroups.addDateInputFormGroup(name, view);
+    };
+    BaseForm.prototype.addTextDropDownFormGroup = function (name, view) {
+        return this.formGroups.addTextDropDownFormGroup(name, view);
+    };
+    BaseForm.prototype.addNumberDropDownFormGroup = function (name, view) {
+        return this.formGroups.addNumberDropDownFormGroup(name, view);
+    };
+    BaseForm.prototype.addDateDropDownFormGroup = function (name, view) {
+        return this.formGroups.addDateDropDownFormGroup(name, view);
+    };
+    BaseForm.prototype.addBooleanDropDownFormGroup = function (name, view) {
+        return this.formGroups.addBooleanDropDownFormGroup(name, view);
+    };
+    BaseForm.prototype.addDropDownFormGroup = function (name, view) {
+        return this.formGroups.addDropDownFormGroup(name, view);
+    };
+    BaseForm.prototype.addFormGroup = function (formGroup) {
+        return this.formGroups.addFormGroup(formGroup);
+    };
+    BaseForm.prototype.save = function (action) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var validationResult, errors_1, result, errors, model, ex_1, caption, error;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        validationResult = this.validate();
+                        if (validationResult.hasErrors()) {
+                            errors_1 = validationResult.values();
+                            this.modalError.show(errors_1, "Unable to " + action.friendlyName);
+                            return [2 /*return*/, new FormSaveResult_1.FormSaveResult(null, errors_1)];
+                        }
+                        errors = [];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        model = this.export();
+                        return [4 /*yield*/, action.execute(model, { preventDefault: true })];
+                    case 2:
+                        result = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        ex_1 = _a.sent();
+                        caption = '';
+                        if (ex_1 instanceof AppApiError_1.AppApiError) {
+                            errors.push.apply(errors, ex_1.getErrors());
+                            caption = ex_1.getCaption();
+                        }
+                        else {
+                            error = new ErrorModel_1.ErrorModel(ex_1.message, '', '');
+                            errors.push(error);
+                            new ConsoleLog_1.ConsoleLog().error(ex_1.message);
+                        }
+                        this.modalError.show(errors, caption);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/, new FormSaveResult_1.FormSaveResult(result, errors)];
+                }
+            });
+        });
+    };
+    BaseForm.prototype.validate = function () {
+        var errors = new ErrorList_1.ErrorList();
+        this.formGroups.validate(errors);
+        return errors;
+    };
+    BaseForm.prototype.import = function (values) {
+        this.formGroups.import(values);
+    };
+    BaseForm.prototype.export = function () {
+        var values = {};
+        this.formGroups.export(values);
+        return values;
+    };
+    return BaseForm;
+}());
+exports.BaseForm = BaseForm;
+//# sourceMappingURL=BaseForm.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseFormView.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseFormView.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BaseFormView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ModalErrorComponentView_1 = __webpack_require__(/*! ../Error/ModalErrorComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js");
+var FormView_1 = __webpack_require__(/*! ../Html/FormView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormView.js");
+var FormViewModel_1 = __webpack_require__(/*! ../Html/FormViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormViewModel.js");
+var ComplexFieldLayout_1 = __webpack_require__(/*! ./ComplexFieldLayout */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldLayout.js");
+var FormGroupViewCollection_1 = __webpack_require__(/*! ./FormGroupViewCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupViewCollection.js");
+var BaseFormView = /** @class */ (function (_super) {
+    tslib_1.__extends(BaseFormView, _super);
+    function BaseFormView(vm) {
+        if (vm === void 0) { vm = new FormViewModel_1.FormViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.layout = new ComplexFieldLayout_1.ComplexFieldLayout(_this);
+        _this.formGroups = new FormGroupViewCollection_1.FormGroupViewCollection();
+        _this.modalError = _this.addContent(new ModalErrorComponentView_1.ModalErrorComponentView());
+        return _this;
+    }
+    BaseFormView.prototype.useLayout = function (layout) {
+        this.layout = layout;
+    };
+    BaseFormView.prototype.executeLayout = function () {
+        this.layout.execute();
+        this.formGroups.executeLayout();
+    };
+    BaseFormView.prototype.forEachFormGroup = function (action) {
+        this.formGroups.forEach(action);
+    };
+    BaseFormView.prototype.addHiddenFormGroup = function () {
+        return this.formGroups.addHiddenInputFormGroup();
+    };
+    BaseFormView.prototype.addInputFormGroup = function () {
+        return this.formGroups.addInputFormGroup();
+    };
+    BaseFormView.prototype.addDropDownFormGroup = function () {
+        return this.formGroups.addDropDownFormGroup();
+    };
+    BaseFormView.prototype.addFormGroup = function (formGroup) {
+        return this.formGroups.addFormGroup(formGroup);
+    };
+    return BaseFormView;
+}(FormView_1.FormView));
+exports.BaseFormView = BaseFormView;
+//# sourceMappingURL=BaseFormView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BooleanDropDownFormGroup.js":
+/*!*******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/BooleanDropDownFormGroup.js ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BooleanDropDownFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var DropDownFormGroup_1 = __webpack_require__(/*! ./DropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js");
+var BooleanDropDownFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(BooleanDropDownFormGroup, _super);
+    function BooleanDropDownFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.constraints = new ConstraintCollection_1.ConstraintCollection();
+        return _this;
+    }
+    BooleanDropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return BooleanDropDownFormGroup;
+}(DropDownFormGroup_1.DropDownFormGroup));
+exports.BooleanDropDownFormGroup = BooleanDropDownFormGroup;
+//# sourceMappingURL=BooleanDropDownFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldFormGroupView.js":
+/*!********************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldFormGroupView.js ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComplexFieldFormGroupView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var FormGroupView_1 = __webpack_require__(/*! ../Html/FormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormGroupView.js");
+var ComplexFieldLayout_1 = __webpack_require__(/*! ./ComplexFieldLayout */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldLayout.js");
+var FormGroupViewCollection_1 = __webpack_require__(/*! ./FormGroupViewCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupViewCollection.js");
+var ComplexFieldFormGroupView = /** @class */ (function (_super) {
+    tslib_1.__extends(ComplexFieldFormGroupView, _super);
+    function ComplexFieldFormGroupView(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.layout = new ComplexFieldLayout_1.ComplexFieldLayout(_this);
+        _this.formGroups = new FormGroupViewCollection_1.FormGroupViewCollection();
+        return _this;
+    }
+    ComplexFieldFormGroupView.prototype.useLayout = function (createLayout) {
+        this.layout = createLayout(this);
+    };
+    ComplexFieldFormGroupView.prototype.executeLayout = function () {
+        this.layout.execute();
+        this.formGroups.executeLayout();
+    };
+    ComplexFieldFormGroupView.prototype.forEachFormGroup = function (action) {
+        this.formGroups.forEach(action);
+    };
+    ComplexFieldFormGroupView.prototype.addHiddenFormGroup = function () {
+        return this.formGroups.addHiddenInputFormGroup();
+    };
+    ComplexFieldFormGroupView.prototype.addInputFormGroup = function () {
+        return this.formGroups.addInputFormGroup();
+    };
+    ComplexFieldFormGroupView.prototype.addDropDownFormGroup = function () {
+        return this.formGroups.addDropDownFormGroup();
+    };
+    ComplexFieldFormGroupView.prototype.addFormGroup = function (formGroup) {
+        return this.formGroups.addFormGroup(formGroup);
+    };
+    return ComplexFieldFormGroupView;
+}(FormGroupView_1.FormGroupView));
+exports.ComplexFieldFormGroupView = ComplexFieldFormGroupView;
+//# sourceMappingURL=ComplexFieldFormGroupView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldLayout.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldLayout.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComplexFieldLayout = void 0;
+var BaseFormView_1 = __webpack_require__(/*! ./BaseFormView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseFormView.js");
+var ComplexFieldLayout = /** @class */ (function () {
+    function ComplexFieldLayout(complexField) {
+        this.complexField = complexField;
+    }
+    ComplexFieldLayout.prototype.execute = function () {
+        this.executeLayout(this.complexField);
+    };
+    ComplexFieldLayout.prototype.executeLayout = function (complexField) {
+        if (complexField instanceof BaseFormView_1.BaseFormView) {
+            complexField.forEachFormGroup(function (fg) {
+                fg.addToContainer(complexField);
+            });
+        }
+        else {
+            complexField.forEachFormGroup(function (fg) {
+                fg.addToContainer(complexField.valueColumn);
+            });
+        }
+    };
+    return ComplexFieldLayout;
+}());
+exports.ComplexFieldLayout = ComplexFieldLayout;
+//# sourceMappingURL=ComplexFieldLayout.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js":
+/*!***************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpperRangeConstraint = exports.LowerRangeConstraint = exports.NumberConstraintCollection = exports.DateConstraintCollection = exports.TextConstraintCollection = exports.ConstraintCollection = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ErrorModel_1 = __webpack_require__(/*! ../ErrorModel */ "../../../../Published/Development/Packages/Shared/Current/npm/ErrorModel.js");
+var ConstraintResult_1 = __webpack_require__(/*! ./ConstraintResult */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintResult.js");
+var NotWhitespaceConstraint_1 = __webpack_require__(/*! ./NotWhitespaceConstraint */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NotWhitespaceConstraint.js");
+var ConstraintCollection = /** @class */ (function () {
+    function ConstraintCollection() {
+        this.constraints = [];
+        this.isNullAllowed = true;
+        this.skipped = false;
+    }
+    ConstraintCollection.prototype.mustNotBeNull = function () {
+        this.isNullAllowed = false;
+    };
+    ConstraintCollection.prototype.skipValidation = function () { this.skipped = true; };
+    ConstraintCollection.prototype.unskipValidation = function () { this.skipped = false; };
+    ConstraintCollection.prototype.add = function (constraint) {
+        this.constraints.push(constraint);
+    };
+    ConstraintCollection.prototype.validate = function (errors, field) {
+        if (!this.skipped) {
+            var value = field.getValue();
+            if (value === undefined || value === null) {
+                if (!this.isNullAllowed) {
+                    errors.add(new ErrorModel_1.ErrorModel('Must not be null', field.getCaption(), field.getName()));
+                }
+            }
+            else {
+                for (var _i = 0, _a = this.constraints; _i < _a.length; _i++) {
+                    var c = _a[_i];
+                    var result = c.test(value);
+                    if (!result.isValid) {
+                        errors.add(new ErrorModel_1.ErrorModel(result.errorMessage, field.getCaption(), field.getName()));
+                        return;
+                    }
+                }
+            }
+        }
+    };
+    return ConstraintCollection;
+}());
+exports.ConstraintCollection = ConstraintCollection;
+var TextConstraintCollection = /** @class */ (function (_super) {
+    tslib_1.__extends(TextConstraintCollection, _super);
+    function TextConstraintCollection() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextConstraintCollection.prototype.mustNotBeWhitespace = function (failureMessage) {
+        this.add(new NotWhitespaceConstraint_1.NotWhitespaceConstraint(failureMessage));
+    };
+    return TextConstraintCollection;
+}(ConstraintCollection));
+exports.TextConstraintCollection = TextConstraintCollection;
+var DateConstraintCollection = /** @class */ (function (_super) {
+    tslib_1.__extends(DateConstraintCollection, _super);
+    function DateConstraintCollection() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DateConstraintCollection.prototype.mustBeOnOrAbove = function (lowerValue, failureMessage) {
+        this.add(new LowerRangeConstraint(lowerValue, true, failureMessage));
+    };
+    DateConstraintCollection.prototype.mustBeAbove = function (lowerValue, failureMessage) {
+        this.add(new LowerRangeConstraint(lowerValue, false, failureMessage));
+    };
+    DateConstraintCollection.prototype.mustBeOnOrBelow = function (upperValue, failureMessage) {
+        this.add(new UpperRangeConstraint(upperValue, true, failureMessage));
+    };
+    DateConstraintCollection.prototype.mustBeBelow = function (upperValue, failureMessage) {
+        this.add(new UpperRangeConstraint(upperValue, false, failureMessage));
+    };
+    return DateConstraintCollection;
+}(ConstraintCollection));
+exports.DateConstraintCollection = DateConstraintCollection;
+var NumberConstraintCollection = /** @class */ (function (_super) {
+    tslib_1.__extends(NumberConstraintCollection, _super);
+    function NumberConstraintCollection() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    NumberConstraintCollection.prototype.mustBeOnOrAbove = function (lowerValue, failureMessage) {
+        this.add(new LowerRangeConstraint(lowerValue, true, failureMessage));
+    };
+    NumberConstraintCollection.prototype.mustBeAbove = function (lowerValue, failureMessage) {
+        this.add(new LowerRangeConstraint(lowerValue, false, failureMessage));
+    };
+    NumberConstraintCollection.prototype.mustBeOnOrBelow = function (upperValue, failureMessage) {
+        this.add(new UpperRangeConstraint(upperValue, true, failureMessage));
+    };
+    NumberConstraintCollection.prototype.mustBeBelow = function (upperValue, failureMessage) {
+        this.add(new UpperRangeConstraint(upperValue, false, failureMessage));
+    };
+    return NumberConstraintCollection;
+}(ConstraintCollection));
+exports.NumberConstraintCollection = NumberConstraintCollection;
+var LowerRangeConstraint = /** @class */ (function () {
+    function LowerRangeConstraint(boundValue, isIncluded, failureMessage) {
+        this.boundValue = boundValue;
+        this.isIncluded = isIncluded;
+        this.failureMessage = failureMessage;
+    }
+    LowerRangeConstraint.prototype.test = function (value) {
+        return this.isInRange(value)
+            ? ConstraintResult_1.ConstraintResult.passed()
+            : ConstraintResult_1.ConstraintResult.failed(this.failureMessage);
+    };
+    LowerRangeConstraint.prototype.isInRange = function (value) {
+        if (this.boundValue === undefined || this.boundValue === null) {
+            return true;
+        }
+        if (value > this.boundValue) {
+            return true;
+        }
+        if (this.boundValue === value) {
+            return this.isIncluded;
+        }
+        return false;
+    };
+    return LowerRangeConstraint;
+}());
+exports.LowerRangeConstraint = LowerRangeConstraint;
+var UpperRangeConstraint = /** @class */ (function () {
+    function UpperRangeConstraint(boundValue, isIncluded, failureMessage) {
+        this.boundValue = boundValue;
+        this.isIncluded = isIncluded;
+        this.failureMessage = failureMessage;
+    }
+    UpperRangeConstraint.prototype.test = function (value) {
+        return this.isInRange(value)
+            ? ConstraintResult_1.ConstraintResult.passed()
+            : ConstraintResult_1.ConstraintResult.failed(this.failureMessage);
+    };
+    UpperRangeConstraint.prototype.isInRange = function (value) {
+        if (this.boundValue === undefined || this.boundValue === null) {
+            return true;
+        }
+        if (value < this.boundValue) {
+            return true;
+        }
+        if (this.boundValue === value) {
+            return this.isIncluded;
+        }
+        return false;
+    };
+    return UpperRangeConstraint;
+}());
+exports.UpperRangeConstraint = UpperRangeConstraint;
+//# sourceMappingURL=ConstraintCollection.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintResult.js":
+/*!***********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintResult.js ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConstraintResult = void 0;
+var ConstraintResult = /** @class */ (function () {
+    function ConstraintResult(isValid, errorMessage) {
+        this.isValid = isValid;
+        this.errorMessage = errorMessage;
+    }
+    ConstraintResult.passed = function () { return new ConstraintResult(true, ""); };
+    ConstraintResult.failed = function (errorMessage) { return new ConstraintResult(false, errorMessage); };
+    return ConstraintResult;
+}());
+exports.ConstraintResult = ConstraintResult;
+//# sourceMappingURL=ConstraintResult.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateDropDownFormGroup.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateDropDownFormGroup.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DateDropDownFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var DropDownFormGroup_1 = __webpack_require__(/*! ./DropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js");
+var DateDropDownFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(DateDropDownFormGroup, _super);
+    function DateDropDownFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.constraints = new ConstraintCollection_1.DateConstraintCollection();
+        return _this;
+    }
+    DateDropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return DateDropDownFormGroup;
+}(DropDownFormGroup_1.DropDownFormGroup));
+exports.DateDropDownFormGroup = DateDropDownFormGroup;
+//# sourceMappingURL=DateDropDownFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateInputFormGroup.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateInputFormGroup.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DateInputFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var InputFormGroup_1 = __webpack_require__(/*! ./InputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroup.js");
+var TextToDateViewValue_1 = __webpack_require__(/*! ./TextToDateViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToDateViewValue.js");
+var DateInputFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(DateInputFormGroup, _super);
+    function DateInputFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view, new TextToDateViewValue_1.TextToDateViewValue()) || this;
+        _this.constraints = new ConstraintCollection_1.DateConstraintCollection();
+        _this.view.input.setType('date');
+        return _this;
+    }
+    DateInputFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return DateInputFormGroup;
+}(InputFormGroup_1.InputFormGroup));
+exports.DateInputFormGroup = DateInputFormGroup;
+//# sourceMappingURL=DateInputFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DropDownFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var SimpleFieldFormGroup_1 = __webpack_require__(/*! ./SimpleFieldFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroup.js");
+var DropDownFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(DropDownFormGroup, _super);
+    function DropDownFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.constraints = new ConstraintCollection_1.ConstraintCollection();
+        _this.valueChanged = _this.view.select.changed;
+        return _this;
+    }
+    DropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    DropDownFormGroup.prototype.getValue = function () {
+        return this.view.select.getValue();
+    };
+    DropDownFormGroup.prototype.setValue = function (value) {
+        this.view.select.setValue(value);
+    };
+    DropDownFormGroup.prototype.setItems = function () {
+        var items = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            items[_i] = arguments[_i];
+        }
+        this.view.select.setItems(items);
+    };
+    DropDownFormGroup.prototype.setItemCaption = function (itemCaption) {
+        this.view.select.setItemCaption(itemCaption);
+    };
+    return DropDownFormGroup;
+}(SimpleFieldFormGroup_1.SimpleFieldFormGroup));
+exports.DropDownFormGroup = DropDownFormGroup;
+//# sourceMappingURL=DropDownFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroupView.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroupView.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DropDownFormGroupView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Select_1 = __webpack_require__(/*! ../Html/Select */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.js");
+var SimpleFieldFormGroupView_1 = __webpack_require__(/*! ./SimpleFieldFormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroupView.js");
+var DropDownFormGroupView = /** @class */ (function (_super) {
+    tslib_1.__extends(DropDownFormGroupView, _super);
+    function DropDownFormGroupView(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.select = _this.inputGroup.insertContent(0, new Select_1.Select());
+        _this.select.addCssName('form-control');
+        return _this;
+    }
+    return DropDownFormGroupView;
+}(SimpleFieldFormGroupView_1.SimpleFieldFormGroupView));
+exports.DropDownFormGroupView = DropDownFormGroupView;
+//# sourceMappingURL=DropDownFormGroupView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorList.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorList.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ErrorList = void 0;
+var ErrorList = /** @class */ (function () {
+    function ErrorList() {
+        this.errors = [];
+    }
+    ErrorList.prototype.add = function (error) {
+        this.errors.push(error);
+    };
+    ErrorList.prototype.merge = function (errors) {
+        var _a;
+        (_a = this.errors).push.apply(_a, errors.values());
+    };
+    ErrorList.prototype.hasErrors = function () { return this.errors.length > 0; };
+    ErrorList.prototype.values = function () { return this.errors; };
+    return ErrorList;
+}());
+exports.ErrorList = ErrorList;
+//# sourceMappingURL=ErrorList.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItem.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItem.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ErrorListItem = void 0;
+var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var ErrorListItem = /** @class */ (function () {
+    function ErrorListItem(error, view) {
+        new TextBlock_1.TextBlock(error.Message, view.message);
+    }
+    return ErrorListItem;
+}());
+exports.ErrorListItem = ErrorListItem;
+//# sourceMappingURL=ErrorListItem.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItemView.js":
+/*!************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItemView.js ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ErrorListItemView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var TextSpanView_1 = __webpack_require__(/*! ../Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var ListGroupItemView_1 = __webpack_require__(/*! ../ListGroup/ListGroupItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupItemView.js");
+var ErrorListItemView = /** @class */ (function (_super) {
+    tslib_1.__extends(ErrorListItemView, _super);
+    function ErrorListItemView() {
+        var _this = _super.call(this) || this;
+        _this.addCssName('dropdown-item-text');
+        _this.addCssName(ContextualClass_1.ContextualClass.danger.append('text'));
+        _this.message = _this.addContent(new TextSpanView_1.TextSpanView());
+        return _this;
+    }
+    return ErrorListItemView;
+}(ListGroupItemView_1.ListGroupItemView));
+exports.ErrorListItemView = ErrorListItemView;
+//# sourceMappingURL=ErrorListItemView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FieldViewValue.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/FieldViewValue.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FieldViewValue = void 0;
+var FieldViewValue = /** @class */ (function () {
+    function FieldViewValue() {
+    }
+    FieldViewValue.prototype.getValue = function () {
+        return this.value;
+    };
+    FieldViewValue.prototype.setValue = function (value) {
+        this.value = value;
+    };
+    FieldViewValue.prototype.setValueFromView = function (viewValue) {
+        var value = this._fromView(viewValue);
+        this.value = value;
+        return value;
+    };
+    FieldViewValue.prototype._fromView = function (value) {
+        return value;
+    };
+    FieldViewValue.prototype.toView = function () {
+        return this._toView(this.value);
+    };
+    FieldViewValue.prototype._toView = function (value) { return value; };
+    return FieldViewValue;
+}());
+exports.FieldViewValue = FieldViewValue;
+//# sourceMappingURL=FieldViewValue.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupCollection.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupCollection.js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormGroupCollection = void 0;
+var BooleanDropDownFormGroup_1 = __webpack_require__(/*! ./BooleanDropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BooleanDropDownFormGroup.js");
+var DateDropDownFormGroup_1 = __webpack_require__(/*! ./DateDropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateDropDownFormGroup.js");
+var DateInputFormGroup_1 = __webpack_require__(/*! ./DateInputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DateInputFormGroup.js");
+var DropDownFormGroup_1 = __webpack_require__(/*! ./DropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js");
+var NumberDropDownFormGroup_1 = __webpack_require__(/*! ./NumberDropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberDropDownFormGroup.js");
+var NumberInputFormGroup_1 = __webpack_require__(/*! ./NumberInputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberInputFormGroup.js");
+var TextDropDownFormGroup_1 = __webpack_require__(/*! ./TextDropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextDropDownFormGroup.js");
+var TextInputFormGroup_1 = __webpack_require__(/*! ./TextInputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextInputFormGroup.js");
+var FormGroupCollection = /** @class */ (function () {
+    function FormGroupCollection(name) {
+        this.name = name;
+        this.values = [];
+    }
+    FormGroupCollection.prototype.formGroups = function () {
+        return this.values;
+    };
+    FormGroupCollection.prototype.addHiddenTextFormGroup = function (name, view) {
+        return this.addFormGroup(new TextInputFormGroup_1.TextInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addHiddenNumberFormGroup = function (name, view) {
+        return this.addFormGroup(new NumberInputFormGroup_1.NumberInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addHiddenDateFormGroup = function (name, view) {
+        return this.addFormGroup(new DateInputFormGroup_1.DateInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addTextInputFormGroup = function (name, view) {
+        return this.addFormGroup(new TextInputFormGroup_1.TextInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addNumberInputFormGroup = function (name, view) {
+        return this.addFormGroup(new NumberInputFormGroup_1.NumberInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addDateInputFormGroup = function (name, view) {
+        return this.addFormGroup(new DateInputFormGroup_1.DateInputFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addTextDropDownFormGroup = function (name, view) {
+        return this.addFormGroup(new TextDropDownFormGroup_1.TextDropDownFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addNumberDropDownFormGroup = function (name, view) {
+        return this.addFormGroup(new NumberDropDownFormGroup_1.NumberDropDownFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addDateDropDownFormGroup = function (name, view) {
+        return this.addFormGroup(new DateDropDownFormGroup_1.DateDropDownFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addBooleanDropDownFormGroup = function (name, view) {
+        return this.addFormGroup(new BooleanDropDownFormGroup_1.BooleanDropDownFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addDropDownFormGroup = function (name, view) {
+        return this.addFormGroup(new DropDownFormGroup_1.DropDownFormGroup(this.name, name, view));
+    };
+    FormGroupCollection.prototype.addFormGroup = function (formGroup) {
+        this.values.push(formGroup);
+        return formGroup;
+    };
+    FormGroupCollection.prototype.forEach = function (action) {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var formGroup = _a[_i];
+            action(formGroup);
+        }
+    };
+    FormGroupCollection.prototype.getField = function (name) {
+        var match = null;
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var formGroup = _a[_i];
+            var testField = formGroup.getField(name);
+            if (testField) {
+                match = testField;
+                break;
+            }
+        }
+        return match;
+    };
+    FormGroupCollection.prototype.clearErrors = function () {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var field = _a[_i];
+            field.clearErrors();
+        }
+    };
+    FormGroupCollection.prototype.validate = function (errors) {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var field = _a[_i];
+            field.validate(errors);
+        }
+    };
+    FormGroupCollection.prototype.import = function (values) {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var field = _a[_i];
+            field.import(values);
+        }
+    };
+    FormGroupCollection.prototype.export = function (values) {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var field = _a[_i];
+            field.export(values);
+        }
+    };
+    return FormGroupCollection;
+}());
+exports.FormGroupCollection = FormGroupCollection;
+//# sourceMappingURL=FormGroupCollection.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupViewCollection.js":
+/*!******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormGroupViewCollection.js ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormGroupViewCollection = void 0;
+var ComplexFieldFormGroupView_1 = __webpack_require__(/*! ./ComplexFieldFormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ComplexFieldFormGroupView.js");
+var DropDownFormGroupView_1 = __webpack_require__(/*! ./DropDownFormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroupView.js");
+var InputFormGroupView_1 = __webpack_require__(/*! ./InputFormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroupView.js");
+var FormGroupViewCollection = /** @class */ (function () {
+    function FormGroupViewCollection() {
+        this.values = [];
+    }
+    FormGroupViewCollection.prototype.formGroups = function () {
+        return this.values;
+    };
+    FormGroupViewCollection.prototype.addHiddenInputFormGroup = function () {
+        var formGroup = this.addInputFormGroup();
+        this.hideFormGroup(formGroup);
+        return formGroup;
+    };
+    FormGroupViewCollection.prototype.hideFormGroup = function (formGroup) {
+        formGroup.input.setType('hidden');
+        formGroup.hide();
+    };
+    FormGroupViewCollection.prototype.addInputFormGroup = function () {
+        return this.addFormGroup(new InputFormGroupView_1.InputFormGroupView());
+    };
+    FormGroupViewCollection.prototype.addDropDownFormGroup = function () {
+        return this.addFormGroup(new DropDownFormGroupView_1.DropDownFormGroupView());
+    };
+    FormGroupViewCollection.prototype.addFormGroup = function (formGroup) {
+        this.values.push(formGroup);
+        return formGroup;
+    };
+    FormGroupViewCollection.prototype.executeLayout = function () {
+        this.forEach(function (fg) {
+            if (fg instanceof ComplexFieldFormGroupView_1.ComplexFieldFormGroupView) {
+                fg.executeLayout();
+            }
+        });
+    };
+    FormGroupViewCollection.prototype.forEach = function (action) {
+        for (var _i = 0, _a = this.formGroups(); _i < _a.length; _i++) {
+            var formGroup = _a[_i];
+            action(formGroup);
+        }
+    };
+    return FormGroupViewCollection;
+}());
+exports.FormGroupViewCollection = FormGroupViewCollection;
+//# sourceMappingURL=FormGroupViewCollection.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormSaveResult.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/FormSaveResult.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormSaveResult = void 0;
+var FormSaveResult = /** @class */ (function () {
+    function FormSaveResult(value, errors) {
+        this.value = value;
+        this.errors = errors;
+    }
+    FormSaveResult.prototype.succeeded = function () {
+        return this.errors.length === 0;
+    };
+    return FormSaveResult;
+}());
+exports.FormSaveResult = FormSaveResult;
+//# sourceMappingURL=FormSaveResult.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroup.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroup.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InputFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var DebouncedAction_1 = __webpack_require__(/*! ../DebouncedAction */ "../../../../Published/Development/Packages/Shared/Current/npm/DebouncedAction.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var SimpleFieldFormGroup_1 = __webpack_require__(/*! ./SimpleFieldFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroup.js");
+var InputFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(InputFormGroup, _super);
+    function InputFormGroup(prefix, name, view, viewValue) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.viewValue = viewValue;
+        _this._valueChanged = new Events_1.DefaultEvent(_this);
+        _this.valueChanged = _this._valueChanged.handler();
+        _this.debouncedOnInputValueChanged = new DebouncedAction_1.DebouncedAction(function () {
+            if (!_this.view.input.hasFocus()) {
+                var currentValue = _this.view.input.getValue();
+                var newValue = _this.viewValue.toView();
+                if (newValue !== currentValue) {
+                    _this.view.input.setValue(newValue);
+                }
+            }
+        }, 700);
+        var valueName = _this.getName();
+        _this.view.input.setID(valueName);
+        _this.view.input.setName(valueName);
+        _this.view.input.changed.register(_this.onInputValueChanged.bind(_this));
+        return _this;
+    }
+    InputFormGroup.prototype.onInputValueChanged = function (viewValue) {
+        var value = this.viewValue.setValueFromView(viewValue);
+        this._valueChanged.invoke(value);
+        this.debouncedOnInputValueChanged.execute();
+    };
+    InputFormGroup.prototype.getValue = function () {
+        return this.viewValue.getValue();
+    };
+    InputFormGroup.prototype.setValue = function (value) {
+        this.viewValue.setValue(value);
+        var inputValue = this.viewValue.toView();
+        this.view.input.setValue(inputValue);
+    };
+    InputFormGroup.prototype.setMaxLength = function (maxLength) {
+        this.view.input.setMaxLength(maxLength);
+    };
+    InputFormGroup.prototype.protect = function () {
+        this.view.input.setType('password');
+    };
+    InputFormGroup.prototype.setFocus = function () { this.view.input.setFocus(); };
+    InputFormGroup.prototype.blur = function () { this.view.input.blur(); };
+    return InputFormGroup;
+}(SimpleFieldFormGroup_1.SimpleFieldFormGroup));
+exports.InputFormGroup = InputFormGroup;
+//# sourceMappingURL=InputFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroupView.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroupView.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InputFormGroupView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Input_1 = __webpack_require__(/*! ../Html/Input */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.js");
+var SimpleFieldFormGroupView_1 = __webpack_require__(/*! ./SimpleFieldFormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroupView.js");
+var InputFormGroupView = /** @class */ (function (_super) {
+    tslib_1.__extends(InputFormGroupView, _super);
+    function InputFormGroupView(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.input = _this.inputGroup.insertContent(0, new Input_1.Input());
+        _this.input.addCssName('form-control');
+        return _this;
+    }
+    return InputFormGroupView;
+}(SimpleFieldFormGroupView_1.SimpleFieldFormGroupView));
+exports.InputFormGroupView = InputFormGroupView;
+//# sourceMappingURL=InputFormGroupView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NotWhitespaceConstraint.js":
+/*!******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/NotWhitespaceConstraint.js ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NotWhitespaceConstraint = void 0;
+var ConstraintResult_1 = __webpack_require__(/*! ./ConstraintResult */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintResult.js");
+var NotWhitespaceConstraint = /** @class */ (function () {
+    function NotWhitespaceConstraint(failureMessage) {
+        this.failureMessage = failureMessage;
+    }
+    NotWhitespaceConstraint.prototype.test = function (value) {
+        if (/^\s*$/.test(value)) {
+            return ConstraintResult_1.ConstraintResult.failed(this.failureMessage);
+        }
+        return ConstraintResult_1.ConstraintResult.passed();
+    };
+    return NotWhitespaceConstraint;
+}());
+exports.NotWhitespaceConstraint = NotWhitespaceConstraint;
+//# sourceMappingURL=NotWhitespaceConstraint.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberDropDownFormGroup.js":
+/*!******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberDropDownFormGroup.js ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NumberDropDownFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var DropDownFormGroup_1 = __webpack_require__(/*! ./DropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js");
+var NumberDropDownFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(NumberDropDownFormGroup, _super);
+    function NumberDropDownFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.constraints = new ConstraintCollection_1.NumberConstraintCollection();
+        return _this;
+    }
+    NumberDropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return NumberDropDownFormGroup;
+}(DropDownFormGroup_1.DropDownFormGroup));
+exports.NumberDropDownFormGroup = NumberDropDownFormGroup;
+//# sourceMappingURL=NumberDropDownFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberInputFormGroup.js":
+/*!***************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/NumberInputFormGroup.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NumberInputFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var InputFormGroup_1 = __webpack_require__(/*! ./InputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroup.js");
+var TextToNumberViewValue_1 = __webpack_require__(/*! ./TextToNumberViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToNumberViewValue.js");
+var NumberInputFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(NumberInputFormGroup, _super);
+    function NumberInputFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view, new TextToNumberViewValue_1.TextToNumberViewValue()) || this;
+        _this.constraints = new ConstraintCollection_1.NumberConstraintCollection();
+        return _this;
+    }
+    NumberInputFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return NumberInputFormGroup;
+}(InputFormGroup_1.InputFormGroup));
+exports.NumberInputFormGroup = NumberInputFormGroup;
+//# sourceMappingURL=NumberInputFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroup.js":
+/*!***************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroup.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SimpleFieldFormGroup = void 0;
+var TextBlock_1 = __webpack_require__(/*! ../Html/TextBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextBlock.js");
+var ListGroup_1 = __webpack_require__(/*! ../ListGroup/ListGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroup.js");
+var ErrorList_1 = __webpack_require__(/*! ./ErrorList */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorList.js");
+var ErrorListItem_1 = __webpack_require__(/*! ./ErrorListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItem.js");
+var SimpleFieldFormGroup = /** @class */ (function () {
+    function SimpleFieldFormGroup(prefix, name, view) {
+        this.view = view;
+        this.name = prefix ? prefix + "_" + name : name;
+        this.captionBlock = new TextBlock_1.TextBlock('', this.view.caption);
+        this.alertList = new ListGroup_1.ListGroup(this.view.alertList);
+    }
+    SimpleFieldFormGroup.prototype.getName = function () {
+        return this.name;
+    };
+    SimpleFieldFormGroup.prototype.getCaption = function () {
+        return this.caption;
+    };
+    SimpleFieldFormGroup.prototype.setCaption = function (caption) {
+        this.caption = caption;
+        this.captionBlock.setText(caption);
+    };
+    SimpleFieldFormGroup.prototype.getField = function (name) { return this.getName() === name ? this : null; };
+    SimpleFieldFormGroup.prototype.setErrors = function (errors) {
+        this.alertList.setItems(errors, function (e, li) { return new ErrorListItem_1.ErrorListItem(e, li); });
+        if (errors.length > 0) {
+            this.view.showDropDown();
+        }
+        else {
+            this.view.hideDropDown();
+        }
+    };
+    SimpleFieldFormGroup.prototype.clearErrors = function () {
+        this.setErrors([]);
+    };
+    SimpleFieldFormGroup.prototype.validate = function (errors) {
+        var fieldErrors = new ErrorList_1.ErrorList();
+        this.validateConstraints(fieldErrors);
+        this.setErrors(fieldErrors.values());
+        errors.merge(fieldErrors);
+    };
+    SimpleFieldFormGroup.prototype.import = function (values) {
+        if (values) {
+            var value = values[this.getName()];
+            if (value !== undefined) {
+                this.setValue(value);
+            }
+        }
+    };
+    SimpleFieldFormGroup.prototype.export = function (values) {
+        values[this.getName()] = this.getValue();
+    };
+    return SimpleFieldFormGroup;
+}());
+exports.SimpleFieldFormGroup = SimpleFieldFormGroup;
+//# sourceMappingURL=SimpleFieldFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroupView.js":
+/*!*******************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/SimpleFieldFormGroupView.js ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SimpleFieldFormGroupView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Alert_1 = __webpack_require__(/*! ../Alert */ "../../../../Published/Development/Packages/Shared/Current/npm/Alert.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var DropdownComponent_1 = __webpack_require__(/*! ../Dropdown/DropdownComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.js");
+var FaIcon_1 = __webpack_require__(/*! ../FaIcon */ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var FormGroupView_1 = __webpack_require__(/*! ../Html/FormGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormGroupView.js");
+var InputGroup_1 = __webpack_require__(/*! ../Html/InputGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/InputGroup.js");
+var ListItem_1 = __webpack_require__(/*! ../Html/ListItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/ListItem.js");
+var ListGroupView_1 = __webpack_require__(/*! ../ListGroup/ListGroupView */ "../../../../Published/Development/Packages/Shared/Current/npm/ListGroup/ListGroupView.js");
+var MarginCss_1 = __webpack_require__(/*! ../MarginCss */ "../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js");
+var PaddingCss_1 = __webpack_require__(/*! ../PaddingCss */ "../../../../Published/Development/Packages/Shared/Current/npm/PaddingCss.js");
+var ErrorListItemView_1 = __webpack_require__(/*! ./ErrorListItemView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ErrorListItemView.js");
+var SimpleFieldFormGroupView = /** @class */ (function (_super) {
+    tslib_1.__extends(SimpleFieldFormGroupView, _super);
+    function SimpleFieldFormGroupView(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.inputGroup = _this.valueColumn.addContent(new InputGroup_1.InputGroup());
+        _this.dropdown = _this.inputGroup.addContent(new DropdownComponent_1.DropdownComponent());
+        _this.dropdown.hide();
+        _this.dropdown.button.setContext(ContextualClass_1.ContextualClass.danger);
+        _this.dropdown.button.useOutlineStyle();
+        _this.dropdown.button.addContent(new FaIcon_1.FaIcon('exclamation'))
+            .configure(function (i) {
+            i.solidStyle();
+        });
+        _this.dropdown.menu.setPadding(PaddingCss_1.PaddingCss.xs(0));
+        var alertItem = new ListItem_1.ListItem().addToList(_this.dropdown.menu);
+        alertItem.addCssName(ContextualClass_1.ContextualClass.danger.append('border'));
+        var alert = alertItem.addContent(new Alert_1.Alert());
+        alert.setMargin(MarginCss_1.MarginCss.xs(0));
+        alert.setContext(ContextualClass_1.ContextualClass.danger);
+        _this.alertList = alert.addContent(new ListGroupView_1.ListGroupView(function () { return new ErrorListItemView_1.ErrorListItemView(); }));
+        return _this;
+    }
+    SimpleFieldFormGroupView.prototype.showDropDown = function () { this.dropdown.show(); };
+    SimpleFieldFormGroupView.prototype.hideDropDown = function () { this.dropdown.hide(); };
+    return SimpleFieldFormGroupView;
+}(FormGroupView_1.FormGroupView));
+exports.SimpleFieldFormGroupView = SimpleFieldFormGroupView;
+//# sourceMappingURL=SimpleFieldFormGroupView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextDropDownFormGroup.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextDropDownFormGroup.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextDropDownFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var DropDownFormGroup_1 = __webpack_require__(/*! ./DropDownFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/DropDownFormGroup.js");
+var TextDropDownFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(TextDropDownFormGroup, _super);
+    function TextDropDownFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view) || this;
+        _this.constraints = new ConstraintCollection_1.TextConstraintCollection();
+        return _this;
+    }
+    TextDropDownFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return TextDropDownFormGroup;
+}(DropDownFormGroup_1.DropDownFormGroup));
+exports.TextDropDownFormGroup = TextDropDownFormGroup;
+//# sourceMappingURL=TextDropDownFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextInputFormGroup.js":
+/*!*************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextInputFormGroup.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextInputFormGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ConstraintCollection_1 = __webpack_require__(/*! ./ConstraintCollection */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/ConstraintCollection.js");
+var InputFormGroup_1 = __webpack_require__(/*! ./InputFormGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/InputFormGroup.js");
+var TextToTextViewValue_1 = __webpack_require__(/*! ./TextToTextViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToTextViewValue.js");
+var TextInputFormGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(TextInputFormGroup, _super);
+    function TextInputFormGroup(prefix, name, view) {
+        var _this = _super.call(this, prefix, name, view, new TextToTextViewValue_1.TextToTextViewValue()) || this;
+        _this.constraints = new ConstraintCollection_1.TextConstraintCollection();
+        return _this;
+    }
+    TextInputFormGroup.prototype.validateConstraints = function (fieldErrors) {
+        this.constraints.validate(fieldErrors, this);
+    };
+    return TextInputFormGroup;
+}(InputFormGroup_1.InputFormGroup));
+exports.TextInputFormGroup = TextInputFormGroup;
+//# sourceMappingURL=TextInputFormGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToDateViewValue.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToDateViewValue.js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextToDateViewValue = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var TypedFieldViewValue_1 = __webpack_require__(/*! ./TypedFieldViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TypedFieldViewValue.js");
+var TextToDateViewValue = /** @class */ (function (_super) {
+    tslib_1.__extends(TextToDateViewValue, _super);
+    function TextToDateViewValue() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextToDateViewValue.prototype._fromView = function (value) {
+        if (value) {
+            var match = /^(?<Year>\d{4})-(?<Month>\d{2})-(?<Day>\d{2})$/.exec(value);
+            return new Date(Number(match.groups.Year), Number(match.groups.Month) - 1, Number(match.groups.Day));
+        }
+        return value ? new Date(value) : null;
+    };
+    TextToDateViewValue.prototype._toView = function (value) {
+        return value ? value.toISOString().substring(0, 10) : '';
+    };
+    return TextToDateViewValue;
+}(TypedFieldViewValue_1.TypedFieldViewValue));
+exports.TextToDateViewValue = TextToDateViewValue;
+//# sourceMappingURL=TextToDateViewValue.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToNumberViewValue.js":
+/*!****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToNumberViewValue.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextToNumberViewValue = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var TypedFieldViewValue_1 = __webpack_require__(/*! ./TypedFieldViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TypedFieldViewValue.js");
+var TextToNumberViewValue = /** @class */ (function (_super) {
+    tslib_1.__extends(TextToNumberViewValue, _super);
+    function TextToNumberViewValue() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextToNumberViewValue.prototype._fromView = function (value) {
+        return value ? Number(value) : null;
+    };
+    TextToNumberViewValue.prototype._toView = function (value) {
+        return value ? value.toString() : '';
+    };
+    return TextToNumberViewValue;
+}(TypedFieldViewValue_1.TypedFieldViewValue));
+exports.TextToNumberViewValue = TextToNumberViewValue;
+//# sourceMappingURL=TextToNumberViewValue.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToTextViewValue.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TextToTextViewValue.js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextToTextViewValue = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var TypedFieldViewValue_1 = __webpack_require__(/*! ./TypedFieldViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TypedFieldViewValue.js");
+var TextToTextViewValue = /** @class */ (function (_super) {
+    tslib_1.__extends(TextToTextViewValue, _super);
+    function TextToTextViewValue() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextToTextViewValue.prototype._fromView = function (value) {
+        return value;
+    };
+    TextToTextViewValue.prototype._toView = function (value) {
+        return value;
+    };
+    return TextToTextViewValue;
+}(TypedFieldViewValue_1.TypedFieldViewValue));
+exports.TextToTextViewValue = TextToTextViewValue;
+//# sourceMappingURL=TextToTextViewValue.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/TypedFieldViewValue.js":
+/*!**************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Forms/TypedFieldViewValue.js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TypedFieldViewValue = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var FieldViewValue_1 = __webpack_require__(/*! ./FieldViewValue */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/FieldViewValue.js");
+var TypedFieldViewValue = /** @class */ (function (_super) {
+    tslib_1.__extends(TypedFieldViewValue, _super);
+    function TypedFieldViewValue() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return TypedFieldViewValue;
+}(FieldViewValue_1.FieldViewValue));
+exports.TypedFieldViewValue = TypedFieldViewValue;
+//# sourceMappingURL=TypedFieldViewValue.js.map
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js":
 /*!************************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js ***!
@@ -2197,6 +4600,7 @@ exports.AggregateComponentViewModel = AggregateComponentViewModel;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Block = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var FlexCss_1 = __webpack_require__(/*! ../FlexCss */ "../../../../Published/Development/Packages/Shared/Current/npm/FlexCss.js");
 var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
 var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
 var Block = /** @class */ (function (_super) {
@@ -2209,7 +4613,7 @@ var Block = /** @class */ (function (_super) {
         this.addCssName('h-100');
     };
     Block.prototype.flexFill = function () {
-        this.addCssName('flex-fill');
+        this.addCssFrom(new FlexCss_1.FlexCss().fill());
     };
     Block.prototype.positionRelative = function () {
         this.addCssName('position-relative');
@@ -2399,6 +4803,7 @@ exports.Container = Container;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FlexColumn = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var FlexCss_1 = __webpack_require__(/*! ../FlexCss */ "../../../../Published/Development/Packages/Shared/Current/npm/FlexCss.js");
 var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
 var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
 var FlexColumn = /** @class */ (function (_super) {
@@ -2406,7 +4811,8 @@ var FlexColumn = /** @class */ (function (_super) {
     function FlexColumn(vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;
-        _this.addCssName('d-flex flex-column h-100');
+        _this.addCssName('d-flex h-100');
+        _this.addCssFrom(new FlexCss_1.FlexCss().column());
         return _this;
     }
     return FlexColumn;
@@ -2455,6 +4861,150 @@ var FlexColumnFill = /** @class */ (function (_super) {
 }(HtmlComponent_1.HtmlComponent));
 exports.FlexColumnFill = FlexColumnFill;
 //# sourceMappingURL=FlexColumnFill.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormGroupView.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/FormGroupView.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormGroupView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Column_1 = __webpack_require__(/*! ../Grid/Column */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/Column.js");
+var LabelColumn_1 = __webpack_require__(/*! ../Grid/LabelColumn */ "../../../../Published/Development/Packages/Shared/Current/npm/Grid/LabelColumn.js");
+var Block_1 = __webpack_require__(/*! ../Html/Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ../Html/BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var TextSpanView_1 = __webpack_require__(/*! ../Html/TextSpanView */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/TextSpanView.js");
+var MarginCss_1 = __webpack_require__(/*! ../MarginCss */ "../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js");
+var FormGroupView = /** @class */ (function (_super) {
+    tslib_1.__extends(FormGroupView, _super);
+    function FormGroupView(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.captionColumn = _this.addContent(new LabelColumn_1.LabelColumn());
+        _this.caption = _this.captionColumn.addContent(new TextSpanView_1.TextSpanView());
+        _this.valueColumn = _this.addContent(new Column_1.Column());
+        _this.addCssName('form-group row');
+        _this.setMargin(MarginCss_1.MarginCss.bottom(3));
+        return _this;
+    }
+    return FormGroupView;
+}(Block_1.Block));
+exports.FormGroupView = FormGroupView;
+//# sourceMappingURL=FormGroupView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormView.js":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/FormView.js ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ButtonCommandItem_1 = __webpack_require__(/*! ../Command/ButtonCommandItem */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/ButtonCommandItem.js");
+var AggregateComponent_1 = __webpack_require__(/*! ./AggregateComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponent.js");
+var FormViewModel_1 = __webpack_require__(/*! ./FormViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormViewModel.js");
+var HtmlContainerComponent_1 = __webpack_require__(/*! ./HtmlContainerComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlContainerComponent.js");
+var FormView = /** @class */ (function (_super) {
+    tslib_1.__extends(FormView, _super);
+    function FormView(vm) {
+        if (vm === void 0) { vm = new FormViewModel_1.FormViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.submitted = _this.vm.submitted;
+        _this.content = new AggregateComponent_1.AggregateComponent(_this.vm.content);
+        _this.setAction("#");
+        return _this;
+    }
+    FormView.prototype.useDefaultSubmit = function () {
+        this.vm.useDefaultSubmit();
+    };
+    FormView.prototype.clearAutocomplete = function () { this.setAutocomplete(null); };
+    FormView.prototype.setAutocompleteOff = function () { this.setAutocomplete('off'); };
+    FormView.prototype.setAutocompleteNewPassword = function () { this.setAutocomplete('new-password'); };
+    FormView.prototype.setAutocomplete = function (autocomplete) {
+        this.vm.autocomplete(autocomplete);
+    };
+    FormView.prototype.setAction = function (action) { this.vm.action(action); };
+    FormView.prototype.setMethod = function (method) { this.vm.method(method); };
+    FormView.prototype.addOffscreenSubmit = function () {
+        return this.addContent(new ButtonCommandItem_1.ButtonCommandItem())
+            .configure(function (button) {
+            button.makeOffscreenSubmit();
+        });
+    };
+    return FormView;
+}(HtmlContainerComponent_1.HtmlContainerComponent));
+exports.FormView = FormView;
+//# sourceMappingURL=FormView.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/FormViewModel.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/FormViewModel.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FormViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var DelayedAction_1 = __webpack_require__(/*! ../DelayedAction */ "../../../../Published/Development/Packages/Shared/Current/npm/DelayedAction.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var AggregateComponentViewModel_1 = __webpack_require__(/*! ./AggregateComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/AggregateComponentViewModel.js");
+var template = __webpack_require__(/*! ./Form.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Form.html");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var FormViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(FormViewModel, _super);
+    function FormViewModel(content) {
+        if (content === void 0) { content = new AggregateComponentViewModel_1.AggregateComponentViewModel(); }
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('form-component', template)) || this;
+        _this.content = content;
+        _this.action = ko.observable(null);
+        _this.method = ko.observable(null);
+        _this.autocomplete = ko.observable(null);
+        _this._submitted = new Events_1.SimpleEvent(_this);
+        _this.submitted = _this._submitted.handler();
+        _this.isDefaultSubmit = false;
+        return _this;
+    }
+    FormViewModel.prototype.useDefaultSubmit = function () {
+        this.isDefaultSubmit = true;
+    };
+    FormViewModel.prototype.submit = function (_, event) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (document.activeElement instanceof HTMLElement) {
+                            document.activeElement.blur();
+                        }
+                        return [4 /*yield*/, DelayedAction_1.DelayedAction.delay(300)];
+                    case 1:
+                        _a.sent();
+                        this._submitted.invoke();
+                        return [2 /*return*/, this.isDefaultSubmit];
+                }
+            });
+        });
+    };
+    return FormViewModel;
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
+exports.FormViewModel = FormViewModel;
+//# sourceMappingURL=FormViewModel.js.map
 
 /***/ }),
 
@@ -2878,6 +5428,140 @@ exports.HtmlContainerComponent = HtmlContainerComponent;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.js":
+/*!***********************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Input = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var InputViewModel_1 = __webpack_require__(/*! ./InputViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/InputViewModel.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var Input = /** @class */ (function (_super) {
+    tslib_1.__extends(Input, _super);
+    function Input(vm) {
+        if (vm === void 0) { vm = new InputViewModel_1.InputViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this._changed = new Events_1.DefaultEvent(_this);
+        _this.changed = _this._changed.handler();
+        _this.border = ContextualClass_1.ContextualClass.default;
+        vm.type('text');
+        vm.value.subscribe(_this.onValueChanged.bind(_this));
+        return _this;
+    }
+    Input.prototype.onValueChanged = function (value) {
+        this._changed.invoke(value);
+    };
+    Input.prototype.enable = function () { this.vm.isEnabled(true); };
+    Input.prototype.disable = function () { this.vm.isEnabled(false); };
+    Input.prototype.clearAutocomplete = function () { this.setAutocomplete(null); };
+    Input.prototype.setAutocompleteOff = function () { this.setAutocomplete('off'); };
+    Input.prototype.setAutocompleteNewPassword = function () { this.setAutocomplete('new-password'); };
+    Input.prototype.setAutocomplete = function (autocomplete) {
+        this.vm.autocomplete(autocomplete);
+    };
+    Input.prototype.getValue = function () { return this.vm.value(); };
+    Input.prototype.setValue = function (value) {
+        this.vm.value(value);
+    };
+    Input.prototype.setBorder = function (border) {
+        var borderCss = this.getBorderCss(border);
+        this.replaceCssName(this.getBorderCss(this.border), borderCss);
+        this.border = border;
+    };
+    Input.prototype.getBorderCss = function (border) {
+        return border === ContextualClass_1.ContextualClass.default ? '' : border.append('border');
+    };
+    Input.prototype.setMaxLength = function (maxLength) {
+        this.vm.maxLength(maxLength);
+    };
+    Input.prototype.setType = function (type) {
+        this.vm.type(type);
+    };
+    Input.prototype.hasFocus = function () { return this.vm.hasFocus(); };
+    Input.prototype.setFocus = function () { this.vm.hasFocus(true); };
+    Input.prototype.blur = function () { this.vm.hasFocus(false); };
+    return Input;
+}(HtmlComponent_1.HtmlComponent));
+exports.Input = Input;
+//# sourceMappingURL=Input.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/InputGroup.js":
+/*!****************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/InputGroup.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InputGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var Block_1 = __webpack_require__(/*! ./Block */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Block.js");
+var BlockViewModel_1 = __webpack_require__(/*! ./BlockViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/BlockViewModel.js");
+var Input_1 = __webpack_require__(/*! ./Input */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.js");
+var InputViewModel_1 = __webpack_require__(/*! ./InputViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/InputViewModel.js");
+var InputGroup = /** @class */ (function (_super) {
+    tslib_1.__extends(InputGroup, _super);
+    function InputGroup(vm) {
+        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this.addCssName('input-group');
+        return _this;
+    }
+    InputGroup.prototype.addInput = function (vm) {
+        if (vm === void 0) { vm = new InputViewModel_1.InputViewModel(); }
+        return this.addContent(new Input_1.Input(vm));
+    };
+    return InputGroup;
+}(Block_1.Block));
+exports.InputGroup = InputGroup;
+//# sourceMappingURL=InputGroup.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/InputViewModel.js":
+/*!********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/InputViewModel.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InputViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var template = __webpack_require__(/*! ./Input.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.html");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var InputViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(InputViewModel, _super);
+    function InputViewModel() {
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('input', template)) || this;
+        _this.type = ko.observable('text');
+        _this.value = ko.observable('');
+        _this.maxLength = ko.observable(null);
+        _this.isEnabled = ko.observable(true);
+        _this.hasFocus = ko.observable(false);
+        _this.autocomplete = ko.observable(null);
+        return _this;
+    }
+    return InputViewModel;
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
+exports.InputViewModel = InputViewModel;
+//# sourceMappingURL=InputViewModel.js.map
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.js":
 /*!***********************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.js ***!
@@ -3117,6 +5801,97 @@ var ListItemViewModel = /** @class */ (function (_super) {
 }(HtmlComponentViewModel_1.HtmlComponentViewModel));
 exports.ListItemViewModel = ListItemViewModel;
 //# sourceMappingURL=ListItemViewModel.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Select = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var HtmlComponent_1 = __webpack_require__(/*! ./HtmlComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponent.js");
+var ContextualClass_1 = __webpack_require__(/*! ../ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
+var SelectViewModel_1 = __webpack_require__(/*! ./SelectViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SelectViewModel.js");
+var Events_1 = __webpack_require__(/*! ../Events */ "../../../../Published/Development/Packages/Shared/Current/npm/Events.js");
+var Select = /** @class */ (function (_super) {
+    tslib_1.__extends(Select, _super);
+    function Select(vm) {
+        if (vm === void 0) { vm = new SelectViewModel_1.SelectViewModel(); }
+        var _this = _super.call(this, vm) || this;
+        _this._changed = new Events_1.DefaultEvent(_this);
+        _this.changed = _this._changed.handler();
+        _this.border = ContextualClass_1.ContextualClass.default;
+        vm.value.subscribe(_this.onChange.bind(_this));
+        return _this;
+    }
+    Select.prototype.onChange = function (value) {
+        this._changed.invoke(value);
+    };
+    Select.prototype.enable = function () { this.vm.isEnabled(true); };
+    Select.prototype.disable = function () { this.vm.isEnabled(false); };
+    Select.prototype.setBorder = function (border) {
+        var borderCss = this.getBorderCss(border);
+        this.replaceCssName(this.getBorderCss(this.border), borderCss);
+        this.border = border;
+    };
+    Select.prototype.getBorderCss = function (border) {
+        return border === ContextualClass_1.ContextualClass.default ? '' : border.append('border');
+    };
+    Select.prototype.setItemCaption = function (itemCaption) {
+        this.vm.itemsCaption(itemCaption);
+    };
+    Select.prototype.setItems = function (items) {
+        this.vm.items(items);
+    };
+    Select.prototype.getValue = function () { return this.vm.value(); };
+    Select.prototype.setValue = function (value) {
+        this.vm.value(value);
+    };
+    return Select;
+}(HtmlComponent_1.HtmlComponent));
+exports.Select = Select;
+//# sourceMappingURL=Select.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/SelectViewModel.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/SelectViewModel.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SelectViewModel = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/tslib/tslib.es6.js");
+var ComponentTemplate_1 = __webpack_require__(/*! ../ComponentTemplate */ "../../../../Published/Development/Packages/Shared/Current/npm/ComponentTemplate.js");
+var HtmlComponentViewModel_1 = __webpack_require__(/*! ./HtmlComponentViewModel */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/HtmlComponentViewModel.js");
+var template = __webpack_require__(/*! ./Select.html */ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.html");
+var ko = __webpack_require__(/*! knockout */ "../../../../Published/Development/Packages/Shared/Current/npm/node_modules/knockout/build/output/knockout-latest.js");
+var SelectViewModel = /** @class */ (function (_super) {
+    tslib_1.__extends(SelectViewModel, _super);
+    function SelectViewModel() {
+        var _this = _super.call(this, new ComponentTemplate_1.ComponentTemplate('select', template)) || this;
+        _this.isEnabled = ko.observable(true);
+        _this.value = ko.observable(null);
+        _this.items = ko.observableArray([]);
+        _this.itemsText = ko.observable('displayText');
+        _this.itemsValue = ko.observable('value');
+        _this.itemsCaption = ko.observable('');
+        _this.hasFocus = ko.observable(false);
+        return _this;
+    }
+    return SelectViewModel;
+}(HtmlComponentViewModel_1.HtmlComponentViewModel));
+exports.SelectViewModel = SelectViewModel;
+//# sourceMappingURL=SelectViewModel.js.map
 
 /***/ }),
 
@@ -4114,10 +6889,10 @@ var MessageAlert = /** @class */ (function () {
     function MessageAlert(view) {
         var _this = this;
         this.view = view;
-        this._messageChanged = new Events_1.DefaultEvent(this);
-        this.messageChanged = this._messageChanged.handler();
+        this._isVisibleChanged = new Events_1.DefaultEvent(this);
+        this.isVisibleChanged = this._isVisibleChanged.handler();
         this.debouncedSetMessage = new DebouncedAction_1.DebouncedAction(function (message) {
-            _this.updateVmMessage(message);
+            _this.updateViewMessage(message);
         }, 500);
         this.textBlock = new TextBlock_1.TextBlock('', view.textBlock);
     }
@@ -4178,19 +6953,20 @@ var MessageAlert = /** @class */ (function () {
     };
     MessageAlert.prototype.setMessage = function (message) {
         this._message = _.trim(message);
-        this._messageChanged.invoke(this._message);
         if (this._message) {
-            this.updateVmMessage(this._message);
+            this.updateViewMessage(this._message);
         }
         this.debouncedSetMessage.execute(this._message);
     };
-    MessageAlert.prototype.updateVmMessage = function (message) {
+    MessageAlert.prototype.updateViewMessage = function (message) {
         this.textBlock.setText(message);
         if (message) {
             this.view.show();
+            this._isVisibleChanged.invoke(true);
         }
         else {
             this.view.hide();
+            this._isVisibleChanged.invoke(false);
         }
     };
     return MessageAlert;
@@ -42361,6 +45137,874 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 /***/ }),
 
+/***/ "./Scripts/Hub/Api/AppGroup.js":
+/*!*************************************!*\
+  !*** ./Scripts/Hub/Api/AppGroup.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AppGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppGroup, _super);
+    function AppGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'App') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetAppAction = _this.createAction('GetApp', 'Get App');
+        _this.GetRolesAction = _this.createAction('GetRoles', 'Get Roles');
+        _this.GetRoleAction = _this.createAction('GetRole', 'Get Role');
+        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        _this.GetModifierCategoriesAction = _this.createAction('GetModifierCategories', 'Get Modifier Categories');
+        _this.GetModifierCategoryAction = _this.createAction('GetModifierCategory', 'Get Modifier Category');
+        _this.GetDefaultModiiferAction = _this.createAction('GetDefaultModiifer', 'Get Default Modiifer');
+        return _this;
+    }
+    AppGroup.prototype.GetApp = function (errorOptions) {
+        return this.GetAppAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetRoles = function (errorOptions) {
+        return this.GetRolesAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetRole = function (model, errorOptions) {
+        return this.GetRoleAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetResourceGroups = function (errorOptions) {
+        return this.GetResourceGroupsAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetModifierCategories = function (errorOptions) {
+        return this.GetModifierCategoriesAction.execute({}, errorOptions || {});
+    };
+    AppGroup.prototype.GetModifierCategory = function (model, errorOptions) {
+        return this.GetModifierCategoryAction.execute(model, errorOptions || {});
+    };
+    AppGroup.prototype.GetDefaultModiifer = function (errorOptions) {
+        return this.GetDefaultModiiferAction.execute({}, errorOptions || {});
+    };
+    return AppGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppGroup = AppGroup;
+//# sourceMappingURL=AppGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppUserGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/AppUserGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppUserGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AppUserGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppUserGroup, _super);
+    function AppUserGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AppUser') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetUserAccessAction = _this.createAction('GetUserAccess', 'Get User Access');
+        _this.GetUnassignedRolesAction = _this.createAction('GetUnassignedRoles', 'Get Unassigned Roles');
+        _this.GetUserModCategoriesAction = _this.createAction('GetUserModCategories', 'Get User Mod Categories');
+        return _this;
+    }
+    AppUserGroup.prototype.GetUserAccess = function (model, errorOptions) {
+        return this.GetUserAccessAction.execute(model, errorOptions || {});
+    };
+    AppUserGroup.prototype.GetUnassignedRoles = function (model, errorOptions) {
+        return this.GetUnassignedRolesAction.execute(model, errorOptions || {});
+    };
+    AppUserGroup.prototype.GetUserModCategories = function (model, errorOptions) {
+        return this.GetUserModCategoriesAction.execute(model, errorOptions || {});
+    };
+    return AppUserGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppUserGroup = AppUserGroup;
+//# sourceMappingURL=AppUserGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js":
+/*!****************************************************!*\
+  !*** ./Scripts/Hub/Api/AppUserMaintenanceGroup.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppUserMaintenanceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AppUserMaintenanceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppUserMaintenanceGroup, _super);
+    function AppUserMaintenanceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AppUserMaintenance') || this;
+        _this.AssignRoleAction = _this.createAction('AssignRole', 'Assign Role');
+        _this.UnassignRoleAction = _this.createAction('UnassignRole', 'Unassign Role');
+        _this.DenyAccessAction = _this.createAction('DenyAccess', 'Deny Access');
+        _this.AllowAccessAction = _this.createAction('AllowAccess', 'Allow Access');
+        return _this;
+    }
+    AppUserMaintenanceGroup.prototype.AssignRole = function (model, errorOptions) {
+        return this.AssignRoleAction.execute(model, errorOptions || {});
+    };
+    AppUserMaintenanceGroup.prototype.UnassignRole = function (model, errorOptions) {
+        return this.UnassignRoleAction.execute(model, errorOptions || {});
+    };
+    AppUserMaintenanceGroup.prototype.DenyAccess = function (model, errorOptions) {
+        return this.DenyAccessAction.execute(model, errorOptions || {});
+    };
+    AppUserMaintenanceGroup.prototype.AllowAccess = function (model, errorOptions) {
+        return this.AllowAccessAction.execute(model, errorOptions || {});
+    };
+    return AppUserMaintenanceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppUserMaintenanceGroup = AppUserMaintenanceGroup;
+//# sourceMappingURL=AppUserMaintenanceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AppsGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/AppsGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppsGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AppsGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AppsGroup, _super);
+    function AppsGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
+        _this.Index = _this.createView('Index');
+        _this.AllAction = _this.createAction('All', 'All');
+        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
+        _this.RedirectToApp = _this.createView('RedirectToApp');
+        return _this;
+    }
+    AppsGroup.prototype.All = function (errorOptions) {
+        return this.AllAction.execute({}, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
+        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
+    };
+    return AppsGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AppsGroup = AppsGroup;
+//# sourceMappingURL=AppsGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AuthApiGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/AuthApiGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthApiGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AuthApiGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AuthApiGroup, _super);
+    function AuthApiGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'AuthApi') || this;
+        _this.AuthenticateAction = _this.createAction('Authenticate', 'Authenticate');
+        return _this;
+    }
+    AuthApiGroup.prototype.Authenticate = function (model, errorOptions) {
+        return this.AuthenticateAction.execute(model, errorOptions || {});
+    };
+    return AuthApiGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AuthApiGroup = AuthApiGroup;
+//# sourceMappingURL=AuthApiGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/AuthGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/AuthGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AuthGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AuthGroup, _super);
+    function AuthGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Auth') || this;
+        _this.Index = _this.createView('Index');
+        _this.VerifyLoginAction = _this.createAction('VerifyLogin', 'Verify Login');
+        _this.VerifyLoginForm = _this.createView('VerifyLoginForm');
+        _this.Login = _this.createView('Login');
+        _this.Logout = _this.createView('Logout');
+        return _this;
+    }
+    AuthGroup.prototype.VerifyLogin = function (model, errorOptions) {
+        return this.VerifyLoginAction.execute(model, errorOptions || {});
+    };
+    return AuthGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AuthGroup = AuthGroup;
+//# sourceMappingURL=AuthGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/HubAppApi.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/HubAppApi.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HubAppApi = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApi_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApi */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApi.js");
+var UserGroup_1 = __webpack_require__(/*! ./UserGroup */ "./Scripts/Hub/Api/UserGroup.js");
+var UserCacheGroup_1 = __webpack_require__(/*! ./UserCacheGroup */ "./Scripts/Hub/Api/UserCacheGroup.js");
+var AuthGroup_1 = __webpack_require__(/*! ./AuthGroup */ "./Scripts/Hub/Api/AuthGroup.js");
+var AuthApiGroup_1 = __webpack_require__(/*! ./AuthApiGroup */ "./Scripts/Hub/Api/AuthApiGroup.js");
+var PermanentLogGroup_1 = __webpack_require__(/*! ./PermanentLogGroup */ "./Scripts/Hub/Api/PermanentLogGroup.js");
+var AppsGroup_1 = __webpack_require__(/*! ./AppsGroup */ "./Scripts/Hub/Api/AppsGroup.js");
+var AppGroup_1 = __webpack_require__(/*! ./AppGroup */ "./Scripts/Hub/Api/AppGroup.js");
+var InstallGroup_1 = __webpack_require__(/*! ./InstallGroup */ "./Scripts/Hub/Api/InstallGroup.js");
+var PublishGroup_1 = __webpack_require__(/*! ./PublishGroup */ "./Scripts/Hub/Api/PublishGroup.js");
+var VersionGroup_1 = __webpack_require__(/*! ./VersionGroup */ "./Scripts/Hub/Api/VersionGroup.js");
+var ResourceGroupGroup_1 = __webpack_require__(/*! ./ResourceGroupGroup */ "./Scripts/Hub/Api/ResourceGroupGroup.js");
+var ResourceGroup_1 = __webpack_require__(/*! ./ResourceGroup */ "./Scripts/Hub/Api/ResourceGroup.js");
+var ModCategoryGroup_1 = __webpack_require__(/*! ./ModCategoryGroup */ "./Scripts/Hub/Api/ModCategoryGroup.js");
+var UsersGroup_1 = __webpack_require__(/*! ./UsersGroup */ "./Scripts/Hub/Api/UsersGroup.js");
+var UserInquiryGroup_1 = __webpack_require__(/*! ./UserInquiryGroup */ "./Scripts/Hub/Api/UserInquiryGroup.js");
+var AppUserGroup_1 = __webpack_require__(/*! ./AppUserGroup */ "./Scripts/Hub/Api/AppUserGroup.js");
+var AppUserMaintenanceGroup_1 = __webpack_require__(/*! ./AppUserMaintenanceGroup */ "./Scripts/Hub/Api/AppUserMaintenanceGroup.js");
+var UserMaintenanceGroup_1 = __webpack_require__(/*! ./UserMaintenanceGroup */ "./Scripts/Hub/Api/UserMaintenanceGroup.js");
+var HubAppApi = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(HubAppApi, _super);
+    function HubAppApi(events, baseUrl, version) {
+        if (version === void 0) { version = ''; }
+        var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
+        _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
+        _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
+        _this.Auth = _this.addGroup(function (evts, resourceUrl) { return new AuthGroup_1.AuthGroup(evts, resourceUrl); });
+        _this.AuthApi = _this.addGroup(function (evts, resourceUrl) { return new AuthApiGroup_1.AuthApiGroup(evts, resourceUrl); });
+        _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
+        _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
+        _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
+        _this.Install = _this.addGroup(function (evts, resourceUrl) { return new InstallGroup_1.InstallGroup(evts, resourceUrl); });
+        _this.Publish = _this.addGroup(function (evts, resourceUrl) { return new PublishGroup_1.PublishGroup(evts, resourceUrl); });
+        _this.Version = _this.addGroup(function (evts, resourceUrl) { return new VersionGroup_1.VersionGroup(evts, resourceUrl); });
+        _this.ResourceGroup = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroupGroup_1.ResourceGroupGroup(evts, resourceUrl); });
+        _this.Resource = _this.addGroup(function (evts, resourceUrl) { return new ResourceGroup_1.ResourceGroup(evts, resourceUrl); });
+        _this.ModCategory = _this.addGroup(function (evts, resourceUrl) { return new ModCategoryGroup_1.ModCategoryGroup(evts, resourceUrl); });
+        _this.Users = _this.addGroup(function (evts, resourceUrl) { return new UsersGroup_1.UsersGroup(evts, resourceUrl); });
+        _this.UserInquiry = _this.addGroup(function (evts, resourceUrl) { return new UserInquiryGroup_1.UserInquiryGroup(evts, resourceUrl); });
+        _this.AppUser = _this.addGroup(function (evts, resourceUrl) { return new AppUserGroup_1.AppUserGroup(evts, resourceUrl); });
+        _this.AppUserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new AppUserMaintenanceGroup_1.AppUserMaintenanceGroup(evts, resourceUrl); });
+        _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
+        return _this;
+    }
+    HubAppApi.DefaultVersion = 'V1169';
+    return HubAppApi;
+}(AppApi_1.AppApi));
+exports.HubAppApi = HubAppApi;
+//# sourceMappingURL=HubAppApi.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/InstallGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/InstallGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.InstallGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var InstallGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(InstallGroup, _super);
+    function InstallGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Install') || this;
+        _this.RegisterAppAction = _this.createAction('RegisterApp', 'Register App');
+        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
+        _this.AddSystemUserAction = _this.createAction('AddSystemUser', 'Add System User');
+        _this.NewInstallationAction = _this.createAction('NewInstallation', 'New Installation');
+        _this.BeginCurrentInstallationAction = _this.createAction('BeginCurrentInstallation', 'Begin Current Installation');
+        _this.BeginVersionInstallationAction = _this.createAction('BeginVersionInstallation', 'Begin Version Installation');
+        _this.InstalledAction = _this.createAction('Installed', 'Installed');
+        return _this;
+    }
+    InstallGroup.prototype.RegisterApp = function (model, errorOptions) {
+        return this.RegisterAppAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.GetVersion = function (model, errorOptions) {
+        return this.GetVersionAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.AddSystemUser = function (model, errorOptions) {
+        return this.AddSystemUserAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.NewInstallation = function (model, errorOptions) {
+        return this.NewInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.BeginCurrentInstallation = function (model, errorOptions) {
+        return this.BeginCurrentInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.BeginVersionInstallation = function (model, errorOptions) {
+        return this.BeginVersionInstallationAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.Installed = function (model, errorOptions) {
+        return this.InstalledAction.execute(model, errorOptions || {});
+    };
+    return InstallGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.InstallGroup = InstallGroup;
+//# sourceMappingURL=InstallGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ModCategoryGroup.js":
+/*!*********************************************!*\
+  !*** ./Scripts/Hub/Api/ModCategoryGroup.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ModCategoryGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var ModCategoryGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ModCategoryGroup, _super);
+    function ModCategoryGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'ModCategory') || this;
+        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
+        _this.GetModifiersAction = _this.createAction('GetModifiers', 'Get Modifiers');
+        _this.GetModifierAction = _this.createAction('GetModifier', 'Get Modifier');
+        _this.GetResourceGroupsAction = _this.createAction('GetResourceGroups', 'Get Resource Groups');
+        return _this;
+    }
+    ModCategoryGroup.prototype.GetModCategory = function (model, errorOptions) {
+        return this.GetModCategoryAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetModifiers = function (model, errorOptions) {
+        return this.GetModifiersAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetModifier = function (model, errorOptions) {
+        return this.GetModifierAction.execute(model, errorOptions || {});
+    };
+    ModCategoryGroup.prototype.GetResourceGroups = function (model, errorOptions) {
+        return this.GetResourceGroupsAction.execute(model, errorOptions || {});
+    };
+    return ModCategoryGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ModCategoryGroup = ModCategoryGroup;
+//# sourceMappingURL=ModCategoryGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/PermanentLogGroup.js":
+/*!**********************************************!*\
+  !*** ./Scripts/Hub/Api/PermanentLogGroup.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PermanentLogGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var PermanentLogGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(PermanentLogGroup, _super);
+    function PermanentLogGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'PermanentLog') || this;
+        _this.LogBatchAction = _this.createAction('LogBatch', 'Log Batch');
+        _this.StartSessionAction = _this.createAction('StartSession', 'Start Session');
+        _this.StartRequestAction = _this.createAction('StartRequest', 'Start Request');
+        _this.EndRequestAction = _this.createAction('EndRequest', 'End Request');
+        _this.EndSessionAction = _this.createAction('EndSession', 'End Session');
+        _this.LogEventAction = _this.createAction('LogEvent', 'Log Event');
+        _this.AuthenticateSessionAction = _this.createAction('AuthenticateSession', 'Authenticate Session');
+        _this.EndExpiredSessionsAction = _this.createAction('EndExpiredSessions', 'End Expired Sessions');
+        return _this;
+    }
+    PermanentLogGroup.prototype.LogBatch = function (model, errorOptions) {
+        return this.LogBatchAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.StartSession = function (model, errorOptions) {
+        return this.StartSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.StartRequest = function (model, errorOptions) {
+        return this.StartRequestAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndRequest = function (model, errorOptions) {
+        return this.EndRequestAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndSession = function (model, errorOptions) {
+        return this.EndSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.LogEvent = function (model, errorOptions) {
+        return this.LogEventAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.AuthenticateSession = function (model, errorOptions) {
+        return this.AuthenticateSessionAction.execute(model, errorOptions || {});
+    };
+    PermanentLogGroup.prototype.EndExpiredSessions = function (errorOptions) {
+        return this.EndExpiredSessionsAction.execute({}, errorOptions || {});
+    };
+    return PermanentLogGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.PermanentLogGroup = PermanentLogGroup;
+//# sourceMappingURL=PermanentLogGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/PublishGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/PublishGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PublishGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var PublishGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(PublishGroup, _super);
+    function PublishGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Publish') || this;
+        _this.NewVersionAction = _this.createAction('NewVersion', 'New Version');
+        _this.BeginPublishAction = _this.createAction('BeginPublish', 'Begin Publish');
+        _this.EndPublishAction = _this.createAction('EndPublish', 'End Publish');
+        _this.GetVersionsAction = _this.createAction('GetVersions', 'Get Versions');
+        return _this;
+    }
+    PublishGroup.prototype.NewVersion = function (model, errorOptions) {
+        return this.NewVersionAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.BeginPublish = function (model, errorOptions) {
+        return this.BeginPublishAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.EndPublish = function (model, errorOptions) {
+        return this.EndPublishAction.execute(model, errorOptions || {});
+    };
+    PublishGroup.prototype.GetVersions = function (model, errorOptions) {
+        return this.GetVersionsAction.execute(model, errorOptions || {});
+    };
+    return PublishGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.PublishGroup = PublishGroup;
+//# sourceMappingURL=PublishGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ResourceGroup.js":
+/*!******************************************!*\
+  !*** ./Scripts/Hub/Api/ResourceGroup.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ResourceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var ResourceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ResourceGroup, _super);
+    function ResourceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Resource') || this;
+        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
+        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        return _this;
+    }
+    ResourceGroup.prototype.GetResource = function (model, errorOptions) {
+        return this.GetResourceAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetRoleAccess = function (model, errorOptions) {
+        return this.GetRoleAccessAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    ResourceGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    return ResourceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ResourceGroup = ResourceGroup;
+//# sourceMappingURL=ResourceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ResourceGroupGroup.js":
+/*!***********************************************!*\
+  !*** ./Scripts/Hub/Api/ResourceGroupGroup.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ResourceGroupGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var ResourceGroupGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ResourceGroupGroup, _super);
+    function ResourceGroupGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'ResourceGroup') || this;
+        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
+        _this.GetResourcesAction = _this.createAction('GetResources', 'Get Resources');
+        _this.GetResourceAction = _this.createAction('GetResource', 'Get Resource');
+        _this.GetRoleAccessAction = _this.createAction('GetRoleAccess', 'Get Role Access');
+        _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');
+        _this.GetMostRecentRequestsAction = _this.createAction('GetMostRecentRequests', 'Get Most Recent Requests');
+        _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+        return _this;
+    }
+    ResourceGroupGroup.prototype.GetResourceGroup = function (model, errorOptions) {
+        return this.GetResourceGroupAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetResources = function (model, errorOptions) {
+        return this.GetResourcesAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetResource = function (model, errorOptions) {
+        return this.GetResourceAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetRoleAccess = function (model, errorOptions) {
+        return this.GetRoleAccessAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetModCategory = function (model, errorOptions) {
+        return this.GetModCategoryAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetMostRecentRequests = function (model, errorOptions) {
+        return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+    };
+    ResourceGroupGroup.prototype.GetMostRecentErrorEvents = function (model, errorOptions) {
+        return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+    };
+    return ResourceGroupGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ResourceGroupGroup = ResourceGroupGroup;
+//# sourceMappingURL=ResourceGroupGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserCacheGroup.js":
+/*!*******************************************!*\
+  !*** ./Scripts/Hub/Api/UserCacheGroup.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserCacheGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var UserCacheGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserCacheGroup, _super);
+    function UserCacheGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserCache') || this;
+        _this.ClearCacheAction = _this.createAction('ClearCache', 'Clear Cache');
+        return _this;
+    }
+    UserCacheGroup.prototype.ClearCache = function (model, errorOptions) {
+        return this.ClearCacheAction.execute(model, errorOptions || {});
+    };
+    return UserCacheGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserCacheGroup = UserCacheGroup;
+//# sourceMappingURL=UserCacheGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserGroup.js":
+/*!**************************************!*\
+  !*** ./Scripts/Hub/Api/UserGroup.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var UserGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserGroup, _super);
+    function UserGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'User') || this;
+        _this.Index = _this.createView('Index');
+        return _this;
+    }
+    return UserGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserGroup = UserGroup;
+//# sourceMappingURL=UserGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserInquiryGroup.js":
+/*!*********************************************!*\
+  !*** ./Scripts/Hub/Api/UserInquiryGroup.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserInquiryGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var UserInquiryGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserInquiryGroup, _super);
+    function UserInquiryGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserInquiry') || this;
+        _this.GetUserAction = _this.createAction('GetUser', 'Get User');
+        _this.GetUserByUserNameAction = _this.createAction('GetUserByUserName', 'Get User By User Name');
+        _this.GetCurrentUserAction = _this.createAction('GetCurrentUser', 'Get Current User');
+        _this.RedirectToAppUser = _this.createView('RedirectToAppUser');
+        return _this;
+    }
+    UserInquiryGroup.prototype.GetUser = function (model, errorOptions) {
+        return this.GetUserAction.execute(model, errorOptions || {});
+    };
+    UserInquiryGroup.prototype.GetUserByUserName = function (model, errorOptions) {
+        return this.GetUserByUserNameAction.execute(model, errorOptions || {});
+    };
+    UserInquiryGroup.prototype.GetCurrentUser = function (errorOptions) {
+        return this.GetCurrentUserAction.execute({}, errorOptions || {});
+    };
+    return UserInquiryGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserInquiryGroup = UserInquiryGroup;
+//# sourceMappingURL=UserInquiryGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UserMaintenanceGroup.js":
+/*!*************************************************!*\
+  !*** ./Scripts/Hub/Api/UserMaintenanceGroup.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserMaintenanceGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var UserMaintenanceGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UserMaintenanceGroup, _super);
+    function UserMaintenanceGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'UserMaintenance') || this;
+        _this.EditUserAction = _this.createAction('EditUser', 'Edit User');
+        _this.GetUserForEditAction = _this.createAction('GetUserForEdit', 'Get User For Edit');
+        return _this;
+    }
+    UserMaintenanceGroup.prototype.EditUser = function (model, errorOptions) {
+        return this.EditUserAction.execute(model, errorOptions || {});
+    };
+    UserMaintenanceGroup.prototype.GetUserForEdit = function (model, errorOptions) {
+        return this.GetUserForEditAction.execute(model, errorOptions || {});
+    };
+    return UserMaintenanceGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UserMaintenanceGroup = UserMaintenanceGroup;
+//# sourceMappingURL=UserMaintenanceGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/UsersGroup.js":
+/*!***************************************!*\
+  !*** ./Scripts/Hub/Api/UsersGroup.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UsersGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var UsersGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(UsersGroup, _super);
+    function UsersGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Users') || this;
+        _this.Index = _this.createView('Index');
+        _this.GetUsersAction = _this.createAction('GetUsers', 'Get Users');
+        _this.GetSystemUsersAction = _this.createAction('GetSystemUsers', 'Get System Users');
+        _this.AddUserAction = _this.createAction('AddUser', 'Add User');
+        return _this;
+    }
+    UsersGroup.prototype.GetUsers = function (errorOptions) {
+        return this.GetUsersAction.execute({}, errorOptions || {});
+    };
+    UsersGroup.prototype.GetSystemUsers = function (model, errorOptions) {
+        return this.GetSystemUsersAction.execute(model, errorOptions || {});
+    };
+    UsersGroup.prototype.AddUser = function (model, errorOptions) {
+        return this.AddUserAction.execute(model, errorOptions || {});
+    };
+    return UsersGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.UsersGroup = UsersGroup;
+//# sourceMappingURL=UsersGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/VerifyLoginForm.js":
+/*!********************************************!*\
+  !*** ./Scripts/Hub/Api/VerifyLoginForm.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.VerifyLoginForm = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+// Generated code
+var BaseForm_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Forms/BaseForm */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseForm.js");
+var VerifyLoginForm = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(VerifyLoginForm, _super);
+    function VerifyLoginForm(view) {
+        var _this = _super.call(this, 'VerifyLoginForm', view) || this;
+        _this.UserName = _this.addTextInputFormGroup('UserName', _this.view.UserName);
+        _this.Password = _this.addTextInputFormGroup('Password', _this.view.Password);
+        _this.UserName.setCaption('User Name');
+        _this.UserName.constraints.mustNotBeNull();
+        _this.UserName.constraints.mustNotBeWhitespace('Must not be blank');
+        _this.UserName.setMaxLength(100);
+        _this.Password.setCaption('Password');
+        _this.Password.constraints.mustNotBeNull();
+        _this.Password.constraints.mustNotBeWhitespace('Must not be blank');
+        _this.Password.setMaxLength(100);
+        _this.Password.protect();
+        return _this;
+    }
+    return VerifyLoginForm;
+}(BaseForm_1.BaseForm));
+exports.VerifyLoginForm = VerifyLoginForm;
+//# sourceMappingURL=VerifyLoginForm.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/VerifyLoginFormView.js":
+/*!************************************************!*\
+  !*** ./Scripts/Hub/Api/VerifyLoginFormView.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.VerifyLoginFormView = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+// Generated code
+var BaseFormView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Forms/BaseFormView */ "../../../../Published/Development/Packages/Shared/Current/npm/Forms/BaseFormView.js");
+var VerifyLoginFormView = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(VerifyLoginFormView, _super);
+    function VerifyLoginFormView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.UserName = _this.addInputFormGroup();
+        _this.Password = _this.addInputFormGroup();
+        return _this;
+    }
+    return VerifyLoginFormView;
+}(BaseFormView_1.BaseFormView));
+exports.VerifyLoginFormView = VerifyLoginFormView;
+//# sourceMappingURL=VerifyLoginFormView.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/VersionGroup.js":
+/*!*****************************************!*\
+  !*** ./Scripts/Hub/Api/VersionGroup.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.VersionGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var VersionGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(VersionGroup, _super);
+    function VersionGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Version') || this;
+        _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
+        _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');
+        return _this;
+    }
+    VersionGroup.prototype.GetVersion = function (model, errorOptions) {
+        return this.GetVersionAction.execute(model, errorOptions || {});
+    };
+    VersionGroup.prototype.GetResourceGroup = function (model, errorOptions) {
+        return this.GetResourceGroupAction.execute(model, errorOptions || {});
+    };
+    return VersionGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.VersionGroup = VersionGroup;
+//# sourceMappingURL=VersionGroup.js.map
+
+/***/ }),
+
 /***/ "./Scripts/Hub/Apis.js":
 /*!*****************************!*\
   !*** ./Scripts/Hub/Apis.js ***!
@@ -42371,9 +46015,9 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Apis = void 0;
-var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/AppApiFactory */ "../../../../Published/Development/Packages/Shared/Current/npm/AppApiFactory.js");
+var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiFactory */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiFactory.js");
 var ModalErrorComponent_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Error/ModalErrorComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js");
-var HubAppApi_1 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module '../Hub/Api/HubAppApi'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var HubAppApi_1 = __webpack_require__(/*! ../Hub/Api/HubAppApi */ "./Scripts/Hub/Api/HubAppApi.js");
 var Apis = /** @class */ (function () {
     function Apis(modalError) {
         this.modalError = new ModalErrorComponent_1.ModalErrorComponent(modalError);
@@ -42402,7 +46046,7 @@ exports.LoginComponent = exports.LoginResult = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var AsyncCommand_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Command/AsyncCommand */ "../../../../Published/Development/Packages/Shared/Current/npm/Command/AsyncCommand.js");
 var UrlBuilder_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
-var VerifyLoginForm_1 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module '../Api/VerifyLoginForm'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var VerifyLoginForm_1 = __webpack_require__(/*! ../Api/VerifyLoginForm */ "./Scripts/Hub/Api/VerifyLoginForm.js");
 var MessageAlert_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MessageAlert */ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlert.js");
 var LoginResult = /** @class */ (function () {
     function LoginResult(token) {
@@ -42512,7 +46156,7 @@ var Block_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Html/Block */ 
 var MarginCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MarginCss */ "../../../../Published/Development/Packages/Shared/Current/npm/MarginCss.js");
 var MessageAlertView_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/MessageAlertView */ "../../../../Published/Development/Packages/Shared/Current/npm/MessageAlertView.js");
 var TextCss_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/TextCss */ "../../../../Published/Development/Packages/Shared/Current/npm/TextCss.js");
-var VerifyLoginFormView_1 = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module '../Api/VerifyLoginFormView'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var VerifyLoginFormView_1 = __webpack_require__(/*! ../Api/VerifyLoginFormView */ "./Scripts/Hub/Api/VerifyLoginFormView.js");
 var LoginComponentView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(LoginComponentView, _super);
     function LoginComponentView() {
@@ -42855,6 +46499,19 @@ module.exports = code;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.html":
+/*!*****************************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownComponent.html ***!
+  \*****************************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<!-- ko with: button -->\r\n<button data-bind=\"\r\n        dropdown: $data,\r\n        attr: {\r\n            'class': css,\r\n            title: title,\r\n            id: id,\r\n            name: name\r\n        },\r\n        enable: isEnabled\" class=\"dropdown-toggle\" type=\"button\" data-bs-toggle=\"dropdown\" data-toggle=\"dropdown\" aria-expanded=\"false\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</button>\r\n<!-- /ko -->\r\n<!-- ko with: menu -->\r\n<!-- ko if: hasItems -->\r\n<ul data-bind=\"\r\n    attr: { 'class': css, title: title, id: id, name: name },\r\n    foreach: items,\r\n    delegatedEvent: { event: 'click', selector: 'li', callback: click }\r\n\" class=\"dropdown-menu dropdown-menu-right\">\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n</ul>\r\n<!-- /ko -->\r\n<!-- /ko -->\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.html":
 /*!*********************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/FaIcon.html ***!
@@ -42902,6 +46559,19 @@ module.exports = code;
 
 // Module
 var code = "<!-- ko if: isVisible -->\r\n<button data-bind=\"\r\n        attr: { \r\n            type: type, \r\n            'class': css, \r\n            title: title, \r\n            id: id, \r\n            name: name\r\n        }, \r\n        click: click,\r\n        enable: isEnabled\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</button>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Form.html":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Form.html ***!
+  \************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<!-- ko if: isVisible -->\r\n<form data-bind=\"attr: { \r\n      'class': css, \r\n      title: title, \r\n      id: id, \r\n      name: name,\r\n      autocomplete: autocomplete,\r\n      action: action,\r\n      method: method\r\n    }, submit: submit\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</form>\r\n<!-- /ko -->";
 // Exports
 module.exports = code;
 
@@ -42959,6 +46629,19 @@ module.exports = code;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.html":
+/*!*************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Input.html ***!
+  \*************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<input data-bind=\"attr: {\r\n            type: type,\r\n            id: name,\r\n            name: name,\r\n            maxLength: maxLength,\r\n            autocomplete: autocomplete,\r\n            'class': css\r\n        },\r\n        visible: isVisible,\r\n        enable: isEnabled,\r\n        hasFocus: hasFocus,\r\n        textInput: value\">";
+// Exports
+module.exports = code;
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.html":
 /*!*************************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Label.html ***!
@@ -43006,6 +46689,19 @@ module.exports = code;
 
 // Module
 var code = "<!-- ko if: isVisible -->\r\n<li data-bind=\"attr: { 'class': css, title: title, id: id, name: name }\">\r\n    <!-- ko with: content -->\r\n    <!-- ko component: { name: componentName, params: $data } --><!-- /ko -->\r\n    <!-- /ko -->\r\n</li>\r\n<!-- /ko -->";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.html":
+/*!**************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Html/Select.html ***!
+  \**************************************************************************************/
+/***/ ((module) => {
+
+// Module
+var code = "<select data-bind=\"\r\n    attr: {\r\n        id: name,\r\n        name: name,\r\n        'class': css\r\n    },\r\n    visible: isVisible,\r\n    enable: isEnabled,\r\n    value: value,\r\n    options: items,\r\n    optionsValue: itemsValue(),\r\n    optionsText: itemsText(),\r\n    optionsCaption: itemsCaption\" class=\"form-control\"></select>";
 // Exports
 module.exports = code;
 

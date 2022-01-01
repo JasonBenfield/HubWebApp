@@ -1,4 +1,4 @@
-﻿import { AppApiFactory } from "@jasonbenfield/sharedwebapp/AppApiFactory";
+﻿import { AppApiFactory } from "@jasonbenfield/sharedwebapp/Api/AppApiFactory";
 import { ModalErrorComponent } from "@jasonbenfield/sharedwebapp/Error/ModalErrorComponent";
 import { ModalErrorComponentView } from "@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView";
 import { HubAppApi } from "../Hub/Api/HubAppApi";

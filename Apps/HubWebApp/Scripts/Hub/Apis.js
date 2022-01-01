@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Apis = void 0;
-var AppApiFactory_1 = require("@jasonbenfield/sharedwebapp/AppApiFactory");
+var AppApiFactory_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiFactory");
 var ModalErrorComponent_1 = require("@jasonbenfield/sharedwebapp/Error/ModalErrorComponent");
 var HubAppApi_1 = require("../Hub/Api/HubAppApi");
 var Apis = /** @class */ (function () {

@@ -1,6 +1,6 @@
 // Generated Code
 namespace XTI_HubAppClient;
-public sealed partial class GetUnassignedRolesRequest
+public sealed partial class UserModifierKey
 {
     public int UserID { get; set; }
 

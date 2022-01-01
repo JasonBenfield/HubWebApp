@@ -1,4 +1,5 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
@@ -13,7 +14,7 @@ export class ModCategoryComponent {
         private readonly view: ModCategoryComponentView
     ) {
         new TextBlock('Modifier Category', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
+        this.alert = new CardAlert(this.view.alert).alert;
         this.modCategoryName = new TextBlock('', this.view.modCategoryName);
     }
 

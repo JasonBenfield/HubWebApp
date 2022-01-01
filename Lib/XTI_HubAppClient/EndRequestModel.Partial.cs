@@ -1,13 +1,12 @@
 ﻿using XTI_TempLog.Abstractions;
 
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+
+partial class EndRequestModel : IEndRequestModel
 {
-    partial class EndRequestModel : IEndRequestModel
+    public EndRequestModel(IEndRequestModel source)
     {
-        public EndRequestModel(IEndRequestModel source)
-        {
-            RequestKey = source.RequestKey;
-            TimeEnded = source.TimeEnded;
-        }
+        RequestKey = source.RequestKey;
+        TimeEnded = source.TimeEnded;
     }
 }

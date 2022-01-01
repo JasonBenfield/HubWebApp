@@ -31,7 +31,7 @@ public sealed class GetUserModifierCategoriesAction : AppAction<int, UserModifie
             var modifierModels = new List<ModifierModel>();
             foreach (var modifier in modifiers)
             {
-                var assignedRoles = await user.AssignedRoles(modifier);
+                var assignedRoles = await user.Modifier(modifier).AssignedRoles();
                 if (assignedRoles.Any() && !assignedRoles.Any(r => r.ID.Equals(denyAccessRole.ID)))
                 {
                     modifierModels.Add(modifier.ToModel());

@@ -9,7 +9,7 @@ var MostRecentErrorEventListCardView = /** @class */ (function (_super) {
     function MostRecentErrorEventListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.errorEvents = _this.addUnorderedListGroup(function () { return new EventListItemView_1.EventListItemView(); });
         return _this;
     }

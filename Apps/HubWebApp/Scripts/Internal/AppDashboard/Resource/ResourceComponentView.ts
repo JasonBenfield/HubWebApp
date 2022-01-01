@@ -1,4 +1,5 @@
-﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
+﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
+import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
@@ -8,7 +9,7 @@ import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 
 export class ResourceComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
-    readonly alert: MessageAlertView;
+    readonly alert: CardAlertView;
     readonly resourceName: TextSpanView;
     readonly resultType: TextSpanView;
     private readonly anonListItem: ListItem;
@@ -16,7 +17,7 @@ export class ResourceComponentView extends CardView {
     constructor() {
         super();
         this.titleHeader = this.addCardTitleHeader();
-        this.alert = this.addCardAlert().alert;
+        this.alert = this.addCardAlert();
         let listGroup = this.addUnorderedListGroup();
         let listItem = new ListItem();
         listGroup.addItem(listItem);

@@ -10,6 +10,6 @@ internal static class AppUserExtensions
         services.AddScoped<IndexAction>();
         services.AddScoped<GetUserModifierCategoriesAction>();
         services.AddScoped<GetUnassignedRolesAction>();
-        services.AddScoped<GetUserRolesAction>();
+        services.AddScoped<GetUserAccessAction>();
     }
 }

@@ -9,7 +9,7 @@ var ModifierListCardView = /** @class */ (function (_super) {
     function ModifierListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();
-        _this.alert = _this.addCardAlert().alert;
+        _this.alert = _this.addCardAlert();
         _this.modifiers = _this.addBlockListGroup(function () { return new ModifierListItemView_1.ModifierListItemView(); });
         return _this;
     }

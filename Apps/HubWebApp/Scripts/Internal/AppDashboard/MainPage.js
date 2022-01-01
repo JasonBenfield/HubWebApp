@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
-var WebPage_1 = require("@jasonbenfield/sharedwebapp/WebPage");
-var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/XtiUrl");
+var WebPage_1 = require("@jasonbenfield/sharedwebapp/Api/WebPage");
+var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/Api/XtiUrl");
 var Apis_1 = require("../../Hub/Apis");
 var AppDetailPanel_1 = require("./AppDetail/AppDetailPanel");
 var MainPageView_1 = require("./MainPageView");
