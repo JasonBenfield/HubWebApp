@@ -40,7 +40,7 @@ public sealed class NewVersionCommand : VersionCommand
         {
             throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
         }
-        var version = await appFactory.Apps.StartNewVersion(options.AppKey(), versionType, clock.Now());
+        var version = await appFactory.Apps.StartNewVersion(options.AppKey(), options.Domain, versionType, clock.Now());
         var gitVersion = new XtiGitVersion(version.Type().DisplayText, version.Key().Value);
         await gitHubRepo.CreateNewVersion(gitVersion);
         var newVersionBranchName = gitVersion.BranchName();

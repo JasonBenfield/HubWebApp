@@ -21,7 +21,14 @@ public sealed class AddSystemUserAction : AppAction<AddSystemUserRequest, AppUse
     public async Task<AppUserModel> Execute(AddSystemUserRequest model)
     {
         var hashedPassword = hashedPasswordFactory.Create(model.Password);
-        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser(model.AppKey, model.MachineName, hashedPassword, clock.Now());
+        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
+        (
+            model.AppKey, 
+            model.MachineName,
+            model.Domain, 
+            hashedPassword, 
+            clock.Now()
+        );
         return systemUser.ToModel();
     }
 }

@@ -29,7 +29,7 @@ public sealed class InstallLocationRepository
                 .InstallLocations
                 .Create(location);
         }
-        return appFactory.InstallLocation(location);
+        return appFactory.CreateInstallLocation(location);
     }
 
     public async Task<InstallLocation> Location(string qualifiedMachineName)
@@ -42,6 +42,6 @@ public sealed class InstallLocationRepository
         {
             throw new Exception($"Install location '{qualifiedMachineName}' was not found");
         }
-        return appFactory.InstallLocation(location);
+        return appFactory.CreateInstallLocation(location);
     }
 }

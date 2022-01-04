@@ -19,6 +19,15 @@ interface ILoginCredentials {
 interface ILoginResult {
 	Token: string;
 }
+interface IExternalLoginRequest {
+	ExternalUserKey: string;
+	StartUrl: string;
+	ReturnUrl: string;
+}
+interface IRegisterUserAuthenticatorRequest {
+	UserID: number;
+	ExternalUserKey: string;
+}
 interface ILogBatchModel {
 	StartSessions: IStartSessionModel[];
 	StartRequests: IStartRequestModel[];
@@ -65,11 +74,25 @@ interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: Date;
 }
+interface IGetAppDomainRequest {
+	AppName: string;
+	Version: string;
+}
+interface IAppWithModKeyModel {
+	App: IAppModel;
+	ModKey: string;
+}
 interface IAppModel {
 	ID: number;
 	Type: IAppType;
 	AppName: string;
 	Title: string;
+}
+interface IGetAppByIDRequest {
+	AppID: number;
+}
+interface IGetAppByAppKeyRequest {
+	AppKey: IAppKey;
 }
 interface IAppKey {
 	Name: IAppName;
@@ -120,6 +143,7 @@ interface IModifierModel {
 }
 interface IRegisterAppRequest {
 	Versions: IAppVersionModel[];
+	Domain: string;
 	VersionKey: string;
 	AppTemplate: IAppApiTemplateModel;
 }
@@ -160,6 +184,7 @@ interface IAppVersionKey {
 }
 interface IAddSystemUserRequest {
 	AppKey: IAppKey;
+	Domain: string;
 	MachineName: string;
 	Password: string;
 }
@@ -187,6 +212,7 @@ interface IInstalledRequest {
 }
 interface INewVersionRequest {
 	AppKey: IAppKey;
+	Domain: string;
 	VersionType: IAppVersionType;
 }
 interface IPublishVersionRequest {
@@ -249,6 +275,8 @@ interface IGetModCategoryModifierRequest {
 interface IAddUserModel {
 	UserName: string;
 	Password: string;
+	PersonName: string;
+	Email: string;
 }
 interface IRedirectToAppUserRequest {
 	AppID: number;

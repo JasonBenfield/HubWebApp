@@ -26,14 +26,14 @@ public sealed class AppEventRepository
             Detail = detail
         };
         await factory.DB.Events.Create(record);
-        return factory.Event(record);
+        return factory.CreateEvent(record);
     }
 
     internal Task<AppEvent[]> RetrieveByRequest(AppRequest request)
     {
         return factory.DB.Events.Retrieve()
             .Where(e => e.RequestID == request.ID.Value)
-            .Select(e => factory.Event(e))
+            .Select(e => factory.CreateEvent(e))
             .ToArrayAsync();
     }
 
@@ -103,7 +103,7 @@ public sealed class AppEventRepository
             )
             .OrderByDescending(evt => evt.TimeOccurred)
             .Take(howMany)
-            .Select(evt => factory.Event(evt))
+            .Select(evt => factory.CreateEvent(evt))
             .ToArrayAsync();
 
 }

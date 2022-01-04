@@ -236,6 +236,7 @@ internal sealed class PermanentLogTest
         var version = await appFactory.Apps.StartNewVersion
         (
             new AppKey(new AppName("Fake"), AppType.Values.WebApp),
+            "fake.example.com",
             AppVersionType.Values.Major,
             DateTime.Now
         );

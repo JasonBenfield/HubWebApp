@@ -3,44 +3,48 @@ namespace XTI_HubAppClient;
 public sealed partial class HubAppClient : AppClient
 {
     public const string DefaultVersion = "V1169";
-    public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, string baseUrl, string version = DefaultVersion) : base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
+    public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, AppClientUrl clientUrl, string version = DefaultVersion) : base(httpClientFactory, clientUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
     {
         xtiToken = tokenFactory.Create(this);
-        User = new UserGroup(httpClientFactory, xtiToken, url);
+        User = new UserGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(User);
-        UserCache = new UserCacheGroup(httpClientFactory, xtiToken, url);
+        UserCache = new UserCacheGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(UserCache);
-        Auth = new AuthGroup(httpClientFactory, xtiToken, url);
+        Auth = new AuthGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Auth);
-        AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, url);
+        AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(AuthApi);
-        PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, url);
+        ExternalAuth = new ExternalAuthGroup(httpClientFactory, xtiToken, clientUrl);
+        SetJsonSerializerOptions(ExternalAuth);
+        Authenticators = new AuthenticatorsGroup(httpClientFactory, xtiToken, clientUrl);
+        SetJsonSerializerOptions(Authenticators);
+        PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(PermanentLog);
-        Apps = new AppsGroup(httpClientFactory, xtiToken, url);
+        Apps = new AppsGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Apps);
-        App = new AppGroup(httpClientFactory, xtiToken, url);
+        App = new AppGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(App);
-        Install = new InstallGroup(httpClientFactory, xtiToken, url);
+        Install = new InstallGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Install);
-        Publish = new PublishGroup(httpClientFactory, xtiToken, url);
+        Publish = new PublishGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Publish);
-        Version = new VersionGroup(httpClientFactory, xtiToken, url);
+        Version = new VersionGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Version);
-        ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
+        ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(ResourceGroup);
-        Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
+        Resource = new ResourceGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Resource);
-        ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, url);
+        ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(ModCategory);
-        Users = new UsersGroup(httpClientFactory, xtiToken, url);
+        Users = new UsersGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(Users);
-        UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, url);
+        UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(UserInquiry);
-        AppUser = new AppUserGroup(httpClientFactory, xtiToken, url);
+        AppUser = new AppUserGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(AppUser);
-        AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, url);
+        AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(AppUserMaintenance);
-        UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
+        UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, clientUrl);
         SetJsonSerializerOptions(UserMaintenance);
     }
 
@@ -51,6 +55,10 @@ public sealed partial class HubAppClient : AppClient
     public AuthGroup Auth { get; }
 
     public AuthApiGroup AuthApi { get; }
+
+    public ExternalAuthGroup ExternalAuth { get; }
+
+    public AuthenticatorsGroup Authenticators { get; }
 
     public PermanentLogGroup PermanentLog { get; }
 

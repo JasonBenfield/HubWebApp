@@ -36,7 +36,7 @@ internal sealed class AllowAccessTest
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                await tester.FakeHubAppModifier(),
+                tester.FakeHubAppModifier(),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser
             );
@@ -51,7 +51,7 @@ internal sealed class AllowAccessTest
         var hubApp = await tester.HubApp();
         var denyAccessRole = await hubApp.Role(AppRoleName.DenyAccess);
         var modifier = await tester.HubAppModifier();
-        await user.Modifier(modifier).AddRole(denyAccessRole);
+        await user.Modifier(modifier).AssignRole(denyAccessRole);
         var request = new UserModifierKey
         {
             UserID = user.ID.Value,
@@ -76,7 +76,7 @@ internal sealed class AllowAccessTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {

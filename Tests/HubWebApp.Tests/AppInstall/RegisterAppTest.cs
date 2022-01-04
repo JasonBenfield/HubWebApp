@@ -303,7 +303,7 @@ public sealed class RegisterAppTest
         Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }
 
-    private async Task<HubActionTester<RegisterAppRequest, EmptyActionResult>> setup()
+    private async Task<HubActionTester<RegisterAppRequest, AppWithModKeyModel>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

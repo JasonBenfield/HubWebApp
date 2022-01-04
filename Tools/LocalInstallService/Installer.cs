@@ -23,9 +23,10 @@ sealed class Installer
                 var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
                 var appName = context.Request.Form["appName"].FirstOrDefault() ?? "";
                 var appType = context.Request.Form["appType"].FirstOrDefault() ?? "";
-                var systemUserName = context.Request.Form["systemUserName"].FirstOrDefault() ?? "";
-                var systemPassword = context.Request.Form["systemPassword"].FirstOrDefault() ?? "";
+                var installationUserName = context.Request.Form["installationUserName"].FirstOrDefault() ?? "";
+                var installationPassword = context.Request.Form["installationPassword"].FirstOrDefault() ?? "";
                 var versionKey = context.Request.Form["versionKey"].FirstOrDefault() ?? "";
+                var domain = context.Request.Form["domain"].FirstOrDefault() ?? "";
                 var repoOwner = context.Request.Form["repoOwner"].FirstOrDefault() ?? "";
                 var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
                 var release = context.Request.Form["release"].FirstOrDefault() ?? "";
@@ -36,7 +37,8 @@ sealed class Installer
                 args.Append($"--environment {envName}");
                 args.Append($" --AppName {appName} --AppType {appType}");
                 args.Append($" --VersionKey {versionKey}");
-                args.Append($" --SystemUserName {systemUserName} --SystemPassword {systemPassword}");
+                args.Append($" --InstallationUserName {installationUserName} --InstallationPassword {installationPassword}");
+                args.Append($" --Domain {domain}");
                 args.Append($" --RepoOwner {repoOwner} --RepoName {repoName}");
                 args.Append($" --Release {release}");
                 args.Append($" --MachineName {machineName}");

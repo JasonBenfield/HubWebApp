@@ -6,5 +6,6 @@ internal sealed class InstallOptions
     public string AppType { get; set; } = "";
     public string RepoOwner { get; set; } = "";
     public string RepoName { get; set; } = "";
+    public string Domain { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
 }

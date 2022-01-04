@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class PublishGroup : AppClientGroup
 {
-    public PublishGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl) : base(httpClientFactory, xtiToken, baseUrl, "Publish")
+    public PublishGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, AppClientUrl clientUrl) : base(httpClientFactory, xtiToken, clientUrl, "Publish")
     {
     }
 

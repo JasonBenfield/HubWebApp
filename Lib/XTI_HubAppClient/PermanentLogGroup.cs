@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class PermanentLogGroup : AppClientGroup
 {
-    public PermanentLogGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl) : base(httpClientFactory, xtiToken, baseUrl, "PermanentLog")
+    public PermanentLogGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, AppClientUrl clientUrl) : base(httpClientFactory, xtiToken, clientUrl, "PermanentLog")
     {
     }
 

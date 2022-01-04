@@ -17,7 +17,7 @@ public sealed class InstallationRepository
             .Installations
             .Retrieve()
             .Where(inst => inst.ID == installationID)
-            .Select(inst => appFactory.Installation(inst))
+            .Select(inst => appFactory.CreateInstallation(inst))
             .SingleAsync();
 
     internal Task<bool> HasCurrentInstallation(InstallLocation location, App app)

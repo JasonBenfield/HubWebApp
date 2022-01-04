@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
+using System.Security.Claims;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
@@ -79,7 +80,26 @@ internal sealed class LoginTest
     }
 
     [Test]
-    public async Task ShouldAuthenticateSession()
+    public async Task ShouldAuthenticateUser()
+    {
+        var tester = await setup();
+        var model = createLoginModel();
+        await tester.Execute(model);
+        var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
+        Assert.That
+        (
+            access.Claims,
+            Has.One.EqualTo
+            (
+                new Claim("UserName", new AppUserName(model.Credentials.UserName).Value)
+            )
+            .Using<Claim>((x, y) => x.Type == y.Type && x.Value == y.Value),
+            "Should authenticate user"
+        );
+    }
+
+    [Test]
+    public async Task ShouldAuthenticateTempLogSession()
     {
         var tester = await setup();
         var model = createLoginModel();
@@ -143,7 +163,7 @@ internal sealed class LoginTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {

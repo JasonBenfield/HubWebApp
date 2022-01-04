@@ -48,6 +48,7 @@ internal sealed class ManageVersionTester
         (
             HubInfo.AppKey.Name.Value,
             HubInfo.AppKey.Type.DisplayText,
+            "",
             AppVersionType.Values.Patch.DisplayText,
             "JasonBenfield",
             "XTI_App"

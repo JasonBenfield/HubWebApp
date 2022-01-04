@@ -15,12 +15,12 @@ public sealed class AppRegistration
         this.clock = clock;
     }
 
-    public async Task Run(AppApiTemplateModel template, AppVersionKey versionKey, AppVersionModel[] versions)
+    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey, AppVersionModel[] versions)
     {
         await appFactory.Users.AddAnonIfNotExists(clock.Now());
         await tryAddUnknownApp();
         var appKey = template.AppKey;
-        var app = await appFactory.Apps.AddOrUpdate(appKey, clock.Now());
+        var app = await appFactory.Apps.AddOrUpdate(appKey, domain, clock.Now());
         foreach (var versionModel in versions)
         {
             await app.AddVersionIfNotFound
@@ -42,13 +42,14 @@ public sealed class AppRegistration
         {
             await updateResourceGroupFromTemplate(app, version, groupTemplate);
         }
-        await addAppModifier(appKey, app);
+        var modifier = await addAppModifier(appKey, app);
         await addManageCacheRoleToHubSystemUsers(app);
+        return new AppWithModKeyModel(app.ToAppModel(), modifier.ModKey().Value);
     }
 
     private async Task tryAddUnknownApp()
     {
-        var app = await appFactory.Apps.AddOrUpdate(AppKey.Unknown, clock.Now());
+        var app = await appFactory.Apps.AddOrUpdate(AppKey.Unknown, "", clock.Now());
         var currentVersion = await app.CurrentVersion();
         var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
@@ -104,7 +105,7 @@ public sealed class AppRegistration
         return roles;
     }
 
-    private async Task addAppModifier(AppKey appKey, App app)
+    private async Task<Modifier> addAppModifier(AppKey appKey, App app)
     {
         var hubApp = await appFactory.Apps.App(HubInfo.AppKey);
         var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
@@ -113,26 +114,18 @@ public sealed class AppRegistration
         var hubAdminRole = await hubApp.Role(AppRoleName.Admin);
         foreach (var systemUser in systemUsers)
         {
-            var assignedRoles = await systemUser.Modifier(appModifier).AssignedRoles();
-            if (!assignedRoles.Any(r => r.ID.Equals(hubAdminRole.ID)))
-            {
-                await systemUser.Modifier(appModifier).AddRole(hubAdminRole);
-            }
+            await systemUser.Modifier(appModifier).AssignRole(hubAdminRole);
         }
+        return appModifier;
     }
 
     private async Task addManageCacheRoleToHubSystemUsers(App app)
     {
-        var defaultModifier = await app.DefaultModifier();
         var hubSystemUsers = await appFactory.SystemUsers.SystemUsers(HubInfo.AppKey);
         var manageCacheRole = await app.AddRoleIfNotFound(AppRoleName.ManageUserCache);
         foreach (var hubSystemUser in hubSystemUsers)
         {
-            var assignedRoles = await hubSystemUser.Modifier(defaultModifier).AssignedRoles();
-            if (!assignedRoles.Any(r => r.ID.Equals(manageCacheRole.ID)))
-            {
-                await hubSystemUser.AddRole(manageCacheRole);
-            }
+            await hubSystemUser.AssignRole(manageCacheRole);
         }
     }
 }

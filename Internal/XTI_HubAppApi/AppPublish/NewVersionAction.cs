@@ -20,6 +20,7 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, AppVersionMo
         var version = await appFactory.Apps.StartNewVersion
         (
             model.AppKey,
+            model.Domain,
             model.VersionType,
             clock.Now()
         );

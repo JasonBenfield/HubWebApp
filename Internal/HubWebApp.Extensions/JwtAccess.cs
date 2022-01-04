@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using XTI_HubAppApi.Auth;
+using XTI_HubAppApi;
 using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions;

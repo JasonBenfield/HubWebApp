@@ -7,6 +7,7 @@ internal static class AppInstallExtensions
 {
     public static void AddAppInstallGroupServices(this IServiceCollection services)
     {
+        services.AddScoped<AddSystemUserValidation>();
         services.AddScoped<AddSystemUserAction>();
         services.AddScoped<BeginCurrentInstallationAction>();
         services.AddScoped<BeginVersionInstallationAction>();

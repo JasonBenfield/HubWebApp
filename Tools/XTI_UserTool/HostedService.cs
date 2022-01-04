@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using XTI_App.Abstractions;
+using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub;
@@ -31,6 +32,10 @@ internal sealed class HostedService : IHostedService
             else if (userOptions.Command.Equals("systemUser", StringComparison.OrdinalIgnoreCase))
             {
                 await addSystemUser(scope.ServiceProvider, userOptions);
+            }
+            else if (userOptions.Command.Equals("installationUser", StringComparison.OrdinalIgnoreCase))
+            {
+                await addInstallationUser(scope.ServiceProvider, userOptions);
             }
             else if (userOptions.Command.Equals("userroles", StringComparison.OrdinalIgnoreCase))
             {
@@ -63,7 +68,7 @@ internal sealed class HostedService : IHostedService
         string password;
         if (string.IsNullOrWhiteSpace(userOptions.Password))
         {
-            password = Guid.NewGuid().ToString("N") + "!?";
+            password = generatePassword();
         }
         else
         {
@@ -87,11 +92,10 @@ internal sealed class HostedService : IHostedService
     {
         if (string.IsNullOrWhiteSpace(userOptions.AppName)) { throw new ArgumentException("App name is required"); }
         if (string.IsNullOrWhiteSpace(userOptions.AppType)) { throw new ArgumentException("App type is required"); }
-        if (string.IsNullOrWhiteSpace(userOptions.MachineName)) { throw new ArgumentException("Machine name is required"); }
         string password;
         if (string.IsNullOrWhiteSpace(userOptions.Password))
         {
-            password = Guid.NewGuid().ToString("N") + "!?";
+            password = generatePassword();
         }
         else
         {
@@ -102,12 +106,73 @@ internal sealed class HostedService : IHostedService
             new AppName(userOptions.AppName),
             AppType.Values.Value(userOptions.AppType)
         );
+        if(appKey.Type.Equals(AppType.Values.WebApp) && string.IsNullOrWhiteSpace(userOptions.Domain))
+        {
+            throw new Exception($"Domain is required when app is a web app");
+        }
         var appFactory = sp.GetRequiredService<AppFactory>();
         var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
         var clock = sp.GetRequiredService<IClock>();
         var hashedPassword = hashedPasswordFactory.Create(password);
-        await appFactory.SystemUsers.AddOrUpdateSystemUser(appKey, "", hashedPassword, clock.Now());
+        var machineName = string.IsNullOrWhiteSpace(userOptions.MachineName)
+            ? Environment.MachineName
+            : userOptions.MachineName;
+        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
+        (
+            appKey, 
+            machineName, 
+            userOptions.Domain, 
+            hashedPassword, 
+            clock.Now()
+        );
+        if (string.IsNullOrWhiteSpace(userOptions.MachineName))
+        {
+            var credentials = sp.GetRequiredService<SystemUserCredentials>();
+            await credentials.Update
+            (
+                new CredentialValue
+                (
+                    systemUser.UserName().Value,
+                    password
+                )
+            );
+        }
     }
+
+    private static async Task addInstallationUser(IServiceProvider sp, UserOptions userOptions)
+    {
+        string password;
+        if (string.IsNullOrWhiteSpace(userOptions.Password))
+        {
+            password = generatePassword();
+        }
+        else
+        {
+            password = userOptions.Password;
+        }
+        var appFactory = sp.GetRequiredService<AppFactory>();
+        var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
+        var clock = sp.GetRequiredService<IClock>();
+        var hashedPassword = hashedPasswordFactory.Create(password);
+        var machineName = string.IsNullOrWhiteSpace(userOptions.MachineName)
+            ? Environment.MachineName
+            : userOptions.MachineName;
+        var installationUser = await appFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
+        if (string.IsNullOrWhiteSpace(userOptions.MachineName))
+        {
+            var credentials = sp.GetRequiredService<SystemUserCredentials>();
+            await credentials.Update
+            (
+                new CredentialValue
+                (
+                    installationUser.UserName().Value,
+                    password
+                )
+            );
+        }
+    }
+
+    private static string generatePassword() => Guid.NewGuid().ToString("N") + "!?";
 
     private static async Task addUserRoles(IServiceProvider sp, UserOptions userOptions)
     {
@@ -142,13 +207,9 @@ internal sealed class HostedService : IHostedService
             var modCategory = await app.ModCategory(new ModifierCategoryName(userOptions.ModCategoryName));
             modifier = await modCategory.ModifierByTargetKey(userOptions.ModKey);
         }
-        var userRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
         foreach (var role in roles)
         {
-            if (!userRoles.Any(ur => ur.ID.Equals(role.ID)))
-            {
-                await user.AddRole(role);
-            }
+            await user.Modifier(modifier).AssignRole(role);
         }
     }
 

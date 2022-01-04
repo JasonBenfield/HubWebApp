@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -11,9 +12,10 @@ namespace XTI_HubAppClient.Extensions;
 
 public static class HubClientExtensions
 {
-    public static void AddHubClientServices(this IServiceCollection services)
+    public static void AddHubClientServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient();
+        services.Configure<HubClientOptions>(configuration.GetSection(HubClientOptions.HubClient));
         services.AddScoped(sp =>
         {
             var credentials = sp.GetRequiredService<ISystemUserCredentials>();
@@ -25,16 +27,19 @@ public static class HubClientExtensions
             var xtiTokenFactory = sp.GetRequiredService<XtiTokenFactory>();
             return new CachedXtiTokenFactory(cache, xtiTokenFactory);
         });
+        services.AddSingleton<HubClientOptionsAppClientDomain>();
         services.AddScoped(sp =>
         {
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             var xtiTokenFactory = sp.GetRequiredService<IXtiTokenFactory>();
-            var appOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value;
             var env = sp.GetRequiredService<IHostEnvironment>();
-            var versionKey = env.IsProduction() 
-                ? "" 
-                : XTI_App.Abstractions.AppVersionKey.Current.Value;
-            return new HubAppClient(httpClientFactory, xtiTokenFactory, appOptions.BaseUrl, versionKey);
+            var versionKey = env.IsProduction()
+                ? ""
+                : AppVersionKey.Current.Value;
+            var hubClientOptions = sp.GetRequiredService<IOptions<HubClientOptions>>();
+            var clientDomain = sp.GetRequiredService<HubClientOptionsAppClientDomain>();
+            var clientUrl = new AppClientUrl(clientDomain);
+            return new HubAppClient(httpClientFactory, xtiTokenFactory, clientUrl, versionKey);
         });
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
         services.AddScoped(sp =>

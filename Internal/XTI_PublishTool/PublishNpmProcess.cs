@@ -29,101 +29,120 @@ internal sealed class PublishNpmProcess
         );
         if (Directory.Exists(sourceScriptPath))
         {
-            var tempExportDir = Path.Combine(projectDir, "Exports");
+            var tempExportDir = Path.Combine(new DirectoryInfo(projectDir).Parent?.Parent?.FullName ?? "", "NpmTempExports");
+            var exportScriptDir = Path.Combine(publishDir, "npm");
             if (Directory.Exists(tempExportDir))
             {
                 Directory.Delete(tempExportDir, true);
             }
             var tempExportSrcDir = Path.Combine(tempExportDir, "src");
             var tempExportDistDir = Path.Combine(tempExportDir, "dist");
-            Console.WriteLine($"Copying '{sourceScriptPath}' to '{tempExportSrcDir}'");
-            await new RobocopyProcess(sourceScriptPath, tempExportSrcDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
+            try
+            {
+                Console.WriteLine($"Copying '{sourceScriptPath}' to '{tempExportSrcDir}'");
+                await new RobocopyProcess(sourceScriptPath, tempExportSrcDir)
+                    .CopySubdirectoriesIncludingEmpty()
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .Pattern("*.d.ts")
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
+                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                    .CopySubdirectoriesIncludingEmpty()
+                    .Pattern("*.d.ts")
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .Pattern("*.html")
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
+                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                    .CopySubdirectoriesIncludingEmpty()
+                    .Pattern("*.html")
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .Pattern("*.scss")
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
+                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                    .CopySubdirectoriesIncludingEmpty()
+                    .Pattern("*.scss")
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
 
-            new IndexFile(tempExportSrcDir).Write();
-            File.Copy
-            (
-                Path.Combine(getProjectDir(appKey), "package.json"),
-                Path.Combine(tempExportDistDir, "package.json")
-            );
-            var tsConfigPath = Path.Combine(tempExportSrcDir, "tsConfig.json");
+                new IndexFile(tempExportSrcDir).Write();
+                File.Copy
+                (
+                    Path.Combine(projectDir, "package.json"),
+                    Path.Combine(tempExportSrcDir, "package.json")
+                );
+                Console.WriteLine($"Running npm install at '{tempExportSrcDir}'");
+                var npmProcess = new WinProcess("npm")
+                    .UseArgumentNameDelimiter("")
+                    .AddArgument("install");
+                var npmResult = await new CmdProcess(npmProcess)
+                    .WriteOutputToConsole()
+                    .SetWorkingDirectory(tempExportSrcDir)
+                    .Run();
+                npmResult.EnsureExitCodeIsZero();
+                File.Copy
+                (
+                    Path.Combine(projectDir, "package.json"),
+                    Path.Combine(tempExportDistDir, "package.json")
+                );
+                var tsConfigPath = Path.Combine(tempExportSrcDir, "tsConfig.json");
 
-            var tscProcess = new WinProcess("tsc")
-                .UseArgumentNameDelimiter("-")
-                .AddArgument("p", tsConfigPath)
-                .UseArgumentNameDelimiter("--")
-                .AddArgument("declaration", "true")
-                .AddArgument("outDir", "../dist");
-            var tscResult = await new CmdProcess(tscProcess)
-                .SetWorkingDirectory(tempExportSrcDir)
-                .WriteOutputToConsole()
-                .Run();
-            tscResult.EnsureExitCodeIsZero();
+                Console.WriteLine($"Running tsc at '{tempExportSrcDir}'");
+                var tscProcess = new WinProcess("tsc")
+                    //.UseArgumentNameDelimiter("-")
+                    //.AddArgument("p", tsConfigPath)
+                    .UseArgumentNameDelimiter("--")
+                    .AddArgument("declaration", "true")
+                    .AddArgument("outDir", "../dist");
+                var tscResult = await new CmdProcess(tscProcess)
+                    .SetWorkingDirectory(tempExportSrcDir)
+                    .WriteOutputToConsole()
+                    .Run();
+                tscResult.EnsureExitCodeIsZero();
 
-            File.Delete(Path.Combine(tempExportDistDir, "main.d.ts"));
-            File.Delete(Path.Combine(tempExportDistDir, "_references.d.ts"));
+                File.Delete(Path.Combine(tempExportDistDir, "main.d.ts"));
+                File.Delete(Path.Combine(tempExportDistDir, "_references.d.ts"));
 
-            new IndexDeclarationFile(tempExportDistDir).Write();
+                new IndexDeclarationFile(tempExportDistDir).Write();
 
-            var npmVersionProcess = new WinProcess("npm")
-                .UseArgumentNameDelimiter("")
-                .UseArgumentValueDelimiter(" ")
-                .AddArgument("version", versionNumber);
-            var npmVersionResult = await new CmdProcess(npmVersionProcess)
-                .SetWorkingDirectory(tempExportDistDir)
-                .WriteOutputToConsole()
-                .Run();
-            npmVersionResult.EnsureExitCodeIsZero();
+                var npmVersionProcess = new WinProcess("npm")
+                    .UseArgumentNameDelimiter("")
+                    .UseArgumentValueDelimiter(" ")
+                    .AddArgument("version", versionNumber);
+                var npmVersionResult = await new CmdProcess(npmVersionProcess)
+                    .SetWorkingDirectory(tempExportDistDir)
+                    .WriteOutputToConsole()
+                    .Run();
+                npmVersionResult.EnsureExitCodeIsZero();
 
-            var exportScriptDir = Path.Combine(publishDir, "npm");
-            await new RobocopyProcess(tempExportDistDir, exportScriptDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .Purge()
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
-
-            Directory.Delete(tempExportDir, true);
-
+                await new RobocopyProcess(tempExportDistDir, exportScriptDir)
+                    .CopySubdirectoriesIncludingEmpty()
+                    .Purge()
+                    .NoFileClassLogging()
+                    .NoFileLogging()
+                    .NoDirectoryLogging()
+                    .NoJobHeader()
+                    .NoJobSummary()
+                    .Run();
+            }
+            finally
+            {
+                //Directory.Delete(tempExportDir, true);
+            }
             if (hostEnv.IsProduction())
             {
                 var npmPublishProcess = new WinProcess("npm")

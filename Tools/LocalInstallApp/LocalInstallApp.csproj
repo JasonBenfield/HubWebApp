@@ -12,8 +12,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Abstractions" Version="1.8.11" />
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.11" />
+    <PackageReference Include="XTI_App.Abstractions" Version="1.8.12" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.12" />
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.10.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
@@ -23,6 +23,7 @@
     <PackageReference Include="XTI_Processes" Version="1.1.1" />
     <PackageReference Include="XTI_Git.GitLib" Version="1.2.3" />
     <PackageReference Include="XTI_GitHub.Web" Version="1.2.3" />
+	  <PackageReference Include="XTI_App.Secrets" Version="1.8.12" />
   </ItemGroup>
 
   <ItemGroup>

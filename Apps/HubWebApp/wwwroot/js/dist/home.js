@@ -155,6 +155,145 @@ exports.AlignCss = AlignCss;
 
 /***/ }),
 
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js":
+/*!*******************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppResourceUrl = void 0;
+var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js");
+var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var AppVersionDomain_1 = __webpack_require__(/*! ./AppVersionDomain */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js");
+var AppResourceUrl = /** @class */ (function () {
+    function AppResourceUrl(baseUrl, path, cacheBust) {
+        this.baseUrl = baseUrl;
+        this.path = path;
+        this.cacheBust = cacheBust;
+        this.url = new UrlBuilder_1.UrlBuilder(baseUrl)
+            .addPart(path.format())
+            .addQuery('cacheBust', cacheBust)
+            .url;
+    }
+    AppResourceUrl.app = function (appName, modifier, cacheBust) {
+        var appVersionDomain = new AppVersionDomain_1.AppVersionDomain().value(appName);
+        return new AppResourceUrl("https://" + appVersionDomain.Domain + "/", XtiPath_1.XtiPath.app(appName, appVersionDomain.Version, modifier), cacheBust);
+    };
+    Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
+        get: function () {
+            return new UrlBuilder_1.UrlBuilder("/" + this.path.format());
+        },
+        enumerable: false,
+        configurable: true
+    });
+    AppResourceUrl.prototype.withGroup = function (group) {
+        return new AppResourceUrl(this.baseUrl, this.path.withGroup(group), this.cacheBust);
+    };
+    AppResourceUrl.prototype.withAction = function (action) {
+        return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
+    };
+    AppResourceUrl.prototype.withModifier = function (modifier) {
+        return new AppResourceUrl(this.baseUrl, this.path.withModifier(modifier), this.cacheBust);
+    };
+    AppResourceUrl.prototype.toString = function () {
+        return this.url.value();
+    };
+    return AppResourceUrl;
+}());
+exports.AppResourceUrl = AppResourceUrl;
+//# sourceMappingURL=AppResourceUrl.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppVersionDomain = void 0;
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var AppVersionDomain = /** @class */ (function () {
+    function AppVersionDomain() {
+    }
+    AppVersionDomain.prototype.value = function (app) {
+        var domain = new Enumerable_1.First(new Enumerable_1.FilteredArray(pageContext.WebAppDomains, function (d) { return d.App.toLowerCase() === app.toLowerCase(); })).value();
+        return domain || { App: '', Version: '', Domain: '' };
+    };
+    return AppVersionDomain;
+}());
+exports.AppVersionDomain = AppVersionDomain;
+//# sourceMappingURL=AppVersionDomain.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js":
+/*!************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.XtiPath = void 0;
+var JoinedStrings_1 = __webpack_require__(/*! ../JoinedStrings */ "../../../../Published/Development/Packages/Shared/Current/npm/JoinedStrings.js");
+var XtiPath = /** @class */ (function () {
+    function XtiPath(app, version, group, action, modifier) {
+        this.app = app ? app : '';
+        this.version = version ? version : '';
+        this.group = group ? group : '';
+        this.action = action ? action : '';
+        this.modifier = modifier ? modifier : '';
+        var parts = [this.app, this.version];
+        if (this.group) {
+            parts.push(this.group);
+            if (this.action) {
+                parts.push(this.action);
+                if (this.modifier) {
+                    parts.push(this.modifier);
+                }
+            }
+        }
+        this.value = new JoinedStrings_1.JoinedStrings('/', parts).value();
+    }
+    XtiPath.app = function (appKey, version, modifier) {
+        return new XtiPath(appKey, version, '', '', modifier);
+    };
+    XtiPath.prototype.withGroup = function (group) {
+        return new XtiPath(this.app, this.version, group, '', this.modifier);
+    };
+    XtiPath.prototype.withAction = function (action) {
+        return new XtiPath(this.app, this.version, this.group, action, this.modifier);
+    };
+    XtiPath.prototype.withModifier = function (modifier) {
+        return new XtiPath(this.app, this.version, this.group, this.action, modifier);
+    };
+    XtiPath.prototype.format = function () {
+        return this.value;
+    };
+    XtiPath.prototype.equals = function (other) {
+        if (other) {
+            return this.value === other.value;
+        }
+        return false;
+    };
+    XtiPath.prototype.toString = function () {
+        return this.value;
+    };
+    return XtiPath;
+}());
+exports.XtiPath = XtiPath;
+//# sourceMappingURL=XtiPath.js.map
+
+/***/ }),
+
 /***/ "../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js":
 /*!**********************************************************************************!*\
   !*** ../../../../Published/Development/Packages/Shared/Current/npm/ColumnCss.js ***!
@@ -4047,6 +4186,7 @@ exports.PaddingCss = PaddingCss;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageFrameView = void 0;
 var AlignCss_1 = __webpack_require__(/*! ./AlignCss */ "../../../../Published/Development/Packages/Shared/Current/npm/AlignCss.js");
+var AppResourceUrl_1 = __webpack_require__(/*! ./Api/AppResourceUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js");
 var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
 var DropdownBlock_1 = __webpack_require__(/*! ./Dropdown/DropdownBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.js");
 var ModalErrorComponentView_1 = __webpack_require__(/*! ./Error/ModalErrorComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js");
@@ -4097,7 +4237,8 @@ var PageFrameView = /** @class */ (function () {
         this.logoutMenuItem = dropdown.addLinkItem();
         var logoutTextSpan = this.logoutMenuItem.link.addContent(new TextSpanView_1.TextSpanView());
         logoutTextSpan.setText('Logout');
-        this.logoutMenuItem.link.setHref(pageContext.BaseUrl + "/Hub/Current/Auth/Logout");
+        var logoutUrl = AppResourceUrl_1.AppResourceUrl.app('Hub', '', pageContext.CacheBust).withGroup('Auth').withAction('Logout');
+        this.logoutMenuItem.link.setHref(logoutUrl.url.value());
         this.content = frame.addContent(new Block_1.Block());
         this.content.flexFill();
         this.content.addCssName('h-100');

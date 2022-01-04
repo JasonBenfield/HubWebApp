@@ -7,6 +7,8 @@ public sealed class RegisterAppRequest
 {
     public AppVersionModel[] Versions { get; set; } = new AppVersionModel[0];
 
+    public string Domain { get; set; } = "";
+
     public string VersionKey { get; set; } = "";
 
     public AppApiTemplateModel AppTemplate { get; set; } = new AppApiTemplateModel();

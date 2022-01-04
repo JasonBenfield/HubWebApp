@@ -24,9 +24,9 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
         var existingRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
         foreach(var role in existingRoles)
         {
-            await user.Modifier(modifier).RemoveRole(role);
+            await user.Modifier(modifier).UnassignRole(role);
         }
-        await user.Modifier(modifier).AddRole(denyAccessRole);
+        await user.Modifier(modifier).AssignRole(denyAccessRole);
         return new EmptyActionResult();
     }
 }

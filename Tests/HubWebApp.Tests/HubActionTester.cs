@@ -100,18 +100,23 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             hubApp.ID.Value.ToString(),
             hubApp.Key().Name.DisplayText
         );
-        var fakeApp = FakeHubApp();
-        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Apps);
-        modCategory.AddModifier(hubAppModifier.ID, hubAppModifier.ModKey(), hubApp.ID.Value.ToString());
         return hubAppModifier;
     }
 
-    public async Task<FakeModifier> FakeHubAppModifier()
+    public FakeModifier FakeDefaultModifier()
     {
-        var modifier = await HubAppModifier();
         var fakeApp = FakeHubApp();
-        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Apps);
-        return modCategory.ModifierOrDefault(modifier.ModKey());
+        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Default);
+        return modCategory.ModifierOrDefault(ModifierKey.Default);
+    }
+
+    public FakeModifier FakeHubAppModifier()
+    {
+        var fakeHubApp = FakeHubApp();
+        var modCategory = fakeHubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var appContext = Services.GetRequiredService<FakeAppContext>();
+        var app = appContext.App();
+        return modCategory.ModifierByTargetID(app.ID.Value.ToString());
     }
 
     public Task<TResult> Execute(TModel model) =>

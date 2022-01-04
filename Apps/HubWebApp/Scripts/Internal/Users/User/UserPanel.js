@@ -46,10 +46,7 @@ var UserPanel = /** @class */ (function () {
         this.awaitable = new Awaitable_1.Awaitable();
         this.backCommand = new Command_1.Command(this.back.bind(this));
         this.userComponent = new UserComponent_1.UserComponent(this.hubApi, this.view.userComponent);
-        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (appID) { return _this.hubApi.UserInquiry.RedirectToAppUser.getUrl({
-            AppID: appID,
-            UserID: _this.userID
-        }).toString(); }, this.view.appListCard);
+        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (modKey) { return _this.hubApi.AppUser.Index.getModifierUrl(modKey, _this.userID).toString(); }, this.view.appListCard);
         this.backCommand.add(this.view.backButton);
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
         this.userComponent.editRequested.register(this.onEditRequested.bind(this));

@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Configuration.Extensions;
 using XTI_Credentials;
 using XTI_HubAppClient;
+using XTI_HubAppClient.Extensions;
 using XTI_Secrets;
 using XTI_Secrets.Extensions;
 using XTI_WebAppClient;
@@ -24,12 +24,12 @@ public class EndToEndTest
             UserName = "TestUser1",
             Password = "Password12345"
         };
-        await input.HubClient.Users.AddUser(addUserModel);
+        await input.HubClient.Users.AddOrUpdateUser(addUserModel);
         input.HubClient.ResetToken();
         input.TestCredentials.Source = new SimpleCredentials(new CredentialValue(addUserModel.UserName, addUserModel.Password));
         var ex = Assert.ThrowsAsync<AppClientException>(async () =>
         {
-            await input.HubClient.Users.AddUser(new AddUserModel
+            await input.HubClient.Users.AddOrUpdateUser(new AddUserModel
             {
                 UserName = "TestUser2",
                 Password = "Password12345"
@@ -72,19 +72,7 @@ public class EndToEndTest
                         return new XtiTokenFactory(credentials);
                     });
                     services.AddSingleton<ICredentials, TestCredentials>();
-                    services.AddScoped(sp =>
-                    {
-                        var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-                        var tokenFactory = sp.GetRequiredService<IXtiTokenFactory>();
-                        var appOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value;
-                        return new HubAppClient
-                        (
-                            httpClientFactory,
-                            tokenFactory,
-                            appOptions.BaseUrl,
-                            "Current"
-                        );
-                    });
+                    services.AddHubClientServices(hostContext.Configuration);
                 }
             )
             .Build();

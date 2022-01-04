@@ -17,7 +17,7 @@ public sealed class FakeHubSetup : IAppSetup
 
     public async Task Run(AppVersionKey versionKey)
     {
-        var setup = new DefaultFakeSetup(apiFactory, appContext, "Hub");
+        var setup = new DefaultFakeSetup(apiFactory, appContext);
         await setup.Run(versionKey);
         appContext.SetCurrentApp(setup.App);
     }

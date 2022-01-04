@@ -25,7 +25,7 @@ internal sealed class GetUsersTest
     {
         var hubApiFactory = tester.Services.GetRequiredService<HubAppApiFactory>();
         var hubApi = hubApiFactory.CreateForSuperUser();
-        await hubApi.Users.AddUser.Execute(new AddUserModel
+        await hubApi.Users.AddOrUpdateUser.Execute(new AddUserModel
         {
             UserName = userName.Value,
             Password = "Password123456"

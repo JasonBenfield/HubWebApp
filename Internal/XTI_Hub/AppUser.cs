@@ -1,4 +1,5 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -21,11 +22,11 @@ public sealed class AppUser : IAppUser
     public bool IsPasswordCorrect(IHashedPassword hashedPassword) =>
         hashedPassword.Equals(record.Password);
 
-    public async Task AddRole(AppRole role)
+    public async Task AssignRole(AppRole role)
     {
         var app = await role.App();
         var modifier = await app.DefaultModifier();
-        await Modifier(modifier).AddRole(role);
+        await Modifier(modifier).AssignRole(role);
     }
 
     public AppUserModifier Modifier(Modifier modifier) =>
@@ -55,6 +56,42 @@ public sealed class AppUser : IAppUser
                 u.Email = email.Value;
             }
         );
+
+    public async Task AddAuthenticator(App authenticatorApp, string externalUserKey)
+    {
+        var authenticatorIDs = factory.DB
+            .Authenticators.Retrieve()
+            .Where(a => a.AppID == authenticatorApp.ID.Value)
+            .Select(a => a.ID);
+        var entity = await factory.DB
+            .UserAuthenticators.Retrieve()
+            .Where
+            (
+                ua =>
+                    authenticatorIDs.Contains(ua.AuthenticatorID)
+                    && ua.UserID == ID.Value
+            )
+            .FirstOrDefaultAsync();
+        if (entity == null)
+        {
+            var authenticatorID = await authenticatorIDs.FirstAsync();
+            entity = new UserAuthenticatorEntity
+            {
+                AuthenticatorID = authenticatorID,
+                UserID = ID.Value,
+                ExternalUserKey = externalUserKey
+            };
+            await factory.DB.UserAuthenticators.Create(entity);
+        }
+        else
+        {
+            await factory.DB.UserAuthenticators.Update
+            (
+                entity,
+                ua => ua.ExternalUserKey = externalUserKey
+            );
+        }
+    }
 
     public AppUserModel ToModel() => new AppUserModel
     {

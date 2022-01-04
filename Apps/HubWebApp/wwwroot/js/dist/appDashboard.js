@@ -203,10 +203,10 @@ exports.AppApi = void 0;
 var AppResourceUrl_1 = __webpack_require__(/*! ./AppResourceUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js");
 var XtiUrl_1 = __webpack_require__(/*! ./XtiUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiUrl.js");
 var AppApi = /** @class */ (function () {
-    function AppApi(events, baseUrl, app, version) {
+    function AppApi(events, app) {
         this.events = events;
         this.groups = {};
-        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(baseUrl, app, version, XtiUrl_1.XtiUrl.current.path.modifier, pageContext.CacheBust);
+        this.resourceUrl = AppResourceUrl_1.AppResourceUrl.app(app, XtiUrl_1.XtiUrl.current.path.modifier, pageContext.CacheBust);
     }
     Object.defineProperty(AppApi.prototype, "name", {
         get: function () { return this.resourceUrl.path.app; },
@@ -433,28 +433,19 @@ exports.AppApiEvents = AppApiEvents;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppApiFactory = void 0;
-var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiEvents.js");
 var ConsoleLog_1 = __webpack_require__(/*! ../ConsoleLog */ "../../../../Published/Development/Packages/Shared/Current/npm/ConsoleLog.js");
-var HostEnvironment_1 = __webpack_require__(/*! ../HostEnvironment */ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js");
+var AppApiEvents_1 = __webpack_require__(/*! ./AppApiEvents */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiEvents.js");
 var AppApiFactory = /** @class */ (function () {
-    function AppApiFactory(_defaultApiType, modalError) {
-        this._defaultApiType = _defaultApiType;
+    function AppApiFactory(modalError) {
         this.modalError = modalError;
     }
     AppApiFactory.prototype.api = function (apiCtor) {
         var _this = this;
-        var api;
         var events = new AppApiEvents_1.AppApiEvents(function (err) {
             new ConsoleLog_1.ConsoleLog().error(err.toString());
             _this.modalError.show(err.getErrors(), err.getCaption());
         });
-        if (apiCtor === this._defaultApiType) {
-            api = new apiCtor(events, location.protocol + "//" + location.host, 'Current');
-        }
-        else {
-            var hostEnvironment = new HostEnvironment_1.HostEnvironment();
-            api = new apiCtor(events, pageContext.BaseUrl, hostEnvironment.isProduction ? '' : 'Current');
-        }
+        var api = new apiCtor(events);
         return api;
     };
     return AppApiFactory;
@@ -512,9 +503,12 @@ var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Publish
 var WebPage_1 = __webpack_require__(/*! ./WebPage */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/WebPage.js");
 var AppApiView = /** @class */ (function () {
     function AppApiView(resourceUrl, actionName) {
-        this.url = resourceUrl.withAction(actionName).url.value();
+        this.resourceUrl = resourceUrl.withAction(actionName);
     }
     AppApiView.prototype.getUrl = function (data) {
+        return this.getModifierUrl(null, data);
+    };
+    AppApiView.prototype.getModifierUrl = function (modifier, data) {
         var model;
         if (typeof data === 'string' || typeof data === 'number' || data instanceof Date) {
             model = { model: data };
@@ -522,7 +516,10 @@ var AppApiView = /** @class */ (function () {
         else {
             model = data;
         }
-        var urlBuilder = new UrlBuilder_1.UrlBuilder(this.url);
+        var resourceUrl = modifier === undefined || modifier === null
+            ? this.resourceUrl
+            : this.resourceUrl.withModifier(modifier);
+        var urlBuilder = new UrlBuilder_1.UrlBuilder(resourceUrl.url.value());
         urlBuilder.addQueryFromObject(model);
         return urlBuilder;
     };
@@ -557,6 +554,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppResourceUrl = void 0;
 var XtiPath_1 = __webpack_require__(/*! ./XtiPath */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/XtiPath.js");
 var UrlBuilder_1 = __webpack_require__(/*! ../UrlBuilder */ "../../../../Published/Development/Packages/Shared/Current/npm/UrlBuilder.js");
+var AppVersionDomain_1 = __webpack_require__(/*! ./AppVersionDomain */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js");
 var AppResourceUrl = /** @class */ (function () {
     function AppResourceUrl(baseUrl, path, cacheBust) {
         this.baseUrl = baseUrl;
@@ -567,8 +565,9 @@ var AppResourceUrl = /** @class */ (function () {
             .addQuery('cacheBust', cacheBust)
             .url;
     }
-    AppResourceUrl.app = function (baseUrl, appKey, version, modifier, cacheBust) {
-        return new AppResourceUrl(baseUrl, XtiPath_1.XtiPath.app(appKey, version, modifier), cacheBust);
+    AppResourceUrl.app = function (appName, modifier, cacheBust) {
+        var appVersionDomain = new AppVersionDomain_1.AppVersionDomain().value(appName);
+        return new AppResourceUrl("https://" + appVersionDomain.Domain + "/", XtiPath_1.XtiPath.app(appName, appVersionDomain.Version, modifier), cacheBust);
     };
     Object.defineProperty(AppResourceUrl.prototype, "relativeUrl", {
         get: function () {
@@ -583,6 +582,9 @@ var AppResourceUrl = /** @class */ (function () {
     AppResourceUrl.prototype.withAction = function (action) {
         return new AppResourceUrl(this.baseUrl, this.path.withAction(action), this.cacheBust);
     };
+    AppResourceUrl.prototype.withModifier = function (modifier) {
+        return new AppResourceUrl(this.baseUrl, this.path.withModifier(modifier), this.cacheBust);
+    };
     AppResourceUrl.prototype.toString = function () {
         return this.url.value();
     };
@@ -590,6 +592,31 @@ var AppResourceUrl = /** @class */ (function () {
 }());
 exports.AppResourceUrl = AppResourceUrl;
 //# sourceMappingURL=AppResourceUrl.js.map
+
+/***/ }),
+
+/***/ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js":
+/*!*********************************************************************************************!*\
+  !*** ../../../../Published/Development/Packages/Shared/Current/npm/Api/AppVersionDomain.js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppVersionDomain = void 0;
+var Enumerable_1 = __webpack_require__(/*! ../Enumerable */ "../../../../Published/Development/Packages/Shared/Current/npm/Enumerable.js");
+var AppVersionDomain = /** @class */ (function () {
+    function AppVersionDomain() {
+    }
+    AppVersionDomain.prototype.value = function (app) {
+        var domain = new Enumerable_1.First(new Enumerable_1.FilteredArray(pageContext.WebAppDomains, function (d) { return d.App.toLowerCase() === app.toLowerCase(); })).value();
+        return domain || { App: '', Version: '', Domain: '' };
+    };
+    return AppVersionDomain;
+}());
+exports.AppVersionDomain = AppVersionDomain;
+//# sourceMappingURL=AppVersionDomain.js.map
 
 /***/ }),
 
@@ -806,6 +833,9 @@ var XtiPath = /** @class */ (function () {
     };
     XtiPath.prototype.withAction = function (action) {
         return new XtiPath(this.app, this.version, this.group, action, this.modifier);
+    };
+    XtiPath.prototype.withModifier = function (modifier) {
+        return new XtiPath(this.app, this.version, this.group, this.action, modifier);
     };
     XtiPath.prototype.format = function () {
         return this.value;
@@ -3154,30 +3184,6 @@ var TextColumn = /** @class */ (function (_super) {
 }(Block_1.Block));
 exports.TextColumn = TextColumn;
 //# sourceMappingURL=TextColumn.js.map
-
-/***/ }),
-
-/***/ "../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js":
-/*!****************************************************************************************!*\
-  !*** ../../../../Published/Development/Packages/Shared/Current/npm/HostEnvironment.js ***!
-  \****************************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.HostEnvironment = void 0;
-var HostEnvironment = /** @class */ (function () {
-    function HostEnvironment() {
-        this.isTest = pageContext.EnvironmentName === 'Test';
-        this.isDevelopment = pageContext.EnvironmentName === 'Development';
-        this.isStaging = pageContext.EnvironmentName === 'Staging';
-        this.isProduction = pageContext.EnvironmentName === 'Production';
-    }
-    return HostEnvironment;
-}());
-exports.HostEnvironment = HostEnvironment;
-//# sourceMappingURL=HostEnvironment.js.map
 
 /***/ }),
 
@@ -5841,6 +5847,7 @@ exports.PaddingCss = PaddingCss;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageFrameView = void 0;
 var AlignCss_1 = __webpack_require__(/*! ./AlignCss */ "../../../../Published/Development/Packages/Shared/Current/npm/AlignCss.js");
+var AppResourceUrl_1 = __webpack_require__(/*! ./Api/AppResourceUrl */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppResourceUrl.js");
 var ContextualClass_1 = __webpack_require__(/*! ./ContextualClass */ "../../../../Published/Development/Packages/Shared/Current/npm/ContextualClass.js");
 var DropdownBlock_1 = __webpack_require__(/*! ./Dropdown/DropdownBlock */ "../../../../Published/Development/Packages/Shared/Current/npm/Dropdown/DropdownBlock.js");
 var ModalErrorComponentView_1 = __webpack_require__(/*! ./Error/ModalErrorComponentView */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponentView.js");
@@ -5891,7 +5898,8 @@ var PageFrameView = /** @class */ (function () {
         this.logoutMenuItem = dropdown.addLinkItem();
         var logoutTextSpan = this.logoutMenuItem.link.addContent(new TextSpanView_1.TextSpanView());
         logoutTextSpan.setText('Logout');
-        this.logoutMenuItem.link.setHref(pageContext.BaseUrl + "/Hub/Current/Auth/Logout");
+        var logoutUrl = AppResourceUrl_1.AppResourceUrl.app('Hub', '', pageContext.CacheBust).withGroup('Auth').withAction('Logout');
+        this.logoutMenuItem.link.setHref(logoutUrl.url.value());
         this.content = frame.addContent(new Block_1.Block());
         this.content.flexFill();
         this.content.addCssName('h-100');
@@ -43784,16 +43792,24 @@ var AppsGroup = /** @class */ (function (_super) {
     function AppsGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
         _this.Index = _this.createView('Index');
-        _this.AllAction = _this.createAction('All', 'All');
-        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
+        _this.GetAppDomainAction = _this.createAction('GetAppDomain', 'Get App Domain');
+        _this.GetAppsAction = _this.createAction('GetApps', 'Get Apps');
+        _this.GetAppByIdAction = _this.createAction('GetAppById', 'Get App By Id');
+        _this.GetAppByAppKeyAction = _this.createAction('GetAppByAppKey', 'Get App By App Key');
         _this.RedirectToApp = _this.createView('RedirectToApp');
         return _this;
     }
-    AppsGroup.prototype.All = function (errorOptions) {
-        return this.AllAction.execute({}, errorOptions || {});
+    AppsGroup.prototype.GetAppDomain = function (model, errorOptions) {
+        return this.GetAppDomainAction.execute(model, errorOptions || {});
     };
-    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
-        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
+    AppsGroup.prototype.GetApps = function (errorOptions) {
+        return this.GetAppsAction.execute({}, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppById = function (model, errorOptions) {
+        return this.GetAppByIdAction.execute(model, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppByAppKey = function (model, errorOptions) {
+        return this.GetAppByAppKeyAction.execute(model, errorOptions || {});
     };
     return AppsGroup;
 }(AppApiGroup_1.AppApiGroup));
@@ -43866,6 +43882,67 @@ exports.AuthGroup = AuthGroup;
 
 /***/ }),
 
+/***/ "./Scripts/Hub/Api/AuthenticatorsGroup.js":
+/*!************************************************!*\
+  !*** ./Scripts/Hub/Api/AuthenticatorsGroup.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthenticatorsGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var AuthenticatorsGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(AuthenticatorsGroup, _super);
+    function AuthenticatorsGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'Authenticators') || this;
+        _this.RegisterAuthenticatorAction = _this.createAction('RegisterAuthenticator', 'Register Authenticator');
+        _this.RegisterUserAuthenticatorAction = _this.createAction('RegisterUserAuthenticator', 'Register User Authenticator');
+        return _this;
+    }
+    AuthenticatorsGroup.prototype.RegisterAuthenticator = function (errorOptions) {
+        return this.RegisterAuthenticatorAction.execute({}, errorOptions || {});
+    };
+    AuthenticatorsGroup.prototype.RegisterUserAuthenticator = function (model, errorOptions) {
+        return this.RegisterUserAuthenticatorAction.execute(model, errorOptions || {});
+    };
+    return AuthenticatorsGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.AuthenticatorsGroup = AuthenticatorsGroup;
+//# sourceMappingURL=AuthenticatorsGroup.js.map
+
+/***/ }),
+
+/***/ "./Scripts/Hub/Api/ExternalAuthGroup.js":
+/*!**********************************************!*\
+  !*** ./Scripts/Hub/Api/ExternalAuthGroup.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+// Generated code
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExternalAuthGroup = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var AppApiGroup_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiGroup */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiGroup.js");
+var ExternalAuthGroup = /** @class */ (function (_super) {
+    (0, tslib_1.__extends)(ExternalAuthGroup, _super);
+    function ExternalAuthGroup(events, resourceUrl) {
+        var _this = _super.call(this, events, resourceUrl, 'ExternalAuth') || this;
+        _this.Login = _this.createView('Login');
+        return _this;
+    }
+    return ExternalAuthGroup;
+}(AppApiGroup_1.AppApiGroup));
+exports.ExternalAuthGroup = ExternalAuthGroup;
+//# sourceMappingURL=ExternalAuthGroup.js.map
+
+/***/ }),
+
 /***/ "./Scripts/Hub/Api/HubAppApi.js":
 /*!**************************************!*\
   !*** ./Scripts/Hub/Api/HubAppApi.js ***!
@@ -43883,6 +43960,8 @@ var UserGroup_1 = __webpack_require__(/*! ./UserGroup */ "./Scripts/Hub/Api/User
 var UserCacheGroup_1 = __webpack_require__(/*! ./UserCacheGroup */ "./Scripts/Hub/Api/UserCacheGroup.js");
 var AuthGroup_1 = __webpack_require__(/*! ./AuthGroup */ "./Scripts/Hub/Api/AuthGroup.js");
 var AuthApiGroup_1 = __webpack_require__(/*! ./AuthApiGroup */ "./Scripts/Hub/Api/AuthApiGroup.js");
+var ExternalAuthGroup_1 = __webpack_require__(/*! ./ExternalAuthGroup */ "./Scripts/Hub/Api/ExternalAuthGroup.js");
+var AuthenticatorsGroup_1 = __webpack_require__(/*! ./AuthenticatorsGroup */ "./Scripts/Hub/Api/AuthenticatorsGroup.js");
 var PermanentLogGroup_1 = __webpack_require__(/*! ./PermanentLogGroup */ "./Scripts/Hub/Api/PermanentLogGroup.js");
 var AppsGroup_1 = __webpack_require__(/*! ./AppsGroup */ "./Scripts/Hub/Api/AppsGroup.js");
 var AppGroup_1 = __webpack_require__(/*! ./AppGroup */ "./Scripts/Hub/Api/AppGroup.js");
@@ -43899,13 +43978,14 @@ var AppUserMaintenanceGroup_1 = __webpack_require__(/*! ./AppUserMaintenanceGrou
 var UserMaintenanceGroup_1 = __webpack_require__(/*! ./UserMaintenanceGroup */ "./Scripts/Hub/Api/UserMaintenanceGroup.js");
 var HubAppApi = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(HubAppApi, _super);
-    function HubAppApi(events, baseUrl, version) {
-        if (version === void 0) { version = ''; }
-        var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
+    function HubAppApi(events) {
+        var _this = _super.call(this, events, 'Hub') || this;
         _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
         _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
         _this.Auth = _this.addGroup(function (evts, resourceUrl) { return new AuthGroup_1.AuthGroup(evts, resourceUrl); });
         _this.AuthApi = _this.addGroup(function (evts, resourceUrl) { return new AuthApiGroup_1.AuthApiGroup(evts, resourceUrl); });
+        _this.ExternalAuth = _this.addGroup(function (evts, resourceUrl) { return new ExternalAuthGroup_1.ExternalAuthGroup(evts, resourceUrl); });
+        _this.Authenticators = _this.addGroup(function (evts, resourceUrl) { return new AuthenticatorsGroup_1.AuthenticatorsGroup(evts, resourceUrl); });
         _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
@@ -43922,7 +44002,6 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;
@@ -44413,7 +44492,7 @@ var UsersGroup = /** @class */ (function (_super) {
         _this.Index = _this.createView('Index');
         _this.GetUsersAction = _this.createAction('GetUsers', 'Get Users');
         _this.GetSystemUsersAction = _this.createAction('GetSystemUsers', 'Get System Users');
-        _this.AddUserAction = _this.createAction('AddUser', 'Add User');
+        _this.AddOrUpdateUserAction = _this.createAction('AddOrUpdateUser', 'Add Or Update User');
         return _this;
     }
     UsersGroup.prototype.GetUsers = function (errorOptions) {
@@ -44422,8 +44501,8 @@ var UsersGroup = /** @class */ (function (_super) {
     UsersGroup.prototype.GetSystemUsers = function (model, errorOptions) {
         return this.GetSystemUsersAction.execute(model, errorOptions || {});
     };
-    UsersGroup.prototype.AddUser = function (model, errorOptions) {
-        return this.AddUserAction.execute(model, errorOptions || {});
+    UsersGroup.prototype.AddOrUpdateUser = function (model, errorOptions) {
+        return this.AddOrUpdateUserAction.execute(model, errorOptions || {});
     };
     return UsersGroup;
 }(AppApiGroup_1.AppApiGroup));
@@ -44478,13 +44557,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Apis = void 0;
 var AppApiFactory_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Api/AppApiFactory */ "../../../../Published/Development/Packages/Shared/Current/npm/Api/AppApiFactory.js");
 var ModalErrorComponent_1 = __webpack_require__(/*! @jasonbenfield/sharedwebapp/Error/ModalErrorComponent */ "../../../../Published/Development/Packages/Shared/Current/npm/Error/ModalErrorComponent.js");
-var HubAppApi_1 = __webpack_require__(/*! ../Hub/Api/HubAppApi */ "./Scripts/Hub/Api/HubAppApi.js");
+var HubAppApi_1 = __webpack_require__(/*! ./Api/HubAppApi */ "./Scripts/Hub/Api/HubAppApi.js");
 var Apis = /** @class */ (function () {
     function Apis(modalError) {
         this.modalError = new ModalErrorComponent_1.ModalErrorComponent(modalError);
     }
     Apis.prototype.hub = function () {
-        var apiFactory = new AppApiFactory_1.AppApiFactory(HubAppApi_1.HubAppApi, this.modalError);
+        var apiFactory = new AppApiFactory_1.AppApiFactory(this.modalError);
         return apiFactory.api(HubAppApi_1.HubAppApi);
     };
     return Apis;

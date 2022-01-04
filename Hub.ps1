@@ -5,8 +5,9 @@ $script:hubConfig = [PSCustomObject]@{
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
-    AppsToImport = ""
 }
+
+. .\Hub.Private.ps1
 
 function Hub-NewVersion {
     param(
@@ -60,6 +61,10 @@ function Hub-Publish {
     )
     $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
     $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
+    $Domain = Get-Domain -EnvName $EnvName
+    $PsBoundParameters.Add("Domain", $Domain)
+    $SiteName = Get-SiteName -EnvName $EnvName
+    $PsBoundParameters.Add("SiteName", $SiteName)
     $script:hubConfig | Xti-Publish @PsBoundParameters
 }
 
@@ -70,26 +75,15 @@ function Hub-Install {
     )
     $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
     $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
+    $Domain = Get-Domain -EnvName $EnvName
+    $PsBoundParameters.Add("Domain", $Domain)
+    $SiteName = Get-SiteName -EnvName $EnvName
+    $PsBoundParameters.Add("SiteName", $SiteName)
     $script:hubConfig | Xti-Install @PsBoundParameters
 }
 
-function Add-DBMigrations {
+function Hub-Add-DBMigrations {
     param ([Parameter(Mandatory)]$Name)
     $env:DOTNET_ENVIRONMENT="Development"
-    dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./Lib/XTI_HubDB.EF.SqlServer
-}
-
-function Get-DestinationMachine {
-    param(
-        $EnvName
-    )
-    if($EnvName -eq "Development")
-    {
-        $DestinationMachine = ""
-    }
-    else
-    {
-        $DestinationMachine = "finduilas.xartogg.com"
-    }
-    return $DestinationMachine
+    dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./Internal/XTI_HubDB.EF.SqlServer
 }

@@ -24,6 +24,8 @@ internal sealed class HubClientApp : IApp
         return new HubClientModifierCategory(hubClient, appContext, modCategory);
     }
 
+    public Task<ModifierKey> ModKeyInHubApps() => appContext.ModKeyInHubApps(this);
+
     public async Task<IAppRole> Role(AppRoleName roleName)
     {
         var modifier = await appContext.GetModifierKey();
@@ -38,7 +40,7 @@ internal sealed class HubClientApp : IApp
         return roles.Select(r => new HubClientRole(r)).ToArray();
     }
 
-    public async Task<IAppVersion> Version(XTI_App.Abstractions.AppVersionKey versionKey)
+    public async Task<IAppVersion> Version(AppVersionKey versionKey)
     {
         var modifier = await appContext.GetModifierKey();
         var version = await hubClient.Version.GetVersion(modifier, versionKey.Value);

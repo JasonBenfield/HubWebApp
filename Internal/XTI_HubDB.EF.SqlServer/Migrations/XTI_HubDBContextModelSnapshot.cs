@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XTI_HubDB.EF;
 
+#nullable disable
+
 namespace XTI_HubDB.EF.SqlServer.Migrations
 {
     [DbContext(typeof(HubDbContext))]
@@ -15,18 +17,25 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -34,6 +43,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
@@ -45,32 +55,36 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Apps");
+                    b.ToTable("Apps", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppEventEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Caption")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Detail")
+                        .IsRequired()
                         .HasMaxLength(32000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
@@ -86,29 +100,31 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("EventKey")
-                        .IsUnique()
-                        .HasFilter("[EventKey] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("RequestID");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppRequestEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("ModifierID")
                         .HasColumnType("int");
 
                     b.Property<string>("Path")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RequestKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -129,27 +145,28 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("ModifierID");
 
                     b.HasIndex("RequestKey")
-                        .IsUnique()
-                        .HasFilter("[RequestKey] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("ResourceID");
 
                     b.HasIndex("SessionID");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppRoleEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -161,28 +178,31 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("AppID", "Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppSessionEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("RemoteAddress")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("RequesterKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SessionKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -193,6 +213,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UserAgent")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -202,30 +223,33 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("SessionKey")
-                        .IsUnique()
-                        .HasFilter("[SessionKey] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppUserEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -233,24 +257,25 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("UserName")
-                        .IsUnique()
-                        .HasFilter("[UserName] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppUserRoleEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("ModifierID")
                         .HasColumnType("int");
@@ -269,20 +294,26 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppVersionEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Major")
@@ -304,6 +335,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VersionKey")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -312,38 +344,37 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("AppID");
 
                     b.HasIndex("VersionKey")
-                        .IsUnique()
-                        .HasFilter("[VersionKey] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Versions");
+                    b.ToTable("Versions", (string)null);
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.InstallLocationEntity", b =>
+            modelBuilder.Entity("XTI_HubDB.Entities.AuthenticatorEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
-                    b.Property<string>("QualifiedMachineName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("QualifiedMachineName")
-                        .IsUnique()
-                        .HasFilter("[QualifiedMachineName] IS NOT NULL");
+                    b.HasIndex("AppID")
+                        .IsUnique();
 
-                    b.ToTable("InstallLocations");
+                    b.ToTable("Authenticators", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.InstallationEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool>("IsCurrent")
                         .HasColumnType("bit");
@@ -367,72 +398,97 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("LocationID", "VersionID", "IsCurrent")
                         .IsUnique();
 
-                    b.ToTable("Installations");
+                    b.ToTable("Installations", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.InstallLocationEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("QualifiedMachineName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("QualifiedMachineName")
+                        .IsUnique();
+
+                    b.ToTable("InstallLocations", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ModifierCategoryEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("AppID", "Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("ModifierCategories");
+                    b.ToTable("ModifierCategories", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ModifierEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("DisplayText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TargetKey")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("CategoryID", "ModKey")
-                        .IsUnique()
-                        .HasFilter("[ModKey] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("CategoryID", "TargetKey")
-                        .IsUnique()
-                        .HasFilter("[TargetKey] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Modifiers");
+                    b.ToTable("Modifiers", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ResourceEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -441,6 +497,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -450,18 +507,18 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("GroupID", "Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Resources");
+                    b.ToTable("Resources", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ResourceGroupEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool>("IsAnonymousAllowed")
                         .HasColumnType("bit");
@@ -470,6 +527,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -481,18 +539,18 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("ModCategoryID");
 
                     b.HasIndex("VersionID", "Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("ResourceGroups");
+                    b.ToTable("ResourceGroups", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ResourceGroupRoleEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -510,15 +568,16 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("GroupID", "RoleID")
                         .IsUnique();
 
-                    b.ToTable("ResourceGroupRoles");
+                    b.ToTable("ResourceGroupRoles", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ResourceRoleEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool>("IsAllowed")
                         .HasColumnType("bit");
@@ -536,7 +595,39 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasIndex("ResourceID", "RoleID")
                         .IsUnique();
 
-                    b.ToTable("ResourceRoles");
+                    b.ToTable("ResourceRoles", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.UserAuthenticatorEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("AuthenticatorID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ExternalUserKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AuthenticatorID");
+
+                    b.HasIndex("ExternalUserKey", "AuthenticatorID")
+                        .IsUnique();
+
+                    b.HasIndex("UserID", "AuthenticatorID")
+                        .IsUnique();
+
+                    b.ToTable("UserAuthenticators", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppEventEntity", b =>
@@ -609,6 +700,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppVersionEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.AppEntity", null)
+                        .WithMany()
+                        .HasForeignKey("AppID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.AuthenticatorEntity", b =>
                 {
                     b.HasOne("XTI_HubDB.Entities.AppEntity", null)
                         .WithMany()
@@ -700,6 +800,21 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.AppRoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.UserAuthenticatorEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.AuthenticatorEntity", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticatorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("XTI_HubDB.Entities.AppUserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

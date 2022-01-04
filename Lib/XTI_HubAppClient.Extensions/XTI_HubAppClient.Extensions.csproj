@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Secrets" Version="1.8.11" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="XTI_App.Secrets" Version="1.8.12" />
   </ItemGroup>
 
   <ItemGroup>

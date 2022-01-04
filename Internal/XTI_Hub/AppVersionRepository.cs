@@ -13,18 +13,18 @@ public sealed class AppVersionRepository
         this.factory = factory;
     }
 
-    internal async Task<AppVersion> AddIfNotFound(AppVersionKey key, App app, DateTimeOffset timeAdded, AppVersionStatus status, AppVersionType type, Version version)
+    internal async Task<AppVersion> AddIfNotFound(AppVersionKey key, AppEntity app, DateTimeOffset timeAdded, AppVersionStatus status, AppVersionType type, Version version)
     {
         var record = await factory.DB
             .Versions
             .Retrieve()
-            .FirstOrDefaultAsync(v => v.AppID == app.ID.Value && v.VersionKey == key.Value);
+            .FirstOrDefaultAsync(v => v.AppID == app.ID && v.VersionKey == key.Value);
         if (record == null)
         {
             record = new AppVersionEntity
             {
                 VersionKey = key.Value,
-                AppID = app.ID.Value,
+                AppID = app.ID,
                 Major = version.Major,
                 Minor = version.Minor,
                 Patch = version.Build,
@@ -35,10 +35,10 @@ public sealed class AppVersionRepository
             };
             await factory.DB.Versions.Create(record);
         }
-        return factory.Version(record);
+        return factory.CreateVersion(record);
     }
 
-    internal async Task<AppVersion> StartNewVersion(AppVersionKey key, App app, DateTimeOffset timeAdded, AppVersionType type)
+    internal async Task<AppVersion> StartNewVersion(AppVersionKey key, AppEntity app, DateTimeOffset timeAdded, AppVersionType type)
     {
         var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
         if (!validVersionTypes.Contains(type))
@@ -49,7 +49,7 @@ public sealed class AppVersionRepository
         return await AddVersion(key, app, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
     }
 
-    private async Task<AppVersion> AddVersion(AppVersionKey key, App app, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, Version versionNumber)
+    private async Task<AppVersion> AddVersion(AppVersionKey key, AppEntity app, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, Version versionNumber)
     {
         AppVersionEntity? record = null;
         await factory.DB.Transaction(async () =>
@@ -57,14 +57,15 @@ public sealed class AppVersionRepository
             record = new AppVersionEntity
             {
                 VersionKey = new GeneratedKey().Value(),
-                AppID = app.ID.Value,
+                AppID = app.ID,
                 Major = versionNumber.Major,
                 Minor = versionNumber.Minor,
                 Patch = versionNumber.Build,
                 TimeAdded = timeAdded,
                 Description = "",
                 Status = status.Value,
-                Type = type.Value
+                Type = type.Value,
+                Domain = app.Domain
             };
             await factory.DB.Versions.Create(record);
             if (key.Equals(AppVersionKey.None))
@@ -76,7 +77,7 @@ public sealed class AppVersionRepository
                 );
             }
         });
-        return factory.Version(record ?? throw new ArgumentNullException(nameof(record)));
+        return factory.CreateVersion(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
     public async Task<AppVersion> Version(int id)
@@ -85,13 +86,13 @@ public sealed class AppVersionRepository
             .Versions
             .Retrieve()
             .FirstAsync(v => v.ID == id);
-        return factory.Version(record);
+        return factory.CreateVersion(record);
     }
 
     internal async Task<AppVersion> VersionByApp(App app, AppVersionKey versionKey)
     {
         var record = await GetVersionByApp(app, versionKey);
-        return factory.Version(record ?? throw new Exception($"Version '{versionKey.DisplayText}' was not found"));
+        return factory.CreateVersion(record ?? throw new Exception($"Version '{versionKey.DisplayText}' was not found"));
     }
 
     internal async Task<AppVersion> VersionByAppOrDefault(App app, AppVersionKey versionKey)
@@ -102,7 +103,7 @@ public sealed class AppVersionRepository
             var unknownApp = await factory.Apps.App(AppKey.Unknown);
             record = await GetVersionByApp(unknownApp, AppVersionKey.Current);
         }
-        return factory.Version
+        return factory.CreateVersion
         (
             record ?? throw new Exception($"Version '{versionKey.DisplayText}' was not found")
         );
@@ -141,10 +142,10 @@ public sealed class AppVersionRepository
             .Versions
             .Retrieve()
             .Where(v => v.AppID == app.ID.Value)
-            .Select(v => factory.Version(v))
+            .Select(v => factory.CreateVersion(v))
             .ToArrayAsync();
 
-    internal Task<AppVersion> AddCurrentVersion(App app, DateTimeOffset timeAdded) =>
+    internal Task<AppVersion> AddCurrentVersion(AppEntity app, DateTimeOffset timeAdded) =>
         AddIfNotFound
         (
             AppVersionKey.None,

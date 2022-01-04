@@ -7,47 +7,53 @@ namespace XTI_Hub;
 public sealed class AppUserModifier
 {
     private readonly AppFactory factory;
-    private readonly AppUser appUser;
+    private readonly AppUser user;
     private readonly Modifier modifier;
 
     internal AppUserModifier(AppFactory factory, AppUser appUser, Modifier modifier)
     {
         this.factory = factory;
-        this.appUser = appUser;
+        this.user = appUser;
         this.modifier = modifier;
     }
 
-    public Task AddRole(AppRole role)
+    public async Task AssignRole(AppRole role)
     {
-        var record = new AppUserRoleEntity
+        var any = await GetUserRole(role).AnyAsync();
+        if (!any)
         {
-            UserID = appUser.ID.Value,
-            RoleID = role.ID.Value,
-            ModifierID = modifier.ID.Value
-        };
-        return factory.DB.UserRoles.Create(record);
+            var record = new AppUserRoleEntity
+            {
+                UserID = user.ID.Value,
+                RoleID = role.ID.Value,
+                ModifierID = modifier.ID.Value
+            };
+            await factory.DB.UserRoles.Create(record);
+        }
     }
 
-    public async Task RemoveRole(AppRole role)
+    public async Task UnassignRole(AppRole role)
     {
-        var userRole = await factory.DB
-            .UserRoles
-            .Retrieve()
-            .Where
-            (
-                ur => ur.UserID == appUser.ID.Value
-                    && ur.ModifierID == modifier.ID.Value
-                    && ur.RoleID == role.ID.Value
-            )
-            .FirstOrDefaultAsync();
+        var userRole = await GetUserRole(role).FirstOrDefaultAsync();
         if (userRole != null)
         {
             await factory.DB.UserRoles.Delete(userRole);
         }
     }
 
+    private IQueryable<AppUserRoleEntity> GetUserRole(AppRole role) =>
+        factory.DB
+            .UserRoles
+            .Retrieve()
+            .Where
+            (
+                ur => ur.UserID == user.ID.Value
+                    && ur.ModifierID == modifier.ID.Value
+                    && ur.RoleID == role.ID.Value
+            );
+
     public Task<AppRole[]> ExplicitlyUnassignedRoles()
-        => factory.Roles.RolesNotAssignedToUser(appUser, modifier);
+        => factory.Roles.RolesNotAssignedToUser(user, modifier);
 
     public async Task<AppRole[]> AssignedRoles()
     {
@@ -55,12 +61,12 @@ public sealed class AppUserModifier
         if (!roles.Any() && !modifier.ModKey().Equals(ModifierKey.Default))
         {
             var defaultModifier = await modifier.DefaultModifier();
-            roles = await new AppUserModifier(factory, appUser, defaultModifier).AssignedRoles();
+            roles = await new AppUserModifier(factory, user, defaultModifier).AssignedRoles();
         }
         return roles;
     }
 
     public Task<AppRole[]> ExplicitlyAssignedRoles()
-        => factory.Roles.RolesAssignedToUser(appUser, modifier);
+        => factory.Roles.RolesAssignedToUser(user, modifier);
 
 }

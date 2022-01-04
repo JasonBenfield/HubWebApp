@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using XTI_HubAppApi.Auth;
+using XTI_HubAppApi;
 
 namespace HubWebApp.Extensions;
 
@@ -35,11 +35,11 @@ public sealed class CookieAccess : AccessForLogin
         (
             new[]
             {
-                    new AuthenticationToken()
-                    {
-                        Name = "Jwt",
-                        Value = token
-                    }
+                new AuthenticationToken()
+                {
+                    Name = "Jwt",
+                    Value = token
+                }
             }
         );
         authProps.IsPersistent = true;

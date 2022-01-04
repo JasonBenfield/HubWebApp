@@ -20,7 +20,7 @@ public sealed class ModifierRepository
         {
             record = await Add(category, modKey, targetID, displayText);
         }
-        return factory.Modifier(record);
+        return factory.CreateModifier(record);
     }
 
     internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, string targetKey, string displayText)
@@ -30,7 +30,7 @@ public sealed class ModifierRepository
         {
             record = await Add(category, ModifierKey.Generate(), targetKey, displayText);
         }
-        return factory.Modifier(record);
+        return factory.CreateModifier(record);
     }
 
     private async Task<ModifierEntity> Add(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
@@ -48,7 +48,7 @@ public sealed class ModifierRepository
 
     internal Task<Modifier[]> Modifiers(ModifierCategory category) =>
         modifiersForCategory(category)
-            .Select(m => factory.Modifier(m))
+            .Select(m => factory.CreateModifier(m))
             .ToArrayAsync();
 
     internal async Task<Modifier> Modifier(int id)
@@ -56,7 +56,7 @@ public sealed class ModifierRepository
         var entity = await factory.DB
             .Modifiers.Retrieve()
             .Where(m => m.ID == id).FirstOrDefaultAsync();
-        return factory.Modifier(entity ?? throw new Exception($"Modifier {id} not found"));
+        return factory.CreateModifier(entity ?? throw new Exception($"Modifier {id} not found"));
     }
 
     internal async Task<Modifier> ModifierByModKey(ModifierCategory modCategory, ModifierKey modKey)
@@ -71,7 +71,7 @@ public sealed class ModifierRepository
             modCategory = await app.ModCategory(ModifierCategoryName.Default);
         }
         var record = await GetModifierByModKey(modCategory, modKey);
-        return factory.Modifier
+        return factory.CreateModifier
         (
             record ?? throw new ModifierNotFoundException(modKey, modCategory)
         );
@@ -103,7 +103,7 @@ public sealed class ModifierRepository
         }
         else
         {
-            mod = factory.Modifier(record);
+            mod = factory.CreateModifier(record);
         }
         return mod;
     }
@@ -120,7 +120,7 @@ public sealed class ModifierRepository
             .Retrieve()
             .Where(m => categoryIDs.Any(id => id == m.CategoryID) && m.ID == modifierID)
             .FirstOrDefaultAsync();
-        return factory.Modifier
+        return factory.CreateModifier
         (
             record ?? throw new ModifierNotFoundException(modifierID, app)
         );
@@ -129,7 +129,7 @@ public sealed class ModifierRepository
     internal async Task<Modifier> ModifierByTargetKey(ModifierCategory category, string targetKey)
     {
         var record = await GetModifierByTargetKey(category, targetKey);
-        return factory.Modifier
+        return factory.CreateModifier
         (
             record ?? throw new ModifierNotFoundException(targetKey, category)
         );

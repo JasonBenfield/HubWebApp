@@ -25,7 +25,7 @@ internal sealed class InstallHostedService : IHostedService
         try
         {
             var appKey = ensureAppKeyIsValid(sp);
-            var credentials = await addSystemUser(sp, appKey);
+            var credentials = await addInstallationUser(sp, appKey);
             var appVersion = await retrieveVersion(sp, appKey);
             var options = sp.GetRequiredService<IOptions<InstallOptions>>().Value;
             var installMachineName =
@@ -59,8 +59,8 @@ internal sealed class InstallHostedService : IHostedService
                         KeyValuePair.Create("versionKey", appVersion.VersionKey),
                         KeyValuePair.Create("repoOwner", options.RepoOwner),
                         KeyValuePair.Create("repoName", options.RepoName),
-                        KeyValuePair.Create("systemUserName", credentials.UserName),
-                        KeyValuePair.Create("systemPassword", credentials.Password),
+                        KeyValuePair.Create("installationUserName", credentials.UserName),
+                        KeyValuePair.Create("installationPassword", credentials.Password),
                         KeyValuePair.Create("release", release),
                         KeyValuePair.Create("machineName", installMachineName)
                     }
@@ -90,9 +90,9 @@ internal sealed class InstallHostedService : IHostedService
         return version.ToModel();
     }
 
-    private static async Task<CredentialValue> addSystemUser(IServiceProvider sp, AppKey appKey)
+    private static async Task<CredentialValue> addInstallationUser(IServiceProvider sp, AppKey appKey)
     {
-        Console.WriteLine("Adding system user");
+        Console.WriteLine("Adding installation user");
         var machineName = getMachineName(sp);
         var dashIndex = machineName.IndexOf(".");
         if (dashIndex > -1)
@@ -104,9 +104,9 @@ internal sealed class InstallHostedService : IHostedService
         var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
         var password = $"{Guid.NewGuid():N}?!";
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
+        var systemUser = await appFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
         var credentials = new CredentialValue(systemUser.UserName().Value, password);
-        Console.WriteLine($"Added system user '{systemUser.UserName()}'");
+        Console.WriteLine($"Added installation user '{systemUser.UserName()}'");
         return credentials;
     }
 
@@ -155,7 +155,8 @@ internal sealed class InstallHostedService : IHostedService
                     VersionKey = versionKey,
                     SystemUserName = credential.UserName,
                     SystemPassword = credential.Password,
-                    MachineName = machineName
+                    MachineName = machineName,
+                    Domain = options.Domain
                 }
             );
         Console.WriteLine($"Running Local Install\r\n{installProcess.CommandText()}");

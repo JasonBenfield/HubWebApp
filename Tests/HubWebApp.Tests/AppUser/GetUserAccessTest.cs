@@ -37,7 +37,7 @@ internal sealed class GetUserAccessTest
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                await tester.FakeHubAppModifier(),
+                tester.FakeHubAppModifier(),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.ViewApp,
                 HubInfo.Roles.ViewUser
@@ -53,7 +53,7 @@ internal sealed class GetUserAccessTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.Modifier(hubAppModifier).AddRole(viewUserRole);
+        await user.Modifier(hubAppModifier).AssignRole(viewUserRole);
         var request = new UserModifierKey
         {
             UserID = user.ID.Value,
@@ -122,7 +122,7 @@ internal sealed class GetUserAccessTest
         var hubApp = await tester.HubApp();
         var defaultModifier = await hubApp.DefaultModifier();
         var role = await hubApp.Role(HubInfo.Roles.EditUser);
-        await user.Modifier(defaultModifier).AddRole(role);
+        await user.Modifier(defaultModifier).AssignRole(role);
         var request = new UserModifierKey
         {
             UserID = user.ID.Value,
@@ -139,7 +139,7 @@ internal sealed class GetUserAccessTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
@@ -155,7 +155,7 @@ internal sealed class GetUserAccessTest
     {
         var denyAccessTester = tester.Create(hubApi => hubApi.AppUserMaintenance.DenyAccess);
         denyAccessTester.LoginAsAdmin();
-        var hubAppModifier = await denyAccessTester.FakeHubAppModifier();
+        var hubAppModifier = denyAccessTester.FakeHubAppModifier();
         await denyAccessTester.Execute
         (
             new UserModifierKey

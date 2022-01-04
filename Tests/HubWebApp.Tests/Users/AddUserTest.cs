@@ -80,7 +80,7 @@ internal sealed class AddUserTest
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Users.AddUser);
+        return HubActionTester.Create(services, hubApi => hubApi.Users.AddOrUpdateUser);
     }
 
     private AddUserModel createModel()

@@ -19,8 +19,9 @@ public sealed class PublishProcess
     private readonly GitFactory gitFactory;
     private readonly ISecretCredentialsFactory credentialsFactory;
     private readonly string repoOwner;
+    private readonly string domain;
 
-    public PublishProcess(IHostEnvironment hostEnv, AppFactory appFactory, GitFactory gitFactory, ISecretCredentialsFactory credentialsFactory, string repoOwner)
+    public PublishProcess(IHostEnvironment hostEnv, AppFactory appFactory, GitFactory gitFactory, ISecretCredentialsFactory credentialsFactory, string repoOwner, string domain)
     {
         this.hostEnv = hostEnv;
         xtiFolder = new XtiFolder(hostEnv);
@@ -28,6 +29,7 @@ public sealed class PublishProcess
         this.gitFactory = gitFactory;
         this.credentialsFactory = credentialsFactory;
         this.repoOwner = repoOwner;
+        this.domain = domain;
     }
 
     public async Task Run(AppKey appKey, string repoOwner, string repoName)
@@ -70,7 +72,9 @@ public sealed class PublishProcess
         if (appKey.Type.Equals(AppType.Values.WebApp))
         {
             await buildWebApp(appKey, buildVersionKey);
+            await Task.Delay(TimeSpan.FromSeconds(1));
             await runDotnetBuild();
+            await Task.Delay(TimeSpan.FromSeconds(1));
             await runDotNetPublish(appKey, versionKey);
         }
         else if (appKey.Type.Equals(AppType.Values.Service))
@@ -135,7 +139,7 @@ public sealed class PublishProcess
         }
     }
 
-    public async Task RunInstall(AppKey appKey, string destinationMachine)
+    public async Task RunInstall(AppKey appKey, string destinationMachine, string domain, string siteName)
     {
         Console.WriteLine("Installing");
         var installPath = Path.Combine
@@ -153,7 +157,9 @@ public sealed class PublishProcess
                 {
                     AppName = appKey.Name.DisplayText,
                     AppType = appKey.Type.DisplayText,
-                    DestinationMachine = destinationMachine
+                    DestinationMachine = destinationMachine,
+                    Domain = domain,
+                    SiteName = siteName
                 }
             )
             .Run();
@@ -217,7 +223,7 @@ public sealed class PublishProcess
     {
         Console.WriteLine("Begin Publishing");
         var versionOptions = new VersionToolOptions();
-        versionOptions.CommandBeginPublish(appKey.Name.Value, appKey.Type.DisplayText);
+        versionOptions.CommandBeginPublish(appKey.Name.Value, appKey.Type.DisplayText, domain);
         var result = await runVersionTool(versionOptions);
         var output = result.Data<VersionToolOutput>();
         return output;
@@ -253,10 +259,14 @@ public sealed class PublishProcess
 
     private static async Task runDotnetBuild()
     {
+        Console.WriteLine("Running dotnet build");
         var result = await new WinProcess("dotnet")
               .WriteOutputToConsole()
               .UseArgumentNameDelimiter("")
               .AddArgument("build")
+              .UseArgumentNameDelimiter("-")
+              .UseArgumentValueDelimiter("=")
+              .AddArgument("p:TypeScriptCompileBlocked", "true")
               .Run();
         result.EnsureExitCodeIsZero();
     }

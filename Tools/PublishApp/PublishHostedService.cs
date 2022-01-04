@@ -34,13 +34,20 @@ internal sealed class PublishHostedService : IHostedService
                 appFactory, 
                 gitFactory, 
                 credentialsFactory,
-                options.RepoOwner
+                options.RepoOwner,
+                options.Domain
             );
             var appKey = new AppKey(new AppName(options.AppName), AppType.Values.Value(options.AppType));
             await publishProcess.Run(appKey, options.RepoOwner, options.RepoName);
             if (!appKey.Type.Equals(AppType.Values.Package) && !options.NoInstall)
             {
-                await publishProcess.RunInstall(appKey, options.DestinationMachine);
+                await publishProcess.RunInstall
+                (
+                    appKey, 
+                    options.DestinationMachine, 
+                    options.Domain,
+                    options.SiteName
+                );
             }
         }
         catch (Exception ex)

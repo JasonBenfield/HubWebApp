@@ -13,7 +13,7 @@ internal sealed class GetAppTest
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        var modifier = await tester.FakeHubAppModifier();
+        var modifier = tester.FakeHubAppModifier();
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (

@@ -1,11 +1,10 @@
-﻿using System.Web;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_WebApp;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.Auth;
 
-public sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
+internal sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
 {
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
@@ -21,27 +20,7 @@ public sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
         await auth.Authenticate(model.Credentials.UserName, model.Credentials.Password);
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var startUrl = model.StartUrl;
-        if (string.IsNullOrWhiteSpace(startUrl))
-        {
-            startUrl = "~/User";
-        }
-        else
-        {
-            startUrl = HttpUtility.UrlDecode(startUrl);
-        }
-        if (!string.IsNullOrWhiteSpace(model.ReturnUrl))
-        {
-            if (startUrl.Contains("?"))
-            {
-                startUrl += "&";
-            }
-            else
-            {
-                startUrl += "?";
-            }
-            startUrl += $"returnUrl={model.ReturnUrl}";
-        }
+        var startUrl = new StartUrl(model.StartUrl, model.ReturnUrl).Value;
         return new WebRedirectResult(startUrl);
     }
 }

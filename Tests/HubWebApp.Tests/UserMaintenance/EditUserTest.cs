@@ -73,7 +73,7 @@ internal sealed class EditUserTest
 
     private async Task<AppUser> addUser(HubActionTester<EditUserForm, EmptyActionResult> tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {

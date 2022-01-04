@@ -19,19 +19,28 @@ internal sealed class AppModifierAssertions<TModel, TResult>
 
     public void ShouldThrowError_WhenModifierIsBlank(TModel model)
     {
-        var adminUser = tester.LoginAsAdmin();
-        var ex = Assert.ThrowsAsync<Exception>(() => tester.Execute(model));
+        tester.LoginAsAdmin();
+        var ex = Assert.ThrowsAsync<Exception>
+        (
+            () => tester.Execute(model),
+            "Should throw error when modifier is blank"
+        );
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
-    public void ShouldThrowError_WhenAccessIsDenied(TModel model, IModifier modifier, params AppRoleName[] allowedRoles)
+    public void ShouldThrowError_WhenAccessIsDenied(TModel model, FakeModifier modifier, params AppRoleName[] allowedRoles)
     {
         var loggedInUser = tester.Login();
+        var appContext = tester.Services.GetRequiredService<FakeAppContext>();
         foreach (var roleName in allowedRoles)
         {
             clearUserRoles(loggedInUser, modifier);
             loggedInUser.AddRole(roleName);
-            Assert.DoesNotThrowAsync(() => tester.Execute(model, modifier.ModKey()));
+            Assert.DoesNotThrowAsync
+            (
+                () => tester.Execute(model, modifier.ModKey()),
+                $"Should have access with role '{roleName.DisplayText}'"
+            );
         }
         var roles = tester.FakeHubApp()
             .Roles()
@@ -42,10 +51,19 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         {
             clearUserRoles(loggedInUser, modifier);
             loggedInUser.AddRole(roleName);
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, modifier.ModKey()));
+            Assert.ThrowsAsync<AccessDeniedException>
+            (
+                () => tester.Execute(model, modifier.ModKey()),
+                $"Should not have access with role '{roleName.DisplayText}'"
+            );
         }
         clearUserRoles(loggedInUser, modifier);
         loggedInUser.AddRole(AppRoleName.DenyAccess);
+        Assert.ThrowsAsync<AccessDeniedException>
+        (
+            () => tester.Execute(model, modifier.ModKey()),
+            $"Should not have access with role '{AppRoleName.DenyAccess.DisplayText}'"
+        );
     }
 
     private static void clearUserRoles(FakeAppUser loggedInUser, IModifier modifier)

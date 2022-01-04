@@ -38,7 +38,7 @@ internal sealed class UnassignRoleTest
             ModifierID = defaultModifier.ID.Value,
             RoleID = viewAppRole.ID.Value
         };
-        var modifier = await tester.FakeHubAppModifier();
+        var modifier = tester.FakeHubAppModifier();
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
@@ -102,7 +102,7 @@ internal sealed class UnassignRoleTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute
         (

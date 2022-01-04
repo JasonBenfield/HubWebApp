@@ -29,18 +29,17 @@ public static class FakeExtensions
         services.AddScoped<HubAppSetup>();
         services.AddScoped<IAppSetup>(sp => sp.GetRequiredService<HubAppSetup>());
         services.AddScoped(_ => HubInfo.AppKey);
-        services.AddScoped<AccessForAuthenticate, FakeAccessForAuthenticate>();
-        services.AddScoped<AccessForLogin, FakeAccessForLogin>();
+        services.AddScoped<FakeAccessForAuthenticate>();
+        services.AddScoped<AccessForAuthenticate>(sp => sp.GetRequiredService<FakeAccessForAuthenticate>());
+        services.AddScoped<FakeAccessForLogin>();
+        services.AddScoped<AccessForLogin>(sp => sp.GetRequiredService<FakeAccessForLogin>());
         services.AddScoped
         (
             sp => new DefaultFakeSetup
             (
                 sp.GetRequiredService<AppApiFactory>(),
-                sp.GetRequiredService<FakeAppContext>(),
-                "Hub"
+                sp.GetRequiredService<FakeAppContext>()
             )
         );
-        //services.AddScoped<ISourceAppContext, DefaultAppContext>();
-        //services.AddScoped<ISourceUserContext, WebUserContext>();
     }
 }
