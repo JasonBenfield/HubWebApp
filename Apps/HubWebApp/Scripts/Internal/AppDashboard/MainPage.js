@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var SingleActivePanel_1 = require("@jasonbenfield/sharedwebapp/Panel/SingleActivePanel");
 var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
 var WebPage_1 = require("@jasonbenfield/sharedwebapp/Api/WebPage");
 var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/Api/XtiUrl");
@@ -14,6 +15,7 @@ var MainPage = /** @class */ (function () {
     function MainPage(page) {
         this.view = new MainPageView_1.MainPageView(page);
         this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        this.panels = new SingleActivePanel_1.SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel_1.AppDetailPanel(this.hubApi, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel_1.ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));
         this.resourcePanel = this.panels.add(new ResourcePanel_1.ResourcePanel(this.hubApi, this.view.resourcePanel));
@@ -26,9 +28,9 @@ var MainPage = /** @class */ (function () {
         }
     }
     MainPage.prototype.activateAppDetailPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.appDetailPanel);
@@ -51,9 +53,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateResourceGroupPanel = function (groupID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.resourceGroupPanel);
@@ -79,9 +81,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateResourcePanel = function (resourceID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.resourcePanel);
@@ -101,9 +103,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateModCategoryPanel = function (modCategoryID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.modCategoryPanel);

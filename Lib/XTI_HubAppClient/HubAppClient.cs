@@ -6,46 +6,26 @@ public sealed partial class HubAppClient : AppClient
     public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, AppClientUrl clientUrl, string version = DefaultVersion) : base(httpClientFactory, clientUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
     {
         xtiToken = tokenFactory.Create(this);
-        User = new UserGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(User);
-        UserCache = new UserCacheGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(UserCache);
-        Auth = new AuthGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Auth);
-        AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(AuthApi);
-        ExternalAuth = new ExternalAuthGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(ExternalAuth);
-        Authenticators = new AuthenticatorsGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Authenticators);
-        PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(PermanentLog);
-        Apps = new AppsGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Apps);
-        App = new AppGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(App);
-        Install = new InstallGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Install);
-        Publish = new PublishGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Publish);
-        Version = new VersionGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Version);
-        ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(ResourceGroup);
-        Resource = new ResourceGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Resource);
-        ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(ModCategory);
-        Users = new UsersGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(Users);
-        UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(UserInquiry);
-        AppUser = new AppUserGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(AppUser);
-        AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(AppUserMaintenance);
-        UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, clientUrl);
-        SetJsonSerializerOptions(UserMaintenance);
+        User = GetGroup((_clientFactory, _token, _url) => new UserGroup(_clientFactory, _token, _url));
+        UserCache = GetGroup((_clientFactory, _token, _url) => new UserCacheGroup(_clientFactory, _token, _url));
+        Auth = GetGroup((_clientFactory, _token, _url) => new AuthGroup(_clientFactory, _token, _url));
+        AuthApi = GetGroup((_clientFactory, _token, _url) => new AuthApiGroup(_clientFactory, _token, _url));
+        ExternalAuth = GetGroup((_clientFactory, _token, _url) => new ExternalAuthGroup(_clientFactory, _token, _url));
+        Authenticators = GetGroup((_clientFactory, _token, _url) => new AuthenticatorsGroup(_clientFactory, _token, _url));
+        PermanentLog = GetGroup((_clientFactory, _token, _url) => new PermanentLogGroup(_clientFactory, _token, _url));
+        Apps = GetGroup((_clientFactory, _token, _url) => new AppsGroup(_clientFactory, _token, _url));
+        App = GetGroup((_clientFactory, _token, _url) => new AppGroup(_clientFactory, _token, _url));
+        Install = GetGroup((_clientFactory, _token, _url) => new InstallGroup(_clientFactory, _token, _url));
+        Publish = GetGroup((_clientFactory, _token, _url) => new PublishGroup(_clientFactory, _token, _url));
+        Version = GetGroup((_clientFactory, _token, _url) => new VersionGroup(_clientFactory, _token, _url));
+        ResourceGroup = GetGroup((_clientFactory, _token, _url) => new ResourceGroupGroup(_clientFactory, _token, _url));
+        Resource = GetGroup((_clientFactory, _token, _url) => new ResourceGroup(_clientFactory, _token, _url));
+        ModCategory = GetGroup((_clientFactory, _token, _url) => new ModCategoryGroup(_clientFactory, _token, _url));
+        Users = GetGroup((_clientFactory, _token, _url) => new UsersGroup(_clientFactory, _token, _url));
+        UserInquiry = GetGroup((_clientFactory, _token, _url) => new UserInquiryGroup(_clientFactory, _token, _url));
+        AppUser = GetGroup((_clientFactory, _token, _url) => new AppUserGroup(_clientFactory, _token, _url));
+        AppUserMaintenance = GetGroup((_clientFactory, _token, _url) => new AppUserMaintenanceGroup(_clientFactory, _token, _url));
+        UserMaintenance = GetGroup((_clientFactory, _token, _url) => new UserMaintenanceGroup(_clientFactory, _token, _url));
     }
 
     public UserGroup User { get; }

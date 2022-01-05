@@ -3,6 +3,7 @@ import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleH
 import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
 import { ListItem } from "@jasonbenfield/sharedwebapp/Html/ListItem";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
+import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
 import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
 
@@ -18,7 +19,7 @@ export class ModCategoryComponentView extends CardView {
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
         this.listGroup = this.addBlockListGroup();
-        let listItem = new ListItem();
+        let listItem = new ListGroupItemView();
         this.listGroup.addItem(listItem)
         this.modCategoryName = listItem.addContent(new TextSpanView());
         this.clicked = this.listGroup.itemClicked;

@@ -6,7 +6,7 @@ var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ButtonListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView");
 var ModifierCategoryListItemView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModifierCategoryListItemView, _super);
+    tslib_1.__extends(ModifierCategoryListItemView, _super);
     function ModifierCategoryListItemView() {
         var _this = _super.call(this) || this;
         _this.categoryName = _this.addContent(new Row_1.Row())

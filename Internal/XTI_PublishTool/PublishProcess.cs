@@ -243,7 +243,8 @@ public sealed class PublishProcess
             .AddArgument("c", getConfiguration())
             .UseArgumentValueDelimiter("=")
             .AddArgument("p:PublishProfile", "Default")
-            .AddArgument("p:PublishDir", publishAppDir);
+            .AddArgument("p:PublishDir", publishAppDir)
+            .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
     }

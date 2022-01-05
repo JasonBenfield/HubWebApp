@@ -17,8 +17,9 @@ export class ResourceGroupAccessCard {
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceAccessCardView
     ) {
-        new TextBlock('Permissions', this.view.titleHeader);
+        new TextBlock('Allowed Roles', this.view.titleHeader);
         this.alert = new CardAlert(this.view.alert).alert;
+        this.accessItems = new ListGroup(this.view.accessItems);
     }
 
     setGroupID(groupID: number) {

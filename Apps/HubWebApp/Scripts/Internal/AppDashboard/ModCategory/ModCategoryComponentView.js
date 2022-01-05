@@ -7,7 +7,7 @@ var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
 var TextBlockView_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlockView");
 var UnorderedList_1 = require("@jasonbenfield/sharedwebapp/Html/UnorderedList");
 var ModCategoryComponentView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModCategoryComponentView, _super);
+    tslib_1.__extends(ModCategoryComponentView, _super);
     function ModCategoryComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

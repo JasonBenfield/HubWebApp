@@ -10,7 +10,7 @@ var TextValueFormGroupView_1 = require("@jasonbenfield/sharedwebapp/Html/TextVal
 var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var HubTheme_1 = require("../../HubTheme");
 var UserComponentView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserComponentView, _super);
+    tslib_1.__extends(UserComponentView, _super);
     function UserComponentView() {
         var _this = _super.call(this) || this;
         _this.setName(UserComponentView.name);

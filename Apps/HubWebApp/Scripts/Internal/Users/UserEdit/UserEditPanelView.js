@@ -12,7 +12,7 @@ var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var EditUserFormView_1 = require("../../../Hub/Api/EditUserFormView");
 var HubTheme_1 = require("../../HubTheme");
 var UserEditPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserEditPanelView, _super);
+    tslib_1.__extends(UserEditPanelView, _super);
     function UserEditPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

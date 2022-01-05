@@ -22,6 +22,7 @@ await Host.CreateDefaultBuilder(args)
     (
         (hostContext, services) =>
         {
+            services.AddMemoryCache();
             services.Configure<InstallOptions>(hostContext.Configuration);
             services.AddSingleton<XtiFolder>();
             services.AddScoped<GitFactory>();

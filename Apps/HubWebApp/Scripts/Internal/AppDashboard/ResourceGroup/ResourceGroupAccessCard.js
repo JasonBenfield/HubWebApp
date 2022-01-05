@@ -4,21 +4,23 @@ exports.ResourceGroupAccessCard = void 0;
 var tslib_1 = require("tslib");
 var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceGroupAccessCard = /** @class */ (function () {
     function ResourceGroupAccessCard(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new TextBlock_1.TextBlock('Permissions', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Allowed Roles', this.view.titleHeader);
         this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.accessItems = new ListGroup_1.ListGroup(this.view.accessItems);
     }
     ResourceGroupAccessCard.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;
     };
     ResourceGroupAccessCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var accessItems;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getRoleAccessItems()];
                     case 1:
@@ -35,13 +37,13 @@ var ResourceGroupAccessCard = /** @class */ (function () {
         });
     };
     ResourceGroupAccessCard.prototype.getRoleAccessItems = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var allowedRoles, accessItems, _i, allowedRoles_1, allowedRole;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.ResourceGroup.GetRoleAccess({
                                             VersionKey: 'Current',

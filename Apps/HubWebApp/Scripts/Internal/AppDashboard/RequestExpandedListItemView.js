@@ -6,7 +6,7 @@ var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView");
 var RequestExpandedListItemView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(RequestExpandedListItemView, _super);
+    tslib_1.__extends(RequestExpandedListItemView, _super);
     function RequestExpandedListItemView() {
         var _this = _super.call(this) || this;
         var row = _this.addContent(new Row_1.Row());

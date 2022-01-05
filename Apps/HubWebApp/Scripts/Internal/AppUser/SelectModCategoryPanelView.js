@@ -15,7 +15,7 @@ var MarginCss_1 = require("@jasonbenfield/sharedwebapp/MarginCss");
 var HubTheme_1 = require("../HubTheme");
 var ModCategoryButtonListItemView_1 = require("./ModCategoryButtonListItemView");
 var SelectModCategoryPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(SelectModCategoryPanelView, _super);
+    tslib_1.__extends(SelectModCategoryPanelView, _super);
     function SelectModCategoryPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

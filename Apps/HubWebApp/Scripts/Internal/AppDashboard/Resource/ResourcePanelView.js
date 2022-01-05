@@ -12,7 +12,7 @@ var MostRecentRequestListCardView_1 = require("../MostRecentRequestListCardView"
 var ResourceAccessCardView_1 = require("../ResourceAccessCardView");
 var ResourceComponentView_1 = require("./ResourceComponentView");
 var ResourcePanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourcePanelView, _super);
+    tslib_1.__extends(ResourcePanelView, _super);
     function ResourcePanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

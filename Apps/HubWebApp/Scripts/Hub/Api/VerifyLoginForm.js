@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 // Generated code
 var BaseForm_1 = require("@jasonbenfield/sharedwebapp/Forms/BaseForm");
 var VerifyLoginForm = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(VerifyLoginForm, _super);
+    tslib_1.__extends(VerifyLoginForm, _super);
     function VerifyLoginForm(view) {
         var _this = _super.call(this, 'VerifyLoginForm', view) || this;
         _this.UserName = _this.addTextInputFormGroup('UserName', _this.view.UserName);

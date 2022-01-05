@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 // Generated code
 var BaseForm_1 = require("@jasonbenfield/sharedwebapp/Forms/BaseForm");
 var EditUserForm = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(EditUserForm, _super);
+    tslib_1.__extends(EditUserForm, _super);
     function EditUserForm(view) {
         var _this = _super.call(this, 'EditUserForm', view) || this;
         _this.UserID = _this.addHiddenNumberFormGroup('UserID', _this.view.UserID);

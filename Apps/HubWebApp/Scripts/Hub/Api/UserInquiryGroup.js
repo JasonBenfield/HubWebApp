@@ -5,7 +5,7 @@ exports.UserInquiryGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var UserInquiryGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserInquiryGroup, _super);
+    tslib_1.__extends(UserInquiryGroup, _super);
     function UserInquiryGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'UserInquiry') || this;
         _this.GetUserAction = _this.createAction('GetUser', 'Get User');

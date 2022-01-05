@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var AppListItemView_1 = require("./AppListItemView");
 var AppListCardView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppListCardView, _super);
+    tslib_1.__extends(AppListCardView, _super);
     function AppListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

@@ -99,12 +99,8 @@ internal sealed class PublishNpmProcess
                     Path.Combine(projectDir, "package.json"),
                     Path.Combine(tempExportDistDir, "package.json")
                 );
-                var tsConfigPath = Path.Combine(tempExportSrcDir, "tsConfig.json");
-
                 Console.WriteLine($"Running tsc at '{tempExportSrcDir}'");
                 var tscProcess = new WinProcess("tsc")
-                    //.UseArgumentNameDelimiter("-")
-                    //.AddArgument("p", tsConfigPath)
                     .UseArgumentNameDelimiter("--")
                     .AddArgument("declaration", "true")
                     .AddArgument("outDir", "../dist");
@@ -141,7 +137,7 @@ internal sealed class PublishNpmProcess
             }
             finally
             {
-                //Directory.Delete(tempExportDir, true);
+                Directory.Delete(tempExportDir, true);
             }
             if (hostEnv.IsProduction())
             {

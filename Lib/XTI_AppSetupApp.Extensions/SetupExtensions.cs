@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using XTI_App.Secrets;
+using XTI_Core;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
 using XTI_WebAppClient;
@@ -13,6 +14,8 @@ public static class SetupExtensions
 {
     public static void AddAppSetupServices(this IServiceCollection services, IHostEnvironment hostEnv, IConfiguration config)
     {
+        services.AddMemoryCache();
+        services.AddSingleton<XtiFolder>();
         services.AddFileSecretCredentials(hostEnv);
         services.AddSingleton<InstallationUserCredentials>();
         services.AddSingleton<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());

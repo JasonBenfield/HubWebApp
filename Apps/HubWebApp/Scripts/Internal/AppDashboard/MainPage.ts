@@ -23,6 +23,7 @@ class MainPage {
     constructor(page: PageFrameView) {
         this.view = new MainPageView(page);
         this.hubApi = new Apis(page.modalError).hub();
+        this.panels = new SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubApi, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));
         this.resourcePanel = this.panels.add(new ResourcePanel(this.hubApi, this.view.resourcePanel));

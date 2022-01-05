@@ -5,7 +5,7 @@ exports.AppGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var AppGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppGroup, _super);
+    tslib_1.__extends(AppGroup, _super);
     function AppGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'App') || this;
         _this.Index = _this.createView('Index');
@@ -17,7 +17,7 @@ var AppGroup = /** @class */ (function (_super) {
         _this.GetMostRecentErrorEventsAction = _this.createAction('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
         _this.GetModifierCategoriesAction = _this.createAction('GetModifierCategories', 'Get Modifier Categories');
         _this.GetModifierCategoryAction = _this.createAction('GetModifierCategory', 'Get Modifier Category');
-        _this.GetDefaultModiiferAction = _this.createAction('GetDefaultModiifer', 'Get Default Modiifer');
+        _this.GetDefaultModifierAction = _this.createAction('GetDefaultModifier', 'Get Default Modifier');
         return _this;
     }
     AppGroup.prototype.GetApp = function (errorOptions) {
@@ -44,8 +44,8 @@ var AppGroup = /** @class */ (function (_super) {
     AppGroup.prototype.GetModifierCategory = function (model, errorOptions) {
         return this.GetModifierCategoryAction.execute(model, errorOptions || {});
     };
-    AppGroup.prototype.GetDefaultModiifer = function (errorOptions) {
-        return this.GetDefaultModiiferAction.execute({}, errorOptions || {});
+    AppGroup.prototype.GetDefaultModifier = function (errorOptions) {
+        return this.GetDefaultModifierAction.execute({}, errorOptions || {});
     };
     return AppGroup;
 }(AppApiGroup_1.AppApiGroup));

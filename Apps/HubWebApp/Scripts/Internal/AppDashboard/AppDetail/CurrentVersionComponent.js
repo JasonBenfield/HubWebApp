@@ -14,28 +14,28 @@ var CurrentVersionComponent = /** @class */ (function () {
         this.version = new TextBlock_1.TextBlock('', this.view.version);
     }
     CurrentVersionComponent.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var currentVersion;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getCurrentVersion()];
                     case 1:
                         currentVersion = _a.sent();
                         this.versionKey.setText(currentVersion.VersionKey);
-                        this.version.setText("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
+                        this.version.setText(currentVersion.Major + "." + currentVersion.Minor + "." + currentVersion.Patch);
                         return [2 /*return*/];
                 }
             });
         });
     };
     CurrentVersionComponent.prototype.getCurrentVersion = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var currentVersion;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.Version.GetVersion('current')];
                                     case 1:

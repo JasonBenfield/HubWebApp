@@ -7,7 +7,7 @@ var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
 var MessageAlertView_1 = require("@jasonbenfield/sharedwebapp/MessageAlertView");
 var AppUserDataPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppUserDataPanelView, _super);
+    tslib_1.__extends(AppUserDataPanelView, _super);
     function AppUserDataPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

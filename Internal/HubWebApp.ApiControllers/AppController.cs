@@ -64,8 +64,8 @@ public class AppController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> GetDefaultModiifer()
+    public Task<ResultContainer<ModifierModel>> GetDefaultModifier()
     {
-        return api.Group("App").Action<EmptyRequest, ModifierModel>("GetDefaultModiifer").Execute(new EmptyRequest());
+        return api.Group("App").Action<EmptyRequest, ModifierModel>("GetDefaultModifier").Execute(new EmptyRequest());
     }
 }

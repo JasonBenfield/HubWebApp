@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var RoleAccessListItemView_1 = require("./RoleAccessListItemView");
 var ResourceAccessCardView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceAccessCardView, _super);
+    tslib_1.__extends(ResourceAccessCardView, _super);
     function ResourceAccessCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

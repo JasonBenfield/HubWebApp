@@ -104,9 +104,9 @@ internal sealed class InstallHostedService : IHostedService
         var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
         var password = $"{Guid.NewGuid():N}?!";
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var systemUser = await appFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
-        var credentials = new CredentialValue(systemUser.UserName().Value, password);
-        Console.WriteLine($"Added installation user '{systemUser.UserName()}'");
+        var installationUser = await appFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
+        var credentials = new CredentialValue(installationUser.UserName().Value, password);
+        Console.WriteLine($"Added installation user '{installationUser.UserName()}'");
         return credentials;
     }
 
@@ -153,8 +153,8 @@ internal sealed class InstallHostedService : IHostedService
                     AppName = options.AppName,
                     AppType = options.AppType,
                     VersionKey = versionKey,
-                    SystemUserName = credential.UserName,
-                    SystemPassword = credential.Password,
+                    InstallationUserName = credential.UserName,
+                    InstallationPassword = credential.Password,
                     MachineName = machineName,
                     Domain = options.Domain
                 }

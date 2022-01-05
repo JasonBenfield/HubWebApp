@@ -7,12 +7,12 @@ import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 export class ResourceGroupListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly requests: ListGroupView;
+    readonly resourceGroups: ListGroupView;
 
     constructor() {
         super();
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.requests = this.addBlockListGroup(() => new ResourceGroupListItemView());
+        this.resourceGroups = this.addBlockListGroup(() => new ResourceGroupListItemView());
     }
 }

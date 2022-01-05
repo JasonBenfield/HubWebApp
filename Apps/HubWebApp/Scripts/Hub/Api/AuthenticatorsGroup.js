@@ -5,7 +5,7 @@ exports.AuthenticatorsGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var AuthenticatorsGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AuthenticatorsGroup, _super);
+    tslib_1.__extends(AuthenticatorsGroup, _super);
     function AuthenticatorsGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Authenticators') || this;
         _this.RegisterAuthenticatorAction = _this.createAction('RegisterAuthenticator', 'Register Authenticator');

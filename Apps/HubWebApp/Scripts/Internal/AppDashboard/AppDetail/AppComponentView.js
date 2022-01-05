@@ -7,7 +7,7 @@ var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var AppComponentView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AppComponentView, _super);
+    tslib_1.__extends(AppComponentView, _super);
     function AppComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

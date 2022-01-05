@@ -23,7 +23,7 @@ namespace XTI_HubAppClient
         public async Task<IModifier> DefaultModifier()
         {
             var appModifier = await appContext.GetModifierKey();
-            var defaultModifier = await hubClient.App.GetDefaultModiifer(appModifier);
+            var defaultModifier = await hubClient.App.GetDefaultModifier(appModifier);
             return new HubClientModifier(hubClient, appContext, defaultModifier);
         }
 

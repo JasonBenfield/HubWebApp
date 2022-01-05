@@ -10,10 +10,8 @@ import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
 export class ResourceGroupListCard {
     private readonly alert: MessageAlert;
-    private readonly requests: ListGroup;
-
-    private readonly _resourceSelected = new DefaultEvent<IResourceGroupModel>(this);
-    readonly resourceGroupSelected = this._resourceSelected.handler();
+    private readonly resourceGroups: ListGroup;
+    readonly resourceGroupClicked: IEventHandler<ResourceGroupListItem>;
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -21,16 +19,13 @@ export class ResourceGroupListCard {
     ) {
         new TextBlock('Resource Groups', this.view.titleHeader);
         this.alert = new CardAlert(this.view.alert).alert;
-        this.requests = new ListGroup(this.view.requests);
-    }
-
-    protected onItemSelected(item: ResourceGroupListItem) {
-        this._resourceSelected.invoke(item.group);
+        this.resourceGroups = new ListGroup(this.view.resourceGroups);
+        this.resourceGroupClicked = this.resourceGroups.itemClicked;
     }
 
     async refresh() {
         let resourceGroups = await this.getResourceGroups();
-        this.requests.setItems(
+        this.resourceGroups.setItems(
             resourceGroups,
             (sourceItem: IResourceGroupModel, listItem: ResourceGroupListItemView) =>
                 new ResourceGroupListItem(sourceItem, listItem)
@@ -40,14 +35,10 @@ export class ResourceGroupListCard {
         }
     }
 
-    private async getResourceGroups() {
-        let resourceGroup: IResourceGroupModel[];
-        await this.alert.infoAction(
+    private getResourceGroups() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                resourceGroup = await this.hubApi.App.GetResourceGroups();
-            }
+            () => this.hubApi.App.GetResourceGroups()
         );
-        return resourceGroup;
     }
 }
