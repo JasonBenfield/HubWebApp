@@ -13,7 +13,15 @@ public sealed class UserInquiryGroup : AppApiGroupWrapper
         var actions = new AppApiActionFactory(source);
         GetUser = source.AddAction(actions.Action(nameof(GetUser), () => sp.GetRequiredService<GetUserAction>()));
         GetUserByUserName = source.AddAction(actions.Action(nameof(GetUserByUserName), () => sp.GetRequiredService<GetUserByUserNameAction>()));
-        GetCurrentUser = source.AddAction(actions.Action(nameof(GetCurrentUser), () => sp.GetRequiredService<GetCurrentUserAction>()));
+        GetCurrentUser = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(GetCurrentUser),
+                ResourceAccess.AllowAuthenticated(),
+                () => sp.GetRequiredService<GetCurrentUserAction>()
+            )
+        );
         RedirectToAppUser = source.AddAction(actions.Action(nameof(RedirectToAppUser), () => sp.GetRequiredService<RedirectToAppUserAction>()));
     }
 

@@ -4,7 +4,7 @@ using XTI_App.Extensions;
 using XTI_Hub;
 using XTI_HubAppApi.ExternalAuth;
 using XTI_TempLog;
-using XTI_WebApp;
+using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppApi;
 

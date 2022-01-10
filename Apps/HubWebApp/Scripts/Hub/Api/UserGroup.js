@@ -9,6 +9,8 @@ var UserGroup = /** @class */ (function (_super) {
     function UserGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'User') || this;
         _this.Index = _this.createView('Index');
+        _this.AccessDenied = _this.createView('AccessDenied');
+        _this.Error = _this.createView('Error');
         return _this;
     }
     return UserGroup;

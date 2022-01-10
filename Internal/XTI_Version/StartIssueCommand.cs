@@ -5,27 +5,25 @@ namespace XTI_Version;
 
 public sealed class StartIssueCommand : VersionCommand
 {
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
 
-    public StartIssueCommand(GitFactory gitFactory)
+    public StartIssueCommand(VersionGitFactory gitFactory)
     {
         this.gitFactory = gitFactory;
     }
 
     public async Task Execute(VersionToolOptions options)
     {
-        if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
-        if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
         if (options.IssueNumber <= 0) { throw new ArgumentException("Issue Number is required"); }
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitRepo = gitFactory.CreateGitRepo();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if (xtiBranchName is not XtiVersionBranchName)
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not a version branch");
         }
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+        var gitHubRepo = gitFactory.CreateGitHubRepo();
         var issue = await gitHubRepo.Issue(options.IssueNumber);
-        gitRepo.CheckoutBranch(issue.BranchName().Value);
+        await gitRepo.CheckoutBranch(issue.BranchName().Value);
     }
 }

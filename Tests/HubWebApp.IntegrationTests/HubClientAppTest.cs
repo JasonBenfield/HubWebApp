@@ -39,17 +39,13 @@ internal sealed class HubClientAppTest
                     services.AddMemoryCache();
                     services.AddSingleton<XtiFolder>();
                     services.AddSingleton(_ => HubInfo.AppKey);
+                    services.AddSingleton(_ => AppVersionKey.Current);
                     services.AddFileSecretCredentials(hostContext.HostingEnvironment);
                     services.AddSingleton<InstallationUserCredentials>();
                     services.AddSingleton<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
                     services.AddSingleton<SystemUserCredentials>();
                     services.AddSingleton<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
                     services.AddHubClientServices(hostContext.Configuration);
-                    services.AddScoped(sp =>
-                    {
-                        var credentials = sp.GetRequiredService<IInstallationUserCredentials>();
-                        return new XtiTokenFactory(credentials);
-                    });
                 }
             )
             .Build();

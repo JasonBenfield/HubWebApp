@@ -1,5 +1,5 @@
 ﻿using XTI_App.Api;
-using XTI_WebApp;
+using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.Auth;

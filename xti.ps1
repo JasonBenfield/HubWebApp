@@ -1,60 +1,62 @@
 ﻿Import-Module PowershellForXti -Force
 
-$script:hubConfig = [PSCustomObject]@{
+$script:xtiConfig = [PSCustomObject]@{
     RepoOwner = "JasonBenfield"
     RepoName = "HubWebApp"
     AppName = "Hub"
     AppType = "WebApp"
 }
 
-. .\Hub.Private.ps1
+if(Test-Path ".\xti.private.ps1"){
+. .\xti.Private.ps1
+}
 
-function Hub-NewVersion {
+function Xti-NewVersion {
     param(
         [ValidateSet(“major”, "minor", "patch")]
         $VersionType = "minor"
     )
-    $script:hubConfig | New-XtiVersion @PsBoundParameters
+    $script:xtiConfig | New-BaseXtiVersion @PsBoundParameters
 }
 
-function Hub-Issues {
+function Xti-Issues {
     param(
     )
-    $script:hubConfig | Xti-Issues @PsBoundParameters
+    $script:xtiConfig | BaseXti-Issues @PsBoundParameters
 }
 
-function Hub-NewIssue {
+function Xti-NewIssue {
     param(
         [Parameter(Mandatory)]
         [string] $IssueTitle,
         [switch] $Start
     )
-    $script:hubConfig | New-XtiIssue @PsBoundParameters
+    $script:xtiConfig | New-BaseXtiIssue @PsBoundParameters
 }
 
-function Hub-StartIssue {
+function Xti-StartIssue {
     param(
         [Parameter(Position=0)]
         [long]$IssueNumber = 0
     )
-    $script:hubConfig | Xti-StartIssue @PsBoundParameters
+    $script:xtiConfig | BaseXti-StartIssue @PsBoundParameters
 }
 
-function Hub-CompleteIssue {
+function Xti-CompleteIssue {
     param(
     )
-    $script:hubConfig | Xti-CompleteIssue @PsBoundParameters
+    $script:xtiConfig | BaseXti-CompleteIssue @PsBoundParameters
 }
 
-function Hub-Build {
+function Xti-Build {
     param(
         [ValidateSet("Development", "Production", "Staging", "Test")]
         $EnvName = "Development"
     )
-    $script:hubConfig | Xti-BuildWebApp @PsBoundParameters
+    $script:xtiConfig | BaseXti-BuildWebApp @PsBoundParameters
 }
 
-function Hub-Publish {
+function Xti-Publish {
     param(
         [ValidateSet("Production", "Development")]
         [string] $EnvName="Development"
@@ -65,10 +67,10 @@ function Hub-Publish {
     $PsBoundParameters.Add("Domain", $Domain)
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
-    $script:hubConfig | Xti-Publish @PsBoundParameters
+    $script:xtiConfig | BaseXti-Publish @PsBoundParameters
 }
 
-function Hub-Install {
+function Xti-Install {
     param(
         [ValidateSet("Development", "Production", "Staging", "Test")]
         $EnvName = "Development"
@@ -79,10 +81,10 @@ function Hub-Install {
     $PsBoundParameters.Add("Domain", $Domain)
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
-    $script:hubConfig | Xti-Install @PsBoundParameters
+    $script:xtiConfig | BaseXti-Install @PsBoundParameters
 }
 
-function Hub-Add-DBMigrations {
+function Add-HubDBMigrations {
     param ([Parameter(Mandatory)]$Name)
     $env:DOTNET_ENVIRONMENT="Development"
     dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./Internal/XTI_HubDB.EF.SqlServer

@@ -28,14 +28,15 @@ export class SelectModCategoryPanelView extends Block {
         this.setName(SelectModCategoryPanelView.name);
         let flexColumn = this.addContent(new FlexColumn());
         let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.defaultModListItem = new ButtonListGroupItemView();
+        let defaultModList = flexFill.addContent(
+            new ListGroupView(() => new ListItem(), new ListBlockViewModel())
+        );
+        defaultModList.setMargin(MarginCss.bottom(3));
+        this.defaultModClicked = defaultModList.itemClicked;
+        this.defaultModListItem = defaultModList.addButtonListGroupItem();
         this.defaultModListItem
             .addContent(new TextBlockView())
             .configure(tb => tb.setText('Default Modifier'));
-        let defaultModList = flexFill.addContent(new ListGroupView(() => new ListItem(), new ListBlockViewModel()));
-        this.defaultModClicked = defaultModList.itemClicked;
-        defaultModList.addItem(this.defaultModListItem);
-        defaultModList.setMargin(MarginCss.bottom(3));
 
         let card = flexFill.addContent(new CardView());
         this.titleHeader = card.addCardTitleHeader();

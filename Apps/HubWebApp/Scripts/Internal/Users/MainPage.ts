@@ -2,7 +2,7 @@
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { Apis } from '../../Hub/Apis';
+import { Apis } from '../Apis';
 import { MainPageView } from './MainPageView';
 import { UserPanel } from './User/UserPanel';
 import { UserEditPanel } from './UserEdit/UserEditPanel';
@@ -18,7 +18,7 @@ class MainPage {
 
     constructor(page: PageFrameView) {
         this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).hub();
+        this.hubApi = new Apis(page.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.userListPanel = this.panels.add(new UserListPanel(this.hubApi, this.view.userListPanel));
         this.userPanel = this.panels.add(new UserPanel(this.hubApi, this.view.userPanel));

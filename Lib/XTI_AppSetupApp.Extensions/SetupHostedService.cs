@@ -23,7 +23,7 @@ public sealed class SetupHostedService : IHostedService
             ? AppVersionKey.Current
             : AppVersionKey.Parse(options.VersionKey);
         await defaultSetup.Run(versionKey);
-        var additionalSetup = scope.ServiceProvider.GetRequiredService<IAppSetup>();
+        var additionalSetup = scope.ServiceProvider.GetService<IAppSetup>();
         if (additionalSetup != null)
         {
             await additionalSetup.Run(versionKey);

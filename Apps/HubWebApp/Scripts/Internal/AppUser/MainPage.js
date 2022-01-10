@@ -6,7 +6,7 @@ var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
 var Url_1 = require("@jasonbenfield/sharedwebapp/Url");
 var WebPage_1 = require("@jasonbenfield/sharedwebapp/Api/WebPage");
 var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/Api/XtiUrl");
-var Apis_1 = require("../../Hub/Apis");
+var Apis_1 = require("../Apis");
 var AddRolePanel_1 = require("./AddRolePanel");
 var AppUserDataPanel_1 = require("./AppUserDataPanel");
 var MainPageView_1 = require("./MainPageView");
@@ -16,7 +16,7 @@ var UserRolesPanel_1 = require("./UserRolesPanel");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
         this.view = new MainPageView_1.MainPageView(page);
-        this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        this.hubApi = new Apis_1.Apis(page.modalError).Hub();
         this.panels = new SingleActivePanel_1.SingleActivePanel();
         this.appUserDataPanel = this.panels.add(new AppUserDataPanel_1.AppUserDataPanel(this.hubApi, this.view.appUserDataPanel));
         this.selectModCategoryPanel = this.panels.add(new SelectModCategoryPanel_1.SelectModCategoryPanel(this.hubApi, this.view.selectModCategoryPanel));

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
@@ -13,23 +12,25 @@ using XTI_WebAppClient;
 
 namespace HubWebApp.EndToEndTests;
 
-public class EndToEndTest
+internal sealed class EndToEndTest
 {
+    private static readonly CredentialValue NewUserCredentials = new CredentialValue("TestUser1", "Password12345");
+
     [Test]
     public async Task ShouldLogin()
     {
-        var input = setup();
+        var sp = setup();
         var addUserModel = new AddUserModel
         {
-            UserName = "TestUser1",
-            Password = "Password12345"
+            UserName = NewUserCredentials.UserName,
+            Password = NewUserCredentials.Password
         };
-        await input.HubClient.Users.AddOrUpdateUser(addUserModel);
-        input.HubClient.ResetToken();
-        input.TestCredentials.Source = new SimpleCredentials(new CredentialValue(addUserModel.UserName, addUserModel.Password));
+        var hubClient = sp.GetRequiredService<HubAppClient>();
+        await hubClient.Users.AddOrUpdateUser(addUserModel);
+        hubClient.UseToken<NewUserXtiToken>();
         var ex = Assert.ThrowsAsync<AppClientException>(async () =>
         {
-            await input.HubClient.Users.AddOrUpdateUser(new AddUserModel
+            await hubClient.Users.AddOrUpdateUser(new AddUserModel
             {
                 UserName = "TestUser2",
                 Password = "Password12345"
@@ -40,7 +41,7 @@ public class EndToEndTest
 
     }
 
-    private TestInput setup()
+    private IServiceProvider setup()
     {
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Test");
         var host = Host.CreateDefaultBuilder()
@@ -49,13 +50,6 @@ public class EndToEndTest
                 (hostContext, config) =>
                 {
                     config.UseXtiConfiguration(hostContext.HostingEnvironment, new string[] { });
-                    config.AddInMemoryCollection
-                    (
-                        new[]
-                        {
-                                KeyValuePair.Create("Authenticator:CredentialKey", "HubAdmin")
-                        }
-                    );
                 }
             )
             .ConfigureServices
@@ -65,41 +59,51 @@ public class EndToEndTest
                     services.Configure<AppOptions>(hostContext.Configuration.GetSection(AppOptions.App));
                     services.AddHttpClient();
                     services.AddFileSecretCredentials(hostContext.HostingEnvironment);
-                    services.AddSingleton(sp =>
-                    {
-                        var credentialsFactory = sp.GetRequiredService<SecretCredentialsFactory>();
-                        var credentials = credentialsFactory.Create("TEST");
-                        return new XtiTokenFactory(credentials);
-                    });
-                    services.AddSingleton<ICredentials, TestCredentials>();
+                    services.AddScoped
+                    (
+                        sp =>
+                        {
+                            var authClient = sp.GetRequiredService<IAuthClient>();
+                            var credentialsFactory = sp.GetRequiredService<SecretCredentialsFactory>();
+                            var credentials = credentialsFactory.Create("TEST");
+                            return new TesterXtiToken(authClient, credentials);
+                        }
+                    );
+                    services.AddScoped
+                    (
+                        sp =>
+                        {
+                            var authClient = sp.GetRequiredService<IAuthClient>();
+                            return new NewUserXtiToken(authClient, new SimpleCredentials(NewUserCredentials));
+                        }
+                    );
                     services.AddHubClientServices(hostContext.Configuration);
+                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    {
+                        tokenAccessor.AddToken(() => sp.GetRequiredService<TesterXtiToken>());
+                        tokenAccessor.UseToken<TesterXtiToken>();
+                        tokenAccessor.AddToken(() => sp.GetRequiredService<NewUserXtiToken>());
+                    });
                 }
             )
             .Build();
         var scope = host.Services.CreateScope();
-        return new TestInput(scope.ServiceProvider);
+        return scope.ServiceProvider;
     }
 
-    public sealed class TestCredentials : ICredentials
+    public sealed class TesterXtiToken : AuthenticatorXtiToken
     {
-        public TestCredentials(ICredentials source)
+        public TesterXtiToken(IAuthClient authClient, ICredentials credentials)
+            : base(authClient, credentials)
         {
-            Source = source;
         }
-
-        public ICredentials Source { get; set; }
-
-        public Task<CredentialValue> Value() => Source.Value();
     }
 
-    public sealed class TestInput
+    public sealed class NewUserXtiToken : AuthenticatorXtiToken
     {
-        public TestInput(IServiceProvider sp)
+        public NewUserXtiToken(IAuthClient authClient, ICredentials credentials)
+            : base(authClient, credentials)
         {
-            HubClient = sp.GetRequiredService<HubAppClient>();
-            TestCredentials = (TestCredentials)sp.GetRequiredService<ICredentials>();
         }
-        public HubAppClient HubClient { get; }
-        public TestCredentials TestCredentials { get; }
     }
 }

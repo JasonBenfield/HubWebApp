@@ -4,7 +4,7 @@ import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { Apis } from '../../Hub/Apis';
+import { Apis } from '../Apis';
 import { AppDetailPanel } from './AppDetail/AppDetailPanel';
 import { MainPageView } from './MainPageView';
 import { ModCategoryPanel } from './ModCategory/ModCategoryPanel';
@@ -22,7 +22,7 @@ class MainPage {
 
     constructor(page: PageFrameView) {
         this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).hub();
+        this.hubApi = new Apis(page.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubApi, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));

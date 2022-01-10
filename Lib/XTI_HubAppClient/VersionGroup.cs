@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class VersionGroup : AppClientGroup
 {
-    public VersionGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, AppClientUrl clientUrl) : base(httpClientFactory, xtiToken, clientUrl, "Version")
+    public VersionGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Version")
     {
     }
 

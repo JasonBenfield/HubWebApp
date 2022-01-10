@@ -2,11 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using XTI_App.Api;
 using XTI_App.Secrets;
 using XTI_Core;
+using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
-using XTI_WebAppClient;
 
 namespace XTI_AppSetupApp.Extensions;
 
@@ -19,15 +20,18 @@ public static class SetupExtensions
         services.AddFileSecretCredentials(hostEnv);
         services.AddSingleton<InstallationUserCredentials>();
         services.AddSingleton<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
+        services.AddScoped<InstallationUserXtiToken>();
         services.AddSingleton<SystemUserCredentials>();
         services.AddSingleton<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
         services.AddHubClientServices(config);
-        services.AddScoped(sp =>
+        services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HubClientAppContext>());
+        services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HubClientUserContext>());
+        services.AddXtiTokenAccessor((sp, tokenAccessor) =>
         {
-            var credentials = sp.GetRequiredService<IInstallationUserCredentials>();
-            return new XtiTokenFactory(credentials);
+            tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+            tokenAccessor.UseToken<InstallationUserXtiToken>();
         });
-        services.Configure<SetupOptions>(config.GetSection(SetupOptions.Setup));
+        services.Configure<SetupOptions>(config);
         services.AddScoped(sp =>
         {
             var options = sp.GetRequiredService<IOptions<SetupOptions>>().Value;

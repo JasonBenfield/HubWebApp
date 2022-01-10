@@ -54,7 +54,7 @@ public sealed class AppRepository
         {
             var entity = await AddApp(appKey, title, domain, timeAdded);
             await factory.Versions.AddCurrentVersion(entity, timeAdded);
-            var app = factory.CreateApp(entity);
+            app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
             await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
         });

@@ -14,7 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="XTI_Configuration.Extensions" Version="1.10.2" />
-    <PackageReference Include="XTI_WebApp.RCL" Version="1.9.1" />
+    <PackageReference Include="XTI_WebApp.RCL" Version="1.8.9-dev220109220549770" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,13 +23,5 @@
 
   <ItemGroup>
 	  <TypeScriptCompile Include="Scripts\**\*.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="%2a%2a\**" />
-    <Content Remove="%2a%2a\**" />
-    <EmbeddedResource Remove="%2a%2a\**" />
-    <None Remove="%2a%2a\**" />
-    <TypeScriptCompile Remove="%2a%2a\**" />
   </ItemGroup>
 </Project>

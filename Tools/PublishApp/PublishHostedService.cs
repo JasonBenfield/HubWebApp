@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using XTI_App.Abstractions;
+using XTI_GitHub;
 using XTI_Hub;
 using XTI_PublishTool;
 using XTI_Secrets;
@@ -25,14 +26,14 @@ internal sealed class PublishHostedService : IHostedService
         {
             var hostEnv = sp.GetRequiredService<IHostEnvironment>();
             var appFactory = sp.GetRequiredService<AppFactory>();
-            var gitFactory = sp.GetRequiredService<GitFactory>();
+            var gitFactory = sp.GetRequiredService<IGitHubFactory>();
             var credentialsFactory = sp.GetRequiredService<ISecretCredentialsFactory>();
             var options = sp.GetRequiredService<IOptions<PublishOptions>>().Value;
             var publishProcess = new PublishProcess
             (
-                hostEnv, 
-                appFactory, 
-                gitFactory, 
+                hostEnv,
+                appFactory,
+                gitFactory,
                 credentialsFactory,
                 options.RepoOwner,
                 options.Domain
@@ -43,8 +44,8 @@ internal sealed class PublishHostedService : IHostedService
             {
                 await publishProcess.RunInstall
                 (
-                    appKey, 
-                    options.DestinationMachine, 
+                    appKey,
+                    options.DestinationMachine,
                     options.Domain,
                     options.SiteName
                 );

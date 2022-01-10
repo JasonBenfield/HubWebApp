@@ -15,11 +15,13 @@ internal sealed class BeginPublishTest
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.example.com"
         });
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
             AppTemplate = apiFactory.CreateTemplate().ToModel(),
+            Domain = "webapps.example.com",
             VersionKey = version.VersionKey,
             Versions = new AppVersionModel[0]
         });

@@ -11,7 +11,7 @@ public sealed class AppVersionEntityConfiguration : IEntityTypeConfiguration<App
         builder.HasKey(v => v.ID);
         builder.Property(v => v.ID).ValueGeneratedOnAdd();
         builder.Property(v => v.VersionKey).HasMaxLength(50);
-        builder.HasIndex(v => v.VersionKey).IsUnique();
+        builder.HasIndex(v => new { v.AppID, v.VersionKey }).IsUnique();
         builder
             .HasOne<AppEntity>()
             .WithMany()

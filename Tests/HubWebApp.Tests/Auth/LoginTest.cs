@@ -1,20 +1,12 @@
 using HubWebApp.Fakes;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
 using System.Security.Claims;
-using XTI_App.Abstractions;
-using XTI_App.Api;
 using XTI_App.Extensions;
-using XTI_App.Fakes;
 using XTI_Core;
-using XTI_Hub;
-using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
 using XTI_HubAppApi.UserList;
 using XTI_TempLog;
-using XTI_WebApp;
+using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 

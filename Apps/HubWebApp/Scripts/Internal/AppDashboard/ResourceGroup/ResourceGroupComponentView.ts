@@ -17,13 +17,11 @@ export class ResourceGroupComponentView extends CardView {
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
         let listGroup = this.addUnorderedListGroup();
-        let listItem = new ListGroupItemView();
-        listGroup.addItem(listItem);
+        let listItem = listGroup.addListGroupItem();
         let row = listItem.addContent(new Row());
         this.groupName = row.addColumn()
             .addContent(new TextSpanView());
-        this.anonListItem = new ListGroupItemView();
-        listGroup.addItem(this.anonListItem);
+        this.anonListItem = listGroup.addListGroupItem();
         this.anonListItem.addContent(new Row())
             .addColumn()
             .addContent(new TextSpanView())

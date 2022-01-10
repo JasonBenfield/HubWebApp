@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Git.Abstractions;
 using XTI_Hub;
@@ -11,10 +9,10 @@ namespace XTI_Version;
 public sealed class NewVersionCommand : VersionCommand
 {
     private readonly AppFactory appFactory;
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
     private readonly IClock clock;
 
-    public NewVersionCommand(AppFactory appFactory, GitFactory gitFactory, IClock clock)
+    public NewVersionCommand(AppFactory appFactory, VersionGitFactory gitFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.gitFactory = gitFactory;
@@ -25,15 +23,13 @@ public sealed class NewVersionCommand : VersionCommand
     {
         if (string.IsNullOrWhiteSpace(options.AppName)) { throw new ArgumentException("App Name is required"); }
         if (string.IsNullOrWhiteSpace(options.AppType)) { throw new ArgumentException("App Type is required"); }
-        if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
-        if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitRepo = gitFactory.CreateGitRepo();
         var currentBranchName = gitRepo.CurrentBranchName();
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
-        var defaultBranchName = await gitHubRepo.DefaultBranchName();
-        if (!currentBranchName.Equals(defaultBranchName, StringComparison.OrdinalIgnoreCase))
+        var gitHubRepo = gitFactory.CreateGitHubRepo();
+        var repoInfo = await gitHubRepo.RepositoryInformation();
+        if (!currentBranchName.Equals(repoInfo.DefaultBranch, StringComparison.OrdinalIgnoreCase))
         {
-            throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{defaultBranchName}'");
+            throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{repoInfo.DefaultBranch}'");
         }
         var versionType = AppVersionType.Values.Value(options.VersionType);
         if (versionType == null)
@@ -44,6 +40,6 @@ public sealed class NewVersionCommand : VersionCommand
         var gitVersion = new XtiGitVersion(version.Type().DisplayText, version.Key().Value);
         await gitHubRepo.CreateNewVersion(gitVersion);
         var newVersionBranchName = gitVersion.BranchName();
-        gitRepo.CheckoutBranch(newVersionBranchName.Value);
+        await gitRepo.CheckoutBranch(newVersionBranchName.Value);
     }
 }

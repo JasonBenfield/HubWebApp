@@ -5,9 +5,9 @@ namespace XTI_Version;
 
 public sealed class CompleteIssueCommand : VersionCommand
 {
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
 
-    public CompleteIssueCommand(GitFactory gitFactory)
+    public CompleteIssueCommand(VersionGitFactory gitFactory)
     {
         this.gitFactory = gitFactory;
     }
@@ -16,19 +16,19 @@ public sealed class CompleteIssueCommand : VersionCommand
     {
         if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
         if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitRepo = gitFactory.CreateGitRepo();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if (xtiBranchName is not XtiIssueBranchName issueBranchName)
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not an issue branch");
         }
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+        var gitHubRepo = gitFactory.CreateGitHubRepo();
         var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
-        gitRepo.CommitChanges(issue.Title);
+        await gitRepo.CommitChanges(issue.Title);
         await gitHubRepo.CompleteIssue(issueBranchName);
         var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
         var branchName = milestoneName.Version.BranchName();
-        gitRepo.CheckoutBranch(branchName.Value);
+        await gitRepo.CheckoutBranch(branchName.Value);
     }
 }

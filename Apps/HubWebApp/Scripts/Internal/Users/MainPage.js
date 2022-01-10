@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var SingleActivePanel_1 = require("@jasonbenfield/sharedwebapp/Panel/SingleActivePanel");
 var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
-var Apis_1 = require("../../Hub/Apis");
+var Apis_1 = require("../Apis");
 var MainPageView_1 = require("./MainPageView");
 var UserPanel_1 = require("./User/UserPanel");
 var UserEditPanel_1 = require("./UserEdit/UserEditPanel");
@@ -11,7 +11,7 @@ var UserListPanel_1 = require("./UserList/UserListPanel");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
         this.view = new MainPageView_1.MainPageView(page);
-        this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        this.hubApi = new Apis_1.Apis(page.modalError).Hub();
         this.panels = new SingleActivePanel_1.SingleActivePanel();
         this.userListPanel = this.panels.add(new UserListPanel_1.UserListPanel(this.hubApi, this.view.userListPanel));
         this.userPanel = this.panels.add(new UserPanel_1.UserPanel(this.hubApi, this.view.userPanel));

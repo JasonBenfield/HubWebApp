@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_Hub;
 using XTI_VersionToolApi;
@@ -8,9 +9,9 @@ namespace XTI_Version;
 public sealed class BeginPublishCommand : VersionCommand
 {
     private readonly AppFactory appFactory;
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
 
-    public BeginPublishCommand(AppFactory appFactory, GitFactory gitFactory)
+    public BeginPublishCommand(AppFactory appFactory, VersionGitFactory gitFactory)
     {
         this.appFactory = appFactory;
         this.gitFactory = gitFactory;
@@ -20,7 +21,7 @@ public sealed class BeginPublishCommand : VersionCommand
     {
         if (string.IsNullOrWhiteSpace(options.AppName)) { throw new ArgumentException("App Name is required"); }
         if (string.IsNullOrWhiteSpace(options.AppType)) { throw new ArgumentException("App Type is required"); }
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitRepo = gitFactory.CreateGitRepo();
         var branchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(branchName);
         if (xtiBranchName is not XtiVersionBranchName versionBranchName)

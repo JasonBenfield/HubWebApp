@@ -54,7 +54,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Name", "Type")
                         .IsUnique();
 
                     b.ToTable("Apps", (string)null);
@@ -341,9 +341,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AppID");
-
-                    b.HasIndex("VersionKey")
+                    b.HasIndex("AppID", "VersionKey")
                         .IsUnique();
 
                     b.ToTable("Versions", (string)null);

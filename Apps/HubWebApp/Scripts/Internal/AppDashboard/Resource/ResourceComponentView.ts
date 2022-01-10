@@ -18,16 +18,14 @@ export class ResourceComponentView extends CardView {
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
         let listGroup = this.addUnorderedListGroup();
-        let listItem = new ListGroupItemView();
-        listGroup.addItem(listItem);
+        let listItem = listGroup.addListGroupItem();
         let row = listItem.addContent(new Row());
         this.resourceName = row.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
             .addContent(new TextSpanView());
         this.resultType = row.addColumn()
             .addContent(new TextSpanView());
-        this.anonListItem = new ListGroupItemView();
-        listGroup.addItem(this.anonListItem);
+        this.anonListItem = listGroup.addListGroupItem();
         this.anonListItem.addContent(new Row())
             .addColumn()
             .addContent(new TextSpanView())

@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
-using XTI_HubAppApi;
-using XTI_HubAppApi.AppInstall;
+﻿using XTI_HubAppApi.AppInstall;
 using XTI_HubAppApi.AppPublish;
 
 namespace HubWebApp.Tests;
@@ -19,7 +14,8 @@ internal sealed class EndPublishTest
         var newVersion = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.example.com"
         });
         var request = new PublishVersionRequest
         {
@@ -41,7 +37,8 @@ internal sealed class EndPublishTest
         var version1 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.example.com"
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
@@ -57,7 +54,8 @@ internal sealed class EndPublishTest
         var version2 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.example.com"
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {

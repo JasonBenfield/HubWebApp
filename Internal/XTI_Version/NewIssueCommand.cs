@@ -5,21 +5,19 @@ namespace XTI_Version;
 
 public sealed class NewIssueCommand : VersionCommand
 {
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
 
-    public NewIssueCommand(GitFactory gitFactory)
+    public NewIssueCommand(VersionGitFactory gitFactory)
     {
         this.gitFactory = gitFactory;
     }
 
     public async Task Execute(VersionToolOptions options)
     {
-        if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
-        if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
         if (string.IsNullOrWhiteSpace(options.IssueTitle)) { throw new ArgumentException("Issue Title is required"); }
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitRepo = gitFactory.CreateGitRepo();
         var currentBranchName = gitRepo.CurrentBranchName();
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+        var gitHubRepo = gitFactory.CreateGitHubRepo();
         XtiGitVersion xtiGitVersion;
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if (xtiBranchName is XtiIssueBranchName issueBranchName)
@@ -43,7 +41,7 @@ public sealed class NewIssueCommand : VersionCommand
         var issue = await gitHubRepo.CreateIssue(xtiGitVersion, options.IssueTitle);
         if (options.StartIssue)
         {
-            gitRepo.CheckoutBranch(issue.BranchName().Value);
+            await gitRepo.CheckoutBranch(issue.BranchName().Value);
         }
     }
 }

@@ -28,7 +28,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddScoped<IClock, UtcClock>();
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser());
-        services.Configure<SetupOptions>(hostContext.Configuration.GetSection(SetupOptions.Setup));
+        services.Configure<SetupOptions>(hostContext.Configuration);
         services.AddScoped(sp =>
         {
             var options = sp.GetRequiredService<IOptions<SetupOptions>>().Value;

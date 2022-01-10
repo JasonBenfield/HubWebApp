@@ -3,9 +3,9 @@
 interface IUserStartRequest {
 	ReturnUrl: string;
 }
-interface IEmptyActionResult {
-}
 interface IEmptyRequest {
+}
+interface IEmptyActionResult {
 }
 interface ILoginModel {
 	Credentials: ILoginCredentials;

@@ -2,7 +2,7 @@
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_Hub;
-using XTI_WebApp;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;
 

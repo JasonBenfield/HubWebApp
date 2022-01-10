@@ -1,12 +1,11 @@
-﻿using HubWebApp.Extensions;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
+using XTI_Core;
 using XTI_Hub;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Auth;
 using XTI_HubDB.Extensions;
 using XTI_HubSetup;
 using XTI_WebApp.Fakes;
@@ -26,7 +25,17 @@ public static class FakeExtensions
         services.AddScoped<AppApiFactory>(sp => sp.GetRequiredService<HubAppApiFactory>());
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
         services.AddScoped(sp => new VersionReader(""));
-        services.AddScoped<HubAppSetup>();
+        services.AddScoped(sp =>
+        {
+            return new HubAppSetup
+            (
+                sp.GetRequiredService<AppFactory>(),
+                sp.GetRequiredService<IClock>(),
+                sp.GetRequiredService<HubAppApiFactory>(),
+                sp.GetRequiredService<VersionReader>(),
+                "webapps.example.com"
+            );
+        });
         services.AddScoped<IAppSetup>(sp => sp.GetRequiredService<HubAppSetup>());
         services.AddScoped(_ => HubInfo.AppKey);
         services.AddScoped<FakeAccessForAuthenticate>();

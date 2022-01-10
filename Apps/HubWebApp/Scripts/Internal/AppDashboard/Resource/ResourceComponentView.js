@@ -6,7 +6,6 @@ var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var ColumnCss_1 = require("@jasonbenfield/sharedwebapp/ColumnCss");
 var Row_1 = require("@jasonbenfield/sharedwebapp/Grid/Row");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
-var ListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView");
 var ResourceComponentView = /** @class */ (function (_super) {
     tslib_1.__extends(ResourceComponentView, _super);
     function ResourceComponentView() {
@@ -14,16 +13,14 @@ var ResourceComponentView = /** @class */ (function (_super) {
         _this.titleHeader = _this.addCardTitleHeader();
         _this.alert = _this.addCardAlert();
         var listGroup = _this.addUnorderedListGroup();
-        var listItem = new ListGroupItemView_1.ListGroupItemView();
-        listGroup.addItem(listItem);
+        var listItem = listGroup.addListGroupItem();
         var row = listItem.addContent(new Row_1.Row());
         _this.resourceName = row.addColumn()
             .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
             .addContent(new TextSpanView_1.TextSpanView());
         _this.resultType = row.addColumn()
             .addContent(new TextSpanView_1.TextSpanView());
-        _this.anonListItem = new ListGroupItemView_1.ListGroupItemView();
-        listGroup.addItem(_this.anonListItem);
+        _this.anonListItem = listGroup.addListGroupItem();
         _this.anonListItem.addContent(new Row_1.Row())
             .addColumn()
             .addContent(new TextSpanView_1.TextSpanView())

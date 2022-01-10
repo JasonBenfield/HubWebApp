@@ -1,12 +1,32 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Hub;
 using XTI_HubAppApi.AppPublish;
+using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
 
 sealed class NewVersionTest
 {
+    [Test]
+    public async Task ShouldSetDomainForWebApps_WhenStartingNewVersion()
+    {
+        var tester = await setup();
+        tester.LoginAsAdmin();
+        var model = new NewVersionRequest
+        {
+            AppKey = HubInfo.AppKey,
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.xartogg.com"
+        };
+        var newVersion = await tester.Execute(model);
+        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var version = await db.Versions.Retrieve()
+            .FirstAsync(v => v.ID == newVersion.ID);
+        Assert.That(version.Domain, Is.EqualTo(model.Domain), "Should set domain when starting a new version");
+    }
+
     [Test]
     public async Task ShouldCreateNewPatch()
     {
@@ -15,7 +35,8 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.xartogg.com"
         };
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.Status, Is.EqualTo(AppVersionStatus.Values.New));
@@ -29,7 +50,8 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Minor
+            VersionType = AppVersionType.Values.Minor,
+            Domain = "webapps.xartogg.com"
         };
         tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
@@ -43,7 +65,8 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Major
+            VersionType = AppVersionType.Values.Major,
+            Domain = "webapps.xartogg.com"
         };
         tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);

@@ -16,17 +16,17 @@ public sealed class PublishProcess
     private readonly IHostEnvironment hostEnv;
     private readonly XtiFolder xtiFolder;
     private readonly AppFactory appFactory;
-    private readonly GitFactory gitFactory;
+    private readonly IGitHubFactory gitHubFactory;
     private readonly ISecretCredentialsFactory credentialsFactory;
     private readonly string repoOwner;
     private readonly string domain;
 
-    public PublishProcess(IHostEnvironment hostEnv, AppFactory appFactory, GitFactory gitFactory, ISecretCredentialsFactory credentialsFactory, string repoOwner, string domain)
+    public PublishProcess(IHostEnvironment hostEnv, AppFactory appFactory, IGitHubFactory gitHubFactory, ISecretCredentialsFactory credentialsFactory, string repoOwner, string domain)
     {
         this.hostEnv = hostEnv;
         xtiFolder = new XtiFolder(hostEnv);
         this.appFactory = appFactory;
-        this.gitFactory = gitFactory;
+        this.gitHubFactory = gitHubFactory;
         this.credentialsFactory = credentialsFactory;
         this.repoOwner = repoOwner;
         this.domain = domain;
@@ -54,7 +54,7 @@ public sealed class PublishProcess
         {
             packageVersion = await retrieveDevPackageVersion(appKey);
         }
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(repoOwner, repoName);
+        var gitHubRepo = gitHubFactory.CreateGitHubRepository(repoOwner, repoName);
         GitHubRelease? release = null;
         if (!appKey.Type.Equals(AppType.Values.Package) && hostEnv.IsProduction())
         {
@@ -77,7 +77,7 @@ public sealed class PublishProcess
             await Task.Delay(TimeSpan.FromSeconds(1));
             await runDotNetPublish(appKey, versionKey);
         }
-        else if (appKey.Type.Equals(AppType.Values.Service))
+        else if (appKey.Type.Equals(AppType.Values.ServiceApp))
         {
             await runDotnetBuild();
             await runDotNetPublish(appKey, versionKey);
@@ -289,7 +289,7 @@ public sealed class PublishProcess
     private static string getAppType(AppKey appKey)
     {
         var appType = appKey.Type.DisplayText.Replace(" ", "");
-        if (appKey.Type.Equals(AppType.Values.Service))
+        if (appKey.Type.Equals(AppType.Values.ServiceApp))
         {
             appType = "ServiceApp";
         }

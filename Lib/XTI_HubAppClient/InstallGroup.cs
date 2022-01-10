@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class InstallGroup : AppClientGroup
 {
-    public InstallGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, AppClientUrl clientUrl) : base(httpClientFactory, xtiToken, clientUrl, "Install")
+    public InstallGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Install")
     {
     }
 

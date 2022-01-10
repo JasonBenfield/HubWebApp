@@ -10,6 +10,7 @@ using XTI_App.Extensions;
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_GitHub;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_Processes;
@@ -69,7 +70,7 @@ internal sealed class InstallHostedService : IHostedService
                     }
                     await installWebApp(sp, appKey, versionKey, AppVersionKey.Current, tempDir);
                 }
-                else if (appKey.Type.Equals(AppType.Values.Service))
+                else if (appKey.Type.Equals(AppType.Values.ServiceApp))
                 {
                     if (hostEnv.IsProduction())
                     {
@@ -141,8 +142,8 @@ internal sealed class InstallHostedService : IHostedService
     private static async Task downloadAssets(IServiceProvider sp, string tempDir)
     {
         var options = sp.GetRequiredService<IOptions<InstallOptions>>().Value;
-        var gitFactory = sp.GetRequiredService<GitFactory>();
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+        var gitHubFactory = sp.GetRequiredService<IGitHubFactory>();
+        var gitHubRepo = gitHubFactory.CreateGitHubRepository(options.RepoOwner, options.RepoName);
         if (Directory.Exists(tempDir))
         {
             Directory.Delete(tempDir, true);
@@ -203,7 +204,7 @@ internal sealed class InstallHostedService : IHostedService
         (
             new CredentialValue
             (
-                options.InstallationUserName, 
+                options.InstallationUserName,
                 options.InstallationPassword
             )
         );
@@ -411,15 +412,20 @@ internal sealed class InstallHostedService : IHostedService
                 binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
                 await writeLog($"Creating service '{binPath}'");
                 var secretCredentialsValue = await retrieveCredentials(sp, "ServiceApp");
-                await new WinProcess("sc")
+                var createServiceProcess = new WinProcess("sc")
+                    .WriteOutputToConsole()
                     .UseArgumentNameDelimiter("")
                     .AddArgument("create")
+                    .AddArgument(serviceName)
                     .UseArgumentValueDelimiter("= ")
                     .AddArgument("start", "auto")
                     .AddArgument("binpath", new Quoted(binPath))
                     .AddArgument("obj", new Quoted(secretCredentialsValue.UserName))
-                    .AddArgument("password", new Quoted(secretCredentialsValue.Password))
+                    .AddArgument("password", new Quoted(secretCredentialsValue.Password));
+                await writeLog(createServiceProcess.CommandText());
+                var createServiceResult = await createServiceProcess
                     .Run();
+                createServiceResult.EnsureExitCodeIsZero();
                 sc = getService(serviceName);
             }
             else if (sc.Status == ServiceControllerStatus.Running)
