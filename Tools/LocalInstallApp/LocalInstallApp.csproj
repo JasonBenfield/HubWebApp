@@ -18,11 +18,11 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
-		<PackageReference Include="XTI_Git.Secrets" Version="1.2.6" />
+		<PackageReference Include="XTI_Git.Secrets" Version="1.2.7" />
 		<PackageReference Include="XTI_SecretsToolApi" Version="1.8.2" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.2" />
 		<PackageReference Include="XTI_Processes" Version="1.1.1" />
-		<PackageReference Include="XTI_GitHub.Web" Version="1.2.6" />
+		<PackageReference Include="XTI_GitHub.Web" Version="1.2.7" />
 		<PackageReference Include="XTI_App.Secrets" Version="1.8.13-dev220108185520923" />
 	</ItemGroup>
 
