@@ -7,7 +7,7 @@ var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var LinkListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/LinkListGroupItemView");
 var LinkListItemViewModel_1 = require("@jasonbenfield/sharedwebapp/ListGroup/LinkListItemViewModel");
 var AppListItemView = /** @class */ (function (_super) {
-    tslib_1.__extends(AppListItemView, _super);
+    (0, tslib_1.__extends)(AppListItemView, _super);
     function AppListItemView() {
         var _this = _super.call(this, new LinkListItemViewModel_1.LinkListItemViewModel()) || this;
         var row = _this.addContent(new Row_1.Row());

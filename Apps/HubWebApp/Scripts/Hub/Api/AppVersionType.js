@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var NumericValue_1 = require("@jasonbenfield/sharedwebapp/NumericValue");
 var NumericValues_1 = require("@jasonbenfield/sharedwebapp/NumericValues");
 var AppVersionTypes = /** @class */ (function (_super) {
-    tslib_1.__extends(AppVersionTypes, _super);
+    (0, tslib_1.__extends)(AppVersionTypes, _super);
     function AppVersionTypes(NotSet, Major, Minor, Patch) {
         var _this = _super.call(this, [NotSet, Major, Minor, Patch]) || this;
         _this.NotSet = NotSet;
@@ -19,7 +19,7 @@ var AppVersionTypes = /** @class */ (function (_super) {
 }(NumericValues_1.NumericValues));
 exports.AppVersionTypes = AppVersionTypes;
 var AppVersionType = /** @class */ (function (_super) {
-    tslib_1.__extends(AppVersionType, _super);
+    (0, tslib_1.__extends)(AppVersionType, _super);
     function AppVersionType(Value, DisplayText) {
         return _super.call(this, Value, DisplayText) || this;
     }

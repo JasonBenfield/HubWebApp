@@ -18,9 +18,9 @@ var ResourceGroupAccessCard = /** @class */ (function () {
         this.groupID = groupID;
     };
     ResourceGroupAccessCard.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var accessItems;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getRoleAccessItems()];
                     case 1:
@@ -37,13 +37,13 @@ var ResourceGroupAccessCard = /** @class */ (function () {
         });
     };
     ResourceGroupAccessCard.prototype.getRoleAccessItems = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var allowedRoles, accessItems, _i, allowedRoles_1, allowedRole;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                            return tslib_1.__generator(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                            return (0, tslib_1.__generator)(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.ResourceGroup.GetRoleAccess({
                                             VersionKey: 'Current',

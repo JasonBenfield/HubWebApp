@@ -15,7 +15,7 @@ var MostRecentErrorEventListCardView_1 = require("./MostRecentErrorEventListCard
 var MostRecentRequestListCardView_1 = require("./MostRecentRequestListCardView");
 var ResourceGroupListCardView_1 = require("./ResourceGroupListCardView");
 var AppDetailPanelView = /** @class */ (function (_super) {
-    tslib_1.__extends(AppDetailPanelView, _super);
+    (0, tslib_1.__extends)(AppDetailPanelView, _super);
     function AppDetailPanelView(vm) {
         if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
         var _this = _super.call(this, vm) || this;

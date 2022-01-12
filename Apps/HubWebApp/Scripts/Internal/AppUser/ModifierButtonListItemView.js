@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var TextBlockView_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlockView");
 var ButtonListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView");
 var ModifierButtonListItemView = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierButtonListItemView, _super);
+    (0, tslib_1.__extends)(ModifierButtonListItemView, _super);
     function ModifierButtonListItemView() {
         var _this = _super.call(this) || this;
         _this.displayText = _this.addContent(new TextBlockView_1.TextBlockView);

@@ -6,7 +6,7 @@ var tslib_1 = require("tslib");
 var NumericValue_1 = require("@jasonbenfield/sharedwebapp/NumericValue");
 var NumericValues_1 = require("@jasonbenfield/sharedwebapp/NumericValues");
 var AppTypes = /** @class */ (function (_super) {
-    tslib_1.__extends(AppTypes, _super);
+    (0, tslib_1.__extends)(AppTypes, _super);
     function AppTypes(NotFound, WebApp, ServiceApp, Package, ConsoleApp) {
         var _this = _super.call(this, [NotFound, WebApp, ServiceApp, Package, ConsoleApp]) || this;
         _this.NotFound = NotFound;
@@ -20,7 +20,7 @@ var AppTypes = /** @class */ (function (_super) {
 }(NumericValues_1.NumericValues));
 exports.AppTypes = AppTypes;
 var AppType = /** @class */ (function (_super) {
-    tslib_1.__extends(AppType, _super);
+    (0, tslib_1.__extends)(AppType, _super);
     function AppType(Value, DisplayText) {
         return _super.call(this, Value, DisplayText) || this;
     }

@@ -38,8 +38,8 @@ var AddRolePanel = /** @class */ (function () {
         this.roles.itemClicked.register(this.onRoleClicked.bind(this));
     }
     AddRolePanel.prototype.onRoleClicked = function (roleListItem) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.addRole(roleListItem.role)];
                     case 1:
@@ -74,10 +74,10 @@ var AddRolePanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     AddRolePanel.prototype.delayedStart = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var roles;
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return _this.hubApi.AppUser.GetUnassignedRoles({
                             UserID: _this.user.ID,

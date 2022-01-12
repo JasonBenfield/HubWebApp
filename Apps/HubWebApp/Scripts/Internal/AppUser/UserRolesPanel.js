@@ -64,9 +64,9 @@ var UserRolesPanel = /** @class */ (function () {
         this.awaitable.resolve(UserRolesPanelResult.modifierRequested());
     };
     UserRolesPanel.prototype.allowAccess = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Allowing Access...', function () { return _this.hubApi.AppUserMaintenance.AllowAccess({
                             UserID: _this.user.ID,
@@ -83,9 +83,9 @@ var UserRolesPanel = /** @class */ (function () {
         });
     };
     UserRolesPanel.prototype.denyAccess = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.alert.infoAction('Denying Access...', function () { return _this.hubApi.AppUserMaintenance.DenyAccess({
                             UserID: _this.user.ID,
@@ -126,11 +126,11 @@ var UserRolesPanel = /** @class */ (function () {
         return this.awaitable.start();
     };
     UserRolesPanel.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var isDefaultModifier, userAccess, defaultUserAccess, _i, _a, listItem, userRoleListItems, _b, userRoleListItems_1, listItem;
             var _c;
             var _this = this;
-            return tslib_1.__generator(this, function (_d) {
+            return (0, tslib_1.__generator)(this, function (_d) {
                 switch (_d.label) {
                     case 0:
                         this.alert.clear();
@@ -138,8 +138,8 @@ var UserRolesPanel = /** @class */ (function () {
                         this.denyAccessCommand.hide();
                         this.addCommand.hide();
                         isDefaultModifier = this.modifier.ID === this.defaultModifier.ID;
-                        return [4 /*yield*/, this.alert.infoAction('Loading', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                                return tslib_1.__generator(this, function (_a) {
+                        return [4 /*yield*/, this.alert.infoAction('Loading', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                                return (0, tslib_1.__generator)(this, function (_a) {
                                     switch (_a.label) {
                                         case 0: return [4 /*yield*/, this.hubApi.AppUser.GetUserAccess({
                                                 UserID: this.user.ID,
@@ -182,7 +182,7 @@ var UserRolesPanel = /** @class */ (function () {
                             listItem = userRoleListItems_1[_b];
                             this.deleteEvents.register(listItem.deleteButtonClicked, this.onDeleteRoleClicked.bind(this));
                         }
-                        (_c = this.userRoleListItems).splice.apply(_c, tslib_1.__spreadArray([0, this.userRoleListItems.length], userRoleListItems));
+                        (_c = this.userRoleListItems).splice.apply(_c, (0, tslib_1.__spreadArray)([0, this.userRoleListItems.length], userRoleListItems, false));
                         if (isDefaultModifier) {
                             this.view.hideDefaultUserRoles();
                         }

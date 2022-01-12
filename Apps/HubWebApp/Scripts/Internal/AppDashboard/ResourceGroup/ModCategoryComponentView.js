@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ModCategoryComponentView = /** @class */ (function (_super) {
-    tslib_1.__extends(ModCategoryComponentView, _super);
+    (0, tslib_1.__extends)(ModCategoryComponentView, _super);
     function ModCategoryComponentView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

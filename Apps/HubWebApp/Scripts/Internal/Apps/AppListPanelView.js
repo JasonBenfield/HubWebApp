@@ -7,7 +7,7 @@ var FlexColumn_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumn");
 var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill");
 var AppListCardView_1 = require("./AppListCardView");
 var AppListPanelView = /** @class */ (function (_super) {
-    tslib_1.__extends(AppListPanelView, _super);
+    (0, tslib_1.__extends)(AppListPanelView, _super);
     function AppListPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

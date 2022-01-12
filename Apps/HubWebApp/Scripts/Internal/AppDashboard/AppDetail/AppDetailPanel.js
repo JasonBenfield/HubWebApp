@@ -72,9 +72,9 @@ var AppDetailPanel = /** @class */ (function () {
         this.awaitable.resolve(AppDetailPanelResult.modCategorySelected(modCategory));
     };
     AppDetailPanel.prototype.refresh = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
             var promises;
-            return tslib_1.__generator(this, function (_a) {
+            return (0, tslib_1.__generator)(this, function (_a) {
                 promises = [
                     this.app.refresh(),
                     this.currentVersion.refresh(),

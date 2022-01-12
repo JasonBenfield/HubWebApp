@@ -5,7 +5,7 @@ exports.PermanentLogGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var PermanentLogGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(PermanentLogGroup, _super);
+    (0, tslib_1.__extends)(PermanentLogGroup, _super);
     function PermanentLogGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'PermanentLog') || this;
         _this.LogBatchAction = _this.createAction('LogBatch', 'Log Batch');

@@ -8,7 +8,7 @@ var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView");
 var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var ModifierListItemView = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierListItemView, _super);
+    (0, tslib_1.__extends)(ModifierListItemView, _super);
     function ModifierListItemView() {
         var _this = _super.call(this) || this;
         var row = _this.addContent(new Row_1.Row());

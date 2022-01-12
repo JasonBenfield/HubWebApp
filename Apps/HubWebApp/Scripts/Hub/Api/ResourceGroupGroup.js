@@ -5,7 +5,7 @@ exports.ResourceGroupGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var ResourceGroupGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceGroupGroup, _super);
+    (0, tslib_1.__extends)(ResourceGroupGroup, _super);
     function ResourceGroupGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'ResourceGroup') || this;
         _this.GetResourceGroupAction = _this.createAction('GetResourceGroup', 'Get Resource Group');

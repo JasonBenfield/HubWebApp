@@ -47,7 +47,7 @@ internal sealed class LogoutTest
         var host = new HubTestHost();
         var services = await host.Setup
         (
-            (hc, s) =>
+            (s) =>
             {
                 s.AddScoped<IAppContext>(sp => sp.GetRequiredService<CachedAppContext>());
                 s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());

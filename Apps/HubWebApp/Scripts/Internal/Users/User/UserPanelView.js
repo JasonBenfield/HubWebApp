@@ -10,7 +10,7 @@ var AppListCardView_1 = require("../../Apps/AppListCardView");
 var HubTheme_1 = require("../../HubTheme");
 var UserComponentView_1 = require("./UserComponentView");
 var UserPanelView = /** @class */ (function (_super) {
-    tslib_1.__extends(UserPanelView, _super);
+    (0, tslib_1.__extends)(UserPanelView, _super);
     function UserPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

@@ -11,7 +11,7 @@ var ModCategoryComponentView_1 = require("./ModCategoryComponentView");
 var ModifierListCardView_1 = require("./ModifierListCardView");
 var ResourceGroupListCardView_1 = require("./ResourceGroupListCardView");
 var ModCategoryPanelView = /** @class */ (function (_super) {
-    tslib_1.__extends(ModCategoryPanelView, _super);
+    (0, tslib_1.__extends)(ModCategoryPanelView, _super);
     function ModCategoryPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

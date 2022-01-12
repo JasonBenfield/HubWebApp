@@ -5,7 +5,7 @@ exports.PublishGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var PublishGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(PublishGroup, _super);
+    (0, tslib_1.__extends)(PublishGroup, _super);
     function PublishGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Publish') || this;
         _this.NewVersionAction = _this.createAction('NewVersion', 'New Version');

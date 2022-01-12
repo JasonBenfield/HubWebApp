@@ -12,7 +12,7 @@ var MessageAlertView_1 = require("@jasonbenfield/sharedwebapp/MessageAlertView")
 var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var VerifyLoginFormView_1 = require("../Api/VerifyLoginFormView");
 var LoginComponentView = /** @class */ (function (_super) {
-    tslib_1.__extends(LoginComponentView, _super);
+    (0, tslib_1.__extends)(LoginComponentView, _super);
     function LoginComponentView() {
         var _this = _super.call(this) || this;
         _this.verifyLoginForm = _this.addContent(new VerifyLoginFormView_1.VerifyLoginFormView());

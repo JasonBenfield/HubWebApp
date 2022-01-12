@@ -1,26 +1,26 @@
 ﻿using HubWebApp.Fakes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using XTI_Core.Fakes;
 
 namespace HubWebApp.Tests;
 
 internal sealed class HubTestHost
 {
-    public async Task<IServiceProvider> Setup(Action<HostBuilderContext, IServiceCollection>? configure = null)
+    public async Task<IServiceProvider> Setup(Action<IServiceCollection>? configure = null)
     {
-        var host = Host.CreateDefaultBuilder()
-            .ConfigureServices
-            (
-                (hostContext, services) =>
-                {
-                    services.AddFakesForHubWebApp(hostContext.Configuration);
-                    if (configure != null)
-                    {
-                        configure(hostContext, services);
-                    }
-                }
-            )
-            .Build();
-        var scope = host.Services.CreateScope();
+        var configuration = new ConfigurationBuilder().Build();
+        var services = new ServiceCollection();
+        services.AddSingleton<IHostEnvironment>
+        (
+            _ => new FakeHostEnvironment { EnvironmentName = "Production" }
+        );
+        services.AddFakesForHubWebApp(configuration);
+        if (configure != null)
+        {
+            configure(services);
+        }
+        var scope = services.BuildServiceProvider().CreateScope();
         var sp = scope.ServiceProvider;
         var setup = sp.GetRequiredService<IAppSetup>();
         await setup.Run(AppVersionKey.Current);

@@ -1,4 +1,5 @@
 ﻿using HubWebApp.Fakes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
@@ -203,22 +204,16 @@ internal sealed class PermanentLogTest
 
     private async Task<IServiceProvider> setup()
     {
-        var host = Host.CreateDefaultBuilder()
-            .ConfigureServices
-            (
-                (hostContext, services) =>
-                {
-                    services.AddFakeTempLogServices();
-                    services.AddFakesForHubWebApp(hostContext.Configuration);
-                    services.AddScoped<IAppApiUser, AppApiSuperUser>();
-                    services.AddSingleton<IAppEnvironmentContext, FakeAppEnvironmentContext>();
-                    services.AddSingleton(sp => HubInfo.AppKey);
-                    services.AddScoped<PermanentLog>();
-                    services.AddScoped<HubAppApi>();
-                }
-            )
-            .Build();
-        var scope = host.Services.CreateScope();
+        var configuration = new ConfigurationBuilder().Build();
+        var services = new ServiceCollection();
+        services.AddFakeTempLogServices();
+        services.AddFakesForHubWebApp(configuration);
+        services.AddScoped<IAppApiUser, AppApiSuperUser>();
+        services.AddSingleton<IAppEnvironmentContext, FakeAppEnvironmentContext>();
+        services.AddSingleton(sp => HubInfo.AppKey);
+        services.AddScoped<PermanentLog>();
+        services.AddScoped<HubAppApi>();
+        var scope = services.BuildServiceProvider().CreateScope();
         var sp = scope.ServiceProvider;
         var appEnvContext = (FakeAppEnvironmentContext)sp.GetRequiredService<IAppEnvironmentContext>();
         appEnvContext.Environment = new AppEnvironment

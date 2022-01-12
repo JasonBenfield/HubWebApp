@@ -25,7 +25,7 @@ var AppUserGroup_1 = require("./AppUserGroup");
 var AppUserMaintenanceGroup_1 = require("./AppUserMaintenanceGroup");
 var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var HubAppApi = /** @class */ (function (_super) {
-    tslib_1.__extends(HubAppApi, _super);
+    (0, tslib_1.__extends)(HubAppApi, _super);
     function HubAppApi(events) {
         var _this = _super.call(this, events, 'Hub') || this;
         _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });

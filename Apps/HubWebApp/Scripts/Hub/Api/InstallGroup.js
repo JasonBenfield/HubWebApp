@@ -5,7 +5,7 @@ exports.InstallGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var InstallGroup = /** @class */ (function (_super) {
-    tslib_1.__extends(InstallGroup, _super);
+    (0, tslib_1.__extends)(InstallGroup, _super);
     function InstallGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Install') || this;
         _this.RegisterAppAction = _this.createAction('RegisterApp', 'Register App');

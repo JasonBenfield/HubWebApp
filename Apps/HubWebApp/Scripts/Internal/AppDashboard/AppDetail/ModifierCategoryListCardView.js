@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var ModifierCategoryListItemView_1 = require("./ModifierCategoryListItemView");
 var ModifierCategoryListCardView = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierCategoryListCardView, _super);
+    (0, tslib_1.__extends)(ModifierCategoryListCardView, _super);
     function ModifierCategoryListCardView() {
         var _this = _super.call(this) || this;
         _this.titleHeader = _this.addCardTitleHeader();

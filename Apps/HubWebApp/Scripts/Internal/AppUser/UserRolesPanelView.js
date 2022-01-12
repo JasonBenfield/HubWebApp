@@ -21,7 +21,7 @@ var TextCss_1 = require("@jasonbenfield/sharedwebapp/TextCss");
 var HubTheme_1 = require("../HubTheme");
 var UserRoleListItemView_1 = require("./UserRoleListItemView");
 var UserRolesPanelView = /** @class */ (function (_super) {
-    tslib_1.__extends(UserRolesPanelView, _super);
+    (0, tslib_1.__extends)(UserRolesPanelView, _super);
     function UserRolesPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

@@ -9,7 +9,7 @@ var ListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGro
 var PaddingCss_1 = require("@jasonbenfield/sharedwebapp/PaddingCss");
 var HubTheme_1 = require("../HubTheme");
 var UserRoleListItemView = /** @class */ (function (_super) {
-    tslib_1.__extends(UserRoleListItemView, _super);
+    (0, tslib_1.__extends)(UserRoleListItemView, _super);
     function UserRoleListItemView() {
         var _this = _super.call(this) || this;
         var row = _this.addContent(new Row_1.Row());
