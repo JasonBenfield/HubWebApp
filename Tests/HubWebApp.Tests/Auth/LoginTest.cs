@@ -1,19 +1,12 @@
 using HubWebApp.Fakes;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
+using System.Security.Claims;
 using XTI_App.Extensions;
-using XTI_App.Fakes;
 using XTI_Core;
-using XTI_Hub;
-using XTI_HubAppApi;
 using XTI_HubAppApi.Auth;
 using XTI_HubAppApi.UserList;
 using XTI_TempLog;
-using XTI_WebApp;
+using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
@@ -79,7 +72,26 @@ internal sealed class LoginTest
     }
 
     [Test]
-    public async Task ShouldAuthenticateSession()
+    public async Task ShouldAuthenticateUser()
+    {
+        var tester = await setup();
+        var model = createLoginModel();
+        await tester.Execute(model);
+        var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
+        Assert.That
+        (
+            access.Claims,
+            Has.One.EqualTo
+            (
+                new Claim("UserName", new AppUserName(model.Credentials.UserName).Value)
+            )
+            .Using<Claim>((x, y) => x.Type == y.Type && x.Value == y.Value),
+            "Should authenticate user"
+        );
+    }
+
+    [Test]
+    public async Task ShouldAuthenticateTempLogSession()
     {
         var tester = await setup();
         var model = createLoginModel();
@@ -130,7 +142,7 @@ internal sealed class LoginTest
         var host = new HubTestHost();
         var services = await host.Setup
         (
-            (hc, s) =>
+            (s) =>
             {
                 s.AddScoped<IAppContext>(sp => sp.GetRequiredService<CachedAppContext>());
                 s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
@@ -143,7 +155,7 @@ internal sealed class LoginTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {

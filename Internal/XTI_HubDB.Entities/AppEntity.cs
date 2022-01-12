@@ -7,4 +7,5 @@ public sealed class AppEntity
     public string Name { get; set; } = "xti_notfound";
     public string Title { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
+    public string Domain { get; set; } = "";
 }

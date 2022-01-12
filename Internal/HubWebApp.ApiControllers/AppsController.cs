@@ -16,15 +16,27 @@ public class AppsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppModel[]>> All()
+    public Task<ResultContainer<string>> GetAppDomain([FromBody] GetAppDomainRequest model)
     {
-        return api.Group("Apps").Action<EmptyRequest, AppModel[]>("All").Execute(new EmptyRequest());
+        return api.Group("Apps").Action<GetAppDomainRequest, string>("GetAppDomain").Execute(model);
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> GetAppModifierKey([FromBody] AppKey model)
+    public Task<ResultContainer<AppWithModKeyModel[]>> GetApps()
     {
-        return api.Group("Apps").Action<AppKey, string>("GetAppModifierKey").Execute(model);
+        return api.Group("Apps").Action<EmptyRequest, AppWithModKeyModel[]>("GetApps").Execute(new EmptyRequest());
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppWithModKeyModel>> GetAppById([FromBody] GetAppByIDRequest model)
+    {
+        return api.Group("Apps").Action<GetAppByIDRequest, AppWithModKeyModel>("GetAppById").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppWithModKeyModel>> GetAppByAppKey([FromBody] GetAppByAppKeyRequest model)
+    {
+        return api.Group("Apps").Action<GetAppByAppKeyRequest, AppWithModKeyModel>("GetAppByAppKey").Execute(model);
     }
 
     public async Task<IActionResult> RedirectToApp(int model)

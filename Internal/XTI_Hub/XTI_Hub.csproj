@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
-    <PackageReference Include="XTI_App.Api" Version="1.8.11" />
+    <PackageReference Include="XTI_App.Api" Version="1.8.13-dev220108185520923" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,7 +41,7 @@ public sealed class ResourceRepository
                     }
                 );
         }
-        return factory.Resource(record);
+        return factory.CreateResource(record);
     }
 
     public Task<Resource[]> Resources(ResourceGroup group) => 
@@ -51,7 +51,7 @@ public sealed class ResourceRepository
             .Where(r => r.GroupID == group.ID.Value)
             .OrderBy(r => r.ResultType)
             .ThenBy(r => r.Name)
-            .Select(r => factory.Resource(r))
+            .Select(r => factory.CreateResource(r))
             .ToArrayAsync();
 
     internal async Task<Resource> ResourceOrDefault(ResourceGroup group, ResourceName name)
@@ -68,13 +68,13 @@ public sealed class ResourceRepository
                    .FirstOrDefaultAsync(r => r.Name == ResourceName.Unknown.Value);
             }
         }
-        return factory.Resource(record ?? throw new ArgumentNullException(nameof(record)));
+        return factory.CreateResource(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
     internal async Task<Resource> ResourceByName(ResourceGroup group, ResourceName name)
     {
         var record = await GetResource(group, name);
-        return factory.Resource
+        return factory.CreateResource
         (
             record ?? 
             throw new Exception($"Resource '{name.DisplayText}' not found for group '{group.Name().DisplayText}'")
@@ -98,6 +98,6 @@ public sealed class ResourceRepository
             .Resources
             .Retrieve()
             .FirstOrDefaultAsync(r => r.ID == id && groupIDs.Any(gID => gID == r.GroupID));
-        return factory.Resource(record ?? throw new Exception($"Resource {id} not found for version '{version.Key().DisplayText}"));
+        return factory.CreateResource(record ?? throw new Exception($"Resource {id} not found for version '{version.Key().DisplayText}"));
     }
 }

@@ -15,19 +15,19 @@ public sealed class UserListGroup : AppApiGroupWrapper
         Index = source.AddAction(actions.Action(nameof(Index), () => sp.GetRequiredService<IndexAction>()));
         GetUsers = source.AddAction(actions.Action(nameof(GetUsers), () => sp.GetRequiredService<GetUsersAction>()));
         GetSystemUsers = source.AddAction(actions.Action(nameof(GetSystemUsers), () => sp.GetRequiredService<GetSystemUsersAction>()));
-        AddUser = source.AddAction
+        AddOrUpdateUser = source.AddAction
         (
             actions.Action
             (
-                nameof(AddUser),
+                nameof(AddOrUpdateUser),
                 Access.WithAllowed(HubInfo.Roles.AddUser),
                 () => sp.GetRequiredService<AddUserValidation>(),
-                () => sp.GetRequiredService<AddUserAction>()
+                () => sp.GetRequiredService<AddOrUpdateUserAction>()
             )
         );
     }
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
     public AppApiAction<AppKey, AppUserModel[]> GetSystemUsers { get; }
-    public AppApiAction<AddUserModel, int> AddUser { get; }
+    public AppApiAction<AddUserModel, int> AddOrUpdateUser { get; }
 }

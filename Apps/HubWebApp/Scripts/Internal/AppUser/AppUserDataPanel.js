@@ -49,7 +49,7 @@ var AppUserDataPanel = /** @class */ (function () {
                                         return [4 /*yield*/, this.hubApi.UserInquiry.GetUser(this.userID)];
                                     case 2:
                                         user = _a.sent();
-                                        return [4 /*yield*/, this.hubApi.App.GetDefaultModiifer()];
+                                        return [4 /*yield*/, this.hubApi.App.GetDefaultModifier()];
                                     case 3:
                                         defaultModifier = _a.sent();
                                         appUserData = new AppUserOptions_1.AppUserOptions(app, user, defaultModifier);

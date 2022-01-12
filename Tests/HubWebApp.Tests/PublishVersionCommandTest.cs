@@ -24,7 +24,7 @@ internal sealed class PublishVersionCommandTest
         var newVersion = versions.First(v => !v.IsCurrent());
         await tester.Checkout(newVersion);
         var key = tester.App.Key();
-        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
+        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText, "fake.example.com");
         await tester.Execute();
         newVersion = await tester.App.Version(newVersion.Key());
         Assert.That(newVersion.IsPublishing(), Is.True, "Should begin publishing the new version");
@@ -39,7 +39,7 @@ internal sealed class PublishVersionCommandTest
         var newVersion = versions.First(v => !v.IsCurrent());
         await tester.Checkout(newVersion);
         var key = tester.App.Key();
-        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
+        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText, "fake.example.com");
         await tester.Command().Execute(tester.Options);
         tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App", key.Name.Value, key.Type.DisplayText);
         await tester.Execute();
@@ -56,12 +56,12 @@ internal sealed class PublishVersionCommandTest
         var newVersion = versions.First(v => !v.IsCurrent());
         await tester.Checkout(newVersion);
         var key = tester.App.Key();
-        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
+        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText, "");
         await tester.Execute();
         tester.Options.CommandCompleteVersion("JasonBenfield", "XTI_App", key.Name.Value, key.Type.DisplayText);
         await tester.Execute();
         await tester.Checkout(newVersion);
-        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText);
+        tester.Options.CommandBeginPublish(key.Name.Value, key.Type.DisplayText, "");
         Assert.ThrowsAsync<PublishException>(() => tester.Execute());
     }
 
@@ -74,6 +74,7 @@ internal sealed class PublishVersionCommandTest
         (
             appKey.Name.DisplayText,
             appKey.Type.DisplayText,
+            "",
             AppVersionType.Values.Patch.DisplayText,
             "JasonBenfield",
             "XTI_App"

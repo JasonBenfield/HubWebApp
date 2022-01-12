@@ -58,15 +58,15 @@ var AppDetailPanel = /** @class */ (function () {
         this.app = new AppComponent_1.AppComponent(this.hubApi, this.view.app);
         this.currentVersion = new CurrentVersionComponent_1.CurrentVersionComponent(this.hubApi, this.view.currentVersion);
         this.resourceGroupListCard = new ResourceGroupListCard_1.ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
-        this.resourceGroupListCard.resourceGroupSelected.register(this.onResourceGroupSelected.bind(this));
+        this.resourceGroupListCard.resourceGroupClicked.register(this.onResourceGroupSelected.bind(this));
         this.modifierCategoryListCard = new ModifierCategoryListCard_1.ModifierCategoryListCard(this.hubApi, this.view.modifierCategoryListCard);
         this.modifierCategoryListCard.modCategorySelected.register(this.onModCategorySelected.bind(this));
         this.mostRecentRequestListCard = new MostRecentRequestListCard_1.MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
         this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard_1.MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
         this.backCommand.add(this.view.backButton);
     }
-    AppDetailPanel.prototype.onResourceGroupSelected = function (resourceGroup) {
-        this.awaitable.resolve(AppDetailPanelResult.resourceGroupSelected(resourceGroup));
+    AppDetailPanel.prototype.onResourceGroupSelected = function (listItem) {
+        this.awaitable.resolve(AppDetailPanelResult.resourceGroupSelected(listItem.group));
     };
     AppDetailPanel.prototype.onModCategorySelected = function (modCategory) {
         this.awaitable.resolve(AppDetailPanelResult.modCategorySelected(modCategory));

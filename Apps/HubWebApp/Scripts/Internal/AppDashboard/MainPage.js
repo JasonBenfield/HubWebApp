@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var SingleActivePanel_1 = require("@jasonbenfield/sharedwebapp/Panel/SingleActivePanel");
 var Startup_1 = require("@jasonbenfield/sharedwebapp/Startup");
 var WebPage_1 = require("@jasonbenfield/sharedwebapp/Api/WebPage");
 var XtiUrl_1 = require("@jasonbenfield/sharedwebapp/Api/XtiUrl");
-var Apis_1 = require("../../Hub/Apis");
+var Apis_1 = require("../Apis");
 var AppDetailPanel_1 = require("./AppDetail/AppDetailPanel");
 var MainPageView_1 = require("./MainPageView");
 var ModCategoryPanel_1 = require("./ModCategory/ModCategoryPanel");
@@ -13,7 +14,8 @@ var ResourceGroupPanel_1 = require("./ResourceGroup/ResourceGroupPanel");
 var MainPage = /** @class */ (function () {
     function MainPage(page) {
         this.view = new MainPageView_1.MainPageView(page);
-        this.hubApi = new Apis_1.Apis(page.modalError).hub();
+        this.hubApi = new Apis_1.Apis(page.modalError).Hub();
+        this.panels = new SingleActivePanel_1.SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel_1.AppDetailPanel(this.hubApi, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel_1.ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));
         this.resourcePanel = this.panels.add(new ResourcePanel_1.ResourcePanel(this.hubApi, this.view.resourcePanel));

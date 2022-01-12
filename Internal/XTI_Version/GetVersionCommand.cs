@@ -10,9 +10,9 @@ namespace XTI_Version
     public sealed class GetVersionCommand : VersionCommand
     {
         private readonly AppFactory appFactory;
-        private readonly GitFactory gitFactory;
+        private readonly VersionGitFactory gitFactory;
 
-        public GetVersionCommand(AppFactory appFactory, GitFactory gitFactory)
+        public GetVersionCommand(AppFactory appFactory, VersionGitFactory gitFactory)
         {
             this.appFactory = appFactory;
             this.gitFactory = gitFactory;
@@ -21,13 +21,13 @@ namespace XTI_Version
         public async Task Execute(VersionToolOptions options)
         {
             AppVersion version;
-            var gitRepo = await gitFactory.CreateGitRepo();
+            var gitRepo = gitFactory.CreateGitRepo();
             var currentBranchName = gitRepo.CurrentBranchName();
             var app = await appFactory.Apps.App(options.AppKey());
             var xtiBranchName = XtiBranchName.Parse(currentBranchName);
             if (xtiBranchName is XtiIssueBranchName issueBranchName && !string.IsNullOrWhiteSpace(options.RepoOwner))
             {
-                var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+                var gitHubRepo = gitFactory.CreateGitHubRepo();
                 var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
                 var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
                 var versionKey = AppVersionKey.Parse(milestoneName.Version.Key);

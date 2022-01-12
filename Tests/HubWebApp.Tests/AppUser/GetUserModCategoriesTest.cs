@@ -25,7 +25,7 @@ internal sealed class GetUserModCategoriesTest
         var user = await addUser(tester, "some.user");
         var adminRole = await tester.AdminRole();
         var hubAppModifier = await tester.HubAppModifier();
-        await user.Modifier(hubAppModifier).AddRole(adminRole);
+        await user.Modifier(hubAppModifier).AssignRole(adminRole);
         var modCategories = await tester.Execute(user.ID.Value, hubAppModifier.ModKey());
         Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(1), "Should have access to one modifier");
         Assert.That(modCategories[0].Modifiers[0].ModKey, Is.EqualTo(hubAppModifier.ModKey()), "Should have access to one modifier");
@@ -40,7 +40,7 @@ internal sealed class GetUserModCategoriesTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
@@ -50,14 +50,5 @@ internal sealed class GetUserModCategoriesTest
         var factory = tester.Services.GetRequiredService<AppFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
-    }
-
-    private async Task grantUserAccess(IHubActionTester tester, AppUser user)
-    {
-        var app = await tester.HubApp();
-        var viewUserRole = await app.Role(HubInfo.Roles.ViewUser);
-        await user.AddRole(viewUserRole);
-        var hubAppModifier = await tester.HubAppModifier();
-        await user.Modifier(hubAppModifier).AddRole(viewUserRole);
     }
 }

@@ -13,7 +13,15 @@ public sealed class InstallGroup : AppApiGroupWrapper
         var actions = new WebAppApiActionFactory(source);
         RegisterApp = source.AddAction(actions.Action(nameof(RegisterApp), () => services.GetRequiredService<RegisterAppAction>()));
         GetVersion = source.AddAction(actions.Action(nameof(GetVersion), () => services.GetRequiredService<GetVersionAction>()));
-        AddSystemUser = source.AddAction(actions.Action(nameof(AddSystemUser), () => services.GetRequiredService<AddSystemUserAction>()));
+        AddSystemUser = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(AddSystemUser),
+                () => services.GetRequiredService<AddSystemUserValidation>(),
+                () => services.GetRequiredService<AddSystemUserAction>()
+            )
+        );
         NewInstallation = source.AddAction
         (
             actions.Action(nameof(NewInstallation), () => services.GetRequiredService<NewInstallationAction>())
@@ -32,7 +40,7 @@ public sealed class InstallGroup : AppApiGroupWrapper
         );
     }
 
-    public AppApiAction<RegisterAppRequest, EmptyActionResult> RegisterApp { get; }
+    public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
     public AppApiAction<GetVersionRequest, AppVersionModel> GetVersion { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }

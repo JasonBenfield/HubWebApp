@@ -46,7 +46,7 @@ public sealed class AppRequestRepository
                     }
                 );
         }
-        return factory.Request(record);
+        return factory.CreateRequest(record);
     }
 
     public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now)
@@ -71,7 +71,7 @@ public sealed class AppRequestRepository
                 now
             );
         }
-        return factory.Request(requestRecord);
+        return factory.CreateRequest(requestRecord);
     }
 
     private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested)
@@ -93,7 +93,7 @@ public sealed class AppRequestRepository
         => factory.DB.Requests
             .Retrieve()
             .Where(r => r.SessionID == session.ID.Value)
-            .Select(r => factory.Request(r))
+            .Select(r => factory.CreateRequest(r))
             .ToArrayAsync();
 
     internal Task<AppRequest[]> RetrieveMostRecent(AppSession session, int howMany)
@@ -103,7 +103,7 @@ public sealed class AppRequestRepository
             .Where(r => r.SessionID == session.ID.Value)
             .OrderByDescending(r => r.TimeStarted)
             .Take(howMany)
-            .Select(r => factory.Request(r))
+            .Select(r => factory.CreateRequest(r))
             .ToArrayAsync();
     }
 

@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Core;
-using XTI_Hub;
-using XTI_HubAppApi;
+﻿using XTI_Core;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubAppApi.AppPublish;
 
@@ -20,11 +15,13 @@ internal sealed class BeginPublishTest
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             AppKey = HubInfo.AppKey,
-            VersionType = AppVersionType.Values.Patch
+            VersionType = AppVersionType.Values.Patch,
+            Domain = "webapps.example.com"
         });
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
             AppTemplate = apiFactory.CreateTemplate().ToModel(),
+            Domain = "webapps.example.com",
             VersionKey = version.VersionKey,
             Versions = new AppVersionModel[0]
         });
@@ -53,6 +50,7 @@ internal sealed class BeginPublishTest
         var patch = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -72,6 +70,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -91,6 +90,7 @@ internal sealed class BeginPublishTest
         var majorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -110,6 +110,7 @@ internal sealed class BeginPublishTest
         var originalCurrent = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -118,6 +119,7 @@ internal sealed class BeginPublishTest
         var patch = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -137,6 +139,7 @@ internal sealed class BeginPublishTest
         var originalCurrent = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -145,6 +148,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -164,6 +168,7 @@ internal sealed class BeginPublishTest
         var originalCurrent = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -172,6 +177,7 @@ internal sealed class BeginPublishTest
         var majorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -191,6 +197,7 @@ internal sealed class BeginPublishTest
         var majorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -199,6 +206,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -219,6 +227,7 @@ internal sealed class BeginPublishTest
         var majorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -227,6 +236,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -235,6 +245,7 @@ internal sealed class BeginPublishTest
         var patch = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -254,6 +265,7 @@ internal sealed class BeginPublishTest
         var patch = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -262,6 +274,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -281,6 +294,7 @@ internal sealed class BeginPublishTest
         var patch = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -289,6 +303,7 @@ internal sealed class BeginPublishTest
         var minorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -297,6 +312,7 @@ internal sealed class BeginPublishTest
         var majorVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             clock.Now()
         );

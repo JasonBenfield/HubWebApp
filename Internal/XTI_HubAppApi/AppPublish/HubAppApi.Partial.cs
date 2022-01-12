@@ -16,8 +16,7 @@ partial class HubAppApi
             source.AddGroup
             (
                 nameof(Publish),
-                HubInfo.ModCategories.Apps,
-                Access.WithAllowed(HubInfo.Roles.Publisher)
+                HubInfo.ModCategories.Apps
             ),
             services
         );

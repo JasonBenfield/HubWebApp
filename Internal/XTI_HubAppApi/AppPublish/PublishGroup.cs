@@ -12,7 +12,15 @@ public sealed class PublishGroup : AppApiGroupWrapper
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
-        NewVersion = source.AddAction(actions.Action(nameof(NewVersion), () => services.GetRequiredService<NewVersionAction>()));
+        NewVersion = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(NewVersion),
+                () => services.GetRequiredService<NewVersionValidation>(),
+                () => services.GetRequiredService<NewVersionAction>()
+            )
+        );
         BeginPublish = source.AddAction(actions.Action(nameof(BeginPublish), () => services.GetRequiredService<BeginPublishAction>()));
         EndPublish = source.AddAction(actions.Action(nameof(EndPublish), () => services.GetRequiredService<EndPublishAction>()));
         GetVersions = source.AddAction(actions.Action(nameof(GetVersions), () => services.GetRequiredService<GetVersionsAction>()));

@@ -20,7 +20,7 @@ var AppListCard = /** @class */ (function () {
         this.apps.itemClicked.register(this.onAppSelected.bind(this));
     }
     AppListCard.prototype.onAppSelected = function (listItem) {
-        this._appSelected.invoke(listItem.app);
+        this._appSelected.invoke(listItem.appWithModKey.App);
     };
     AppListCard.prototype.refresh = function () {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -43,27 +43,8 @@ var AppListCard = /** @class */ (function () {
         });
     };
     AppListCard.prototype.getApps = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var apps;
-            var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.hubApi.Apps.All()];
-                                    case 1:
-                                        apps = _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, apps];
-                }
-            });
-        });
+        var _this = this;
+        return this.alert.infoAction('Loading...', function () { return _this.hubApi.Apps.GetApps(); });
     };
     return AppListCard;
 }());

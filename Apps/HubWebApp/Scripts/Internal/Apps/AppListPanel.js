@@ -24,7 +24,7 @@ var AppListPanel = /** @class */ (function () {
         this.hubApi = hubApi;
         this.view = view;
         this.awaitable = new Awaitable_1.Awaitable();
-        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (appID) { return _this.hubApi.Apps.RedirectToApp.getUrl(appID).toString(); }, this.view.appListCard);
+        this.appListCard = new AppListCard_1.AppListCard(this.hubApi, function (modKey) { return _this.hubApi.App.Index.getModifierUrl(modKey, {}).toString(); }, this.view.appListCard);
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
     }
     AppListPanel.prototype.onAppSelected = function (app) {

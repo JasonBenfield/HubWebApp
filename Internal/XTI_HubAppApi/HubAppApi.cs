@@ -27,6 +27,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         )
     {
         createAuth(services);
+        createExternalAuth(services);
+        createAuthenticators(services);
         createPermanentLog(services);
         createAppList(services);
         createAppInquiry(services);
@@ -45,6 +47,10 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     }
 
     partial void createAuth(IServiceProvider services);
+
+    partial void createExternalAuth(IServiceProvider services);
+
+    partial void createAuthenticators(IServiceProvider services);
 
     partial void createUserList(IServiceProvider services);
 

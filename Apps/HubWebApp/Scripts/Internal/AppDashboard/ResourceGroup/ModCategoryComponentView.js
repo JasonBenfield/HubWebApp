@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModCategoryComponentView = void 0;
 var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
-var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
 var TextSpanView_1 = require("@jasonbenfield/sharedwebapp/Html/TextSpanView");
 var ModCategoryComponentView = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(ModCategoryComponentView, _super);
@@ -12,8 +11,7 @@ var ModCategoryComponentView = /** @class */ (function (_super) {
         _this.titleHeader = _this.addCardTitleHeader();
         _this.alert = _this.addCardAlert();
         _this.listGroup = _this.addBlockListGroup();
-        var listItem = new ListItem_1.ListItem();
-        _this.listGroup.addItem(listItem);
+        var listItem = _this.listGroup.addListGroupItem();
         _this.modCategoryName = listItem.addContent(new TextSpanView_1.TextSpanView());
         _this.clicked = _this.listGroup.itemClicked;
         return _this;

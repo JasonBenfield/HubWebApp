@@ -2,7 +2,7 @@
 import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
 import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { Apis } from '../../Hub/Apis';
+import { Apis } from '../Apis';
 import { AppListPanel } from './AppListPanel';
 import { MainPageView } from './MainPageView';
 
@@ -12,7 +12,7 @@ class MainPage {
 
     constructor(page: PageFrameView) {
         let view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).hub();
+        this.hubApi = new Apis(page.modalError).Hub();
         page.content.setPadding(PaddingCss.top(3));
         this.appListPanel = new AppListPanel(this.hubApi, view.appListPanel);
         this.activateAppListPanel();

@@ -8,6 +8,8 @@ var UserGroup_1 = require("./UserGroup");
 var UserCacheGroup_1 = require("./UserCacheGroup");
 var AuthGroup_1 = require("./AuthGroup");
 var AuthApiGroup_1 = require("./AuthApiGroup");
+var ExternalAuthGroup_1 = require("./ExternalAuthGroup");
+var AuthenticatorsGroup_1 = require("./AuthenticatorsGroup");
 var PermanentLogGroup_1 = require("./PermanentLogGroup");
 var AppsGroup_1 = require("./AppsGroup");
 var AppGroup_1 = require("./AppGroup");
@@ -24,13 +26,14 @@ var AppUserMaintenanceGroup_1 = require("./AppUserMaintenanceGroup");
 var UserMaintenanceGroup_1 = require("./UserMaintenanceGroup");
 var HubAppApi = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(HubAppApi, _super);
-    function HubAppApi(events, baseUrl, version) {
-        if (version === void 0) { version = ''; }
-        var _this = _super.call(this, events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion) || this;
+    function HubAppApi(events) {
+        var _this = _super.call(this, events, 'Hub') || this;
         _this.User = _this.addGroup(function (evts, resourceUrl) { return new UserGroup_1.UserGroup(evts, resourceUrl); });
         _this.UserCache = _this.addGroup(function (evts, resourceUrl) { return new UserCacheGroup_1.UserCacheGroup(evts, resourceUrl); });
         _this.Auth = _this.addGroup(function (evts, resourceUrl) { return new AuthGroup_1.AuthGroup(evts, resourceUrl); });
         _this.AuthApi = _this.addGroup(function (evts, resourceUrl) { return new AuthApiGroup_1.AuthApiGroup(evts, resourceUrl); });
+        _this.ExternalAuth = _this.addGroup(function (evts, resourceUrl) { return new ExternalAuthGroup_1.ExternalAuthGroup(evts, resourceUrl); });
+        _this.Authenticators = _this.addGroup(function (evts, resourceUrl) { return new AuthenticatorsGroup_1.AuthenticatorsGroup(evts, resourceUrl); });
         _this.PermanentLog = _this.addGroup(function (evts, resourceUrl) { return new PermanentLogGroup_1.PermanentLogGroup(evts, resourceUrl); });
         _this.Apps = _this.addGroup(function (evts, resourceUrl) { return new AppsGroup_1.AppsGroup(evts, resourceUrl); });
         _this.App = _this.addGroup(function (evts, resourceUrl) { return new AppGroup_1.AppGroup(evts, resourceUrl); });
@@ -47,7 +50,6 @@ var HubAppApi = /** @class */ (function (_super) {
         _this.UserMaintenance = _this.addGroup(function (evts, resourceUrl) { return new UserMaintenanceGroup_1.UserMaintenanceGroup(evts, resourceUrl); });
         return _this;
     }
-    HubAppApi.DefaultVersion = 'V1169';
     return HubAppApi;
 }(AppApi_1.AppApi));
 exports.HubAppApi = HubAppApi;

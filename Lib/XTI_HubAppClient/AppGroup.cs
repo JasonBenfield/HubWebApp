@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class AppGroup : AppClientGroup
 {
-    public AppGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl) : base(httpClientFactory, xtiToken, baseUrl, "App")
+    public AppGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "App")
     {
     }
 
@@ -14,5 +14,5 @@ public sealed partial class AppGroup : AppClientGroup
     public Task<AppEventModel[]> GetMostRecentErrorEvents(string modifier, int model) => Post<AppEventModel[], int>("GetMostRecentErrorEvents", modifier, model);
     public Task<ModifierCategoryModel[]> GetModifierCategories(string modifier) => Post<ModifierCategoryModel[], EmptyRequest>("GetModifierCategories", modifier, new EmptyRequest());
     public Task<ModifierCategoryModel> GetModifierCategory(string modifier, string model) => Post<ModifierCategoryModel, string>("GetModifierCategory", modifier, model);
-    public Task<ModifierModel> GetDefaultModiifer(string modifier) => Post<ModifierModel, EmptyRequest>("GetDefaultModiifer", modifier, new EmptyRequest());
+    public Task<ModifierModel> GetDefaultModifier(string modifier) => Post<ModifierModel, EmptyRequest>("GetDefaultModifier", modifier, new EmptyRequest());
 }

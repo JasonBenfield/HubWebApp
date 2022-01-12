@@ -21,6 +21,6 @@ sealed class GetAppDefaultModifier
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.App.GetDefaultModiifer);
+        return HubActionTester.Create(services, hubApi => hubApi.App.GetDefaultModifier);
     }
 }

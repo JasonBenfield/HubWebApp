@@ -1,8 +1,9 @@
 ﻿const path = require('path');
-const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
-    user: './Scripts/Internal/User/MainPage.ts',
+    user: './Scripts/Internal/User/Start/MainPage.ts',
+    accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
+    error: './Scripts/Internal/User/Error/MainPage.ts',
     login: './Scripts/Hub/Auth/LoginPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
@@ -73,16 +74,9 @@ const outputFilename = '[name].js';
 
 const resolve = {
     alias: {
-        xtistart: path.resolve(__dirname, 'Scripts/Internal/Startup.js'),
-        XtiShared: path.resolve(__dirname, 'Imports/Shared/')
     }
 };
 const plugins = [
-    //new webpack.SourceMapDevToolPlugin({
-    //    filename: "[file].map",
-    //    fallbackModuleFilenameTemplate: '[absolute-resource-path]',
-    //    moduleFilenameTemplate: '[absolute-resource-path]'
-    //}),
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',

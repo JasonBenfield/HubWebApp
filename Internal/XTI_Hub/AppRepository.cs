@@ -13,18 +13,19 @@ public sealed class AppRepository
         this.factory = factory;
     }
 
-    public async Task<AppVersion> StartNewVersion(AppKey appKey, AppVersionType versionType, DateTimeOffset timeAdded)
+    public async Task<AppVersion> StartNewVersion(AppKey appKey, string domain, AppVersionType versionType, DateTimeOffset timeAdded)
     {
         var app = await AddOrUpdate
         (
             appKey,
+            domain,
             timeAdded
         );
         var version = await app.StartNewVersion(versionType, timeAdded);
         return version;
     }
 
-    public async Task<App> AddOrUpdate(AppKey appKey, DateTimeOffset timeAdded)
+    public async Task<App> AddOrUpdate(AppKey appKey, string domain, DateTimeOffset timeAdded)
     {
         App app;
         var title = appKey.Name.DisplayText;
@@ -32,61 +33,64 @@ public sealed class AppRepository
             .FirstOrDefaultAsync(a => a.Name == appKey.Name.Value && a.Type == appKey.Type.Value);
         if (record == null)
         {
-            app = await Add(appKey, title, timeAdded);
+            app = await Add(appKey, title, domain, timeAdded);
         }
         else
         {
             await factory.DB.Apps.Update(record, r =>
             {
                 r.Title = title.Trim();
+                r.Domain = domain;
             });
-            app = factory.App(record);
+            app = factory.CreateApp(record);
         }
         return app;
     }
 
-    private async Task<App> Add(AppKey appKey, string title, DateTimeOffset timeAdded)
+    private async Task<App> Add(AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
     {
         App? app = null;
         await factory.Transaction(async () =>
         {
-            app = await AddApp(appKey, title, timeAdded);
-            await factory.Versions.AddCurrentVersion(app, timeAdded);
+            var entity = await AddApp(appKey, title, domain, timeAdded);
+            await factory.Versions.AddCurrentVersion(entity, timeAdded);
+            app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
             await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
         });
         return app ?? throw new ArgumentNullException(nameof(app));
     }
 
-    private async Task<App> AddApp(AppKey appKey, string title, DateTimeOffset timeAdded)
+    private async Task<AppEntity> AddApp(AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
     {
         var record = new AppEntity
         {
             Name = appKey.Name.Value,
             Type = appKey.Type.Value,
-            Title = title?.Trim() ?? "",
+            Title = title.Trim(),
+            Domain = domain,
             TimeAdded = timeAdded
         };
         await factory.DB.Apps.Create(record);
-        return factory.App(record);
+        return record;
     }
 
     public async Task<IEnumerable<App>> All()
     {
         var records = await factory.DB.Apps.Retrieve().ToArrayAsync();
-        return records.Select(r => factory.App(r));
+        return records.Select(r => factory.CreateApp(r));
     }
 
     public async Task<App> App(int id)
     {
         var record = await factory.DB.Apps.Retrieve().FirstOrDefaultAsync(a => a.ID == id);
-        return factory.App(record ?? throw new Exception($"App {id} not found"));
+        return factory.CreateApp(record ?? throw new Exception($"App {id} not found"));
     }
 
     public async Task<App> App(AppKey appKey)
     {
         var record = await GetAppByKey(appKey);
-        return factory.App
+        return factory.CreateApp
         (
             record ?? throw new ArgumentNullException($"App '{appKey.Name.DisplayText} {appKey.Type.DisplayText}' not found")
         );
@@ -103,7 +107,7 @@ public sealed class AppRepository
         {
             record = await GetAppByKey(AppKey.Unknown);
         }
-        return factory.App
+        return factory.CreateApp
         (
             record ?? throw new ArgumentNullException($"App '{appKey.Name.DisplayText} {appKey.Type.DisplayText}' not found")
         );
@@ -152,7 +156,7 @@ public sealed class AppRepository
             .Apps
             .Retrieve()
             .Where(a => a.Type == AppType.Values.WebApp && appIDs.Any(id => id == a.ID))
-            .Select(a => factory.App(a))
+            .Select(a => factory.CreateApp(a))
             .ToArrayAsync();
     }
 }

@@ -20,7 +20,7 @@ internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         var role = await app.Role(model.RoleID);
         var user = await appFactory.Users.User(model.UserID);
         var modifier = await app.Modifier(model.ModifierID);
-        await user.Modifier(modifier).AddRole(role);
+        await user.Modifier(modifier).AssignRole(role);
         return role.ID.Value;
     }
 }

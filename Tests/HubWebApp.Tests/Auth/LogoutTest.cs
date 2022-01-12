@@ -47,7 +47,7 @@ internal sealed class LogoutTest
         var host = new HubTestHost();
         var services = await host.Setup
         (
-            (hc, s) =>
+            (s) =>
             {
                 s.AddScoped<IAppContext>(sp => sp.GetRequiredService<CachedAppContext>());
                 s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
@@ -62,7 +62,7 @@ internal sealed class LogoutTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {

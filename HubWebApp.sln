@@ -16,9 +16,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E167D40E-9DB8-40E5-A388-FAD1FEFBC7C0}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		db-add-migrations.ps1 = db-add-migrations.ps1
-		Hub.ps1 = Hub.ps1
+		Common.Targets = Common.Targets
 		readme.md = readme.md
+		xti.private.ps1 = xti.private.ps1
+		xti.ps1 = xti.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.Tests", "Tests\HubWebApp.Tests\HubWebApp.Tests.csproj", "{4E815D32-B1E2-4BE4-9B3D-3CC6CF8C7484}"
@@ -84,6 +85,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubSetup", "Internal\XTI_HubSetup\XTI_HubSetup.csproj", "{B2219C6A-25F7-4D1A-9E91-D2513ABC97BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_Hub.Abstractions", "Internal\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj", "{60F6C1CF-C497-439D-806C-3B9728110D4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.WebApp.Extensions", "Lib\XTI_HubAppClient.WebApp.Extensions\XTI_HubAppClient.WebApp.Extensions.csproj", "{C2D83760-4760-4DD0-B3A3-506A43C7AC45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.ServiceApp.Extensions", "Lib\XTI_HubAppClient.ServiceApp.Extensions\XTI_HubAppClient.ServiceApp.Extensions.csproj", "{0B6B94D6-869D-4192-95DC-0881882149EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.ConsoleApp.Extensions", "Lib\XTI_HubAppClient.ConsoleApp.Extensions\XTI_HubAppClient.ConsoleApp.Extensions.csproj", "{930E22B7-5A87-4AFB-B8E1-777A037D6B24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,6 +226,18 @@ Global
 		{60F6C1CF-C497-439D-806C-3B9728110D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60F6C1CF-C497-439D-806C-3B9728110D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60F6C1CF-C497-439D-806C-3B9728110D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B6B94D6-869D-4192-95DC-0881882149EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B6B94D6-869D-4192-95DC-0881882149EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B6B94D6-869D-4192-95DC-0881882149EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B6B94D6-869D-4192-95DC-0881882149EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -256,6 +275,9 @@ Global
 		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7} = {D413D9EB-8AC4-40F8-AC7A-99A519E71533}
 		{B2219C6A-25F7-4D1A-9E91-D2513ABC97BC} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{60F6C1CF-C497-439D-806C-3B9728110D4E} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
+		{C2D83760-4760-4DD0-B3A3-506A43C7AC45} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
+		{0B6B94D6-869D-4192-95DC-0881882149EE} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
+		{930E22B7-5A87-4AFB-B8E1-777A037D6B24} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

@@ -12,7 +12,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public HubDbContext(DbContextOptions<HubDbContext> options)
         : base(options)
     {
+        Authenticators = new EfDataRepository<AuthenticatorEntity>(this);
         Users = new EfDataRepository<AppUserEntity>(this);
+        UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
         Requests = new EfDataRepository<AppRequestEntity>(this);
         Events = new EfDataRepository<AppEventEntity>(this);
@@ -33,6 +35,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new UserAuthenticatorEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AuthenticatorEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
@@ -52,7 +56,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         base.OnModelCreating(modelBuilder);
     }
 
+    public DataRepository<AuthenticatorEntity> Authenticators { get; }
     public DataRepository<AppUserEntity> Users { get; }
+    public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }
     public DataRepository<AppRequestEntity> Requests { get; }
     public DataRepository<AppEventEntity> Events { get; }

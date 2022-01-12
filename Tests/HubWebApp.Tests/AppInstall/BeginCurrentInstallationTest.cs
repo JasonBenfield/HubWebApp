@@ -85,6 +85,7 @@ sealed class BeginCurrentInstallationTest
         var nextVersion = await factory.Apps.StartNewVersion
         (
             HubInfo.AppKey,
+            "hub.example.com",
             AppVersionType.Values.Major,
             DateTimeOffset.Now
         );

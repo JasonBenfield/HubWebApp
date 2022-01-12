@@ -54,6 +54,32 @@ public sealed class AppUserRepository
         return factory.User(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
+    public async Task<AppUser> UserByExternalKey(App authenticatorApp, string externalUserKey)
+    {
+        var authenticatorIDs = factory.DB
+            .Authenticators.Retrieve()
+            .Where(a => a.AppID == authenticatorApp.ID.Value)
+            .Select(a => a.ID);
+        var userIDs = factory.DB
+            .UserAuthenticators.Retrieve()
+            .Where
+            (
+                a =>
+                    authenticatorIDs.Contains(a.AuthenticatorID)
+                    && a.ExternalUserKey == externalUserKey
+            )
+            .Select(a => a.UserID);
+        var userEntity = await factory.DB
+            .Users.Retrieve()
+            .Where(u => userIDs.Contains(u.ID))
+            .FirstOrDefaultAsync();
+        return factory.User
+        (
+            userEntity
+            ?? throw new Exception($"User not found for authenticator '{authenticatorApp.Key().Name.DisplayText}' with user key '{externalUserKey}'")
+        );
+    }
+
     private Task<AppUserEntity?> GetUser(AppUserName userName)
         => factory.DB
             .Users
@@ -64,14 +90,14 @@ public sealed class AppUserRepository
     {
         var userName = AppUserName.Anon;
         var record = await GetUser(userName);
-        if(record == null)
+        if (record == null)
         {
             record = await AddUserEntity
             (
                 userName,
-                new SystemHashedPassword(), 
-                new PersonName(""), 
-                new EmailAddress(""), 
+                new SystemHashedPassword(),
+                new PersonName(""),
+                new EmailAddress(""),
                 timeAdded
             );
         }
@@ -90,9 +116,9 @@ public sealed class AppUserRepository
         AppUserName userName,
         IHashedPassword password,
         DateTimeOffset timeAdded
-    ) => Add(userName, password, new PersonName(""), new EmailAddress(""), timeAdded);
+    ) => AddOrUpdate(userName, password, new PersonName(""), new EmailAddress(""), timeAdded);
 
-    public async Task<AppUser> Add
+    public async Task<AppUser> AddOrUpdate
     (
         AppUserName userName,
         IHashedPassword password,
@@ -101,7 +127,24 @@ public sealed class AppUserRepository
         DateTimeOffset timeAdded
     )
     {
-        var record = await AddUserEntity(userName, password, name, email, timeAdded);
+        var record = await GetUser(userName);
+        if (record == null)
+        {
+            record = await AddUserEntity(userName, password, name, email, timeAdded);
+        }
+        else
+        {
+            await factory.DB.Users.Update
+            (
+                record,
+                u =>
+                {
+                    u.Name = name.Value;
+                    u.Password = password.Value();
+                    u.Email = email.Value;
+                }
+            );
+        }
         return factory.User(record);
     }
 

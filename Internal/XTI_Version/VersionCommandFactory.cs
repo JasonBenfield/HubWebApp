@@ -6,10 +6,10 @@ namespace XTI_Version;
 public sealed class VersionCommandFactory
 {
     private readonly AppFactory appFactory;
-    private readonly GitFactory gitFactory;
+    private readonly VersionGitFactory gitFactory;
     private readonly IClock clock;
 
-    public VersionCommandFactory(AppFactory appFactory, GitFactory gitFactory, IClock clock)
+    public VersionCommandFactory(AppFactory appFactory, VersionGitFactory gitFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.gitFactory = gitFactory;
@@ -41,7 +41,7 @@ public sealed class VersionCommandFactory
         }
         else if (commandName.Equals(VersionCommandName.GetCurrentVersion))
         {
-            command = new GetCurrentVersionCommand(appFactory);
+            command = new GetCurrentVersionCommand(appFactory, clock);
         }
         else if (commandName.Equals(VersionCommandName.GetVersion))
         {

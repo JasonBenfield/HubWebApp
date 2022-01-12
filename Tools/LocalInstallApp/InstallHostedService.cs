@@ -7,8 +7,10 @@ using System.IO.Compression;
 using System.ServiceProcess;
 using XTI_App.Abstractions;
 using XTI_App.Extensions;
+using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_GitHub;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_Processes;
@@ -59,7 +61,7 @@ internal sealed class InstallHostedService : IHostedService
                     await writeLog("Downloading Assets");
                     await downloadAssets(sp, tempDir);
                 }
-                await storeSystemUserCredentials(sp, appKey);
+                await storeInstallationUserCredentials(sp);
                 if (appKey.Type.Equals(AppType.Values.WebApp))
                 {
                     if (hostEnv.IsProduction())
@@ -68,7 +70,7 @@ internal sealed class InstallHostedService : IHostedService
                     }
                     await installWebApp(sp, appKey, versionKey, AppVersionKey.Current, tempDir);
                 }
-                else if (appKey.Type.Equals(AppType.Values.Service))
+                else if (appKey.Type.Equals(AppType.Values.ServiceApp))
                 {
                     if (hostEnv.IsProduction())
                     {
@@ -129,7 +131,8 @@ internal sealed class InstallHostedService : IHostedService
                 new
                 {
                     VersionKey = versionKey,
-                    VersionsPath = Path.Combine(sourceDir, "versions.json")
+                    VersionsPath = Path.Combine(sourceDir, "versions.json"),
+                    Domain = sp.GetRequiredService<IOptions<InstallOptions>>().Value.Domain
                 },
                 "Setup"
             )
@@ -139,8 +142,8 @@ internal sealed class InstallHostedService : IHostedService
     private static async Task downloadAssets(IServiceProvider sp, string tempDir)
     {
         var options = sp.GetRequiredService<IOptions<InstallOptions>>().Value;
-        var gitFactory = sp.GetRequiredService<GitFactory>();
-        var gitHubRepo = await gitFactory.CreateGitHubRepo(options.RepoOwner, options.RepoName);
+        var gitHubFactory = sp.GetRequiredService<IGitHubFactory>();
+        var gitHubRepo = gitHubFactory.CreateGitHubRepository(options.RepoOwner, options.RepoName);
         if (Directory.Exists(tempDir))
         {
             Directory.Delete(tempDir, true);
@@ -193,32 +196,19 @@ internal sealed class InstallHostedService : IHostedService
         }
     }
 
-    private async Task storeSystemUserCredentials(IServiceProvider sp, AppKey appKey)
+    private Task storeInstallationUserCredentials(IServiceProvider sp)
     {
-        var credentialKey = getCredentialKey(appKey);
         var options = sp.GetRequiredService<IOptions<InstallOptions>>().Value;
-        var xtiFolder = sp.GetRequiredService<XtiFolder>();
-        var path = getSecretsToolPath(xtiFolder);
-        var hostEnv = sp.GetRequiredService<IHostEnvironment>();
-        var secretsOptions = new SecretsToolOptions
-        {
-            Command = "Store",
-            CredentialKey = credentialKey,
-            UserName = options.SystemUserName,
-            Password = options.SystemPassword
-        };
-        var process = new XtiProcess(path)
-            .WriteOutputToConsole()
-            .UseEnvironment(hostEnv.EnvironmentName)
-            .AddConfigOptions(secretsOptions);
-        await writeLog(process.CommandText());
-        var result = await process.Run();
-        result.EnsureExitCodeIsZero();
+        var credentials = sp.GetRequiredService<InstallationUserCredentials>();
+        return credentials.Update
+        (
+            new CredentialValue
+            (
+                options.InstallationUserName,
+                options.InstallationPassword
+            )
+        );
     }
-
-    private string getCredentialKey(AppKey appKey)
-        => $"System_User_{appKey.Type.DisplayText}_{appKey.Name.DisplayText}"
-            .Replace(" ", "");
 
     private static AppKey ensureAppKeyIsValid(IServiceProvider sp)
     {
@@ -304,7 +294,11 @@ internal sealed class InstallHostedService : IHostedService
         var secretCredentialsValue = await retrieveCredentials(sp, "WebApp");
         using var server = new ServerManager();
         var hostEnv = sp.GetRequiredService<IHostEnvironment>();
-        var siteName = hostEnv.IsProduction() ? "WebApps" : hostEnv.EnvironmentName;
+        var siteName = sp.GetRequiredService<IOptions<InstallOptions>>().Value.SiteName;
+        if (string.IsNullOrWhiteSpace(siteName))
+        {
+            siteName = hostEnv.IsProduction() ? "WebApps" : hostEnv.EnvironmentName;
+        }
         var site = server.Sites[siteName];
         var appName = getAppName(appKey);
         var appPoolName = $"Xti_{hostEnv.EnvironmentName}_{appName}_{versionKey.DisplayText}";
@@ -418,15 +412,20 @@ internal sealed class InstallHostedService : IHostedService
                 binPath = $"{binPath} --Environment {hostEnv.EnvironmentName}";
                 await writeLog($"Creating service '{binPath}'");
                 var secretCredentialsValue = await retrieveCredentials(sp, "ServiceApp");
-                await new WinProcess("sc")
+                var createServiceProcess = new WinProcess("sc")
+                    .WriteOutputToConsole()
                     .UseArgumentNameDelimiter("")
                     .AddArgument("create")
+                    .AddArgument(serviceName)
                     .UseArgumentValueDelimiter("= ")
                     .AddArgument("start", "auto")
                     .AddArgument("binpath", new Quoted(binPath))
                     .AddArgument("obj", new Quoted(secretCredentialsValue.UserName))
-                    .AddArgument("password", new Quoted(secretCredentialsValue.Password))
+                    .AddArgument("password", new Quoted(secretCredentialsValue.Password));
+                await writeLog(createServiceProcess.CommandText());
+                var createServiceResult = await createServiceProcess
                     .Run();
+                createServiceResult.EnsureExitCodeIsZero();
                 sc = getService(serviceName);
             }
             else if (sc.Status == ServiceControllerStatus.Running)

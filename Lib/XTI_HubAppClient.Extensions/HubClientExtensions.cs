@@ -1,48 +1,76 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using XTI_App.Abstractions;
-using XTI_App.Secrets;
 using XTI_TempLog.Abstractions;
+using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
 
 namespace XTI_HubAppClient.Extensions;
 
 public static class HubClientExtensions
 {
-    public static void AddHubClientServices(this IServiceCollection services)
+    public static void AddHubClientServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient();
-        services.AddScoped(sp =>
+        services.Configure<HubClientOptions>(configuration.GetSection(HubClientOptions.HubClient));
+        services.AddScoped<SystemUserXtiToken>();
+        services.AddXtiTokenAccessor((sp, accessor) => { });
+        services.AddScoped<HubClientOptionsAppClientDomain>();
+        services.AddScoped<HubClientAppClientDomain>();
+        if (!services.Any(s => s.ImplementationType == typeof(AppClientDomainSelector)))
         {
-            var credentials = sp.GetRequiredService<ISystemUserCredentials>();
-            return new XtiTokenFactory(credentials);
-        });
-        services.AddScoped<IXtiTokenFactory>(sp =>
-        {
-            var cache = sp.GetRequiredService<IMemoryCache>();
-            var xtiTokenFactory = sp.GetRequiredService<XtiTokenFactory>();
-            return new CachedXtiTokenFactory(cache, xtiTokenFactory);
-        });
-        services.AddScoped(sp =>
-        {
-            var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-            var xtiTokenFactory = sp.GetRequiredService<IXtiTokenFactory>();
-            var appOptions = sp.GetRequiredService<IOptions<AppOptions>>().Value;
-            var env = sp.GetRequiredService<IHostEnvironment>();
-            var versionKey = env.IsProduction() 
-                ? "" 
-                : XTI_App.Abstractions.AppVersionKey.Current.Value;
-            return new HubAppClient(httpClientFactory, xtiTokenFactory, appOptions.BaseUrl, versionKey);
-        });
+            AddAppClientDomainSelector(services, (sp, domains) => { });
+        }
+        services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
+        services.AddScoped<AppClientUrl>();
+        services.AddSingleton<HubAppClientVersion>();
+        services.AddScoped<HubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
-        services.AddScoped(sp =>
-        {
-            var xtiTokenFactory = sp.GetRequiredService<IXtiTokenFactory>();
-            var authClient = sp.GetRequiredService<IAuthClient>();
-            return xtiTokenFactory.Create(authClient);
-        });
         services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+        services.AddScoped<HubAppClientContext>();
+        services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().AppContext);
+        services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().UserContext);
     }
+
+    public static void AddAppClientDomainSelector(this IServiceCollection services, Action<IServiceProvider, AppClientDomainSelector> configure)
+    {
+        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(AppClientDomainSelector));
+        if (existing != null)
+        {
+            services.Remove(existing);
+        }
+        services.AddScoped
+        (
+            sp =>
+            {
+                var appClientDomains = new AppClientDomainSelector();
+                appClientDomains.AddAppClientDomain(() => sp.GetRequiredService<HubClientOptionsAppClientDomain>());
+                configure(sp, appClientDomains);
+                appClientDomains.AddAppClientDomain(() => sp.GetRequiredService<HubClientAppClientDomain>());
+                return appClientDomains;
+            }
+        );
+    }
+
+    public static void AddXtiTokenAccessor(this IServiceCollection services, Action<IServiceProvider, XtiTokenAccessor> configure)
+    {
+        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
+        if (existing != null)
+        {
+            services.Remove(existing);
+        }
+        services.AddScoped
+        (
+            sp =>
+            {
+                var cache = sp.GetRequiredService<IMemoryCache>();
+                var xtiTokenAccessor = new XtiTokenAccessor(cache);
+                xtiTokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                xtiTokenAccessor.UseToken<SystemUserXtiToken>();
+                configure(sp, xtiTokenAccessor);
+                return xtiTokenAccessor;
+            }
+        );
+    }
+
 }

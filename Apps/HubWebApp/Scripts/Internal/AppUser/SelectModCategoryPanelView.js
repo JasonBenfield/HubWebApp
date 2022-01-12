@@ -9,7 +9,6 @@ var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill"
 var ListBlockViewModel_1 = require("@jasonbenfield/sharedwebapp/Html/ListBlockViewModel");
 var ListItem_1 = require("@jasonbenfield/sharedwebapp/Html/ListItem");
 var TextBlockView_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlockView");
-var ButtonListGroupItemView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView");
 var ListGroupView_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroupView");
 var MarginCss_1 = require("@jasonbenfield/sharedwebapp/MarginCss");
 var HubTheme_1 = require("../HubTheme");
@@ -22,14 +21,13 @@ var SelectModCategoryPanelView = /** @class */ (function (_super) {
         _this.setName(SelectModCategoryPanelView.name);
         var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
         var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        _this.defaultModListItem = new ButtonListGroupItemView_1.ButtonListGroupItemView();
+        var defaultModList = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ListItem_1.ListItem(); }, new ListBlockViewModel_1.ListBlockViewModel()));
+        defaultModList.setMargin(MarginCss_1.MarginCss.bottom(3));
+        _this.defaultModClicked = defaultModList.itemClicked;
+        _this.defaultModListItem = defaultModList.addButtonListGroupItem();
         _this.defaultModListItem
             .addContent(new TextBlockView_1.TextBlockView())
             .configure(function (tb) { return tb.setText('Default Modifier'); });
-        var defaultModList = flexFill.addContent(new ListGroupView_1.ListGroupView(function () { return new ListItem_1.ListItem(); }, new ListBlockViewModel_1.ListBlockViewModel()));
-        _this.defaultModClicked = defaultModList.itemClicked;
-        defaultModList.addItem(_this.defaultModListItem);
-        defaultModList.setMargin(MarginCss_1.MarginCss.bottom(3));
         var card = flexFill.addContent(new CardView_1.CardView());
         _this.titleHeader = card.addCardTitleHeader();
         _this.alert = card.addCardAlert();

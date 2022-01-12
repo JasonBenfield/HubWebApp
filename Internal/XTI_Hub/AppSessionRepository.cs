@@ -17,7 +17,7 @@ public sealed class AppSessionRepository
     public async Task<AppSession> Session(string sessionKey)
     {
         var record = await GetSession(sessionKey);
-        return factory.Session(record ?? throw new Exception($"Session '{sessionKey}' not found"));
+        return factory.CreateSession(record ?? throw new Exception($"Session '{sessionKey}' not found"));
     }
 
     public async Task<AppSession> SessionOrPlaceHolder(string sessionKey, DateTimeOffset now)
@@ -27,7 +27,7 @@ public sealed class AppSessionRepository
         {
             record = await AddPlaceHolderSession(sessionKey, new GeneratedKey().Value(), now);
         }
-        return factory.Session(record);
+        return factory.CreateSession(record);
     }
 
     private Task<AppSessionEntity?> GetSession(string sessionKey) =>
@@ -51,7 +51,7 @@ public sealed class AppSessionRepository
         {
             record = await AddPlaceHolderSession(new GeneratedKey().Value(), defaultRequestKey, now);
         }
-        return factory.Session(record);
+        return factory.CreateSession(record);
     }
 
     private async Task<AppSessionEntity> AddPlaceHolderSession(string sessionKey, string requesterKey, DateTimeOffset now)
@@ -74,7 +74,7 @@ public sealed class AppSessionRepository
             .Sessions
             .Retrieve()
             .Where(s => s.TimeEnded == DateTimeOffset.MaxValue && s.TimeStarted >= timeRange.Start && s.TimeStarted <= timeRange.End)
-            .Select(s => factory.Session(s))
+            .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
     public Task<AppSession[]> SessionsByTimeRange(DateTimeRange timeRange) =>
@@ -82,7 +82,7 @@ public sealed class AppSessionRepository
             .Sessions
             .Retrieve()
             .Where(s => s.TimeStarted >= timeRange.Start && s.TimeStarted <= timeRange.End)
-            .Select(s => factory.Session(s))
+            .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
     public async Task<AppSession> AddOrUpdate(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
@@ -96,7 +96,7 @@ public sealed class AppSessionRepository
         {
             await Update(record, user, timeStarted, requesterKey, userAgent, remoteAddress);
         }
-        return factory.Session(record);
+        return factory.CreateSession(record);
     }
 
     private async Task<AppSessionEntity> Add(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)

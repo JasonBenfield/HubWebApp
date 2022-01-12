@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginComponent = exports.LoginResult = void 0;
 var tslib_1 = require("tslib");
 var AsyncCommand_1 = require("@jasonbenfield/sharedwebapp/Command/AsyncCommand");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var UrlBuilder_1 = require("@jasonbenfield/sharedwebapp/UrlBuilder");
 var VerifyLoginForm_1 = require("../Api/VerifyLoginForm");
-var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var LoginResult = /** @class */ (function () {
     function LoginResult(token) {
         this.token = token;
@@ -84,9 +84,6 @@ var LoginComponent = /** @class */ (function () {
         input.name = name;
         input.value = value;
         return input;
-    };
-    LoginComponent.ResultKeys = {
-        loginComplete: 'login-complete'
     };
     return LoginComponent;
 }());

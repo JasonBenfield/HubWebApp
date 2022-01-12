@@ -9,7 +9,7 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class InstallGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Install');
-		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IEmptyActionResult>('RegisterApp', 'Register App');
+		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppWithModKeyModel>('RegisterApp', 'Register App');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IAppVersionModel>('GetVersion', 'Get Version');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
 		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
@@ -18,7 +18,7 @@ export class InstallGroup extends AppApiGroup {
 		this.InstalledAction = this.createAction<IInstalledRequest,IEmptyActionResult>('Installed', 'Installed');
 	}
 	
-	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IEmptyActionResult>;
+	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppWithModKeyModel>;
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IAppVersionModel>;
 	readonly AddSystemUserAction: AppApiAction<IAddSystemUserRequest,IAppUserModel>;
 	readonly NewInstallationAction: AppApiAction<INewInstallationRequest,INewInstallationResult>;

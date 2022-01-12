@@ -1,16 +1,8 @@
 ﻿import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
-import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
-import { VerifyLoginForm } from "../Api/VerifyLoginForm";
-import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { BlockViewModel } from "@jasonbenfield/sharedwebapp/Html/BlockViewModel";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
 import { MessageAlert } from '@jasonbenfield/sharedwebapp/MessageAlert';
-import { TextCss } from '@jasonbenfield/sharedwebapp/TextCss';
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
+import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 import { HubAppApi } from "../Api/HubAppApi";
+import { VerifyLoginForm } from "../Api/VerifyLoginForm";
 import { LoginComponentView } from "./LoginComponentView";
 
 export class LoginResult {
@@ -19,10 +11,6 @@ export class LoginResult {
 }
 
 export class LoginComponent {
-    public static readonly ResultKeys = {
-        loginComplete: 'login-complete'
-    };
-
     private readonly verifyLoginForm: VerifyLoginForm;
     private readonly loginCommand = new AsyncCommand(this.login.bind(this));
     private readonly alert: MessageAlert;

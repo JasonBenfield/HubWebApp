@@ -16,8 +16,7 @@ partial class HubAppApi
             source.AddGroup
             (
                 nameof(Install),
-                HubInfo.ModCategories.Apps,
-                Access.WithAllowed(HubInfo.Roles.Installer)
+                HubInfo.ModCategories.Apps
             ),
             services
         );

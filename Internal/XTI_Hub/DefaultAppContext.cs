@@ -18,6 +18,13 @@ public sealed class DefaultAppContext : ISourceAppContext
 
     public async Task<IApp> App() => await appFactory.Apps.AppOrUnknown(appKey);
 
+    public async Task<ModifierKey> ModKeyInHubApps(IApp app)
+    {
+        var theApp = await appFactory.Apps.App(app.ID.Value);
+        var modKey = await theApp.ModKeyInHubApps();
+        return modKey;
+    }
+
     public async Task<IAppVersion> Version()
     {
         var app = await App();

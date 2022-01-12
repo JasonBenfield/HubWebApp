@@ -1,6 +1,7 @@
 ﻿import { Awaitable } from '@jasonbenfield/sharedwebapp/Awaitable';
 import { Command } from '@jasonbenfield/sharedwebapp/Command/Command';
 import { HubAppApi } from '../../../Hub/Api/HubAppApi';
+import { ResourceGroupListItem } from '../ResourceGroupListItem';
 import { AppComponent } from './AppComponent';
 import { AppDetailPanelView } from './AppDetailPanelView';
 import { CurrentVersionComponent } from './CurrentVersionComponent';
@@ -61,7 +62,7 @@ export class AppDetailPanel implements IPanel {
         this.app = new AppComponent(this.hubApi, this.view.app);
         this.currentVersion = new CurrentVersionComponent(this.hubApi, this.view.currentVersion);
         this.resourceGroupListCard = new ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
-        this.resourceGroupListCard.resourceGroupSelected.register(
+        this.resourceGroupListCard.resourceGroupClicked.register(
             this.onResourceGroupSelected.bind(this)
         );
         this.modifierCategoryListCard = new ModifierCategoryListCard(this.hubApi, this.view.modifierCategoryListCard);
@@ -74,9 +75,9 @@ export class AppDetailPanel implements IPanel {
         this.backCommand.add(this.view.backButton);
     }
 
-    private onResourceGroupSelected(resourceGroup: IResourceGroupModel) {
+    private onResourceGroupSelected(listItem: ResourceGroupListItem) {
         this.awaitable.resolve(
-            AppDetailPanelResult.resourceGroupSelected(resourceGroup)
+            AppDetailPanelResult.resourceGroupSelected(listItem.group)
         );
     }
 

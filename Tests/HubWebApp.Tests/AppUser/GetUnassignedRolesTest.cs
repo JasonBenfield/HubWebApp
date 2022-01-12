@@ -8,7 +8,6 @@ internal sealed class GetUnassignedRolesTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var request = new UserModifierKey
@@ -24,7 +23,6 @@ internal sealed class GetUnassignedRolesTest
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var request = new UserModifierKey
@@ -36,7 +34,7 @@ internal sealed class GetUnassignedRolesTest
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                await tester.FakeHubAppModifier(),
+                tester.FakeHubAppModifier(),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.ViewApp,
                 HubInfo.Roles.ViewUser
@@ -52,7 +50,7 @@ internal sealed class GetUnassignedRolesTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.Modifier(hubAppModifier).AddRole(viewUserRole);
+        await user.Modifier(hubAppModifier).AssignRole(viewUserRole);
         var request = new UserModifierKey
         {
             UserID = user.ID.Value,
@@ -81,7 +79,7 @@ internal sealed class GetUnassignedRolesTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.Modifier(hubAppModifier).AddRole(viewUserRole);
+        await user.Modifier(hubAppModifier).AssignRole(viewUserRole);
         var request = new UserModifierKey
         {
             UserID = user.ID.Value,
@@ -97,7 +95,7 @@ internal sealed class GetUnassignedRolesTest
 
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
-        var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
@@ -107,22 +105,6 @@ internal sealed class GetUnassignedRolesTest
         var factory = tester.Services.GetRequiredService<AppFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
-    }
-
-    private async Task denyAccess(IHubActionTester tester, AppUser user, Modifier modifier)
-    {
-        var denyAccessTester = tester.Create(hubApi => hubApi.AppUserMaintenance.DenyAccess);
-        denyAccessTester.LoginAsAdmin();
-        var hubAppModifier = await denyAccessTester.FakeHubAppModifier();
-        await denyAccessTester.Execute
-        (
-            new UserModifierKey
-            {
-                UserID = user.ID.Value,
-                ModifierID = modifier.ID.Value
-            },
-            hubAppModifier.ModKey()
-        );
     }
 
     private async Task<HubActionTester<UserModifierKey, AppRoleModel[]>> setup()

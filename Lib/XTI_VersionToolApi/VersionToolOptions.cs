@@ -6,6 +6,7 @@ public sealed class VersionToolOptions
     public string AppName { get; set; } = "";
     public string AppType { get; set; } = "";
     public string VersionType { get; set; } = "";
+    public string Domain { get; set; } = "";
     public string RepoOwner { get; set; } = "";
     public string RepoName { get; set; } = "";
     public string IssueTitle { get; set; } = "";
@@ -13,21 +14,23 @@ public sealed class VersionToolOptions
     public string OutputPath { get; set; } = "";
     public bool StartIssue { get; set; }
 
-    public void CommandNewVersion(string appName, string appType, string versionType, string repoOwner, string repoName)
+    public void CommandNewVersion(string appName, string appType, string domain, string versionType, string repoOwner, string repoName)
     {
         Command = "NewVersion";
         AppName = appName;
         AppType = appType;
+        Domain = domain;
         VersionType = versionType;
         RepoOwner = repoOwner;
         RepoName = repoName;
     }
 
-    public void CommandBeginPublish(string appName, string appType)
+    public void CommandBeginPublish(string appName, string appType, string domain)
     {
         Command = "BeginPublish";
         AppName = appName;
         AppType = appType;
+        Domain = domain;
     }
 
     public void CommandCompleteVersion(string repoOwner, string repoName, string appName, string appType)

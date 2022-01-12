@@ -12,4 +12,5 @@ public sealed class AppVersionEntity
     public int Type { get; set; }
     public string Description { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
+    public string Domain { get; set; } = "";
 }

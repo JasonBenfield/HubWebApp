@@ -1,10 +1,12 @@
 ﻿using HubWebApp.Fakes;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using XTI_App.Abstractions;
-using XTI_App.Api;
+using Microsoft.Extensions.Options;
+using XTI_Core.Fakes;
+using XTI_Git;
 using XTI_Git.Abstractions;
-using XTI_Hub;
+using XTI_Git.Fakes;
+using XTI_GitHub;
+using XTI_GitHub.Fakes;
 using XTI_Secrets.Fakes;
 using XTI_Version;
 using XTI_VersionToolApi;
@@ -31,7 +33,10 @@ internal sealed class ManageVersionTester
                 {
                     services.AddFakesForHubWebApp(hostContext.Configuration);
                     services.AddScoped(sp => sp.GetRequiredService<AppApiFactory>().CreateForSuperUser());
-                    services.AddScoped<GitFactory, FakeGitFactory>();
+                    services.AddScoped<IXtiGitFactory, FakeGitFactory>();
+                    services.AddScoped<IGitHubFactory, FakeGitHubFactory>();
+                    services.AddScoped<IOptions<VersionToolOptions>, FakeOptions<VersionToolOptions>>();
+                    services.AddScoped<VersionGitFactory>();
                     services.AddScoped<VersionCommandFactory>();
                     services.AddFakeSecretCredentials();
                 }
@@ -43,20 +48,21 @@ internal sealed class ManageVersionTester
         await setup.Run(AppVersionKey.Current);
         var appFactory = SP.GetRequiredService<AppFactory>();
         app = await appFactory.Apps.App(HubInfo.AppKey);
-        Options = new VersionToolOptions();
+        Options = sp.GetRequiredService<IOptions<VersionToolOptions>>().Value;
         Options.CommandNewVersion
         (
             HubInfo.AppKey.Name.Value,
             HubInfo.AppKey.Type.DisplayText,
+            "",
             AppVersionType.Values.Patch.DisplayText,
             "JasonBenfield",
             "XTI_App"
         );
-        var gitFactory = SP.GetRequiredService<GitFactory>();
-        var gitHubRepo = await gitFactory.CreateGitHubRepo("JasonBenfield", "XTI_App");
-        var defaultBranchName = await gitHubRepo.DefaultBranchName();
-        var gitRepo = await gitFactory.CreateGitRepo();
-        gitRepo.CheckoutBranch(defaultBranchName);
+        var gitFactory = SP.GetRequiredService<VersionGitFactory>();
+        var gitHubRepo = gitFactory.CreateGitHubRepo();
+        var repoInfo = await gitHubRepo.RepositoryInformation();
+        var gitRepo = gitFactory.CreateGitRepo();
+        await gitRepo.CheckoutBranch(repoInfo.DefaultBranch);
     }
 
     public Task Execute()
@@ -75,9 +81,9 @@ internal sealed class ManageVersionTester
 
     public async Task Checkout(AppVersion version)
     {
-        var gitFactory = SP.GetRequiredService<GitFactory>();
-        var gitRepo = await gitFactory.CreateGitRepo();
+        var gitFactory = SP.GetRequiredService<VersionGitFactory>();
+        var gitRepo = gitFactory.CreateGitRepo();
         var versionBranchName = new XtiVersionBranchName(new XtiGitVersion(version.Type().DisplayText, version.Key().DisplayText));
-        gitRepo.CheckoutBranch(versionBranchName.Value);
+        await gitRepo.CheckoutBranch(versionBranchName.Value);
     }
 }

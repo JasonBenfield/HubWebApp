@@ -6,6 +6,8 @@ import { UserGroup } from "./UserGroup";
 import { UserCacheGroup } from "./UserCacheGroup";
 import { AuthGroup } from "./AuthGroup";
 import { AuthApiGroup } from "./AuthApiGroup";
+import { ExternalAuthGroup } from "./ExternalAuthGroup";
+import { AuthenticatorsGroup } from "./AuthenticatorsGroup";
 import { PermanentLogGroup } from "./PermanentLogGroup";
 import { AppsGroup } from "./AppsGroup";
 import { AppGroup } from "./AppGroup";
@@ -23,14 +25,14 @@ import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 
 
 export class HubAppApi extends AppApi {
-	public static readonly DefaultVersion = 'V1169';
-	
-	constructor(events: AppApiEvents, baseUrl: string, version: string = '') {
-		super(events, baseUrl, 'Hub', version || HubAppApi.DefaultVersion);
+	constructor(events: AppApiEvents) {
+		super(events, 'Hub');
 		this.User = this.addGroup((evts, resourceUrl) => new UserGroup(evts, resourceUrl));
 		this.UserCache = this.addGroup((evts, resourceUrl) => new UserCacheGroup(evts, resourceUrl));
 		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
 		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
+		this.ExternalAuth = this.addGroup((evts, resourceUrl) => new ExternalAuthGroup(evts, resourceUrl));
+		this.Authenticators = this.addGroup((evts, resourceUrl) => new AuthenticatorsGroup(evts, resourceUrl));
 		this.PermanentLog = this.addGroup((evts, resourceUrl) => new PermanentLogGroup(evts, resourceUrl));
 		this.Apps = this.addGroup((evts, resourceUrl) => new AppsGroup(evts, resourceUrl));
 		this.App = this.addGroup((evts, resourceUrl) => new AppGroup(evts, resourceUrl));
@@ -51,6 +53,8 @@ export class HubAppApi extends AppApi {
 	readonly UserCache: UserCacheGroup;
 	readonly Auth: AuthGroup;
 	readonly AuthApi: AuthApiGroup;
+	readonly ExternalAuth: ExternalAuthGroup;
+	readonly Authenticators: AuthenticatorsGroup;
 	readonly PermanentLog: PermanentLogGroup;
 	readonly Apps: AppsGroup;
 	readonly App: AppGroup;

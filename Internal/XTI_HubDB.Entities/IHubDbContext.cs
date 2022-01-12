@@ -17,6 +17,8 @@ public interface IHubDbContext
     DataRepository<AppSessionEntity> Sessions { get; }
     DataRepository<AppUserRoleEntity> UserRoles { get; }
     DataRepository<AppUserEntity> Users { get; }
+    DataRepository<AuthenticatorEntity> Authenticators { get; }
+    DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     DataRepository<AppVersionEntity> Versions { get; }
     DataRepository<InstallLocationEntity> InstallLocations { get; }
     DataRepository<InstallationEntity> Installations { get; }

@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class ModCategoryGroup : AppClientGroup
 {
-    public ModCategoryGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl) : base(httpClientFactory, xtiToken, baseUrl, "ModCategory")
+    public ModCategoryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "ModCategory")
     {
     }
 

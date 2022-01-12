@@ -5,7 +5,7 @@ using XTI_Hub;
 
 namespace XTI_HubAppApi.AppInstall;
 
-public sealed class RegisterAppAction : AppAction<RegisterAppRequest, EmptyActionResult>
+public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithModKeyModel>
 {
     private readonly AppFactory appFactory;
     private readonly IClock clock;
@@ -16,17 +16,18 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, EmptyActio
         this.clock = clock;
     }
 
-    public async Task<EmptyActionResult> Execute(RegisterAppRequest model)
+    public async Task<AppWithModKeyModel> Execute(RegisterAppRequest model)
     {
         var versionKey = string.IsNullOrWhiteSpace(model.VersionKey)
             ? AppVersionKey.Current
             : AppVersionKey.Parse(model.VersionKey);
-        await new AppRegistration(appFactory, clock).Run
+        var appWithModifier = await new AppRegistration(appFactory, clock).Run
         (
             model.AppTemplate,
+            model.Domain,
             versionKey,
             model.Versions
         );
-        return new EmptyActionResult();
+        return appWithModifier;
     }
 }

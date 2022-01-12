@@ -9,16 +9,24 @@ var AppsGroup = /** @class */ (function (_super) {
     function AppsGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Apps') || this;
         _this.Index = _this.createView('Index');
-        _this.AllAction = _this.createAction('All', 'All');
-        _this.GetAppModifierKeyAction = _this.createAction('GetAppModifierKey', 'Get App Modifier Key');
+        _this.GetAppDomainAction = _this.createAction('GetAppDomain', 'Get App Domain');
+        _this.GetAppsAction = _this.createAction('GetApps', 'Get Apps');
+        _this.GetAppByIdAction = _this.createAction('GetAppById', 'Get App By Id');
+        _this.GetAppByAppKeyAction = _this.createAction('GetAppByAppKey', 'Get App By App Key');
         _this.RedirectToApp = _this.createView('RedirectToApp');
         return _this;
     }
-    AppsGroup.prototype.All = function (errorOptions) {
-        return this.AllAction.execute({}, errorOptions || {});
+    AppsGroup.prototype.GetAppDomain = function (model, errorOptions) {
+        return this.GetAppDomainAction.execute(model, errorOptions || {});
     };
-    AppsGroup.prototype.GetAppModifierKey = function (model, errorOptions) {
-        return this.GetAppModifierKeyAction.execute(model, errorOptions || {});
+    AppsGroup.prototype.GetApps = function (errorOptions) {
+        return this.GetAppsAction.execute({}, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppById = function (model, errorOptions) {
+        return this.GetAppByIdAction.execute(model, errorOptions || {});
+    };
+    AppsGroup.prototype.GetAppByAppKey = function (model, errorOptions) {
+        return this.GetAppByAppKeyAction.execute(model, errorOptions || {});
     };
     return AppsGroup;
 }(AppApiGroup_1.AppApiGroup));

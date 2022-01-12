@@ -5,6 +5,7 @@ internal sealed class UserOptions
     public string Command { get; set; } = "";
     public string AppName { get; set; } = "";
     public string AppType { get; set; } = "";
+    public string Domain { get; set; } = "";
     public string MachineName { get; set; } = "";
     public string CredentialKey { get; set; } = "";
     public string UserName { get; set; } = "";

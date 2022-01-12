@@ -10,8 +10,12 @@ export class UserGroup extends AppApiGroup implements IUserGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'User');
 		this.Index = this.createView<IUserStartRequest>('Index');
+		this.AccessDenied = this.createView<IEmptyRequest>('AccessDenied');
+		this.Error = this.createView<IEmptyRequest>('Error');
 	}
 	
 	readonly Index: AppApiView<IUserStartRequest>;
+	readonly AccessDenied: AppApiView<IEmptyRequest>;
+	readonly Error: AppApiView<IEmptyRequest>;
 	
 }

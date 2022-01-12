@@ -1,4 +1,5 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -18,6 +19,30 @@ public sealed class App : IApp
     public EntityID ID { get; }
     public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
     public string Title { get => record.Title; }
+
+    public async Task RegisterAsAuthenticator()
+    {
+        var authenticator = await factory.DB
+            .Authenticators.Retrieve()
+            .Where(auth => auth.AppID == ID.Value)
+            .FirstOrDefaultAsync();
+        if(authenticator == null)
+        {
+            authenticator = new AuthenticatorEntity
+            {
+                AppID = ID.Value
+            };
+            await factory.DB.Authenticators.Create(authenticator);
+        }
+    }
+
+    public async Task<ModifierKey> ModKeyInHubApps()
+    {
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var modifier = await modCategory.ModifierByTargetID(ID.Value);
+        return modifier.ModKey();
+    }
 
     public Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
@@ -64,10 +89,10 @@ public sealed class App : IApp
         factory.Roles.Role(this, roleName);
 
     public Task<AppVersion> AddVersionIfNotFound(AppVersionKey key, DateTimeOffset timeAdded, AppVersionStatus status, AppVersionType type, Version version) =>
-        factory.Versions.AddIfNotFound(key, this, timeAdded, status, type, version);
+        factory.Versions.AddIfNotFound(key, record, timeAdded, status, type, version);
 
     internal Task<AppVersion> StartNewVersion(AppVersionType versionType, DateTimeOffset timeAdded) =>
-        factory.Versions.StartNewVersion(AppVersionKey.None, this, timeAdded, versionType);
+        factory.Versions.StartNewVersion(AppVersionKey.None, record, timeAdded, versionType);
 
     public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);
 
@@ -145,4 +170,5 @@ public sealed class App : IApp
     }
 
     public override string ToString() => $"{nameof(App)} {ID.Value}: {record.Name}";
+
 }

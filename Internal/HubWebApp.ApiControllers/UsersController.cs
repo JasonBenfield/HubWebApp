@@ -28,8 +28,8 @@ public class UsersController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> AddUser([FromBody] AddUserModel model)
+    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddUserModel model)
     {
-        return api.Group("Users").Action<AddUserModel, int>("AddUser").Execute(model);
+        return api.Group("Users").Action<AddUserModel, int>("AddOrUpdateUser").Execute(model);
     }
 }

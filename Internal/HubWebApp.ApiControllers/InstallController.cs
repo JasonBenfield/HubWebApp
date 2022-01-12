@@ -10,9 +10,9 @@ public class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RegisterApp([FromBody] RegisterAppRequest model)
+    public Task<ResultContainer<AppWithModKeyModel>> RegisterApp([FromBody] RegisterAppRequest model)
     {
-        return api.Group("Install").Action<RegisterAppRequest, EmptyActionResult>("RegisterApp").Execute(model);
+        return api.Group("Install").Action<RegisterAppRequest, AppWithModKeyModel>("RegisterApp").Execute(model);
     }
 
     [HttpPost]

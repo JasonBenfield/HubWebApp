@@ -5,7 +5,7 @@ import { Url } from '@jasonbenfield/sharedwebapp/Url';
 import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
-import { Apis } from '../../Hub/Apis';
+import { Apis } from '../Apis';
 import { AddRolePanel } from './AddRolePanel';
 import { AppUserDataPanel } from './AppUserDataPanel';
 import { MainPageView } from './MainPageView';
@@ -26,7 +26,7 @@ class MainPage {
 
     constructor(page: PageFrameView) {
         this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).hub();
+        this.hubApi = new Apis(page.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
             new AppUserDataPanel(this.hubApi, this.view.appUserDataPanel)

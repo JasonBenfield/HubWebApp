@@ -20,7 +20,7 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
         var user = await factory.Users.User(model.UserID);
         var modifier = await app.Modifier(model.ModifierID);
         var role = await app.Role(model.RoleID);
-        await user.Modifier(modifier).RemoveRole(role);
+        await user.Modifier(modifier).UnassignRole(role);
         return new EmptyActionResult();
     }
 }

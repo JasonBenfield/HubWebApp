@@ -19,6 +19,7 @@
   "exclude": [
     "Imports",
     "node_modules",
-    "wwwroot"
+    "wwwroot",
+    "../../../../../../Published/Development/**"
   ]
 }

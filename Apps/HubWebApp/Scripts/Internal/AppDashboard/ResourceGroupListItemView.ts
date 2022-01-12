@@ -7,7 +7,7 @@ export class ResourceGroupListItemView extends ButtonListGroupItemView {
 
     constructor() {
         super();
-        let row = new Row();
+        let row = this.addContent(new Row());
         this.groupName = row.addColumn()
             .addContent(new TextSpanView());
     }

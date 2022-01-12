@@ -13,7 +13,7 @@ var app = builder.Build();
 
 if ( app.Environment.IsDevOrTest())
 {
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
 }
 app.UseStaticFiles();
 app.UseRouting();

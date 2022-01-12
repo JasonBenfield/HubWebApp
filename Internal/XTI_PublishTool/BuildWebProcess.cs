@@ -1,9 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
-using XTI_App.Abstractions;
-using XTI_App.Extensions;
-using XTI_Core;
+﻿using XTI_App.Abstractions;
 using XTI_Processes;
-using XTI_VersionToolApi;
 
 namespace XTI_PublishTool;
 
@@ -59,13 +55,30 @@ public sealed class BuildWebProcess
     private async Task runTsc()
     {
         var projectDir = getProjectDir();
-        var tsConfigPath = Path.Combine
+        await runTsc
         (
-            projectDir,
-            "Scripts",
-            getAppName(appKey),
-            "tsconfig.json"
+            Path.Combine
+            (
+                projectDir,
+                "Scripts",
+                getAppName(appKey),
+                "tsconfig.json"
+            )
         );
+        await runTsc
+        (
+            Path.Combine
+            (
+                projectDir,
+                "Scripts",
+                "Internal",
+                "tsconfig.json"
+            )
+        );
+    }
+
+    private static async Task runTsc(string tsConfigPath)
+    {
         Console.WriteLine($"Compiling Typescript '{tsConfigPath}'");
         if (File.Exists(tsConfigPath))
         {

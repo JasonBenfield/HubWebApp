@@ -4,13 +4,15 @@ exports.ResourceGroupAccessCard = void 0;
 var tslib_1 = require("tslib");
 var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
 var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var RoleAccessListItem_1 = require("../RoleAccessListItem");
 var ResourceGroupAccessCard = /** @class */ (function () {
     function ResourceGroupAccessCard(hubApi, view) {
         this.hubApi = hubApi;
         this.view = view;
-        new TextBlock_1.TextBlock('Permissions', this.view.titleHeader);
+        new TextBlock_1.TextBlock('Allowed Roles', this.view.titleHeader);
         this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.accessItems = new ListGroup_1.ListGroup(this.view.accessItems);
     }
     ResourceGroupAccessCard.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;

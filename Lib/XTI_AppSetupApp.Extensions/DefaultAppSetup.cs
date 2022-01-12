@@ -1,5 +1,8 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.Extensions.Options;
+using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Secrets;
+using XTI_Credentials;
 using XTI_HubAppClient;
 
 namespace XTI_AppSetupApp.Extensions;
@@ -7,27 +10,65 @@ namespace XTI_AppSetupApp.Extensions;
 public sealed class DefaultAppSetup : IAppSetup
 {
     private readonly HubAppClient hubClient;
+    private readonly SystemUserCredentials systemUserCredentials;
     private readonly AppApiFactory apiFactory;
     private readonly VersionReader versionReader;
+    private readonly string domain;
+    private AppModel? app;
+    private string? modKey;
 
-    public DefaultAppSetup(HubAppClient hubApi, AppApiFactory apiFactory, VersionReader versionReader)
+    public DefaultAppSetup(HubAppClient hubClient, AppApiFactory apiFactory, SystemUserCredentials systemUserCredentials, VersionReader versionReader, IOptions<SetupOptions> options)
     {
-        this.hubClient = hubApi;
+        this.hubClient = hubClient;
         this.apiFactory = apiFactory;
+        this.systemUserCredentials = systemUserCredentials;
         this.versionReader = versionReader;
+        domain = options.Value.Domain;
+    }
+
+    public AppModel App
+    {
+        get => app ?? throw new ArgumentNullException(nameof(app));
+    }
+
+    public string ModKey
+    {
+        get => modKey ?? throw new ArgumentNullException(nameof(modKey));
     }
 
     public async Task Run(AppVersionKey versionKey)
     {
         var versions = await versionReader.Versions();
         var template = apiFactory.CreateTemplate();
+        var password = Guid.NewGuid().ToString();
+        var systemUser = await hubClient.Install.AddSystemUser
+        (
+            "",
+            new AddSystemUserRequest
+            {
+                AppKey = template.AppKey,
+                MachineName = Environment.MachineName,
+                Domain = domain,
+                Password = password
+            }
+        );
+        await systemUserCredentials.Update
+        (
+            new CredentialValue
+            (
+                systemUser.UserName,
+                password
+            )
+        );
         var request = new RegisterAppRequest
         {
             AppTemplate = ToClientTemplateModel(template.ToModel()),
             VersionKey = versionKey.Value,
             Versions = versions
         };
-        await hubClient.Install.RegisterApp("", request);
+        var result = await hubClient.Install.RegisterApp("", request);
+        app = result.App;
+        modKey = result.ModKey;
     }
 
     private XTI_HubAppClient.AppApiTemplateModel ToClientTemplateModel(XTI_App.Api.AppApiTemplateModel model)
