@@ -1,32 +1,16 @@
 using HubWebApp.Extensions;
-using XTI_Configuration.Extensions;
+using XTI_Core.Extensions;
+using XTI_Core;
 using XTI_WebApp.Extensions;
+using XTI_Hub;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.UseXtiConfiguration(builder.Environment, new string[0]);
-
+builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
 builder.Services.AddResponseCaching();
-builder.Services.ConfigureXtiCookieAndTokenAuthentication(builder.Environment, builder.Configuration);
-builder.Services.AddServicesForHub(builder.Environment, builder.Configuration);
+var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
+builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
+builder.Services.AddServicesForHub(builder.Configuration, args);
 
 var app = builder.Build();
-
-if ( app.Environment.IsDevOrTest())
-{
-    //app.UseDeveloperExceptionPage();
-}
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseResponseCaching();
-app.UseXti();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute
-    (
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}"
-    );
-});
+app.UseXtiDefaults();
 await app.RunAsync();

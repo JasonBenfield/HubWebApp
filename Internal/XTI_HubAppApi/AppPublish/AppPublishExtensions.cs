@@ -11,6 +11,7 @@ internal static class AppPublishExtensions
         services.AddScoped<EndPublishAction>();
         services.AddScoped<GetVersionsAction>();
         services.AddScoped<NewVersionValidation>();
+        services.AddScoped<NextVersionKeyAction>();
         services.AddScoped<NewVersionAction>();
     }
 }

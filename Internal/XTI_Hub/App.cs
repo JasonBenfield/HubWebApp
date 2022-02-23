@@ -91,8 +91,8 @@ public sealed class App : IApp
     public Task<AppVersion> AddVersionIfNotFound(AppVersionKey key, DateTimeOffset timeAdded, AppVersionStatus status, AppVersionType type, Version version) =>
         factory.Versions.AddIfNotFound(key, record, timeAdded, status, type, version);
 
-    internal Task<AppVersion> StartNewVersion(AppVersionType versionType, DateTimeOffset timeAdded) =>
-        factory.Versions.StartNewVersion(AppVersionKey.None, record, timeAdded, versionType);
+    internal Task<AppVersion> StartNewVersion(AppVersionKey versionKey, AppVersionType versionType, DateTimeOffset timeAdded) =>
+        factory.Versions.StartNewVersion(versionKey, record, timeAdded, versionType);
 
     public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);
 

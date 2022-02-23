@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
+using XTI_Core.Extensions;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
-using XTI_HubAppApi.Auth;
 using XTI_HubAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
 using XTI_WebApp.Abstractions;
@@ -19,9 +19,9 @@ namespace HubWebApp.Extensions;
 
 public static class HubWebAppExtensions
 {
-    public static void AddServicesForHub(this IServiceCollection services, IHostEnvironment hostEnv, IConfiguration configuration)
+    public static void AddServicesForHub(this IServiceCollection services, IConfiguration configuration, string[] args)
     {
-        AddBasicServicesForHub(services, hostEnv, configuration);
+        AddBasicServicesForHub(services, configuration, args);
         services
             .AddMvc()
             .AddJsonOptions(options =>
@@ -39,10 +39,11 @@ public static class HubWebAppExtensions
             );
     }
 
-    public static void AddBasicServicesForHub(this IServiceCollection services, IHostEnvironment hostEnv, IConfiguration configuration)
+    public static void AddBasicServicesForHub(this IServiceCollection services, IConfiguration configuration, string[] args)
     {
-        services.AddWebAppServices(hostEnv, configuration);
-        services.AddHubDbContextForSqlServer(configuration);
+        services.AddAppServices();
+        services.AddWebAppServices();
+        services.AddHubDbContextForSqlServer();
         services.AddScoped<AppFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
@@ -54,6 +55,7 @@ public static class HubWebAppExtensions
         services.AddSingleton(_ => HubInfo.AppKey);
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
+        services.AddScoped<IHubAdministration, DbHubAdministration>();
         services.AddHubAppApiServices();
         services.AddScoped
         (

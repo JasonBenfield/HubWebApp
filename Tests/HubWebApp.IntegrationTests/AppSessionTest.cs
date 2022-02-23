@@ -1,11 +1,7 @@
 ﻿using HubWebApp.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Configuration.Extensions;
 using XTI_Core;
-using XTI_Hub;
+using XTI_Core.Extensions;
 using XTI_HubDB.EF;
 
 namespace HubWebApp.IntegrationTests;
@@ -84,14 +80,14 @@ public sealed class AppSessionTest
             (
                 (hostContext, config) =>
                 {
-                    config.UseXtiConfiguration(hostContext.HostingEnvironment, new string[] { });
+                    config.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", new string[0]);
                 }
             )
             .ConfigureServices
             (
                 (hostContext, services) =>
                 {
-                    services.AddServicesForHub(hostContext.HostingEnvironment, hostContext.Configuration);
+                    services.AddServicesForHub(hostContext.Configuration, new string[0]);
                 }
             )
             .Build();

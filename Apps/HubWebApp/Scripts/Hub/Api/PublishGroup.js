@@ -8,12 +8,16 @@ var PublishGroup = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(PublishGroup, _super);
     function PublishGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Publish') || this;
+        _this.NextVersionKeyAction = _this.createAction('NextVersionKey', 'Next Version Key');
         _this.NewVersionAction = _this.createAction('NewVersion', 'New Version');
         _this.BeginPublishAction = _this.createAction('BeginPublish', 'Begin Publish');
         _this.EndPublishAction = _this.createAction('EndPublish', 'End Publish');
         _this.GetVersionsAction = _this.createAction('GetVersions', 'Get Versions');
         return _this;
     }
+    PublishGroup.prototype.NextVersionKey = function (errorOptions) {
+        return this.NextVersionKeyAction.execute({}, errorOptions || {});
+    };
     PublishGroup.prototype.NewVersion = function (model, errorOptions) {
         return this.NewVersionAction.execute(model, errorOptions || {});
     };

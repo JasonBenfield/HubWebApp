@@ -194,6 +194,10 @@ interface IAppUserModel {
 	Name: string;
 	Email: string;
 }
+interface IAddInstallationUserRequest {
+	MachineName: string;
+	Password: string;
+}
 interface INewInstallationRequest {
 	AppKey: IAppKey;
 	QualifiedMachineName: string;
@@ -212,6 +216,7 @@ interface IInstalledRequest {
 }
 interface INewVersionRequest {
 	AppKey: IAppKey;
+	VersionKey: IAppVersionKey;
 	Domain: string;
 	VersionType: IAppVersionType;
 }

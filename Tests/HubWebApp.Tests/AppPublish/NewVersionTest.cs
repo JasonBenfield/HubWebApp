@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppPublish;
 using XTI_HubDB.Entities;
 

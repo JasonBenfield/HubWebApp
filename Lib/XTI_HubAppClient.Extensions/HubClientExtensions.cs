@@ -4,15 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
+using XTI_Core.Extensions;
 
 namespace XTI_HubAppClient.Extensions;
 
 public static class HubClientExtensions
 {
-    public static void AddHubClientServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHubClientServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.Configure<HubClientOptions>(configuration.GetSection(HubClientOptions.HubClient));
+        services.AddConfigurationOptions<HubClientOptions>(HubClientOptions.HubClient);
         services.AddScoped<SystemUserXtiToken>();
         services.AddXtiTokenAccessor((sp, accessor) => { });
         services.AddScoped<HubClientOptionsAppClientDomain>();

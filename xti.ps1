@@ -13,7 +13,7 @@ if(Test-Path ".\xti.private.ps1"){
 
 function Xti-NewVersion {
     param(
-        [ValidateSet(“major”, "minor", "patch")]
+        [ValidateSet("major", "minor", "patch")]
         $VersionType = "minor"
     )
     $script:xtiConfig | New-BaseXtiVersion @PsBoundParameters
@@ -82,6 +82,17 @@ function Xti-Install {
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
     $script:xtiConfig | BaseXti-Install @PsBoundParameters
+}
+
+function Xti-PublishLib {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [ValidateSet("Default", "DB")]
+        $HubAdministrationType = "Default"
+    )
+    $script:xtiConfig | BaseXti-PublishLib @PsBoundParameters
 }
 
 function Add-HubDBMigrations {

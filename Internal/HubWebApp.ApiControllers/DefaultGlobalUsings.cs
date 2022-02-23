@@ -19,5 +19,4 @@ global using XTI_HubAppApi.ResourceInquiry;
 global using XTI_HubAppApi.UserInquiry;
 global using XTI_HubAppApi.UserList;
 global using XTI_HubAppApi.VersionInquiry;
-global using XTI_TempLog;
 global using XTI_WebApp.Api;

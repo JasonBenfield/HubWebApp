@@ -1,5 +1,5 @@
 ﻿using XTI_Core;
-using XTI_HubAppClient;
+using XTI_Hub.Abstractions;
 
 namespace XTI_AppSetupApp.Extensions;
 

@@ -1,17 +1,10 @@
 ﻿using HubWebApp.Fakes;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
 using XTI_Core;
-using XTI_Hub;
-using XTI_HubAppApi;
+using XTI_Core.Extensions;
 using XTI_HubAppApi.PermanentLog;
 using XTI_HubSetup;
 using XTI_TempLog;
+using XTI_TempLog.Abstractions;
 using XTI_TempLog.Fakes;
 
 namespace HubWebApp.Tests;
@@ -204,17 +197,15 @@ internal sealed class PermanentLogTest
 
     private async Task<IServiceProvider> setup()
     {
-        var configuration = new ConfigurationBuilder().Build();
-        var services = new ServiceCollection();
-        services.AddFakeTempLogServices();
-        services.AddFakesForHubWebApp(configuration);
-        services.AddScoped<IAppApiUser, AppApiSuperUser>();
-        services.AddSingleton<IAppEnvironmentContext, FakeAppEnvironmentContext>();
-        services.AddSingleton(sp => HubInfo.AppKey);
-        services.AddScoped<PermanentLog>();
-        services.AddScoped<HubAppApi>();
-        var scope = services.BuildServiceProvider().CreateScope();
-        var sp = scope.ServiceProvider;
+        var builder = new XtiHostBuilder();
+        builder.Services.AddFakeTempLogServices();
+        builder.Services.AddFakesForHubWebApp();
+        builder.Services.AddScoped<IAppApiUser, AppApiSuperUser>();
+        builder.Services.AddSingleton<IAppEnvironmentContext, FakeAppEnvironmentContext>();
+        builder.Services.AddSingleton(sp => HubInfo.AppKey);
+        builder.Services.AddScoped<PermanentLog>();
+        builder.Services.AddScoped<HubAppApi>();
+        var sp = builder.Build().Scope();
         var appEnvContext = (FakeAppEnvironmentContext)sp.GetRequiredService<IAppEnvironmentContext>();
         appEnvContext.Environment = new AppEnvironment
         (
@@ -232,6 +223,7 @@ internal sealed class PermanentLogTest
         (
             new AppKey(new AppName("Fake"), AppType.Values.WebApp),
             "fake.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             DateTime.Now
         );

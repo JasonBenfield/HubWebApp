@@ -28,6 +28,12 @@ public class InstallController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppUserModel>> AddInstallationUser([FromBody] AddInstallationUserRequest model)
+    {
+        return api.Group("Install").Action<AddInstallationUserRequest, AppUserModel>("AddInstallationUser").Execute(model);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<NewInstallationResult>> NewInstallation([FromBody] NewInstallationRequest model)
     {
         return api.Group("Install").Action<NewInstallationRequest, NewInstallationResult>("NewInstallation").Execute(model);

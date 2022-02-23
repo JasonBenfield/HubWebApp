@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using XTI_App.Abstractions;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.Entities;
@@ -86,6 +87,7 @@ sealed class BeginCurrentInstallationTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             DateTimeOffset.Now
         );
@@ -128,11 +130,10 @@ sealed class BeginCurrentInstallationTest
             .FirstAsync();
     }
 
-    private async Task<NewInstallationResult> newInstallation(IHubActionTester tester, NewInstallationRequest model)
+    private Task<NewInstallationResult> newInstallation(IHubActionTester tester, NewInstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.NewInstallation.Execute(model);
-        return result.Data;
+        return hubApi.Install.NewInstallation.Invoke(model);
     }
 
     private async Task<HubActionTester<BeginInstallationRequest, int>> setup()

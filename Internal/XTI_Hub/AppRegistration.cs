@@ -1,6 +1,7 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_Core;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 

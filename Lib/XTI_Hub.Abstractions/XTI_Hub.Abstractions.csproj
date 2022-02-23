@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<Import Project="..\\..\\Common.Targets" />
+
+	<ItemGroup>
+		<PackageReference Include="XTI_App.Abstractions" Version="1.8.13-dev220209221357657" />
+	</ItemGroup>
+
+</Project>

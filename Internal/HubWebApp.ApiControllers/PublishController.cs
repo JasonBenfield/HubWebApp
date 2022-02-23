@@ -10,6 +10,12 @@ public class PublishController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppVersionKey>> NextVersionKey()
+    {
+        return api.Group("Publish").Action<EmptyRequest, AppVersionKey>("NextVersionKey").Execute(new EmptyRequest());
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppVersionModel>> NewVersion([FromBody] NewVersionRequest model)
     {
         return api.Group("Publish").Action<NewVersionRequest, AppVersionModel>("NewVersion").Execute(model);

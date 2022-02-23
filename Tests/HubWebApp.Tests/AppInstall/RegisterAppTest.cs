@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Hub;
+﻿using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 
 namespace HubWebApp.Tests;

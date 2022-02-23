@@ -1,10 +1,6 @@
 ﻿using HubWebApp.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Configuration.Extensions;
-using XTI_Hub;
+using XTI_Core.Extensions;
 
 namespace HubWebApp.IntegrationTests;
 
@@ -25,20 +21,20 @@ sealed class VersionTest
     private static IServiceProvider setup(string envName = "Test")
     {
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", envName);
-        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", envName);
+        var appKey = HubInfo.AppKey;
         var host = Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration
             (
                 (hostContext, config) =>
                 {
-                    config.UseXtiConfiguration(hostContext.HostingEnvironment, new string[] { });
+                    config.UseXtiConfiguration(hostContext.HostingEnvironment, appKey.Name.DisplayText, appKey.Type.DisplayText, new string[0]);
                 }
             )
             .ConfigureServices
             (
                 (hostContext, services) =>
                 {
-                    services.AddBasicServicesForHub(hostContext.HostingEnvironment, hostContext.Configuration);
+                    services.AddBasicServicesForHub(hostContext.Configuration, new string[0]);
                 }
             )
             .Build();

@@ -1,5 +1,5 @@
 ﻿using XTI_App.Api;
-using XTI_TempLog;
+using XTI_TempLog.Abstractions;
 
 namespace XTI_HubAppApi.PermanentLog;
 

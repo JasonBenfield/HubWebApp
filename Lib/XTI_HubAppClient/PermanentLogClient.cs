@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_TempLog.Abstractions;
+﻿using XTI_TempLog.Abstractions;
 
 namespace XTI_HubAppClient
 {
@@ -16,24 +11,24 @@ namespace XTI_HubAppClient
             this.client = client;
         }
 
-        public Task StartSession(IStartSessionModel model)
-            => client.PermanentLog.StartSession(new StartSessionModel(model));
+        public Task StartSession(StartSessionModel model)
+            => client.PermanentLog.StartSession(model);
 
-        public Task StartRequest(IStartRequestModel model)
-            => client.PermanentLog.StartRequest(new StartRequestModel(model));
-        public Task AuthenticateSession(IAuthenticateSessionModel model)
-            => client.PermanentLog.AuthenticateSession(new AuthenticateSessionModel(model));
+        public Task StartRequest(StartRequestModel model)
+            => client.PermanentLog.StartRequest(model);
+        public Task AuthenticateSession(AuthenticateSessionModel model)
+            => client.PermanentLog.AuthenticateSession(model);
 
-        public Task LogEvent(ILogEventModel model)
-            => client.PermanentLog.LogEvent(new LogEventModel(model));
+        public Task LogEvent(LogEventModel model)
+            => client.PermanentLog.LogEvent(model);
 
-        public Task EndRequest(IEndRequestModel model)
-            => client.PermanentLog.EndRequest(new EndRequestModel(model));
+        public Task EndRequest(EndRequestModel model)
+            => client.PermanentLog.EndRequest(model);
 
-        public Task EndSession(IEndSessionModel model)
-            => client.PermanentLog.EndSession(new EndSessionModel(model));
+        public Task EndSession(EndSessionModel model)
+            => client.PermanentLog.EndSession(model);
 
-        public Task LogBatch(ILogBatchModel model)
-            => client.PermanentLog.LogBatch(new LogBatchModel(model));
+        public Task LogBatch(LogBatchModel model)
+            => client.PermanentLog.LogBatch(model);
     }
 }

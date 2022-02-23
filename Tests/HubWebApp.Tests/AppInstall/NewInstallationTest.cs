@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_Hub;
+using XTI_Core;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
@@ -196,7 +195,7 @@ sealed class NewInstallationTest
     private async Task<HubActionTester<NewInstallationRequest, NewInstallationResult>> setup()
     {
         var host = new HubTestHost();
-        var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.NewInstallation);
+        var sp = await host.Setup();
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.NewInstallation);
     }
 }

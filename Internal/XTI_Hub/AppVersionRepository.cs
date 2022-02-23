@@ -34,6 +34,23 @@ public sealed class AppVersionRepository
         return factory.CreateVersion(entity);
     }
 
+    public async Task<AppVersionKey> NextKey()
+    {
+        int maxID;
+        var any = await factory.DB
+            .Versions.Retrieve()
+            .AnyAsync();
+        if (any)
+        {
+            maxID = await factory.DB.Versions.Retrieve().MaxAsync(v => v.ID);
+        }
+        else
+        {
+            maxID = 0;
+        }
+        return new AppVersionKey(maxID + 1);
+    }
+
     internal async Task<AppVersion> StartNewVersion(AppVersionKey key, AppEntity app, DateTimeOffset timeAdded, AppVersionType type)
     {
         var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });

@@ -6,11 +6,11 @@ namespace LocalInstallService;
 
 sealed class Installer
 {
-    private readonly IHostEnvironment hostEnv;
+    private readonly XtiEnvironment xtiEnv;
 
-    public Installer(IHostEnvironment hostEnv)
+    public Installer(XtiEnvironment xtiEnv)
     {
-        this.hostEnv = hostEnv;
+        this.xtiEnv = xtiEnv;
     }
 
     public async Task Run(HttpContext context)
@@ -31,8 +31,8 @@ sealed class Installer
                 var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
                 var release = context.Request.Form["release"].FirstOrDefault() ?? "";
                 var machineName = context.Request.Form["machineName"].FirstOrDefault() ?? "";
-                var xtiFolder = new XtiFolder(hostEnv);
-                var path = Path.Combine(xtiFolder.ToolsPath(), "LocalInstallApp", "LocalInstallApp.exe");
+                var xtiFolder = new XtiFolder(xtiEnv);
+                var path = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
                 var args = new StringBuilder();
                 args.Append($"--environment {envName}");
                 args.Append($" --AppName {appName} --AppType {appType}");
@@ -41,7 +41,7 @@ sealed class Installer
                 args.Append($" --Domain {domain}");
                 args.Append($" --RepoOwner {repoOwner} --RepoName {repoName}");
                 args.Append($" --Release {release}");
-                args.Append($" --MachineName {machineName}");
+                args.Append($" --DestinationMachine {machineName}");
                 Process.Start(path, args.ToString());
                 await context.Response.WriteAsync($"Ran {path} {args}");
             }

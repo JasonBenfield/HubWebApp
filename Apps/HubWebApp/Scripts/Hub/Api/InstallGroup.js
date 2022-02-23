@@ -11,6 +11,7 @@ var InstallGroup = /** @class */ (function (_super) {
         _this.RegisterAppAction = _this.createAction('RegisterApp', 'Register App');
         _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');
         _this.AddSystemUserAction = _this.createAction('AddSystemUser', 'Add System User');
+        _this.AddInstallationUserAction = _this.createAction('AddInstallationUser', 'Add Installation User');
         _this.NewInstallationAction = _this.createAction('NewInstallation', 'New Installation');
         _this.BeginCurrentInstallationAction = _this.createAction('BeginCurrentInstallation', 'Begin Current Installation');
         _this.BeginVersionInstallationAction = _this.createAction('BeginVersionInstallation', 'Begin Version Installation');
@@ -25,6 +26,9 @@ var InstallGroup = /** @class */ (function (_super) {
     };
     InstallGroup.prototype.AddSystemUser = function (model, errorOptions) {
         return this.AddSystemUserAction.execute(model, errorOptions || {});
+    };
+    InstallGroup.prototype.AddInstallationUser = function (model, errorOptions) {
+        return this.AddInstallationUserAction.execute(model, errorOptions || {});
     };
     InstallGroup.prototype.NewInstallation = function (model, errorOptions) {
         return this.NewInstallationAction.execute(model, errorOptions || {});

@@ -1,22 +1,15 @@
 ﻿using HubWebApp.Fakes;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
 using XTI_AppSetupApp.Extensions;
 using XTI_Core;
 using XTI_Core.Fakes;
-using XTI_Hub;
-using XTI_HubAppApi;
 
 namespace HubWebApp.Tests;
 
 internal static class TestExtensions
 {
-    public static void AddServicesForTests(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServicesForTests(this IServiceCollection services)
     {
-        services.AddFakesForHubWebApp(configuration);
+        services.AddFakesForHubWebApp();
         services.AddSingleton<IClock, FakeClock>();
         services.AddScoped<AppFactory>();
         services.AddScoped<HubAppApiFactory>();

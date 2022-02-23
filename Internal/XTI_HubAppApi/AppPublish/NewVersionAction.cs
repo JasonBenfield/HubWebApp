@@ -1,6 +1,7 @@
 ﻿using XTI_App.Api;
 using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
 
@@ -21,6 +22,7 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, AppVersionMo
         (
             model.AppKey,
             model.Domain,
+            model.VersionKey,
             model.VersionType,
             clock.Now()
         );

@@ -1,4 +1,5 @@
 ﻿using XTI_Core;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubAppApi.AppPublish;
 
@@ -51,6 +52,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -71,6 +73,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -91,6 +94,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -111,6 +115,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -120,6 +125,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -140,6 +146,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -149,6 +156,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -169,6 +177,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -178,6 +187,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -198,6 +208,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -207,6 +218,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -228,6 +240,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );
@@ -237,6 +250,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -246,6 +260,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -266,6 +281,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -275,6 +291,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -295,6 +312,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Patch,
             clock.Now()
         );
@@ -304,6 +322,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Minor,
             clock.Now()
         );
@@ -313,6 +332,7 @@ internal sealed class BeginPublishTest
         (
             HubInfo.AppKey,
             "hub.example.com",
+            AppVersionKey.None,
             AppVersionType.Values.Major,
             clock.Now()
         );

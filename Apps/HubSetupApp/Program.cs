@@ -1,12 +1,11 @@
 ﻿using HubSetupApp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Secrets;
-using XTI_Configuration.Extensions;
 using XTI_Core;
+using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubDB.Extensions;
@@ -16,22 +15,22 @@ using XTI_Secrets.Extensions;
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        config.UseXtiConfiguration(hostingContext.HostingEnvironment, args);
+        config.UseXtiConfiguration(hostingContext.HostingEnvironment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
     })
     .ConfigureServices((hostContext, services) =>
     {
-        services.AddHubDbContextForSqlServer(hostContext.Configuration);
-        services.AddFileSecretCredentials(hostContext.HostingEnvironment);
+        services.AddHubDbContextForSqlServer();
+        services.AddFileSecretCredentials();
         services.AddSingleton<SystemUserCredentials>();
         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
         services.AddScoped<AppFactory>();
         services.AddScoped<IClock, UtcClock>();
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser());
-        services.Configure<SetupOptions>(hostContext.Configuration);
+        services.AddConfigurationOptions<SetupOptions>();
         services.AddScoped(sp =>
         {
-            var options = sp.GetRequiredService<IOptions<SetupOptions>>().Value;
+            var options = sp.GetRequiredService<SetupOptions>();
             return new VersionReader(options.VersionsPath);
         });
         services.AddScoped
@@ -42,7 +41,7 @@ await Host.CreateDefaultBuilder(args)
                 sp.GetRequiredService<IClock>(),
                 sp.GetRequiredService<HubAppApiFactory>(),
                 sp.GetRequiredService<VersionReader>(),
-                sp.GetRequiredService<IOptions<SetupOptions>>().Value.Domain
+                sp.GetRequiredService<SetupOptions>().Domain
             )
         );
         services.AddHostedService<SetupHostedService>();

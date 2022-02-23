@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -137,9 +138,7 @@ public sealed class AppVersion : IAppVersion
     {
         ID = ID.Value,
         VersionKey = Key().DisplayText,
-        Major = Major,
-        Minor = Minor,
-        Patch = Patch,
+        VersionNumber = new AppVersionNumber(Major, Minor, Patch),
         VersionType = Type(),
         Status = Status(),
         TimeAdded = record.TimeAdded

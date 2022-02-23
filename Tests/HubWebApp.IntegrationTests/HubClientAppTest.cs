@@ -1,16 +1,10 @@
 ﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XTI_App.Secrets;
-using XTI_Configuration.Extensions;
 using XTI_Core;
+using XTI_Core.Extensions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
-using XTI_WebAppClient;
 
 namespace HubWebApp.IntegrationTests;
 
@@ -30,7 +24,7 @@ internal sealed class HubClientAppTest
         var host = Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration((hostingContext, config) =>
             {
-                config.UseXtiConfiguration(hostingContext.HostingEnvironment, new string[0]);
+                config.UseXtiConfiguration(hostingContext.HostingEnvironment, "", "", new string[0]);
             })
             .ConfigureServices
             (
@@ -40,12 +34,12 @@ internal sealed class HubClientAppTest
                     services.AddSingleton<XtiFolder>();
                     services.AddSingleton(_ => HubInfo.AppKey);
                     services.AddSingleton(_ => AppVersionKey.Current);
-                    services.AddFileSecretCredentials(hostContext.HostingEnvironment);
+                    services.AddFileSecretCredentials();
                     services.AddSingleton<InstallationUserCredentials>();
                     services.AddSingleton<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
                     services.AddSingleton<SystemUserCredentials>();
                     services.AddSingleton<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
-                    services.AddHubClientServices(hostContext.Configuration);
+                    services.AddHubClientServices();
                 }
             )
             .Build();

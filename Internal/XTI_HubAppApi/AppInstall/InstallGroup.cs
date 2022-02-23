@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Api;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.AppInstall;
@@ -20,6 +21,14 @@ public sealed class InstallGroup : AppApiGroupWrapper
                 nameof(AddSystemUser),
                 () => services.GetRequiredService<AddSystemUserValidation>(),
                 () => services.GetRequiredService<AddSystemUserAction>()
+            )
+        );
+        AddInstallationUser = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(AddInstallationUser),
+                () => services.GetRequiredService<AddInstallationUserAction>()
             )
         );
         NewInstallation = source.AddAction
@@ -43,6 +52,7 @@ public sealed class InstallGroup : AppApiGroupWrapper
     public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
     public AppApiAction<GetVersionRequest, AppVersionModel> GetVersion { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
+    public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }
     public AppApiAction<BeginInstallationRequest, int> BeginCurrentInstallation { get; }
     public AppApiAction<BeginInstallationRequest, int> BeginVersionInstallation { get; }

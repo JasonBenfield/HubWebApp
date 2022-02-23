@@ -1,7 +1,7 @@
 ﻿using LocalInstallService;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
-using XTI_Configuration.Extensions;
+using XTI_Core.Extensions;
 
 #pragma warning disable CA1416 // Validate platform compatibility
 WebHost.CreateDefaultBuilder(args)
@@ -9,7 +9,7 @@ WebHost.CreateDefaultBuilder(args)
     (
         (hostContext, configuration) =>
         {
-            configuration.UseXtiConfiguration(hostContext.HostingEnvironment, args);
+            configuration.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", args);
         }
     )
     .ConfigureServices

@@ -1,21 +1,20 @@
 ﻿using XTI_App.Api;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
 
 public sealed class InstalledAction : AppAction<InstalledRequest, EmptyActionResult>
 {
-    private readonly AppFactory appFactory;
+    private readonly IHubAdministration hubAdministration;
 
-    public InstalledAction(AppFactory appFactory)
+    public InstalledAction(IHubAdministration hubAdministration)
     {
-        this.appFactory = appFactory;
+        this.hubAdministration = hubAdministration;
     }
 
     public async Task<EmptyActionResult> Execute(InstalledRequest model)
     {
-        var installation = await appFactory.Installations.Installation(model.InstallationID);
-        await installation.Installed();
+        await hubAdministration.Installed(model.InstallationID);
         return new EmptyActionResult();
     }
 }

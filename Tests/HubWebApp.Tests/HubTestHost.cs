@@ -1,6 +1,7 @@
 ﻿using HubWebApp.Fakes;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using XTI_Core;
+using XTI_Core.Extensions;
 using XTI_Core.Fakes;
 
 namespace HubWebApp.Tests;
@@ -9,22 +10,21 @@ internal sealed class HubTestHost
 {
     public async Task<IServiceProvider> Setup(Action<IServiceCollection>? configure = null)
     {
-        var configuration = new ConfigurationBuilder().Build();
-        var services = new ServiceCollection();
-        services.AddSingleton<IHostEnvironment>
+        var envName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Production";
+        var builder = new XtiHostBuilder(XtiEnvironment.Parse(envName));
+        builder.Services.AddSingleton<IHostEnvironment>
         (
-            _ => new FakeHostEnvironment { EnvironmentName = "Production" }
+            _ => new FakeHostEnvironment { EnvironmentName = envName }
         );
-        services.AddFakesForHubWebApp(configuration);
+        builder.Services.AddFakesForHubWebApp();
         if (configure != null)
         {
-            configure(services);
+            configure(builder.Services);
         }
-        var scope = services.BuildServiceProvider().CreateScope();
-        var sp = scope.ServiceProvider;
+        var sp = builder.Build().Scope();
         var setup = sp.GetRequiredService<IAppSetup>();
         await setup.Run(AppVersionKey.Current);
-        var defaultFakeSetup = scope.ServiceProvider.GetRequiredService<DefaultFakeSetup>();
+        var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();
         await defaultFakeSetup.Run(AppVersionKey.Current);
 
         var factory = sp.GetRequiredService<AppFactory>();
@@ -39,8 +39,8 @@ internal sealed class HubTestHost
         var fakeModifier = fakeModCategory.ModifierByTargetID(fakeApp.ID.Value.ToString());
         fakeModifier.SetModKey(modifier);
 
-        var userContext = scope.ServiceProvider.GetRequiredService<FakeUserContext>();
-        var adminUser = await addAdminUser(scope.ServiceProvider);
+        var userContext = sp.GetRequiredService<FakeUserContext>();
+        var adminUser = await addAdminUser(sp);
         var fakeAdminUser = userContext.AddUser(adminUser);
         fakeAdminUser.AddRole(HubInfo.Roles.Admin);
         return sp;

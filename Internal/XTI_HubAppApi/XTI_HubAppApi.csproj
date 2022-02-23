@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.13-dev220108185520923" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.8.9-dev220109220549770" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.13-dev220209221357657" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.8.9-dev220209223230033" />
   </ItemGroup>
 
   <ItemGroup>

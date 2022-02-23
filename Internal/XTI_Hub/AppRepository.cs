@@ -13,7 +13,7 @@ public sealed class AppRepository
         this.factory = factory;
     }
 
-    public async Task<AppVersion> StartNewVersion(AppKey appKey, string domain, AppVersionType versionType, DateTimeOffset timeAdded)
+    public async Task<AppVersion> StartNewVersion(AppKey appKey, string domain, AppVersionKey versionKey, AppVersionType versionType, DateTimeOffset timeAdded)
     {
         var app = await AddOrUpdate
         (
@@ -21,7 +21,7 @@ public sealed class AppRepository
             domain,
             timeAdded
         );
-        var version = await app.StartNewVersion(versionType, timeAdded);
+        var version = await app.StartNewVersion(versionKey, versionType, timeAdded);
         return version;
     }
 

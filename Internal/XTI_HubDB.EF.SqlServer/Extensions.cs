@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_DB;
 using XTI_HubDB.EF;
@@ -12,17 +10,20 @@ namespace XTI_HubDB.Extensions;
 
 public static class Extensions
 {
-    public static void AddHubDbContextForSqlServer(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHubDbContextForSqlServer(this IServiceCollection services)
     {
-        services.Configure<DbOptions>(configuration.GetSection(DbOptions.DB));
+        services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddDbContext<HubDbContext>((sp, options) =>
         {
-            var appDbOptions = sp.GetRequiredService<IOptions<DbOptions>>().Value;
-            var hostEnvironment = sp.GetRequiredService<IHostEnvironment>();
-            var connectionString = new HubConnectionString(appDbOptions, hostEnvironment.EnvironmentName).Value();
-            options
-                .UseSqlServer(connectionString, b => b.MigrationsAssembly("XTI_HubDB.EF.SqlServer"));
-            if (hostEnvironment?.IsDevOrTest() == true)
+            var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+            var hubDbOptions = sp.GetRequiredService<DbOptions>();
+            var connectionString = new HubConnectionString(hubDbOptions, xtiEnv.EnvironmentName);
+            options.UseSqlServer
+            (
+                connectionString.Value(),
+                b => b.MigrationsAssembly("XTI_HubDB.EF.SqlServer")
+            );
+            if (xtiEnv.IsDevelopmentOrTest())
             {
                 options.EnableSensitiveDataLogging();
             }
