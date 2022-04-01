@@ -7,20 +7,18 @@ namespace XTI_Admin;
 internal sealed class BeginPublishProcess
 {
     private readonly Scopes scopes;
-    private readonly AppKey appKey;
 
-    public BeginPublishProcess(Scopes scopes, AppKey appKey)
+    public BeginPublishProcess(Scopes scopes)
     {
         this.scopes = scopes;
-        this.appKey = appKey;
     }
 
-    public async Task<AppVersionModel> Run()
+    public async Task<XtiVersionModel> Run()
     {
         Console.WriteLine("Begin Publishing");
         var versionKey = new VersionKeyFromCurrentBranch(scopes).Value();
         var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.BeginPublish(appKey, versionKey);
+        var version = await hubAdmin.BeginPublish(new AppVersionName().Value, versionKey);
         return version;
     }
 }

@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppPublish;
 using XTI_HubDB.Entities;
@@ -17,15 +14,15 @@ sealed class NewVersionTest
         tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
-            Domain = "webapps.xartogg.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
         var newVersion = await tester.Execute(model);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
-        var version = await db.Versions.Retrieve()
-            .FirstAsync(v => v.ID == newVersion.ID);
-        Assert.That(version.Domain, Is.EqualTo(model.Domain), "Should set domain when starting a new version");
+        var version = await db.AppVersions.Retrieve()
+            .FirstAsync(v => v.VersionID == newVersion.ID);
+        Assert.That(version.Domain, Is.EqualTo(model.AppDefinitions[0].Domain), "Should set domain when starting a new version");
     }
 
     [Test]
@@ -35,9 +32,9 @@ sealed class NewVersionTest
         tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
-            Domain = "webapps.xartogg.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.Status, Is.EqualTo(AppVersionStatus.Values.New));
@@ -50,9 +47,9 @@ sealed class NewVersionTest
         var tester = await setup();
         var model = new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Minor,
-            Domain = "webapps.xartogg.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
         tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
@@ -65,16 +62,16 @@ sealed class NewVersionTest
         var tester = await setup();
         var model = new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Major,
-            Domain = "webapps.xartogg.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
         tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Major), "Should start new major version");
     }
 
-    private async Task<HubActionTester<NewVersionRequest, AppVersionModel>> setup()
+    private async Task<HubActionTester<NewVersionRequest, XtiVersionModel>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

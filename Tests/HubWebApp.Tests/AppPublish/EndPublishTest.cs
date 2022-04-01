@@ -14,14 +14,14 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var newVersion = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
-            Domain = "webapps.example.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         var request = new PublishVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(newVersion.VersionKey)
+            GroupName = newVersion.GroupName,
+            VersionKey = newVersion.VersionKey
         };
         await hubApi.Publish.BeginPublish.Invoke(request);
         tester.LoginAsAdmin();
@@ -37,52 +37,51 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var version1 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
-            Domain = "webapps.example.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version1.VersionKey)
+            GroupName = version1.GroupName,
+            VersionKey = version1.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version1.VersionKey)
+            GroupName = version1.GroupName,
+            VersionKey = version1.VersionKey
         });
-
         var version2 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            AppKey = HubInfo.AppKey,
+            GroupName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
-            Domain = "webapps.example.com"
+            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version2.VersionKey)
+            GroupName = version2.GroupName,
+            VersionKey = version2.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version2.VersionKey)
+            GroupName = version2.GroupName,
+            VersionKey = version2.VersionKey
         });
         version1 = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version1.VersionKey)
+            GroupName = version1.GroupName,
+            VersionKey = version1.VersionKey
         });
         version2 = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
-            AppKey = HubInfo.AppKey,
-            VersionKey = AppVersionKey.Parse(version2.VersionKey)
+            GroupName = version2.GroupName,
+            VersionKey = version2.VersionKey
         });
         Assert.That(version1.Status, Is.EqualTo(AppVersionStatus.Values.Old), "Should archive previous version");
         Assert.That(version2.Status, Is.EqualTo(AppVersionStatus.Values.Current), "Should make latest published version current");
     }
 
-    private async Task<HubActionTester<PublishVersionRequest, AppVersionModel>> setup()
+    private async Task<HubActionTester<PublishVersionRequest, XtiVersionModel>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

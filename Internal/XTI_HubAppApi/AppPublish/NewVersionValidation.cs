@@ -12,7 +12,7 @@ internal sealed class NewVersionValidation : AppActionValidation<NewVersionReque
         {
             errors.Add("Version type is required");
         }
-        if(model.AppKey.Type.Equals(AppType.Values.WebApp) && string.IsNullOrWhiteSpace(model.Domain))
+        if (model.AppDefinitions.Any(ad => ad.AppKey.Type.Equals(AppType.Values.WebApp) && string.IsNullOrWhiteSpace(ad.Domain)))
         {
             errors.Add("Domain is required when app is a web app");
         }

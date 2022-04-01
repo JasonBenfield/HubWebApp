@@ -6,9 +6,8 @@ public sealed partial class PublishGroup : AppClientGroup
     {
     }
 
-    public Task<AppVersionKey> NextVersionKey(string modifier) => Post<AppVersionKey, EmptyRequest>("NextVersionKey", modifier, new EmptyRequest());
-    public Task<AppVersionModel> NewVersion(string modifier, NewVersionRequest model) => Post<AppVersionModel, NewVersionRequest>("NewVersion", modifier, model);
-    public Task<AppVersionModel> BeginPublish(string modifier, PublishVersionRequest model) => Post<AppVersionModel, PublishVersionRequest>("BeginPublish", modifier, model);
-    public Task<AppVersionModel> EndPublish(string modifier, PublishVersionRequest model) => Post<AppVersionModel, PublishVersionRequest>("EndPublish", modifier, model);
-    public Task<AppVersionModel[]> GetVersions(string modifier, AppKey model) => Post<AppVersionModel[], AppKey>("GetVersions", modifier, model);
+    public Task<XtiVersionModel> NewVersion(string modifier, NewVersionRequest model) => Post<XtiVersionModel, NewVersionRequest>("NewVersion", modifier, model);
+    public Task<XtiVersionModel> BeginPublish(string modifier, PublishVersionRequest model) => Post<XtiVersionModel, PublishVersionRequest>("BeginPublish", modifier, model);
+    public Task<XtiVersionModel> EndPublish(string modifier, PublishVersionRequest model) => Post<XtiVersionModel, PublishVersionRequest>("EndPublish", modifier, model);
+    public Task<XtiVersionModel[]> GetVersions(string modifier, AppKey model) => Post<XtiVersionModel[], AppKey>("GetVersions", modifier, model);
 }

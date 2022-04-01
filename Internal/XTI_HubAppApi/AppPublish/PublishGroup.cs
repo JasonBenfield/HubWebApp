@@ -12,14 +12,6 @@ public sealed class PublishGroup : AppApiGroupWrapper
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
-        NextVersionKey = source.AddAction
-        (
-            actions.Action
-            (
-                nameof(NextVersionKey),
-                () => services.GetRequiredService<NextVersionKeyAction>()
-            )
-        );
         NewVersion = source.AddAction
         (
             actions.Action
@@ -34,9 +26,8 @@ public sealed class PublishGroup : AppApiGroupWrapper
         GetVersions = source.AddAction(actions.Action(nameof(GetVersions), () => services.GetRequiredService<GetVersionsAction>()));
     }
 
-    public AppApiAction<EmptyRequest, AppVersionKey> NextVersionKey { get; }
-    public AppApiAction<NewVersionRequest, AppVersionModel> NewVersion { get; }
-    public AppApiAction<PublishVersionRequest, AppVersionModel> BeginPublish { get; }
-    public AppApiAction<PublishVersionRequest, AppVersionModel> EndPublish { get; }
-    public AppApiAction<AppKey, AppVersionModel[]> GetVersions { get; }
+    public AppApiAction<NewVersionRequest, XtiVersionModel> NewVersion { get; }
+    public AppApiAction<PublishVersionRequest, XtiVersionModel> BeginPublish { get; }
+    public AppApiAction<PublishVersionRequest, XtiVersionModel> EndPublish { get; }
+    public AppApiAction<AppKey, XtiVersionModel[]> GetVersions { get; }
 }

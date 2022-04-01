@@ -17,14 +17,14 @@ export class CurrentVersionComponent {
 
     async refresh() {
         let currentVersion = await this.getCurrentVersion();
-        this.versionKey.setText(currentVersion.VersionKey);
+        this.versionKey.setText(currentVersion.VersionKey.DisplayText);
         this.version.setText(
-            `${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`
+            `${currentVersion.VersionNumber.Major}.${currentVersion.VersionNumber.Minor}.${currentVersion.VersionNumber.Patch}`
         );
     }
 
     private async getCurrentVersion() {
-        let currentVersion: IAppVersionModel;
+        let currentVersion: IXtiVersionModel;
         await this.alert.infoAction(
             'Loading...',
             async () => {

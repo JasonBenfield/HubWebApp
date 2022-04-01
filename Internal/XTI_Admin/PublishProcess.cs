@@ -31,28 +31,27 @@ public sealed class PublishProcess
         var semanticVersion = "";
         if (xtiEnv.IsProduction())
         {
-            foreach (var appKey in appKeys)
-            {
-                var version = await new BeginPublishProcess(scopes, appKey).Run();
-                semanticVersion = $"{version.Version()}";
-            }
+            var version = await new BeginPublishProcess(scopes).Run();
+            semanticVersion = version.VersionNumber.Format();
         }
         else
         {
-            var currentVersion = await new CurrentVersion(scopes, appKeys.First()).Value();
-            semanticVersion = $"{currentVersion.NextPatch()}-dev{DateTime.Now:yyMMddHHmmssfff}";
+            var currentVersion = await new CurrentVersion(scopes).Value();
+            semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         GitHubRelease? release = null;
-        if (!appKeys.All(appKey => appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
+        if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
         {
             var tagName = $"v{semanticVersion}";
             await gitHubRepo.DeleteReleaseIfExists(tagName);
             Console.WriteLine($"Creating release {tagName}");
             release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "");
         }
+        var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {
+            setCurrentDirectory(slnDir, appKey);
             var publishDir = getPublishDir(appKey, versionKey);
             if (Directory.Exists(publishDir))
             {
@@ -80,10 +79,20 @@ public sealed class PublishProcess
                 await new CompleteVersionProcess(scopes, appKey).Run();
             }
         }
+        Environment.CurrentDirectory = slnDir;
         if(release != null)
         {
             Console.WriteLine($"Finalizing release {release.TagName}");
             await gitHubRepo.FinalizeRelease(release);
+        }
+    }
+
+    private static void setCurrentDirectory(string slnDir, AppKey appKey)
+    {
+        var projectDir = Path.Combine(slnDir, $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", ""));
+        if (Directory.Exists(projectDir))
+        {
+            Environment.CurrentDirectory = projectDir;
         }
     }
 

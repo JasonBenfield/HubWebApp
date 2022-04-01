@@ -37,8 +37,9 @@ public sealed class AppEventRepository
             .ToArrayAsync();
     }
 
-    internal Task<AppEvent[]> MostRecentErrorsForVersion(AppVersion version, int howMany)
+    internal Task<AppEvent[]> MostRecentErrorsForVersion(App app, XtiVersion version, int howMany)
     {
+        var appVersionID = factory.Versions.QueryAppVersionID(app, version);
         var requestIDs = factory.DB
             .Requests
             .Retrieve()
@@ -56,9 +57,9 @@ public sealed class AppEventRepository
                     .Retrieve(),
                 res => res.GroupID,
                 rg => rg.ID,
-                (res, rg) => new { RequestID = res.RequestID, VersionID = rg.VersionID }
+                (res, rg) => new { RequestID = res.RequestID, AppVersionID = rg.AppVersionID }
             )
-            .Where(rg => rg.VersionID == version.ID.Value)
+            .Where(rg => appVersionID.Contains(rg.AppVersionID))
             .Select(rg => rg.RequestID);
         return mostRecentErrors(howMany, requestIDs);
     }
@@ -92,7 +93,7 @@ public sealed class AppEventRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    private Task<AppEvent[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) => 
+    private Task<AppEvent[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
         factory.DB
             .Events
             .Retrieve()

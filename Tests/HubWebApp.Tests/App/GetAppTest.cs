@@ -1,4 +1,6 @@
-﻿namespace HubWebApp.Tests;
+﻿using XTI_Hub.Abstractions;
+
+namespace HubWebApp.Tests;
 
 internal sealed class GetAppTest
 {

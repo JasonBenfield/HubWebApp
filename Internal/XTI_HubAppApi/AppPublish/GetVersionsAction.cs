@@ -5,7 +5,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
 
-public sealed class GetVersionsAction : AppAction<AppKey, AppVersionModel[]>
+public sealed class GetVersionsAction : AppAction<AppKey, XtiVersionModel[]>
 {
     private readonly AppFactory appFactory;
 
@@ -14,7 +14,7 @@ public sealed class GetVersionsAction : AppAction<AppKey, AppVersionModel[]>
         this.appFactory = appFactory;
     }
 
-    public async Task<AppVersionModel[]> Execute(AppKey appKey)
+    public async Task<XtiVersionModel[]> Execute(AppKey appKey)
     {
         var app = await appFactory.Apps.App(appKey);
         var versions = await app.Versions();

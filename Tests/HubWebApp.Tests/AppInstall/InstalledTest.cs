@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.Entities;
@@ -25,7 +24,7 @@ sealed class InstalledTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = hubApp.Key(),
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         });
         await tester.Execute
         (
@@ -57,7 +56,7 @@ sealed class InstalledTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = hubApp.Key(),
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         });
         await tester.Execute
         (

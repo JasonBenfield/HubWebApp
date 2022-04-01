@@ -50,7 +50,7 @@ public sealed class InstallGroup : AppApiGroupWrapper
     }
 
     public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
-    public AppApiAction<GetVersionRequest, AppVersionModel> GetVersion { get; }
+    public AppApiAction<GetVersionRequest, XtiVersionModel> GetVersion { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }

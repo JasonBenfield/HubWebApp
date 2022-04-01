@@ -16,7 +16,7 @@ internal sealed class BranchVersion
         sp = scopes.Production();
     }
 
-    public async Task<AppVersionModel> Value()
+    public async Task<XtiVersionModel> Value()
     {
         var gitRepo = sp.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
@@ -38,8 +38,7 @@ internal sealed class BranchVersion
             versionKey = AppVersionKey.Current;
         }
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
-        var appKey = sp.GetRequiredService<AppKey>();
-        var version = await hubAdmin.Version(appKey, versionKey);
+        var version = await hubAdmin.Version(new AppVersionName().Value, versionKey);
         return version;
     }
 }

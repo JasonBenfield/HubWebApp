@@ -1,6 +1,8 @@
 ﻿using HubWebApp.Fakes;
 using XTI_Core;
 using XTI_Core.Extensions;
+using XTI_Hub.Abstractions;
+using XTI_HubAppApi.AppPublish;
 using XTI_HubAppApi.PermanentLog;
 using XTI_HubSetup;
 using XTI_TempLog;
@@ -219,16 +221,24 @@ internal sealed class PermanentLogTest
         var clock = sp.GetRequiredService<IClock>();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
-        var version = await appFactory.Apps.StartNewVersion
-        (
-            new AppKey(new AppName("Fake"), AppType.Values.WebApp),
-            "fake.example.com",
-            AppVersionKey.None,
-            AppVersionType.Values.Major,
-            DateTime.Now
-        );
-        await version.Publishing();
-        await version.Published();
+        var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
+        var hubApi = apiFactory.CreateForSuperUser();
+        var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
+        {
+            GroupName = "FakeWebApp",
+            VersionType = AppVersionType.Values.Major,
+            AppDefinitions = new[] { new AppDefinitionModel(new AppKey(new AppName("Fake"), AppType.Values.WebApp), "webapps.example.com") }
+        });
+        await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
+        {
+            GroupName = version.GroupName,
+            VersionKey = version.VersionKey
+        });
+        await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
+        {
+            GroupName = version.GroupName,
+            VersionKey = version.VersionKey
+        });
         await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
         await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
         return sp;

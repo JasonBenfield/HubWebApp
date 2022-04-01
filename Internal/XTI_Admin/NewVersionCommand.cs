@@ -38,12 +38,13 @@ public sealed class NewVersionCommand : ICommand
             throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
         }
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        var versionKey = await hubAdministration.NextVersionKey();
-        foreach(var appKey in appKeys)
-        {
-            await hubAdministration.StartNewVersion(appKey, options.Domain, versionKey, versionType);
-        }
-        var gitVersion = new XtiGitVersion(versionType.DisplayText, versionKey.DisplayText);
+        var newVersion = await hubAdministration.StartNewVersion
+        (
+            new AppVersionName().Value,
+            versionType,
+            appKeys.Select(ak => new AppDefinitionModel(ak, options.Domain)).ToArray()
+        );
+        var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey);
         await gitHubRepo.CreateNewVersion(gitVersion);
         var newVersionBranchName = gitVersion.BranchName();
         await gitRepo.CheckoutBranch(newVersionBranchName.Value);

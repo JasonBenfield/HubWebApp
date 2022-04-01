@@ -15,11 +15,11 @@ internal sealed class LocalInstallServiceProcess
 
     public async Task Run()
     {
-        var appVersion = await new CurrentVersion(scopes).Value();
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var options = scopes.GetRequiredService<AdminOptions>();
         var appKey = options.AppKey();
-        var release = $"v{appVersion.Major}.{appVersion.Minor}.{appVersion.Patch}";
+        var appVersion = await new CurrentVersion(scopes).Value();
+        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+        var release = $"v{appVersion.VersionNumber.Format()}";
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
         using var client = httpClientFactory.CreateClient();
         using var content = new FormUrlEncodedContent
@@ -30,7 +30,7 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("envName", xtiEnv.EnvironmentName),
                 KeyValuePair.Create("appName", appKey.Name.Value),
                 KeyValuePair.Create("appType", appKey.Type.DisplayText.Replace(" ", "")),
-                KeyValuePair.Create("versionKey", appVersion.VersionKey),
+                KeyValuePair.Create("versionKey", appVersion.VersionKey.DisplayText),
                 KeyValuePair.Create("repoOwner", options.RepoOwner),
                 KeyValuePair.Create("repoName", options.RepoName),
                 KeyValuePair.Create("installationUserName", options.InstallationUserName),

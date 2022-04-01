@@ -28,8 +28,8 @@ public sealed class InstallationRepository
 
     private IQueryable<CurrentInstallation> currentInstallation(InstallLocation location, App app)
     {
-        var versionIDs = appFactory.DB
-            .Versions
+        var appVersionIDs = appFactory.DB
+            .AppVersions
             .Retrieve()
             .Where(v => v.AppID == app.ID.Value)
             .Select(v => v.ID);
@@ -41,7 +41,7 @@ public sealed class InstallationRepository
                 inst =>
                     inst.IsCurrent
                     && inst.LocationID == location.ID.Value
-                    && versionIDs.Any(id => id == inst.VersionID)
+                    && appVersionIDs.Contains(inst.AppVersionID)
             )
             .Select(inst => appFactory.CurrentInstallation(inst));
     }
@@ -53,7 +53,9 @@ public sealed class InstallationRepository
         => versionInstallation(location, appVersion).FirstAsync();
 
     private IQueryable<VersionInstallation> versionInstallation(InstallLocation location, AppVersion appVersion)
-        => appFactory.DB
+    {
+        var appVersionIDs = appVersion.QueryAppVersionID();
+        return appFactory.DB
             .Installations
             .Retrieve()
             .Where
@@ -61,28 +63,30 @@ public sealed class InstallationRepository
                 inst =>
                     !inst.IsCurrent
                     && inst.LocationID == location.ID.Value
-                    && inst.VersionID == appVersion.ID.Value
+                    && appVersionIDs.Contains(inst.AppVersionID)
             )
             .Select(inst => appFactory.VersionInstallation(inst));
+    }
 
-    internal async Task<CurrentInstallation> NewCurrentInstallation(InstallLocation location, AppVersion version, DateTimeOffset timeAdded)
+    internal async Task<CurrentInstallation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded)
     {
-        var entity = await NewInstallation(location, version, timeAdded, true);
+        var entity = await NewInstallation(location, appVersion, timeAdded, true);
         return appFactory.CurrentInstallation(entity);
     }
 
-    internal async Task<VersionInstallation> NewVersionInstallation(InstallLocation location, AppVersion version, DateTimeOffset timeAdded)
+    internal async Task<VersionInstallation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded)
     {
-        var entity = await NewInstallation(location, version, timeAdded, false);
+        var entity = await NewInstallation(location, appVersion, timeAdded, false);
         return appFactory.VersionInstallation(entity);
     }
 
-    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion version, DateTimeOffset timeAdded, bool isCurrent)
+    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded, bool isCurrent)
     {
+        var appVersionID = await appVersion.AppVersionID();
         var entity = new InstallationEntity
         {
             LocationID = location.ID.Value,
-            VersionID = version.ID.Value,
+            AppVersionID = appVersionID,
             Status = InstallStatus.Values.InstallPending.Value,
             IsCurrent = isCurrent,
             TimeAdded = timeAdded

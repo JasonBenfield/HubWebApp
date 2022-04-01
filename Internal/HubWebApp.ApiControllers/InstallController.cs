@@ -16,9 +16,9 @@ public class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppVersionModel>> GetVersion([FromBody] GetVersionRequest model)
+    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] GetVersionRequest model)
     {
-        return api.Group("Install").Action<GetVersionRequest, AppVersionModel>("GetVersion").Execute(model);
+        return api.Group("Install").Action<GetVersionRequest, XtiVersionModel>("GetVersion").Execute(model);
     }
 
     [HttpPost]

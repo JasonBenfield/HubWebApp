@@ -19,25 +19,22 @@ public sealed class DbHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
-    public async Task<AppVersionModel> Version(AppKey appKey, AppVersionKey versionKey)
+    public async Task<XtiVersionModel> Version(string groupName, AppVersionKey versionKey)
     {
-        var app = await appFactory.Apps.App(appKey);
-        var version = await app.Version(versionKey);
+        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
         return version.ToModel();
     }
 
-    public async Task<AppVersionModel> BeginPublish(AppKey appKey, AppVersionKey versionKey)
+    public async Task<XtiVersionModel> BeginPublish(string groupName, AppVersionKey versionKey)
     {
-        var app = await appFactory.Apps.App(appKey);
-        var version = await app.Version(versionKey);
+        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
         await version.Publishing();
         return version.ToModel();
     }
 
-    public async Task<AppVersionModel> EndPublish(AppKey appKey, AppVersionKey versionKey)
+    public async Task<XtiVersionModel> EndPublish(string groupName, AppVersionKey versionKey)
     {
-        var app = await appFactory.Apps.App(appKey);
-        var version = await app.Version(versionKey);
+        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
         await version.Published();
         return version.ToModel();
     }
@@ -112,11 +109,14 @@ public sealed class DbHubAdministration : IHubAdministration
         return installationUser.ToModel();
     }
 
-    public Task<AppVersionKey> NextVersionKey() => appFactory.Versions.NextKey();
-
-    public async Task<AppVersionModel> StartNewVersion(AppKey appKey, string domain, AppVersionKey versionKey, AppVersionType versionType)
+    public async Task<XtiVersionModel> StartNewVersion(string groupName, AppVersionType versionType, AppDefinitionModel[] appDefs)
     {
-        var version = await appFactory.Apps.StartNewVersion(appKey, domain, versionKey, versionType, clock.Now());
+        var version = await appFactory.Versions.StartNewVersion(groupName, AppVersionKey.None, clock.Now(), versionType);
+        foreach(var appDef in appDefs)
+        {
+            var app = await appFactory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, clock.Now());
+            await app.AddVersion(version);
+        }
         return version.ToModel();
     }
 }

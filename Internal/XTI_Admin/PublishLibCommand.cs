@@ -1,4 +1,6 @@
 ﻿using XTI_Core;
+using XTI_Git;
+using XTI_GitHub;
 
 namespace XTI_Admin;
 
@@ -15,15 +17,22 @@ internal sealed class PublishLibCommand : ICommand
     {
         string semanticVersion;
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+        var currentVersion = await new CurrentVersion(scopes).Value();
         if (xtiEnv.IsProduction())
         {
-            var version = await new BranchVersion(scopes).Value();
-            semanticVersion = $"{version.Version()}";
+            var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
+            var currentBranchName = gitRepo.CurrentBranchName();
+            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+            var repoInfo = await gitHubRepo.RepositoryInformation();
+            if (!currentBranchName.Equals(repoInfo.DefaultBranch, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{repoInfo.DefaultBranch}'");
+            }
+            semanticVersion = currentVersion.VersionNumber.Format();
         }
         else
         {
-            var currentVersion = await new CurrentVersion(scopes).Value();
-            semanticVersion = $"{currentVersion.NextPatch()}-dev{DateTime.Now:yyMMddHHmmssfff}";
+            semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
         await new PublishLibProcess(scopes).Run(semanticVersion);
     }

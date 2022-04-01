@@ -4,7 +4,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
 
-public sealed class GetVersionAction : AppAction<GetVersionRequest, AppVersionModel>
+public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionModel>
 {
     private readonly AppFactory appFactory;
 
@@ -13,10 +13,9 @@ public sealed class GetVersionAction : AppAction<GetVersionRequest, AppVersionMo
         this.appFactory = appFactory;
     }
 
-    public async Task<AppVersionModel> Execute(GetVersionRequest model)
+    public async Task<XtiVersionModel> Execute(GetVersionRequest model)
     {
-        var app = await appFactory.Apps.App(model.AppKey);
-        var version = await app.Version(model.VersionKey);
+        var version = await appFactory.Versions.VersionByGroupName(model.GroupName, model.VersionKey);
         return version.ToModel();
     }
 }

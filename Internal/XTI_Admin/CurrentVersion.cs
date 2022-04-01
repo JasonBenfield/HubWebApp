@@ -7,18 +7,16 @@ namespace XTI_Admin;
 internal sealed class CurrentVersion
 {
     private readonly IServiceProvider sp;
-    private readonly AppKey appKey;
 
-    public CurrentVersion(Scopes scopes, AppKey appKey)
+    public CurrentVersion(Scopes scopes)
     {
         sp = scopes.Production();
-        this.appKey = appKey;
     }
 
-    public async Task<AppVersionModel> Value()
+    public async Task<XtiVersionModel> Value()
     {
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.Version(appKey, AppVersionKey.Current);
+        var version = await hubAdmin.Version(new AppVersionName().Value, AppVersionKey.Current);
         return version;
     }
 }

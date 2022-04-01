@@ -21,8 +21,8 @@ var CurrentVersionComponent = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getCurrentVersion()];
                     case 1:
                         currentVersion = _a.sent();
-                        this.versionKey.setText(currentVersion.VersionKey);
-                        this.version.setText("".concat(currentVersion.Major, ".").concat(currentVersion.Minor, ".").concat(currentVersion.Patch));
+                        this.versionKey.setText(currentVersion.VersionKey.DisplayText);
+                        this.version.setText("".concat(currentVersion.VersionNumber.Major, ".").concat(currentVersion.VersionNumber.Minor, ".").concat(currentVersion.VersionNumber.Patch));
                         return [2 /*return*/];
                 }
             });

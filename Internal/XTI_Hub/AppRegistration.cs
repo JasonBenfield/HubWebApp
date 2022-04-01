@@ -16,7 +16,7 @@ public sealed class AppRegistration
         this.clock = clock;
     }
 
-    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey, AppVersionModel[] versions)
+    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey, XtiVersionModel[] versions)
     {
         await appFactory.Users.AddAnonIfNotExists(clock.Now());
         await tryAddUnknownApp();
@@ -26,11 +26,12 @@ public sealed class AppRegistration
         {
             await app.AddVersionIfNotFound
             (
+                versionModel.GroupName,
                 AppVersionKey.Parse(versionModel.VersionKey),
                 clock.Now(),
                 versionModel.Status,
                 versionModel.VersionType,
-                versionModel.Version()
+                versionModel.VersionNumber
             );
         }
         var roleNames = template.RecursiveRoles()
@@ -57,12 +58,12 @@ public sealed class AppRegistration
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
     }
 
-    private static async Task updateResourceGroupFromTemplate(App app, AppVersion version, AppApiGroupTemplateModel groupTemplate)
+    private static async Task updateResourceGroupFromTemplate(App app, AppVersion appVersion, AppApiGroupTemplateModel groupTemplate)
     {
         var modCategoryName = new ModifierCategoryName(groupTemplate.ModCategory);
         var modCategory = await app.AddModCategoryIfNotFound(modCategoryName);
         var groupName = new ResourceGroupName(groupTemplate.Name);
-        var resourceGroup = await version.AddOrUpdateResourceGroup(groupName, modCategory);
+        var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupName, modCategory);
         if (groupTemplate.IsAnonymousAllowed)
         {
             await resourceGroup.AllowAnonymous();

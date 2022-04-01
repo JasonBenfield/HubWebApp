@@ -4,7 +4,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.VersionInquiry;
 
-public sealed class GetVersionAction : AppAction<string, AppVersionModel>
+public sealed class GetVersionAction : AppAction<string, XtiVersionModel>
 {
     private readonly AppFromPath appFromPath;
 
@@ -13,10 +13,10 @@ public sealed class GetVersionAction : AppAction<string, AppVersionModel>
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppVersionModel> Execute(string versionKey)
+    public async Task<XtiVersionModel> Execute(string versionKey)
     {
         var app = await appFromPath.Value();
         var version = await app.Version(AppVersionKey.Parse(versionKey));
-        return version.ToModel();
+        return version.ToVersionModel();
     }
 }

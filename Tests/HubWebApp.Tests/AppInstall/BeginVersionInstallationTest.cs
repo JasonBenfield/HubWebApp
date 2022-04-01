@@ -29,7 +29,7 @@ sealed class BeginVersionInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         await tester.Execute(request);
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
@@ -58,7 +58,7 @@ sealed class BeginVersionInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         var installationID = await tester.Execute(request);
         Assert.That

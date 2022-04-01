@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
+using XTI_HubAppApi.AppPublish;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
@@ -30,7 +26,7 @@ sealed class BeginCurrentInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         await tester.Execute(request);
         var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
@@ -60,7 +56,7 @@ sealed class BeginCurrentInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         var installationID = await tester.Execute(request);
         Assert.That
@@ -83,24 +79,39 @@ sealed class BeginCurrentInstallationTest
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var nextVersion = await factory.Apps.StartNewVersion
-        (
-            HubInfo.AppKey,
-            "hub.example.com",
-            AppVersionKey.None,
-            AppVersionType.Values.Major,
-            DateTimeOffset.Now
-        );
-        await nextVersion.Publishing();
         var hubApiFactory = tester.Services.GetRequiredService<HubAppApiFactory>();
         var hubApi = hubApiFactory.CreateForSuperUser();
+        var nextVersion = await hubApi.Publish.NewVersion.Invoke
+        (
+            new NewVersionRequest
+            {
+                GroupName = "HubWebApp",
+                VersionType = AppVersionType.Values.Major,
+                AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
+            }
+        );
+        await hubApi.Publish.BeginPublish.Invoke
+        (
+            new PublishVersionRequest
+            {
+                GroupName = nextVersion.GroupName,
+                VersionKey = nextVersion.VersionKey
+            }
+        );
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
             AppTemplate = hubApiFactory.CreateTemplate().ToModel(),
-            VersionKey = nextVersion.Key().Value,
-            Versions = new AppVersionModel[0]
+            VersionKey = nextVersion.VersionKey,
+            Versions = new XtiVersionModel[0]
         });
-        await nextVersion.Published();
+        await hubApi.Publish.EndPublish.Invoke
+        (
+            new PublishVersionRequest
+            {
+                GroupName = nextVersion.GroupName,
+                VersionKey = nextVersion.VersionKey
+            }
+        );
         await newInstallation(tester, new NewInstallationRequest
         {
             QualifiedMachineName = qualifiedMachineName,
@@ -110,14 +121,15 @@ sealed class BeginCurrentInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = nextVersion.Key().Value
+            VersionKey = nextVersion.VersionKey
         };
         var installationID = await tester.Execute(request);
         var currentInstallation = await getInstallation(tester, installationID);
+        var installationVersion = await getVersion(tester, currentInstallation);
         Assert.That
         (
-            currentInstallation.VersionID,
-            Is.EqualTo(nextVersion.ID.Value),
+            installationVersion.ID,
+            Is.EqualTo(nextVersion.ID),
             "Should set current installation version"
         );
     }
@@ -127,6 +139,14 @@ sealed class BeginCurrentInstallationTest
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         return db.Installations.Retrieve()
             .Where(inst => inst.ID == installationID)
+            .FirstAsync();
+    }
+
+    private static Task<AppXtiVersionEntity> getVersion(IHubActionTester tester, InstallationEntity installation)
+    {
+        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        return db.AppVersions.Retrieve()
+            .Where(av => av.ID == installation.AppVersionID)
             .FirstAsync();
     }
 

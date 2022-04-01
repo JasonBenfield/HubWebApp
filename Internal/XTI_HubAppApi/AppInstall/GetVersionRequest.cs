@@ -4,6 +4,6 @@ namespace XTI_HubAppApi.AppInstall;
 
 public sealed class GetVersionRequest
 {
-    public AppKey AppKey { get; set; } = AppKey.Unknown;
+    public string GroupName { get; set; } = "";
     public AppVersionKey VersionKey { get; set; } = AppVersionKey.None;
 }

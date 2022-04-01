@@ -2,16 +2,15 @@
 
 namespace XTI_Hub.Abstractions;
 
-public sealed class AppVersionModel
+public sealed class XtiVersionModel
 {
     public int ID { get; set; }
-    public string VersionKey { get; set; } = "";
+    public string GroupName { get; set; } = "";
+    public AppVersionKey VersionKey { get; set; } = AppVersionKey.None;
     public AppVersionNumber VersionNumber { get; set; } = new AppVersionNumber(0, 0, 0);
     public AppVersionType VersionType { get; set; } = AppVersionType.Values.NotSet;
     public AppVersionStatus Status { get; set; } = AppVersionStatus.Values.NotSet;
     public DateTimeOffset TimeAdded { get; set; }
 
-    public Version Version() => VersionNumber.ToVersion();
-
-    public Version NextPatch() => VersionNumber.NextPatch().ToVersion();
+    public AppVersionNumber NextPatch() => VersionNumber.NextPatch();
 }

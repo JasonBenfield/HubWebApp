@@ -13,18 +13,6 @@ public sealed class AppRepository
         this.factory = factory;
     }
 
-    public async Task<AppVersion> StartNewVersion(AppKey appKey, string domain, AppVersionKey versionKey, AppVersionType versionType, DateTimeOffset timeAdded)
-    {
-        var app = await AddOrUpdate
-        (
-            appKey,
-            domain,
-            timeAdded
-        );
-        var version = await app.StartNewVersion(versionKey, versionType, timeAdded);
-        return version;
-    }
-
     public async Task<App> AddOrUpdate(AppKey appKey, string domain, DateTimeOffset timeAdded)
     {
         App app;
@@ -53,7 +41,6 @@ public sealed class AppRepository
         await factory.Transaction(async () =>
         {
             var entity = await AddApp(appKey, title, domain, timeAdded);
-            await factory.Versions.AddCurrentVersion(entity, timeAdded);
             app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
             await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
@@ -141,14 +128,14 @@ public sealed class AppRepository
                 grp => grp.ID,
                 (res, grp) => new
                 {
-                    VersionID = grp.VersionID
+                    AppVersionID = grp.AppVersionID
                 }
             )
             .Join
             (
-                factory.DB.Versions.Retrieve(),
-                grp => grp.VersionID,
-                v => v.ID,
+                factory.DB.AppVersions.Retrieve(),
+                grp => grp.AppVersionID,
+                av => av.ID,
                 (grp, v) => v.AppID
             )
             .Distinct();

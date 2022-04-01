@@ -102,7 +102,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
                 || templ.DataType == typeof(AppVersionStatus)
                 || templ.DataType == typeof(AppVersionType)
                 || templ.DataType == typeof(ResourceResultType)
-                || templ.DataType == typeof(AppVersionModel)
+                || templ.DataType == typeof(XtiVersionModel)
                 || templ.DataType == typeof(AppVersionNumber)
                 || templ.DataType == typeof(AppUserModel)
                 || templ.DataType == typeof(AuthenticateSessionModel)
@@ -112,7 +112,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
                 || templ.DataType == typeof(StartRequestModel)
                 || templ.DataType == typeof(EndRequestModel)
                 || templ.DataType == typeof(EndSessionModel)
-                || templ.DataType == typeof(NewInstallationResult);
+                || templ.DataType == typeof(NewInstallationResult)
+                || templ.DataType == typeof(AppDefinitionModel);
         }
         return false;
     }

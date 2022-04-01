@@ -33,7 +33,11 @@ public sealed class CompleteVersionProcess
         await gitRepo.CheckoutBranch(repoInfo.DefaultBranch);
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
-        await hubAdmin.EndPublish(appKey, versionKey);
+        await hubAdmin.EndPublish
+        (
+            new AppVersionName().Value, 
+            versionKey
+        );
         gitRepo.DeleteBranch(versionBranchName.Value);
     }
 }

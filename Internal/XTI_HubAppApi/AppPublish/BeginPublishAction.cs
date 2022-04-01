@@ -3,7 +3,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
 
-public sealed class BeginPublishAction : AppAction<PublishVersionRequest, AppVersionModel>
+public sealed class BeginPublishAction : AppAction<PublishVersionRequest, XtiVersionModel>
 {
     private readonly IHubAdministration hubAdministration;
 
@@ -12,5 +12,5 @@ public sealed class BeginPublishAction : AppAction<PublishVersionRequest, AppVer
         this.hubAdministration = hubAdministration;
     }
 
-    public Task<AppVersionModel> Execute(PublishVersionRequest model) => hubAdministration.BeginPublish(model.AppKey, model.VersionKey);
+    public Task<XtiVersionModel> Execute(PublishVersionRequest model) => hubAdministration.BeginPublish(model.GroupName, model.VersionKey);
 }
