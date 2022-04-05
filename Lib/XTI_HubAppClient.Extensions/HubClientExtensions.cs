@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using XTI_Core.Extensions;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
@@ -9,11 +9,10 @@ namespace XTI_HubAppClient.Extensions;
 
 public static class HubClientExtensions
 {
-    public static void AddHubClientServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHubClientServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.Configure<HubClientOptions>(configuration.GetSection(HubClientOptions.HubClient));
-        services.AddScoped<SystemUserXtiToken>();
+        services.AddConfigurationOptions<HubClientOptions>(HubClientOptions.HubClient);
         services.AddXtiTokenAccessor((sp, accessor) => { });
         services.AddScoped<HubClientOptionsAppClientDomain>();
         services.AddScoped<HubClientAppClientDomain>();
@@ -65,8 +64,6 @@ public static class HubClientExtensions
             {
                 var cache = sp.GetRequiredService<IMemoryCache>();
                 var xtiTokenAccessor = new XtiTokenAccessor(cache);
-                xtiTokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                xtiTokenAccessor.UseToken<SystemUserXtiToken>();
                 configure(sp, xtiTokenAccessor);
                 return xtiTokenAccessor;
             }

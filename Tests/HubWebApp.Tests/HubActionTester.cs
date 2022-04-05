@@ -133,7 +133,6 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
                 RequestServices = Services
             };
         }
-        //httpContextAccessor.HttpContext.User = new FakeHttpUser().Create("Session-Key", user);
         var appApiFactory = Services.GetRequiredService<AppApiFactory>();
         var hubApiForSuperUser = (HubAppApi)appApiFactory.CreateForSuperUser();
         var actionForSuperUser = getAction(hubApiForSuperUser);

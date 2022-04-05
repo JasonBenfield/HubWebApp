@@ -1,22 +1,16 @@
 ﻿using XTI_App.Api;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
 
-public sealed class EndPublishAction : AppAction<PublishVersionRequest, AppVersionModel>
+public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersionModel>
 {
-    private readonly AppFactory appFactory;
+    private readonly IHubAdministration hubAdministration;
 
-    public EndPublishAction(AppFactory appFactory)
+    public EndPublishAction(IHubAdministration hubAdministration)
     {
-        this.appFactory = appFactory;
+        this.hubAdministration = hubAdministration;
     }
 
-    public async Task<AppVersionModel> Execute(PublishVersionRequest model)
-    {
-        var app = await appFactory.Apps.App(model.AppKey);
-        var version = await app.Version(model.VersionKey);
-        await version.Published();
-        return version.ToModel();
-    }
+    public Task<XtiVersionModel> Execute(PublishVersionRequest model) => hubAdministration.EndPublish(model.GroupName, model.VersionKey);
 }

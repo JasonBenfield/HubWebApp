@@ -6,5 +6,5 @@ public sealed class BeginInstallationRequest
 {
     public string QualifiedMachineName { get; set; } = "";
     public AppKey AppKey { get; set; } = AppKey.Unknown;
-    public string VersionKey { get; set; } = "";
+    public AppVersionKey VersionKey { get; set; } = AppVersionKey.None;
 }

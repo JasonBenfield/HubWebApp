@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.AppPublish;
@@ -26,8 +26,8 @@ public sealed class PublishGroup : AppApiGroupWrapper
         GetVersions = source.AddAction(actions.Action(nameof(GetVersions), () => services.GetRequiredService<GetVersionsAction>()));
     }
 
-    public AppApiAction<NewVersionRequest, AppVersionModel> NewVersion { get; }
-    public AppApiAction<PublishVersionRequest, AppVersionModel> BeginPublish { get; }
-    public AppApiAction<PublishVersionRequest, AppVersionModel> EndPublish { get; }
-    public AppApiAction<AppKey, AppVersionModel[]> GetVersions { get; }
+    public AppApiAction<NewVersionRequest, XtiVersionModel> NewVersion { get; }
+    public AppApiAction<PublishVersionRequest, XtiVersionModel> BeginPublish { get; }
+    public AppApiAction<PublishVersionRequest, XtiVersionModel> EndPublish { get; }
+    public AppApiAction<AppKey, XtiVersionModel[]> GetVersions { get; }
 }

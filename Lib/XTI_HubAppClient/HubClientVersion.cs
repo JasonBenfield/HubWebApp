@@ -8,7 +8,7 @@ internal sealed class HubClientVersion : IAppVersion
     private readonly HubClientAppContext appContext;
     private readonly XTI_App.Abstractions.AppVersionKey versionKey;
 
-    public HubClientVersion(HubAppClient hubClient, HubClientAppContext appContext, AppVersionModel model)
+    public HubClientVersion(HubAppClient hubClient, HubClientAppContext appContext, XtiVersionModel model)
     {
         this.hubClient = hubClient;
         this.appContext = appContext;

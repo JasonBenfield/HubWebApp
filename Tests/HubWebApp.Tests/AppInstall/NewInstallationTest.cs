@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
@@ -56,7 +54,8 @@ sealed class NewInstallationTest
         };
         await tester.Execute(request);
         var currentInstallation = await getCurrentInstallation(tester);
-        Assert.That(currentInstallation?.VersionID, Is.EqualTo(version.ID.Value), "Should add current installation");
+        var installationVersion = await getVersion(tester, currentInstallation);
+        Assert.That(currentInstallation?.AppVersionID, Is.EqualTo(installationVersion.ID), "Should add current installation");
         var installLocations = await getInstallLocations(tester);
         Assert.That(currentInstallation?.LocationID, Is.EqualTo(installLocations[0].ID));
     }
@@ -123,7 +122,7 @@ sealed class NewInstallationTest
     {
         var tester = await setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
@@ -134,8 +133,11 @@ sealed class NewInstallationTest
         await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var installations = await db.Installations.Retrieve().ToArrayAsync();
+        var appVersionID = db.AppVersions.Retrieve()
+            .Where(av => av.AppID == appVersion.ToAppModel().ID && av.VersionID == appVersion.ToVersionModel().ID)
+            .Select(av => av.ID);
         var versionInstallations = installations
-            .Where(inst => !inst.IsCurrent && inst.VersionID == version.ID.Value)
+            .Where(inst => !inst.IsCurrent && appVersionID.Contains(inst.AppVersionID))
             .ToArray();
         Assert.That(versionInstallations.Length, Is.EqualTo(1), "Should not add duplicate version installation");
     }
@@ -184,19 +186,30 @@ sealed class NewInstallationTest
         return currentInstallation;
     }
 
+    private static Task<AppXtiVersionEntity> getVersion(IHubActionTester tester, InstallationEntity installation)
+    {
+        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        return db.AppVersions.Retrieve()
+            .Where(av => av.ID == installation.AppVersionID)
+            .FirstAsync();
+    }
+
     private static async Task<InstallationEntity> getVersionInstallation(IHubActionTester tester, AppVersion appVersion)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
+        var appVersionID = db.AppVersions.Retrieve()
+            .Where(av => av.AppID == appVersion.ToAppModel().ID && av.VersionID == appVersion.ToVersionModel().ID)
+            .Select(av => av.ID);
         var installations = await db.Installations.Retrieve().ToArrayAsync();
         var versionInstallation = installations
-            .First(inst => !inst.IsCurrent && inst.VersionID == appVersion.ID.Value);
+            .First(inst => !inst.IsCurrent && appVersionID.Contains(inst.AppVersionID));
         return versionInstallation;
     }
 
     private async Task<HubActionTester<NewInstallationRequest, NewInstallationResult>> setup()
     {
         var host = new HubTestHost();
-        var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.NewInstallation);
+        var sp = await host.Setup();
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.NewInstallation);
     }
 }

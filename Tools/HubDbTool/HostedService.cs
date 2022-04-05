@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using XTI_Core.Extensions;
+using XTI_Core;
 using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 
 namespace HubDbTool;
 
@@ -19,13 +19,14 @@ internal sealed class HostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var scope = sp.CreateScope();
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<MainDbToolOptions>>().Value;
-        var hostEnvironment = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+        var db = scope.ServiceProvider.GetRequiredService<IHubDbContext>();
+        var options = scope.ServiceProvider.GetRequiredService<MainDbToolOptions>();
+        var xtiEnv = scope.ServiceProvider.GetRequiredService<XtiEnvironment>();
         try
         {
             if (options.Command == "reset")
             {
-                if (!hostEnvironment.IsTest() && !options.Force)
+                if (!xtiEnv.IsTest() && !options.Force)
                 {
                     throw new ArgumentException("Database reset can only be run for the test environment");
                 }
@@ -39,11 +40,11 @@ internal sealed class HostedService : IHostedService
                     throw new ArgumentException("Backup file path is required for backup");
                 }
                 var mainDbBackup = scope.ServiceProvider.GetRequiredService<HubDbBackup>();
-                await mainDbBackup.Run(hostEnvironment.EnvironmentName, options.BackupFilePath);
+                await mainDbBackup.Run(xtiEnv.EnvironmentName, options.BackupFilePath);
             }
             else if (options.Command == "restore")
             {
-                if (hostEnvironment.IsProduction())
+                if (xtiEnv.IsProduction())
                 {
                     throw new ArgumentException("Database restore cannot be run for the production environment");
                 }
@@ -52,7 +53,7 @@ internal sealed class HostedService : IHostedService
                     throw new ArgumentException("Backup file path is required for restore");
                 }
                 var mainDbRestore = scope.ServiceProvider.GetRequiredService<HubDbRestore>();
-                await mainDbRestore.Run(hostEnvironment.EnvironmentName, options.BackupFilePath);
+                await mainDbRestore.Run(xtiEnv.EnvironmentName, options.BackupFilePath);
             }
             else if (options.Command == "update")
             {

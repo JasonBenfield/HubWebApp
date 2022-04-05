@@ -2,7 +2,9 @@
 using XTI_App.Api;
 using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.Auth;
+using XTI_TempLog.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi;
@@ -99,7 +101,19 @@ public sealed partial class HubAppApi : WebAppApiWrapper
                 || templ.DataType == typeof(AppType)
                 || templ.DataType == typeof(AppVersionStatus)
                 || templ.DataType == typeof(AppVersionType)
-                || templ.DataType == typeof(ResourceResultType);
+                || templ.DataType == typeof(ResourceResultType)
+                || templ.DataType == typeof(XtiVersionModel)
+                || templ.DataType == typeof(AppVersionNumber)
+                || templ.DataType == typeof(AppUserModel)
+                || templ.DataType == typeof(AuthenticateSessionModel)
+                || templ.DataType == typeof(LogEventModel)
+                || templ.DataType == typeof(LogBatchModel)
+                || templ.DataType == typeof(StartSessionModel)
+                || templ.DataType == typeof(StartRequestModel)
+                || templ.DataType == typeof(EndRequestModel)
+                || templ.DataType == typeof(EndSessionModel)
+                || templ.DataType == typeof(NewInstallationResult)
+                || templ.DataType == typeof(AppDefinitionModel);
         }
         return false;
     }

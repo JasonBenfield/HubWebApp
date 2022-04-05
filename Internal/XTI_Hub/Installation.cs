@@ -30,8 +30,10 @@ public class Installation
 
     protected Task StartVersion() => SetStatus(InstallStatus.Values.InstallStarted);
 
-    protected Task StartCurrent(AppVersion appVersion)
-        => appFactory.DB
+    protected async Task StartCurrent(AppVersion appVersion)
+    {
+        var appVersionID = await appVersion.AppVersionID();
+        await appFactory.DB
             .Installations
             .Update
             (
@@ -39,9 +41,10 @@ public class Installation
                 inst =>
                 {
                     inst.Status = InstallStatus.Values.InstallStarted;
-                    inst.VersionID = appVersion.ID.Value;
+                    inst.AppVersionID = appVersionID;
                 }
             );
+    }
 
     public InstallationModel ToModel() => new InstallationModel
     {

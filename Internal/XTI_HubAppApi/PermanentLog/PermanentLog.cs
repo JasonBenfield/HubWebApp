@@ -1,7 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Hub;
-using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 
 namespace XTI_HubAppApi.PermanentLog;
@@ -17,7 +16,7 @@ public sealed class PermanentLog
         this.clock = clock;
     }
 
-    public async Task LogBatch(ILogBatchModel model)
+    public async Task LogBatch(LogBatchModel model)
     {
         foreach (var startSession in model.StartSessions)
         {
@@ -45,7 +44,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task StartSession(IStartSessionModel startSession)
+    public async Task StartSession(StartSessionModel startSession)
     {
         try
         {
@@ -66,7 +65,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task AuthenticateSession(IAuthenticateSessionModel model)
+    public async Task AuthenticateSession(AuthenticateSessionModel model)
     {
         try
         {
@@ -80,7 +79,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task StartRequest(IStartRequestModel startRequest)
+    public async Task StartRequest(StartRequestModel startRequest)
     {
         try
         {
@@ -125,7 +124,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task LogEvent(ILogEventModel model)
+    public async Task LogEvent(LogEventModel model)
     {
         try
         {
@@ -137,7 +136,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task EndRequest(IEndRequestModel model)
+    public async Task EndRequest(EndRequestModel model)
     {
         try
         {
@@ -150,7 +149,7 @@ public sealed class PermanentLog
         }
     }
 
-    public async Task EndSession(IEndSessionModel model)
+    public async Task EndSession(EndSessionModel model)
     {
         try
         {
@@ -175,7 +174,7 @@ public sealed class PermanentLog
         });
     }
 
-    private async Task logEvent(ILogEventModel model)
+    private async Task logEvent(LogEventModel model)
     {
         var request = await appFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now());
         var severity = AppEventSeverity.Values.Value(model.Severity);

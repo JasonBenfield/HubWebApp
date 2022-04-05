@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
-using XTI_Hub;
+﻿using XTI_Hub.Abstractions;
 using XTI_HubAppApi.AppInstall;
 
 namespace HubWebApp.Tests;
@@ -36,8 +31,8 @@ public sealed class RegisterAppTest
         var request = new RegisterAppRequest
         {
             AppTemplate = fakeApi.ToModel(),
-            VersionKey = AppVersionKey.Current.Value,
-            Versions = new AppVersionModel[0]
+            VersionKey = AppVersionKey.Current,
+            Versions = new XtiVersionModel[0]
         };
         return request;
     }
@@ -50,8 +45,7 @@ public sealed class RegisterAppTest
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
-        var currentVersion = await app.CurrentVersion();
-        Assert.That(currentVersion.IsCurrent(), Is.True, "Should add current version");
+        Assert.DoesNotThrowAsync(() => app.CurrentVersion());
     }
 
     [Test]

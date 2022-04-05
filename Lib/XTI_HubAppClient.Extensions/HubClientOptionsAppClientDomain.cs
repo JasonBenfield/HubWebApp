@@ -7,9 +7,9 @@ internal sealed class HubClientOptionsAppClientDomain : IAppClientDomain
 {
     private readonly HubClientOptions options;
 
-    public HubClientOptionsAppClientDomain(IOptions<HubClientOptions> options)
+    public HubClientOptionsAppClientDomain(HubClientOptions options)
     {
-        this.options = options.Value;
+        this.options = options;
     }
 
     public Task<string> Value(string appName, string version)

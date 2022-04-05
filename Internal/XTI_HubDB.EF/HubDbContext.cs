@@ -19,7 +19,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         Requests = new EfDataRepository<AppRequestEntity>(this);
         Events = new EfDataRepository<AppEventEntity>(this);
         Apps = new EfDataRepository<AppEntity>(this);
-        Versions = new EfDataRepository<AppVersionEntity>(this);
+        Versions = new EfDataRepository<XtiVersionEntity>(this);
+        AppVersions = new EfDataRepository<AppXtiVersionEntity>(this);
         Roles = new EfDataRepository<AppRoleEntity>(this);
         UserRoles = new EfDataRepository<AppUserRoleEntity>(this);
         ResourceGroups = new EfDataRepository<ResourceGroupEntity>(this);
@@ -42,7 +43,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEventEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new AppVersionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new XtiVersionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AppXtiVersionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRoleEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppUserRoleEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ResourceGroupEntityConfiguration());
@@ -63,7 +65,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<AppRequestEntity> Requests { get; }
     public DataRepository<AppEventEntity> Events { get; }
     public DataRepository<AppEntity> Apps { get; }
-    public DataRepository<AppVersionEntity> Versions { get; }
+    public DataRepository<XtiVersionEntity> Versions { get; }
+    public DataRepository<AppXtiVersionEntity> AppVersions { get; }
     public DataRepository<AppRoleEntity> Roles { get; }
     public DataRepository<AppUserRoleEntity> UserRoles { get; }
     public DataRepository<ResourceGroupEntity> ResourceGroups { get; }

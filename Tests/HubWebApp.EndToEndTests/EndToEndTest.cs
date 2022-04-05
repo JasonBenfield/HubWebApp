@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
 using XTI_App.Abstractions;
-using XTI_Configuration.Extensions;
+using XTI_Core.Extensions;
 using XTI_Credentials;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
@@ -49,16 +49,16 @@ internal sealed class EndToEndTest
             (
                 (hostContext, config) =>
                 {
-                    config.UseXtiConfiguration(hostContext.HostingEnvironment, new string[] { });
+                    config.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", new string[0]);
                 }
             )
             .ConfigureServices
             (
                 (hostContext, services) =>
                 {
-                    services.Configure<AppOptions>(hostContext.Configuration.GetSection(AppOptions.App));
+                    services.AddConfigurationOptions<AppOptions>(AppOptions.App);
                     services.AddHttpClient();
-                    services.AddFileSecretCredentials(hostContext.HostingEnvironment);
+                    services.AddFileSecretCredentials();
                     services.AddScoped
                     (
                         sp =>
@@ -77,7 +77,7 @@ internal sealed class EndToEndTest
                             return new NewUserXtiToken(authClient, new SimpleCredentials(NewUserCredentials));
                         }
                     );
-                    services.AddHubClientServices(hostContext.Configuration);
+                    services.AddHubClientServices();
                     services.AddXtiTokenAccessor((sp, tokenAccessor) =>
                     {
                         tokenAccessor.AddToken(() => sp.GetRequiredService<TesterXtiToken>());

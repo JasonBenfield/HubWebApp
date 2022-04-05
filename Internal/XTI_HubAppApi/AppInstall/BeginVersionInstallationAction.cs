@@ -1,28 +1,21 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
 
 public sealed class BeginVersionInstallationAction : AppAction<BeginInstallationRequest, int>
 {
-    private readonly AppFactory appFactory;
+    private readonly IHubAdministration hubAdministration;
 
-    public BeginVersionInstallationAction(AppFactory appFactory)
+    public BeginVersionInstallationAction(IHubAdministration hubAdministration)
     {
-        this.appFactory = appFactory;
+        this.hubAdministration = hubAdministration;
     }
 
     public Task<int> Execute(BeginInstallationRequest model)
     {
         var versionKey = AppVersionKey.Parse(model.VersionKey);
-        var installationService = new DbInstallationService
-        (
-            appFactory,
-            model.AppKey,
-            versionKey,
-            model.QualifiedMachineName
-        );
-        return installationService.BeginVersionInstall();
+        return hubAdministration.BeginVersionInstall(model.AppKey, versionKey, model.QualifiedMachineName);
     }
 }

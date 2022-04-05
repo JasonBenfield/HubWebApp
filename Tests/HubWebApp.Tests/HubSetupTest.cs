@@ -1,9 +1,5 @@
 ﻿using HubWebApp.Fakes;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
+using XTI_Core.Extensions;
 using XTI_HubSetup;
 
 namespace HubWebApp.Tests;
@@ -64,16 +60,8 @@ internal sealed class HubSetupTest
 
     private IServiceProvider setup()
     {
-        var host = Host.CreateDefaultBuilder()
-            .ConfigureServices
-            (
-                (hostContext, services) =>
-                {
-                    services.AddFakesForHubWebApp(hostContext.Configuration);
-                }
-            )
-            .Build();
-        var scope = host.Services.CreateScope();
-        return scope.ServiceProvider;
+        var builder = new XtiHostBuilder();
+        builder.Services.AddFakesForHubWebApp();
+        return builder.Build().Scope();
     }
 }

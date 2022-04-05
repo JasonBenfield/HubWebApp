@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Extensions;
 using XTI_HubAppClient.Extensions;
+using XTI_TempLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Extensions;
 
@@ -13,15 +13,15 @@ namespace XTI_HubAppClient.WebApp.Extensions;
 
 public static class WebAppExtensions
 {
-    public static void AddWebAppServices(this IServiceCollection services, IHostEnvironment hostEnv, IConfiguration configuration)
-    {
-        services.AddHubClientServices(configuration);
-        XTI_WebApp.Extensions.WebAppExtensions.AddWebAppServices(services, hostEnv, configuration);
-        services.AddAppClients((sp, domains) => { });
-        services.AddAppClientDomainSelector((sp, domains) => { });
-        services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HubClientAppContext>());
-        services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HubClientUserContext>());
-    }
+    public static void AddThrottledLog<TAppApi>(this IServiceCollection services, Action<TAppApi, ThrottledLogsBuilder> action)
+        where TAppApi : IAppApi =>
+        AppExtensions.AddThrottledLog(services, action);
+
+    public static ThrottledPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
+        AppExtensions.Throttle(builder, action);
+
+    public static ThrottledPathBuilder AndThrottle(this ThrottledPathBuilder builder, IAppApiAction action) =>
+        AppExtensions.AndThrottle(builder, action);
 
     public static void AddAppClients(this IServiceCollection services, Action<IServiceProvider, AppClients> configure)
     {

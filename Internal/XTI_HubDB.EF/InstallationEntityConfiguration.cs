@@ -10,17 +10,17 @@ public sealed class InstallationEntityConfiguration : IEntityTypeConfiguration<I
     {
         builder.HasKey(inst => inst.ID);
         builder.Property(inst => inst.ID).ValueGeneratedOnAdd();
-        builder.HasIndex(inst => new { inst.LocationID, inst.VersionID, inst.IsCurrent }).IsUnique();
+        builder.HasIndex(inst => new { inst.LocationID, inst.AppVersionID, inst.IsCurrent }).IsUnique();
         builder
             .HasOne<InstallLocationEntity>()
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict)
             .HasForeignKey(inst => inst.LocationID);
         builder
-            .HasOne<AppVersionEntity>()
+            .HasOne<AppXtiVersionEntity>()
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict)
-            .HasForeignKey(inst => inst.VersionID);
+            .HasForeignKey(inst => inst.AppVersionID);
         builder.ToTable("Installations");
     }
 }

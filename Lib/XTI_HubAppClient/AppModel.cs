@@ -7,4 +7,5 @@ public sealed partial class AppModel
     public AppType Type { get; set; } = AppType.Values.GetDefault();
     public string AppName { get; set; } = "";
     public string Title { get; set; } = "";
+    public string Domain { get; set; } = "";
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -19,6 +20,7 @@ public sealed class App : IApp
     public EntityID ID { get; }
     public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
     public string Title { get => record.Title; }
+    internal string Domain { get => record.Domain; }
 
     public async Task RegisterAsAuthenticator()
     {
@@ -26,7 +28,7 @@ public sealed class App : IApp
             .Authenticators.Retrieve()
             .Where(auth => auth.AppID == ID.Value)
             .FirstOrDefaultAsync();
-        if(authenticator == null)
+        if (authenticator == null)
         {
             authenticator = new AuthenticatorEntity
             {
@@ -88,11 +90,18 @@ public sealed class App : IApp
     public Task<AppRole> Role(AppRoleName roleName) =>
         factory.Roles.Role(this, roleName);
 
-    public Task<AppVersion> AddVersionIfNotFound(AppVersionKey key, DateTimeOffset timeAdded, AppVersionStatus status, AppVersionType type, Version version) =>
-        factory.Versions.AddIfNotFound(key, record, timeAdded, status, type, version);
+    public Task<XtiVersion> AddVersionIfNotFound
+    (
+        string groupName,
+        AppVersionKey key,
+        DateTimeOffset timeAdded,
+        AppVersionStatus status,
+        AppVersionType type,
+        AppVersionNumber versionNumber
+    ) =>
+        factory.Versions.AddIfNotFound(groupName, key, timeAdded, status, type, versionNumber, this);
 
-    internal Task<AppVersion> StartNewVersion(AppVersionType versionType, DateTimeOffset timeAdded) =>
-        factory.Versions.StartNewVersion(AppVersionKey.None, record, timeAdded, versionType);
+    internal Task AddVersion(XtiVersion version) => factory.Versions.AddVersionToApp(this, version);
 
     public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);
 
@@ -135,13 +144,12 @@ public sealed class App : IApp
 
     async Task<IAppVersion> IApp.Version(AppVersionKey versionKey) => await Version(versionKey);
 
-    public Task<AppVersion> Version(AppVersionKey versionKey) =>
-        factory.Versions.VersionByApp(this, versionKey);
+    public Task<AppVersion> Version(AppVersionKey versionKey) => factory.Versions.VersionByApp(this, versionKey);
 
     public Task<AppVersion> VersionOrDefault(AppVersionKey versionKey) =>
         factory.Versions.VersionByAppOrDefault(this, versionKey);
 
-    public Task<AppVersion[]> Versions() => factory.Versions.VersionsByApp(this);
+    public Task<XtiVersion[]> Versions() => factory.Versions.VersionsByApp(this);
 
     public async Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
     {
@@ -165,7 +173,8 @@ public sealed class App : IApp
             ID = ID.Value,
             AppName = key.Name.DisplayText,
             Title = record.Title,
-            Type = key.Type
+            Type = key.Type,
+            Domain = record.Domain
         };
     }
 

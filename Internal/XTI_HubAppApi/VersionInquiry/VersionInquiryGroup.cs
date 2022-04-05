@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Api;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.VersionInquiry;
@@ -15,6 +16,6 @@ public sealed class VersionInquiryGroup : AppApiGroupWrapper
         GetResourceGroup = source.AddAction(actions.Action(nameof(GetResourceGroup), () => sp.GetRequiredService<GetResourceGroupAction>()));
     }
 
-    public AppApiAction<string, AppVersionModel> GetVersion { get; }
+    public AppApiAction<string, XtiVersionModel> GetVersion { get; }
     public AppApiAction<GetVersionResourceGroupRequest, ResourceGroupModel> GetResourceGroup { get; }
 }

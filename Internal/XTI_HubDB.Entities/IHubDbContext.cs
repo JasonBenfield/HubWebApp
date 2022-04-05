@@ -19,7 +19,8 @@ public interface IHubDbContext
     DataRepository<AppUserEntity> Users { get; }
     DataRepository<AuthenticatorEntity> Authenticators { get; }
     DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
-    DataRepository<AppVersionEntity> Versions { get; }
+    DataRepository<XtiVersionEntity> Versions { get; }
+    DataRepository<AppXtiVersionEntity> AppVersions { get; }
     DataRepository<InstallLocationEntity> InstallLocations { get; }
     DataRepository<InstallationEntity> Installations { get; }
     Task Transaction(Func<Task> action);

@@ -22,10 +22,10 @@ public sealed class AppRequestRepository
             record = await Add
             (
                 session,
-                requestKey, 
+                requestKey,
                 resource,
                 modifier,
-                path, 
+                path,
                 timeRequested
             );
         }
@@ -107,8 +107,9 @@ public sealed class AppRequestRepository
             .ToArrayAsync();
     }
 
-    internal async Task<AppRequestExpandedModel[]> MostRecentForVersion(AppVersion version, int howMany)
+    internal async Task<AppRequestExpandedModel[]> MostRecentForVersion(App app, XtiVersion version, int howMany)
     {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
         var resources = factory.DB
             .Resources
             .Retrieve()
@@ -117,7 +118,7 @@ public sealed class AppRequestRepository
                 factory.DB
                     .ResourceGroups
                     .Retrieve()
-                    .Where(rg => rg.VersionID == version.ID.Value),
+                    .Where(rg => appVersionIDs.Contains(rg.AppVersionID)),
                 res => res.GroupID,
                 rg => rg.ID,
                 (res, rg) => new ResourceWithGroupRecord

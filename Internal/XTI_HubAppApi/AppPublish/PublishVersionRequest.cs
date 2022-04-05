@@ -4,6 +4,6 @@ namespace XTI_HubAppApi.AppPublish;
 
 public sealed class PublishVersionRequest
 {
-    public AppKey AppKey { get; set; } = AppKey.Unknown;
+    public string GroupName { get; set; } = "";
     public AppVersionKey VersionKey { get; set; } = AppVersionKey.None;
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.Entities;
@@ -27,7 +29,7 @@ sealed class BeginVersionInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         await tester.Execute(request);
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
@@ -56,7 +58,7 @@ sealed class BeginVersionInstallationTest
         {
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey,
-            VersionKey = version.Key().Value
+            VersionKey = version.Key()
         };
         var installationID = await tester.Execute(request);
         Assert.That
@@ -85,7 +87,7 @@ sealed class BeginVersionInstallationTest
     private async Task<HubActionTester<BeginInstallationRequest, int>> setup()
     {
         var host = new HubTestHost();
-        var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.BeginVersionInstallation);
+        var sp = await host.Setup();
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.BeginVersionInstallation);
     }
 }

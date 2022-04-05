@@ -5,6 +5,7 @@ using XTI_App.Api;
 using XTI_App.Fakes;
 using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubDB.Extensions;
 using XTI_HubSetup;
@@ -14,9 +15,9 @@ namespace HubWebApp.Fakes;
 
 public static class FakeExtensions
 {
-    public static void AddFakesForHubWebApp(this IServiceCollection services, IConfiguration config)
+    public static void AddFakesForHubWebApp(this IServiceCollection services)
     {
-        services.AddFakesForXtiWebApp(config);
+        services.AddFakesForXtiWebApp();
         services.AddHubDbContextForInMemory();
         services.AddScoped<AppFactory>();
         services.AddTransient<AppFromPath>();
@@ -50,5 +51,6 @@ public static class FakeExtensions
                 sp.GetRequiredService<FakeAppContext>()
             )
         );
+        services.AddScoped<IHubAdministration, DbHubAdministration>();
     }
 }

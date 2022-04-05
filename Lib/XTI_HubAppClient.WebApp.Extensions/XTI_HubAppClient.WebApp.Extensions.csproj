@@ -1,19 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-	<Import Project="..\\..\\Common.Targets" />
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
-    <PackageReference Include="XTI_WebApp.Extensions" Version="1.8.9-dev220109220549770" />
-  </ItemGroup>
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.11" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
+	</ItemGroup>
 
 </Project>

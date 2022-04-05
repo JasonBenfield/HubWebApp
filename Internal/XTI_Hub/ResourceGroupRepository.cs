@@ -13,12 +13,12 @@ public sealed class ResourceGroupRepository
         this.factory = factory;
     }
 
-    internal async Task<ResourceGroup> AddOrUpdateResourceGroup(AppVersion version, ResourceGroupName name, ModifierCategory modCategory)
+    internal async Task<ResourceGroup> AddOrUpdateResourceGroup(App app, XtiVersion version, ResourceGroupName name, ModifierCategory modCategory)
     {
-        var record = await GetGroup(version, name);
+        var record = await GetGroup(app, version, name);
         if (record == null)
         {
-            record = await Add(version, name, modCategory);
+            record = await Add(app, version, name, modCategory);
         }
         else
         {
@@ -35,11 +35,13 @@ public sealed class ResourceGroupRepository
         return factory.CreateGroup(record);
     }
 
-    private async Task<ResourceGroupEntity> Add(AppVersion version, ResourceGroupName name, ModifierCategory modCategory)
+    private async Task<ResourceGroupEntity> Add(App app, XtiVersion version, ResourceGroupName name, ModifierCategory modCategory)
     {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
+        var appVersionID = await appVersionIDs.FirstAsync();
         var record = new ResourceGroupEntity
         {
-            VersionID = version.ID.Value,
+            AppVersionID = appVersionID,
             Name = name.Value,
             ModCategoryID = modCategory.ID.Value
         };
@@ -47,21 +49,24 @@ public sealed class ResourceGroupRepository
         return record;
     }
 
-    internal Task<ResourceGroup[]> Groups(AppVersion version) =>
-        factory.DB
+    internal Task<ResourceGroup[]> Groups(App app, XtiVersion version)
+    {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
+        return factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(g => g.VersionID == version.ID.Value)
+            .Where(g => appVersionIDs.Contains(g.AppVersionID))
             .OrderBy(g => g.Name)
             .Select(g => factory.CreateGroup(g))
             .ToArrayAsync();
+    }
 
-    internal async Task<ResourceGroup> GroupOrDefault(AppVersion version, ResourceGroupName name)
+    internal async Task<ResourceGroup> GroupOrDefault(App app, XtiVersion version, ResourceGroupName name)
     {
-        var record = await GetGroup(version, name);
+        var record = await GetGroup(app, version, name);
         if (record == null)
         {
-            record = await GetGroup(version, name);
+            record = await GetGroup(app, version, name);
             if (record == null)
             {
                 record = await factory.DB
@@ -74,25 +79,29 @@ public sealed class ResourceGroupRepository
         return factory.CreateGroup(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
-    internal async Task<ResourceGroup> GroupByName(AppVersion version, ResourceGroupName name)
+    internal async Task<ResourceGroup> GroupByName(App app, XtiVersion version, ResourceGroupName name)
     {
-        var record = await GetGroup(version, name);
+        var record = await GetGroup(app, version, name);
         return factory.CreateGroup(record ?? throw new Exception($"Group '{name.DisplayText}' not found"));
     }
 
-    private Task<ResourceGroupEntity?> GetGroup(AppVersion version, ResourceGroupName name) =>
-        factory.DB
+    private Task<ResourceGroupEntity?> GetGroup(App app, XtiVersion version, ResourceGroupName name)
+    {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
+        return factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(g => g.VersionID == version.ID.Value && g.Name == name.Value)
+            .Where(g => appVersionIDs.Contains(g.AppVersionID) && g.Name == name.Value)
             .FirstOrDefaultAsync();
+    }
 
-    internal async Task<ResourceGroup> GroupForVersion(AppVersion version, int id)
+    internal async Task<ResourceGroup> GroupForVersion(App app, XtiVersion version, int id)
     {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
         var record = await factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(g => g.VersionID == version.ID.Value && g.ID == id)
+            .Where(g => appVersionIDs.Contains(g.AppVersionID) && g.ID == id)
             .FirstOrDefaultAsync();
         return factory.CreateGroup(record ?? throw new Exception($"Group {id} not found for version '{version.Key().DisplayText}"));
     }
@@ -107,7 +116,7 @@ public sealed class ResourceGroupRepository
         return factory.CreateGroup(record ?? throw new Exception($"Group {id} not found"));
     }
 
-    internal Task<ResourceGroup[]> Groups(ModifierCategory modCategory) => 
+    internal Task<ResourceGroup[]> Groups(ModifierCategory modCategory) =>
         factory.DB
             .ResourceGroups
             .Retrieve()

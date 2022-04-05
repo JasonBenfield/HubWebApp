@@ -2,6 +2,7 @@
 using XTI_App.Api;
 using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
 

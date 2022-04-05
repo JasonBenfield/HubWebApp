@@ -10,9 +10,9 @@ public class VersionController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppVersionModel>> GetVersion([FromBody] string model)
+    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string model)
     {
-        return api.Group("Version").Action<string, AppVersionModel>("GetVersion").Execute(model);
+        return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model);
     }
 
     [HttpPost]

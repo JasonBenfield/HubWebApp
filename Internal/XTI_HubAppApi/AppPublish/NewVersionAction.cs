@@ -1,29 +1,29 @@
 ﻿using XTI_App.Api;
 using XTI_Core;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
 
-public sealed class NewVersionAction : AppAction<NewVersionRequest, AppVersionModel>
+public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionModel>
 {
-    private readonly AppFactory appFactory;
+    private readonly IHubAdministration hubAdministration;
     private readonly IClock clock;
 
-    public NewVersionAction(AppFactory appFactory, IClock clock)
+    public NewVersionAction(IHubAdministration hubAdministration, IClock clock)
     {
-        this.appFactory = appFactory;
+        this.hubAdministration = hubAdministration;
         this.clock = clock;
     }
 
-    public async Task<AppVersionModel> Execute(NewVersionRequest model)
+    public async Task<XtiVersionModel> Execute(NewVersionRequest model)
     {
-        var version = await appFactory.Apps.StartNewVersion
+        var version = await hubAdministration.StartNewVersion
         (
-            model.AppKey,
-            model.Domain,
+            model.GroupName,
             model.VersionType,
-            clock.Now()
+            model.AppDefinitions
         );
-        return version.ToModel();
+        return version;
     }
 }

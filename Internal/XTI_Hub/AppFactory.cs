@@ -31,11 +31,11 @@ public sealed class AppFactory
 
     internal App CreateApp(AppEntity record) => new(this, record);
 
-    private AppVersionRepository? versions;
+    private XtiVersionRepository? versions;
 
-    public AppVersionRepository Versions { get => versions ??= new(this); }
+    public XtiVersionRepository Versions { get => versions ??= new(this); }
 
-    internal AppVersion CreateVersion(AppVersionEntity record) => new(this, record);
+    internal XtiVersion CreateVersion(XtiVersionEntity record) => new(this, record);
 
     private AppRoleRepository? roles;
 

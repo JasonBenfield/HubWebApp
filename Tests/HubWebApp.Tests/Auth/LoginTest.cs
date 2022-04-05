@@ -6,6 +6,7 @@ using XTI_Core;
 using XTI_HubAppApi.Auth;
 using XTI_HubAppApi.UserList;
 using XTI_TempLog;
+using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;

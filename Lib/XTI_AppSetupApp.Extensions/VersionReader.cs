@@ -1,5 +1,5 @@
 ﻿using XTI_Core;
-using XTI_HubAppClient;
+using XTI_Hub.Abstractions;
 
 namespace XTI_AppSetupApp.Extensions;
 
@@ -12,9 +12,9 @@ public sealed class VersionReader
         this.path = path;
     }
 
-    public async Task<AppVersionModel[]> Versions()
+    public async Task<XtiVersionModel[]> Versions()
     {
-        var versions = new AppVersionModel[0];
+        var versions = new XtiVersionModel[0];
         if (File.Exists(path))
         {
             using (var reader = new StreamReader(path))
@@ -22,7 +22,7 @@ public sealed class VersionReader
                 var serialized = await reader.ReadToEndAsync();
                 if (!string.IsNullOrWhiteSpace(serialized))
                 {
-                    versions = XtiSerializer.Deserialize(serialized, () => new AppVersionModel[0]);
+                    versions = XtiSerializer.Deserialize(serialized, () => new XtiVersionModel[0]);
                 }
             }
         }

@@ -32,7 +32,8 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<string>("Domain")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -297,7 +298,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("UserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.AppVersionEntity", b =>
+            modelBuilder.Entity("XTI_HubDB.Entities.AppXtiVersionEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -308,43 +309,22 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Domain")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Major")
+                    b.Property<int>("VersionID")
                         .HasColumnType("int");
-
-                    b.Property<int>("Minor")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Patch")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TimeAdded")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VersionKey")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AppID", "VersionKey")
+                    b.HasIndex("VersionID");
+
+                    b.HasIndex("AppID", "VersionID")
                         .IsUnique();
 
-                    b.ToTable("Versions", (string)null);
+                    b.ToTable("AppXtiVersions", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.AuthenticatorEntity", b =>
@@ -374,6 +354,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
+                    b.Property<int>("AppVersionID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsCurrent")
                         .HasColumnType("bit");
 
@@ -386,14 +369,11 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<DateTimeOffset>("TimeAdded")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("VersionID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("VersionID");
+                    b.HasIndex("AppVersionID");
 
-                    b.HasIndex("LocationID", "VersionID", "IsCurrent")
+                    b.HasIndex("LocationID", "AppVersionID", "IsCurrent")
                         .IsUnique();
 
                     b.ToTable("Installations", (string)null);
@@ -518,6 +498,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
+                    b.Property<int>("AppVersionID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAnonymousAllowed")
                         .HasColumnType("bit");
 
@@ -529,14 +512,11 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("VersionID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
                     b.HasIndex("ModCategoryID");
 
-                    b.HasIndex("VersionID", "Name")
+                    b.HasIndex("AppVersionID", "Name")
                         .IsUnique();
 
                     b.ToTable("ResourceGroups", (string)null);
@@ -628,6 +608,54 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("UserAuthenticators", (string)null);
                 });
 
+            modelBuilder.Entity("XTI_HubDB.Entities.XtiVersionEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Major")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Minor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Patch")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TimeAdded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VersionKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GroupName", "VersionKey")
+                        .IsUnique();
+
+                    b.ToTable("XtiVersions", (string)null);
+                });
+
             modelBuilder.Entity("XTI_HubDB.Entities.AppEventEntity", b =>
                 {
                     b.HasOne("XTI_HubDB.Entities.AppRequestEntity", null)
@@ -697,11 +725,17 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.AppVersionEntity", b =>
+            modelBuilder.Entity("XTI_HubDB.Entities.AppXtiVersionEntity", b =>
                 {
                     b.HasOne("XTI_HubDB.Entities.AppEntity", null)
                         .WithMany()
                         .HasForeignKey("AppID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("XTI_HubDB.Entities.XtiVersionEntity", null)
+                        .WithMany()
+                        .HasForeignKey("VersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -717,15 +751,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
             modelBuilder.Entity("XTI_HubDB.Entities.InstallationEntity", b =>
                 {
-                    b.HasOne("XTI_HubDB.Entities.InstallLocationEntity", null)
+                    b.HasOne("XTI_HubDB.Entities.AppXtiVersionEntity", null)
                         .WithMany()
-                        .HasForeignKey("LocationID")
+                        .HasForeignKey("AppVersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("XTI_HubDB.Entities.AppVersionEntity", null)
+                    b.HasOne("XTI_HubDB.Entities.InstallLocationEntity", null)
                         .WithMany()
-                        .HasForeignKey("VersionID")
+                        .HasForeignKey("LocationID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -759,15 +793,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
             modelBuilder.Entity("XTI_HubDB.Entities.ResourceGroupEntity", b =>
                 {
-                    b.HasOne("XTI_HubDB.Entities.ModifierCategoryEntity", null)
+                    b.HasOne("XTI_HubDB.Entities.AppXtiVersionEntity", null)
                         .WithMany()
-                        .HasForeignKey("ModCategoryID")
+                        .HasForeignKey("AppVersionID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("XTI_HubDB.Entities.AppVersionEntity", null)
+                    b.HasOne("XTI_HubDB.Entities.ModifierCategoryEntity", null)
                         .WithMany()
-                        .HasForeignKey("VersionID")
+                        .HasForeignKey("ModCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

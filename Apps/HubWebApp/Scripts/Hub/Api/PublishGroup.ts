@@ -9,16 +9,16 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class PublishGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Publish');
-		this.NewVersionAction = this.createAction<INewVersionRequest,IAppVersionModel>('NewVersion', 'New Version');
-		this.BeginPublishAction = this.createAction<IPublishVersionRequest,IAppVersionModel>('BeginPublish', 'Begin Publish');
-		this.EndPublishAction = this.createAction<IPublishVersionRequest,IAppVersionModel>('EndPublish', 'End Publish');
-		this.GetVersionsAction = this.createAction<IAppKey,IAppVersionModel[]>('GetVersions', 'Get Versions');
+		this.NewVersionAction = this.createAction<INewVersionRequest,IXtiVersionModel>('NewVersion', 'New Version');
+		this.BeginPublishAction = this.createAction<IPublishVersionRequest,IXtiVersionModel>('BeginPublish', 'Begin Publish');
+		this.EndPublishAction = this.createAction<IPublishVersionRequest,IXtiVersionModel>('EndPublish', 'End Publish');
+		this.GetVersionsAction = this.createAction<IAppKey,IXtiVersionModel[]>('GetVersions', 'Get Versions');
 	}
 	
-	readonly NewVersionAction: AppApiAction<INewVersionRequest,IAppVersionModel>;
-	readonly BeginPublishAction: AppApiAction<IPublishVersionRequest,IAppVersionModel>;
-	readonly EndPublishAction: AppApiAction<IPublishVersionRequest,IAppVersionModel>;
-	readonly GetVersionsAction: AppApiAction<IAppKey,IAppVersionModel[]>;
+	readonly NewVersionAction: AppApiAction<INewVersionRequest,IXtiVersionModel>;
+	readonly BeginPublishAction: AppApiAction<IPublishVersionRequest,IXtiVersionModel>;
+	readonly EndPublishAction: AppApiAction<IPublishVersionRequest,IXtiVersionModel>;
+	readonly GetVersionsAction: AppApiAction<IAppKey,IXtiVersionModel[]>;
 	
 	NewVersion(model: INewVersionRequest, errorOptions?: IActionErrorOptions) {
 		return this.NewVersionAction.execute(model, errorOptions || {});

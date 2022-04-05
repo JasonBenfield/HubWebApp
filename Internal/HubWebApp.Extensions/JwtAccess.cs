@@ -12,9 +12,9 @@ public sealed class JwtAccess : AccessForAuthenticate
 {
     private readonly XtiAuthenticationOptions xtiAuthOptions;
 
-    public JwtAccess(IOptions<XtiAuthenticationOptions> xtiAuthOptions)
+    public JwtAccess(XtiAuthenticationOptions xtiAuthOptions)
     {
-        this.xtiAuthOptions = xtiAuthOptions.Value;
+        this.xtiAuthOptions = xtiAuthOptions;
     }
 
     protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)

@@ -87,17 +87,20 @@ public sealed class ResourceRepository
             .Retrieve()
             .FirstOrDefaultAsync(r => r.GroupID == group.ID.Value && r.Name == name.Value);
 
-    internal async Task<Resource> Resource(AppVersion version, int id)
+    internal async Task<Resource> ResourceForVersion(App app, XtiVersion version, int id)
     {
+        var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
         var groupIDs = factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(rg => rg.VersionID == version.ID.Value)
+            .Where(rg => appVersionIDs.Contains(rg.AppVersionID))
             .Select(rg => rg.ID);
         var record = await factory.DB
             .Resources
             .Retrieve()
-            .FirstOrDefaultAsync(r => r.ID == id && groupIDs.Any(gID => gID == r.GroupID));
+            .Where(r => groupIDs.Contains(r.GroupID) && r.ID == id)
+            .FirstOrDefaultAsync();
         return factory.CreateResource(record ?? throw new Exception($"Resource {id} not found for version '{version.Key().DisplayText}"));
     }
+
 }

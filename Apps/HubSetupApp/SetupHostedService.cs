@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using XTI_App.Abstractions;
 using XTI_App.Secrets;
 using XTI_Core;
@@ -46,7 +45,7 @@ public sealed class SetupHostedService : IHostedService
         var hashedPasswordFactory = scope.ServiceProvider.GetRequiredService<IHashedPasswordFactory>();
         var clock = scope.ServiceProvider.GetRequiredService<IClock>();
         var password = Guid.NewGuid().ToString();
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<SetupOptions>>().Value;
+        var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
         var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
         (
             HubInfo.AppKey,
@@ -69,7 +68,7 @@ public sealed class SetupHostedService : IHostedService
     private static async Task runSetup(IServiceScope scope)
     {
         var hubSetup = scope.ServiceProvider.GetRequiredService<HubAppSetup>();
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<SetupOptions>>().Value;
+        var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
         var versionKey = string.IsNullOrWhiteSpace(options.VersionKey)
             ? AppVersionKey.Current
             : AppVersionKey.Parse(options.VersionKey);

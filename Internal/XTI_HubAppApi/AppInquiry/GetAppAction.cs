@@ -1,5 +1,5 @@
 ﻿using XTI_App.Api;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInquiry;
 
