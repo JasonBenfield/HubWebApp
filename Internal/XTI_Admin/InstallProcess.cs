@@ -16,25 +16,28 @@ internal sealed class InstallProcess
     public async Task Run()
     {
         var options = scopes.GetRequiredService<AdminOptions>();
-        var appKey = options.AppKey();
-        if (!appKey.Type.Equals(AppType.Values.Package))
+        var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
+        foreach(var appKey in selectedAppKeys.Values)
         {
-            var credentials = await addInstallationUser();
-            options.InstallationUserName = credentials.UserName;
-            options.InstallationPassword = credentials.Password;
-            var installMachineName = getMachineName();
-            await newInstallation
-            (
-                appKey,
-                installMachineName
-            );
-            if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+            if (!appKey.Type.Equals(AppType.Values.Package))
             {
-                await new LocalInstallProcess(scopes).Run();
-            }
-            else
-            {
-                await new LocalInstallServiceProcess(scopes).Run();
+                var credentials = await addInstallationUser();
+                options.InstallationUserName = credentials.UserName;
+                options.InstallationPassword = credentials.Password;
+                var installMachineName = getMachineName();
+                await newInstallation
+                (
+                    appKey,
+                    installMachineName
+                );
+                if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+                {
+                    await new LocalInstallProcess(scopes, appKey).Run();
+                }
+                else
+                {
+                    await new LocalInstallServiceProcess(scopes, appKey).Run();
+                }
             }
         }
     }

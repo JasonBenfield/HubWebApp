@@ -26,19 +26,17 @@ public static class XtiSetupAppHost
                 {
                     services.AddMemoryCache();
                     services.AddFileSecretCredentials();
+                    services.AddHubClientServices();
                     services.AddScoped<InstallationUserCredentials>();
                     services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
                     services.AddScoped<InstallationUserXtiToken>();
-                    services.AddScoped<SystemUserCredentials>();
-                    services.AddScoped<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
-                    services.AddHubClientServices();
-                    services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HubClientAppContext>());
-                    services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HubClientUserContext>());
                     services.AddXtiTokenAccessor((sp, tokenAccessor) =>
                     {
                         tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
                         tokenAccessor.UseToken<InstallationUserXtiToken>();
                     });
+                    services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HubClientAppContext>());
+                    services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HubClientUserContext>());
                     services.AddConfigurationOptions<SetupOptions>();
                     services.AddScoped(sp =>
                     {

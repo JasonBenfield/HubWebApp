@@ -19,7 +19,7 @@ internal sealed class InstallServiceProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string tempDir, AppVersionKey versionKey, AppVersionKey installVersionKey)
+    public async Task Run(string tempDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey)
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         ServiceController? sc = null;
@@ -27,14 +27,14 @@ internal sealed class InstallServiceProcess
         if (AppVersionKey.Current.Equals(options.VersionKey))
         {
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            var appName = options.AppKey().Name.DisplayText.Replace(" ", "");
+            var appName = appKey.Name.DisplayText.Replace(" ", "");
             var serviceName = $"Xti_{xtiEnv.EnvironmentName}_{appName}";
             sc = getService(serviceName);
             if (sc == null)
             {
                 var binPath = Path.Combine
                 (
-                    xtiFolder.InstallPath(options.AppKey(), AppVersionKey.Current),
+                    xtiFolder.InstallPath(appKey, AppVersionKey.Current),
                     $"{appName}ServiceApp.exe"
                 );
                 binPath = $"{binPath} --Environment {xtiEnv.EnvironmentName}";
@@ -63,7 +63,7 @@ internal sealed class InstallServiceProcess
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
             }
         }
-        await new CopyToInstallDirProcess(scopes).Run(tempDir, versionKey, installVersionKey, true);
+        await new CopyToInstallDirProcess(scopes).Run(tempDir, appKey, versionKey, installVersionKey, true);
         if (sc != null)
         {
             Console.WriteLine($"Starting services '{sc.DisplayName}'");

@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_Core.EF" Version="1.10.3-dev220209221022191" />
-    <PackageReference Include="XTI_DB" Version="1.10.3-dev220209221022191" />
+    <PackageReference Include="XTI_Core.EF" Version="1.10.3" />
+    <PackageReference Include="XTI_DB" Version="1.10.3" />
   </ItemGroup>
 
   <ItemGroup>

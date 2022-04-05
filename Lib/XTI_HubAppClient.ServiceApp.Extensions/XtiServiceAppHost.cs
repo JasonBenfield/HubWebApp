@@ -25,6 +25,12 @@ public static class XtiServiceAppHost
                     services.AddAppServices();
                     services.AddXtiServiceAppServices();
                     services.AddHubClientServices();
+                    services.AddScoped<SystemUserXtiToken>();
+                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    {
+                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessor.UseToken<SystemUserXtiToken>();
+                    });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HubClientAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HubClientUserContext>());
                 }

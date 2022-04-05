@@ -9,12 +9,10 @@ namespace XTI_Admin;
 public sealed class CompleteVersionProcess
 {
     private readonly Scopes scopes;
-    private readonly AppKey appKey;
 
-    public CompleteVersionProcess(Scopes scopes, AppKey appKey)
+    public CompleteVersionProcess(Scopes scopes)
     {
         this.scopes = scopes;
-        this.appKey = appKey;
     }
 
     public async Task Run()

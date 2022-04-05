@@ -1,22 +1,22 @@
-﻿using XTI_Core;
-using XTI_Credentials;
-using XTI_Hub.Abstractions;
+﻿using XTI_App.Abstractions;
+using XTI_Core;
 
 namespace XTI_Admin;
 
 internal sealed class LocalInstallServiceProcess
 {
     private readonly Scopes scopes;
+    private readonly AppKey appKey;
 
-    public LocalInstallServiceProcess(Scopes scopes)
+    public LocalInstallServiceProcess(Scopes scopes, AppKey appKey)
     {
         this.scopes = scopes;
+        this.appKey = appKey;
     }
 
     public async Task Run()
     {
         var options = scopes.GetRequiredService<AdminOptions>();
-        var appKey = options.AppKey();
         var appVersion = await new CurrentVersion(scopes).Value();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var release = $"v{appVersion.VersionNumber.Format()}";

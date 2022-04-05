@@ -25,7 +25,7 @@ public sealed class PublishableFolder
         if (!appKeys.Any())
         {
             var appKey = GetAppKey(folderPath);
-            if(appKey != null)
+            if (appKey != null)
             {
                 appKeys.Add(appKey);
             }
@@ -35,16 +35,24 @@ public sealed class PublishableFolder
 
     private AppKey? GetAppKey(string folderPath)
     {
-        var folderName = Path.GetDirectoryName(folderPath) ?? "";
-        var appType = AppType.Values.GetAll()
-            .FirstOrDefault
-            (
-                type => folderName.EndsWith(type.DisplayText.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)
-            );
+        var folderName = new DirectoryInfo(folderPath).Name;
+        AppType? appType;
+        if (folderName.Equals("XTI_WebApp", StringComparison.OrdinalIgnoreCase) || folderName.Equals("XTI_ConsoleApp"))
+        {
+            appType = AppType.Values.Package;
+        }
+        else
+        {
+            appType = AppType.Values.GetAll()
+                .FirstOrDefault
+                (
+                    type => folderPath.EndsWith(type.DisplayText.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)
+                );
+        }
         int typeLength;
         if (appType == null)
         {
-            if (Directory.GetDirectories(folderName, "Lib").Any())
+            if (Directory.GetDirectories(folderPath, "Lib").Any())
             {
                 appType = AppType.Values.Package;
             }

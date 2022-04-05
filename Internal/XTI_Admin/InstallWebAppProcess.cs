@@ -19,10 +19,9 @@ internal sealed class InstallWebAppProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string tempDir, AppVersionKey versionKey, AppVersionKey installVersionKey)
+    public async Task Run(string tempDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey)
     {
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        var appKey = scopes.GetRequiredService<AppKey>();
         var options = scopes.GetRequiredService<AdminOptions>();
         int installationID;
         var machineName =
@@ -40,7 +39,7 @@ internal sealed class InstallWebAppProcess
         Console.WriteLine($"Preparing IIS for {versionKey.DisplayText}");
         await prepareIis(appKey, installVersionKey);
         deleteExistingWebFiles(appKey, installVersionKey);
-        await new CopyToInstallDirProcess(scopes).Run(tempDir, versionKey, installVersionKey, false);
+        await new CopyToInstallDirProcess(scopes).Run(tempDir, appKey, versionKey, installVersionKey, false);
         var appOfflinePath = getAppOfflinePath(appKey, installVersionKey);
         File.Delete(appOfflinePath);
         await hubAdministration.Installed(installationID);

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using XTI_Core;
 using XTI_Core.Extensions;
+using XTI_DB;
 using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
 
@@ -18,6 +20,8 @@ internal sealed class MainDbContextFactory : IDesignTimeDbContextFactory<HubDbCo
             })
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddSingleton(_ => new XtiEnvironment(hostContext.HostingEnvironment.EnvironmentName));
+                services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
                 services.Configure<MainDbToolOptions>(hostContext.Configuration);
                 services.AddHubDbContextForSqlServer();
             })

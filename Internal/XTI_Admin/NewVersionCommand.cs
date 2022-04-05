@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Core;
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
@@ -44,7 +43,7 @@ public sealed class NewVersionCommand : ICommand
             versionType,
             appKeys.Select(ak => new AppDefinitionModel(ak, options.Domain)).ToArray()
         );
-        var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey);
+        var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey.DisplayText);
         await gitHubRepo.CreateNewVersion(gitVersion);
         var newVersionBranchName = gitVersion.BranchName();
         await gitRepo.CheckoutBranch(newVersionBranchName.Value);

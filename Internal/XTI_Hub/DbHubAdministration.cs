@@ -111,7 +111,7 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> StartNewVersion(string groupName, AppVersionType versionType, AppDefinitionModel[] appDefs)
     {
-        var version = await appFactory.Versions.StartNewVersion(groupName, AppVersionKey.None, clock.Now(), versionType);
+        var version = await appFactory.Versions.StartNewVersion(groupName, clock.Now(), versionType);
         foreach(var appDef in appDefs)
         {
             var app = await appFactory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, clock.Now());

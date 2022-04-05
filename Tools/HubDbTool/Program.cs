@@ -1,6 +1,7 @@
 ﻿using HubDbTool;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_DB;
 using XTI_HubDB.EF;
@@ -13,6 +14,7 @@ await Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
+        services.AddSingleton(_ => new XtiEnvironment(hostContext.HostingEnvironment.EnvironmentName));
         services.AddConfigurationOptions<MainDbToolOptions>();
         services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddHubDbContextForSqlServer();

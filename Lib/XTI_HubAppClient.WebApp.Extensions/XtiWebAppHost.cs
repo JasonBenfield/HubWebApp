@@ -17,6 +17,12 @@ public static class XtiWebAppHost
         builder.Services.AddResponseCaching();
         builder.Services.AddAppServices();
         builder.Services.AddHubClientServices();
+        builder.Services.AddScoped<SystemUserXtiToken>();
+        builder.Services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+        {
+            tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+            tokenAccessor.UseToken<SystemUserXtiToken>();
+        });
         XTI_WebApp.Extensions.WebAppExtensions.AddWebAppServices(builder.Services);
         builder.Services.AddAppClients((sp, domains) => { });
         builder.Services.AddAppClientDomainSelector((sp, domains) => { });

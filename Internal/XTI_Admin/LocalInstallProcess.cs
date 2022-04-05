@@ -12,17 +12,18 @@ namespace XTI_Admin;
 internal sealed class LocalInstallProcess
 {
     private readonly Scopes scopes;
+    private readonly AppKey appKey;
 
-    public LocalInstallProcess(Scopes scopes)
+    public LocalInstallProcess(Scopes scopes, AppKey appKey)
     {
         this.scopes = scopes;
+        this.appKey = appKey;
     }
 
     public async Task Run()
     {
         var options = scopes.GetRequiredService<AdminOptions>();
-        var appKey = options.AppKey();
-        Console.WriteLine($"Starting install {options.AppName} {options.AppType} {options.VersionKey} {options.Release}");
+        Console.WriteLine($"Starting install {appKey.Name.DisplayText} {appKey.Type.DisplayText} {options.VersionKey} {options.Release}");
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var tempDir = Path.Combine
         (
@@ -37,30 +38,43 @@ internal sealed class LocalInstallProcess
             {
                 versionKey = AppVersionKey.Parse(options.VersionKey);
             }
-            if (xtiEnv.IsDevelopmentOrTest())
+            var installationSource = options.InstallationSource;
+            if (installationSource == InstallationSources.Default)
             {
-                await runSetup(appKey, versionKey);
+                if (xtiEnv.IsDevelopmentOrTest())
+                {
+                    installationSource = InstallationSources.Folder;
+                }
+                else
+                {
+                    installationSource = InstallationSources.GitHub;
+                }
+            }
+            if (installationSource == InstallationSources.Folder)
+            {
+                await copyPublishedDirToTempDir(tempDir, appKey, versionKey);
             }
             else
             {
                 Console.WriteLine("Downloading Assets");
                 await downloadAssets(tempDir);
             }
+            await runSetup(options, xtiEnv, tempDir);
             if (appKey.Type.Equals(AppType.Values.WebApp))
             {
                 if (xtiEnv.IsProduction())
                 {
-                    await new InstallWebAppProcess(scopes).Run(tempDir, versionKey, versionKey);
+                    await new InstallWebAppProcess(scopes).Run(tempDir, appKey, versionKey, versionKey);
                 }
-                await new InstallWebAppProcess(scopes).Run(tempDir, versionKey, AppVersionKey.Current);
+                await new InstallWebAppProcess(scopes).Run(tempDir, appKey, versionKey, AppVersionKey.Current);
             }
             else if (appKey.Type.Equals(AppType.Values.ServiceApp))
             {
                 if (xtiEnv.IsProduction())
                 {
-                    await new InstallServiceProcess(scopes).Run(tempDir, versionKey, versionKey);
+                    await new InstallServiceProcess(scopes).Run(tempDir, appKey, versionKey, versionKey);
                 }
-                await new InstallServiceProcess(scopes).Run(tempDir, versionKey, AppVersionKey.Current);
+                await new InstallServiceProcess(scopes).Run(tempDir, appKey, versionKey, AppVersionKey.Current);
             }
         }
         finally
@@ -73,37 +87,41 @@ internal sealed class LocalInstallProcess
         Console.WriteLine("Installation Complete");
     }
 
-    private async Task runSetup(AppKey appKey, AppVersionKey versionKey)
+    private async Task runSetup(AdminOptions options, XtiEnvironment xtiEnv, string tempDir)
+    {
+        var setupAppDir = Path.Combine(tempDir, "Setup");
+        var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{appKey.Name.DisplayText}SetupApp.exe"))
+            .UseEnvironment(xtiEnv.EnvironmentName)
+            .WriteOutputToConsole()
+            .AddConfigOptions
+            (
+                new
+                {
+                    VersionKey = options.VersionKey,
+                    VersionsPath = Path.Combine(tempDir, "versions.json"),
+                    Domain = options.Domain
+                },
+                "Setup"
+            )
+            .Run();
+        setupResult.EnsureExitCodeIsZero();
+    }
+
+    private async Task copyPublishedDirToTempDir(string tempDir, AppKey appKey, AppVersionKey versionKey)
     {
         var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var sourceDir = xtiFolder.PublishPath(appKey, versionKey);
-        var setupAppDir = Path.Combine(sourceDir, "Setup");
-        Console.WriteLine($"Running Setup '{setupAppDir}'");
-        if (Directory.Exists(setupAppDir))
-        {
-            var appName = appKey.Name.DisplayText.Replace(" ", "");
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-            var result = await new XtiProcess(Path.Combine(setupAppDir, $"{appName}SetupApp.exe"))
-                .SetWorkingDirectory(setupAppDir)
-                .UseEnvironment(xtiEnv.EnvironmentName)
-                .AddConfigOptions
-                (
-                    new
-                    {
-                        VersionKey = versionKey.DisplayText,
-                        VersionsPath = Path.Combine(sourceDir, "versions.json"),
-                        Domain = scopes.GetRequiredService<AdminOptions>().Domain
-                    },
-                    "Setup"
-                )
-                .WriteOutputToConsole()
-                .Run();
-            result.EnsureExitCodeIsZero();
-        }
-        else
-        {
-            Console.WriteLine($"Setup App not Found '{setupAppDir}'");
-        }
+        var copyProcess = new RobocopyProcess(sourceDir, tempDir)
+            .CopySubdirectoriesIncludingEmpty()
+            .NoDirectoryLogging()
+            .NoFileClassLogging()
+            .NoFileLogging()
+            .NoFileSizeLogging()
+            .NoJobHeader()
+            .NoJobSummary()
+            .NoProgressDisplayed()
+            .Purge();
+        await copyProcess.Run();
     }
 
     private async Task downloadAssets(string tempDir)
@@ -115,11 +133,12 @@ internal sealed class LocalInstallProcess
             Directory.Delete(tempDir, true);
         }
         Directory.CreateDirectory(tempDir);
+        var appKeyText =  $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
         var release = await gitHubRepo.Release(options.Release);
-        var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("setup.zip", StringComparison.OrdinalIgnoreCase));
+        var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
         if (setupAsset != null)
         {
-            var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
+            var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Versions.json", StringComparison.OrdinalIgnoreCase));
             if (versionsAsset != null)
             {
                 Console.WriteLine($"Downloading versions.json {release.TagName} {setupAsset.Name}");
@@ -133,33 +152,16 @@ internal sealed class LocalInstallProcess
             await File.WriteAllBytesAsync(setupZipPath, setupContent);
             var setupAppDir = Path.Combine(tempDir, "Setup");
             ZipFile.ExtractToDirectory(setupZipPath, setupAppDir);
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-            Console.WriteLine($"Running Setup '{setupAppDir}'");
-            var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{options.AppName}SetupApp.exe"))
-                .UseEnvironment(xtiEnv.EnvironmentName)
-                .WriteOutputToConsole()
-                .AddConfigOptions
-                (
-                    new
-                    {
-                        VersionKey = options.VersionKey,
-                        VersionsPath = Path.Combine(tempDir, "versions.json"),
-                        Domain = options.Domain
-                    },
-                    "Setup"
-                )
-                .Run();
-            setupResult.EnsureExitCodeIsZero();
         }
-        var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("app.zip", StringComparison.OrdinalIgnoreCase));
+        var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
         if (appAsset != null)
         {
             Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
             var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
             var appZipPath = Path.Combine(tempDir, "setup.zip");
             await File.WriteAllBytesAsync(appZipPath, appContent);
-            var setupAppDir = Path.Combine(tempDir, "App");
-            ZipFile.ExtractToDirectory(appZipPath, setupAppDir);
+            var appDir = Path.Combine(tempDir, "App");
+            ZipFile.ExtractToDirectory(appZipPath, appDir);
         }
     }
 

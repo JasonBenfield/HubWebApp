@@ -14,11 +14,10 @@ internal sealed class CopyToInstallDirProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string tempDir, AppVersionKey versionKey, AppVersionKey installVersionKey, bool purge)
+    public async Task Run(string tempDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, bool purge)
     {
         var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var appKey = scopes.GetRequiredService<AppKey>();
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
         string sourceDir;
         if (xtiEnv.IsDevelopmentOrTest())

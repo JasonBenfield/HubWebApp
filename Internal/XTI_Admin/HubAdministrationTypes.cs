@@ -3,5 +3,6 @@
 public enum HubAdministrationTypes
 {
     Default,
-    DB
+    DB,
+    HubClient
 }

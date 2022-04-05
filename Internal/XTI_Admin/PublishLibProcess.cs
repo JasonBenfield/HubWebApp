@@ -1,5 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_Git.Abstractions;
 using XTI_Processes;
 
@@ -48,7 +47,7 @@ internal sealed class PublishLibProcess
                 if (!xtiEnv.IsProduction())
                 {
                     packProcess
-                        .UseArgumentNameDelimiter("--")
+                    .UseArgumentNameDelimiter("--")
                         .AddArgument("include-source")
                         .AddArgument("include-symbols");
                 }
@@ -65,7 +64,8 @@ internal sealed class PublishLibProcess
                         .AddArgument(new Quoted(Path.Combine(outputPath, $"{new DirectoryInfo(dir).Name}.{semanticVersion}.nupkg")))
                         .UseArgumentNameDelimiter("--")
                         .AddArgument("api-key", credentials.Password)
-                        .AddArgument("source", $"https://nuget.pkg.github.com/{options.RepoOwner}/index.json");
+                        .AddArgument("source", $"https://nuget.pkg.github.com/{options.RepoOwner}/index.json")
+                        .AddArgument("skip-duplicate");
                     var publishResult = await publishProcess.Run();
                     publishResult.EnsureExitCodeIsZero();
                 }

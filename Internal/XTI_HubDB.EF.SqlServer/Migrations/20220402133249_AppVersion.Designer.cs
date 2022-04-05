@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XTI_HubDB.EF;
 
 #nullable disable
 
-namespace XTI_HubDB.EF.SqlServer.Migrations
+namespace XTI_HubDB.EF.SqlServer
 {
     [DbContext(typeof(HubDbContext))]
-    partial class XTI_HubDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220402133249_AppVersion")]
+    partial class AppVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

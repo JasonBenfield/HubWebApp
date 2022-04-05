@@ -71,9 +71,6 @@ await Host.CreateDefaultBuilder(args)
                 var config = sp.GetRequiredService<IXtiConfiguration>();
                 return config.Source.Get<AdminOptions>();
             });
-            services.AddScoped<ISystemUserCredentials, SystemUserCredentials>();
-            services.AddScoped<IInstallationUserCredentials, InstallationUserCredentials>();
-            services.AddScoped(sp => sp.GetRequiredService<AdminOptions>().AppKey());
             services.AddScoped<IGitHubCredentialsAccessor, SecretGitHubCredentialsAccessor>();
             services.AddScoped<GitLibCredentials>();
             services.AddScoped<IGitHubFactory, WebGitHubFactory>();
@@ -107,25 +104,30 @@ await Host.CreateDefaultBuilder(args)
                 {
                     IHubAdministration hubAdministration;
                     var options = sp.GetRequiredService<AdminOptions>();
-                    if (options.HubAdministrationType == HubAdministrationTypes.Default)
+                    var hubAdministrationType = options.HubAdministrationType;
+                    if (hubAdministrationType == HubAdministrationTypes.Default)
                     {
-                        var appKey = options.AppKey();
-                        if (appKey.Equals(HubInfo.AppKey))
+                        var appKeys = sp.GetRequiredService<SelectedAppKeys>();
+                        if (appKeys.Values.Any(appKey => appKey.Equals(HubInfo.AppKey)))
                         {
-                            hubAdministration = sp.GetRequiredService<DbHubAdministration>();
+                            hubAdministrationType = HubAdministrationTypes.DB;
                         }
                         else
                         {
-                            hubAdministration = sp.GetRequiredService<HcHubAdministration>();
+                            hubAdministrationType = HubAdministrationTypes.HubClient;
                         }
                     }
-                    else if (options.HubAdministrationType == HubAdministrationTypes.DB)
+                    if (hubAdministrationType == HubAdministrationTypes.DB)
                     {
                         hubAdministration = sp.GetRequiredService<DbHubAdministration>();
                     }
+                    else if (hubAdministrationType == HubAdministrationTypes.HubClient)
+                    {
+                        hubAdministration = sp.GetRequiredService<HcHubAdministration>();
+                    }
                     else
                     {
-                        throw new NotSupportedException($"'{options.HubAdministrationType}' is not supported.");
+                        throw new NotSupportedException($"'{hubAdministrationType}' is not supported.");
                     }
                     return hubAdministration;
                 }

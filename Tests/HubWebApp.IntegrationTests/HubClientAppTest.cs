@@ -35,11 +35,14 @@ internal sealed class HubClientAppTest
                     services.AddSingleton(_ => HubInfo.AppKey);
                     services.AddSingleton(_ => AppVersionKey.Current);
                     services.AddFileSecretCredentials();
-                    services.AddSingleton<InstallationUserCredentials>();
-                    services.AddSingleton<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
+                    services.AddHubClientServices();
                     services.AddSingleton<SystemUserCredentials>();
                     services.AddSingleton<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
-                    services.AddHubClientServices();
+                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    {
+                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessor.UseToken<SystemUserXtiToken>();
+                    });
                 }
             )
             .Build();

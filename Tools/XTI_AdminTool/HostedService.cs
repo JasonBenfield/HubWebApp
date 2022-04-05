@@ -18,6 +18,9 @@ internal sealed class HostedService : IHostedService
         try
         {
             using var scope = sp.CreateScope();
+            var appKeys = scope.ServiceProvider.GetRequiredService<SelectedAppKeys>().Values;
+            var joinedAppKeys = string.Join(", ", appKeys.Select(ak => ak.Serialize()));
+            Console.WriteLine($"App Keys: {joinedAppKeys}");
             var commandFactory = scope.ServiceProvider.GetRequiredService<CommandFactory>();
             var options = scope.ServiceProvider.GetRequiredService<AdminOptions>();
             var command = commandFactory.CreateCommand(options);

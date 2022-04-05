@@ -8,11 +8,11 @@ using XTI_Processes;
 
 namespace XTI_Admin;
 
-public sealed class PublishProcess
+internal sealed class PublishProcess
 {
     private readonly Scopes scopes;
 
-    public PublishProcess(Scopes scopes)
+    internal PublishProcess(Scopes scopes)
     {
         this.scopes = scopes;
     }
@@ -74,22 +74,22 @@ public sealed class PublishProcess
                 await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
             }
             await new PublishLibProcess(scopes).Run(semanticVersion);
-            if (xtiEnv.IsProduction())
-            {
-                await new CompleteVersionProcess(scopes, appKey).Run();
-            }
+            Environment.CurrentDirectory = slnDir;
         }
-        Environment.CurrentDirectory = slnDir;
-        if(release != null)
+        if (xtiEnv.IsProduction())
         {
-            Console.WriteLine($"Finalizing release {release.TagName}");
-            await gitHubRepo.FinalizeRelease(release);
+            await new CompleteVersionProcess(scopes).Run();
+            if (release != null)
+            {
+                Console.WriteLine($"Finalizing release {release.TagName}");
+                await gitHubRepo.FinalizeRelease(release);
+            }
         }
     }
 
     private static void setCurrentDirectory(string slnDir, AppKey appKey)
     {
-        var projectDir = Path.Combine(slnDir, $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", ""));
+        var projectDir = Path.Combine(slnDir, new AppDirectoryName(appKey).Value);
         if (Directory.Exists(projectDir))
         {
             Environment.CurrentDirectory = projectDir;
@@ -192,6 +192,11 @@ public sealed class PublishProcess
             .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
+        var privateAppSettings = Path.Combine(publishDir, "appsettings.private.json");
+        if (File.Exists(privateAppSettings))
+        {
+            File.Delete(privateAppSettings);
+        }
     }
 
     private string getPublishDir(AppKey appKey, AppVersionKey versionKey)
@@ -207,18 +212,15 @@ public sealed class PublishProcess
 
     private static string getProjectDir(AppKey appKey)
     {
-        string appType = getAppType(appKey);
         return Path.Combine
         (
             Environment.CurrentDirectory,
             "Apps",
-            $"{getAppName(appKey)}{appType}"
+            new AppDirectoryName(appKey).Value
         );
     }
 
     private static string getAppName(AppKey appKey) => appKey.Name.DisplayText.Replace(" ", "");
-
-    private static string getAppType(AppKey appKey) => appKey.Type.DisplayText.Replace(" ", "");
 
     private string getConfiguration()
     {

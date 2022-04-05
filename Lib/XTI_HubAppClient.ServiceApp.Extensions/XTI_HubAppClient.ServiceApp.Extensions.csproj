@@ -9,7 +9,7 @@
 	<Import Project="..\\..\\Common.Targets" />
 
 	<ItemGroup>
-    <PackageReference Include="XTI_ServiceApp.Extensions" Version="1.2.9-dev220209224638536" />
+    <PackageReference Include="XTI_ServiceApp.Extensions" Version="1.2.9" />
   </ItemGroup>
 
   <ItemGroup>

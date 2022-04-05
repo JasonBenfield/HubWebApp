@@ -1,8 +1,11 @@
 ﻿using HubWebApp.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 
 namespace HubWebApp.IntegrationTests;
 
@@ -72,9 +75,22 @@ public sealed class AppSessionTest
         Assert.That(events.Length, Is.EqualTo(1));
     }
 
-    private static async Task<IServiceProvider> setup()
+    [Test]
+    public async Task Should()
     {
-        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Test");
+        var services = await setup("Production");
+        var db = services.GetRequiredService<IHubDbContext>();
+        var nextKey = await db.Versions.Retrieve()
+            .Where(v=>v.GroupName == "xti_app")
+            .Select(v => int.Parse(v.VersionKey.Substring(1)))
+            .ToArrayAsync();
+        Console.WriteLine($"Versions: {nextKey.Length}");
+        Console.WriteLine(JsonSerializer.Serialize(nextKey, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    private static async Task<IServiceProvider> setup(string envName = "Development")
+    {
+        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", envName);
         var host = Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration
             (
@@ -87,15 +103,18 @@ public sealed class AppSessionTest
             (
                 (hostContext, services) =>
                 {
-                    services.AddServicesForHub(hostContext.Configuration, new string[0]);
+                    services.AddBasicServicesForHub(hostContext.Configuration, new string[0]);
                 }
             )
             .Build();
         var scope = host.Services.CreateScope();
-        var resetDB = scope.ServiceProvider.GetRequiredService<HubDbReset>();
-        await resetDB.Run();
-        var setup = scope.ServiceProvider.GetRequiredService<IAppSetup>();
-        await setup.Run(AppVersionKey.Current);
+        if(envName == "Test")
+        {
+            var resetDB = scope.ServiceProvider.GetRequiredService<HubDbReset>();
+            await resetDB.Run();
+            var setup = scope.ServiceProvider.GetRequiredService<IAppSetup>();
+            await setup.Run(AppVersionKey.Current);
+        }
         return scope.ServiceProvider;
     }
 
