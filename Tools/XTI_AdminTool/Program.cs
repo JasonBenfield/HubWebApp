@@ -74,11 +74,12 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped<IGitHubCredentialsAccessor, SecretGitHubCredentialsAccessor>();
             services.AddScoped<GitLibCredentials>();
             services.AddScoped<IGitHubFactory, WebGitHubFactory>();
+            services.AddScoped<GitRepoInfo>();
             services.AddScoped(sp =>
             {
-                var options = sp.GetRequiredService<AdminOptions>();
+                var gitRepoInfo = sp.GetRequiredService<GitRepoInfo>();
                 var gitHubFactory = sp.GetRequiredService<IGitHubFactory>();
-                return gitHubFactory.CreateGitHubRepository(options.RepoOwner, options.RepoName);
+                return gitHubFactory.CreateGitHubRepository(gitRepoInfo.RepoOwner, gitRepoInfo.RepoName);
             });
             services.AddScoped<IXtiGitFactory, GitLibFactory>();
             services.AddScoped

@@ -6,8 +6,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
-	<Import Project="..\\..\\Common.Targets" />
-
 	<ItemGroup>
 		<PackageReference Include="XTI_App.Abstractions" Version="1.8.13" />
 	</ItemGroup>

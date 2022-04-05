@@ -15,9 +15,9 @@ public sealed class CompleteIssueCommand : ICommand
 
     public async Task Execute()
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
-        if (string.IsNullOrWhiteSpace(options.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
-        if (string.IsNullOrWhiteSpace(options.RepoName)) { throw new ArgumentException("Repo Name is required"); }
+        var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
+        if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
+        if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoName)) { throw new ArgumentException("Repo Name is required"); }
         var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);

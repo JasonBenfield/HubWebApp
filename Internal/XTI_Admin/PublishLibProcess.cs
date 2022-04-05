@@ -30,6 +30,8 @@ internal sealed class PublishLibProcess
                 "Packages",
                 envName
             );
+            var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
+            var repositoryUrl = gitRepoInfo.RepositoryUrl();
             var credentialsAccessor = scopes.GetRequiredService<IGitHubCredentialsAccessor>();
             var credentials = await credentialsAccessor.Value();
             foreach (var dir in Directory.GetDirectories(libDir))
@@ -43,7 +45,8 @@ internal sealed class PublishLibProcess
                     .AddArgument("c", getConfiguration())
                     .AddArgument("o", new Quoted(outputPath))
                     .UseArgumentValueDelimiter("=")
-                    .AddArgument("p:PackageVersion", semanticVersion);
+                    .AddArgument("p:PackageVersion", semanticVersion)
+                    .AddArgument("p:RepositoryUrl", repositoryUrl);
                 if (!xtiEnv.IsProduction())
                 {
                     packProcess
@@ -55,7 +58,6 @@ internal sealed class PublishLibProcess
                 packResult.EnsureExitCodeIsZero();
                 if (xtiEnv.IsProduction())
                 {
-                    var options = scopes.GetRequiredService<AdminOptions>();
                     var publishProcess = new WinProcess("dotnet")
                         .WriteOutputToConsole()
                         .UseArgumentNameDelimiter("")
@@ -64,7 +66,7 @@ internal sealed class PublishLibProcess
                         .AddArgument(new Quoted(Path.Combine(outputPath, $"{new DirectoryInfo(dir).Name}.{semanticVersion}.nupkg")))
                         .UseArgumentNameDelimiter("--")
                         .AddArgument("api-key", credentials.Password)
-                        .AddArgument("source", $"https://nuget.pkg.github.com/{options.RepoOwner}/index.json")
+                        .AddArgument("source", $"https://nuget.pkg.github.com/{gitRepoInfo.RepoOwner}/index.json")
                         .AddArgument("skip-duplicate");
                     var publishResult = await publishProcess.Run();
                     publishResult.EnsureExitCodeIsZero();

@@ -116,7 +116,7 @@ public sealed class BuildProcess
         }
     }
 
-    private static async Task runDotnetBuild()
+    private async Task runDotnetBuild()
     {
         Console.WriteLine("Running dotnet build");
         var result = await new WinProcess("dotnet")
@@ -135,7 +135,7 @@ public sealed class BuildProcess
         (
             Environment.CurrentDirectory,
             "Apps",
-            $"{getAppName(appKey)}WebApp"
+            new AppDirectoryName(appKey).Value
         );
 
     private string getAppName(AppKey appKey)

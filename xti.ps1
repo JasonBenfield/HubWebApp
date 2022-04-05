@@ -1,12 +1,5 @@
 ﻿Import-Module PowershellForXti -Force
 
-$script:xtiConfig = [PSCustomObject]@{
-    RepoOwner = "JasonBenfield"
-    RepoName = "HubWebApp"
-    AppName = "Hub"
-    AppType = "WebApp"
-}
-
 if(Test-Path ".\xti.private.ps1"){
 . .\xti.Private.ps1
 }
@@ -16,13 +9,13 @@ function Xti-NewVersion {
         [ValidateSet("major", "minor", "patch")]
         $VersionType = "minor"
     )
-    $script:xtiConfig | New-BaseXtiVersion @PsBoundParameters
+    New-BaseXtiVersion @PsBoundParameters
 }
 
 function Xti-Issues {
     param(
     )
-    $script:xtiConfig | BaseXti-Issues @PsBoundParameters
+    BaseXti-Issues @PsBoundParameters
 }
 
 function Xti-NewIssue {
@@ -31,7 +24,7 @@ function Xti-NewIssue {
         [string] $IssueTitle,
         [switch] $Start
     )
-    $script:xtiConfig | New-BaseXtiIssue @PsBoundParameters
+    New-BaseXtiIssue @PsBoundParameters
 }
 
 function Xti-StartIssue {
@@ -39,13 +32,13 @@ function Xti-StartIssue {
         [Parameter(Position=0)]
         [long]$IssueNumber = 0
     )
-    $script:xtiConfig | BaseXti-StartIssue @PsBoundParameters
+    BaseXti-StartIssue @PsBoundParameters
 }
 
 function Xti-CompleteIssue {
     param(
     )
-    $script:xtiConfig | BaseXti-CompleteIssue @PsBoundParameters
+    BaseXti-CompleteIssue @PsBoundParameters
 }
 
 function Xti-Build {
@@ -53,7 +46,7 @@ function Xti-Build {
         [ValidateSet("Development", "Production", "Staging", "Test")]
         $EnvName = "Development"
     )
-    $script:xtiConfig | BaseXti-BuildWebApp @PsBoundParameters
+    BaseXti-BuildWebApp @PsBoundParameters
 }
 
 function Xti-Publish {
@@ -67,7 +60,7 @@ function Xti-Publish {
     $PsBoundParameters.Add("Domain", $Domain)
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
-    $script:xtiConfig | BaseXti-Publish @PsBoundParameters
+    BaseXti-Publish @PsBoundParameters
 }
 
 function Xti-Install {
@@ -81,7 +74,7 @@ function Xti-Install {
     $PsBoundParameters.Add("Domain", $Domain)
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
-    $script:xtiConfig | BaseXti-Install @PsBoundParameters
+    BaseXti-Install @PsBoundParameters
 }
 
 function Xti-PublishLib {
@@ -92,7 +85,7 @@ function Xti-PublishLib {
         [ValidateSet("Default", "DB")]
         $HubAdministrationType = "Default"
     )
-    $script:xtiConfig | BaseXti-PublishLib @PsBoundParameters
+    BaseXti-PublishLib @PsBoundParameters
 }
 
 function Add-HubDBMigrations {

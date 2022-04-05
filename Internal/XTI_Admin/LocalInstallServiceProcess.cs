@@ -17,6 +17,7 @@ internal sealed class LocalInstallServiceProcess
     public async Task Run()
     {
         var options = scopes.GetRequiredService<AdminOptions>();
+        var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
         var appVersion = await new CurrentVersion(scopes).Value();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var release = $"v{appVersion.VersionNumber.Format()}";
@@ -31,8 +32,8 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("appName", appKey.Name.Value),
                 KeyValuePair.Create("appType", appKey.Type.DisplayText.Replace(" ", "")),
                 KeyValuePair.Create("versionKey", appVersion.VersionKey.DisplayText),
-                KeyValuePair.Create("repoOwner", options.RepoOwner),
-                KeyValuePair.Create("repoName", options.RepoName),
+                KeyValuePair.Create("repoOwner", gitRepoInfo.RepoOwner),
+                KeyValuePair.Create("repoName", gitRepoInfo.RepoName),
                 KeyValuePair.Create("installationUserName", options.InstallationUserName),
                 KeyValuePair.Create("installationPassword", options.InstallationPassword),
                 KeyValuePair.Create("release", release),
