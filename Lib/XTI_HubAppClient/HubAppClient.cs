@@ -1,66 +1,68 @@
 // Generated Code
-using XTI_WebAppClient;
-using System.Net.Http;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class HubAppClient : AppClient
 {
-    public sealed partial class HubAppClient : AppClient
+    public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Hub", version.Value)
     {
-        public HubAppClient(IHttpClientFactory httpClientFactory, IXtiTokenFactory tokenFactory, string baseUrl, string version = DefaultVersion): base(httpClientFactory, baseUrl, "Hub", string.IsNullOrWhiteSpace(version) ? DefaultVersion : version)
-        {
-            xtiToken = tokenFactory.Create(this);
-            User = new UserGroup(httpClientFactory, xtiToken, url);
-            UserCache = new UserCacheGroup(httpClientFactory, xtiToken, url);
-            Auth = new AuthGroup(httpClientFactory, xtiToken, url);
-            AuthApi = new AuthApiGroup(httpClientFactory, xtiToken, url);
-            PermanentLog = new PermanentLogGroup(httpClientFactory, xtiToken, url);
-            Apps = new AppsGroup(httpClientFactory, xtiToken, url);
-            App = new AppGroup(httpClientFactory, xtiToken, url);
-            AppRegistration = new AppRegistrationGroup(httpClientFactory, xtiToken, url);
-            Version = new VersionGroup(httpClientFactory, xtiToken, url);
-            ResourceGroup = new ResourceGroupGroup(httpClientFactory, xtiToken, url);
-            Resource = new ResourceGroup(httpClientFactory, xtiToken, url);
-            ModCategory = new ModCategoryGroup(httpClientFactory, xtiToken, url);
-            Users = new UsersGroup(httpClientFactory, xtiToken, url);
-            UserInquiry = new UserInquiryGroup(httpClientFactory, xtiToken, url);
-            AppUser = new AppUserGroup(httpClientFactory, xtiToken, url);
-            AppUserMaintenance = new AppUserMaintenanceGroup(httpClientFactory, xtiToken, url);
-            UserMaintenance = new UserMaintenanceGroup(httpClientFactory, xtiToken, url);
-        }
-
-        public const string DefaultVersion = "V1169";
-        public UserGroup User { get; }
-
-        public UserCacheGroup UserCache { get; }
-
-        public AuthGroup Auth { get; }
-
-        public AuthApiGroup AuthApi { get; }
-
-        public PermanentLogGroup PermanentLog { get; }
-
-        public AppsGroup Apps { get; }
-
-        public AppGroup App { get; }
-
-        public AppRegistrationGroup AppRegistration { get; }
-
-        public VersionGroup Version { get; }
-
-        public ResourceGroupGroup ResourceGroup { get; }
-
-        public ResourceGroup Resource { get; }
-
-        public ModCategoryGroup ModCategory { get; }
-
-        public UsersGroup Users { get; }
-
-        public UserInquiryGroup UserInquiry { get; }
-
-        public AppUserGroup AppUser { get; }
-
-        public AppUserMaintenanceGroup AppUserMaintenance { get; }
-
-        public UserMaintenanceGroup UserMaintenance { get; }
+        User = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserGroup(_clientFactory, _tokenAccessor, _url));
+        UserCache = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserCacheGroup(_clientFactory, _tokenAccessor, _url));
+        Auth = GetGroup((_clientFactory, _tokenAccessor, _url) => new AuthGroup(_clientFactory, _tokenAccessor, _url));
+        AuthApi = GetGroup((_clientFactory, _tokenAccessor, _url) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url));
+        ExternalAuth = GetGroup((_clientFactory, _tokenAccessor, _url) => new ExternalAuthGroup(_clientFactory, _tokenAccessor, _url));
+        Authenticators = GetGroup((_clientFactory, _tokenAccessor, _url) => new AuthenticatorsGroup(_clientFactory, _tokenAccessor, _url));
+        PermanentLog = GetGroup((_clientFactory, _tokenAccessor, _url) => new PermanentLogGroup(_clientFactory, _tokenAccessor, _url));
+        Apps = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppsGroup(_clientFactory, _tokenAccessor, _url));
+        App = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppGroup(_clientFactory, _tokenAccessor, _url));
+        Install = GetGroup((_clientFactory, _tokenAccessor, _url) => new InstallGroup(_clientFactory, _tokenAccessor, _url));
+        Publish = GetGroup((_clientFactory, _tokenAccessor, _url) => new PublishGroup(_clientFactory, _tokenAccessor, _url));
+        Version = GetGroup((_clientFactory, _tokenAccessor, _url) => new VersionGroup(_clientFactory, _tokenAccessor, _url));
+        ResourceGroup = GetGroup((_clientFactory, _tokenAccessor, _url) => new ResourceGroupGroup(_clientFactory, _tokenAccessor, _url));
+        Resource = GetGroup((_clientFactory, _tokenAccessor, _url) => new ResourceGroup(_clientFactory, _tokenAccessor, _url));
+        ModCategory = GetGroup((_clientFactory, _tokenAccessor, _url) => new ModCategoryGroup(_clientFactory, _tokenAccessor, _url));
+        Users = GetGroup((_clientFactory, _tokenAccessor, _url) => new UsersGroup(_clientFactory, _tokenAccessor, _url));
+        UserInquiry = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserInquiryGroup(_clientFactory, _tokenAccessor, _url));
+        AppUser = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppUserGroup(_clientFactory, _tokenAccessor, _url));
+        AppUserMaintenance = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppUserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
+        UserMaintenance = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
     }
+
+    public UserGroup User { get; }
+
+    public UserCacheGroup UserCache { get; }
+
+    public AuthGroup Auth { get; }
+
+    public AuthApiGroup AuthApi { get; }
+
+    public ExternalAuthGroup ExternalAuth { get; }
+
+    public AuthenticatorsGroup Authenticators { get; }
+
+    public PermanentLogGroup PermanentLog { get; }
+
+    public AppsGroup Apps { get; }
+
+    public AppGroup App { get; }
+
+    public InstallGroup Install { get; }
+
+    public PublishGroup Publish { get; }
+
+    public VersionGroup Version { get; }
+
+    public ResourceGroupGroup ResourceGroup { get; }
+
+    public ResourceGroup Resource { get; }
+
+    public ModCategoryGroup ModCategory { get; }
+
+    public UsersGroup Users { get; }
+
+    public UserInquiryGroup UserInquiry { get; }
+
+    public AppUserGroup AppUser { get; }
+
+    public AppUserMaintenanceGroup AppUserMaintenance { get; }
+
+    public UserMaintenanceGroup UserMaintenance { get; }
 }

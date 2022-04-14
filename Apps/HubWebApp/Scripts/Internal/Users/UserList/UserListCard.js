@@ -2,29 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserListCard = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Card_1 = require("XtiShared/Card/Card");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var Row_1 = require("XtiShared/Grid/Row");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var UserListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(UserListCard, _super);
-    function UserListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._userSelected = new Events_1.DefaultEvent(_this);
-        _this.userSelected = _this._userSelected.handler();
-        _this.setName(UserListCard.name);
-        _this.addCardTitleHeader('Users');
-        _this.alert = _this.addCardAlert().alert;
-        _this.users = _this.addButtonListGroup();
-        _this.users.itemClicked.register(_this.onUserClicked.bind(_this));
-        return _this;
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var UserListItem_1 = require("./UserListItem");
+var UserListCard = /** @class */ (function () {
+    function UserListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._userSelected = new Events_1.DefaultEvent(this);
+        this.userSelected = this._userSelected.handler();
+        new TextBlock_1.TextBlock('Users', this.view.titleHeader);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.users = new ListGroup_1.ListGroup(this.view.users);
+        this.users.itemClicked.register(this.onUserClicked.bind(this));
     }
     UserListCard.prototype.onUserClicked = function (listItem) {
-        this._userSelected.invoke(listItem.getData());
+        this._userSelected.invoke(listItem.user);
     };
     UserListCard.prototype.refresh = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -35,13 +30,7 @@ var UserListCard = /** @class */ (function (_super) {
                     case 1:
                         users = _a.sent();
                         this.users.setItems(users, function (user, listItem) {
-                            listItem.setData(user);
-                            var row = listItem.addContent(new Row_1.Row());
-                            row.addColumn()
-                                .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs(4)); })
-                                .addContent(new TextSpan_1.TextSpan(user.UserName));
-                            row.addColumn()
-                                .addContent(new TextSpan_1.TextSpan(user.Name));
+                            return new UserListItem_1.UserListItem(user, listItem);
                         });
                         if (users.length === 0) {
                             this.alert.danger('No Users were Found');
@@ -75,6 +64,6 @@ var UserListCard = /** @class */ (function (_super) {
         });
     };
     return UserListCard;
-}(Card_1.Card));
+}());
 exports.UserListCard = UserListCard;
 //# sourceMappingURL=UserListCard.js.map

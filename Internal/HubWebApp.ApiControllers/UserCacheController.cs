@@ -1,29 +1,17 @@
 // Generated Code
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using XTI_App.Api;
-using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
-using XTI_App;
-using XTI_WebApp.Api;
-
-namespace HubWebApp.ApiControllers
+namespace HubWebApp.ApiControllers;
+[Authorize]
+public class UserCacheController : Controller
 {
-    [Authorize]
-    public class UserCacheController : Controller
+    private readonly HubAppApi api;
+    public UserCacheController(HubAppApi api)
     {
-        public UserCacheController(HubAppApi api)
-        {
-            this.api = api;
-        }
+        this.api = api;
+    }
 
-        private readonly HubAppApi api;
-        [HttpPost]
-        public Task<ResultContainer<EmptyActionResult>> ClearCache([FromBody] string model)
-        {
-            return api.Group("UserCache").Action<string, EmptyActionResult>("ClearCache").Execute(model);
-        }
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> ClearCache([FromBody] string model)
+    {
+        return api.Group("UserCache").Action<string, EmptyActionResult>("ClearCache").Execute(model);
     }
 }

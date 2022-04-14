@@ -3,9 +3,9 @@
 interface IUserStartRequest {
 	ReturnUrl: string;
 }
-interface IEmptyActionResult {
-}
 interface IEmptyRequest {
+}
+interface IEmptyActionResult {
 }
 interface ILoginModel {
 	Credentials: ILoginCredentials;
@@ -18,6 +18,15 @@ interface ILoginCredentials {
 }
 interface ILoginResult {
 	Token: string;
+}
+interface IExternalLoginRequest {
+	ExternalUserKey: string;
+	StartUrl: string;
+	ReturnUrl: string;
+}
+interface IRegisterUserAuthenticatorRequest {
+	UserID: number;
+	ExternalUserKey: string;
 }
 interface ILogBatchModel {
 	StartSessions: IStartSessionModel[];
@@ -41,6 +50,7 @@ interface IStartRequestModel {
 	AppType: string;
 	Path: string;
 	TimeStarted: Date;
+	ActualCount: number;
 }
 interface ILogEventModel {
 	EventKey: string;
@@ -50,6 +60,7 @@ interface ILogEventModel {
 	Caption: string;
 	Message: string;
 	Detail: string;
+	ActualCount: number;
 }
 interface IEndRequestModel {
 	RequestKey: string;
@@ -63,15 +74,34 @@ interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: Date;
 }
+interface IGetAppDomainRequest {
+	AppName: string;
+	Version: string;
+}
+interface IAppWithModKeyModel {
+	App: IAppModel;
+	ModKey: string;
+}
 interface IAppModel {
 	ID: number;
 	Type: IAppType;
 	AppName: string;
 	Title: string;
+	Domain: string;
+}
+interface IGetAppByIDRequest {
+	AppID: number;
+}
+interface IGetAppByAppKeyRequest {
+	AppKey: IAppKey;
 }
 interface IAppKey {
-	Name: string;
+	Name: IAppName;
 	Type: IAppType;
+}
+interface IAppName {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -113,19 +143,28 @@ interface IModifierModel {
 	DisplayText: string;
 }
 interface IRegisterAppRequest {
-	Versions: IAppVersionModel[];
-	VersionKey: string;
+	Versions: IXtiVersionModel[];
+	Domain: string;
+	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
 }
-interface IAppVersionModel {
+interface IXtiVersionModel {
 	ID: number;
-	VersionKey: string;
-	Major: number;
-	Minor: number;
-	Patch: number;
+	GroupName: string;
+	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
 	VersionType: IAppVersionType;
 	Status: IAppVersionStatus;
 	TimeAdded: Date;
+}
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
 }
 interface IAppApiTemplateModel {
 	AppKey: IAppKey;
@@ -144,16 +183,13 @@ interface IAppApiActionTemplateModel {
 	Roles: string[];
 	ResultType: IResourceResultType;
 }
-interface INewVersionRequest {
-	AppKey: IAppKey;
-	VersionType: IAppVersionType;
-}
 interface IGetVersionRequest {
-	AppKey: IAppKey;
-	VersionKey: string;
+	GroupName: string;
+	VersionKey: IAppVersionKey;
 }
 interface IAddSystemUserRequest {
 	AppKey: IAppKey;
+	Domain: string;
 	MachineName: string;
 	Password: string;
 }
@@ -162,6 +198,39 @@ interface IAppUserModel {
 	UserName: string;
 	Name: string;
 	Email: string;
+}
+interface IAddInstallationUserRequest {
+	MachineName: string;
+	Password: string;
+}
+interface INewInstallationRequest {
+	AppKey: IAppKey;
+	QualifiedMachineName: string;
+}
+interface INewInstallationResult {
+	CurrentInstallationID: number;
+	VersionInstallationID: number;
+}
+interface IBeginInstallationRequest {
+	QualifiedMachineName: string;
+	AppKey: IAppKey;
+	VersionKey: IAppVersionKey;
+}
+interface IInstalledRequest {
+	InstallationID: number;
+}
+interface INewVersionRequest {
+	GroupName: string;
+	VersionType: IAppVersionType;
+	AppDefinitions: IAppDefinitionModel[];
+}
+interface IAppDefinitionModel {
+	AppKey: IAppKey;
+	Domain: string;
+}
+interface IPublishVersionRequest {
+	GroupName: string;
+	VersionKey: IAppVersionKey;
 }
 interface IGetVersionResourceGroupRequest {
 	VersionKey: string;
@@ -219,21 +288,19 @@ interface IGetModCategoryModifierRequest {
 interface IAddUserModel {
 	UserName: string;
 	Password: string;
+	PersonName: string;
+	Email: string;
 }
 interface IRedirectToAppUserRequest {
 	AppID: number;
 	UserID: number;
 }
-interface IGetUserRolesRequest {
+interface IUserModifierKey {
 	UserID: number;
 	ModifierID: number;
 }
-interface IGetUserRoleAccessRequest {
-	UserID: number;
-	ModifierID: number;
-}
-interface IUserRoleAccessModel {
-	UnassignedRoles: IAppRoleModel[];
+interface IUserAccessModel {
+	HasAccess: boolean;
 	AssignedRoles: IAppRoleModel[];
 }
 interface IUserModifierCategoryModel {
@@ -242,6 +309,7 @@ interface IUserModifierCategoryModel {
 }
 interface IUserRoleRequest {
 	UserID: number;
+	ModifierID: number;
 	RoleID: number;
 }
 interface IAppType {

@@ -1,87 +1,77 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
-using XTI_Hub;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_HubAppApi;
-using XTI_HubAppApi.UserList;
+﻿namespace HubWebApp.Tests;
 
-namespace HubWebApp.Tests
+internal static class AccessAssertions
 {
-    public static class AccessAssertions
+    public static AppModifierAssertions<TModel, TResult> Create<TModel, TResult>(HubActionTester<TModel, TResult> tester)
     {
-        public static AppModifierAssertions<TModel, TResult> Create<TModel, TResult>(HubActionTester<TModel, TResult> tester)
-        {
-            return new AppModifierAssertions<TModel, TResult>(tester);
-        }
+        return new AppModifierAssertions<TModel, TResult>(tester);
+    }
+}
+
+internal sealed class AppModifierAssertions<TModel, TResult>
+{
+    private readonly HubActionTester<TModel, TResult> tester;
+
+    public AppModifierAssertions(HubActionTester<TModel, TResult> tester)
+    {
+        this.tester = tester;
     }
 
-    public sealed class AppModifierAssertions<TModel, TResult>
+    public void ShouldThrowError_WhenModifierIsBlank(TModel model)
     {
-        private readonly HubActionTester<TModel, TResult> tester;
+        tester.LoginAsAdmin();
+        var ex = Assert.ThrowsAsync<Exception>
+        (
+            () => tester.Execute(model),
+            "Should throw error when modifier is blank"
+        );
+        Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
+    }
 
-        public AppModifierAssertions(HubActionTester<TModel, TResult> tester)
+    public void ShouldThrowError_WhenAccessIsDenied(TModel model, FakeModifier modifier, params AppRoleName[] allowedRoles)
+    {
+        var loggedInUser = tester.Login();
+        var appContext = tester.Services.GetRequiredService<FakeAppContext>();
+        foreach (var roleName in allowedRoles)
         {
-            this.tester = tester;
+            clearUserRoles(loggedInUser, modifier);
+            loggedInUser.AddRole(roleName);
+            Assert.DoesNotThrowAsync
+            (
+                () => tester.Execute(model, modifier.ModKey()),
+                $"Should have access with role '{roleName.DisplayText}'"
+            );
         }
-
-        public async Task ShouldThrowError_WhenModifierIsBlank(TModel model)
+        var roles = tester.FakeHubApp()
+            .Roles()
+            .Select(r => r.Name())
+            .Where(r => !r.Equals(AppRoleName.DenyAccess));
+        var deniedRoles = roles.Except(allowedRoles).ToArray();
+        foreach (var roleName in deniedRoles)
         {
-            var adminUser = await tester.AdminUser();
-            var ex = Assert.ThrowsAsync<Exception>(() => tester.Execute(model, adminUser));
-            Assert.That(ex.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
+            clearUserRoles(loggedInUser, modifier);
+            loggedInUser.AddRole(roleName);
+            Assert.ThrowsAsync<AccessDeniedException>
+            (
+                () => tester.Execute(model, modifier.ModKey()),
+                $"Should not have access with role '{roleName.DisplayText}'"
+            );
         }
+        clearUserRoles(loggedInUser, modifier);
+        loggedInUser.AddRole(AppRoleName.DenyAccess);
+        Assert.ThrowsAsync<AccessDeniedException>
+        (
+            () => tester.Execute(model, modifier.ModKey()),
+            $"Should not have access with role '{AppRoleName.DenyAccess.DisplayText}'"
+        );
+    }
 
-        public async Task ShouldThrowError_WhenModifierIsNotFound(TModel model)
+    private static void clearUserRoles(FakeAppUser loggedInUser, IModifier modifier)
+    {
+        var existingRoles = loggedInUser.Roles(modifier);
+        foreach (var existingRole in existingRoles)
         {
-            var adminUser = await tester.AdminUser();
-            var modKey = new ModifierKey("NotFound");
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, adminUser, modKey));
-        }
-
-        public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser(TModel model, Modifier modifier)
-        {
-            var loggedInUser = await addUser(tester, "assertions_user");
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
-        }
-
-        public async Task ShouldThrowError_WhenModifierIsNotAssignedToUser_ButRoleIsAssignedToUser(TModel model, AppRole role, Modifier modifier)
-        {
-            var loggedInUser = await addUser(tester, "assertions_user");
-            await loggedInUser.AddRole(role);
-            var denyAccessRole = await tester.DenyAccessRole();
-            await loggedInUser.AddRole(denyAccessRole, modifier);
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
-        }
-
-        public async Task ShouldThrowError_WhenRoleIsNotAssignedToUser(TModel model)
-        {
-            var loggedInUser = await addUser(tester, "assertions_user");
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser));
-        }
-
-        public async Task ShouldThrowError_WhenModifiedRoleIsNotAssignedToUser(TModel model, Modifier modifier)
-        {
-            var loggedInUser = await addUser(tester, "assertions_user");
-            var denyAccessRole = await tester.DenyAccessRole();
-            await loggedInUser.AddRole(denyAccessRole, modifier);
-            Assert.ThrowsAsync<AccessDeniedException>(() => tester.Execute(model, loggedInUser, modifier.ModKey()));
-        }
-
-        private async Task<AppUser> addUser(HubActionTester<TModel, TResult> tester, string userName)
-        {
-            var addUserTester = tester.Create(hubApi => hubApi.Users.AddUser);
-            var adminUser = await addUserTester.AdminUser();
-            var userID = await addUserTester.Execute(new AddUserModel
-            {
-                UserName = userName,
-                Password = "Password12345"
-            }, adminUser);
-            var factory = tester.Services.GetService<AppFactory>();
-            var user = await factory.Users().User(new AppUserName(userName));
-            return user;
+            loggedInUser.RemoveRole(existingRole);
         }
     }
 }

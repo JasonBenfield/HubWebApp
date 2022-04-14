@@ -2,29 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceListCard = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Card_1 = require("XtiShared/Card/Card");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
-var Row_1 = require("XtiShared/Grid/Row");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var ResourceResultType_1 = require("../../../Hub/Api/ResourceResultType");
-var ResourceListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceListCard, _super);
-    function ResourceListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._resourceSelected = new Events_1.DefaultEvent(_this);
-        _this.resourceSelected = _this._resourceSelected.handler();
-        _this.addCardTitleHeader('Resources');
-        _this.alert = _this.addCardAlert().alert;
-        _this.resources = _this.addButtonListGroup();
-        _this.resources.itemClicked.register(_this.onItemSelected.bind(_this));
-        return _this;
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
+var ResourceListItem_1 = require("./ResourceListItem");
+var ResourceListCard = /** @class */ (function () {
+    function ResourceListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._resourceSelected = new Events_1.DefaultEvent(this);
+        this.resourceSelected = this._resourceSelected.handler();
+        new TextBlock_1.TextBlock('Resources', this.view.titleHeader);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.resources = new ListGroup_1.ListGroup(this.view.resources);
+        this.resources.itemClicked.register(this.onItemSelected.bind(this));
     }
     ResourceListCard.prototype.onItemSelected = function (item) {
-        this._resourceSelected.invoke(item.getData());
+        this._resourceSelected.invoke(item.resource);
     };
     ResourceListCard.prototype.setGroupID = function (groupID) {
         this.groupID = groupID;
@@ -38,21 +33,7 @@ var ResourceListCard = /** @class */ (function (_super) {
                     case 1:
                         resources = _a.sent();
                         this.resources.setItems(resources, function (sourceItem, listItem) {
-                            listItem.setData(sourceItem);
-                            var row = listItem.addContent(new Row_1.Row());
-                            row.addColumn()
-                                .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs(8)); })
-                                .addContent(new TextSpan_1.TextSpan(sourceItem.Name));
-                            var resultType = ResourceResultType_1.ResourceResultType.values.value(sourceItem.ResultType.Value);
-                            var resultTypeText;
-                            if (resultType.equalsAny(ResourceResultType_1.ResourceResultType.values.None, ResourceResultType_1.ResourceResultType.values.Json)) {
-                                resultTypeText = '';
-                            }
-                            else {
-                                resultTypeText = resultType.DisplayText;
-                            }
-                            row.addColumn()
-                                .addContent(new TextSpan_1.TextSpan(resultTypeText));
+                            return new ResourceListItem_1.ResourceListItem(sourceItem, listItem);
                         });
                         if (resources.length === 0) {
                             this.alert.danger('No Resources were Found');
@@ -89,6 +70,6 @@ var ResourceListCard = /** @class */ (function (_super) {
         });
     };
     return ResourceListCard;
-}(Card_1.Card));
+}());
 exports.ResourceListCard = ResourceListCard;
 //# sourceMappingURL=ResourceListCard.js.map

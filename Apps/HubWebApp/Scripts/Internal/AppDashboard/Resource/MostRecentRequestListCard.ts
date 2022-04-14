@@ -1,25 +1,26 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { MostRecentRequestListCardView } from "../MostRecentRequestListCardView";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
+import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 
-export class MostRecentRequestListCard extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Most Recent Requests');
-        this.alert = this.addCardAlert().alert;
-        this.requests = this.addButtonListGroup();
-    }
-
+export class MostRecentRequestListCard {
     private readonly alert: MessageAlert;
-    private readonly requests: CardButtonListGroup;
+    private readonly requests: ListGroup;
 
     private resourceID: number;
+
+    constructor(
+        private readonly hubApi: HubAppApi,
+        private readonly view: MostRecentRequestListCardView
+    ) {
+        new TextBlock('Most Recent Requests', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.requests = new ListGroup(this.view.requests);
+    }
 
     setResourceID(resourceID: number) {
         this.resourceID = resourceID;
@@ -29,9 +30,8 @@ export class MostRecentRequestListCard extends Card {
         let requests = await this.getRequests();
         this.requests.setItems(
             requests,
-            (sourceItem, listItem) => {
-                listItem.addContent(new RequestExpandedListItem(sourceItem));
-            }
+            (sourceItem: IAppRequestExpandedModel, listItem: RequestExpandedListItemView) =>
+                new RequestExpandedListItem(sourceItem, listItem)
         );
         if (requests.length === 0) {
             this.alert.danger('No Requests were Found');

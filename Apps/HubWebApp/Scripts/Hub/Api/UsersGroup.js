@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersGroup = void 0;
 var tslib_1 = require("tslib");
-var AppApiGroup_1 = require("XtiShared/AppApiGroup");
+var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var UsersGroup = /** @class */ (function (_super) {
     tslib_1.__extends(UsersGroup, _super);
     function UsersGroup(events, resourceUrl) {
@@ -11,7 +11,7 @@ var UsersGroup = /** @class */ (function (_super) {
         _this.Index = _this.createView('Index');
         _this.GetUsersAction = _this.createAction('GetUsers', 'Get Users');
         _this.GetSystemUsersAction = _this.createAction('GetSystemUsers', 'Get System Users');
-        _this.AddUserAction = _this.createAction('AddUser', 'Add User');
+        _this.AddOrUpdateUserAction = _this.createAction('AddOrUpdateUser', 'Add Or Update User');
         return _this;
     }
     UsersGroup.prototype.GetUsers = function (errorOptions) {
@@ -20,8 +20,8 @@ var UsersGroup = /** @class */ (function (_super) {
     UsersGroup.prototype.GetSystemUsers = function (model, errorOptions) {
         return this.GetSystemUsersAction.execute(model, errorOptions || {});
     };
-    UsersGroup.prototype.AddUser = function (model, errorOptions) {
-        return this.AddUserAction.execute(model, errorOptions || {});
+    UsersGroup.prototype.AddOrUpdateUser = function (model, errorOptions) {
+        return this.AddOrUpdateUserAction.execute(model, errorOptions || {});
     };
     return UsersGroup;
 }(AppApiGroup_1.AppApiGroup));

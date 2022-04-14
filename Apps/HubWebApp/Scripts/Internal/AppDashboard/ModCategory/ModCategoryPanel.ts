@@ -1,44 +1,52 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { Result } from "XtiShared/Result";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { MarginCss } from "XtiShared/MarginCss";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ModCategoryComponent } from "./ModCategoryComponent";
+import { ModCategoryPanelView } from "./ModCategoryPanelView";
 import { ModifierListCard } from "./ModifierListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
-import { HubTheme } from "../../HubTheme";
 
-export class ModCategoryPanel extends Block {
-    public static readonly ResultKeys = {
-        backRequested: 'back-requested',
-        resourceGroupSelected: 'resource-group-selected'
-    };
+interface Results {
+    backRequested?: {};
+    resourceGroupSelected?: { resourceGroup: IResourceGroupModel };
+}
+
+export class ModCategoryPanelResult {
+    static get backRequested() {
+        return new ModCategoryPanelResult({ backRequested: {} });
+    }
+
+    static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
+        return new ModCategoryPanelResult({
+            resourceGroupSelected: { resourceGroup: resourceGroup }
+        });
+    }
+
+    private constructor(private readonly results: Results) {
+    }
+
+    get backRequested() { return this.results.backRequested; }
+
+    get resourceGroupSelected() { return this.results.resourceGroupSelected; }
+}
+
+export class ModCategoryPanel implements IPanel {
+    private readonly modCategoryComponent: ModCategoryComponent;
+    private readonly modifierListCard: ModifierListCard;
+    private readonly resourceGroupListCard: ResourceGroupListCard;
+
+    private readonly awaitable = new Awaitable<ModCategoryPanelResult>();
+
+    readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ModCategoryPanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.modCategoryComponent = flexFill
-            .addContent(new ModCategoryComponent(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.modifierListCard = flexFill
-            .addContent(new ModifierListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.resourceGroupListCard = flexFill
-            .addContent(new ResourceGroupListCard(this.hubApi))
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backCommand.add(
-            toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton())
-        ).configure(b => b.setText('App'));
+        this.modCategoryComponent = new ModCategoryComponent(this.hubApi, this.view.modCategoryComponent);
+        this.modifierListCard = new ModifierListCard(this.hubApi, this.view.modifierListCard);
+        this.resourceGroupListCard = new ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
+        this.backCommand.add(this.view.backButton);
         this.resourceGroupListCard.resourceGroupSelected.register(
             this.onResourceGroupSelected.bind(this)
         );
@@ -46,13 +54,9 @@ export class ModCategoryPanel extends Block {
 
     private onResourceGroupSelected(resourceGroup: IResourceGroupModel) {
         this.awaitable.resolve(
-            new Result(ModCategoryPanel.ResultKeys.resourceGroupSelected, resourceGroup)
+            ModCategoryPanelResult.resourceGroupSelected(resourceGroup)
         );
     }
-
-    private readonly modCategoryComponent: ModCategoryComponent;
-    private readonly modifierListCard: ModifierListCard;
-    private readonly resourceGroupListCard: ResourceGroupListCard;
 
     setModCategoryID(categoryID: number) {
         this.modCategoryComponent.setModCategoryID(categoryID);
@@ -69,15 +73,15 @@ export class ModCategoryPanel extends Block {
         return Promise.all(promises);
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    readonly backCommand = new Command(this.back.bind(this));
-
     private back() {
-        this.awaitable.resolve(new Result(ModCategoryPanel.ResultKeys.backRequested));
+        this.awaitable.resolve(ModCategoryPanelResult.backRequested);
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

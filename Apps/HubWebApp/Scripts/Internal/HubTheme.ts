@@ -1,10 +1,24 @@
-﻿import { ButtonCommandItem } from "XtiShared/Command/ButtonCommandItem";
-import { ContextualClass } from "XtiShared/ContextualClass";
-import { Toolbar } from "XtiShared/Html/Toolbar";
-import { PaddingCss } from "XtiShared/PaddingCss";
+﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
+import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
+import { Toolbar } from "@jasonbenfield/sharedwebapp/Html/Toolbar";
+import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 
 export class HubTheme {
     public static readonly instance = new HubTheme();
+
+    readonly listItem = {
+        deleteButton() {
+            return new ButtonCommandItem()
+                .configure(b => {
+                    b.icon.setName('times');
+                    b.icon.addCssFrom(new TextCss().context(ContextualClass.danger).cssClass());
+                    b.useOutlineStyle();
+                    b.setText('');
+                    b.setTitle('Delete');
+                });
+        }
+    }
 
     readonly cardHeader = {
         editButton() {
@@ -15,6 +29,16 @@ export class HubTheme {
                     b.useOutlineStyle();
                     b.setText('Edit');
                     b.setTitle('Edit');
+                });
+        },
+        addButton() {
+            return new ButtonCommandItem()
+                .configure(b => {
+                    b.icon.setName('plus');
+                    b.setContext(ContextualClass.primary);
+                    b.useOutlineStyle();
+                    b.setText('Add');
+                    b.setTitle('Add');
                 });
         }
     }

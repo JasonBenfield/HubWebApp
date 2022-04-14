@@ -2,29 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppComponent = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var Row_1 = require("XtiShared/Grid/Row");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var ColumnCss_1 = require("XtiShared/ColumnCss");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
+var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
 var AppComponent = /** @class */ (function (_super) {
     tslib_1.__extends(AppComponent, _super);
-    function AppComponent(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
+    function AppComponent(hubApi, view) {
         var _this = _super.call(this) || this;
         _this.hubApi = hubApi;
-        _this.addCardTitleHeader('App');
-        _this.alert = _this.addCardAlert().alert;
-        var row = _this.addCardBody()
-            .addContent(new Row_1.Row());
-        _this.appName = row.addColumn()
-            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(new TextSpan_1.TextSpan());
-        _this.appTitle = row.addColumn()
-            .configure(function (c) { return c.setColumnCss(ColumnCss_1.ColumnCss.xs('auto')); })
-            .addContent(new TextSpan_1.TextSpan());
-        _this.appType = row.addColumn()
-            .addContent(new TextSpan_1.TextSpan());
+        new TextBlock_1.TextBlock('App', view.titleHeader);
+        _this.alert = new CardAlert_1.CardAlert(view.alert).alert;
+        _this.appName = new TextBlock_1.TextBlock('', view.appName);
+        _this.appTitle = new TextBlock_1.TextBlock('', view.appTitle);
+        _this.appType = new TextBlock_1.TextBlock('', view.appType);
         return _this;
     }
     AppComponent.prototype.refresh = function () {
@@ -67,6 +57,6 @@ var AppComponent = /** @class */ (function (_super) {
         });
     };
     return AppComponent;
-}(Card_1.Card));
+}(CardView_1.CardView));
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=AppComponent.js.map

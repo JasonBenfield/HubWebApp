@@ -1,33 +1,26 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { UnorderedList } from "XtiShared/Html/UnorderedList";
-import { TextBlock } from "XtiShared/Html/TextBlock";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
-export class ModCategoryComponent extends Card {
+export class ModCategoryComponent {
+    private modCategoryID: number;
+    private readonly alert: MessageAlert;
+    private readonly modCategoryName: TextBlock;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ModCategoryComponentView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Modifier Category');
-        this.alert = this.addCardAlert().alert;
-        this.modCategoryName = this.addCardBody()
-            .addContent(new UnorderedList())
-            .addItem()
-            .addContent(new TextBlock());
+        new TextBlock('Modifier Category', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.modCategoryName = new TextBlock('', this.view.modCategoryName);
     }
-
-    private modCategoryID: number;
 
     setModCategoryID(modCategoryID: number) {
         this.modCategoryID = modCategoryID;
-        this.vm.name('');
     }
-
-    private readonly alert: MessageAlert;
-    private readonly modCategoryName: TextBlock;
 
     async refresh() {
         let modCategory = await this.getModCategory(this.modCategoryID);

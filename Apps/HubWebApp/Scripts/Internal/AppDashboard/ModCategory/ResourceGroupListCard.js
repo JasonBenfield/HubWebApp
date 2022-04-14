@@ -2,25 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResourceGroupListCard = void 0;
 var tslib_1 = require("tslib");
-var Events_1 = require("XtiShared/Events");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
+var Events_1 = require("@jasonbenfield/sharedwebapp/Events");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var ResourceGroupListItem_1 = require("../ResourceGroupListItem");
-var ResourceGroupListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ResourceGroupListCard, _super);
-    function ResourceGroupListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this._resourceSelected = new Events_1.DefaultEvent(_this);
-        _this.resourceGroupSelected = _this._resourceSelected.handler();
-        _this.addCardTitleHeader('Resource Groups');
-        _this.alert = _this.addCardAlert().alert;
-        _this.requests = _this.addButtonListGroup();
-        return _this;
+var ResourceGroupListCard = /** @class */ (function () {
+    function ResourceGroupListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this._resourceSelected = new Events_1.DefaultEvent(this);
+        this.resourceGroupSelected = this._resourceSelected.handler();
+        new TextBlock_1.TextBlock('Resource Groups', this.view.titleHeader);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.requests = new ListGroup_1.ListGroup(this.view.requests);
     }
     ResourceGroupListCard.prototype.onItemSelected = function (item) {
-        this._resourceSelected.invoke(item.getData());
+        this._resourceSelected.invoke(item.group);
     };
     ResourceGroupListCard.prototype.setModCategoryID = function (modCategoryID) {
         this.modCategoryID = modCategoryID;
@@ -34,8 +32,7 @@ var ResourceGroupListCard = /** @class */ (function (_super) {
                     case 1:
                         resourceGroups = _a.sent();
                         this.requests.setItems(resourceGroups, function (sourceItem, listItem) {
-                            listItem.setData(sourceItem);
-                            listItem.addContent(new ResourceGroupListItem_1.ResourceGroupListItem(sourceItem));
+                            return new ResourceGroupListItem_1.ResourceGroupListItem(sourceItem, listItem);
                         });
                         if (resourceGroups.length === 0) {
                             this.alert.danger('No Resource Groups were Found');
@@ -69,6 +66,6 @@ var ResourceGroupListCard = /** @class */ (function (_super) {
         });
     };
     return ResourceGroupListCard;
-}(Card_1.Card));
+}());
 exports.ResourceGroupListCard = ResourceGroupListCard;
 //# sourceMappingURL=ResourceGroupListCard.js.map

@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "XtiShared/AppApiGroup";
-import { AppApiAction } from "XtiShared/AppApiAction";
-import { AppApiView } from "XtiShared/AppApiView";
-import { AppApiEvents } from "XtiShared/AppApiEvents";
-import { AppResourceUrl } from "XtiShared/AppResourceUrl";
+import { AppApiGroup } from "@jasonbenfield/sharedwebapp/Api/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/Api/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/Api/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 
 export class AppGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
@@ -18,7 +18,7 @@ export class AppGroup extends AppApiGroup {
 		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppEventModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 		this.GetModifierCategoriesAction = this.createAction<IEmptyRequest,IModifierCategoryModel[]>('GetModifierCategories', 'Get Modifier Categories');
 		this.GetModifierCategoryAction = this.createAction<string,IModifierCategoryModel>('GetModifierCategory', 'Get Modifier Category');
-		this.GetDefaultModiiferAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModiifer', 'Get Default Modiifer');
+		this.GetDefaultModifierAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModifier', 'Get Default Modifier');
 	}
 	
 	readonly Index: AppApiView<IEmptyRequest>;
@@ -30,7 +30,7 @@ export class AppGroup extends AppApiGroup {
 	readonly GetMostRecentErrorEventsAction: AppApiAction<number,IAppEventModel[]>;
 	readonly GetModifierCategoriesAction: AppApiAction<IEmptyRequest,IModifierCategoryModel[]>;
 	readonly GetModifierCategoryAction: AppApiAction<string,IModifierCategoryModel>;
-	readonly GetDefaultModiiferAction: AppApiAction<IEmptyRequest,IModifierModel>;
+	readonly GetDefaultModifierAction: AppApiAction<IEmptyRequest,IModifierModel>;
 	
 	GetApp(errorOptions?: IActionErrorOptions) {
 		return this.GetAppAction.execute({}, errorOptions || {});
@@ -56,7 +56,7 @@ export class AppGroup extends AppApiGroup {
 	GetModifierCategory(model: string, errorOptions?: IActionErrorOptions) {
 		return this.GetModifierCategoryAction.execute(model, errorOptions || {});
 	}
-	GetDefaultModiifer(errorOptions?: IActionErrorOptions) {
-		return this.GetDefaultModiiferAction.execute({}, errorOptions || {});
+	GetDefaultModifier(errorOptions?: IActionErrorOptions) {
+		return this.GetDefaultModifierAction.execute({}, errorOptions || {});
 	}
 }

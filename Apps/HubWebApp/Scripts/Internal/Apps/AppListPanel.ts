@@ -1,47 +1,51 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Result } from "XtiShared/Result";
-import { Block } from "XtiShared/Html/Block";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { HubAppApi } from "../../Hub/Api/HubAppApi";
 import { AppListCard } from "./AppListCard";
+import { AppListPanelView } from "./AppListPanelView";
 
-export class AppListPanel extends Block {
-    public static readonly ResultKeys = {
-        appSelected: 'app-selected'
+interface Results {
+    appSelected?: { app: IAppModel; };
+}
+
+export class AppListPanelResult {
+    static appSelected(app: IAppModel) {
+        return new AppListPanelResult({ appSelected: { app: app } });
     }
+
+    private constructor(private readonly results: Results) {
+    }
+
+    get appSelected() { return this.results.appSelected; }
+}
+
+export class AppListPanel {
+    public static readonly ResultKeys = {
+    }
+
+    private readonly appListCard: AppListCard;
+    private readonly awaitable = new Awaitable<AppListPanelResult>();
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: AppListPanelView
     ) {
-        super(vm);
-        this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        this.appListCard = flexColumn.addContent(new FlexColumnFill())
-            .addContent(
-                new AppListCard(
-                    this.hubApi,
-                    appID => this.hubApi.Apps.RedirectToApp.getUrl(appID).toString()
-                )
-            );
+        this.appListCard = new AppListCard(
+            this.hubApi,
+            modKey => this.hubApi.App.Index.getModifierUrl(modKey, {}).toString(),
+            this.view.appListCard
+        );
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
     }
 
     private onAppSelected(app: IAppModel) {
         this.awaitable.resolve(
-            new Result(AppListPanel.ResultKeys.appSelected, app)
+            AppListPanelResult.appSelected(app)
         );
     }
-
-    private readonly appListCard: AppListCard;
 
     refresh() {
         return this.appListCard.refresh();
     }
-
-    private readonly awaitable = new Awaitable();
 
     start() {
         return this.awaitable.start();

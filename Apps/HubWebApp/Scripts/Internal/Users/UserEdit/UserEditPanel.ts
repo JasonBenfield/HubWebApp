@@ -1,58 +1,49 @@
-﻿import { Awaitable } from "XtiShared/Awaitable";
-import { Command } from "XtiShared/Command/Command";
-import { Result } from "XtiShared/Result";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
+import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { EditUserForm } from '../../../Hub/Api/EditUserForm';
-import { DelayedAction } from 'XtiShared/DelayedAction';
-import { AsyncCommand } from "XtiShared/Command/AsyncCommand";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { Block } from "XtiShared/Html/Block";
-import { FlexColumn } from "XtiShared/Html/FlexColumn";
-import { FlexColumnFill } from "XtiShared/Html/FlexColumnFill";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { HubTheme } from "../../HubTheme";
-import { Card } from "XtiShared/Card/Card";
-import { TextCss } from "XtiShared/TextCss";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { UserEditPanelView } from "./UserEditPanelView";
 
-export class UserEditPanel extends Block {
-    public static readonly ResultKeys = {
-        canceled: 'canceled',
-        saved: 'saved'
-    };
+interface Results {
+    canceled?: {};
+    saved?: {};
+}
+
+export class UserEditPanelResult {
+    static get canceled() { return new UserEditPanelResult({ canceled: {} }); }
+
+    static get saved() { return new UserEditPanelResult({ saved: {} }); }
+
+    private constructor(private readonly results: Results) {
+    }
+
+    get canceled() { return this.results.canceled; }
+
+    get saved() { return this.results.saved; }
+}
+
+export class UserEditPanel implements IPanel {
+    private readonly alert: MessageAlert;
+    private readonly editUserForm: EditUserForm;
+    private userID: number;
+    private readonly awaitable = new Awaitable<UserEditPanelResult>();
+    private readonly cancelCommand = new Command(this.cancel.bind(this));
+    private readonly saveCommand = new AsyncCommand(this.save.bind(this));
 
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: UserEditPanelView
     ) {
-        super(vm);
-        this.height100();
-        this.setName(UserEditPanel.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.alert = flexFill.container.addContent(new MessageAlert());
-
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.cancelCommand.add(
-            toolbar.columnEnd.addContent(HubTheme.instance.commandToolbar.cancelButton())
-        );
-        this.saveCommand.add(
-            toolbar.columnEnd.addContent(HubTheme.instance.commandToolbar.saveButton())
-        );
-        let editCard = flexFill.addContent(new Card());
-        editCard.addCardTitleHeader('Edit User');
-        let cardBody = editCard.addCardBody();
-        this.editUserForm = cardBody.addContent(new EditUserForm());
-        this.editUserForm.addOffscreenSubmit();
-        this.editUserForm.executeLayout();
-        this.editUserForm.forEachFormGroup(fg => {
-            fg.captionColumn.setTextCss(new TextCss().end().bold());
-        });
+        this.alert = new MessageAlert(this.view.alert);
+        this.cancelCommand.add(this.view.cancelButton);
+        this.saveCommand.add(this.view.saveButton);
+        new TextBlock('Edit User', this.view.titleHeader);
+        this.editUserForm = new EditUserForm(this.view.editUserForm);
     }
-
-    private readonly alert: MessageAlert;
-    private readonly editUserForm: EditUserForm;
-
-    private userID: number;
 
     setUserID(userID: number) {
         this.userID = userID;
@@ -78,28 +69,22 @@ export class UserEditPanel extends Block {
         return userForm;
     }
 
-    private readonly awaitable = new Awaitable();
-
     start() {
         return this.awaitable.start();
     }
 
-    private readonly cancelCommand = new Command(this.cancel.bind(this));
-
     private cancel() {
-        this.awaitable.resolve(
-            new Result(UserEditPanel.ResultKeys.canceled)
-        );
+        this.awaitable.resolve(UserEditPanelResult.canceled);
     }
-
-    private readonly saveCommand = new AsyncCommand(this.save.bind(this));
 
     private async save() {
         let result = await this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction);
         if (result.succeeded()) {
-            this.awaitable.resolve(
-                new Result(UserEditPanel.ResultKeys.saved)
-            );
+            this.awaitable.resolve(UserEditPanelResult.saved);
         }
     }
+
+    activate() { this.view.show(); }
+
+    deactivate() { this.view.hide(); }
 }

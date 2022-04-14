@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Abstractions;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 
 namespace XTI_HubAppClient
 {
@@ -9,7 +7,7 @@ namespace XTI_HubAppClient
         private readonly HubAppClient hubClient;
         private readonly AppKey appKey;
         private readonly AppVersionKey versionKey;
-        private string modKey;
+        private string modKey = "";
 
         public HubClientAppContext(HubAppClient hubClient, AppKey appKey, AppVersionKey versionKey)
         {
@@ -28,7 +26,7 @@ namespace XTI_HubAppClient
         public async Task<IAppVersion> Version()
         {
             var modKey = await GetModifierKey();
-            var version = await hubClient.Version.GetVersion(modKey, versionKey);
+            var version = await hubClient.Version.GetVersion(modKey, versionKey.Value);
             return new HubClientVersion(hubClient, this, version);
         }
 
@@ -36,10 +34,22 @@ namespace XTI_HubAppClient
         {
             if (string.IsNullOrWhiteSpace(modKey))
             {
-                modKey = await hubClient.Apps.GetAppModifierKey(appKey);
+                var appWithModifier = await hubClient.Apps.GetAppByAppKey
+                (
+                    new GetAppByAppKeyRequest { AppKey = appKey }
+                );
+                modKey = appWithModifier.ModKey;
             }
             return modKey;
         }
 
+        public async Task<ModifierKey> ModKeyInHubApps(IApp app)
+        {
+            var appWithModifier = await hubClient.Apps.GetAppById
+            (
+                new GetAppByIDRequest { AppID = app.ID.Value }
+            );
+            return new ModifierKey(appWithModifier.ModKey);
+        }
     }
 }

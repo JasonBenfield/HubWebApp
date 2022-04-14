@@ -1,10 +1,10 @@
 // Generated code
 
-import { AppApiGroup } from "XtiShared/AppApiGroup";
-import { AppApiAction } from "XtiShared/AppApiAction";
-import { AppApiView } from "XtiShared/AppApiView";
-import { AppApiEvents } from "XtiShared/AppApiEvents";
-import { AppResourceUrl } from "XtiShared/AppResourceUrl";
+import { AppApiGroup } from "@jasonbenfield/sharedwebapp/Api/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/Api/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/Api/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 
 export class ModCategoryGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {

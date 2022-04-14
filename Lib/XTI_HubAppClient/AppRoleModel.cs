@@ -1,13 +1,8 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class AppRoleModel
 {
-    public sealed partial class AppRoleModel
-    {
-        public int ID { get; set; }
+    public int ID { get; set; }
 
-        public string Name { get; set; }
-    }
+    public string Name { get; set; } = "";
 }

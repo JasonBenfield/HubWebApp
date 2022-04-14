@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModifierListCard = void 0;
 var tslib_1 = require("tslib");
-var Card_1 = require("XtiShared/Card/Card");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
+var CardAlert_1 = require("@jasonbenfield/sharedwebapp/Card/CardAlert");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var ListGroup_1 = require("@jasonbenfield/sharedwebapp/ListGroup/ListGroup");
 var ModifierListItem_1 = require("./ModifierListItem");
-var ModifierListCard = /** @class */ (function (_super) {
-    tslib_1.__extends(ModifierListCard, _super);
-    function ModifierListCard(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        vm.title('Modifiers');
-        return _this;
+var ModifierListCard = /** @class */ (function () {
+    function ModifierListCard(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        new TextBlock_1.TextBlock('Modifiers', this.view.titleHeader);
+        this.alert = new CardAlert_1.CardAlert(this.view.alert).alert;
+        this.modifiers = new ListGroup_1.ListGroup(this.view.modifiers);
     }
     ModifierListCard.prototype.setModCategoryID = function (modCategoryID) {
         this.modCategoryID = modCategoryID;
@@ -26,8 +26,7 @@ var ModifierListCard = /** @class */ (function (_super) {
                     case 1:
                         modifiers = _a.sent();
                         this.modifiers.setItems(modifiers, function (sourceItem, listItem) {
-                            listItem.setData(sourceItem);
-                            listItem.addContent(new ModifierListItem_1.ModifierListItem(sourceItem));
+                            return new ModifierListItem_1.ModifierListItem(sourceItem, listItem);
                         });
                         if (modifiers.length === 0) {
                             this.alert.danger('No Modifiers were Found');
@@ -61,6 +60,6 @@ var ModifierListCard = /** @class */ (function (_super) {
         });
     };
     return ModifierListCard;
-}(Card_1.Card));
+}());
 exports.ModifierListCard = ModifierListCard;
 //# sourceMappingURL=ModifierListCard.js.map

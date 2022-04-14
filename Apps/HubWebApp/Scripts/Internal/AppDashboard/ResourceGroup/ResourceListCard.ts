@@ -1,65 +1,46 @@
-﻿import { DefaultEvent } from "XtiShared/Events";
-import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { ColumnCss } from "XtiShared/ColumnCss";
-import { Row } from "XtiShared/Grid/Row";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ResourceResultType } from "../../../Hub/Api/ResourceResultType";
+import { ResourceListCardView } from "./ResourceListCardView";
+import { ResourceListItem } from "./ResourceListItem";
+import { ResourceListItemView } from "./ResourceListItemView";
 
-export class ResourceListCard extends Card {
+export class ResourceListCard {
+    private readonly alert: MessageAlert;
+    private readonly resources: ListGroup;
+
+    private groupID: number;
+
+    private readonly _resourceSelected = new DefaultEvent<IResourceModel>(this);
+    readonly resourceSelected = this._resourceSelected.handler();
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ResourceListCardView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Resources');
-        this.alert = this.addCardAlert().alert;
-        this.resources = this.addButtonListGroup();
+        new TextBlock('Resources', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.resources = new ListGroup(this.view.resources);
         this.resources.itemClicked.register(this.onItemSelected.bind(this));
     }
 
-    private onItemSelected(item: IListItem) {
-        this._resourceSelected.invoke(item.getData<IResourceModel>());
+    private onItemSelected(item: ResourceListItem) {
+        this._resourceSelected.invoke(item.resource);
     }
-
-    private readonly alert: MessageAlert;
-    private readonly resources: CardButtonListGroup;
-
-    private groupID: number;
 
     setGroupID(groupID: number) {
         this.groupID = groupID;
     }
 
-    private readonly _resourceSelected = new DefaultEvent<IResourceModel>(this);
-    readonly resourceSelected = this._resourceSelected.handler();
-
     async refresh() {
         let resources = await this.getResources();
         this.resources.setItems(
             resources,
-            (sourceItem, listItem) => {
-                listItem.setData(sourceItem);
-                let row = listItem.addContent(new Row());
-                row.addColumn()
-                    .configure(c => c.setColumnCss(ColumnCss.xs(8)))
-                    .addContent(new TextSpan(sourceItem.Name));
-                let resultType = ResourceResultType.values.value(sourceItem.ResultType.Value);
-                let resultTypeText: string;
-                if (
-                    resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
-                ) {
-                    resultTypeText = '';
-                }
-                else {
-                    resultTypeText = resultType.DisplayText;
-                }
-                row.addColumn()
-                    .addContent(new TextSpan(resultTypeText));
-            }
+            (sourceItem: IResourceModel, listItem: ResourceListItemView) =>
+                new ResourceListItem(sourceItem, listItem)
         );
         if (resources.length === 0) {
             this.alert.danger('No Resources were Found');

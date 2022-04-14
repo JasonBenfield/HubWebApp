@@ -1,6 +1,6 @@
 // Generated code
-import { NumericValue } from 'XtiShared/NumericValue';
-import { NumericValues } from 'XtiShared/NumericValues';
+import { NumericValue } from '@jasonbenfield/sharedwebapp/NumericValue';
+import { NumericValues } from '@jasonbenfield/sharedwebapp/NumericValues';
 
 export class ResourceResultTypes extends NumericValues<ResourceResultType> {
 	constructor(

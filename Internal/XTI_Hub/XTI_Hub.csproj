@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="XTI_App.Api" Version="1.8.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj" />
+    <ProjectReference Include="..\XTI_HubDB.Entities\XTI_HubDB.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

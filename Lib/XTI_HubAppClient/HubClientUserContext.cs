@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using XTI_App.Abstractions;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 
 namespace XTI_HubAppClient
 {
@@ -17,14 +15,24 @@ namespace XTI_HubAppClient
 
         public async Task<AppUserName> CurrentUserName()
         {
-            var user = await hubClient.UserInquiry.GetCurrentUser();
-            return new AppUserName(user.UserName);
+            var userName = await hubClient.UserName();
+            return new AppUserName(userName);
         }
 
         public async Task<IAppUser> User(AppUserName userName)
         {
-            var user = await hubClient.UserInquiry.GetUserByUserName(userName.Value);
-            return new HubClientUser(hubClient, appContext, user);
+            IAppUser user;
+            var currentUserName = await CurrentUserName();
+            if (userName.Equals(currentUserName))
+            {
+                user = await User();
+            }
+            else
+            {
+                var _user = await hubClient.UserInquiry.GetUserByUserName(userName.Value);
+                user = new HubClientUser(hubClient, appContext, _user);
+            }
+            return user;
         }
 
         public async Task<IAppUser> User()

@@ -1,54 +1,44 @@
-﻿import { DefaultEvent } from "XtiShared/Events";
-import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
+import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
+import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
-export class ResourceGroupListCard extends Card {
+export class ResourceGroupListCard {
+    private readonly alert: MessageAlert;
+    private readonly resourceGroups: ListGroup;
+    readonly resourceGroupClicked: IEventHandler<ResourceGroupListItem>;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ResourceGroupListCardView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Resource Groups');
-        this.alert = this.addCardAlert().alert;
-        this.requests = this.addButtonListGroup();
+        new TextBlock('Resource Groups', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.resourceGroups = new ListGroup(this.view.resourceGroups);
+        this.resourceGroupClicked = this.resourceGroups.itemClicked;
     }
-
-    private readonly _resourceSelected = new DefaultEvent<IResourceGroupModel>(this);
-    readonly resourceGroupSelected = this._resourceSelected.handler();
-
-    protected onItemSelected(item: IListItem) {
-        this._resourceSelected.invoke(item.getData<IResourceGroupModel>());
-    }
-
-    private readonly alert: MessageAlert;
-    private readonly requests: CardButtonListGroup;
 
     async refresh() {
         let resourceGroups = await this.getResourceGroups();
-        this.requests.setItems(
+        this.resourceGroups.setItems(
             resourceGroups,
-            (sourceItem, listItem) => {
-                listItem.setData(sourceItem);
-                listItem.addContent(new ResourceGroupListItem(sourceItem));
-            }
+            (sourceItem: IResourceGroupModel, listItem: ResourceGroupListItemView) =>
+                new ResourceGroupListItem(sourceItem, listItem)
         );
         if (resourceGroups.length === 0) {
             this.alert.danger('No Resource Groups were Found');
         }
     }
 
-    private async getResourceGroups() {
-        let resourceGroup: IResourceGroupModel[];
-        await this.alert.infoAction(
+    private getResourceGroups() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                resourceGroup = await this.hubApi.App.GetResourceGroups();
-            }
+            () => this.hubApi.App.GetResourceGroups()
         );
-        return resourceGroup;
     }
 }

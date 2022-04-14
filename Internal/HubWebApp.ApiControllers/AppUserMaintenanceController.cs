@@ -1,36 +1,35 @@
 // Generated Code
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using XTI_HubAppApi.AppUserMaintenance;
-using XTI_App.Api;
-using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
-using XTI_App;
-using XTI_WebApp.Api;
-
-namespace HubWebApp.ApiControllers
+namespace HubWebApp.ApiControllers;
+[Authorize]
+public class AppUserMaintenanceController : Controller
 {
-    [Authorize]
-    public class AppUserMaintenanceController : Controller
+    private readonly HubAppApi api;
+    public AppUserMaintenanceController(HubAppApi api)
     {
-        public AppUserMaintenanceController(HubAppApi api)
-        {
-            this.api = api;
-        }
+        this.api = api;
+    }
 
-        private readonly HubAppApi api;
-        [HttpPost]
-        public Task<ResultContainer<int>> AssignRole([FromBody] UserRoleRequest model)
-        {
-            return api.Group("AppUserMaintenance").Action<UserRoleRequest, int>("AssignRole").Execute(model);
-        }
+    [HttpPost]
+    public Task<ResultContainer<int>> AssignRole([FromBody] UserRoleRequest model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserRoleRequest, int>("AssignRole").Execute(model);
+    }
 
-        [HttpPost]
-        public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest model)
-        {
-            return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model);
-        }
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> DenyAccess([FromBody] UserModifierKey model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("DenyAccess").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> AllowAccess([FromBody] UserModifierKey model)
+    {
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("AllowAccess").Execute(model);
     }
 }

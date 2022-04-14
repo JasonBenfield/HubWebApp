@@ -1,17 +1,11 @@
 // Generated Code
-using System;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class AppModel
 {
-    public sealed partial class AppModel
-    {
-        public int ID { get; set; }
+    public int ID { get; set; }
 
-        public AppType Type { get; set; }
-
-        public string AppName { get; set; }
-
-        public string Title { get; set; }
-    }
+    public AppType Type { get; set; } = AppType.Values.GetDefault();
+    public string AppName { get; set; } = "";
+    public string Title { get; set; } = "";
+    public string Domain { get; set; } = "";
 }

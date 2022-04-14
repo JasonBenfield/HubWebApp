@@ -1,58 +1,41 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
 import { ResourceResultType } from '../../../Hub/Api/ResourceResultType';
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { Row } from "XtiShared/Grid/Row";
-import { ColumnCss } from "XtiShared/ColumnCss";
+import { ResourceComponentView } from "./ResourceComponentView";
 
-export class ResourceComponent extends Card {
+export class ResourceComponent {
+    private readonly alert: MessageAlert;
+    private resourceID: number;
+    private readonly resourceName: TextBlock;
+    private readonly resultType: TextBlock;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ResourceComponentView
     ) {
-        super(vm);
-        this.addCardTitleHeader('Resource');
-        this.alert = this.addCardAlert().alert;
-        let listGroup = this.addListGroup();
-        let row = listGroup
-            .addItem()
-            .addContent(new Row());
-        this.resourceName = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan());
-        this.resultType = row.addColumn()
-            .addContent(new TextSpan());
-        this.anonListItem = listGroup.addItem();
-        this.anonListItem.addContent(new Row())
-            .addColumn()
-            .addContent(new TextSpan('Anonymous is Allowed'));
-        this.anonListItem.hide();
+        new TextBlock('Resource', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.resourceName = new TextBlock('', view.resourceName);
+        this.resultType = new TextBlock('', view.resultType);
     }
-
-    private resourceID: number;
 
     setResourceID(resourceID: number) {
         this.resourceID = resourceID;
         this.resourceName.setText('');
         this.resultType.setText('');
-        this.anonListItem.hide();
+        this.view.hideAnon();
     }
-
-    private readonly alert: MessageAlert;
-    private readonly resourceName: TextSpan;
-    private readonly resultType: TextSpan;
-    private readonly anonListItem: IListItem;
 
     async refresh() {
         let resource = await this.getResource(this.resourceID);
         this.resourceName.setText(resource.Name);
         if (resource.IsAnonymousAllowed) {
-            this.anonListItem.show();
+            this.view.showAnon();
         }
         else {
-            this.anonListItem.hide();
+            this.view.hideAnon();
         }
         let resultType = ResourceResultType.values.value(resource.ResultType.Value);
         let resultTypeText: string;

@@ -1,30 +1,30 @@
 // Generated code
 
-import { AppApiGroup } from "XtiShared/AppApiGroup";
-import { AppApiAction } from "XtiShared/AppApiAction";
-import { AppApiView } from "XtiShared/AppApiView";
-import { AppApiEvents } from "XtiShared/AppApiEvents";
-import { AppResourceUrl } from "XtiShared/AppResourceUrl";
+import { AppApiGroup } from "@jasonbenfield/sharedwebapp/Api/AppApiGroup";
+import { AppApiAction } from "@jasonbenfield/sharedwebapp/Api/AppApiAction";
+import { AppApiView } from "@jasonbenfield/sharedwebapp/Api/AppApiView";
+import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 
 export class AppUserGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUser');
 		this.Index = this.createView<number>('Index');
-		this.GetUserRolesAction = this.createAction<IGetUserRolesRequest,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
-		this.GetUserRoleAccessAction = this.createAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>('GetUserRoleAccess', 'Get User Role Access');
+		this.GetUserAccessAction = this.createAction<IUserModifierKey,IUserAccessModel>('GetUserAccess', 'Get User Access');
+		this.GetUnassignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetUnassignedRoles', 'Get Unassigned Roles');
 		this.GetUserModCategoriesAction = this.createAction<number,IUserModifierCategoryModel[]>('GetUserModCategories', 'Get User Mod Categories');
 	}
 	
 	readonly Index: AppApiView<number>;
-	readonly GetUserRolesAction: AppApiAction<IGetUserRolesRequest,IAppRoleModel[]>;
-	readonly GetUserRoleAccessAction: AppApiAction<IGetUserRoleAccessRequest,IUserRoleAccessModel>;
+	readonly GetUserAccessAction: AppApiAction<IUserModifierKey,IUserAccessModel>;
+	readonly GetUnassignedRolesAction: AppApiAction<IUserModifierKey,IAppRoleModel[]>;
 	readonly GetUserModCategoriesAction: AppApiAction<number,IUserModifierCategoryModel[]>;
 	
-	GetUserRoles(model: IGetUserRolesRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserRolesAction.execute(model, errorOptions || {});
+	GetUserAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetUserAccessAction.execute(model, errorOptions || {});
 	}
-	GetUserRoleAccess(model: IGetUserRoleAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserRoleAccessAction.execute(model, errorOptions || {});
+	GetUnassignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetUnassignedRolesAction.execute(model, errorOptions || {});
 	}
 	GetUserModCategories(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetUserModCategoriesAction.execute(model, errorOptions || {});

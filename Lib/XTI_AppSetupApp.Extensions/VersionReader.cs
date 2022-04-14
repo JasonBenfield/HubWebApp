@@ -1,35 +1,31 @@
-﻿using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using XTI_HubAppClient;
+﻿using XTI_Core;
+using XTI_Hub.Abstractions;
 
-namespace XTI_AppSetupApp.Extensions
+namespace XTI_AppSetupApp.Extensions;
+
+public sealed class VersionReader
 {
-    public sealed class VersionReader
+    private readonly string path;
+
+    public VersionReader(string path)
     {
-        private readonly string path;
+        this.path = path;
+    }
 
-        public VersionReader(string path)
+    public async Task<XtiVersionModel[]> Versions()
+    {
+        var versions = new XtiVersionModel[0];
+        if (File.Exists(path))
         {
-            this.path = path;
-        }
-
-        public async Task<AppVersionModel[]> Versions()
-        {
-            var versions = new AppVersionModel[] { };
-            if (File.Exists(path))
+            using (var reader = new StreamReader(path))
             {
-                using (var reader = new StreamReader(path))
+                var serialized = await reader.ReadToEndAsync();
+                if (!string.IsNullOrWhiteSpace(serialized))
                 {
-                    var serialized = await reader.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(serialized))
-                    {
-                        var jsonOptions = new JsonSerializerOptions();
-                        versions = JsonSerializer.Deserialize<AppVersionModel[]>(serialized, jsonOptions);
-                    }
+                    versions = XtiSerializer.Deserialize(serialized, () => new XtiVersionModel[0]);
                 }
             }
-            return versions;
         }
+        return versions;
     }
 }

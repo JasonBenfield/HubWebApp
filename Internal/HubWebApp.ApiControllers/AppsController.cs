@@ -1,49 +1,47 @@
 // Generated Code
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_App.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
-using XTI_App;
-using XTI_WebApp.Api;
-
-namespace HubWebApp.ApiControllers
+namespace HubWebApp.ApiControllers;
+[Authorize]
+public class AppsController : Controller
 {
-    [Authorize]
-    public class AppsController : Controller
+    private readonly HubAppApi api;
+    public AppsController(HubAppApi api)
     {
-        public AppsController(HubAppApi api)
-        {
-            this.api = api;
-        }
+        this.api = api;
+    }
 
-        private readonly HubAppApi api;
-        public async Task<IActionResult> Index()
-        {
-            var result = await api.Group("Apps").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest());
-            return View(result.Data.ViewName);
-        }
+    public async Task<IActionResult> Index()
+    {
+        var result = await api.Group("Apps").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest());
+        return View(result.Data.ViewName);
+    }
 
-        [HttpPost]
-        public Task<ResultContainer<AppModel[]>> All()
-        {
-            return api.Group("Apps").Action<EmptyRequest, AppModel[]>("All").Execute(new EmptyRequest());
-        }
+    [HttpPost]
+    public Task<ResultContainer<string>> GetAppDomain([FromBody] GetAppDomainRequest model)
+    {
+        return api.Group("Apps").Action<GetAppDomainRequest, string>("GetAppDomain").Execute(model);
+    }
 
-        [HttpPost]
-        public Task<ResultContainer<string>> GetAppModifierKey([FromBody] AppKey model)
-        {
-            return api.Group("Apps").Action<AppKey, string>("GetAppModifierKey").Execute(model);
-        }
+    [HttpPost]
+    public Task<ResultContainer<AppWithModKeyModel[]>> GetApps()
+    {
+        return api.Group("Apps").Action<EmptyRequest, AppWithModKeyModel[]>("GetApps").Execute(new EmptyRequest());
+    }
 
-        public async Task<IActionResult> RedirectToApp(int model)
-        {
-            var result = await api.Group("Apps").Action<int, WebRedirectResult>("RedirectToApp").Execute(model);
-            return Redirect(result.Data.Url);
-        }
+    [HttpPost]
+    public Task<ResultContainer<AppWithModKeyModel>> GetAppById([FromBody] GetAppByIDRequest model)
+    {
+        return api.Group("Apps").Action<GetAppByIDRequest, AppWithModKeyModel>("GetAppById").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppWithModKeyModel>> GetAppByAppKey([FromBody] GetAppByAppKeyRequest model)
+    {
+        return api.Group("Apps").Action<GetAppByAppKeyRequest, AppWithModKeyModel>("GetAppByAppKey").Execute(model);
+    }
+
+    public async Task<IActionResult> RedirectToApp(int model)
+    {
+        var result = await api.Group("Apps").Action<int, WebRedirectResult>("RedirectToApp").Execute(model);
+        return Redirect(result.Data.Url);
     }
 }

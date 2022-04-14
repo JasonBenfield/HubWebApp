@@ -1,36 +1,36 @@
-﻿import { Card } from "XtiShared/Card/Card";
-import { CardButtonListGroup } from "XtiShared/Card/CardButtonListGroup";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
 import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { ModifierListCardView } from "./ModifierListCardView";
 import { ModifierListItem } from "./ModifierListItem";
+import { ModifierListItemView } from "./ModifierListItemView";
 
-export class ModifierListCard extends Card {
+export class ModifierListCard {
+    private modCategoryID: number;
+    private readonly alert: MessageAlert;
+    private readonly modifiers: ListGroup;
+
     constructor(
         private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
+        private readonly view: ModifierListCardView
     ) {
-        super(vm);
-        vm.title('Modifiers');
+        new TextBlock('Modifiers', this.view.titleHeader);
+        this.alert = new CardAlert(this.view.alert).alert;
+        this.modifiers = new ListGroup(this.view.modifiers);
     }
-
-    private modCategoryID: number;
 
     setModCategoryID(modCategoryID: number) {
         this.modCategoryID = modCategoryID;
     }
 
-    private readonly alert: MessageAlert;
-    private readonly modifiers: CardButtonListGroup;
-
     async refresh() {
         let modifiers = await this.getModifiers();
         this.modifiers.setItems(
             modifiers,
-            (sourceItem, listItem) => {
-                listItem.setData(sourceItem);
-                listItem.addContent(new ModifierListItem(sourceItem));
-            }
+            (sourceItem: IModifierModel, listItem: ModifierListItemView) =>
+                new ModifierListItem(sourceItem, listItem)
         );
         if (modifiers.length === 0) {
             this.alert.danger('No Modifiers were Found');

@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppVersionStatus = exports.AppVersionStatuss = void 0;
 var tslib_1 = require("tslib");
 // Generated code
-var NumericValue_1 = require("XtiShared/NumericValue");
-var NumericValues_1 = require("XtiShared/NumericValues");
+var NumericValue_1 = require("@jasonbenfield/sharedwebapp/NumericValue");
+var NumericValues_1 = require("@jasonbenfield/sharedwebapp/NumericValues");
 var AppVersionStatuss = /** @class */ (function (_super) {
     tslib_1.__extends(AppVersionStatuss, _super);
     function AppVersionStatuss(NotSet, New, Publishing, Old, Current) {

@@ -1,48 +1,53 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserEditPanel = void 0;
+exports.UserEditPanel = exports.UserEditPanelResult = void 0;
 var tslib_1 = require("tslib");
-var Awaitable_1 = require("XtiShared/Awaitable");
-var Command_1 = require("XtiShared/Command/Command");
-var Result_1 = require("XtiShared/Result");
+var Awaitable_1 = require("@jasonbenfield/sharedwebapp/Awaitable");
+var AsyncCommand_1 = require("@jasonbenfield/sharedwebapp/Command/AsyncCommand");
+var Command_1 = require("@jasonbenfield/sharedwebapp/Command/Command");
+var DelayedAction_1 = require("@jasonbenfield/sharedwebapp/DelayedAction");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var MessageAlert_1 = require("@jasonbenfield/sharedwebapp/MessageAlert");
 var EditUserForm_1 = require("../../../Hub/Api/EditUserForm");
-var DelayedAction_1 = require("XtiShared/DelayedAction");
-var AsyncCommand_1 = require("XtiShared/Command/AsyncCommand");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var Block_1 = require("XtiShared/Html/Block");
-var FlexColumn_1 = require("XtiShared/Html/FlexColumn");
-var FlexColumnFill_1 = require("XtiShared/Html/FlexColumnFill");
-var MessageAlert_1 = require("XtiShared/MessageAlert");
-var HubTheme_1 = require("../../HubTheme");
-var Card_1 = require("XtiShared/Card/Card");
-var TextCss_1 = require("XtiShared/TextCss");
-var UserEditPanel = /** @class */ (function (_super) {
-    tslib_1.__extends(UserEditPanel, _super);
-    function UserEditPanel(hubApi, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
-        _this.hubApi = hubApi;
-        _this.awaitable = new Awaitable_1.Awaitable();
-        _this.cancelCommand = new Command_1.Command(_this.cancel.bind(_this));
-        _this.saveCommand = new AsyncCommand_1.AsyncCommand(_this.save.bind(_this));
-        _this.height100();
-        _this.setName(UserEditPanel.name);
-        var flexColumn = _this.addContent(new FlexColumn_1.FlexColumn());
-        var flexFill = flexColumn.addContent(new FlexColumnFill_1.FlexColumnFill());
-        _this.alert = flexFill.container.addContent(new MessageAlert_1.MessageAlert());
-        var toolbar = flexColumn.addContent(HubTheme_1.HubTheme.instance.commandToolbar.toolbar());
-        _this.cancelCommand.add(toolbar.columnEnd.addContent(HubTheme_1.HubTheme.instance.commandToolbar.cancelButton()));
-        _this.saveCommand.add(toolbar.columnEnd.addContent(HubTheme_1.HubTheme.instance.commandToolbar.saveButton()));
-        var editCard = flexFill.addContent(new Card_1.Card());
-        editCard.addCardTitleHeader('Edit User');
-        var cardBody = editCard.addCardBody();
-        _this.editUserForm = cardBody.addContent(new EditUserForm_1.EditUserForm());
-        _this.editUserForm.addOffscreenSubmit();
-        _this.editUserForm.executeLayout();
-        _this.editUserForm.forEachFormGroup(function (fg) {
-            fg.captionColumn.setTextCss(new TextCss_1.TextCss().end().bold());
-        });
-        return _this;
+var UserEditPanelResult = /** @class */ (function () {
+    function UserEditPanelResult(results) {
+        this.results = results;
+    }
+    Object.defineProperty(UserEditPanelResult, "canceled", {
+        get: function () { return new UserEditPanelResult({ canceled: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult, "saved", {
+        get: function () { return new UserEditPanelResult({ saved: {} }); },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult.prototype, "canceled", {
+        get: function () { return this.results.canceled; },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(UserEditPanelResult.prototype, "saved", {
+        get: function () { return this.results.saved; },
+        enumerable: false,
+        configurable: true
+    });
+    return UserEditPanelResult;
+}());
+exports.UserEditPanelResult = UserEditPanelResult;
+var UserEditPanel = /** @class */ (function () {
+    function UserEditPanel(hubApi, view) {
+        this.hubApi = hubApi;
+        this.view = view;
+        this.awaitable = new Awaitable_1.Awaitable();
+        this.cancelCommand = new Command_1.Command(this.cancel.bind(this));
+        this.saveCommand = new AsyncCommand_1.AsyncCommand(this.save.bind(this));
+        this.alert = new MessageAlert_1.MessageAlert(this.view.alert);
+        this.cancelCommand.add(this.view.cancelButton);
+        this.saveCommand.add(this.view.saveButton);
+        new TextBlock_1.TextBlock('Edit User', this.view.titleHeader);
+        this.editUserForm = new EditUserForm_1.EditUserForm(this.view.editUserForm);
     }
     UserEditPanel.prototype.setUserID = function (userID) {
         this.userID = userID;
@@ -92,7 +97,7 @@ var UserEditPanel = /** @class */ (function (_super) {
         return this.awaitable.start();
     };
     UserEditPanel.prototype.cancel = function () {
-        this.awaitable.resolve(new Result_1.Result(UserEditPanel.ResultKeys.canceled));
+        this.awaitable.resolve(UserEditPanelResult.canceled);
     };
     UserEditPanel.prototype.save = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
@@ -103,18 +108,16 @@ var UserEditPanel = /** @class */ (function (_super) {
                     case 1:
                         result = _a.sent();
                         if (result.succeeded()) {
-                            this.awaitable.resolve(new Result_1.Result(UserEditPanel.ResultKeys.saved));
+                            this.awaitable.resolve(UserEditPanelResult.saved);
                         }
                         return [2 /*return*/];
                 }
             });
         });
     };
-    UserEditPanel.ResultKeys = {
-        canceled: 'canceled',
-        saved: 'saved'
-    };
+    UserEditPanel.prototype.activate = function () { this.view.show(); };
+    UserEditPanel.prototype.deactivate = function () { this.view.hide(); };
     return UserEditPanel;
-}(Block_1.Block));
+}());
 exports.UserEditPanel = UserEditPanel;
 //# sourceMappingURL=UserEditPanel.js.map

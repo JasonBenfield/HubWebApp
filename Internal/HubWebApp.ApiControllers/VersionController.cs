@@ -1,43 +1,23 @@
 // Generated Code
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_HubAppApi.VersionInquiry;
-using XTI_HubAppApi;
-using XTI_HubAppApi.Users;
-using XTI_App;
-using XTI_WebApp.Api;
-
-namespace HubWebApp.ApiControllers
+namespace HubWebApp.ApiControllers;
+[Authorize]
+public class VersionController : Controller
 {
-    [Authorize]
-    public class VersionController : Controller
+    private readonly HubAppApi api;
+    public VersionController(HubAppApi api)
     {
-        public VersionController(HubAppApi api)
-        {
-            this.api = api;
-        }
+        this.api = api;
+    }
 
-        private readonly HubAppApi api;
-        [HttpPost]
-        public Task<ResultContainer<AppVersionModel>> GetCurrentVersion()
-        {
-            return api.Group("Version").Action<EmptyRequest, AppVersionModel>("GetCurrentVersion").Execute(new EmptyRequest());
-        }
+    [HttpPost]
+    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string model)
+    {
+        return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model);
+    }
 
-        [HttpPost]
-        public Task<ResultContainer<AppVersionModel>> GetVersion([FromBody] string model)
-        {
-            return api.Group("Version").Action<string, AppVersionModel>("GetVersion").Execute(model);
-        }
-
-        [HttpPost]
-        public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetVersionResourceGroupRequest model)
-        {
-            return api.Group("Version").Action<GetVersionResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model);
-        }
+    [HttpPost]
+    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetVersionResourceGroupRequest model)
+    {
+        return api.Group("Version").Action<GetVersionResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model);
     }
 }

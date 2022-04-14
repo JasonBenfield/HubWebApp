@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="XTI_Git.Fakes" Version="1.1.10" />
-    <PackageReference Include="XTI_GitHub.Fakes" Version="1.1.10" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="XTI_Git.Fakes" Version="1.2.8-dev220112214142687" />
+    <PackageReference Include="XTI_GitHub.Fakes" Version="1.2.8-dev220112214142687" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Fakes\HubWebApp.Fakes.csproj" />
-    <ProjectReference Include="..\..\Internal\XTI_Version\XTI_Version.csproj" />
+    <ProjectReference Include="..\..\Internal\XTI_Admin\XTI_Admin.csproj" />
     <ProjectReference Include="..\..\Lib\XTI_AppSetupApp.Extensions\XTI_AppSetupApp.Extensions.csproj" />
-    <ProjectReference Include="..\..\Lib\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
+    <ProjectReference Include="..\..\Internal\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
   </ItemGroup>
 
 </Project>

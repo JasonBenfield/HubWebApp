@@ -1,28 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestExpandedListItem = void 0;
-var tslib_1 = require("tslib");
-var FormattedDate_1 = require("XtiShared/FormattedDate");
-var Row_1 = require("XtiShared/Grid/Row");
-var BlockViewModel_1 = require("XtiShared/Html/BlockViewModel");
-var TextSpan_1 = require("XtiShared/Html/TextSpan");
-var RequestExpandedListItem = /** @class */ (function (_super) {
-    tslib_1.__extends(RequestExpandedListItem, _super);
-    function RequestExpandedListItem(req, vm) {
-        if (vm === void 0) { vm = new BlockViewModel_1.BlockViewModel(); }
-        var _this = _super.call(this, vm) || this;
+var FormattedDate_1 = require("@jasonbenfield/sharedwebapp/FormattedDate");
+var TextBlock_1 = require("@jasonbenfield/sharedwebapp/Html/TextBlock");
+var RequestExpandedListItem = /** @class */ (function () {
+    function RequestExpandedListItem(req, view) {
         var timeStarted = new FormattedDate_1.FormattedDate(req.TimeStarted).formatDateTime();
-        _this.addColumn()
-            .addContent(new TextSpan_1.TextSpan(timeStarted));
-        _this.addColumn()
-            .addContent(new TextSpan_1.TextSpan(req.GroupName));
-        _this.addColumn()
-            .addContent(new TextSpan_1.TextSpan(req.ActionName));
-        _this.addColumn()
-            .addContent(new TextSpan_1.TextSpan(req.UserName));
-        return _this;
+        new TextBlock_1.TextBlock(timeStarted, view.timeStarted);
+        new TextBlock_1.TextBlock(req.GroupName, view.groupName);
+        new TextBlock_1.TextBlock(req.ActionName, view.actionName);
+        new TextBlock_1.TextBlock(req.UserName, view.userName);
     }
     return RequestExpandedListItem;
-}(Row_1.Row));
+}());
 exports.RequestExpandedListItem = RequestExpandedListItem;
 //# sourceMappingURL=RequestExpandedListItem.js.map

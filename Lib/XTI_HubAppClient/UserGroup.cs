@@ -1,15 +1,8 @@
 // Generated Code
-using XTI_WebAppClient;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class UserGroup : AppClientGroup
 {
-    public sealed partial class UserGroup : AppClientGroup
+    public UserGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "User")
     {
-        public UserGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "User")
-        {
-        }
     }
 }

@@ -1,8 +1,10 @@
 ﻿const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const entry = {
-    user: './Imports/Shared/User/UserPage.js',
-    login: './Scripts/Hub/Auth/LoginPage.js',
+    user: './Scripts/Internal/User/Start/MainPage.ts',
+    accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
+    error: './Scripts/Internal/User/Error/MainPage.ts',
+    login: './Scripts/Hub/Auth/LoginPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
@@ -51,7 +53,8 @@ const exportModule = {
                 options: {
                     minimize: {
                         removeComments: false
-                    }
+                    },
+                    esModule: false
                 }
             }]
         },
@@ -71,8 +74,6 @@ const outputFilename = '[name].js';
 
 const resolve = {
     alias: {
-        xtistart: path.resolve(__dirname, 'Scripts/Internal/Startup.js'),
-        XtiShared: path.resolve(__dirname, 'Imports/Shared/')
     }
 };
 const plugins = [
@@ -85,6 +86,7 @@ module.exports = [
     {
         mode: 'production',
         context: __dirname,
+        devtool: false,
         entry: entry,
         module: exportModule,
         plugins: plugins,
@@ -97,6 +99,7 @@ module.exports = [
     {
         mode: 'development',
         context: __dirname,
+        devtool: 'eval-source-map',
         entry: entry,
         module: exportModule,
         plugins: plugins,

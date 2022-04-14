@@ -1,35 +1,24 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { Card } from 'XtiShared/Card/Card';
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { Row } from "XtiShared/Grid/Row";
-import { TextSpan } from 'XtiShared/Html/TextSpan';
-import { ColumnCss } from "XtiShared/ColumnCss";
+﻿import { CardAlert } from '@jasonbenfield/sharedwebapp/Card/CardAlert';
+import { CardView } from '@jasonbenfield/sharedwebapp/Card/CardView';
+import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { AppComponentView } from "./AppComponentView";
 
-export class AppComponent extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi,
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super();
-        this.addCardTitleHeader('App');
-        this.alert = this.addCardAlert().alert;
-        let row = this.addCardBody()
-            .addContent(new Row());
-        this.appName = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan());
-        this.appTitle = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan());
-        this.appType = row.addColumn()
-            .addContent(new TextSpan());
-    }
-
+export class AppComponent extends CardView {
     private readonly alert: MessageAlert;
-    private readonly appName: TextSpan;
-    private readonly appTitle: TextSpan;
-    private readonly appType: TextSpan;
+    private readonly appName: TextBlock;
+    private readonly appTitle: TextBlock;
+    private readonly appType: TextBlock;
+
+    constructor(private readonly hubApi: HubAppApi, view: AppComponentView) {
+        super();
+        new TextBlock('App', view.titleHeader);
+        this.alert = new CardAlert(view.alert).alert;
+        this.appName = new TextBlock('', view.appName);
+        this.appTitle = new TextBlock('', view.appTitle);
+        this.appType = new TextBlock('', view.appType);
+    }
 
     async refresh() {
         let app = await this.getApp();

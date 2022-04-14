@@ -1,25 +1,16 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using XTI_Configuration.Extensions;
+using HubWebApp.Extensions;
+using XTI_Core.Extensions;
+using XTI_Core;
+using XTI_WebApp.Extensions;
+using XTI_Hub;
 
-namespace HubWebApp
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
+builder.Services.AddResponseCaching();
+var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
+builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
+builder.Services.AddServicesForHub(builder.Configuration, args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration
-                (
-                    (hostingContext, config) => config.UseXtiConfiguration(hostingContext.HostingEnvironment, args)
-                )
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+var app = builder.Build();
+app.UseXtiDefaults();
+await app.RunAsync();

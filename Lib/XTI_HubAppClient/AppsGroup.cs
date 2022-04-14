@@ -1,18 +1,13 @@
 // Generated Code
-using XTI_WebAppClient;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
-namespace XTI_HubAppClient
+namespace XTI_HubAppClient;
+public sealed partial class AppsGroup : AppClientGroup
 {
-    public sealed partial class AppsGroup : AppClientGroup
+    public AppsGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Apps")
     {
-        public AppsGroup(IHttpClientFactory httpClientFactory, IXtiToken xtiToken, string baseUrl): base(httpClientFactory, xtiToken, baseUrl, "Apps")
-        {
-        }
-
-        public Task<AppModel[]> All() => Post<AppModel[], EmptyRequest>("All", "", new EmptyRequest());
-        public Task<string> GetAppModifierKey(AppKey model) => Post<string, AppKey>("GetAppModifierKey", "", model);
     }
+
+    public Task<string> GetAppDomain(GetAppDomainRequest model) => Post<string, GetAppDomainRequest>("GetAppDomain", "", model);
+    public Task<AppWithModKeyModel[]> GetApps() => Post<AppWithModKeyModel[], EmptyRequest>("GetApps", "", new EmptyRequest());
+    public Task<AppWithModKeyModel> GetAppById(GetAppByIDRequest model) => Post<AppWithModKeyModel, GetAppByIDRequest>("GetAppById", "", model);
+    public Task<AppWithModKeyModel> GetAppByAppKey(GetAppByAppKeyRequest model) => Post<AppWithModKeyModel, GetAppByAppKeyRequest>("GetAppByAppKey", "", model);
 }

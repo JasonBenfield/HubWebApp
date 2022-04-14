@@ -1,24 +1,28 @@
-﻿import { Startup } from 'xtistart';
+﻿import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
+import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
 import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { Apis } from '../Apis';
 import { AppListPanel } from './AppListPanel';
-import { PageFrame } from 'XtiShared/PageFrame';
-import { PaddingCss } from 'XtiShared/PaddingCss';
+import { MainPageView } from './MainPageView';
 
 class MainPage {
-    constructor(private readonly page: PageFrame) {
-        this.page.content.setPadding(PaddingCss.top(3));
+    private readonly hubApi: HubAppApi;
+    private readonly appListPanel: AppListPanel;
+
+    constructor(page: PageFrameView) {
+        let view = new MainPageView(page);
+        this.hubApi = new Apis(page.modalError).Hub();
+        page.content.setPadding(PaddingCss.top(3));
+        this.appListPanel = new AppListPanel(this.hubApi, view.appListPanel);
         this.activateAppListPanel();
     }
-
-    private readonly hubApi = this.page.api(HubAppApi);
-    private readonly appListPanel = this.page.content.addContent(new AppListPanel(this.hubApi));
 
     private async activateAppListPanel() {
         this.appListPanel.refresh();
         let result = await this.appListPanel.start();
-        if (result.key === AppListPanel.ResultKeys.appSelected) {
-            let app: IAppModel = result.data;
-            this.hubApi.Apps.RedirectToApp.open(app.ID);
+        if (result.appSelected) {
+            this.hubApi.Apps.RedirectToApp.open(result.appSelected.app.ID);
         }
     }
 }

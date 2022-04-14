@@ -1,44 +1,34 @@
-﻿import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { Card } from "XtiShared/Card/Card";
-import { BlockViewModel } from "XtiShared/Html/BlockViewModel";
-import { MessageAlert } from "XtiShared/MessageAlert";
-import { TextSpan } from "XtiShared/Html/TextSpan";
-import { Row } from "XtiShared/Grid/Row";
-import { ColumnCss } from "XtiShared/ColumnCss";
+﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
+import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
 
-export class CurrentVersionComponent extends Card {
-    constructor(
-        private readonly hubApi: HubAppApi, 
-        vm: BlockViewModel = new BlockViewModel()
-    ) {
-        super(vm);
-        this.addCardTitleHeader('Version');
-        this.alert = this.addCardAlert().alert;
-        let row = this.addCardBody()
-            .addContent(new Row());
-        this.versionKey = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpan());
-        this.version = row.addColumn()
-            .addContent(new TextSpan());
-    }
-
+export class CurrentVersionComponent {
     private readonly alert: MessageAlert;
-    private readonly versionKey: TextSpan;
-    private readonly version: TextSpan;
+    private readonly versionKey: TextBlock;
+    private readonly version: TextBlock;
+
+    constructor(private readonly hubApi: HubAppApi, private readonly view: CurrentVersionComponentView) {
+        new TextBlock('Version', this.view.titleHeader);
+        this.alert = new MessageAlert(this.view.alert);
+        this.versionKey = new TextBlock('', this.view.versionKey);
+        this.version = new TextBlock('', this.view.version);
+    }
 
     async refresh() {
         let currentVersion = await this.getCurrentVersion();
-        this.versionKey.setText(currentVersion.VersionKey);
-        this.version.setText(`${currentVersion.Major}.${currentVersion.Minor}.${currentVersion.Patch}`);
+        this.versionKey.setText(currentVersion.VersionKey.DisplayText);
+        this.version.setText(
+            `${currentVersion.VersionNumber.Major}.${currentVersion.VersionNumber.Minor}.${currentVersion.VersionNumber.Patch}`
+        );
     }
 
     private async getCurrentVersion() {
-        let currentVersion: IAppVersionModel;
+        let currentVersion: IXtiVersionModel;
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                currentVersion = await this.hubApi.Version.GetCurrentVersion();
+                currentVersion = await this.hubApi.Version.GetVersion('current');
             }
         );
         return currentVersion;
