@@ -145,7 +145,7 @@ interface IModifierModel {
 interface IRegisterAppRequest {
 	Versions: IXtiVersionModel[];
 	Domain: string;
-	VersionKey: string;
+	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
 }
 interface IXtiVersionModel {
@@ -214,7 +214,7 @@ interface INewInstallationResult {
 interface IBeginInstallationRequest {
 	QualifiedMachineName: string;
 	AppKey: IAppKey;
-	VersionKey: string;
+	VersionKey: IAppVersionKey;
 }
 interface IInstalledRequest {
 	InstallationID: number;

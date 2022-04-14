@@ -5,7 +5,7 @@ exports.VersionGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var VersionGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(VersionGroup, _super);
+    tslib_1.__extends(VersionGroup, _super);
     function VersionGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'Version') || this;
         _this.GetVersionAction = _this.createAction('GetVersion', 'Get Version');

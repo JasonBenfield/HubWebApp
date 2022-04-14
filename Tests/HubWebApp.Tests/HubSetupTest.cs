@@ -62,6 +62,7 @@ internal sealed class HubSetupTest
     {
         var builder = new XtiHostBuilder();
         builder.Services.AddFakesForHubWebApp();
-        return builder.Build().Scope();
+        var sp = builder.Build().Scope();
+        return sp;
     }
 }

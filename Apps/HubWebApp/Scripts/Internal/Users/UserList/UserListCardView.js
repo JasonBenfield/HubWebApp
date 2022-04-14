@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var CardView_1 = require("@jasonbenfield/sharedwebapp/Card/CardView");
 var UserListItemView_1 = require("./UserListItemView");
 var UserListCardView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(UserListCardView, _super);
+    tslib_1.__extends(UserListCardView, _super);
     function UserListCardView() {
         var _this = _super.call(this) || this;
         _this.setName(UserListCardView.name);

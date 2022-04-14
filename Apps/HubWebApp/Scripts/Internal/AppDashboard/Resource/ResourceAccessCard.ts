@@ -1,4 +1,5 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+﻿/// <reference path="../../index.d.ts" />
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
 import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";

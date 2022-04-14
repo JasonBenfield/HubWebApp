@@ -105,9 +105,9 @@ public sealed class BuildProcess
         if (File.Exists(webpackConfigPath))
         {
             Console.WriteLine("Running webpack");
-            var webpackProcess = new WinProcess("webpack")
-                .UseArgumentNameDelimiter("--")
-                .AddArgument("config", new Quoted(webpackConfigPath));
+            var webpackProcess = new WinProcess("webpack");
+                //.UseArgumentNameDelimiter("--")
+                //.AddArgument("config", new Quoted(webpackConfigPath));
             var result = await new CmdProcess(webpackProcess)
                 .SetWorkingDirectory(projectDir)
                 .WriteOutputToConsole()

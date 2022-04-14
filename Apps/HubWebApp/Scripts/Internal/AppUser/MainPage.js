@@ -33,9 +33,9 @@ var MainPage = /** @class */ (function () {
         }
     }
     MainPage.prototype.activateStartPanel = function (userID) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.appUserDataPanel);
@@ -55,9 +55,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateSelectModCategoryPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.selectModCategoryPanel);
@@ -83,9 +83,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateSelectModifierPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.selectModifierPanel);
@@ -106,9 +106,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateUserRolesPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.userRolesPanel);
@@ -127,9 +127,9 @@ var MainPage = /** @class */ (function () {
         });
     };
     MainPage.prototype.activateAddRolePanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.panels.activate(this.addRolePanel);

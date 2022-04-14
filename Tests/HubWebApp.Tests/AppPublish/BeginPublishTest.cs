@@ -263,7 +263,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 GroupName = "HubWebApp",
-                VersionType = AppVersionType.Values.Major,
+                VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
@@ -304,7 +304,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 GroupName = "HubWebApp",
-                VersionType = AppVersionType.Values.Major,
+                VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );

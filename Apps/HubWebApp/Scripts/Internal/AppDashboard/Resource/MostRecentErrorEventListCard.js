@@ -18,9 +18,9 @@ var MostRecentErrorEventListCard = /** @class */ (function () {
         this.resourceID = resourceID;
     };
     MostRecentErrorEventListCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var errorEvents;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getErrorEvents()];
                     case 1:
@@ -37,13 +37,13 @@ var MostRecentErrorEventListCard = /** @class */ (function () {
         });
     };
     MostRecentErrorEventListCard.prototype.getErrorEvents = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var errorEvents;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                            return (0, tslib_1.__generator)(this, function (_a) {
+                    case 0: return [4 /*yield*/, this.alert.infoAction('Loading...', function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                            return tslib_1.__generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, this.hubApi.Resource.GetMostRecentErrorEvents({
                                             VersionKey: 'Current',

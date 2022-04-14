@@ -10,10 +10,10 @@ public sealed class HubAppSetup : IAppSetup
     private readonly AppFactory appFactory;
     private readonly IClock clock;
     private readonly HubAppApiFactory apiFactory;
-    private readonly VersionReader versionReader;
+    private readonly IVersionReader versionReader;
     private readonly string domain;
 
-    public HubAppSetup(AppFactory appFactory, IClock clock, HubAppApiFactory apiFactory, VersionReader versionReader, string domain)
+    public HubAppSetup(AppFactory appFactory, IClock clock, HubAppApiFactory apiFactory, IVersionReader versionReader, string domain)
     {
         this.appFactory = appFactory;
         this.clock = clock;

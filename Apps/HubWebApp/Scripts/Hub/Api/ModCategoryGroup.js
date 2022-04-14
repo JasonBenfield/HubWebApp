@@ -5,7 +5,7 @@ exports.ModCategoryGroup = void 0;
 var tslib_1 = require("tslib");
 var AppApiGroup_1 = require("@jasonbenfield/sharedwebapp/Api/AppApiGroup");
 var ModCategoryGroup = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ModCategoryGroup, _super);
+    tslib_1.__extends(ModCategoryGroup, _super);
     function ModCategoryGroup(events, resourceUrl) {
         var _this = _super.call(this, events, resourceUrl, 'ModCategory') || this;
         _this.GetModCategoryAction = _this.createAction('GetModCategory', 'Get Mod Category');

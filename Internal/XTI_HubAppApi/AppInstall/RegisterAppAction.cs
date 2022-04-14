@@ -1,5 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_Core;
 using XTI_Hub;
 
@@ -18,14 +17,11 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithMod
 
     public async Task<AppWithModKeyModel> Execute(RegisterAppRequest model)
     {
-        var versionKey = string.IsNullOrWhiteSpace(model.VersionKey)
-            ? AppVersionKey.Current
-            : AppVersionKey.Parse(model.VersionKey);
         var appWithModifier = await new AppRegistration(appFactory, clock).Run
         (
             model.AppTemplate,
             model.Domain,
-            versionKey,
+            model.VersionKey,
             model.Versions
         );
         return appWithModifier;

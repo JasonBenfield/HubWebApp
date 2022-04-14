@@ -37,7 +37,8 @@ public sealed class PublishableFolder
     {
         var folderName = new DirectoryInfo(folderPath).Name;
         AppType? appType;
-        if (folderName.Equals("XTI_WebApp", StringComparison.OrdinalIgnoreCase) || folderName.Equals("XTI_ConsoleApp"))
+        var packageNames = new[] { "XTI_WebApp", "XTI_ConsoleApp", "XTI_ServiceApp", "SharedWebApp" };
+        if (packageNames.Contains(folderName, StringComparer.OrdinalIgnoreCase))
         {
             appType = AppType.Values.Package;
         }

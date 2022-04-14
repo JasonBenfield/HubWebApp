@@ -63,7 +63,7 @@ public sealed class DefaultAppSetup : IAppSetup
         var request = new RegisterAppRequest
         {
             AppTemplate = ToClientTemplateModel(template.ToModel()),
-            VersionKey = versionKey.Value,
+            VersionKey = versionKey,
             Versions = versions
         };
         var result = await hubClient.Install.RegisterApp("", request);

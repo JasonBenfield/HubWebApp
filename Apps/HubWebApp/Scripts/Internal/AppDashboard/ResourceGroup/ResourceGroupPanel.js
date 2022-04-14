@@ -78,9 +78,9 @@ var ResourceGroupPanel = /** @class */ (function () {
         this.mostRecentErrorEventListCard.setGroupID(groupID);
     };
     ResourceGroupPanel.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var tasks;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 tasks = [
                     this.resourceGroupComponent.refresh(),
                     this.modCategoryComponent.refresh(),

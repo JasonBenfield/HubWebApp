@@ -16,9 +16,9 @@ var ResourceGroupListCard = /** @class */ (function () {
         this.resourceGroupClicked = this.resourceGroups.itemClicked;
     }
     ResourceGroupListCard.prototype.refresh = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var resourceGroups;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getResourceGroups()];
                     case 1:

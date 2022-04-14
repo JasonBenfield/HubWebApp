@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Core.Fakes;
+using XTI_Hub.Abstractions;
 
 namespace HubWebApp.Tests;
 
@@ -26,7 +27,6 @@ internal sealed class HubTestHost
         await setup.Run(AppVersionKey.Current);
         var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();
         await defaultFakeSetup.Run(AppVersionKey.Current);
-
         var factory = sp.GetRequiredService<AppFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);

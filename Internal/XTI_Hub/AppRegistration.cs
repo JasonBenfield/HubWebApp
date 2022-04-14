@@ -27,7 +27,7 @@ public sealed class AppRegistration
             await app.AddVersionIfNotFound
             (
                 versionModel.GroupName,
-                AppVersionKey.Parse(versionModel.VersionKey),
+                versionModel.VersionKey,
                 clock.Now(),
                 versionModel.Status,
                 versionModel.VersionType,
@@ -52,7 +52,16 @@ public sealed class AppRegistration
     private async Task tryAddUnknownApp()
     {
         var app = await appFactory.Apps.AddOrUpdate(AppKey.Unknown, "", clock.Now());
-        var currentVersion = await app.CurrentVersion();
+        var currentVersion = await appFactory.Versions.AddIfNotFound
+        (
+            "unknown", 
+            AppVersionKey.Current, 
+            clock.Now(), 
+            AppVersionStatus.Values.Current, 
+            AppVersionType.Values.Major, 
+            new AppVersionNumber(1, 0, 0),
+            app
+        );
         var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);

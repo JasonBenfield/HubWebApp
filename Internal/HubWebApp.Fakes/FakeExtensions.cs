@@ -25,7 +25,21 @@ public static class FakeExtensions
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped<AppApiFactory>(sp => sp.GetRequiredService<HubAppApiFactory>());
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
-        services.AddScoped(sp => new VersionReader(""));
+        services.AddScoped<IVersionReader>
+        (
+            sp => new FakeVersionReader
+            (
+                new XtiVersionModel
+                {
+                    GroupName = "hubwebapp",
+                    TimeAdded = DateTimeOffset.Now,
+                    Status = AppVersionStatus.Values.Current,
+                    VersionKey = new AppVersionKey(1),
+                    VersionType = AppVersionType.Values.Major,
+                    VersionNumber = new AppVersionNumber(1, 0, 0)
+                }
+            )
+        );
         services.AddScoped(sp =>
         {
             return new HubAppSetup
@@ -33,7 +47,7 @@ public static class FakeExtensions
                 sp.GetRequiredService<AppFactory>(),
                 sp.GetRequiredService<IClock>(),
                 sp.GetRequiredService<HubAppApiFactory>(),
-                sp.GetRequiredService<VersionReader>(),
+                sp.GetRequiredService<IVersionReader>(),
                 "webapps.example.com"
             );
         });

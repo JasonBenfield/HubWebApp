@@ -9,7 +9,7 @@ var FlexColumnFill_1 = require("@jasonbenfield/sharedwebapp/Html/FlexColumnFill"
 var HubTheme_1 = require("../HubTheme");
 var RoleButtonListItemView_1 = require("./RoleButtonListItemView");
 var AddRolePanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(AddRolePanelView, _super);
+    tslib_1.__extends(AddRolePanelView, _super);
     function AddRolePanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

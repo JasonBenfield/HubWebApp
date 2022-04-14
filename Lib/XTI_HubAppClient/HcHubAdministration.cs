@@ -24,7 +24,7 @@ public sealed class HcHubAdministration : IHubAdministration
         var request = new BeginInstallationRequest
         {
             AppKey = appKey,
-            VersionKey = installVersionKey.DisplayText,
+            VersionKey = installVersionKey,
             QualifiedMachineName = machineName
         };
         return hubClient.Install.BeginCurrentInstallation("", request);
@@ -35,7 +35,7 @@ public sealed class HcHubAdministration : IHubAdministration
         var request = new BeginInstallationRequest
         {
             AppKey = appKey,
-            VersionKey = versionKey.DisplayText,
+            VersionKey = versionKey,
             QualifiedMachineName = machineName
         };
         return hubClient.Install.BeginVersionInstallation("", request);

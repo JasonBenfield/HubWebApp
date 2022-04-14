@@ -32,7 +32,18 @@ public sealed class RegisterAppTest
         {
             AppTemplate = fakeApi.ToModel(),
             VersionKey = AppVersionKey.Current,
-            Versions = new XtiVersionModel[0]
+            Versions = new[]
+            {
+                new XtiVersionModel
+                {
+                    GroupName = "fakewebapp",
+                    TimeAdded = DateTimeOffset.Now,
+                    Status = AppVersionStatus.Values.Current,
+                    VersionKey = new AppVersionKey(1),
+                    VersionNumber = new AppVersionNumber(1,0,0),
+                    VersionType = AppVersionType.Values.Major
+                }
+            }
         };
         return request;
     }

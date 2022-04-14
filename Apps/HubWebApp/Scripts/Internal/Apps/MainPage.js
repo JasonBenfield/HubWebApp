@@ -15,9 +15,9 @@ var MainPage = /** @class */ (function () {
         this.activateAppListPanel();
     }
     MainPage.prototype.activateAppListPanel = function () {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var result;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.appListPanel.refresh();

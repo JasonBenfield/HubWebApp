@@ -28,10 +28,10 @@ await Host.CreateDefaultBuilder(args)
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser());
         services.AddConfigurationOptions<SetupOptions>();
-        services.AddScoped(sp =>
+        services.AddScoped<IVersionReader>(sp =>
         {
             var options = sp.GetRequiredService<SetupOptions>();
-            return new VersionReader(options.VersionsPath);
+            return new FileVersionReader(options.VersionsPath);
         });
         services.AddScoped
         (
@@ -40,7 +40,7 @@ await Host.CreateDefaultBuilder(args)
                 sp.GetRequiredService<AppFactory>(),
                 sp.GetRequiredService<IClock>(),
                 sp.GetRequiredService<HubAppApiFactory>(),
-                sp.GetRequiredService<VersionReader>(),
+                sp.GetRequiredService<IVersionReader>(),
                 sp.GetRequiredService<SetupOptions>().Domain
             )
         );

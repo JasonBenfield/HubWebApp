@@ -68,9 +68,8 @@ internal sealed class PublishProcess
             }
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
             await new PublishNpmProcess(xtiEnv, xtiFolder).Run(appKey, versionKey, semanticVersion);
-            if (!appKey.Type.Equals(AppType.Values.Package) && xtiEnv.IsProduction())
+            if (!appKey.Type.Equals(AppType.Values.Package) && release != null)
             {
-                if (release == null) { throw new Exception("Release not found"); }
                 await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
             }
             await new PublishLibProcess(scopes).Run(semanticVersion);

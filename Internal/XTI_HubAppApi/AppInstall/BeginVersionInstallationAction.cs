@@ -13,9 +13,6 @@ public sealed class BeginVersionInstallationAction : AppAction<BeginInstallation
         this.hubAdministration = hubAdministration;
     }
 
-    public Task<int> Execute(BeginInstallationRequest model)
-    {
-        var versionKey = AppVersionKey.Parse(model.VersionKey);
-        return hubAdministration.BeginVersionInstall(model.AppKey, versionKey, model.QualifiedMachineName);
-    }
+    public Task<int> Execute(BeginInstallationRequest model) =>
+        hubAdministration.BeginVersionInstall(model.AppKey, model.VersionKey, model.QualifiedMachineName);
 }

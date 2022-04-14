@@ -12,7 +12,7 @@ var MessageAlertView_1 = require("@jasonbenfield/sharedwebapp/MessageAlertView")
 var HubTheme_1 = require("../HubTheme");
 var ModifierButtonListItemView_1 = require("./ModifierButtonListItemView");
 var SelectModifierPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(SelectModifierPanelView, _super);
+    tslib_1.__extends(SelectModifierPanelView, _super);
     function SelectModifierPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

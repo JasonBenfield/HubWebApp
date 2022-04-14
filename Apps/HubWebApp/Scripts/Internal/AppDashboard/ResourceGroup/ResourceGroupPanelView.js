@@ -14,7 +14,7 @@ var ModCategoryComponentView_1 = require("./ModCategoryComponentView");
 var ResourceGroupComponentView_1 = require("./ResourceGroupComponentView");
 var ResourceListCardView_1 = require("./ResourceListCardView");
 var ResourceGroupPanelView = /** @class */ (function (_super) {
-    (0, tslib_1.__extends)(ResourceGroupPanelView, _super);
+    tslib_1.__extends(ResourceGroupPanelView, _super);
     function ResourceGroupPanelView() {
         var _this = _super.call(this) || this;
         _this.height100();

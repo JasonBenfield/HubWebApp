@@ -2,6 +2,7 @@
 using XTI_AppSetupApp.Extensions;
 using XTI_Core;
 using XTI_Core.Fakes;
+using XTI_Hub.Abstractions;
 
 namespace HubWebApp.Tests;
 
@@ -28,6 +29,7 @@ internal static class TestExtensions
             sp => sp.GetRequiredService<HubAppApiFactory>().Create(sp.GetRequiredService<IAppApiUser>())
         );
         services.AddScoped<IAppSetup, DefaultAppSetup>();
+        services.AddScoped<IHubAdministration, DbHubAdministration>();
 
     }
 }

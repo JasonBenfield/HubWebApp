@@ -28,7 +28,7 @@ internal sealed class PublishNpmProcess
         );
         if (Directory.Exists(sourceScriptPath))
         {
-            var tempExportDir = Path.Combine(new DirectoryInfo(projectDir).Parent?.Parent?.FullName ?? "", "NpmTempExports");
+            var tempExportDir = Path.Combine(Path.GetTempPath(), getAppName(appKey), "NpmExports");
             var exportScriptDir = Path.Combine(publishDir, "npm");
             if (Directory.Exists(tempExportDir))
             {
@@ -79,6 +79,15 @@ internal sealed class PublishNpmProcess
                     .Run();
 
                 new IndexFile(tempExportSrcDir).Write();
+                var npmrcPath = Path.Combine(projectDir, ".npmrc");
+                if (File.Exists(npmrcPath))
+                {
+                    File.Copy
+                    (
+                        npmrcPath,
+                        Path.Combine(tempExportSrcDir, ".npmrc")
+                    );
+                }
                 File.Copy
                 (
                     Path.Combine(projectDir, "package.json"),
@@ -141,9 +150,10 @@ internal sealed class PublishNpmProcess
             if (xtiEnv.IsProduction())
             {
                 var npmPublishProcess = new WinProcess("npm")
-                    .UseArgumentNameDelimiter("")
+                    .UseArgumentNameDelimiter("--")
                     .UseArgumentValueDelimiter(" ")
-                    .AddArgument("publish");
+                    .AddArgument("publish")
+                    .AddArgument("registry", "https://npm.pkg.github.com");
                 var npmPublishResult = await new CmdProcess(npmPublishProcess)
                     .SetWorkingDirectory(exportScriptDir)
                     .WriteOutputToConsole()

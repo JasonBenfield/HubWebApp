@@ -90,7 +90,7 @@ public sealed class App : IApp
     public Task<AppRole> Role(AppRoleName roleName) =>
         factory.Roles.Role(this, roleName);
 
-    public Task<XtiVersion> AddVersionIfNotFound
+    public Task<AppVersion> AddVersionIfNotFound
     (
         string groupName,
         AppVersionKey key,
