@@ -127,7 +127,7 @@ internal sealed class PublishProcess
                 await gitHubRepo.UploadReleaseAsset(release, new FileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
             }
         }
-        var versionsPath = Path.Combine(publishDir, $"{appKeyText}Versions.json");
+        var versionsPath = Path.Combine(publishDir, $"versions.json");
         if (File.Exists(versionsPath))
         {
             Console.WriteLine("Uploading versions.json");

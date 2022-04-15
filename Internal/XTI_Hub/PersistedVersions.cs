@@ -23,7 +23,7 @@ public sealed class PersistedVersions
         var versionModels = versions.Select(v => v.ToModel()).ToArray();
         var serialized = JsonSerializer.Serialize
         (
-            versions,
+            versionModels,
             new JsonSerializerOptions { WriteIndented = true }
         );
         var dir = Path.GetDirectoryName(path) ?? "";

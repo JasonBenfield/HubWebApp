@@ -12,5 +12,8 @@ public enum CommandNames
     NewIssue,
     StartIssue,
     CompleteIssue,
-    InstallationUser
+    InstallationUser,
+    ShowCredentials,
+    StoreCredentials,
+    DecryptTempLog
 }

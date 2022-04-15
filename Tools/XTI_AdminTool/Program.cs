@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Admin;
@@ -20,6 +21,8 @@ using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_HubDB.Extensions;
 using XTI_Secrets.Extensions;
+using XTI_TempLog;
+using XTI_TempLog.Extensions;
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
@@ -88,6 +91,12 @@ await Host.CreateDefaultBuilder(args)
             );
             services.AddScoped(sp => new PublishableFolder(Environment.CurrentDirectory));
             services.AddScoped<SelectedAppKeys>();
+            services.AddScoped<ITempLogs>(sp =>
+            {
+                var dataProtector = sp.GetDataProtector("XTI_TempLog");
+                var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
+                return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
+            });
             services.AddHubClientServices();
             services.AddScoped<InstallationUserCredentials>();
             services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());

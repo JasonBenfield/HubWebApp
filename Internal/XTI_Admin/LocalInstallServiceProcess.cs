@@ -43,8 +43,8 @@ internal sealed class LocalInstallServiceProcess
         var installServiceUrl = $"http://{options.DestinationMachine}:61862";
         Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey} {options.InstallationUserName} {options.InstallationPassword} {release}");
         using var response = await client.PostAsync(installServiceUrl, content);
-        response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseBody);
+        Console.WriteLine($"Response: {response.StatusCode} {responseBody}");
+        response.EnsureSuccessStatusCode();
     }
 }

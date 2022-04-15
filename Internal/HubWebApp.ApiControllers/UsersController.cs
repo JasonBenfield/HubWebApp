@@ -11,6 +11,7 @@ public class UsersController : Controller
 
     public async Task<IActionResult> Index()
     {
+        throw new Exception("Testing");
         var result = await api.Group("Users").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest());
         return View(result.Data.ViewName);
     }

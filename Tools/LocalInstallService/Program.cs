@@ -1,6 +1,7 @@
 ﻿using LocalInstallService;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
+using XTI_Core;
 using XTI_Core.Extensions;
 
 #pragma warning disable CA1416 // Validate platform compatibility
@@ -16,6 +17,7 @@ WebHost.CreateDefaultBuilder(args)
     (
         (hostContext, services) =>
         {
+            services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
             services.AddSingleton<Installer>();
         }
     )

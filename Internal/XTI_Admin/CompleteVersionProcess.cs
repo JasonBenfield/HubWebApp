@@ -28,7 +28,14 @@ public sealed class CompleteVersionProcess
         await gitRepo.CommitChanges($"Version {versionBranchName.Version.Key}");
         await gitHubRepo.CompleteVersion(versionBranchName);
         var repoInfo = await gitHubRepo.RepositoryInformation();
-        await gitRepo.CheckoutBranch(repoInfo.DefaultBranch);
+        try
+        {
+            await gitRepo.CheckoutBranch(repoInfo.DefaultBranch);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"***Error Checking out branch {repoInfo.DefaultBranch}***\r\n{ex}");
+        }
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
         await hubAdmin.EndPublish

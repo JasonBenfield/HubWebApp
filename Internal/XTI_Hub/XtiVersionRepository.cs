@@ -71,12 +71,13 @@ public sealed class XtiVersionRepository
 
     private async Task<AppVersionKey> NextKey(string groupName)
     {
-        var maxKey = await factory.DB
+        var keys = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.GroupName == groupName)
-            .Select(v => int.Parse(v.VersionKey.Substring(1)))
-            .OrderByDescending(v => v)
-            .FirstOrDefaultAsync();
+            .Where(v => v.GroupName == groupName && v.VersionKey.StartsWith("V"))
+            .Select(v => v.VersionKey.Substring(1))
+            .ToArrayAsync();
+        var keyValues = keys.Select(k => int.Parse(k));
+        var maxKey = keyValues.Any() ? keyValues.Max() : 0;
         return new AppVersionKey(maxKey + 1);
     }
 

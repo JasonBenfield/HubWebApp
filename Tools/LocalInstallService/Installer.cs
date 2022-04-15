@@ -1,6 +1,5 @@
-﻿using System.Diagnostics;
-using System.Text;
-using XTI_Core;
+﻿using XTI_Core;
+using XTI_Processes;
 
 namespace LocalInstallService;
 
@@ -15,40 +14,67 @@ sealed class Installer
 
     public async Task Run(HttpContext context)
     {
-        if (context.Request.Method == "POST")
+        var xtiFolder = new XtiFolder(xtiEnv);
+        var appDataFolder = xtiFolder.AppDataFolder()
+                .WithSubFolder("LocalInstallService");
+        appDataFolder.TryCreate();
+        using var writer = new StreamWriter(appDataFolder.FilePath($"log_{DateTime.Today:yyMMdd}.txt"), true);
+        await writer.WriteLineAsync($"{DateTime.Now:HH:mm:ss} {context.Request.Method} {context.Request.Path}");
+        try
         {
-            var command = context.Request.Form["command"].FirstOrDefault() ?? "";
-            if (command.Equals("install", StringComparison.OrdinalIgnoreCase))
+            if (context.Request.Method == "POST")
             {
-                var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
-                var appName = context.Request.Form["appName"].FirstOrDefault() ?? "";
-                var appType = context.Request.Form["appType"].FirstOrDefault() ?? "";
-                var installationUserName = context.Request.Form["installationUserName"].FirstOrDefault() ?? "";
-                var installationPassword = context.Request.Form["installationPassword"].FirstOrDefault() ?? "";
-                var versionKey = context.Request.Form["versionKey"].FirstOrDefault() ?? "";
-                var domain = context.Request.Form["domain"].FirstOrDefault() ?? "";
-                var repoOwner = context.Request.Form["repoOwner"].FirstOrDefault() ?? "";
-                var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
-                var release = context.Request.Form["release"].FirstOrDefault() ?? "";
-                var machineName = context.Request.Form["machineName"].FirstOrDefault() ?? "";
-                var xtiFolder = new XtiFolder(xtiEnv);
-                var path = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
-                var args = new StringBuilder();
-                args.Append($"--environment {envName}");
-                args.Append($" --AppName {appName} --AppType {appType}");
-                args.Append($" --VersionKey {versionKey}");
-                args.Append($" --InstallationUserName {installationUserName} --InstallationPassword {installationPassword}");
-                args.Append($" --Domain {domain}");
-                args.Append($" --RepoOwner {repoOwner} --RepoName {repoName}");
-                args.Append($" --Release {release}");
-                args.Append($" --DestinationMachine {machineName}");
-                Process.Start(path, args.ToString());
-                await context.Response.WriteAsync($"Ran {path} {args}");
+                var command = context.Request.Form["command"].FirstOrDefault() ?? "";
+                if (command.Equals("install", StringComparison.OrdinalIgnoreCase))
+                {
+                    var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
+                    var appName = context.Request.Form["appName"].FirstOrDefault() ?? "";
+                    var appType = context.Request.Form["appType"].FirstOrDefault() ?? "";
+                    var installationUserName = context.Request.Form["installationUserName"].FirstOrDefault() ?? "";
+                    var installationPassword = context.Request.Form["installationPassword"].FirstOrDefault() ?? "";
+                    var versionKey = context.Request.Form["versionKey"].FirstOrDefault() ?? "";
+                    var domain = context.Request.Form["domain"].FirstOrDefault() ?? "";
+                    var repoOwner = context.Request.Form["repoOwner"].FirstOrDefault() ?? "";
+                    var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
+                    var release = context.Request.Form["release"].FirstOrDefault() ?? "";
+                    var machineName = context.Request.Form["machineName"].FirstOrDefault() ?? "";
+                    var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
+                    var process = new XtiProcess(adminToolPath)
+                        .WriteOutputToConsole()
+                        .UseEnvironment(envName)
+                        .AddConfigOptions
+                        (
+                            new
+                            {
+                                Command = "Install",
+                                AppName = appName,
+                                AppType = appType,
+                                VersionKey = versionKey,
+                                InstallationUserName = installationUserName,
+                                InstallationPassword = installationPassword,
+                                Domain = domain,
+                                RepoOwner = repoOwner,
+                                RepoName = repoName,
+                                Release = release,
+                                DestinationMachine = machineName
+                            }
+                        );
+                    await writer.WriteLineAsync($"Running {process.CommandText()}");
+                    var result = await process.Run();
+                    await writer.WriteLineAsync($"Ran {process.CommandText()}\r\nExit Code: {result.ExitCode}\r\nOutput:\r\n");
+                    await writer.WriteLineAsync(string.Join("\r\n", result.OutputLines));
+                    result.EnsureExitCodeIsZero();
+                }
+            }
+            else
+            {
+                await context.Response.WriteAsync("Running");
             }
         }
-        else
+        catch (Exception ex)
         {
-            await context.Response.WriteAsync("Running");
+            await writer.WriteLineAsync($"***Error***\r\n{ex}");
+            throw;
         }
     }
 }

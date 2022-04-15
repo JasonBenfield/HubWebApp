@@ -22,9 +22,12 @@ public sealed class AdminOptions
     public int IssueNumber { get; set; }
     public bool StartIssue { get; set; }
     public HubAdministrationTypes HubAdministrationType { get; set; } = HubAdministrationTypes.Default;
+    public string UserName { get; set; } = "";
+    public string Password { get; set; } = "";
+    public string CredentialKey { get; set; } = "";
 
     public AppKey AppKey() =>
-        string.IsNullOrWhiteSpace(AppName) 
+        string.IsNullOrWhiteSpace(AppName)
         ? XTI_App.Abstractions.AppKey.Unknown
         : new AppKey(new AppName(AppName), XTI_App.Abstractions.AppType.Values.Value(AppType));
 }

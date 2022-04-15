@@ -55,6 +55,18 @@ public sealed class CommandFactory
         {
             command = new InstallationUserCommand(scopes);
         }
+        else if(commandName == CommandNames.ShowCredentials)
+        {
+            command = new ShowCredentialsCommand(scopes);
+        }
+        else if(commandName == CommandNames.StoreCredentials)
+        {
+            command = new StoreCredentialsCommand(scopes);
+        }
+        else if(commandName == CommandNames.DecryptTempLog)
+        {
+            command = new DecryptTempLogCommand(scopes);
+        }
         else
         {
             throw new NotSupportedException($"Command '{options.Command}' is not supported");
