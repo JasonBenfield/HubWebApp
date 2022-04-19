@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TypeScriptToolsVersion>4.4</TypeScriptToolsVersion>
+		<UserSecretsId>06fc7bb1-bce8-444d-8883-ddda42ebf3f1</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.14-dev220418212100252" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Internal\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<TypeScriptCompile Include="Scripts\**\*.ts" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="**/*.private.*" CopyToPublishDirectory="Never" />
+	</ItemGroup>
+</Project>

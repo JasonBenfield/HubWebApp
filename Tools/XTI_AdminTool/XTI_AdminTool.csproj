@@ -12,13 +12,13 @@
 		<PackageReference Include="XTI_Git.GitLib" Version="1.2.10" />
 		<PackageReference Include="XTI_GitHub.Web" Version="1.2.10" />
 		<PackageReference Include="XTI_Git.Secrets" Version="1.2.10" />
-		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.3" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.4" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Internal\XTI_Admin\XTI_Admin.csproj" />
-		<ProjectReference Include="..\..\Internal\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
-		<ProjectReference Include="..\..\Lib\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
+		<ProjectReference Include="..\..\HubWebApp\Internal\XTI_Admin\XTI_Admin.csproj" />
+		<ProjectReference Include="..\..\HubWebApp\Internal\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
+		<ProjectReference Include="..\..\HubWebApp\Lib\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
 	</ItemGroup>
 
 </Project>

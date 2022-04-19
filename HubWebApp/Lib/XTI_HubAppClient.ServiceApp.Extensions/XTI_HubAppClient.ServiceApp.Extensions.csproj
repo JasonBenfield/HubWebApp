@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.14-dev220418082514671" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.14-dev220418082514671" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
+	</ItemGroup>
+
+</Project>
