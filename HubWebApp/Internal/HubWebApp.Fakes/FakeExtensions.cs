@@ -30,7 +30,7 @@ public static class FakeExtensions
             (
                 new XtiVersionModel
                 {
-                    GroupName = "hubwebapp",
+                    VersionName = "hubwebapp",
                     TimeAdded = DateTimeOffset.Now,
                     Status = AppVersionStatus.Values.Current,
                     VersionKey = new AppVersionKey(1),

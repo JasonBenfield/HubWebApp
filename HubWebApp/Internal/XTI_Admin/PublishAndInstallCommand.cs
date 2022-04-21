@@ -16,6 +16,7 @@ internal sealed class PublishAndInstallCommand : ICommand
         Console.WriteLine($"App Keys: {joinedAppKeys}");
         await new BuildProcess(scopes).Run();
         await new PublishProcess(scopes).Run();
+        Console.WriteLine("Beginning Install");
         await new InstallProcess(scopes).Run();
     }
 }

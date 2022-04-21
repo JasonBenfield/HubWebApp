@@ -11,17 +11,15 @@ public sealed class DefaultAppSetup : IAppSetup
     private readonly HubAppClient hubClient;
     private readonly SystemUserCredentials systemUserCredentials;
     private readonly AppApiFactory apiFactory;
-    private readonly VersionReader versionReader;
     private readonly string domain;
     private AppModel? app;
     private string? modKey;
 
-    public DefaultAppSetup(HubAppClient hubClient, AppApiFactory apiFactory, SystemUserCredentials systemUserCredentials, VersionReader versionReader, SetupOptions options)
+    public DefaultAppSetup(HubAppClient hubClient, AppApiFactory apiFactory, SystemUserCredentials systemUserCredentials, SetupOptions options)
     {
         this.hubClient = hubClient;
         this.apiFactory = apiFactory;
         this.systemUserCredentials = systemUserCredentials;
-        this.versionReader = versionReader;
         domain = options.Domain;
     }
 
@@ -37,7 +35,6 @@ public sealed class DefaultAppSetup : IAppSetup
 
     public async Task Run(AppVersionKey versionKey)
     {
-        var versions = await versionReader.Versions();
         var template = apiFactory.CreateTemplate();
         var password = Guid.NewGuid().ToString();
         var systemUser = await hubClient.Install.AddSystemUser
@@ -62,8 +59,7 @@ public sealed class DefaultAppSetup : IAppSetup
         var request = new RegisterAppRequest
         {
             AppTemplate = ToClientTemplateModel(template.ToModel()),
-            VersionKey = versionKey,
-            Versions = versions
+            VersionKey = versionKey
         };
         var result = await hubClient.Install.RegisterApp("", request);
         app = result.App;

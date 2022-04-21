@@ -1,29 +1,22 @@
 ﻿using System.Text.Json;
-using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
 public sealed class PersistedVersions
 {
-    private readonly AppFactory appFactory;
-    private readonly AppKey appKey;
     private readonly string path;
 
-    public PersistedVersions(AppFactory appFactory, AppKey appKey, string path)
+    public PersistedVersions(string path)
     {
-        this.appFactory = appFactory;
-        this.appKey = appKey;
         this.path = path;
     }
 
-    public async Task Store()
+    public async Task Store(XtiVersionModel[] versions)
     {
-        var app = await appFactory.Apps.App(appKey);
-        var versions = await app.Versions();
-        var versionModels = versions.Select(v => v.ToModel()).ToArray();
         var serialized = JsonSerializer.Serialize
         (
-            versionModels,
+            versions,
             new JsonSerializerOptions { WriteIndented = true }
         );
         var dir = Path.GetDirectoryName(path) ?? "";

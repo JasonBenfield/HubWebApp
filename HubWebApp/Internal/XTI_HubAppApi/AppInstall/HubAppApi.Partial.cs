@@ -5,13 +5,13 @@ namespace XTI_HubAppApi;
 
 partial class HubAppApi
 {
-    private InstallGroup? install;
+    private AppInstallGroup? install;
 
-    public InstallGroup Install { get=>install ?? throw new ArgumentNullException(nameof(install)); }
+    public AppInstallGroup Install { get=>install ?? throw new ArgumentNullException(nameof(install)); }
 
     partial void createInstall(IServiceProvider services)
     {
-        install = new InstallGroup
+        install = new AppInstallGroup
         (
             source.AddGroup
             (

@@ -14,13 +14,13 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var newVersion = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         var request = new PublishVersionRequest
         {
-            GroupName = newVersion.GroupName,
+            VersionName = newVersion.VersionName,
             VersionKey = newVersion.VersionKey
         };
         await hubApi.Publish.BeginPublish.Invoke(request);
@@ -37,44 +37,44 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var version1 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version1.GroupName,
+            VersionName = version1.VersionName,
             VersionKey = version1.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version1.GroupName,
+            VersionName = version1.VersionName,
             VersionKey = version1.VersionKey
         });
         var version2 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version2.GroupName,
+            VersionName = version2.VersionName,
             VersionKey = version2.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version2.GroupName,
+            VersionName = version2.VersionName,
             VersionKey = version2.VersionKey
         });
         version1 = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
-            GroupName = version1.GroupName,
+            VersionName = version1.VersionName,
             VersionKey = version1.VersionKey
         });
         version2 = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
-            GroupName = version2.GroupName,
+            VersionName = version2.VersionName,
             VersionKey = version2.VersionKey
         });
         Assert.That(version1.Status, Is.EqualTo(AppVersionStatus.Values.Old), "Should archive previous version");

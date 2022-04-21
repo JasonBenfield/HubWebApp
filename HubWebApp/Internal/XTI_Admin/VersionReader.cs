@@ -1,9 +1,9 @@
 ﻿using XTI_Core;
 using XTI_Hub.Abstractions;
 
-namespace XTI_AppSetupApp.Extensions;
+namespace XTI_Admin;
 
-public sealed class VersionReader
+internal sealed class VersionReader
 {
     private readonly string path;
 

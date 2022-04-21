@@ -90,17 +90,6 @@ public sealed class App : IApp
     public Task<AppRole> Role(AppRoleName roleName) =>
         factory.Roles.Role(this, roleName);
 
-    public Task<AppVersion> AddVersionIfNotFound
-    (
-        string groupName,
-        AppVersionKey key,
-        DateTimeOffset timeAdded,
-        AppVersionStatus status,
-        AppVersionType type,
-        AppVersionNumber versionNumber
-    ) =>
-        factory.Versions.AddIfNotFound(groupName, key, timeAdded, status, type, versionNumber, this);
-
     internal Task AddVersionIfNotFound(XtiVersion version) => factory.Versions.AddVersionToAppIfNotFound(this, version);
 
     public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);
@@ -147,7 +136,7 @@ public sealed class App : IApp
     public Task<AppVersion> Version(AppVersionKey versionKey) => factory.Versions.VersionByApp(this, versionKey);
 
     public Task<AppVersion> VersionOrDefault(AppVersionKey versionKey) =>
-        factory.Versions.VersionByAppOrDefault(this, versionKey);
+        factory.Versions.VersionByAppOrUnknown(this, versionKey);
 
     public Task<XtiVersion[]> Versions() => factory.Versions.VersionsByApp(this);
 

@@ -14,7 +14,7 @@ sealed class NewVersionTest
         tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
@@ -32,7 +32,7 @@ sealed class NewVersionTest
         tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
@@ -47,7 +47,7 @@ sealed class NewVersionTest
         var tester = await setup();
         var model = new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Minor,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };
@@ -62,7 +62,7 @@ sealed class NewVersionTest
         var tester = await setup();
         var model = new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Major,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.xartogg.com") }
         };

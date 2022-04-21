@@ -225,18 +225,18 @@ internal sealed class PermanentLogTest
         var hubApi = apiFactory.CreateForSuperUser();
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            GroupName = "FakeWebApp",
+            VersionName = "FakeWebApp",
             VersionType = AppVersionType.Values.Major,
             AppDefinitions = new[] { new AppDefinitionModel(new AppKey(new AppName("Fake"), AppType.Values.WebApp), "webapps.example.com") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version.GroupName,
+            VersionName = version.VersionName,
             VersionKey = version.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
         {
-            GroupName = version.GroupName,
+            VersionName = version.VersionName,
             VersionKey = version.VersionKey
         });
         await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);

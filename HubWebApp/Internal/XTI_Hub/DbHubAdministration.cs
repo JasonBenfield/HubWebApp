@@ -19,29 +19,72 @@ public sealed class DbHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
-    public async Task<XtiVersionModel> Version(string groupName, AppVersionKey versionKey)
+    public async Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
+        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
         return version.ToModel();
     }
 
-    public async Task<XtiVersionModel> BeginPublish(string groupName, AppVersionKey versionKey)
+    public async Task<XtiVersionModel[]> Versions(AppVersionName versionName)
     {
-        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
+        var versions = await appFactory.Versions.VersionsByName(versionName);
+        return versions.Select(v => v.ToModel()).ToArray();
+    }
+
+    public async Task AddOrUpdateVersions(AppDefinitionModel appDef, XtiVersionModel[] publishedVersions)
+    {
+        if (publishedVersions.Any())
+        {
+            var versionName = publishedVersions[0].VersionName;
+            var exceptions = publishedVersions.Where(v => v.VersionName == versionName);
+            if (exceptions.Any())
+            {
+                var joinedExceptions = string.Join(",", exceptions.Select(v => v.VersionName).Distinct());
+                throw new ArgumentException($"Expected version '{versionName}' but included versions {joinedExceptions}");
+            }
+            var app = await appFactory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, clock.Now());
+            var currentVersion = await app.VersionOrDefault(AppVersionKey.Current);
+            var currentVersionModel = currentVersion.ToVersionModel();
+            if (currentVersionModel.VersionName != "unknown" && currentVersionModel.VersionName != versionName)
+            {
+                await currentVersion.Delete();
+            }
+            foreach (var publishedVersion in publishedVersions)
+            {
+                foreach (var versionModel in publishedVersions)
+                {
+                    var version = await appFactory.Versions.AddIfNotFound
+                    (
+                        versionModel.VersionName,
+                        versionModel.VersionKey,
+                        clock.Now(),
+                        versionModel.Status,
+                        versionModel.VersionType,
+                        versionModel.VersionNumber
+                    );
+                    await app.AddVersionIfNotFound(version);
+                }
+            }
+        }
+    }
+
+    public async Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey)
+    {
+        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
         await version.Publishing();
         return version.ToModel();
     }
 
-    public async Task<XtiVersionModel> EndPublish(string groupName, AppVersionKey versionKey)
+    public async Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var version = await appFactory.Versions.VersionByGroupName(groupName, versionKey);
+        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
         await version.Published();
         return version.ToModel();
     }
 
-    public async Task<NewInstallationResult> NewInstallation(string groupName, AppKey appKey, string machineName)
+    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName)
     {
-        var version = await appFactory.Versions.VersionByGroupName(groupName, AppVersionKey.Current);
+        var version = await appFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
         var app = await appFactory.Apps.App(appKey);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
@@ -125,9 +168,9 @@ public sealed class DbHubAdministration : IHubAdministration
         return installationUser.ToModel();
     }
 
-    public async Task<XtiVersionModel> StartNewVersion(string groupName, AppVersionType versionType, AppDefinitionModel[] appDefs)
+    public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppDefinitionModel[] appDefs)
     {
-        var version = await appFactory.Versions.StartNewVersion(groupName, clock.Now(), versionType, appDefs);
+        var version = await appFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appDefs);
         return version.ToModel();
     }
 }

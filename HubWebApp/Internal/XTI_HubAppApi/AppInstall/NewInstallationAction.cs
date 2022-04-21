@@ -16,7 +16,7 @@ public sealed class NewInstallationAction : AppAction<NewInstallationRequest, Ne
     {
         var result = await hubAdministration.NewInstallation
         (
-            model.GroupName,
+            model.VersionName,
             model.AppKey,
             model.QualifiedMachineName
         );

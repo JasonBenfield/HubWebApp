@@ -1,11 +1,14 @@
-﻿namespace XTI_Admin;
+﻿using XTI_Hub.Abstractions;
 
-internal sealed class AppVersionName
+namespace XTI_Admin;
+
+internal sealed class AppVersionNameAccessor
 {
-    public AppVersionName()
+    public AppVersionNameAccessor()
     {
-        Value = new DirectoryInfo(Environment.CurrentDirectory).Name;
+        var value = new DirectoryInfo(Environment.CurrentDirectory).Name;
+        Value = new AppVersionName(value);
     }
 
-    public string Value { get; }
+    public AppVersionName Value { get; }
 }

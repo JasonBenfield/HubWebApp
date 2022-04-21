@@ -21,8 +21,7 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithMod
         (
             model.AppTemplate,
             model.Domain,
-            model.VersionKey,
-            model.Versions
+            model.VersionKey
         );
         return appWithModifier;
     }

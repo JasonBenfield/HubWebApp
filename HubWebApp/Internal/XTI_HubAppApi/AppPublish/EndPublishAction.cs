@@ -12,5 +12,5 @@ public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersi
         this.hubAdministration = hubAdministration;
     }
 
-    public Task<XtiVersionModel> Execute(PublishVersionRequest model) => hubAdministration.EndPublish(model.GroupName, model.VersionKey);
+    public Task<XtiVersionModel> Execute(PublishVersionRequest model) => hubAdministration.EndPublish(model.VersionName, model.VersionKey);
 }

@@ -143,28 +143,13 @@ interface IModifierModel {
 	DisplayText: string;
 }
 interface IRegisterAppRequest {
-	Versions: IXtiVersionModel[];
 	Domain: string;
 	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
 }
-interface IXtiVersionModel {
-	ID: number;
-	GroupName: string;
-	VersionKey: IAppVersionKey;
-	VersionNumber: IAppVersionNumber;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: Date;
-}
 interface IAppVersionKey {
 	Value: string;
 	DisplayText: string;
-}
-interface IAppVersionNumber {
-	Major: number;
-	Minor: number;
-	Patch: number;
 }
 interface IAppApiTemplateModel {
 	AppKey: IAppKey;
@@ -183,9 +168,38 @@ interface IAppApiActionTemplateModel {
 	Roles: string[];
 	ResultType: IResourceResultType;
 }
-interface IGetVersionRequest {
-	GroupName: string;
+interface IAddOrUpdateVersionsRequest {
+	App: IAppDefinitionModel;
+	Versions: IXtiVersionModel[];
+}
+interface IAppDefinitionModel {
+	AppKey: IAppKey;
+	Domain: string;
+}
+interface IXtiVersionModel {
+	ID: number;
+	VersionName: IAppVersionName;
 	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: Date;
+}
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
+}
+interface IGetVersionRequest {
+	VersionName: IAppVersionName;
+	VersionKey: IAppVersionKey;
+}
+interface IGetVersionsRequest {
+	VersionName: IAppVersionName;
 }
 interface IAddSystemUserRequest {
 	AppKey: IAppKey;
@@ -204,7 +218,7 @@ interface IAddInstallationUserRequest {
 	Password: string;
 }
 interface INewInstallationRequest {
-	GroupName: string;
+	VersionName: IAppVersionName;
 	AppKey: IAppKey;
 	QualifiedMachineName: string;
 }
@@ -221,16 +235,12 @@ interface IInstalledRequest {
 	InstallationID: number;
 }
 interface INewVersionRequest {
-	GroupName: string;
+	VersionName: IAppVersionName;
 	VersionType: IAppVersionType;
 	AppDefinitions: IAppDefinitionModel[];
 }
-interface IAppDefinitionModel {
-	AppKey: IAppKey;
-	Domain: string;
-}
 interface IPublishVersionRequest {
-	GroupName: string;
+	VersionName: IAppVersionName;
 	VersionKey: IAppVersionKey;
 }
 interface IGetVersionResourceGroupRequest {

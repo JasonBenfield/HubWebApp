@@ -10,7 +10,9 @@ export class InstallGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Install');
 		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppWithModKeyModel>('RegisterApp', 'Register App');
+		this.AddOrUpdateVersionsAction = this.createAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>('AddOrUpdateVersions', 'Add Or Update Versions');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
+		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
 		this.AddInstallationUserAction = this.createAction<IAddInstallationUserRequest,IAppUserModel>('AddInstallationUser', 'Add Installation User');
 		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
@@ -20,7 +22,9 @@ export class InstallGroup extends AppApiGroup {
 	}
 	
 	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppWithModKeyModel>;
+	readonly AddOrUpdateVersionsAction: AppApiAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>;
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IXtiVersionModel>;
+	readonly GetVersionsAction: AppApiAction<IGetVersionsRequest,IXtiVersionModel[]>;
 	readonly AddSystemUserAction: AppApiAction<IAddSystemUserRequest,IAppUserModel>;
 	readonly AddInstallationUserAction: AppApiAction<IAddInstallationUserRequest,IAppUserModel>;
 	readonly NewInstallationAction: AppApiAction<INewInstallationRequest,INewInstallationResult>;
@@ -31,8 +35,14 @@ export class InstallGroup extends AppApiGroup {
 	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
 		return this.RegisterAppAction.execute(model, errorOptions || {});
 	}
+	AddOrUpdateVersions(model: IAddOrUpdateVersionsRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateVersionsAction.execute(model, errorOptions || {});
+	}
 	GetVersion(model: IGetVersionRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetVersionAction.execute(model, errorOptions || {});
+	}
+	GetVersions(model: IGetVersionsRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionsAction.execute(model, errorOptions || {});
 	}
 	AddSystemUser(model: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddSystemUserAction.execute(model, errorOptions || {});

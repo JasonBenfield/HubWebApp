@@ -14,7 +14,7 @@ internal sealed class BeginPublishTest
         var hubApi = apiFactory.CreateForSuperUser();
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            GroupName = "HubWebApp",
+            VersionName = "HubWebApp",
             VersionType = AppVersionType.Values.Patch,
             AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
         });
@@ -28,13 +28,13 @@ internal sealed class BeginPublishTest
         tester.LoginAsAdmin();
         var request = new PublishVersionRequest
         {
-            GroupName = version.GroupName,
+            VersionName = version.VersionName,
             VersionKey = version.VersionKey
         };
         await tester.Execute(request);
         version = await hubApi.Install.GetVersion.Invoke(new GetVersionRequest
         {
-            GroupName = version.GroupName,
+            VersionName = version.VersionName,
             VersionKey = version.VersionKey
         });
         Assert.That(version.Status, Is.EqualTo(AppVersionStatus.Values.Publishing));
@@ -50,14 +50,14 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         Assert.That(patch.VersionNumber.Major, Is.EqualTo(1), "Should assign version number for new patch");
         Assert.That(patch.VersionNumber.Minor, Is.EqualTo(0), "Should assign version number for new patch");
@@ -74,14 +74,14 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         Assert.That(minorVersion.VersionNumber.Major, Is.EqualTo(1), "Should assign version number for new minor version");
         Assert.That(minorVersion.VersionNumber.Minor, Is.EqualTo(1), "Should assign version number for new minor version");
@@ -98,14 +98,14 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         Assert.That(majorVersion.VersionNumber.Major, Is.EqualTo(2), "Should assign version number for new major version");
         Assert.That(majorVersion.VersionNumber.Minor, Is.EqualTo(0), "Should assign version number for new major version");
@@ -122,31 +122,31 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         var patch = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         Assert.That(patch.VersionNumber.Major, Is.EqualTo(1), "Should increment patch of current version");
         Assert.That(patch.VersionNumber.Minor, Is.EqualTo(0), "Should increment patch of current version");
@@ -163,31 +163,31 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         var minorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         Assert.That(minorVersion.VersionNumber.Major, Is.EqualTo(1), "Should increment minor of current version");
         Assert.That(minorVersion.VersionNumber.Minor, Is.EqualTo(2), "Should increment minor of current version");
@@ -204,31 +204,31 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = originalCurrent.GroupName, VersionKey = originalCurrent.VersionKey }
+            new PublishVersionRequest { VersionName = originalCurrent.VersionName, VersionKey = originalCurrent.VersionKey }
         );
         var majorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         Assert.That(majorVersion.VersionNumber.Major, Is.EqualTo(3), "Should increment major of current version");
         Assert.That(majorVersion.VersionNumber.Minor, Is.EqualTo(0), "Should increment major of current version");
@@ -245,31 +245,31 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         var minorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         Assert.That(minorVersion.VersionNumber.Major, Is.EqualTo(2), "Should retain major version from the previous current");
         Assert.That(minorVersion.VersionNumber.Minor, Is.EqualTo(1), "Should increment minor version");
@@ -286,48 +286,48 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         var minorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         var patch = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         Assert.That(patch.VersionNumber.Major, Is.EqualTo(2), "Should retain major version from the previous current");
         Assert.That(patch.VersionNumber.Minor, Is.EqualTo(1), "Should retain minor version from the previous current");
@@ -344,31 +344,31 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         var minorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         Assert.That(minorVersion.VersionNumber.Major, Is.EqualTo(1), "Should reset patch when minor version is publishing");
         Assert.That(minorVersion.VersionNumber.Minor, Is.EqualTo(1), "Should reset patch when minor version is publishing");
@@ -385,48 +385,48 @@ internal sealed class BeginPublishTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Patch,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = patch.GroupName, VersionKey = patch.VersionKey }
+            new PublishVersionRequest { VersionName = patch.VersionName, VersionKey = patch.VersionKey }
         );
         var minorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Minor,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         await hubApi.Publish.EndPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = minorVersion.GroupName, VersionKey = minorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = minorVersion.VersionName, VersionKey = minorVersion.VersionKey }
         );
         var majorVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke
         (
-            new PublishVersionRequest { GroupName = majorVersion.GroupName, VersionKey = majorVersion.VersionKey }
+            new PublishVersionRequest { VersionName = majorVersion.VersionName, VersionKey = majorVersion.VersionKey }
         );
         Assert.That(majorVersion.VersionNumber.Major, Is.EqualTo(2), "Should reset minor version and patch when major version is publishing");
         Assert.That(majorVersion.VersionNumber.Minor, Is.EqualTo(0), "Should reset minor version and patch when major version is publishing");

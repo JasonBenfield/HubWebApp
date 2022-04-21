@@ -15,7 +15,7 @@ public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionMo
 
     public async Task<XtiVersionModel> Execute(GetVersionRequest model)
     {
-        var version = await appFactory.Versions.VersionByGroupName(model.GroupName, model.VersionKey);
+        var version = await appFactory.Versions.VersionByName(model.VersionName, model.VersionKey);
         return version.ToModel();
     }
 }

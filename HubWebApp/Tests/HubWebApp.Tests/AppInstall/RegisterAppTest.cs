@@ -36,7 +36,7 @@ public sealed class RegisterAppTest
             {
                 new XtiVersionModel
                 {
-                    GroupName = "fakewebapp",
+                    VersionName = "fakewebapp",
                     TimeAdded = DateTimeOffset.Now,
                     Status = AppVersionStatus.Values.Current,
                     VersionKey = new AppVersionKey(1),

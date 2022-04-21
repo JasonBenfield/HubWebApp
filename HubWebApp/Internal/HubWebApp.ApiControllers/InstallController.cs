@@ -16,9 +16,21 @@ public class InstallController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> AddOrUpdateVersions([FromBody] AddOrUpdateVersionsRequest model)
+    {
+        return api.Group("Install").Action<AddOrUpdateVersionsRequest, EmptyActionResult>("AddOrUpdateVersions").Execute(model);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] GetVersionRequest model)
     {
         return api.Group("Install").Action<GetVersionRequest, XtiVersionModel>("GetVersion").Execute(model);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] GetVersionsRequest model)
+    {
+        return api.Group("Install").Action<GetVersionsRequest, XtiVersionModel[]>("GetVersions").Execute(model);
     }
 
     [HttpPost]

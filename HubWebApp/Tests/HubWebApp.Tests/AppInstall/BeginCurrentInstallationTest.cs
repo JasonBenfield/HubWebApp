@@ -85,7 +85,7 @@ sealed class BeginCurrentInstallationTest
         (
             new NewVersionRequest
             {
-                GroupName = "HubWebApp",
+                VersionName = "HubWebApp",
                 VersionType = AppVersionType.Values.Major,
                 AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
             }
@@ -94,7 +94,7 @@ sealed class BeginCurrentInstallationTest
         (
             new PublishVersionRequest
             {
-                GroupName = nextVersion.GroupName,
+                VersionName = nextVersion.VersionName,
                 VersionKey = nextVersion.VersionKey
             }
         );
@@ -108,7 +108,7 @@ sealed class BeginCurrentInstallationTest
         (
             new PublishVersionRequest
             {
-                GroupName = nextVersion.GroupName,
+                VersionName = nextVersion.VersionName,
                 VersionKey = nextVersion.VersionKey
             }
         );

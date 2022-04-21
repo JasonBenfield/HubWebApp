@@ -53,21 +53,21 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.BeginVersionInstallation("", request);
     }
 
-    public Task<XtiVersionModel> BeginPublish(string groupName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey)
     {
         var request = new PublishVersionRequest
         {
-            GroupName = groupName,
+            VersionName = versionName,
             VersionKey = versionKey
         };
         return hubClient.Publish.BeginPublish("", request);
     }
 
-    public Task<XtiVersionModel> EndPublish(string groupName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey)
     {
         var request = new PublishVersionRequest
         {
-            GroupName = groupName,
+            VersionName = versionName,
             VersionKey = versionKey
         };
         return hubClient.Publish.EndPublish("", request);
@@ -82,35 +82,49 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.Installed("", request);
     }
 
-    public Task<NewInstallationResult> NewInstallation(string versionName, AppKey appKey, string machineName)
+    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName)
     {
         var request = new NewInstallationRequest
         {
-            GroupName = versionName,
+            VersionName = versionName,
             AppKey = appKey,
             QualifiedMachineName = machineName
         };
         return hubClient.Install.NewInstallation("", request);
     }
 
-    public Task<XtiVersionModel> StartNewVersion(string groupName, AppVersionType versionType, AppDefinitionModel[] appDefs)
+    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppDefinitionModel[] appDefs)
     {
         var request = new NewVersionRequest
         {
-            GroupName = groupName,
+            VersionName = versionName,
             VersionType = versionType,
             AppDefinitions = appDefs
         };
         return hubClient.Publish.NewVersion("", request);
     }
 
-    public Task<XtiVersionModel> Version(string groupName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
     {
         var request = new GetVersionRequest
         {
-            GroupName = groupName,
+            VersionName = versionName,
             VersionKey = versionKey
         };
         return hubClient.Install.GetVersion("", request);
     }
+
+    public Task<XtiVersionModel[]> Versions(AppVersionName versionName) => 
+        hubClient.Install.GetVersions("", new GetVersionsRequest { VersionName = versionName });
+
+    public Task AddOrUpdateVersions(AppDefinitionModel appDef, XtiVersionModel[] publishedVersions) =>
+        hubClient.Install.AddOrUpdateVersions
+        (
+            "", 
+            new AddOrUpdateVersionsRequest
+            {
+                App = appDef,
+                Versions = publishedVersions
+            }
+        );
 }

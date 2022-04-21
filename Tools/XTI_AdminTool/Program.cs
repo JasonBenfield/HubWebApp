@@ -115,6 +115,39 @@ await Host.CreateDefaultBuilder(args)
                 var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
                 return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
             });
+            services.AddScoped<FolderPublishedAssets>();
+            services.AddScoped<GitHubPublishedAssets>();
+            services.AddTransient(sp =>
+            {
+                var options = sp.GetRequiredService<AdminOptions>();
+                var installationSource = options.InstallationSource;
+                if (installationSource == InstallationSources.Default)
+                {
+                    var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+                    if (xtiEnv.IsDevelopmentOrTest())
+                    {
+                        installationSource = InstallationSources.Folder;
+                    }
+                    else
+                    {
+                        installationSource = InstallationSources.GitHub;
+                    }
+                }
+                IPublishedAssets publishedAssets;
+                if (installationSource == InstallationSources.Folder)
+                {
+                    publishedAssets = sp.GetRequiredService<FolderPublishedAssets>();
+                }
+                else if (installationSource == InstallationSources.GitHub)
+                {
+                    publishedAssets = sp.GetRequiredService<GitHubPublishedAssets>();
+                }
+                else
+                {
+                    throw new NotSupportedException($"Installation Source {installationSource} is not supported");
+                }
+                return publishedAssets;
+            });
             services.AddHubClientServices();
             var existingTokenAccessor = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
             if (existingTokenAccessor != null)

@@ -6,14 +6,28 @@ using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.AppInstall;
 
-public sealed class InstallGroup : AppApiGroupWrapper
+public sealed class AppInstallGroup : AppApiGroupWrapper
 {
-    public InstallGroup(AppApiGroup source, IServiceProvider services)
+    public AppInstallGroup(AppApiGroup source, IServiceProvider services)
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
-        RegisterApp = source.AddAction(actions.Action(nameof(RegisterApp), () => services.GetRequiredService<RegisterAppAction>()));
-        GetVersion = source.AddAction(actions.Action(nameof(GetVersion), () => services.GetRequiredService<GetVersionAction>()));
+        RegisterApp = source.AddAction
+        (
+            actions.Action(nameof(RegisterApp), () => services.GetRequiredService<RegisterAppAction>())
+        );
+        AddOrUpdateVersions = source.AddAction
+        (
+            actions.Action(nameof(AddOrUpdateVersions), () => services.GetRequiredService<AddOrUpdateVersions>())
+        );
+        GetVersion = source.AddAction
+        (
+            actions.Action(nameof(GetVersion), () => services.GetRequiredService<GetVersionAction>())
+        );
+        GetVersions = source.AddAction
+        (
+            actions.Action(nameof(GetVersions), () => services.GetRequiredService<GetVersionsAction>())
+        );
         AddSystemUser = source.AddAction
         (
             actions.Action
@@ -51,6 +65,8 @@ public sealed class InstallGroup : AppApiGroupWrapper
 
     public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
     public AppApiAction<GetVersionRequest, XtiVersionModel> GetVersion { get; }
+    public AppApiAction<GetVersionsRequest, XtiVersionModel[]> GetVersions { get; }
+    public AppApiAction<AddOrUpdateVersionsRequest, EmptyActionResult> AddOrUpdateVersions { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }

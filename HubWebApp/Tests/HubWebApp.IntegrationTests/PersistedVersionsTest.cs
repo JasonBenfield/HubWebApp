@@ -1,6 +1,7 @@
 ﻿using HubWebApp.Extensions;
 using Microsoft.Extensions.Hosting;
 using XTI_Core.Extensions;
+using XTI_Hub.Abstractions;
 
 namespace HubWebApp.IntegrationTests;
 
@@ -11,8 +12,23 @@ internal sealed class PersistedVersionsTest
     {
         var sp = setup("Production");
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "HubWebAppVersions.json");
-        var persistedVersions = new XTI_Hub.PersistedVersions(sp.GetRequiredService<AppFactory>(), HubInfo.AppKey, path);
-        await persistedVersions.Store();
+        var persistedVersions = new XTI_Hub.PersistedVersions(path);
+        await persistedVersions.Store
+        (
+            new []
+            {
+                new XtiVersionModel
+                {
+                   ID = 1,
+                   VersionName = "Test",
+                   TimeAdded = DateTime.Now,
+                   Status = AppVersionStatus.Values.Current,
+                   VersionType = AppVersionType.Values.Major,
+                   VersionKey = new AppVersionKey(1),
+                   VersionNumber = new AppVersionNumber(1,0,0)
+                }
+            }
+        );
     }
 
     private static IServiceProvider setup(string envName = "Development")

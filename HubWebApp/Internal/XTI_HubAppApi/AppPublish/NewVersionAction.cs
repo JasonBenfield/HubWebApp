@@ -20,7 +20,7 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionMo
     {
         var version = await hubAdministration.StartNewVersion
         (
-            model.GroupName,
+            model.VersionName,
             model.VersionType,
             model.AppDefinitions
         );

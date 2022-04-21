@@ -20,23 +20,22 @@ public sealed class XtiVersionRepository
             .Where(av => av.AppID == app.ID.Value && av.VersionID == version.ID.Value)
             .Select(av => av.ID);
 
-    internal async Task<AppVersion> AddIfNotFound
+    internal async Task<XtiVersion> AddIfNotFound
     (
-        string groupName,
+        AppVersionName versionName,
         AppVersionKey key,
         DateTimeOffset timeAdded,
         AppVersionStatus status,
         AppVersionType type,
-        AppVersionNumber versionNumber,
-        App app
+        AppVersionNumber versionNumber
     )
     {
-        var entity = await GetVersionByGroupName(groupName, key);
+        var entity = await GetVersionByName(versionName, key);
         if (entity == null)
         {
             entity = await AddVersion
             (
-                groupName.ToLower(),
+                versionName,
                 key,
                 timeAdded,
                 type,
@@ -44,18 +43,13 @@ public sealed class XtiVersionRepository
                 versionNumber
             );
         }
-        var xtiVersion = factory.CreateVersion(entity);
-        await AddVersionToAppIfNotFound(app, xtiVersion);
-        return xtiVersion.App(app);
+        return factory.CreateVersion(entity);
     }
 
     internal async Task AddVersionToAppIfNotFound(App app, XtiVersion version)
     {
-        var appVersionExists = await factory.DB
-            .AppVersions.Retrieve()
-            .Where(av => av.VersionID == version.ID.Value && av.AppID == app.ID.Value)
-            .AnyAsync();
-        if (!appVersionExists)
+        var appVersion = await GetAppVersion(app, version);
+        if (appVersion == null)
         {
             await factory.DB.AppVersions.Create
             (
@@ -69,11 +63,25 @@ public sealed class XtiVersionRepository
         }
     }
 
-    private async Task<AppVersionKey> NextKey(string groupName)
+    private Task<AppXtiVersionEntity?> GetAppVersion(App app, XtiVersion version) =>
+        factory.DB
+            .AppVersions.Retrieve()
+            .FirstOrDefaultAsync(av => av.VersionID == version.ID.Value && av.AppID == app.ID.Value);
+
+    internal async Task RemoveVersionFromApp(App app, XtiVersion version)
+    {
+        var appVersion = await GetAppVersion(app, version);
+        if (appVersion != null)
+        {
+            await factory.DB.AppVersions.Delete(appVersion);
+        }
+    }
+
+    private async Task<AppVersionKey> NextKey(AppVersionName versionName)
     {
         var keys = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.GroupName == groupName && v.VersionKey.StartsWith("V"))
+            .Where(v => v.GroupName == versionName.Value && v.VersionKey.StartsWith("V"))
             .Select(v => v.VersionKey.Substring(1))
             .ToArrayAsync();
         var keyValues = keys.Select(k => int.Parse(k));
@@ -81,20 +89,19 @@ public sealed class XtiVersionRepository
         return new AppVersionKey(maxKey + 1);
     }
 
-    public async Task<XtiVersion> StartNewVersion(string groupName, DateTimeOffset timeAdded, AppVersionType type, AppDefinitionModel[] appDefs)
+    public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type, AppDefinitionModel[] appDefs)
     {
         XtiVersion? version = null;
         await factory.DB.Transaction(async () =>
         {
-            groupName = groupName.ToLower();
-            await AddCurrentVersionIfNotFound(groupName, timeAdded, appDefs);
+            await AddCurrentVersionIfNotFound(versionName, timeAdded, appDefs);
             var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
             if (!validVersionTypes.Contains(type))
             {
                 throw new ArgumentException($"Version type {type} is not valid");
             }
             var versionNumber = new AppVersionNumber(0, 0, 0);
-            var entity = await AddVersion(groupName, AppVersionKey.None, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
+            var entity = await AddVersion(versionName, AppVersionKey.None, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
             version = factory.CreateVersion(entity);
             foreach (var appDef in appDefs)
             {
@@ -105,15 +112,15 @@ public sealed class XtiVersionRepository
         return version ?? throw new ArgumentNullException(nameof(version));
     }
 
-    private async Task<XtiVersion> AddCurrentVersionIfNotFound(string groupName, DateTimeOffset timeAdded, AppDefinitionModel[] appDefs)
+    private async Task<XtiVersion> AddCurrentVersionIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppDefinitionModel[] appDefs)
     {
         XtiVersion currentVersion;
-        var entity = await GetVersionByGroupName(groupName, AppVersionKey.Current);
+        var entity = await GetVersionByName(versionName, AppVersionKey.Current);
         if (entity == null)
         {
             entity = await AddVersion
             (
-                groupName,
+                versionName,
                 AppVersionKey.Current,
                 timeAdded,
                 AppVersionType.Values.Major,
@@ -134,18 +141,18 @@ public sealed class XtiVersionRepository
         return currentVersion;
     }
 
-    private async Task<XtiVersionEntity> AddVersion(string groupName, AppVersionKey key, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, AppVersionNumber versionNumber)
+    private async Task<XtiVersionEntity> AddVersion(AppVersionName versionName, AppVersionKey key, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, AppVersionNumber versionNumber)
     {
         XtiVersionEntity? record = null;
         if (key.Equals(AppVersionKey.None) || key.Equals(AppVersionKey.Current))
         {
-            key = await NextKey(groupName);
+            key = await NextKey(versionName);
         }
         await factory.DB.Transaction(async () =>
         {
             record = new XtiVersionEntity
             {
-                GroupName = groupName.ToLower(),
+                GroupName = versionName.Value,
                 VersionKey = key.Value,
                 Major = versionNumber.Major,
                 Minor = versionNumber.Minor,
@@ -169,11 +176,22 @@ public sealed class XtiVersionRepository
         return factory.CreateVersion(record);
     }
 
-    public async Task<XtiVersion> VersionByGroupName(string groupName, AppVersionKey versionKey)
+    public async Task<XtiVersion> VersionByName(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var record = await GetVersionByGroupName(groupName, versionKey);
-        return factory.CreateVersion(record ?? throw new Exception($"Version '{versionKey.DisplayText}' was not found"));
+        var record = await GetVersionByName(versionName, versionKey);
+        return factory.CreateVersion(record ?? throw new Exception($"Version '{versionName} {versionKey.DisplayText}' was not found"));
     }
+
+    public Task<XtiVersion[]> VersionsByName(AppVersionName versionName) =>
+        factory.DB
+            .Versions
+            .Retrieve()
+            .Where
+            (
+                v => v.GroupName == versionName
+            )
+            .Select(v => factory.CreateVersion(v))
+            .ToArrayAsync();
 
     internal async Task<AppVersion> VersionByApp(App app, AppVersionKey versionKey)
     {
@@ -182,7 +200,7 @@ public sealed class XtiVersionRepository
         return version.App(app);
     }
 
-    internal async Task<AppVersion> VersionByAppOrDefault(App app, AppVersionKey versionKey)
+    internal async Task<AppVersion> VersionByAppOrUnknown(App app, AppVersionKey versionKey)
     {
         var record = await GetVersionByApp(app, versionKey);
         if (record == null)
@@ -225,10 +243,9 @@ public sealed class XtiVersionRepository
         return record;
     }
 
-    private async Task<XtiVersionEntity?> GetVersionByGroupName(string groupName, AppVersionKey versionKey)
+    private async Task<XtiVersionEntity?> GetVersionByName(AppVersionName versionName, AppVersionKey versionKey)
     {
         XtiVersionEntity? record;
-        groupName = groupName.ToLower();
         if (versionKey.Equals(AppVersionKey.Current))
         {
             record = await factory.DB
@@ -237,7 +254,7 @@ public sealed class XtiVersionRepository
                 .Where
                 (
                     v =>
-                        v.GroupName == groupName &&
+                        v.GroupName == versionName &&
                         v.Status == AppVersionStatus.Values.Current.Value
                 )
                 .FirstOrDefaultAsync();
@@ -247,7 +264,7 @@ public sealed class XtiVersionRepository
             record = await factory.DB
                 .Versions
                 .Retrieve()
-                .Where(v => v.GroupName == groupName && v.VersionKey == versionKey.Value)
+                .Where(v => v.GroupName == versionName && v.VersionKey == versionKey.Value)
                 .FirstOrDefaultAsync();
         }
         return record;

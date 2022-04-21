@@ -1,9 +1,11 @@
-﻿using System.IO.Compression;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.IO.Compression;
 using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_GitHub;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_Processes;
 
 namespace XTI_Admin;
@@ -39,6 +41,8 @@ internal sealed class PublishProcess
             var currentVersion = await new CurrentVersion(scopes).Value();
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
+        var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
+        var versions = await hubAdmin.Versions(new AppVersionNameAccessor().Value);
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         GitHubRelease? release = null;
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
@@ -57,7 +61,7 @@ internal sealed class PublishProcess
             {
                 Directory.Delete(publishDir, true);
             }
-            await publishSetup(appKey, versionKey);
+            await publishSetup(appKey, versionKey, versions);
             if (appKey.Type.Equals(AppType.Values.WebApp))
             {
                 await runDotNetPublish(appKey, versionKey);
@@ -136,7 +140,7 @@ internal sealed class PublishProcess
         }
     }
 
-    private async Task publishSetup(AppKey appKey, AppVersionKey versionKey)
+    private async Task publishSetup(AppKey appKey, AppVersionKey versionKey, XtiVersionModel[] versions)
     {
         Console.WriteLine("Publishing setup");
         var setupAppDir = Path.Combine
@@ -149,9 +153,8 @@ internal sealed class PublishProcess
         {
             var publishDir = getPublishDir(appKey, versionKey);
             var versionsPath = Path.Combine(publishDir, "versions.json");
-            var appFactory = scopes.GetRequiredService<AppFactory>();
-            var persistedVersions = new PersistedVersions(appFactory, appKey, versionsPath);
-            await persistedVersions.Store();
+            var persistedVersions = new PersistedVersions(versionsPath);
+            await persistedVersions.Store(versions);
             var publishSetupDir = Path.Combine(publishDir, "Setup");
             Console.WriteLine($"Publishing setup to '{publishSetupDir}'");
             var publishProcess = new WinProcess("dotnet")

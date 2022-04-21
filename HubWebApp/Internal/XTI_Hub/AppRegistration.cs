@@ -16,24 +16,12 @@ public sealed class AppRegistration
         this.clock = clock;
     }
 
-    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey, XtiVersionModel[] versions)
+    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey)
     {
         await appFactory.Users.AddAnonIfNotExists(clock.Now());
         await tryAddUnknownApp();
         var appKey = template.AppKey;
         var app = await appFactory.Apps.AddOrUpdate(appKey, domain, clock.Now());
-        foreach (var versionModel in versions)
-        {
-            await app.AddVersionIfNotFound
-            (
-                versionModel.GroupName,
-                versionModel.VersionKey,
-                clock.Now(),
-                versionModel.Status,
-                versionModel.VersionType,
-                versionModel.VersionNumber
-            );
-        }
         var roleNames = template.RecursiveRoles()
             .Select(r => new AppRoleName(r))
             .Union(new[] { AppRoleName.DenyAccess })
@@ -52,16 +40,17 @@ public sealed class AppRegistration
     private async Task tryAddUnknownApp()
     {
         var app = await appFactory.Apps.AddOrUpdate(AppKey.Unknown, "", clock.Now());
-        var currentVersion = await appFactory.Versions.AddIfNotFound
+        var version = await appFactory.Versions.AddIfNotFound
         (
-            "unknown", 
+            AppVersionName.Unknown, 
             AppVersionKey.Current, 
             clock.Now(), 
             AppVersionStatus.Values.Current, 
             AppVersionType.Values.Major, 
-            new AppVersionNumber(1, 0, 0),
-            app
+            new AppVersionNumber(1, 0, 0)
         );
+        await appFactory.Versions.AddVersionToAppIfNotFound(app, version);
+        var currentVersion = await app.CurrentVersion();
         var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
