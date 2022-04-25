@@ -4,7 +4,7 @@ public sealed class XtiVersionEntity
 {
     public int ID { get; set; }
     public string VersionKey { get; set; } = "xti_notfound";
-    public string GroupName { get; set; } = "";
+    public string VersionName { get; set; } = "";
     public int Major { get; set; }
     public int Minor { get; set; }
     public int Patch { get; set; }

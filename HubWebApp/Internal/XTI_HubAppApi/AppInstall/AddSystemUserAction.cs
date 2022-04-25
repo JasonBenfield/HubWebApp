@@ -1,35 +1,17 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
+﻿using XTI_App.Api;
 using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
 
 public sealed class AddSystemUserAction : AppAction<AddSystemUserRequest, AppUserModel>
 {
-    private readonly AppFactory appFactory;
-    private readonly IClock clock;
-    private readonly IHashedPasswordFactory hashedPasswordFactory;
+    private readonly IHubAdministration hubAdmin;
 
-    public AddSystemUserAction(AppFactory appFactory, IClock clock, IHashedPasswordFactory hashedPasswordFactory)
+    public AddSystemUserAction(IHubAdministration hubAdmin)
     {
-        this.appFactory = appFactory;
-        this.clock = clock;
-        this.hashedPasswordFactory = hashedPasswordFactory;
+        this.hubAdmin = hubAdmin;
     }
 
-    public async Task<AppUserModel> Execute(AddSystemUserRequest model)
-    {
-        var hashedPassword = hashedPasswordFactory.Create(model.Password);
-        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
-        (
-            model.AppKey, 
-            model.MachineName,
-            model.Domain, 
-            hashedPassword, 
-            clock.Now()
-        );
-        return systemUser.ToModel();
-    }
+    public Task<AppUserModel> Execute(AddSystemUserRequest model) =>
+        hubAdmin.AddOrUpdateSystemUser(model.AppKey, model.MachineName, model.Password);
 }

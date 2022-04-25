@@ -7,14 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.14-dev220418212100252" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.14-dev220423115005690" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\XTI_HubAppApi\XTI_HubAppApi.csproj" />
     <ProjectReference Include="..\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
     <ProjectReference Include="..\HubWebApp.Extensions\HubWebApp.Extensions.csproj" />
-    <ProjectReference Include="..\XTI_HubSetup\XTI_HubSetup.csproj" />
   </ItemGroup>
 
 </Project>

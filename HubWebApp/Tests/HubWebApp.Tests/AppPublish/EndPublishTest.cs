@@ -14,9 +14,9 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var newVersion = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            VersionName = "HubWebApp",
+            VersionName = new AppVersionName("HubWebApp"),
             VersionType = AppVersionType.Values.Patch,
-            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
+            AppKeys = new[] { HubInfo.AppKey }
         });
         var request = new PublishVersionRequest
         {
@@ -37,9 +37,9 @@ internal sealed class EndPublishTest
         var hubApi = hubApiFactory.CreateForSuperUser();
         var version1 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            VersionName = "HubWebApp",
+            VersionName = new AppVersionName("HubWebApp"),
             VersionType = AppVersionType.Values.Patch,
-            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
+            AppKeys = new[] { HubInfo.AppKey }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
@@ -53,9 +53,9 @@ internal sealed class EndPublishTest
         });
         var version2 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
-            VersionName = "HubWebApp",
+            VersionName = new AppVersionName("HubWebApp"),
             VersionType = AppVersionType.Values.Patch,
-            AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
+            AppKeys = new[] { HubInfo.AppKey }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {

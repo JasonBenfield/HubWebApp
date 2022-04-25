@@ -8,33 +8,42 @@ namespace XTI_HubAppApi.AppInstall;
 
 public sealed class AppInstallGroup : AppApiGroupWrapper
 {
-    public AppInstallGroup(AppApiGroup source, IServiceProvider services)
+    public AppInstallGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
         RegisterApp = source.AddAction
         (
-            actions.Action(nameof(RegisterApp), () => services.GetRequiredService<RegisterAppAction>())
+            actions.Action(nameof(RegisterApp), () => sp.GetRequiredService<RegisterAppAction>())
+        );
+        AddOrUpdateApps = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(AddOrUpdateApps),
+                () => sp.GetRequiredService<AddOrUpdateAppsValidation>(), 
+                () => sp.GetRequiredService<AddOrUpdateAppsAction>()
+            )
         );
         AddOrUpdateVersions = source.AddAction
         (
-            actions.Action(nameof(AddOrUpdateVersions), () => services.GetRequiredService<AddOrUpdateVersions>())
+            actions.Action(nameof(AddOrUpdateVersions), () => sp.GetRequiredService<AddOrUpdateVersionsAction>())
         );
         GetVersion = source.AddAction
         (
-            actions.Action(nameof(GetVersion), () => services.GetRequiredService<GetVersionAction>())
+            actions.Action(nameof(GetVersion), () => sp.GetRequiredService<GetVersionAction>())
         );
         GetVersions = source.AddAction
         (
-            actions.Action(nameof(GetVersions), () => services.GetRequiredService<GetVersionsAction>())
+            actions.Action(nameof(GetVersions), () => sp.GetRequiredService<GetVersionsAction>())
         );
         AddSystemUser = source.AddAction
         (
             actions.Action
             (
                 nameof(AddSystemUser),
-                () => services.GetRequiredService<AddSystemUserValidation>(),
-                () => services.GetRequiredService<AddSystemUserAction>()
+                () => sp.GetRequiredService<AddSystemUserValidation>(),
+                () => sp.GetRequiredService<AddSystemUserAction>()
             )
         );
         AddInstallationUser = source.AddAction
@@ -42,30 +51,36 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
             actions.Action
             (
                 nameof(AddInstallationUser),
-                () => services.GetRequiredService<AddInstallationUserAction>()
+                () => sp.GetRequiredService<AddInstallationUserAction>()
             )
         );
         NewInstallation = source.AddAction
         (
-            actions.Action(nameof(NewInstallation), () => services.GetRequiredService<NewInstallationAction>())
+            actions.Action
+            (
+                nameof(NewInstallation),
+                () => sp.GetRequiredService<NewInstallationValidation>(),
+                () => sp.GetRequiredService<NewInstallationAction>()
+            )
         );
         BeginCurrentInstallation = source.AddAction
         (
-            actions.Action(nameof(BeginCurrentInstallation), () => services.GetRequiredService<BeginCurrentInstallationAction>())
+            actions.Action(nameof(BeginCurrentInstallation), () => sp.GetRequiredService<BeginCurrentInstallationAction>())
         );
         BeginVersionInstallation = source.AddAction
         (
-            actions.Action(nameof(BeginVersionInstallation), () => services.GetRequiredService<BeginVersionInstallationAction>())
+            actions.Action(nameof(BeginVersionInstallation), () => sp.GetRequiredService<BeginVersionInstallationAction>())
         );
         Installed = source.AddAction
         (
-            actions.Action(nameof(Installed), () => services.GetRequiredService<InstalledAction>())
+            actions.Action(nameof(Installed), () => sp.GetRequiredService<InstalledAction>())
         );
     }
 
     public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
     public AppApiAction<GetVersionRequest, XtiVersionModel> GetVersion { get; }
     public AppApiAction<GetVersionsRequest, XtiVersionModel[]> GetVersions { get; }
+    public AppApiAction<AddOrUpdateAppsRequest, AppModel[]> AddOrUpdateApps { get; }
     public AppApiAction<AddOrUpdateVersionsRequest, EmptyActionResult> AddOrUpdateVersions { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }

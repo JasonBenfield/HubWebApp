@@ -31,6 +31,7 @@ internal sealed class PublishProcess
             ? new VersionKeyFromCurrentBranch(scopes).Value()
             : AppVersionKey.Current;
         var semanticVersion = "";
+        var versionName = new AppVersionNameAccessor().Value;
         if (xtiEnv.IsProduction())
         {
             var version = await new BeginPublishProcess(scopes).Run();
@@ -38,11 +39,17 @@ internal sealed class PublishProcess
         }
         else
         {
-            var currentVersion = await new CurrentVersion(scopes).Value();
+            var currentVersion = await new CurrentVersion(scopes, versionName).Value();
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
+        var publishFolder = scopes.GetRequiredService<PublishFolder>();
+        var versionsPath = publishFolder.VersionsPath();
+        publishFolder.TryCreateVersionDir();
+        if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
+        var persistedVersions = new PersistedVersions(versionsPath);
         var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
         var versions = await hubAdmin.Versions(new AppVersionNameAccessor().Value);
+        await persistedVersions.Store(versions);
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         GitHubRelease? release = null;
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
@@ -51,6 +58,9 @@ internal sealed class PublishProcess
             await gitHubRepo.DeleteReleaseIfExists(tagName);
             Console.WriteLine($"Creating release {tagName}");
             release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "");
+            Console.WriteLine("Uploading versions.json");
+            using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
+            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, "versions.json", "text/plain"));
         }
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
@@ -61,7 +71,7 @@ internal sealed class PublishProcess
             {
                 Directory.Delete(publishDir, true);
             }
-            await publishSetup(appKey, versionKey, versions);
+            await publishSetup(appKey, versionKey);
             if (appKey.Type.Equals(AppType.Values.WebApp))
             {
                 await runDotNetPublish(appKey, versionKey);
@@ -71,7 +81,7 @@ internal sealed class PublishProcess
                 await runDotNetPublish(appKey, versionKey);
             }
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            await new PublishNpmProcess(xtiEnv, xtiFolder).Run(appKey, versionKey, semanticVersion);
+            await new PublishNpmProcess(xtiEnv, xtiFolder, publishFolder).Run(appKey, versionKey, semanticVersion);
             if (!appKey.Type.Equals(AppType.Values.Package) && release != null)
             {
                 await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
@@ -131,16 +141,9 @@ internal sealed class PublishProcess
                 await gitHubRepo.UploadReleaseAsset(release, new FileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
             }
         }
-        var versionsPath = Path.Combine(publishDir, $"versions.json");
-        if (File.Exists(versionsPath))
-        {
-            Console.WriteLine("Uploading versions.json");
-            using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
-            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, $"{appKeyText}Versions.json", "text/plain"));
-        }
     }
 
-    private async Task publishSetup(AppKey appKey, AppVersionKey versionKey, XtiVersionModel[] versions)
+    private async Task publishSetup(AppKey appKey, AppVersionKey versionKey)
     {
         Console.WriteLine("Publishing setup");
         var setupAppDir = Path.Combine
@@ -152,9 +155,6 @@ internal sealed class PublishProcess
         if (Directory.Exists(setupAppDir))
         {
             var publishDir = getPublishDir(appKey, versionKey);
-            var versionsPath = Path.Combine(publishDir, "versions.json");
-            var persistedVersions = new PersistedVersions(versionsPath);
-            await persistedVersions.Store(versions);
             var publishSetupDir = Path.Combine(publishDir, "Setup");
             Console.WriteLine($"Publishing setup to '{publishSetupDir}'");
             var publishProcess = new WinProcess("dotnet")
@@ -201,16 +201,8 @@ internal sealed class PublishProcess
         }
     }
 
-    private string getPublishDir(AppKey appKey, AppVersionKey versionKey)
-    {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        if (!xtiEnv.IsProduction())
-        {
-            versionKey = AppVersionKey.Current;
-        }
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-        return xtiFolder.PublishPath(appKey, versionKey);
-    }
+    private string getPublishDir(AppKey appKey, AppVersionKey versionKey) =>
+        scopes.GetRequiredService<PublishFolder>().AppDir(appKey, versionKey);
 
     private static string getProjectDir(AppKey appKey)
     {

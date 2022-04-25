@@ -17,6 +17,7 @@ sealed class InstalledTest
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -49,6 +50,7 @@ sealed class InstalledTest
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });

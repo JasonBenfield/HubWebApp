@@ -81,7 +81,7 @@ public sealed class AppSessionTest
         var services = await setup("Production");
         var db = services.GetRequiredService<IHubDbContext>();
         var nextKey = await db.Versions.Retrieve()
-            .Where(v=>v.GroupName == "xti_app")
+            .Where(v=>v.VersionName == "xti_app")
             .Select(v => int.Parse(v.VersionKey.Substring(1)))
             .ToArrayAsync();
         Console.WriteLine($"Versions: {nextKey.Length}");

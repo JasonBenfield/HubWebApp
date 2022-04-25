@@ -1,5 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -7,18 +8,20 @@ internal sealed class LocalInstallServiceProcess
 {
     private readonly Scopes scopes;
     private readonly AppKey appKey;
+    private readonly AppVersionName versionName;
 
-    public LocalInstallServiceProcess(Scopes scopes, AppKey appKey)
+    public LocalInstallServiceProcess(Scopes scopes, AppKey appKey, AppVersionName versionName)
     {
         this.scopes = scopes;
         this.appKey = appKey;
+        this.versionName = versionName;
     }
 
     public async Task Run()
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
-        var appVersion = await new CurrentVersion(scopes).Value();
+        var appVersion = await new CurrentVersion(scopes, versionName).Value();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var release = $"v{appVersion.VersionNumber.Format()}";
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();

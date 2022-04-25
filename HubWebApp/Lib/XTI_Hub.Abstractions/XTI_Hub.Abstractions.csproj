@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Abstractions" Version="1.8.14-dev220418082514671" />
+		<PackageReference Include="XTI_App.Abstractions" Version="1.8.14-dev220423114848714" />
 	</ItemGroup>
 
 </Project>

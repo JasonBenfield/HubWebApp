@@ -10,9 +10,9 @@ public sealed class XtiVersionEntityConfiguration : IEntityTypeConfiguration<Xti
     {
         builder.HasKey(v => v.ID);
         builder.Property(v => v.ID).ValueGeneratedOnAdd();
-        builder.Property(v => v.GroupName).HasMaxLength(100);
+        builder.Property(v => v.VersionName).HasMaxLength(100);
         builder.Property(v => v.VersionKey).HasMaxLength(50);
-        builder.HasIndex(v => new { v.GroupName, v.VersionKey }).IsUnique();
+        builder.HasIndex(v => new { v.VersionName, v.VersionKey }).IsUnique();
         builder.ToTable("XtiVersions");
     }
 }

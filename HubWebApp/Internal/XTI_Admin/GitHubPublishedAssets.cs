@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using XTI_App.Abstractions;
 using XTI_GitHub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -8,12 +9,19 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
 {
     private readonly AdminOptions options;
     private readonly XtiGitHubRepository gitHubRepo;
+    private readonly AppVersionName versionName;
     private string tempDir = "";
 
     public GitHubPublishedAssets(AdminOptions options, XtiGitHubRepository gitHubRepo)
     {
         this.options = options;
         this.gitHubRepo = gitHubRepo;
+        versionName = new AppVersionNameAccessor().Value;
+        tempDir = Path.Combine
+        (
+            Path.GetTempPath(),
+            $"xti_{versionName.Value}"
+        );
     }
 
     public string VersionsPath { get; private set; } = "";
@@ -22,36 +30,30 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
 
     public string AppPath { get; private set; } = "";
 
-    public async Task Load(AppKey appKey, AppVersionKey versionKey)
+    public async Task LoadApps(AppKey appKey, AppVersionKey versionKey)
     {
-        tempDir = Path.Combine
+        SetupAppPath = "";
+        AppPath = "";
+        var appTempDir = Path.Combine
         (
-            Path.GetTempPath(),
+            tempDir,
             $"xti_{appKey.Name.Value}_{appKey.Type.DisplayText.Replace(" ", "")}"
         );
-        if (Directory.Exists(tempDir))
+        if (Directory.Exists(appTempDir))
         {
-            Directory.Delete(tempDir, true);
+            Directory.Delete(appTempDir, true);
         }
-        Directory.CreateDirectory(tempDir);
+        Directory.CreateDirectory(appTempDir);
         var appKeyText = $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
         var release = await gitHubRepo.Release(options.Release);
-        var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Versions.json", StringComparison.OrdinalIgnoreCase));
-        if (versionsAsset != null)
-        {
-            Console.WriteLine($"Downloading versions.json {release.TagName} {versionsAsset.Name}");
-            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
-            VersionsPath = Path.Combine(tempDir, "versions.json");
-            await File.WriteAllBytesAsync(VersionsPath, versionsContent);
-        }
         var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
         if (setupAsset != null)
         {
             Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
             var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
-            var setupZipPath = Path.Combine(tempDir, "setup.zip");
+            var setupZipPath = Path.Combine(appTempDir, "setup.zip");
             await File.WriteAllBytesAsync(setupZipPath, setupContent);
-            SetupAppPath = Path.Combine(tempDir, "Setup");
+            SetupAppPath = Path.Combine(appTempDir, "Setup");
             ZipFile.ExtractToDirectory(setupZipPath, SetupAppPath);
         }
         var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
@@ -59,10 +61,33 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         {
             Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
             var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
-            var appZipPath = Path.Combine(tempDir, "setup.zip");
+            var appZipPath = Path.Combine(appTempDir, "setup.zip");
             await File.WriteAllBytesAsync(appZipPath, appContent);
-            AppPath = Path.Combine(tempDir, "App");
+            AppPath = Path.Combine(appTempDir, "App");
             ZipFile.ExtractToDirectory(appZipPath, AppPath);
+        }
+    }
+
+    public async Task LoadVersions()
+    {
+        VersionsPath = "";
+        if (!Directory.Exists(tempDir))
+        {
+            Directory.CreateDirectory(tempDir);
+        }
+        var versionsPath = Path.Combine(tempDir, "versions.json");
+        if (File.Exists(versionsPath))
+        {
+            File.Delete(versionsPath);
+        }
+        var release = await gitHubRepo.Release(options.Release);
+        var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
+        if (versionsAsset != null)
+        {
+            Console.WriteLine($"Downloading versions.json {release.TagName} {versionsAsset.Name}");
+            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
+            VersionsPath = versionsPath;
+            await File.WriteAllBytesAsync(VersionsPath, versionsContent);
         }
     }
 

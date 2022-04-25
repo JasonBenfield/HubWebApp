@@ -2,12 +2,11 @@
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Fakes;
-using XTI_Core;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
+using XTI_HubAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
-using XTI_HubSetup;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes;
@@ -19,35 +18,18 @@ public static class FakeExtensions
         services.AddFakesForXtiWebApp();
         services.AddHubDbContextForInMemory();
         services.AddScoped<AppFactory>();
+        services.AddScoped<InitialSetup>();
         services.AddTransient<AppFromPath>();
         services.AddHubAppApiServices();
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped<AppApiFactory>(sp => sp.GetRequiredService<HubAppApiFactory>());
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
-        services.AddScoped<IVersionReader>
-        (
-            sp => new FakeVersionReader
-            (
-                new XtiVersionModel
-                {
-                    VersionName = "hubwebapp",
-                    TimeAdded = DateTimeOffset.Now,
-                    Status = AppVersionStatus.Values.Current,
-                    VersionKey = new AppVersionKey(1),
-                    VersionType = AppVersionType.Values.Major,
-                    VersionNumber = new AppVersionNumber(1, 0, 0)
-                }
-            )
-        );
         services.AddScoped(sp =>
         {
             return new HubAppSetup
             (
                 sp.GetRequiredService<AppFactory>(),
-                sp.GetRequiredService<IClock>(),
-                sp.GetRequiredService<HubAppApiFactory>(),
-                sp.GetRequiredService<IVersionReader>(),
-                "webapps.example.com"
+                sp.GetRequiredService<HubAppApiFactory>()
             );
         });
         services.AddScoped<IAppSetup>(sp => sp.GetRequiredService<HubAppSetup>());
@@ -65,5 +47,6 @@ public static class FakeExtensions
             )
         );
         services.AddScoped<IHubAdministration, DbHubAdministration>();
+        services.AddScoped<PermanentLog>();
     }
 }

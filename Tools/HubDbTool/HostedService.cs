@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Core;
+using XTI_Hub;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 
@@ -20,7 +21,7 @@ internal sealed class HostedService : IHostedService
     {
         using var scope = sp.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<IHubDbContext>();
-        var options = scope.ServiceProvider.GetRequiredService<MainDbToolOptions>();
+        var options = scope.ServiceProvider.GetRequiredService<HubDbToolOptions>();
         var xtiEnv = scope.ServiceProvider.GetRequiredService<XtiEnvironment>();
         try
         {
@@ -59,6 +60,8 @@ internal sealed class HostedService : IHostedService
             {
                 var mainDbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
                 await mainDbContext.Database.MigrateAsync();
+                var setup = scope.ServiceProvider.GetRequiredService<InitialSetup>();
+                await setup.Run();
             }
             else
             {

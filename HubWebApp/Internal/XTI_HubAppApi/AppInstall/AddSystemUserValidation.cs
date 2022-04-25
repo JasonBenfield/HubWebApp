@@ -8,9 +8,17 @@ internal sealed class AddSystemUserValidation : AppActionValidation<AddSystemUse
 {
     public Task Validate(ErrorList errors, AddSystemUserRequest model)
     {
-        if(model.AppKey.Type.Equals(AppType.Values.WebApp) && string.IsNullOrWhiteSpace(model.Domain))
+        if (model.AppKey.Name.Equals(AppName.Unknown))
         {
-            errors.Add("Domain is required when app is a web app");
+            errors.Add("App Name is required.");
+        }
+        if (model.AppKey.Type.Equals(AppType.Values.NotFound))
+        {
+            errors.Add("App Type is required.");
+        }
+        if (string.IsNullOrWhiteSpace(model.Password))
+        {
+            errors.Add("Password is required");
         }
         return Task.CompletedTask;
     }

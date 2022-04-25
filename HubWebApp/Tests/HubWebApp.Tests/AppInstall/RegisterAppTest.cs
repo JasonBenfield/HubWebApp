@@ -31,19 +31,7 @@ public sealed class RegisterAppTest
         var request = new RegisterAppRequest
         {
             AppTemplate = fakeApi.ToModel(),
-            VersionKey = AppVersionKey.Current,
-            Versions = new[]
-            {
-                new XtiVersionModel
-                {
-                    VersionName = "fakewebapp",
-                    TimeAdded = DateTimeOffset.Now,
-                    Status = AppVersionStatus.Values.Current,
-                    VersionKey = new AppVersionKey(1),
-                    VersionNumber = new AppVersionNumber(1,0,0),
-                    VersionType = AppVersionType.Values.Major
-                }
-            }
+            VersionKey = AppVersionKey.Current
         };
         return request;
     }
@@ -311,7 +299,26 @@ public sealed class RegisterAppTest
     private async Task<HubActionTester<RegisterAppRequest, AppWithModKeyModel>> setup()
     {
         var host = new HubTestHost();
-        var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.RegisterApp);
+        var sp = await host.Setup();
+        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        var versionName = new AppVersionName("FakeWebApp");
+        await hubAdmin.AddOrUpdateApps(versionName, new[] { new AppDefinitionModel(FakeInfo.AppKey, "development.example.com") });
+        await hubAdmin.AddOrUpdateVersions
+        (
+            new[] { FakeInfo.AppKey },
+            new[]
+            {
+                new XtiVersionModel
+                {
+                    VersionName = versionName,
+                    VersionKey = new AppVersionKey(1),
+                    VersionNumber = new AppVersionNumber(1,0,0),
+                    Status = AppVersionStatus.Values.Current,
+                    VersionType = AppVersionType.Values.Major,
+                    TimeAdded = DateTime.Now
+                }
+            }
+        );
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.RegisterApp);
     }
 }

@@ -19,13 +19,12 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.AddInstallationUser("", request);
     }
 
-    public Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string domain, string password)
+    public Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password)
     {
         var request = new AddSystemUserRequest
         {
             AppKey = appKey,
             MachineName = machineName,
-            Domain = domain,
             Password = password
         };
         return hubClient.Install.AddSystemUser("", request);
@@ -93,13 +92,13 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.NewInstallation("", request);
     }
 
-    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppDefinitionModel[] appDefs)
+    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
     {
         var request = new NewVersionRequest
         {
             VersionName = versionName,
             VersionType = versionType,
-            AppDefinitions = appDefs
+            AppKeys = appKeys
         };
         return hubClient.Publish.NewVersion("", request);
     }
@@ -117,14 +116,25 @@ public sealed class HcHubAdministration : IHubAdministration
     public Task<XtiVersionModel[]> Versions(AppVersionName versionName) => 
         hubClient.Install.GetVersions("", new GetVersionsRequest { VersionName = versionName });
 
-    public Task AddOrUpdateVersions(AppDefinitionModel appDef, XtiVersionModel[] publishedVersions) =>
+    public Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions) =>
         hubClient.Install.AddOrUpdateVersions
         (
             "", 
             new AddOrUpdateVersionsRequest
             {
-                App = appDef,
+                Apps = appKeys,
                 Versions = publishedVersions
+            }
+        );
+
+    public Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs) =>
+        hubClient.Install.AddOrUpdateApps
+        (
+            "",
+            new AddOrUpdateAppsRequest
+            {
+                VersionName = versionName,
+                Apps = appDefs
             }
         );
 }

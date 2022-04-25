@@ -168,13 +168,21 @@ interface IAppApiActionTemplateModel {
 	Roles: string[];
 	ResultType: IResourceResultType;
 }
-interface IAddOrUpdateVersionsRequest {
-	App: IAppDefinitionModel;
-	Versions: IXtiVersionModel[];
+interface IAddOrUpdateAppsRequest {
+	VersionName: IAppVersionName;
+	Apps: IAppDefinitionModel[];
+}
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppDefinitionModel {
 	AppKey: IAppKey;
 	Domain: string;
+}
+interface IAddOrUpdateVersionsRequest {
+	Apps: IAppKey[];
+	Versions: IXtiVersionModel[];
 }
 interface IXtiVersionModel {
 	ID: number;
@@ -184,10 +192,6 @@ interface IXtiVersionModel {
 	VersionType: IAppVersionType;
 	Status: IAppVersionStatus;
 	TimeAdded: Date;
-}
-interface IAppVersionName {
-	Value: string;
-	DisplayText: string;
 }
 interface IAppVersionNumber {
 	Major: number;
@@ -203,7 +207,6 @@ interface IGetVersionsRequest {
 }
 interface IAddSystemUserRequest {
 	AppKey: IAppKey;
-	Domain: string;
 	MachineName: string;
 	Password: string;
 }
@@ -237,7 +240,7 @@ interface IInstalledRequest {
 interface INewVersionRequest {
 	VersionName: IAppVersionName;
 	VersionType: IAppVersionType;
-	AppDefinitions: IAppDefinitionModel[];
+	AppKeys: IAppKey[];
 }
 interface IPublishVersionRequest {
 	VersionName: IAppVersionName;

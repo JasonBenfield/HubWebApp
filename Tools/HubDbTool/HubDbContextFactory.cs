@@ -9,7 +9,7 @@ using XTI_HubDB.Extensions;
 
 namespace HubDbTool;
 
-internal sealed class MainDbContextFactory : IDesignTimeDbContextFactory<HubDbContext>
+internal sealed class HubDbContextFactory : IDesignTimeDbContextFactory<HubDbContext>
 {
     public HubDbContext CreateDbContext(string[] args)
     {
@@ -22,7 +22,7 @@ internal sealed class MainDbContextFactory : IDesignTimeDbContextFactory<HubDbCo
             {
                 services.AddSingleton(_ => new XtiEnvironment(hostContext.HostingEnvironment.EnvironmentName));
                 services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
-                services.Configure<MainDbToolOptions>(hostContext.Configuration);
+                services.Configure<HubDbToolOptions>(hostContext.Configuration);
                 services.AddHubDbContextForSqlServer();
             })
             .Build();

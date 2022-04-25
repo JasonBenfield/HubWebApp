@@ -1,4 +1,6 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_Processes;
 
 namespace XTI_Admin;
@@ -16,6 +18,16 @@ public sealed class BuildProcess
     {
         var version = await new BranchVersion(scopes).Value();
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
+        var versionName = new AppVersionNameAccessor().Value;
+        var prodHubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
+        var versions = await prodHubAdmin.Versions(versionName);
+        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
+        var options = scopes.GetRequiredService<AdminOptions>();
+        var appDefs = appKeys
+            .Select(a => new AppDefinitionModel(a, a.Type.Equals(AppType.Values.WebApp) ? options.Domain : ""))
+            .ToArray();
+        await hubAdmin.AddOrUpdateApps(versionName, appDefs);
+        await hubAdmin.AddOrUpdateVersions(appKeys, versions);
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {
@@ -106,8 +118,8 @@ public sealed class BuildProcess
         {
             Console.WriteLine("Running webpack");
             var webpackProcess = new WinProcess("webpack");
-                //.UseArgumentNameDelimiter("--")
-                //.AddArgument("config", new Quoted(webpackConfigPath));
+            //.UseArgumentNameDelimiter("--")
+            //.AddArgument("config", new Quoted(webpackConfigPath));
             var result = await new CmdProcess(webpackProcess)
                 .SetWorkingDirectory(projectDir)
                 .WriteOutputToConsole()

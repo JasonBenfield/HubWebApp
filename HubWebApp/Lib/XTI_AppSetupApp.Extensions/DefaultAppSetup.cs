@@ -2,6 +2,7 @@
 using XTI_App.Api;
 using XTI_App.Secrets;
 using XTI_Credentials;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 
 namespace XTI_AppSetupApp.Extensions;
@@ -12,6 +13,7 @@ public sealed class DefaultAppSetup : IAppSetup
     private readonly SystemUserCredentials systemUserCredentials;
     private readonly AppApiFactory apiFactory;
     private readonly string domain;
+    private readonly AppVersionName versionName;
     private AppModel? app;
     private string? modKey;
 
@@ -21,6 +23,7 @@ public sealed class DefaultAppSetup : IAppSetup
         this.apiFactory = apiFactory;
         this.systemUserCredentials = systemUserCredentials;
         domain = options.Domain;
+        versionName = new AppVersionName(options.VersionName);
     }
 
     public AppModel App
@@ -36,6 +39,15 @@ public sealed class DefaultAppSetup : IAppSetup
     public async Task Run(AppVersionKey versionKey)
     {
         var template = apiFactory.CreateTemplate();
+        await hubClient.Install.AddOrUpdateApps
+        (
+            "",
+            new AddOrUpdateAppsRequest
+            {
+                VersionName = versionName,
+                Apps = new[] { new AppDefinitionModel(template.AppKey, domain) }
+            }
+        );
         var password = Guid.NewGuid().ToString();
         var systemUser = await hubClient.Install.AddSystemUser
         (
@@ -44,7 +56,6 @@ public sealed class DefaultAppSetup : IAppSetup
             {
                 AppKey = template.AppKey,
                 MachineName = Environment.MachineName,
-                Domain = domain,
                 Password = password
             }
         );

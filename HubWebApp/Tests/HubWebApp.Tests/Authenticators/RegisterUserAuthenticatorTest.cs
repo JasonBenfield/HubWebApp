@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.Authenticators;
-using XTI_HubAppApi.ExternalAuth;
 using XTI_HubAppApi.UserList;
 using XTI_HubDB.Entities;
 
@@ -120,7 +120,7 @@ internal sealed class RegisterUserAuthenticatorTest
         );
         var factory = tester.Services.GetRequiredService<AppFactory>();
         var appKey = new AppKey(new AppName("Auth"), AppType.Values.WebApp);
-        var authApp = await factory.Apps.AddOrUpdate(appKey, "auth.example.com", DateTimeOffset.Now);
+        var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, "auth.example.com", DateTimeOffset.Now);
         await authApp.RegisterAsAuthenticator();
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);

@@ -38,7 +38,7 @@ internal sealed class BranchVersion
             versionKey = AppVersionKey.Current;
         }
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.Version(new AppVersionName().Value, versionKey);
+        var version = await hubAdmin.Version(new AppVersionNameAccessor().Value, versionKey);
         return version;
     }
 }

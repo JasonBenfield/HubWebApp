@@ -20,7 +20,7 @@ internal sealed class PersistedVersionsTest
                 new XtiVersionModel
                 {
                    ID = 1,
-                   VersionName = "Test",
+                   VersionName = new AppVersionName("Test"),
                    TimeAdded = DateTime.Now,
                    Status = AppVersionStatus.Values.Current,
                    VersionType = AppVersionType.Values.Major,

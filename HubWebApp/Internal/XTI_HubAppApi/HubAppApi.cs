@@ -114,7 +114,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
                 || templ.DataType == typeof(EndSessionModel)
                 || templ.DataType == typeof(NewInstallationResult)
                 || templ.DataType == typeof(AppDefinitionModel)
-                || templ.DataType == typeof(AppVersionName);
+                || templ.DataType == typeof(AppVersionName)
+                || templ.DataType == typeof(AppModel);
         }
         return false;
     }

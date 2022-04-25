@@ -86,7 +86,7 @@ public sealed class AppUserRepository
             .Retrieve()
             .FirstOrDefaultAsync(u => u.UserName == userName.Value);
 
-    public async Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded)
+    internal async Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded)
     {
         var userName = AppUserName.Anon;
         var record = await GetUser(userName);

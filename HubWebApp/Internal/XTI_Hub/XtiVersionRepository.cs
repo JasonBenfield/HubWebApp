@@ -81,7 +81,7 @@ public sealed class XtiVersionRepository
     {
         var keys = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.GroupName == versionName.Value && v.VersionKey.StartsWith("V"))
+            .Where(v => v.VersionName == versionName.Value && v.VersionKey.StartsWith("V"))
             .Select(v => v.VersionKey.Substring(1))
             .ToArrayAsync();
         var keyValues = keys.Select(k => int.Parse(k));
@@ -89,12 +89,12 @@ public sealed class XtiVersionRepository
         return new AppVersionKey(maxKey + 1);
     }
 
-    public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type, AppDefinitionModel[] appDefs)
+    public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type, AppKey[] appKeys)
     {
         XtiVersion? version = null;
         await factory.DB.Transaction(async () =>
         {
-            await AddCurrentVersionIfNotFound(versionName, timeAdded, appDefs);
+            await AddCurrentVersionIfNotFound(versionName, timeAdded, appKeys);
             var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
             if (!validVersionTypes.Contains(type))
             {
@@ -103,16 +103,16 @@ public sealed class XtiVersionRepository
             var versionNumber = new AppVersionNumber(0, 0, 0);
             var entity = await AddVersion(versionName, AppVersionKey.None, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
             version = factory.CreateVersion(entity);
-            foreach (var appDef in appDefs)
+            foreach (var appKey in appKeys)
             {
-                var app = await factory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, timeAdded);
+                var app = await factory.Apps.App(appKey);
                 await app.AddVersionIfNotFound(version);
             }
         });
         return version ?? throw new ArgumentNullException(nameof(version));
     }
 
-    private async Task<XtiVersion> AddCurrentVersionIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppDefinitionModel[] appDefs)
+    private async Task<XtiVersion> AddCurrentVersionIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys)
     {
         XtiVersion currentVersion;
         var entity = await GetVersionByName(versionName, AppVersionKey.Current);
@@ -133,9 +133,9 @@ public sealed class XtiVersionRepository
         {
             currentVersion = factory.CreateVersion(entity);
         }
-        foreach (var appDef in appDefs)
+        foreach (var appKey in appKeys)
         {
-            var app = await factory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, timeAdded);
+            var app = await factory.Apps.App(appKey);
             await app.AddVersionIfNotFound(currentVersion);
         }
         return currentVersion;
@@ -152,7 +152,7 @@ public sealed class XtiVersionRepository
         {
             record = new XtiVersionEntity
             {
-                GroupName = versionName.Value,
+                VersionName = versionName.Value,
                 VersionKey = key.Value,
                 Major = versionNumber.Major,
                 Minor = versionNumber.Minor,
@@ -188,7 +188,7 @@ public sealed class XtiVersionRepository
             .Retrieve()
             .Where
             (
-                v => v.GroupName == versionName
+                v => v.VersionName == versionName
             )
             .Select(v => factory.CreateVersion(v))
             .ToArrayAsync();
@@ -207,6 +207,14 @@ public sealed class XtiVersionRepository
         {
             var unknownApp = await factory.Apps.App(AppKey.Unknown);
             record = await GetVersionByApp(unknownApp, AppVersionKey.Current);
+            if (record == null)
+            {
+                var unknownVersion = await AddCurrentVersionIfNotFound
+                (
+                    AppVersionName.Unknown, DateTimeOffset.Now, new[] { AppKey.Unknown }
+                );
+                return unknownVersion.App(unknownApp);
+            }
         }
         var version = factory.CreateVersion
         (
@@ -254,7 +262,7 @@ public sealed class XtiVersionRepository
                 .Where
                 (
                     v =>
-                        v.GroupName == versionName &&
+                        v.VersionName == versionName &&
                         v.Status == AppVersionStatus.Values.Current.Value
                 )
                 .FirstOrDefaultAsync();
@@ -264,7 +272,7 @@ public sealed class XtiVersionRepository
             record = await factory.DB
                 .Versions
                 .Retrieve()
-                .Where(v => v.GroupName == versionName && v.VersionKey == versionKey.Value)
+                .Where(v => v.VersionName == versionName && v.VersionKey == versionKey.Value)
                 .FirstOrDefaultAsync();
         }
         return record;
@@ -281,11 +289,17 @@ public sealed class XtiVersionRepository
             .ToArrayAsync();
     }
 
-    private IQueryable<int> QueryVersionIDs(App app) =>
-        factory.DB
+    private IQueryable<int> QueryVersionIDs(App app)
+    {
+        var appModel = app.ToAppModel();
+        var versionIDs = factory.DB.Versions.Retrieve()
+            .Where(v => v.VersionName == appModel.VersionName.Value)
+            .Select(v => v.ID);
+        return factory.DB
             .AppVersions.Retrieve()
-            .Where(av => av.AppID == app.ID.Value)
+            .Where(av => av.AppID == app.ID.Value && versionIDs.Contains(av.VersionID))
             .Select(av => av.VersionID);
+    }
 
     internal async Task Publishing(XtiVersionEntity version)
     {
@@ -295,7 +309,7 @@ public sealed class XtiVersionRepository
         }
         var lastVersion = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.GroupName == version.GroupName)
+            .Where(v => v.VersionName == version.VersionName)
             .OrderByDescending(v => v.Major)
             .ThenByDescending(v => v.Minor)
             .ThenByDescending(v => v.Patch)
@@ -328,7 +342,7 @@ public sealed class XtiVersionRepository
             {
                 var previousVersions = await factory.DB
                     .Versions.Retrieve()
-                    .Where(v => v.ID != version.ID && v.GroupName == version.GroupName && v.Status != AppVersionStatus.Values.Old)
+                    .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status != AppVersionStatus.Values.Old)
                     .ToArrayAsync();
                 foreach (var previousVersion in previousVersions)
                 {

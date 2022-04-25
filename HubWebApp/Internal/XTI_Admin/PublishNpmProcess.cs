@@ -9,16 +9,18 @@ internal sealed class PublishNpmProcess
 {
     private readonly XtiEnvironment xtiEnv;
     private readonly XtiFolder xtiFolder;
+    private readonly PublishFolder publishFolder;
 
-    public PublishNpmProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder)
+    public PublishNpmProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, PublishFolder publishFolder)
     {
         this.xtiEnv = xtiEnv;
         this.xtiFolder = xtiFolder;
+        this.publishFolder = publishFolder;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey, string versionNumber)
     {
-        var publishDir = getPublishDir(appKey, versionKey);
+        var publishDir = publishFolder.AppDir(appKey, versionKey);
         var projectDir = getProjectDir(appKey);
         var sourceScriptPath = Path.Combine
         (
@@ -165,15 +167,6 @@ internal sealed class PublishNpmProcess
         {
             Console.WriteLine($"Source script folder not found '{sourceScriptPath}'");
         }
-    }
-
-    private string getPublishDir(AppKey appKey, AppVersionKey versionKey)
-    {
-        if (!xtiEnv.IsProduction())
-        {
-            versionKey = AppVersionKey.Current;
-        }
-        return xtiFolder.PublishPath(appKey, versionKey);
     }
 
     private static string getProjectDir(AppKey appKey) =>

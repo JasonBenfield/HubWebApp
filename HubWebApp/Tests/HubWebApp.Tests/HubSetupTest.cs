@@ -1,29 +1,18 @@
 ﻿using HubWebApp.Fakes;
 using XTI_Core.Extensions;
-using XTI_HubSetup;
+using XTI_Hub.Abstractions;
 
 namespace HubWebApp.Tests;
 
 internal sealed class HubSetupTest
 {
     [Test]
-    public async Task ShouldAddUnknownApp()
-    {
-        var services = setup();
-        var hubSetup = services.GetRequiredService<HubAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
-        var factory = services.GetRequiredService<AppFactory>();
-        var unknownApp = await factory.Apps.App(AppKey.Unknown);
-        Assert.That(unknownApp.ID.IsValid(), Is.True, "Should add unknown app");
-    }
-
-    [Test]
     public async Task ShouldAddHubApp()
     {
-        var services = setup();
-        var hubSetup = services.GetRequiredService<HubAppSetup>();
+        var sp = await setup();
+        var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = sp.GetRequiredService<AppFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         Assert.That(hubApp.Key(), Is.EqualTo(HubInfo.AppKey), "Should add hub app");
     }
@@ -31,10 +20,10 @@ internal sealed class HubSetupTest
     [Test]
     public async Task ShouldAddModCategoryForApps()
     {
-        var services = setup();
-        var hubSetup = services.GetRequiredService<HubAppSetup>();
+        var sp = await setup();
+        var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = sp.GetRequiredService<AppFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName);
@@ -44,10 +33,10 @@ internal sealed class HubSetupTest
     [Test]
     public async Task ShouldAddModifierForEachApp()
     {
-        var services = setup();
-        var hubSetup = services.GetRequiredService<HubAppSetup>();
+        var sp = await setup();
+        var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = sp.GetRequiredService<AppFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName);
@@ -58,11 +47,35 @@ internal sealed class HubSetupTest
         Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");
     }
 
-    private IServiceProvider setup()
+    private async Task<IServiceProvider> setup()
     {
         var builder = new XtiHostBuilder();
         builder.Services.AddFakesForHubWebApp();
         var sp = builder.Build().Scope();
+        var initialSetup = sp.GetRequiredService<InitialSetup>();
+        await initialSetup.Run();
+        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        await hubAdmin.AddOrUpdateApps
+        (
+            new AppVersionName("HubWebApp"),
+            new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
+        );
+        await hubAdmin.AddOrUpdateVersions
+        (
+            new[] { HubInfo.AppKey },
+            new[]
+            {
+                new XtiVersionModel
+                {
+                    VersionName = new AppVersionName("HubWebApp"),
+                    VersionKey = new AppVersionKey(1),
+                    VersionNumber = new AppVersionNumber(1,0,0),
+                    Status = AppVersionStatus.Values.Current,
+                    VersionType = AppVersionType.Values.Major,
+                    TimeAdded = DateTime.Now
+                }
+            }
+        );
         return sp;
     }
 }

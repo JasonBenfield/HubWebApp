@@ -9,7 +9,6 @@ using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubAppApi;
 using XTI_HubDB.Extensions;
-using XTI_HubSetup;
 using XTI_Secrets.Extensions;
 
 await Host.CreateDefaultBuilder(args)
@@ -32,20 +31,12 @@ await Host.CreateDefaultBuilder(args)
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser());
         services.AddConfigurationOptions<SetupOptions>();
-        services.AddScoped<IVersionReader>(sp =>
-        {
-            var options = sp.GetRequiredService<SetupOptions>();
-            return new FileVersionReader(options.VersionsPath);
-        });
         services.AddScoped
         (
             sp => new HubAppSetup
             (
                 sp.GetRequiredService<AppFactory>(),
-                sp.GetRequiredService<IClock>(),
-                sp.GetRequiredService<HubAppApiFactory>(),
-                sp.GetRequiredService<IVersionReader>(),
-                sp.GetRequiredService<SetupOptions>().Domain
+                sp.GetRequiredService<HubAppApiFactory>()
             )
         );
         services.AddHostedService<SetupHostedService>();

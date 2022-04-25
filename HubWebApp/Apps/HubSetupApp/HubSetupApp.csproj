@@ -11,10 +11,11 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.4" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Internal\XTI_HubSetup\XTI_HubSetup.csproj" />
+		<ProjectReference Include="..\..\Internal\XTI_HubAppApi\XTI_HubAppApi.csproj" />
 		<ProjectReference Include="..\..\Internal\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
 	</ItemGroup>
 

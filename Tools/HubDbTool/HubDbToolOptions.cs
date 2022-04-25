@@ -1,6 +1,6 @@
 ﻿namespace HubDbTool;
 
-internal sealed class MainDbToolOptions
+internal sealed class HubDbToolOptions
 {
     public string Command { get; set; } = "";
     public string BackupFilePath { get; set; } = "";

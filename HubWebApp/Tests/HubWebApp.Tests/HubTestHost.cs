@@ -23,6 +23,30 @@ internal sealed class HubTestHost
             configure(builder.Services);
         }
         var sp = builder.Build().Scope();
+        var initialSetup = sp.GetRequiredService<InitialSetup>();
+        await initialSetup.Run();
+        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        await hubAdmin.AddOrUpdateApps
+        (
+            new AppVersionName("HubWebApp"),
+            new[] { new AppDefinitionModel(HubInfo.AppKey, "development.example.com") }
+        );
+        await hubAdmin.AddOrUpdateVersions
+        (
+            new[] { HubInfo.AppKey },
+            new[]
+            {
+                new XtiVersionModel
+                {
+                    VersionName = new AppVersionName("HubWebApp"),
+                    VersionKey = new AppVersionKey(1),
+                    VersionNumber = new AppVersionNumber(1,0,0),
+                    Status = AppVersionStatus.Values.Current,
+                    VersionType = AppVersionType.Values.Major,
+                    TimeAdded = DateTime.Now
+                }
+            }
+        );
         var setup = sp.GetRequiredService<IAppSetup>();
         await setup.Run(AppVersionKey.Current);
         var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();

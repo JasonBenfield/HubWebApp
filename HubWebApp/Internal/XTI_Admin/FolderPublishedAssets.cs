@@ -1,16 +1,14 @@
 ﻿using XTI_App.Abstractions;
-using XTI_App.Extensions;
-using XTI_Core;
 
 namespace XTI_Admin;
 
 public sealed class FolderPublishedAssets : IPublishedAssets
 {
-    private readonly XtiFolder xtiFolder;
+    private readonly PublishFolder publishFolder;
 
-    public FolderPublishedAssets(XtiFolder xtiFolder)
+    public FolderPublishedAssets(PublishFolder publishFolder)
     {
-        this.xtiFolder = xtiFolder;
+        this.publishFolder = publishFolder;
     }
 
     public string VersionsPath { get; private set; } = "";
@@ -19,15 +17,19 @@ public sealed class FolderPublishedAssets : IPublishedAssets
 
     public string AppPath { get; private set; } = "";
 
-    public Task Load(AppKey appKey, AppVersionKey versionKey)
+    public Task LoadVersions()
     {
-        var sourceDir = xtiFolder.PublishPath(appKey, versionKey);
-        VersionsPath = Path.Combine(sourceDir, "versions.json");
+        VersionsPath = publishFolder.VersionsPath();
+        return Task.CompletedTask;
+    }
+
+    public Task LoadApps(AppKey appKey, AppVersionKey versionKey)
+    {
+        var sourceDir = publishFolder.AppDir(appKey, versionKey);
         SetupAppPath = Path.Combine(sourceDir, "Setup");
         AppPath = Path.Combine(sourceDir, "App");
         return Task.CompletedTask;
     }
 
     public void Dispose() { }
-
 }

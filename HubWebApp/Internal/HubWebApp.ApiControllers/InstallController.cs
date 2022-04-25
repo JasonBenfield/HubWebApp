@@ -16,6 +16,12 @@ public class InstallController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppModel[]>> AddOrUpdateApps([FromBody] AddOrUpdateAppsRequest model)
+    {
+        return api.Group("Install").Action<AddOrUpdateAppsRequest, AppModel[]>("AddOrUpdateApps").Execute(model);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> AddOrUpdateVersions([FromBody] AddOrUpdateVersionsRequest model)
     {
         return api.Group("Install").Action<AddOrUpdateVersionsRequest, EmptyActionResult>("AddOrUpdateVersions").Execute(model);

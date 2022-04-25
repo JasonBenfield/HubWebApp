@@ -19,6 +19,17 @@ public sealed class DbHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
+    public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs)
+    {
+        var apps = new List<AppModel>();
+        foreach (var appDef in appDefs)
+        {
+            var app =  await appFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, appDef.Domain, clock.Now());
+            apps.Add(app.ToAppModel());
+        }
+        return apps.ToArray();
+    }
+
     public async Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
     {
         var version = await appFactory.Versions.VersionByName(versionName, versionKey);
@@ -31,24 +42,18 @@ public sealed class DbHubAdministration : IHubAdministration
         return versions.Select(v => v.ToModel()).ToArray();
     }
 
-    public async Task AddOrUpdateVersions(AppDefinitionModel appDef, XtiVersionModel[] publishedVersions)
+    public async Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions)
     {
         if (publishedVersions.Any())
         {
             var versionName = publishedVersions[0].VersionName;
-            var exceptions = publishedVersions.Where(v => v.VersionName == versionName);
+            var exceptions = publishedVersions.Where(v => !v.VersionName.Equals(versionName));
             if (exceptions.Any())
             {
-                var joinedExceptions = string.Join(",", exceptions.Select(v => v.VersionName).Distinct());
-                throw new ArgumentException($"Expected version '{versionName}' but included versions {joinedExceptions}");
+                var joinedExceptions = string.Join(",", exceptions.Select(v => v.VersionName.DisplayText).Distinct());
+                throw new ArgumentException($"Expected version '{versionName.DisplayText}' but included versions {joinedExceptions}");
             }
-            var app = await appFactory.Apps.AddOrUpdate(appDef.AppKey, appDef.Domain, clock.Now());
-            var currentVersion = await app.VersionOrDefault(AppVersionKey.Current);
-            var currentVersionModel = currentVersion.ToVersionModel();
-            if (currentVersionModel.VersionName != "unknown" && currentVersionModel.VersionName != versionName)
-            {
-                await currentVersion.Delete();
-            }
+            var versions = new List<XtiVersion>();
             foreach (var publishedVersion in publishedVersions)
             {
                 foreach (var versionModel in publishedVersions)
@@ -62,6 +67,14 @@ public sealed class DbHubAdministration : IHubAdministration
                         versionModel.VersionType,
                         versionModel.VersionNumber
                     );
+                    versions.Add(version);
+                }
+            }
+            foreach (var appKey in appKeys)
+            {
+                var app = await appFactory.Apps.App(appKey);
+                foreach (var version in versions)
+                {
                     await app.AddVersionIfNotFound(version);
                 }
             }
@@ -160,17 +173,17 @@ public sealed class DbHubAdministration : IHubAdministration
         return machineName;
     }
 
-    public async Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string domain, string password)
+    public async Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password)
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await appFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, domain, hashedPassword, clock.Now());
+        var installationUser = await appFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
-    public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppDefinitionModel[] appDefs)
+    public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
     {
-        var version = await appFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appDefs);
+        var version = await appFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appKeys);
         return version.ToModel();
     }
 }

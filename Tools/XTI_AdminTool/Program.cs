@@ -115,6 +115,7 @@ await Host.CreateDefaultBuilder(args)
                 var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
                 return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
             });
+            services.AddScoped<PublishFolder>();
             services.AddScoped<FolderPublishedAssets>();
             services.AddScoped<GitHubPublishedAssets>();
             services.AddTransient(sp =>

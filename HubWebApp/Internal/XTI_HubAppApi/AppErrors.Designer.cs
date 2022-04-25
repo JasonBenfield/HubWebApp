@@ -19,7 +19,7 @@ namespace XTI_HubAppApi {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class AppErrors {
@@ -61,6 +61,15 @@ namespace XTI_HubAppApi {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Machine Name is required..
+        /// </summary>
+        public static string MachineNameIsRequired {
+            get {
+                return ResourceManager.GetString("MachineNameIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modifier is required.
         /// </summary>
         public static string ModifierIsRequired {
@@ -75,6 +84,15 @@ namespace XTI_HubAppApi {
         public static string ModifierNotFound {
             get {
                 return ResourceManager.GetString("ModifierNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Name is required..
+        /// </summary>
+        public static string VersionNameIsRequired {
+            get {
+                return ResourceManager.GetString("VersionNameIsRequired", resourceCulture);
             }
         }
     }

@@ -1,27 +1,21 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
 public sealed class AppRegistration
 {
     private readonly AppFactory appFactory;
-    private readonly IClock clock;
 
-    public AppRegistration(AppFactory appFactory, IClock clock)
+    public AppRegistration(AppFactory appFactory)
     {
         this.appFactory = appFactory;
-        this.clock = clock;
     }
 
-    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, string domain, AppVersionKey versionKey)
+    public async Task<AppWithModKeyModel> Run(AppApiTemplateModel template, AppVersionKey versionKey)
     {
-        await appFactory.Users.AddAnonIfNotExists(clock.Now());
-        await tryAddUnknownApp();
         var appKey = template.AppKey;
-        var app = await appFactory.Apps.AddOrUpdate(appKey, domain, clock.Now());
+        var app = await appFactory.Apps.App(appKey);
         var roleNames = template.RecursiveRoles()
             .Select(r => new AppRoleName(r))
             .Union(new[] { AppRoleName.DenyAccess })
@@ -35,25 +29,6 @@ public sealed class AppRegistration
         var modifier = await addAppModifier(appKey, app);
         await addManageCacheRoleToHubSystemUsers(app);
         return new AppWithModKeyModel(app.ToAppModel(), modifier.ModKey().Value);
-    }
-
-    private async Task tryAddUnknownApp()
-    {
-        var app = await appFactory.Apps.AddOrUpdate(AppKey.Unknown, "", clock.Now());
-        var version = await appFactory.Versions.AddIfNotFound
-        (
-            AppVersionName.Unknown, 
-            AppVersionKey.Current, 
-            clock.Now(), 
-            AppVersionStatus.Values.Current, 
-            AppVersionType.Values.Major, 
-            new AppVersionNumber(1, 0, 0)
-        );
-        await appFactory.Versions.AddVersionToAppIfNotFound(app, version);
-        var currentVersion = await app.CurrentVersion();
-        var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
-        var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
-        await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
     }
 
     private static async Task updateResourceGroupFromTemplate(App app, AppVersion appVersion, AppApiGroupTemplateModel groupTemplate)

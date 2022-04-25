@@ -9,12 +9,42 @@ namespace HubWebApp.Tests;
 sealed class NewInstallationTest
 {
     [Test]
+    public async Task ShouldRequireVersionName()
+    {
+        var tester = await setup();
+        tester.LoginAsAdmin();
+        var request = new NewInstallationRequest
+        {
+            AppKey = HubInfo.AppKey,
+            QualifiedMachineName = "destination.example.com"
+        };
+        var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(request));
+        Assert.That(ex?.Errors.Select(e => e.Message), Is.EquivalentTo(new[] { AppErrors.VersionNameIsRequired }));
+    }
+
+    [Test]
+    public async Task ShouldRequireMachineName()
+    {
+        var tester = await setup();
+        tester.LoginAsAdmin();
+        var request = new NewInstallationRequest
+        {
+            VersionName = new AppVersionName("HubWebApp"),
+            AppKey = HubInfo.AppKey,
+            QualifiedMachineName = ""
+        };
+        var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(request));
+        Assert.That(ex?.Errors.Select(e => e.Message), Is.EquivalentTo(new[] { AppErrors.MachineNameIsRequired }));
+    }
+
+    [Test]
     public async Task ShouldAddInstallLocation()
     {
         var tester = await setup();
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -31,6 +61,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -49,6 +80,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -67,6 +99,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -84,6 +117,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -104,6 +138,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -126,6 +161,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };
@@ -151,6 +187,7 @@ sealed class NewInstallationTest
         tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             AppKey = HubInfo.AppKey,
             QualifiedMachineName = "destination.example.com"
         };

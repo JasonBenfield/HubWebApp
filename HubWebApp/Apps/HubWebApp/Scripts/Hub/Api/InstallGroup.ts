@@ -10,6 +10,7 @@ export class InstallGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Install');
 		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppWithModKeyModel>('RegisterApp', 'Register App');
+		this.AddOrUpdateAppsAction = this.createAction<IAddOrUpdateAppsRequest,IAppModel[]>('AddOrUpdateApps', 'Add Or Update Apps');
 		this.AddOrUpdateVersionsAction = this.createAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>('AddOrUpdateVersions', 'Add Or Update Versions');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
 		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
@@ -22,6 +23,7 @@ export class InstallGroup extends AppApiGroup {
 	}
 	
 	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppWithModKeyModel>;
+	readonly AddOrUpdateAppsAction: AppApiAction<IAddOrUpdateAppsRequest,IAppModel[]>;
 	readonly AddOrUpdateVersionsAction: AppApiAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>;
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IXtiVersionModel>;
 	readonly GetVersionsAction: AppApiAction<IGetVersionsRequest,IXtiVersionModel[]>;
@@ -34,6 +36,9 @@ export class InstallGroup extends AppApiGroup {
 	
 	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
 		return this.RegisterAppAction.execute(model, errorOptions || {});
+	}
+	AddOrUpdateApps(model: IAddOrUpdateAppsRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateAppsAction.execute(model, errorOptions || {});
 	}
 	AddOrUpdateVersions(model: IAddOrUpdateVersionsRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddOrUpdateVersionsAction.execute(model, errorOptions || {});

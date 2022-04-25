@@ -17,7 +17,8 @@ internal sealed class PublishLibCommand : ICommand
     {
         string semanticVersion;
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var currentVersion = await new CurrentVersion(scopes).Value();
+        var versionName = new AppVersionNameAccessor().Value;
+        var currentVersion = await new CurrentVersion(scopes, versionName).Value();
         if (xtiEnv.IsProduction())
         {
             var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();

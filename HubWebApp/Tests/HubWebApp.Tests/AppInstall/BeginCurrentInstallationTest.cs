@@ -19,6 +19,7 @@ sealed class BeginCurrentInstallationTest
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -49,6 +50,7 @@ sealed class BeginCurrentInstallationTest
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -71,11 +73,11 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationVersion()
     {
         var tester = await setup();
-        var factory = tester.Services.GetRequiredService<AppFactory>();
         tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = new AppVersionName("HubWebApp"),
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -85,9 +87,9 @@ sealed class BeginCurrentInstallationTest
         (
             new NewVersionRequest
             {
-                VersionName = "HubWebApp",
+                VersionName = new AppVersionName("HubWebApp"),
                 VersionType = AppVersionType.Values.Major,
-                AppDefinitions = new[] { new AppDefinitionModel(HubInfo.AppKey, "hub.example.com") }
+                AppKeys = new[] { HubInfo.AppKey }
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -101,8 +103,7 @@ sealed class BeginCurrentInstallationTest
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
             AppTemplate = hubApiFactory.CreateTemplate().ToModel(),
-            VersionKey = nextVersion.VersionKey,
-            Versions = new XtiVersionModel[0]
+            VersionKey = nextVersion.VersionKey
         });
         await hubApi.Publish.EndPublish.Invoke
         (
@@ -114,6 +115,7 @@ sealed class BeginCurrentInstallationTest
         );
         await newInstallation(tester, new NewInstallationRequest
         {
+            VersionName = nextVersion.VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -128,7 +130,7 @@ sealed class BeginCurrentInstallationTest
         var installationVersion = await getVersion(tester, currentInstallation);
         Assert.That
         (
-            installationVersion.ID,
+            installationVersion.VersionID,
             Is.EqualTo(nextVersion.ID),
             "Should set current installation version"
         );

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -13,20 +14,39 @@ public sealed class AppRepository
         this.factory = factory;
     }
 
-    public async Task<App> AddOrUpdate(AppKey appKey, string domain, DateTimeOffset timeAdded)
+    internal async Task AddUnknownIfNotFound()
+    {
+        var app = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, "", DateTimeOffset.Now);
+        var version = await factory.Versions.AddIfNotFound
+        (
+            AppVersionName.Unknown,
+            AppVersionKey.Current,
+            DateTimeOffset.Now,
+            AppVersionStatus.Values.Current,
+            AppVersionType.Values.Major,
+            new AppVersionNumber(1, 0, 0)
+        );
+        await factory.Versions.AddVersionToAppIfNotFound(app, version);
+        var currentVersion = await app.CurrentVersion();
+        var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
+        var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
+        await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
+    }
+
+    public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, string domain, DateTimeOffset timeAdded)
     {
         App app;
         var title = appKey.Name.DisplayText;
-        var record = await factory.DB.Apps.Retrieve()
-            .FirstOrDefaultAsync(a => a.Name == appKey.Name.Value && a.Type == appKey.Type.Value);
+        var record = await GetAppByKey(appKey);
         if (record == null)
         {
-            app = await Add(appKey, title, domain, timeAdded);
+            app = await Add(versionName, appKey, title, domain, timeAdded);
         }
         else
         {
             await factory.DB.Apps.Update(record, r =>
             {
+                r.VersionName = versionName.Value;
                 r.Title = title.Trim();
                 r.Domain = domain;
             });
@@ -35,12 +55,12 @@ public sealed class AppRepository
         return app;
     }
 
-    private async Task<App> Add(AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
+    private async Task<App> Add(AppVersionName versionName, AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
     {
         App? app = null;
         await factory.Transaction(async () =>
         {
-            var entity = await AddApp(appKey, title, domain, timeAdded);
+            var entity = await AddApp(versionName, appKey, title, domain, timeAdded);
             app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
             await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
@@ -48,13 +68,14 @@ public sealed class AppRepository
         return app ?? throw new ArgumentNullException(nameof(app));
     }
 
-    private async Task<AppEntity> AddApp(AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
+    private async Task<AppEntity> AddApp(AppVersionName versionName, AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
     {
         var record = new AppEntity
-        {
+        {   
             Name = appKey.Name.Value,
             Type = appKey.Type.Value,
             Title = title.Trim(),
+            VersionName = versionName.Value,
             Domain = domain,
             TimeAdded = timeAdded
         };

@@ -40,11 +40,6 @@ public static class XtiSetupAppHost
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddConfigurationOptions<SetupOptions>();
-                    services.AddScoped(sp =>
-                    {
-                        var options = sp.GetRequiredService<SetupOptions>();
-                        return new VersionReader(options.VersionsPath);
-                    });
                     services.AddScoped<DefaultAppSetup>();
                     services.AddHostedService<SetupHostedService>();
                 }

@@ -1,6 +1,4 @@
 ﻿using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
 using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppPublish;
@@ -8,12 +6,10 @@ namespace XTI_HubAppApi.AppPublish;
 public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionModel>
 {
     private readonly IHubAdministration hubAdministration;
-    private readonly IClock clock;
 
-    public NewVersionAction(IHubAdministration hubAdministration, IClock clock)
+    public NewVersionAction(IHubAdministration hubAdministration)
     {
         this.hubAdministration = hubAdministration;
-        this.clock = clock;
     }
 
     public async Task<XtiVersionModel> Execute(NewVersionRequest model)
@@ -22,7 +18,7 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionMo
         (
             model.VersionName,
             model.VersionType,
-            model.AppDefinitions
+            model.AppKeys
         );
         return version;
     }

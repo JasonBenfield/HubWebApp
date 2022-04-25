@@ -28,7 +28,7 @@ public sealed class SystemUserRepository
             .Select(u => factory.User(u))
             .ToArrayAsync();
 
-    public async Task<AppUser> AddOrUpdateSystemUser(AppKey appKey, string machineName, string domain, IHashedPassword hashedPassword, DateTimeOffset now)
+    public async Task<AppUser> AddOrUpdateSystemUser(AppKey appKey, string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
         var systemUser = await SystemUserOrAnon(appKey, machineName);
         if (systemUser.UserName().Equals(AppUserName.SystemUser(appKey, machineName)))
@@ -45,7 +45,7 @@ public sealed class SystemUserRepository
                 now
             );
         }
-        var app = await factory.Apps.AddOrUpdate(appKey, domain, now);
+        var app = await factory.Apps.App(appKey);
         var systemRole = await app.AddRoleIfNotFound(AppRoleName.System);
         await systemUser.AssignRole(systemRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);

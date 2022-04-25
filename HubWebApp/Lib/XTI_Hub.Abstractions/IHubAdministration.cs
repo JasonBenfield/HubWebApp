@@ -4,13 +4,15 @@ namespace XTI_Hub.Abstractions;
 
 public interface IHubAdministration
 {
-    Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppDefinitionModel[] appDefs);
+    Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs);
+
+    Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys);
 
     Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey);
 
     Task<XtiVersionModel[]> Versions(AppVersionName versionName);
 
-    Task AddOrUpdateVersions(AppDefinitionModel appDef, XtiVersionModel[] publishedVersions);
+    Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions);
 
     Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey);
 
@@ -18,7 +20,7 @@ public interface IHubAdministration
 
     Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password);
 
-    Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string domain, string password);
+    Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password);
 
     Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName);
 

@@ -46,7 +46,7 @@ public sealed class App : IApp
         return modifier.ModKey();
     }
 
-    public Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
+    internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
 
     public Task<Modifier> Modifier(int modifierID)
@@ -160,9 +160,9 @@ public sealed class App : IApp
         return new AppModel
         {
             ID = ID.Value,
-            AppName = key.Name.DisplayText,
+            AppKey = key,
+            VersionName = new AppVersionName(record.VersionName),
             Title = record.Title,
-            Type = key.Type,
             Domain = record.Domain
         };
     }

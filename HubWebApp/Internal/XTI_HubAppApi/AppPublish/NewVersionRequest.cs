@@ -7,5 +7,5 @@ public sealed class NewVersionRequest
 {
     public AppVersionName VersionName { get; set; } = AppVersionName.Unknown;
     public AppVersionType VersionType { get; set; } = AppVersionType.Values.NotSet;
-    public AppDefinitionModel[] AppDefinitions { get; set; } = new AppDefinitionModel[0];
+    public AppKey[] AppKeys { get; set; } = new AppKey[0];
 }

@@ -16,20 +16,22 @@ internal sealed class InstallProcess
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
-        var versionKey = scopes.GetRequiredService<AppVersionKey>();
+        var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
+        var versionName = new AppVersionNameAccessor().Value;
+        using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
+        await publishedAssets.LoadVersions();
+        var versionReader = new VersionReader(publishedAssets.VersionsPath);
+        var versions = await versionReader.Versions();
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package));
+        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package)).ToArray();
+        var appDefs = appKeys
+            .Select(a => new AppDefinitionModel(a, a.Type.Equals(AppType.Values.WebApp) ? options.Domain : ""))
+            .ToArray();
+        await hubAdministration.AddOrUpdateApps(versionName, appDefs);
+        await hubAdministration.AddOrUpdateVersions(appKeys, versions);
         foreach (var appKey in appKeys)
         {
-            using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
-            await publishedAssets.Load(appKey, versionKey);
-            var versionReader = new VersionReader(publishedAssets.VersionsPath);
-            var versions = await versionReader.Versions();
-            await hubAdministration.AddOrUpdateVersions
-            (
-                new AppDefinitionModel(appKey, appKey.Type.Equals(AppType.Values.WebApp) ? options.Domain : ""),
-                versions
-            );
+            await publishedAssets.LoadApps(appKey, versionKey);
             var installMachineName = getMachineName();
             await newInstallation
             (
@@ -42,7 +44,7 @@ internal sealed class InstallProcess
             }
             else
             {
-                await new LocalInstallServiceProcess(scopes, appKey).Run();
+                await new LocalInstallServiceProcess(scopes, appKey, versionName).Run();
             }
         }
     }

@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\HubWebApp\Internal\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
+	  <ProjectReference Include="..\..\HubWebApp\Internal\XTI_Hub\XTI_Hub.csproj" />
 	</ItemGroup>
 
 </Project>

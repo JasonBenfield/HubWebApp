@@ -2,6 +2,6 @@
 namespace XTI_HubAppClient;
 public sealed partial class AddOrUpdateVersionsRequest
 {
-    public AppDefinitionModel App { get; set; } = new AppDefinitionModel();
+    public AppKey[] Apps { get; set; } = new AppKey[0];
     public XtiVersionModel[] Versions { get; set; } = new XtiVersionModel[0];
 }

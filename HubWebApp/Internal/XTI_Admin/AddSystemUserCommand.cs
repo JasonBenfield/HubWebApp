@@ -22,10 +22,13 @@ internal sealed class AddSystemUserCommand : ICommand
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var options = scopes.GetRequiredService<AdminOptions>();
         var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
+        var versionName = new AppVersionNameAccessor().Value;
+        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak, ak.Type.Equals(AppType.Values.WebApp) ? options.Domain : "")).ToArray();
+        await hubAdmin.AddOrUpdateApps(versionName, appDefs);
         foreach (var appKey in appKeys)
         {
             var password = Guid.NewGuid().ToString();
-            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, options.Domain, password);
+            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password);
             var systemUserCredentials = new SystemUserCredentials(secretCredentialsFactory, appKey);
             await systemUserCredentials.Update(new CredentialValue(systemUser.UserName, password));
         }

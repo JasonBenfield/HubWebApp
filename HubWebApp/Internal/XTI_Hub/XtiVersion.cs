@@ -29,7 +29,7 @@ public sealed class XtiVersion
     public XtiVersionModel ToModel() => new XtiVersionModel
     {
         ID = ID.Value,
-        VersionName = new AppVersionName(record.GroupName),
+        VersionName = new AppVersionName(record.VersionName),
         VersionKey = Key(),
         VersionNumber = new AppVersionNumber(record.Major, record.Minor, record.Patch),
         VersionType = AppVersionType.Values.Value(record.Type),
