@@ -92,10 +92,12 @@ await Host.CreateDefaultBuilder(args)
                 var config = sp.GetRequiredService<IXtiConfiguration>();
                 return config.Source.Get<AdminOptions>();
             });
+            var slnDir = Environment.CurrentDirectory;
+            services.AddScoped(sp => new GitRepoInfo(sp.GetRequiredService<AdminOptions>(), slnDir));
+            services.AddScoped<AppVersionNameAccessor>();
             services.AddScoped<IGitHubCredentialsAccessor, SecretGitHubCredentialsAccessor>();
             services.AddScoped<GitLibCredentials>();
             services.AddScoped<IGitHubFactory, WebGitHubFactory>();
-            services.AddScoped<GitRepoInfo>();
             services.AddScoped(sp =>
             {
                 var gitRepoInfo = sp.GetRequiredService<GitRepoInfo>();

@@ -30,7 +30,7 @@ internal sealed class LocalInstallServiceProcess
         (
             new[]
             {
-                KeyValuePair.Create("command", "install"),
+                KeyValuePair.Create("command", "localInstall"),
                 KeyValuePair.Create("envName", xtiEnv.EnvironmentName),
                 KeyValuePair.Create("appName", appKey.Name.Value),
                 KeyValuePair.Create("appType", appKey.Type.DisplayText.Replace(" ", "")),
@@ -40,7 +40,8 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("installationUserName", options.InstallationUserName),
                 KeyValuePair.Create("installationPassword", options.InstallationPassword),
                 KeyValuePair.Create("release", release),
-                KeyValuePair.Create("destinationMachine", options.DestinationMachine)
+                KeyValuePair.Create("destinationMachine", options.DestinationMachine),
+                KeyValuePair.Create("domain", options.Domain)
             }
         );
         var installServiceUrl = $"http://{options.DestinationMachine}:61862";

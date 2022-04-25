@@ -18,7 +18,7 @@ public sealed class BuildProcess
     {
         var version = await new BranchVersion(scopes).Value();
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
-        var versionName = new AppVersionNameAccessor().Value;
+        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
         var prodHubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
         var versions = await prodHubAdmin.Versions(versionName);
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();

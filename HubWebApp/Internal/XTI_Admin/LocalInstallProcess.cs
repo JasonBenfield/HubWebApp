@@ -2,6 +2,7 @@
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_Hub.Abstractions;
 using XTI_Processes;
 
 namespace XTI_Admin;
@@ -30,7 +31,9 @@ internal sealed class LocalInstallProcess
         {
             versionKey = AppVersionKey.Parse(options.VersionKey);
         }
-        await runSetup(options, xtiEnv, publishedAssets.SetupAppPath);
+        await publishedAssets.LoadApps(appKey, versionKey);
+        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
+        await runSetup(options, xtiEnv, publishedAssets.SetupAppPath, versionName);
         if (appKey.Type.Equals(AppType.Values.WebApp))
         {
             if (xtiEnv.IsProduction())
@@ -50,7 +53,7 @@ internal sealed class LocalInstallProcess
         Console.WriteLine("Installation Complete");
     }
 
-    private async Task runSetup(AdminOptions options, XtiEnvironment xtiEnv, string setupAppDir)
+    private async Task runSetup(AdminOptions options, XtiEnvironment xtiEnv, string setupAppDir, AppVersionName versionName)
     {
         var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{appKey.Name.DisplayText}SetupApp.exe"))
             .UseEnvironment(xtiEnv.EnvironmentName)
@@ -59,10 +62,10 @@ internal sealed class LocalInstallProcess
             (
                 new
                 {
+                    VersionName = versionName.Value,
                     VersionKey = options.VersionKey,
                     Domain = options.Domain
-                },
-                "Setup"
+                }
             )
             .Run();
         setupResult.EnsureExitCodeIsZero();

@@ -8,11 +8,11 @@ internal sealed class GetAppsTest
         var tester = await setup();
         tester.LoginAsAdmin();
         var apps = await tester.Execute(new EmptyRequest());
-        var appNames = apps.Select(a => a.App.AppName);
+        var appNames = apps.Select(a => a.App.AppKey);
         Assert.That
         (
             appNames,
-            Is.EquivalentTo(new[] { HubInfo.AppKey.Name.DisplayText }),
+            Is.EquivalentTo(new[] { HubInfo.AppKey }),
             "Should get all apps"
         );
     }
@@ -27,11 +27,11 @@ internal sealed class GetAppsTest
         var hubAppModifier = await tester.HubAppModifier();
         adminUser.AddRole(tester.FakeHubAppModifier(), HubInfo.Roles.Admin);
         var apps = await tester.Execute(new EmptyRequest());
-        var appNames = apps.Select(a => a.App.AppName);
+        var appNames = apps.Select(a => a.App.AppKey);
         Assert.That
         (
             appNames,
-            Is.EquivalentTo(new[] { HubInfo.AppKey.Name.DisplayText }),
+            Is.EquivalentTo(new[] { HubInfo.AppKey }),
             "Should get only allowed apps"
         );
     }

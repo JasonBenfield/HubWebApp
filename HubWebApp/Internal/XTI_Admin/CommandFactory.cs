@@ -31,6 +31,10 @@ public sealed class CommandFactory
         {
             command = new InstallCommand(scopes);
         }
+        else if (commandName == CommandNames.LocalInstall)
+        {
+            command = new LocalInstallCommand(scopes);
+        }
         else if (commandName == CommandNames.Build)
         {
             command = new BuildCommand(scopes);

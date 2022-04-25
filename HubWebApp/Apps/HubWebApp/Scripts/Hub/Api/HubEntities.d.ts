@@ -84,16 +84,10 @@ interface IAppWithModKeyModel {
 }
 interface IAppModel {
 	ID: number;
-	Type: IAppType;
-	AppName: string;
+	AppKey: IAppKey;
+	VersionName: IAppVersionName;
 	Title: string;
 	Domain: string;
-}
-interface IGetAppByIDRequest {
-	AppID: number;
-}
-interface IGetAppByAppKeyRequest {
-	AppKey: IAppKey;
 }
 interface IAppKey {
 	Name: IAppName;
@@ -102,6 +96,16 @@ interface IAppKey {
 interface IAppName {
 	Value: string;
 	DisplayText: string;
+}
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
+interface IGetAppByIDRequest {
+	AppID: number;
+}
+interface IGetAppByAppKeyRequest {
+	AppKey: IAppKey;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -171,10 +175,6 @@ interface IAppApiActionTemplateModel {
 interface IAddOrUpdateAppsRequest {
 	VersionName: IAppVersionName;
 	Apps: IAppDefinitionModel[];
-}
-interface IAppVersionName {
-	Value: string;
-	DisplayText: string;
 }
 interface IAppDefinitionModel {
 	AppKey: IAppKey;

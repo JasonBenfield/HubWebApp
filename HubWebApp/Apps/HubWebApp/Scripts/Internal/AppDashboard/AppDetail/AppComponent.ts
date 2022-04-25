@@ -22,9 +22,9 @@ export class AppComponent extends CardView {
 
     async refresh() {
         let app = await this.getApp();
-        this.appName.setText(app.AppName);
+        this.appName.setText(app.AppKey.Name.DisplayText);
         this.appTitle.setText(app.Title);
-        this.appType.setText(app.Type.DisplayText);
+        this.appType.setText(app.AppKey.Type.DisplayText);
     }
 
     private async getApp() {

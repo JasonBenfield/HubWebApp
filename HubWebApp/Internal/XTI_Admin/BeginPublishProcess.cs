@@ -18,7 +18,7 @@ internal sealed class BeginPublishProcess
         Console.WriteLine("Begin Publishing");
         var versionKey = new VersionKeyFromCurrentBranch(scopes).Value();
         var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.BeginPublish(new AppVersionNameAccessor().Value, versionKey);
+        var version = await hubAdmin.BeginPublish(scopes.GetRequiredService<AppVersionNameAccessor>().Value, versionKey);
         return version;
     }
 }

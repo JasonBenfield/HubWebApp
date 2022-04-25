@@ -71,7 +71,7 @@ public sealed class AppRepository
     private async Task<AppEntity> AddApp(AppVersionName versionName, AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
     {
         var record = new AppEntity
-        {   
+        {
             Name = appKey.Name.Value,
             Type = appKey.Type.Value,
             Title = title.Trim(),

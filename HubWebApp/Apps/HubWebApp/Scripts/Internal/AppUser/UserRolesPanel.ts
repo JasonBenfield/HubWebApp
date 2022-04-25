@@ -107,8 +107,8 @@ export class UserRolesPanel implements IPanel {
     }
 
     setAppUserOptions(appUserOptions: AppUserOptions) {
-        this.appName.setText(appUserOptions.app.AppName);
-        this.appType.setText(appUserOptions.app.Type.DisplayText);
+        this.appName.setText(appUserOptions.app.AppKey.Name.DisplayText);
+        this.appType.setText(appUserOptions.app.AppKey.Type.DisplayText);
         this.userName.setText(appUserOptions.user.UserName);
         this.personName.setText(appUserOptions.user.Name);
         this.user = appUserOptions.user;

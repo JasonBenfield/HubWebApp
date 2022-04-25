@@ -40,7 +40,7 @@ public sealed class CompleteVersionProcess
         var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
         await hubAdmin.EndPublish
         (
-            new AppVersionNameAccessor().Value, 
+            scopes.GetRequiredService<AppVersionNameAccessor>().Value, 
             versionKey
         );
         gitRepo.DeleteBranch(versionBranchName.Value);

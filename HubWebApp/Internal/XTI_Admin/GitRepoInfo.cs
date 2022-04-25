@@ -2,11 +2,11 @@
 
 public sealed class GitRepoInfo
 {
-    public GitRepoInfo(AdminOptions options)
+    public GitRepoInfo(AdminOptions options, string slnDir)
     {
         if (string.IsNullOrWhiteSpace(options.RepoOwner))
         {
-            var dirInfo = new DirectoryInfo(Environment.CurrentDirectory);
+            var dirInfo = new DirectoryInfo(slnDir);
             RepoName = dirInfo.Name;
             RepoOwner = dirInfo.Parent?.Name ?? "";
         }

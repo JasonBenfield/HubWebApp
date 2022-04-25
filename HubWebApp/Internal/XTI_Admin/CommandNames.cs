@@ -7,6 +7,7 @@ public enum CommandNames
     Build,
     Publish,
     Install,
+    LocalInstall,
     PublishLib,
     NewVersion,
     NewIssue,

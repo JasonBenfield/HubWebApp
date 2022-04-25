@@ -12,11 +12,11 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
     private readonly AppVersionName versionName;
     private string tempDir = "";
 
-    public GitHubPublishedAssets(AdminOptions options, XtiGitHubRepository gitHubRepo)
+    public GitHubPublishedAssets(AdminOptions options, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
     {
         this.options = options;
         this.gitHubRepo = gitHubRepo;
-        versionName = new AppVersionNameAccessor().Value;
+        versionName = versionNameAccessor.Value;
         tempDir = Path.Combine
         (
             Path.GetTempPath(),

@@ -31,7 +31,7 @@ internal sealed class PublishProcess
             ? new VersionKeyFromCurrentBranch(scopes).Value()
             : AppVersionKey.Current;
         var semanticVersion = "";
-        var versionName = new AppVersionNameAccessor().Value;
+        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
         if (xtiEnv.IsProduction())
         {
             var version = await new BeginPublishProcess(scopes).Run();
@@ -48,7 +48,7 @@ internal sealed class PublishProcess
         if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
         var persistedVersions = new PersistedVersions(versionsPath);
         var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var versions = await hubAdmin.Versions(new AppVersionNameAccessor().Value);
+        var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
         await persistedVersions.Store(versions);
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         GitHubRelease? release = null;

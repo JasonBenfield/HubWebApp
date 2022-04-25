@@ -2,12 +2,11 @@
 
 namespace XTI_Admin;
 
-internal sealed class AppVersionNameAccessor
+public sealed class AppVersionNameAccessor
 {
-    public AppVersionNameAccessor()
+    public AppVersionNameAccessor(GitRepoInfo repoInfo)
     {
-        var value = new DirectoryInfo(Environment.CurrentDirectory).Name;
-        Value = new AppVersionName(value);
+        Value = new AppVersionName(repoInfo.RepoName);
     }
 
     public AppVersionName Value { get; }

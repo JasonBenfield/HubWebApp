@@ -10,11 +10,11 @@ public sealed class PublishFolder
     private readonly XtiEnvironment xtiEnv;
     private readonly AppVersionName versionName;
 
-    public PublishFolder(XtiFolder xtiFolder, XtiEnvironment xtiEnv)
+    public PublishFolder(XtiFolder xtiFolder, XtiEnvironment xtiEnv, AppVersionNameAccessor versionNameAccessor)
     {
         this.xtiFolder = xtiFolder;
         this.xtiEnv = xtiEnv;
-        versionName = new AppVersionNameAccessor().Value;
+        versionName = versionNameAccessor.Value;
     }
 
     public string VersionDir() => Path.Combine(xtiFolder.FolderPath(), xtiEnv.EnvironmentName, versionName.Value);

@@ -2,14 +2,14 @@
 
 namespace XTI_Hub.Abstractions;
 
-public sealed class AppVersionName : TextKeyValue, IEquatable<AppVersionName>
+public sealed class AppVersionName : TextValue, IEquatable<AppVersionName>
 {
     public static readonly AppVersionName None = new AppVersionName();
     public static readonly AppVersionName Unknown = new AppVersionName("Unknown");
 
     public AppVersionName() : this("") { }
 
-    public AppVersionName(string value) : base(value)
+    public AppVersionName(string value) : base(value.ToLower(), value)
     {
     }
 

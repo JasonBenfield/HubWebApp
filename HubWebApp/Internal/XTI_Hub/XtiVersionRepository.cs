@@ -179,7 +179,7 @@ public sealed class XtiVersionRepository
     public async Task<XtiVersion> VersionByName(AppVersionName versionName, AppVersionKey versionKey)
     {
         var record = await GetVersionByName(versionName, versionKey);
-        return factory.CreateVersion(record ?? throw new Exception($"Version '{versionName} {versionKey.DisplayText}' was not found"));
+        return factory.CreateVersion(record ?? throw new Exception($"Version '{versionName.DisplayText} {versionKey.DisplayText}' was not found"));
     }
 
     public Task<XtiVersion[]> VersionsByName(AppVersionName versionName) =>
