@@ -25,7 +25,7 @@ sealed class Installer
             if (context.Request.Method == "POST")
             {
                 var command = context.Request.Form["command"].FirstOrDefault() ?? "";
-                if (command.Equals("install", StringComparison.OrdinalIgnoreCase))
+                if (command.Equals("localinstall", StringComparison.OrdinalIgnoreCase))
                 {
                     var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
                     var appName = context.Request.Form["appName"].FirstOrDefault() ?? "";

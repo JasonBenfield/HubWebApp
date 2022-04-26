@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
+		<PackageReference Include="System.ServiceProcess.ServiceController" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+		<PackageReference Include="XTI_Processes" Version="1.10.3" />
+		<PackageReference Include="XTI_GitHub" Version="1.2.10" />
+		<PackageReference Include="XTI_Git" Version="1.2.10" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.14-dev220423114848714" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
+		<ProjectReference Include="..\XTI_Hub\XTI_Hub.csproj" />
+	</ItemGroup>
+
+</Project>
