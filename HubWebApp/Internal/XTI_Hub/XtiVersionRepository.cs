@@ -262,7 +262,7 @@ public sealed class XtiVersionRepository
                 .Where
                 (
                     v =>
-                        v.VersionName == versionName &&
+                        v.VersionName == versionName.Value &&
                         v.Status == AppVersionStatus.Values.Current.Value
                 )
                 .FirstOrDefaultAsync();
@@ -272,7 +272,7 @@ public sealed class XtiVersionRepository
             record = await factory.DB
                 .Versions
                 .Retrieve()
-                .Where(v => v.VersionName == versionName && v.VersionKey == versionKey.Value)
+                .Where(v => v.VersionName == versionName.Value && v.VersionKey == versionKey.Value)
                 .FirstOrDefaultAsync();
         }
         return record;

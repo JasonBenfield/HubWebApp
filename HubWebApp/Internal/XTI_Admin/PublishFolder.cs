@@ -17,7 +17,7 @@ public sealed class PublishFolder
         versionName = versionNameAccessor.Value;
     }
 
-    public string VersionDir() => Path.Combine(xtiFolder.FolderPath(), xtiEnv.EnvironmentName, versionName.Value);
+    public string VersionDir() => Path.Combine(xtiFolder.FolderPath(), "Published", xtiEnv.EnvironmentName, versionName.Value);
 
     public string VersionsPath() => Path.Combine(VersionDir(), "versions.json");
 

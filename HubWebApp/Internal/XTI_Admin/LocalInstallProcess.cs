@@ -50,6 +50,14 @@ internal sealed class LocalInstallProcess
             }
             await new InstallServiceProcess(scopes).Run(publishedAssets.AppPath, appKey, AppVersionKey.Current);
         }
+        else if (appKey.Type.Equals(AppType.Values.ConsoleApp))
+        {
+            if (xtiEnv.IsProduction())
+            {
+                await new CopyToInstallDirProcess(scopes).Run(publishedAssets.AppPath, appKey, versionKey, true);
+            }
+            await new CopyToInstallDirProcess(scopes).Run(publishedAssets.AppPath, appKey, AppVersionKey.Current, true);
+        }
         Console.WriteLine("Installation Complete");
     }
 

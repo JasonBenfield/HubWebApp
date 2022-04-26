@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.IO.Compression;
 using XTI_App.Abstractions;
-using XTI_App.Extensions;
 using XTI_Core;
 using XTI_GitHub;
 using XTI_Hub;
@@ -46,10 +45,13 @@ internal sealed class PublishProcess
         var versionsPath = publishFolder.VersionsPath();
         publishFolder.TryCreateVersionDir();
         if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
-        var persistedVersions = new PersistedVersions(versionsPath);
-        var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
-        await persistedVersions.Store(versions);
+        if(appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)))
+        {
+            var persistedVersions = new PersistedVersions(versionsPath);
+            var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
+            var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
+            await persistedVersions.Store(versions);
+        }
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         GitHubRelease? release = null;
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
@@ -72,11 +74,7 @@ internal sealed class PublishProcess
                 Directory.Delete(publishDir, true);
             }
             await publishSetup(appKey, versionKey);
-            if (appKey.Type.Equals(AppType.Values.WebApp))
-            {
-                await runDotNetPublish(appKey, versionKey);
-            }
-            else if (appKey.Type.Equals(AppType.Values.ServiceApp))
+            if (!appKey.Type.Equals(AppType.Values.Package))
             {
                 await runDotNetPublish(appKey, versionKey);
             }

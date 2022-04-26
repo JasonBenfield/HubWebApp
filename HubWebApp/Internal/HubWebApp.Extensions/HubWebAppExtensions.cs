@@ -61,7 +61,7 @@ public static class HubWebAppExtensions
         (
             (api, throttledLogs) =>
             {
-                throttledLogs.Throttle(api.PermanentLog.LogBatch.Path.Format())
+                throttledLogs.Throttle(api.PermanentLog.LogBatch)
                     .Requests().ForOneHour()
                     .Exceptions().For(5).Minutes();
             }
