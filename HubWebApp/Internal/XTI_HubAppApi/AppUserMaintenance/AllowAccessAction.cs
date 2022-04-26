@@ -13,11 +13,13 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
 {
     private readonly AppFromPath appFromPath;
     private readonly AppFactory appFactory;
+    private readonly ICachedUserContext userContext;
 
-    public AllowAccessAction(AppFromPath appFromPath, AppFactory appFactory)
+    public AllowAccessAction(AppFromPath appFromPath, AppFactory appFactory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;
+        this.userContext = userContext;
     }
 
     public async Task<EmptyActionResult> Execute(UserModifierKey model)
@@ -27,6 +29,7 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
         var user = await appFactory.Users.User(model.UserID);
         var modifier = await app.Modifier(model.ModifierID);
         await user.Modifier(modifier).UnassignRole(denyAccessRole);
+        userContext.ClearCache(user.UserName());
         return new EmptyActionResult();
     }
 }

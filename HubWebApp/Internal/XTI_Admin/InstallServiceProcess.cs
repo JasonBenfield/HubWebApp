@@ -23,8 +23,7 @@ internal sealed class InstallServiceProcess
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         ServiceController? sc = null;
-        var options = scopes.GetRequiredService<AdminOptions>();
-        if (AppVersionKey.Current.Equals(options.VersionKey))
+        if (installVersionKey.Equals(AppVersionKey.Current))
         {
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
             var appName = appKey.Name.DisplayText.Replace(" ", "");

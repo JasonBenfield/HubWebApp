@@ -10,4 +10,5 @@ public sealed class AppEventEntity
     public string Message { get; set; } = "";
     public string Detail { get; set; } = "";
     public DateTimeOffset TimeOccurred { get; set; } = DateTimeOffset.MaxValue;
+    public int ActualCount { get; set; } = 1;
 }

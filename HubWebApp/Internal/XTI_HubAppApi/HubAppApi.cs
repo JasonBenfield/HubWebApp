@@ -56,7 +56,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
 
     partial void createUserList(IServiceProvider services);
 
-    partial void createPermanentLog(IServiceProvider services);
+    partial void createPermanentLog(IServiceProvider sp);
 
     partial void createAppList(IServiceProvider services);
 

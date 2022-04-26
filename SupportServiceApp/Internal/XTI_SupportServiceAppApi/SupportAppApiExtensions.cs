@@ -4,6 +4,6 @@ public static class SupportAppApiExtensions
 {
     public static void AddSupportAppApiServices(this IServiceCollection services)
     {
-        services.AddHomeGroupServices();
+        services.AddPermanentLogGroupServices();
     }
 }

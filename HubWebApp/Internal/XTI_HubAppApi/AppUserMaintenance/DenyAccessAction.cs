@@ -8,11 +8,13 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
 {
     private readonly AppFromPath appFromPath;
     private readonly AppFactory appFactory;
+    private readonly ICachedUserContext userContext;
 
-    public DenyAccessAction(AppFromPath appFromPath, AppFactory appFactory)
+    public DenyAccessAction(AppFromPath appFromPath, AppFactory appFactory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;
+        this.userContext = userContext;
     }
 
     public async Task<EmptyActionResult> Execute(UserModifierKey model)
@@ -27,6 +29,7 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
             await user.Modifier(modifier).UnassignRole(role);
         }
         await user.Modifier(modifier).AssignRole(denyAccessRole);
+        userContext.ClearCache(user.UserName());
         return new EmptyActionResult();
     }
 }

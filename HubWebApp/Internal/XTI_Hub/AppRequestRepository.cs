@@ -13,7 +13,16 @@ public sealed class AppRequestRepository
         this.factory = factory;
     }
 
-    public async Task<AppRequest> AddOrUpdate(AppSession session, string requestKey, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested)
+    internal async Task<AppRequest> AddOrUpdate
+    (
+        AppSession session, 
+        string requestKey, 
+        Resource resource, 
+        Modifier modifier, 
+        string path, 
+        DateTimeOffset timeRequested, 
+        int actualCount
+    )
     {
         var record = await factory.DB.Requests.Retrieve()
             .FirstOrDefaultAsync(r => r.RequestKey == requestKey);
@@ -26,7 +35,8 @@ public sealed class AppRequestRepository
                 resource,
                 modifier,
                 path,
-                timeRequested
+                timeRequested,
+                actualCount
             );
         }
         else
@@ -43,6 +53,7 @@ public sealed class AppRequestRepository
                         r.ModifierID = modifier.ID.Value;
                         r.Path = path;
                         r.TimeStarted = timeRequested;
+                        r.ActualCount = actualCount;
                     }
                 );
         }
@@ -68,13 +79,14 @@ public sealed class AppRequestRepository
                 resource,
                 modifier,
                 "",
-                now
+                now,
+                1
             );
         }
         return factory.CreateRequest(requestRecord);
     }
 
-    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested)
+    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested, int actualCount)
     {
         var record = new AppRequestEntity
         {
@@ -83,7 +95,8 @@ public sealed class AppRequestRepository
             ResourceID = resource.ID.Value,
             ModifierID = modifier.ID.Value,
             Path = path ?? "",
-            TimeStarted = timeRequested
+            TimeStarted = timeRequested,
+            ActualCount = actualCount
         };
         await factory.DB.Requests.Create(record);
         return record;

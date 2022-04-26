@@ -18,8 +18,8 @@ public sealed partial class SupportAppApi : AppApiWrapper
             )
         )
     {
-        createHomeGroup(sp);
+        createPermanentLogGroup(sp);
     }
 
-    partial void createHomeGroup(IServiceProvider sp);
+    partial void createPermanentLogGroup(IServiceProvider sp);
 }

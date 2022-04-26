@@ -108,14 +108,14 @@ public sealed class PermanentLog
             var resource = await resourceGroup.ResourceOrDefault(path.Action);
             var modCategory = await resourceGroup.ModCategory();
             var modifier = await modCategory.ModifierByModKeyOrDefault(path.Modifier);
-            var request = await appFactory.Requests.AddOrUpdate
+            var request = await session.LogRequest
             (
-                session,
                 startRequest.RequestKey,
                 resource,
                 modifier,
                 startRequest.Path,
-                startRequest.TimeStarted
+                startRequest.TimeStarted,
+                startRequest.ActualCount
             );
         }
         catch (Exception ex)
@@ -185,7 +185,8 @@ public sealed class PermanentLog
             model.TimeOccurred,
             model.Caption,
             model.Message,
-            model.Detail
+            model.Detail,
+            model.ActualCount
         );
     }
 }

@@ -94,7 +94,7 @@ function Add-HubDBMigrations {
     dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./HubWebApp/Internal/XTI_HubDB.EF.SqlServer
 }
 
-function Xti-ResetMainDb {
+function Xti-ResetHubDb {
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateSet(“Development", "Production", "Staging", "Test")]
@@ -107,7 +107,7 @@ function Xti-ResetMainDb {
     }
 }
 
-function Xti-BackupMainDb {
+function Xti-BackupHubDb {
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateSet(“Development", "Production", "Staging", "Test")]
@@ -127,7 +127,7 @@ function Xti-BackupMainDb {
     }
 }
 
-function Xti-RestoreMainDb {
+function Xti-RestoreHubDb {
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateSet(“Development", "Production", "Staging", "Test")]
@@ -141,7 +141,7 @@ function Xti-RestoreMainDb {
     }
 }
 
-function Xti-UpdateMainDb {
+function Xti-UpdateHubDb {
     param (
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         [ValidateSet(“Development", "Production", "Staging", "Test")]

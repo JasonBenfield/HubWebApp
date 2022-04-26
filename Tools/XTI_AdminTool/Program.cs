@@ -21,6 +21,7 @@ using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_HubDB.Extensions;
+using XTI_PermanentLog;
 using XTI_Secrets;
 using XTI_Secrets.Extensions;
 using XTI_Secrets.Files;
@@ -170,6 +171,16 @@ await Host.CreateDefaultBuilder(args)
                 }
             );
             services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+            services.AddScoped
+            (
+                sp => new TempToPermanentLog
+                (
+                    sp.GetRequiredService<ITempLogs>(),
+                    sp.GetRequiredService<IPermanentLogClient>(),
+                    sp.GetRequiredService<IClock>(),
+                    0
+                )
+            );
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();

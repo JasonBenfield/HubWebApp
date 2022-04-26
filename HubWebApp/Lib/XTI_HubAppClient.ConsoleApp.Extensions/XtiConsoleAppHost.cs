@@ -43,7 +43,6 @@ public sealed class XtiConsoleAppHost
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddHostedService<AppAgendaHostedService>();
-
                     services.AddHubClientServices();
                     services.AddScoped<SystemUserXtiToken>();
                     services.AddXtiTokenAccessor((sp, tokenAccessor) =>
@@ -53,6 +52,7 @@ public sealed class XtiConsoleAppHost
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
+                    services.AddScoped<IAppApiUser, AppApiSuperUser>();
                 }
             );
         return builder;

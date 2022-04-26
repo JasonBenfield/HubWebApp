@@ -145,7 +145,8 @@ public sealed class AppSessionTest
             resource,
             modifier,
             "/Hub/Current",
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            1
         );
         return request;
     }
@@ -159,7 +160,8 @@ public sealed class AppSessionTest
             DateTimeOffset.Now,
             "Test",
             "Test Error",
-            "Testing"
+            "Testing",
+            1
         );
     }
 }

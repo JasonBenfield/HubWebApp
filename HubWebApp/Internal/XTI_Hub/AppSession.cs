@@ -27,9 +27,10 @@ public sealed class AppSession
         Resource resource,
         Modifier modifier,
         string path,
-        DateTimeOffset timeRequested
+        DateTimeOffset timeRequested,
+        int actualCount
     )
-        => factory.Requests.AddOrUpdate(this, requestKey, resource, modifier, path, timeRequested);
+        => factory.Requests.AddOrUpdate(this, requestKey, resource, modifier, path, timeRequested, actualCount);
 
     public Task Authenticate(IAppUser user)
         => factory.DB

@@ -52,6 +52,7 @@ public static class XtiServiceAppHost
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
+                    services.AddScoped<IAppApiUser, AppApiSuperUser>();
                 }
             );
         return builder;

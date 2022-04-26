@@ -13,7 +13,7 @@ public sealed class AppEventRepository
         this.factory = factory;
     }
 
-    public async Task<AppEvent> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail)
+    public async Task<AppEvent> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
     {
         var record = await factory.DB.Events.Retrieve().FirstOrDefaultAsync(evt => evt.EventKey == eventKey);
         if (record == null)
@@ -26,7 +26,8 @@ public sealed class AppEventRepository
                 Severity = severity.Value,
                 Caption = caption,
                 Message = message,
-                Detail = detail
+                Detail = detail,
+                ActualCount = actualCount
             };
             await factory.DB.Events.Create(record);
         }
@@ -44,6 +45,7 @@ public sealed class AppEventRepository
                     evt.Caption = caption;
                     evt.Message = message;
                     evt.Detail = detail;
+                    evt.ActualCount = actualCount;
                 }
             );
         }

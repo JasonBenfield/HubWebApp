@@ -10,4 +10,5 @@ public sealed class AppRequestEntity
     public int ModifierID { get; set; }
     public DateTimeOffset TimeStarted { get; set; } = DateTimeOffset.MinValue;
     public DateTimeOffset TimeEnded { get; set; } = DateTimeOffset.MaxValue;
+    public int ActualCount { get; set; } = 1;
 }

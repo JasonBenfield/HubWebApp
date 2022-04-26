@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -13,7 +13,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient.ServiceApp.Extensions\XTI_HubAppClient.ServiceApp.Extensions.csproj" />
-		<ProjectReference Include="..\..\Internal\SupportServiceApp.Extensions\SupportServiceApp.Extensions.csproj" />
+		<ProjectReference Include="..\..\Internal\XTI_SupportServiceAppApi\XTI_SupportServiceAppApi.csproj" />
 	</ItemGroup>
 
 </Project>

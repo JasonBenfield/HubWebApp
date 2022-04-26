@@ -39,13 +39,19 @@ public sealed class AppRequest
 
     public Task<AppEvent[]> Events() => factory.Events.RetrieveByRequest(this);
 
-    public Task<AppEvent> LogEvent(string eventKey, AppEventSeverity severity, DateTimeOffset timeOccurred, string caption, string message, string detail)
-    {
-        return factory.Events.LogEvent
+    public Task<AppEvent> LogEvent
+    (
+        string eventKey,
+        AppEventSeverity severity,
+        DateTimeOffset timeOccurred,
+        string caption,
+        string message,
+        string detail,
+        int actualCount
+    ) => factory.Events.LogEvent
         (
-            this, eventKey, timeOccurred, severity, caption, message, detail
+            this, eventKey, timeOccurred, severity, caption, message, detail, actualCount
         );
-    }
 
     public Task End(DateTimeOffset timeEnded)
         => factory.DB
