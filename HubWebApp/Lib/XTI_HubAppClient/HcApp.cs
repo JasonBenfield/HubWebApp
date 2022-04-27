@@ -1,6 +1,4 @@
-﻿using XTI_App.Abstractions;
-
-namespace XTI_HubAppClient;
+﻿namespace XTI_HubAppClient;
 
 internal sealed class HcApp : IApp
 {

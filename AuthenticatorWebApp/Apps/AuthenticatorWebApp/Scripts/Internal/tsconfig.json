@@ -1,0 +1,29 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": [ "es2015", "dom" ],
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5",
+    "importHelpers": true,
+    "baseUrl": ".",
+    "typeRoots": [
+      "../../node_modules/@types"
+    ],
+    "paths": {
+      "@hub/*": [ "../../../../../hubwebapp/apps/hubwebapp/scripts/hub/*" ],
+      "@jasonbenfield/*": [ "../../node_modules/@jasonbenfield/*" ]
+    }
+  },
+  "exclude": [
+    "Imports",
+    "node_modules",
+    "wwwroot",
+    "../../../../../hubwebapp/apps/hubwebapp/node_modules"
+  ]
+}

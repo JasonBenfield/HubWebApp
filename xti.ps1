@@ -46,7 +46,7 @@ function Xti-Build {
         [ValidateSet("Development", "Production", "Staging", "Test")]
         $EnvName = "Development"
     )
-    BaseXti-BuildWebApp @PsBoundParameters
+    BaseXti-Build @PsBoundParameters
 }
 
 function Xti-Publish {
