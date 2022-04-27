@@ -152,13 +152,15 @@ internal sealed class PublishNpmProcess
             if (xtiEnv.IsProduction())
             {
                 var npmPublishProcess = new WinProcess("npm")
+                    .AddArgument("publish")
                     .UseArgumentNameDelimiter("--")
                     .UseArgumentValueDelimiter(" ")
-                    .AddArgument("publish")
                     .AddArgument("registry", "https://npm.pkg.github.com");
-                var npmPublishResult = await new CmdProcess(npmPublishProcess)
+                var cmdPublishProcess = new CmdProcess(npmPublishProcess)
                     .SetWorkingDirectory(exportScriptDir)
-                    .WriteOutputToConsole()
+                    .WriteOutputToConsole();
+                Console.WriteLine(cmdPublishProcess.CommandText());
+                var npmPublishResult = await cmdPublishProcess
                     .Run();
                 npmPublishResult.EnsureExitCodeIsZero();
             }

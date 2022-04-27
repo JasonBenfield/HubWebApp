@@ -9,5 +9,8 @@ internal sealed class BuildCommand : ICommand
         this.scopes = scopes;
     }
 
-    public Task Execute() => new BuildProcess(scopes).Run();
+    public async Task Execute()
+    {
+        await new BuildProcess(scopes).Run();
+    }
 }
