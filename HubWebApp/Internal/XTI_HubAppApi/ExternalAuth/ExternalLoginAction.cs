@@ -1,16 +1,10 @@
-﻿using XTI_App.Api;
+﻿using System.Web;
+using XTI_App.Api;
 using XTI_Hub;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.ExternalAuth;
-
-public sealed class ExternalLoginRequest
-{
-    public string ExternalUserKey { get; set; } = "";
-    public string StartUrl { get; set; } = "";
-    public string ReturnUrl { get; set; } = "";
-}
 
 internal sealed class ExternalLoginAction : AppAction<ExternalLoginRequest, WebRedirectResult>
 {
@@ -34,7 +28,6 @@ internal sealed class ExternalLoginAction : AppAction<ExternalLoginRequest, WebR
         await auth.Authenticate(user);
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var startUrl = new StartUrl(model.StartUrl, model.ReturnUrl).Value;
-        return new WebRedirectResult(startUrl);
+        return new WebRedirectResult(HttpUtility.HtmlDecode(model.ReturnUrl));
     }
 }

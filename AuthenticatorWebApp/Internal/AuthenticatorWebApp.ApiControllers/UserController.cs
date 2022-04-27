@@ -26,4 +26,10 @@ public class UserController : Controller
         var result = await api.Group("User").Action<EmptyRequest, WebViewResult>("Error").Execute(new EmptyRequest());
         return View(result.Data.ViewName);
     }
+
+    public async Task<IActionResult> Logout(LogoutRequest model)
+    {
+        var result = await api.Group("User").Action<LogoutRequest, WebRedirectResult>("Logout").Execute(model);
+        return Redirect(result.Data.Url);
+    }
 }

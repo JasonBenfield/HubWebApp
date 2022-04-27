@@ -12,10 +12,12 @@ export class UserGroup extends AppApiGroup implements IUserGroup {
 		this.Index = this.createView<IUserStartRequest>('Index');
 		this.AccessDenied = this.createView<IEmptyRequest>('AccessDenied');
 		this.Error = this.createView<IEmptyRequest>('Error');
+		this.Logout = this.createView<ILogoutRequest>('Logout');
 	}
 	
 	readonly Index: AppApiView<IUserStartRequest>;
 	readonly AccessDenied: AppApiView<IEmptyRequest>;
 	readonly Error: AppApiView<IEmptyRequest>;
+	readonly Logout: AppApiView<ILogoutRequest>;
 	
 }

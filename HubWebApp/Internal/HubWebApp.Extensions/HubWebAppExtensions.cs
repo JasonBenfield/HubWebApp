@@ -11,6 +11,7 @@ using XTI_HubAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Abstractions;
+using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
 
 namespace HubWebApp.Extensions;
@@ -22,6 +23,8 @@ public static class HubWebAppExtensions
         services.AddAppServices();
         services.AddWebAppServices();
         services.AddHubDbContextForSqlServer();
+        services.AddScoped<ILogoutProcess, LogoutProcess>();
+        services.AddScoped<LogoutAction>();
         services.AddScoped<AppFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();

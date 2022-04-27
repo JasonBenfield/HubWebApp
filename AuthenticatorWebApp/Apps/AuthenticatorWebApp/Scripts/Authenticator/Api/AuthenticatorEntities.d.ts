@@ -5,5 +5,8 @@ interface IUserStartRequest {
 }
 interface IEmptyRequest {
 }
+interface ILogoutRequest {
+	ReturnUrl: string;
+}
 interface IEmptyActionResult {
 }

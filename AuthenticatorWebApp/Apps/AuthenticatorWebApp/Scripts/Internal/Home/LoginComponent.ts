@@ -16,7 +16,7 @@ export class LoginComponent {
     private readonly alert: MessageAlert;
 
     constructor(
-        private readonly authApi: HubAppApi,
+        private readonly hubApi: HubAppApi,
         private readonly view: LoginComponentView
     ) {
         this.verifyLoginForm = new VerifyLoginForm(this.view.verifyLoginForm);
@@ -32,7 +32,7 @@ export class LoginComponent {
     private async login() {
         this.alert.info('Verifying login...');
         try {
-            let result = await this.verifyLoginForm.save(this.authApi.Auth.VerifyLoginAction);
+            let result = await this.verifyLoginForm.save(this.hubApi.Auth.VerifyLoginAction);
             if (result.succeeded()) {
                 let cred = this.getCredentials();
                 this.alert.info('Opening page...');
@@ -53,7 +53,7 @@ export class LoginComponent {
 
     private postLogin(cred: ILoginCredentials) {
         let form = <HTMLFormElement>document.createElement('form');
-        form.action = this.authApi.Auth.Login
+        form.action = this.hubApi.Auth.Login
             .getUrl(null)
             .value();
         form.style.position = 'absolute';
