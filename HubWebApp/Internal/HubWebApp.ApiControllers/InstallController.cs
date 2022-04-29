@@ -74,4 +74,10 @@ public class InstallController : Controller
     {
         return api.Group("Install").Action<InstalledRequest, EmptyActionResult>("Installed").Execute(model);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> SetUserAccess([FromBody] SetUserAccessRequest model)
+    {
+        return api.Group("Install").Action<SetUserAccessRequest, EmptyActionResult>("SetUserAccess").Execute(model);
+    }
 }

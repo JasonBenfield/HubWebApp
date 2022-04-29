@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Internal\HubWebApp.Fakes\HubWebApp.Fakes.csproj" />
-    <ProjectReference Include="..\..\Internal\XTI_Admin\XTI_Admin.csproj" />
     <ProjectReference Include="..\..\Lib\XTI_AppSetupApp.Extensions\XTI_AppSetupApp.Extensions.csproj" />
     <ProjectReference Include="..\..\Internal\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
   </ItemGroup>

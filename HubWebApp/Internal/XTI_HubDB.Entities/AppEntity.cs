@@ -8,5 +8,4 @@ public sealed class AppEntity
     public string Title { get; set; } = "";
     public string VersionName { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
-    public string Domain { get; set; } = "";
 }

@@ -17,4 +17,5 @@ public sealed partial class InstallGroup : AppClientGroup
     public Task<int> BeginCurrentInstallation(string modifier, BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginCurrentInstallation", modifier, model);
     public Task<int> BeginVersionInstallation(string modifier, BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginVersionInstallation", modifier, model);
     public Task<EmptyActionResult> Installed(string modifier, InstalledRequest model) => Post<EmptyActionResult, InstalledRequest>("Installed", modifier, model);
+    public Task<EmptyActionResult> SetUserAccess(string modifier, SetUserAccessRequest model) => Post<EmptyActionResult, SetUserAccessRequest>("SetUserAccess", modifier, model);
 }

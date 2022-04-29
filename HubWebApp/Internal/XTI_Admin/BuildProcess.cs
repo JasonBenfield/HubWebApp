@@ -24,7 +24,7 @@ public sealed class BuildProcess
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var options = scopes.GetRequiredService<AdminOptions>();
         var appDefs = appKeys
-            .Select(a => new AppDefinitionModel(a, a.Type.Equals(AppType.Values.WebApp) ? options.Domain : ""))
+            .Select(a => new AppDefinitionModel(a))
             .ToArray();
         await hubAdmin.AddOrUpdateApps(versionName, appDefs);
         await hubAdmin.AddOrUpdateVersions(appKeys, versions);

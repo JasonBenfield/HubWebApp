@@ -4,7 +4,6 @@ const entry = {
     user: './Scripts/Internal/User/Start/MainPage.ts',
     accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
     error: './Scripts/Internal/User/Error/MainPage.ts',
-    login: './Scripts/Hub/Auth/LoginPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',

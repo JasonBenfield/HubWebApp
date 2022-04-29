@@ -39,6 +39,10 @@ public sealed class CommandFactory
         {
             command = new BuildCommand(scopes);
         }
+        else if (commandName == CommandNames.Setup)
+        {
+            command = new SetupCommand(scopes);
+        }
         else if (commandName == CommandNames.NewVersion)
         {
             command = new NewVersionCommand(scopes);

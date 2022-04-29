@@ -6,5 +6,4 @@ public sealed class SetupOptions
 
     public string VersionName { get; set; } = "";
     public string VersionKey { get; set; } = "";
-    public string Domain { get; set; } = "";
 }

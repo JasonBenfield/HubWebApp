@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Api;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi.AppList;
@@ -11,15 +12,6 @@ public sealed class AppListGroup : AppApiGroupWrapper
     {
         var actions = new WebAppApiActionFactory(source);
         Index = source.AddAction(actions.View(nameof(Index), () => sp.GetRequiredService<IndexAction>()));
-        GetAppDomain = source.AddAction
-        (
-            actions.Action
-            (
-                nameof(GetAppDomain),
-                ResourceAccess.AllowAuthenticated(),
-                () => sp.GetRequiredService<GetAppDomainAction>()
-            )
-        );
         GetApps = source.AddAction
         (
             actions.Action
@@ -44,12 +36,20 @@ public sealed class AppListGroup : AppApiGroupWrapper
                 () => sp.GetRequiredService<RedirectToAppAction>()
             )
         );
+        GetAppDomains = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(GetAppDomains),
+                () => sp.GetRequiredService<GetAppDomainsAction>()
+            )
+        );
     }
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
-    public AppApiAction<GetAppDomainRequest, string> GetAppDomain { get; }
     public AppApiAction<EmptyRequest, AppWithModKeyModel[]> GetApps { get; }
     public AppApiAction<GetAppByIDRequest, AppWithModKeyModel> GetAppByID { get; }
     public AppApiAction<GetAppByAppKeyRequest, AppWithModKeyModel> GetAppByAppKey { get; }
     public AppApiAction<int, WebRedirectResult> RedirectToApp { get; }
+    public AppApiAction<EmptyRequest, AppDomainModel[]> GetAppDomains { get; }
 }

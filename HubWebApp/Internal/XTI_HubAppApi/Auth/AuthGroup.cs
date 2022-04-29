@@ -10,7 +10,6 @@ public sealed class AuthGroup : AppApiGroupWrapper
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
-        Index = source.AddAction(actions.DefaultView());
         VerifyLogin = source.AddAction
         (
             actions.Action
@@ -36,19 +35,9 @@ public sealed class AuthGroup : AppApiGroupWrapper
                 () => sp.GetRequiredService<LoginAction>()
             )
         );
-        Logout = source.AddAction
-        (
-            actions.Action
-            (
-                nameof(Logout),
-                () => sp.GetRequiredService<LogoutAction>()
-            )
-        );
 
     }
-    public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
     public AppApiAction<VerifyLoginForm, EmptyActionResult> VerifyLogin { get; }
     public AppApiAction<EmptyRequest, WebPartialViewResult> VerifyLoginForm { get; }
     public AppApiAction<LoginModel, WebRedirectResult> Login { get; }
-    public AppApiAction<EmptyRequest, WebRedirectResult> Logout { get; }
 }

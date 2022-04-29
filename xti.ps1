@@ -4,51 +4,6 @@ if(Test-Path ".\xti.private.ps1"){
 . .\xti.Private.ps1
 }
 
-function Xti-NewVersion {
-    param(
-        [ValidateSet("major", "minor", "patch")]
-        $VersionType = "minor"
-    )
-    New-BaseXtiVersion @PsBoundParameters
-}
-
-function Xti-Issues {
-    param(
-    )
-    BaseXti-Issues @PsBoundParameters
-}
-
-function Xti-NewIssue {
-    param(
-        [Parameter(Mandatory)]
-        [string] $IssueTitle,
-        [switch] $Start
-    )
-    New-BaseXtiIssue @PsBoundParameters
-}
-
-function Xti-StartIssue {
-    param(
-        [Parameter(Position=0)]
-        [long]$IssueNumber = 0
-    )
-    BaseXti-StartIssue @PsBoundParameters
-}
-
-function Xti-CompleteIssue {
-    param(
-    )
-    BaseXti-CompleteIssue @PsBoundParameters
-}
-
-function Xti-Build {
-    param(
-        [ValidateSet("Development", "Production", "Staging", "Test")]
-        $EnvName = "Development"
-    )
-    BaseXti-Build @PsBoundParameters
-}
-
 function Xti-Publish {
     param(
         [ValidateSet("Production", "Development")]
@@ -66,14 +21,16 @@ function Xti-Publish {
 function Xti-Install {
     param(
         [ValidateSet("Development", "Production", "Staging", "Test")]
-        $EnvName = "Development"
+        $EnvName = "Development",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $AppType = "",
+        [ValidateSet("Default", "DB")]
+        $HubAdministrationType = "Default",
+        [ValidateSet("Default", "GitHub")]
+        $InstallationSource = "Default"
     )
-    $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
-    $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
-    $Domain = Get-Domain -EnvName $EnvName
-    $PsBoundParameters.Add("Domain", $Domain)
-    $SiteName = Get-SiteName -EnvName $EnvName
-    $PsBoundParameters.Add("SiteName", $SiteName)
     BaseXti-Install @PsBoundParameters
 }
 

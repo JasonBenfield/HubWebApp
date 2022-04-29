@@ -12,7 +12,6 @@ public sealed class DefaultAppSetup : IAppSetup
     private readonly HubAppClient hubClient;
     private readonly SystemUserCredentials systemUserCredentials;
     private readonly AppApiFactory apiFactory;
-    private readonly string domain;
     private readonly AppVersionName versionName;
     private AppModel? app;
     private string? modKey;
@@ -22,7 +21,6 @@ public sealed class DefaultAppSetup : IAppSetup
         this.hubClient = hubClient;
         this.apiFactory = apiFactory;
         this.systemUserCredentials = systemUserCredentials;
-        domain = options.Domain;
         versionName = new AppVersionName(options.VersionName);
     }
 
@@ -45,7 +43,7 @@ public sealed class DefaultAppSetup : IAppSetup
             new AddOrUpdateAppsRequest
             {
                 VersionName = versionName,
-                Apps = new[] { new AppDefinitionModel(template.AppKey, domain) }
+                Apps = new[] { new AppDefinitionModel(template.AppKey) }
             }
         );
         var password = Guid.NewGuid().ToString();

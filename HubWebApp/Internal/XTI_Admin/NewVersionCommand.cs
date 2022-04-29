@@ -17,12 +17,7 @@ public sealed class NewVersionCommand : ICommand
 
     public async Task Execute()
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
-        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
-        if (!appKeys.Any())
-        {
-            throw new ArgumentException("App keys are required");
-        }
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
         var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
@@ -31,6 +26,7 @@ public sealed class NewVersionCommand : ICommand
         {
             throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{repoInfo.DefaultBranch}'");
         }
+        var options = scopes.GetRequiredService<AdminOptions>();
         var versionType = AppVersionType.Values.Value(options.VersionType);
         if (versionType == null)
         {
@@ -38,7 +34,7 @@ public sealed class NewVersionCommand : ICommand
         }
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak, ak.Type.Equals(AppType.Values.WebApp) ? options.Domain : "")).ToArray();
+        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
         await hubAdministration.AddOrUpdateApps(versionName, appDefs);
         var newVersion = await hubAdministration.StartNewVersion
         (

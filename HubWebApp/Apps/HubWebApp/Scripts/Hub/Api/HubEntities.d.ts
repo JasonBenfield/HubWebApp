@@ -12,7 +12,6 @@ interface IEmptyActionResult {
 }
 interface ILoginModel {
 	Credentials: ILoginCredentials;
-	StartUrl: string;
 	ReturnUrl: string;
 }
 interface ILoginCredentials {
@@ -24,7 +23,6 @@ interface ILoginResult {
 }
 interface IExternalLoginRequest {
 	ExternalUserKey: string;
-	StartUrl: string;
 	ReturnUrl: string;
 }
 interface IRegisterUserAuthenticatorRequest {
@@ -77,10 +75,6 @@ interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: Date;
 }
-interface IGetAppDomainRequest {
-	AppName: string;
-	Version: string;
-}
 interface IAppWithModKeyModel {
 	App: IAppModel;
 	ModKey: string;
@@ -90,7 +84,6 @@ interface IAppModel {
 	AppKey: IAppKey;
 	VersionName: IAppVersionName;
 	Title: string;
-	Domain: string;
 }
 interface IAppKey {
 	Name: IAppName;
@@ -109,6 +102,10 @@ interface IGetAppByIDRequest {
 }
 interface IGetAppByAppKeyRequest {
 	AppKey: IAppKey;
+}
+interface IAppDomainModel {
+	AppKey: IAppKey;
+	Domain: string;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -150,7 +147,6 @@ interface IModifierModel {
 	DisplayText: string;
 }
 interface IRegisterAppRequest {
-	Domain: string;
 	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
 }
@@ -181,7 +177,6 @@ interface IAddOrUpdateAppsRequest {
 }
 interface IAppDefinitionModel {
 	AppKey: IAppKey;
-	Domain: string;
 }
 interface IAddOrUpdateVersionsRequest {
 	Apps: IAppKey[];
@@ -236,9 +231,22 @@ interface IBeginInstallationRequest {
 	QualifiedMachineName: string;
 	AppKey: IAppKey;
 	VersionKey: IAppVersionKey;
+	Domain: string;
 }
 interface IInstalledRequest {
 	InstallationID: number;
+}
+interface ISetUserAccessRequest {
+	UserID: number;
+	RoleAssignments: ISetUserAccessRoleRequest[];
+}
+interface ISetUserAccessRoleRequest {
+	AppKey: IAppKey;
+	RoleNames: IAppRoleName[];
+}
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
 }
 interface INewVersionRequest {
 	VersionName: IAppVersionName;

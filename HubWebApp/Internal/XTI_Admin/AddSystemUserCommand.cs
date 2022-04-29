@@ -23,7 +23,7 @@ internal sealed class AddSystemUserCommand : ICommand
         var options = scopes.GetRequiredService<AdminOptions>();
         var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak, ak.Type.Equals(AppType.Values.WebApp) ? options.Domain : "")).ToArray();
+        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
         await hubAdmin.AddOrUpdateApps(versionName, appDefs);
         foreach (var appKey in appKeys)
         {

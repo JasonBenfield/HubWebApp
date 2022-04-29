@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.0" />
-		<PackageReference Include="XTI_App.Api" Version="1.8.14-dev220426110151526" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.14-dev220428083450271" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.4" />
 	</ItemGroup>
 

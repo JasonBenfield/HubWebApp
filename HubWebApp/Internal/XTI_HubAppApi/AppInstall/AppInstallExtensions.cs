@@ -21,5 +21,6 @@ internal static class AppInstallExtensions
         services.AddScoped<NewInstallationValidation>();
         services.AddScoped<NewInstallationAction>();
         services.AddScoped<RegisterAppAction>();
+        services.AddScoped<SetUserAccessAction>();
     }
 }

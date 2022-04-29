@@ -20,7 +20,6 @@ public sealed class App : IApp
     public EntityID ID { get; }
     public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
     public string Title { get => record.Title; }
-    internal string Domain { get => record.Domain; }
 
     public async Task RegisterAsAuthenticator()
     {
@@ -162,8 +161,7 @@ public sealed class App : IApp
             ID = ID.Value,
             AppKey = key,
             VersionName = new AppVersionName(record.VersionName),
-            Title = record.Title,
-            Domain = record.Domain
+            Title = record.Title
         };
     }
 

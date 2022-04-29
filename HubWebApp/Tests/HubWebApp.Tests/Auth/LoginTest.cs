@@ -69,7 +69,7 @@ internal sealed class LoginTest
         var tester = await setup();
         var model = createLoginModel();
         var result = await tester.Execute(model);
-        Assert.That(result.Url, Is.EqualTo("~/User"), "Should redirect to start if password is correct");
+        Assert.That(result.Url, Is.EqualTo(model.ReturnUrl), "Should redirect to return url if password is correct");
     }
 
     [Test]
@@ -175,6 +175,7 @@ internal sealed class LoginTest
             {
                 UserName = "xartogg",
                 Password = "Password12345"
-            }
+            },
+            ReturnUrl = "./Home"
         };
 }

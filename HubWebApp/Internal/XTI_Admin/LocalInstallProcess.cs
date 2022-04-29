@@ -20,7 +20,7 @@ internal sealed class LocalInstallProcess
         this.publishedAssets = publishedAssets;
     }
 
-    public async Task Run()
+    public async Task Run(InstallationOptions installation)
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         Console.WriteLine($"Starting install {appKey.Name.DisplayText} {appKey.Type.DisplayText} {options.VersionKey} {options.Release}");
@@ -33,14 +33,14 @@ internal sealed class LocalInstallProcess
         }
         await publishedAssets.LoadApps(appKey, versionKey);
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        await runSetup(options, xtiEnv, publishedAssets.SetupAppPath, versionName);
+        await new RunSetupProcess(xtiEnv).Run(versionName, appKey, options.VersionKey, publishedAssets.SetupAppPath);
         if (appKey.Type.Equals(AppType.Values.WebApp))
         {
             if (xtiEnv.IsProduction())
             {
-                await new InstallWebAppProcess(scopes).Run(publishedAssets.AppPath, appKey, versionKey, versionKey);
+                await new InstallWebAppProcess(scopes).Run(publishedAssets.AppPath, appKey, versionKey, versionKey, installation);
             }
-            await new InstallWebAppProcess(scopes).Run(publishedAssets.AppPath, appKey, versionKey, AppVersionKey.Current);
+            await new InstallWebAppProcess(scopes).Run(publishedAssets.AppPath, appKey, versionKey, AppVersionKey.Current, installation);
         }
         else if (appKey.Type.Equals(AppType.Values.ServiceApp))
         {
@@ -71,8 +71,7 @@ internal sealed class LocalInstallProcess
                 new
                 {
                     VersionName = versionName.Value,
-                    VersionKey = options.VersionKey,
-                    Domain = options.Domain
+                    VersionKey = options.VersionKey
                 }
             )
             .Run();

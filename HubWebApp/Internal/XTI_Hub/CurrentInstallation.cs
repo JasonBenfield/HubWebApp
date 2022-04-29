@@ -9,5 +9,5 @@ public sealed class CurrentInstallation : Installation
     {
     }
 
-    internal Task Start(AppVersion appVersion) => StartCurrent(appVersion);
+    internal Task Start(AppVersion appVersion, string domain) => StartCurrent(appVersion, domain);
 }

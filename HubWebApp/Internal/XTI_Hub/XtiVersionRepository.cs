@@ -56,8 +56,7 @@ public sealed class XtiVersionRepository
                 new AppXtiVersionEntity
                 {
                     VersionID = version.ID.Value,
-                    AppID = app.ID.Value,
-                    Domain = app.Domain
+                    AppID = app.ID.Value
                 }
             );
         }
@@ -94,7 +93,7 @@ public sealed class XtiVersionRepository
         XtiVersion? version = null;
         await factory.DB.Transaction(async () =>
         {
-            await AddCurrentVersionIfNotFound(versionName, timeAdded, appKeys);
+            await AddCurrentVersionToAppsIfNotFound(versionName, timeAdded, appKeys);
             var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
             if (!validVersionTypes.Contains(type))
             {
@@ -112,7 +111,18 @@ public sealed class XtiVersionRepository
         return version ?? throw new ArgumentNullException(nameof(version));
     }
 
-    private async Task<XtiVersion> AddCurrentVersionIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys)
+    private async Task<XtiVersion> AddCurrentVersionToAppsIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys)
+    {
+        XtiVersion currentVersion = await AddCurrentVersionIfNotFound(versionName, timeAdded);
+        foreach (var appKey in appKeys)
+        {
+            var app = await factory.Apps.App(appKey);
+            await app.AddVersionIfNotFound(currentVersion);
+        }
+        return currentVersion;
+    }
+
+    internal async Task<XtiVersion> AddCurrentVersionIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded)
     {
         XtiVersion currentVersion;
         var entity = await GetVersionByName(versionName, AppVersionKey.Current);
@@ -132,11 +142,6 @@ public sealed class XtiVersionRepository
         else
         {
             currentVersion = factory.CreateVersion(entity);
-        }
-        foreach (var appKey in appKeys)
-        {
-            var app = await factory.Apps.App(appKey);
-            await app.AddVersionIfNotFound(currentVersion);
         }
         return currentVersion;
     }
@@ -209,7 +214,7 @@ public sealed class XtiVersionRepository
             record = await GetVersionByApp(unknownApp, AppVersionKey.Current);
             if (record == null)
             {
-                var unknownVersion = await AddCurrentVersionIfNotFound
+                var unknownVersion = await AddCurrentVersionToAppsIfNotFound
                 (
                     AppVersionName.Unknown, DateTimeOffset.Now, new[] { AppKey.Unknown }
                 );

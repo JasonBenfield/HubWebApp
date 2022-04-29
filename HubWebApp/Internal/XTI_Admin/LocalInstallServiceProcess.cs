@@ -17,7 +17,7 @@ internal sealed class LocalInstallServiceProcess
         this.versionName = versionName;
     }
 
-    public async Task Run()
+    public async Task Run(InstallationOptions installation)
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
@@ -40,8 +40,9 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("installationUserName", options.InstallationUserName),
                 KeyValuePair.Create("installationPassword", options.InstallationPassword),
                 KeyValuePair.Create("release", release),
-                KeyValuePair.Create("destinationMachine", options.DestinationMachine),
-                KeyValuePair.Create("domain", options.Domain)
+                KeyValuePair.Create("destinationMachine", installation.MachineName),
+                KeyValuePair.Create("domain", installation.Domain),
+                KeyValuePair.Create("siteName", installation.SiteName)
             }
         );
         var installServiceUrl = $"http://{options.DestinationMachine}:61862";

@@ -16,12 +16,6 @@ public class AppsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> GetAppDomain([FromBody] GetAppDomainRequest model)
-    {
-        return api.Group("Apps").Action<GetAppDomainRequest, string>("GetAppDomain").Execute(model);
-    }
-
-    [HttpPost]
     public Task<ResultContainer<AppWithModKeyModel[]>> GetApps()
     {
         return api.Group("Apps").Action<EmptyRequest, AppWithModKeyModel[]>("GetApps").Execute(new EmptyRequest());
@@ -43,5 +37,11 @@ public class AppsController : Controller
     {
         var result = await api.Group("Apps").Action<int, WebRedirectResult>("RedirectToApp").Execute(model);
         return Redirect(result.Data.Url);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppDomainModel[]>> GetAppDomains()
+    {
+        return api.Group("Apps").Action<EmptyRequest, AppDomainModel[]>("GetAppDomains").Execute(new EmptyRequest());
     }
 }

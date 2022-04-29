@@ -16,7 +16,7 @@ public sealed class AppRepository
 
     internal async Task AddUnknownIfNotFound()
     {
-        var app = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, "", DateTimeOffset.Now);
+        var app = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, DateTimeOffset.Now);
         var version = await factory.Versions.AddIfNotFound
         (
             AppVersionName.Unknown,
@@ -33,14 +33,14 @@ public sealed class AppRepository
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
     }
 
-    public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, string domain, DateTimeOffset timeAdded)
+    public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded)
     {
         App app;
         var title = appKey.Name.DisplayText;
         var record = await GetAppByKey(appKey);
         if (record == null)
         {
-            app = await Add(versionName, appKey, title, domain, timeAdded);
+            app = await Add(versionName, appKey, title, timeAdded);
         }
         else
         {
@@ -48,19 +48,20 @@ public sealed class AppRepository
             {
                 r.VersionName = versionName.Value;
                 r.Title = title.Trim();
-                r.Domain = domain;
             });
             app = factory.CreateApp(record);
         }
+        var version = await factory.Versions.AddCurrentVersionIfNotFound(versionName, timeAdded);
+        await app.AddVersionIfNotFound(version);
         return app;
     }
 
-    private async Task<App> Add(AppVersionName versionName, AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
+    private async Task<App> Add(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded)
     {
         App? app = null;
         await factory.Transaction(async () =>
         {
-            var entity = await AddApp(versionName, appKey, title, domain, timeAdded);
+            var entity = await AddEntity(versionName, appKey, title, timeAdded);
             app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
             await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
@@ -68,7 +69,7 @@ public sealed class AppRepository
         return app ?? throw new ArgumentNullException(nameof(app));
     }
 
-    private async Task<AppEntity> AddApp(AppVersionName versionName, AppKey appKey, string title, string domain, DateTimeOffset timeAdded)
+    private async Task<AppEntity> AddEntity(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded)
     {
         var record = new AppEntity
         {
@@ -76,7 +77,6 @@ public sealed class AppRepository
             Type = appKey.Type.Value,
             Title = title.Trim(),
             VersionName = versionName.Value,
-            Domain = domain,
             TimeAdded = timeAdded
         };
         await factory.DB.Apps.Create(record);

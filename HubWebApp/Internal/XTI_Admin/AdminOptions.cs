@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Core;
 
 namespace XTI_Admin;
 
@@ -30,4 +31,21 @@ public sealed class AdminOptions
         string.IsNullOrWhiteSpace(AppName)
         ? XTI_App.Abstractions.AppKey.Unknown
         : new AppKey(new AppName(AppName), XTI_App.Abstractions.AppType.Values.Value(AppType));
+
+    public InstallationSources GetInstallationSource(XtiEnvironment xtiEnv)
+    {
+        var installationSource = InstallationSource;
+        if (installationSource == InstallationSources.Default)
+        {
+            if (xtiEnv.IsDevelopmentOrTest())
+            {
+                installationSource = InstallationSources.Folder;
+            }
+            else
+            {
+                installationSource = InstallationSources.GitHub;
+            }
+        }
+        return installationSource;
+    }
 }

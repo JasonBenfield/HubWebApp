@@ -108,9 +108,10 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped<IXtiGitFactory, GitLibFactory>();
             services.AddScoped
             (
-                sp => sp.GetRequiredService<IXtiGitFactory>().CreateRepository(Environment.CurrentDirectory)
+                sp => sp.GetRequiredService<IXtiGitFactory>().CreateRepository(slnDir)
             );
-            services.AddScoped(sp => new PublishableFolder(Environment.CurrentDirectory));
+            services.AddScoped(sp => new SlnFolder(sp.GetRequiredService<XtiEnvironment>(), slnDir));
+            services.AddScoped<InstallOptionsAccessor>();
             services.AddScoped<SelectedAppKeys>();
             services.AddScoped<ITempLogs>(sp =>
             {
@@ -118,25 +119,14 @@ await Host.CreateDefaultBuilder(args)
                 var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
                 return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
             });
-            services.AddScoped<PublishFolder>();
+            services.AddScoped<PublishedFolder>();
             services.AddScoped<FolderPublishedAssets>();
             services.AddScoped<GitHubPublishedAssets>();
             services.AddTransient(sp =>
             {
                 var options = sp.GetRequiredService<AdminOptions>();
-                var installationSource = options.InstallationSource;
-                if (installationSource == InstallationSources.Default)
-                {
-                    var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                    if (xtiEnv.IsDevelopmentOrTest())
-                    {
-                        installationSource = InstallationSources.Folder;
-                    }
-                    else
-                    {
-                        installationSource = InstallationSources.GitHub;
-                    }
-                }
+                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+                var installationSource = options.GetInstallationSource(xtiEnv);
                 IPublishedAssets publishedAssets;
                 if (installationSource == InstallationSources.Folder)
                 {

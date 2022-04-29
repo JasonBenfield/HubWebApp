@@ -23,14 +23,25 @@ public class Installation
 
     public Task Installed() => SetStatus(InstallStatus.Values.Installed);
 
-    private Task SetStatus(InstallStatus status)
-        => appFactory.DB
+    private Task SetStatus(InstallStatus status) =>
+        appFactory.DB
             .Installations
             .Update(entity, inst => inst.Status = status.Value);
 
-    protected Task StartVersion() => SetStatus(InstallStatus.Values.InstallStarted);
+    protected Task StartVersion(string domain) =>
+        appFactory.DB
+            .Installations
+            .Update
+            (
+                entity, 
+                inst =>
+                {
+                    inst.Status = InstallStatus.Values.InstallStarted.Value;
+                    inst.Domain = domain;
+                }
+            );
 
-    protected async Task StartCurrent(AppVersion appVersion)
+    protected async Task StartCurrent(AppVersion appVersion, string domain)
     {
         var appVersionID = await appVersion.AppVersionID();
         await appFactory.DB
@@ -40,8 +51,9 @@ public class Installation
                 entity,
                 inst =>
                 {
-                    inst.Status = InstallStatus.Values.InstallStarted;
+                    inst.Status = InstallStatus.Values.InstallStarted.Value;
                     inst.AppVersionID = appVersionID;
+                    inst.Domain = domain;
                 }
             );
     }

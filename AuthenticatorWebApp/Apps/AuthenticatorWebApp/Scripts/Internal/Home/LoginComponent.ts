@@ -63,12 +63,10 @@ export class LoginComponent {
         let userNameInput = this.createInput('Credentials.UserName', cred.UserName, 'text');
         let passwordInput = this.createInput('Credentials.Password', cred.Password, 'password');
         let urlBuilder = UrlBuilder.current();
-        let startUrlInput = this.createInput('StartUrl', urlBuilder.getQueryValue('startUrl'));
         let returnUrlInput = this.createInput('ReturnUrl', urlBuilder.getQueryValue('returnUrl'));
         form.append(
             userNameInput,
             passwordInput,
-            startUrlInput,
             returnUrlInput
         );
         document.body.append(form);

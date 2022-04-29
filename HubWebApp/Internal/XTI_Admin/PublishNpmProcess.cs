@@ -9,9 +9,9 @@ internal sealed class PublishNpmProcess
 {
     private readonly XtiEnvironment xtiEnv;
     private readonly XtiFolder xtiFolder;
-    private readonly PublishFolder publishFolder;
+    private readonly PublishedFolder publishFolder;
 
-    public PublishNpmProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, PublishFolder publishFolder)
+    public PublishNpmProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, PublishedFolder publishFolder)
     {
         this.xtiEnv = xtiEnv;
         this.xtiFolder = xtiFolder;

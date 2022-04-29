@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -89,9 +91,39 @@ public sealed class InstallationRepository
             AppVersionID = appVersionID,
             Status = InstallStatus.Values.InstallPending.Value,
             IsCurrent = isCurrent,
-            TimeAdded = timeAdded
+            TimeAdded = timeAdded,
+            Domain = ""
         };
         await appFactory.DB.Installations.Create(entity);
         return entity;
     }
+
+    public Task<AppDomainModel[]> AppDomains() =>
+        appFactory.DB
+            .Installations
+            .Retrieve()
+            .Where
+            (
+                inst => inst.IsCurrent && !string.IsNullOrWhiteSpace(inst.Domain)
+            )
+        .Join
+        (
+            appFactory.DB.AppVersions.Retrieve(),
+            inst => inst.AppVersionID,
+            av => av.ID,
+            (inst, av) => new { Installation = inst, AppVersion = av }
+        )
+        .Join
+        (
+            appFactory.DB.Apps.Retrieve(),
+            grouped => grouped.AppVersion.AppID,
+            a => a.ID,
+            (grouped, app) => new AppDomainModel
+            (
+                new AppKey(new AppName(app.Name), AppType.Values.Value(app.Type)),
+                grouped.Installation.Domain
+            )
+        )
+        .ToArrayAsync();
+
 }

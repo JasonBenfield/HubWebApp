@@ -14,10 +14,15 @@ internal sealed class LocalInstallCommand : ICommand
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
+        var installOptionsAccessor = scopes.GetRequiredService<InstallOptionsAccessor>();
         using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
         foreach (var appKey in appKeys)
         {
-            await new LocalInstallProcess(scopes, appKey, publishedAssets).Run();
+            var installations = installOptionsAccessor.Installations(appKey);
+            foreach(var installation in installations)
+            {
+                await new LocalInstallProcess(scopes, appKey, publishedAssets).Run(installation);
+            }
         }
     }
 }

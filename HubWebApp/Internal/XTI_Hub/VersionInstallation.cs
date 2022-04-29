@@ -9,5 +9,5 @@ public sealed class VersionInstallation : Installation
     {
     }
 
-    public Task Start() => StartVersion();
+    public Task Start(string domain) => StartVersion(domain);
 }

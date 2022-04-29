@@ -30,11 +30,6 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -320,11 +315,6 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<int>("VersionID")
                         .HasColumnType("int");
 
@@ -367,6 +357,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("AppVersionID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCurrent")
                         .HasColumnType("bit");

@@ -4,13 +4,13 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-public sealed class PublishFolder
+public sealed class PublishedFolder
 {
     private readonly XtiFolder xtiFolder;
     private readonly XtiEnvironment xtiEnv;
     private readonly AppVersionName versionName;
 
-    public PublishFolder(XtiFolder xtiFolder, XtiEnvironment xtiEnv, AppVersionNameAccessor versionNameAccessor)
+    public PublishedFolder(XtiFolder xtiFolder, XtiEnvironment xtiEnv, AppVersionNameAccessor versionNameAccessor)
     {
         this.xtiFolder = xtiFolder;
         this.xtiEnv = xtiEnv;

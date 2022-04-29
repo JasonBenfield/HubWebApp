@@ -18,10 +18,4 @@ public sealed class FakeAccessForLogin : AccessForLogin
         Claims = claims;
         return Task.FromResult(Token);
     }
-
-    protected override Task _Logout()
-    {
-        Claims = Enumerable.Empty<Claim>();
-        return Task.CompletedTask;
-    }
 }
