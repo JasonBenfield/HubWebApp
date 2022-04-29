@@ -30,10 +30,29 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
 
     public string AppPath { get; private set; } = "";
 
+    public async Task LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    {
+        SetupAppPath = "";
+        AppPath = "";
+        var appTempDir = prepareTempDir(appKey);
+        var appKeyText = getAppKeyText(appKey);
+        var release = await getRelease();
+        await downloadSetup(appTempDir, appKeyText, release);
+    }
+
     public async Task LoadApps(AppKey appKey, AppVersionKey versionKey)
     {
         SetupAppPath = "";
         AppPath = "";
+        var appTempDir = prepareTempDir(appKey);
+        var appKeyText = getAppKeyText(appKey);
+        var release = await getRelease();
+        await downloadSetup(appTempDir, appKeyText, release);
+        await downloadApp(appTempDir, appKeyText, release);
+    }
+
+    private string prepareTempDir(AppKey appKey)
+    {
         var appTempDir = Path.Combine
         (
             tempDir,
@@ -44,8 +63,13 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             Directory.Delete(appTempDir, true);
         }
         Directory.CreateDirectory(appTempDir);
-        var appKeyText = $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
-        var release = await gitHubRepo.Release(options.Release);
+        return appTempDir;
+    }
+
+    private static string getAppKeyText(AppKey appKey) => $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
+
+    private async Task downloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
+    {
         var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
         if (setupAsset != null)
         {
@@ -56,6 +80,10 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             SetupAppPath = Path.Combine(appTempDir, "Setup");
             ZipFile.ExtractToDirectory(setupZipPath, SetupAppPath);
         }
+    }
+
+    private async Task downloadApp(string appTempDir, string appKeyText, GitHubRelease release)
+    {
         var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
         if (appAsset != null)
         {
@@ -67,6 +95,8 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             ZipFile.ExtractToDirectory(appZipPath, AppPath);
         }
     }
+
+    private Task<GitHubRelease> getRelease() => gitHubRepo.Release(options.Release);
 
     public async Task LoadVersions()
     {

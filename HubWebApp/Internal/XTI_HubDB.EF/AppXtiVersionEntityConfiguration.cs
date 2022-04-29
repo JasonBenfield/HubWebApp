@@ -10,7 +10,6 @@ public sealed class AppXtiVersionEntityConfiguration : IEntityTypeConfiguration<
     {
         builder.HasKey(av => av.ID);
         builder.Property(av => av.ID).ValueGeneratedOnAdd();
-        builder.Property(av => av.Domain).HasMaxLength(100);
         builder.HasIndex(av => new { av.AppID, av.VersionID }).IsUnique();
         builder
             .HasOne<AppEntity>()

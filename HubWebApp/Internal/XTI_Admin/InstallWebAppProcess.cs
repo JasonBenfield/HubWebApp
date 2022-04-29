@@ -19,25 +19,24 @@ internal sealed class InstallWebAppProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string publishedAppDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey)
+    public async Task Run(string publishedAppDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, InstallationOptions installation)
     {
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        var options = scopes.GetRequiredService<AdminOptions>();
         int installationID;
         var machineName =
-            string.IsNullOrWhiteSpace(options.DestinationMachine)
+            string.IsNullOrWhiteSpace(installation.MachineName)
                 ? Environment.MachineName
-                : options.DestinationMachine;
+                : installation.MachineName;
         if (installVersionKey.Equals(AppVersionKey.Current))
         {
-            installationID = await hubAdministration.BeginCurrentInstall(appKey, installVersionKey, machineName);
+            installationID = await hubAdministration.BeginCurrentInstall(appKey, installVersionKey, machineName, installation.Domain);
         }
         else
         {
-            installationID = await hubAdministration.BeginVersionInstall(appKey, versionKey, machineName);
+            installationID = await hubAdministration.BeginVersionInstall(appKey, versionKey, machineName, installation.Domain);
         }
-        Console.WriteLine($"Preparing IIS for {versionKey.DisplayText}");
-        await prepareIis(appKey, installVersionKey);
+        Console.WriteLine($"Installing {appKey.Name.DisplayText} {versionKey.DisplayText} to website {installation.SiteName}");
+        await prepareIis(appKey, installVersionKey, installation.SiteName);
         deleteExistingWebFiles(appKey, installVersionKey);
         await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, appKey, installVersionKey, false);
         var appOfflinePath = getAppOfflinePath(appKey, installVersionKey);
@@ -60,15 +59,14 @@ internal sealed class InstallWebAppProcess
         }
     }
 
-    private async Task prepareIis(AppKey appKey, AppVersionKey versionKey)
+    private async Task prepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
     {
         var secretCredentialsValue = await retrieveCredentials("WebApp");
         using var server = new ServerManager();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var siteName = scopes.GetRequiredService<AdminOptions>().SiteName;
         if (string.IsNullOrWhiteSpace(siteName))
         {
-            siteName = xtiEnv.IsProduction() ? "WebApps" : xtiEnv.EnvironmentName;
+            throw new ArgumentException("siteName is required");
         }
         var site = server.Sites[siteName];
         var appName = appKey.Name.DisplayText.Replace(" ", "");

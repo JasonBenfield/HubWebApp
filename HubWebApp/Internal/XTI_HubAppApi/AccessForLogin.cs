@@ -8,8 +8,4 @@ public abstract class AccessForLogin : IAccess
         _GenerateToken(claims);
 
     protected abstract Task<string> _GenerateToken(IEnumerable<Claim> claims);
-
-    public Task Logout() => _Logout();
-
-    protected abstract Task _Logout();
 }

@@ -36,8 +36,6 @@ public static class XtiWebAppHost
         builder.Services.AddAppClientDomainSelector((sp, domains) => { });
         builder.Services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
         builder.Services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
-        builder.Services.AddScoped<ILogoutProcess, LogoutProcess>();
-        builder.Services.AddScoped<LogoutAction>();
         return builder;
     }
 }

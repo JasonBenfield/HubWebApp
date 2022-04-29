@@ -24,7 +24,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var apps = new List<AppModel>();
         foreach (var appDef in appDefs)
         {
-            var app =  await appFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, appDef.Domain, clock.Now());
+            var app =  await appFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
             apps.Add(app.ToAppModel());
         }
         return apps.ToArray();
@@ -129,23 +129,23 @@ public sealed class DbHubAdministration : IHubAdministration
         return new NewInstallationResult(currentInstallation.ID.Value, versionInstallation?.ID.Value ?? 0);
     }
 
-    public async Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName)
+    public async Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
     {
         var installLocation = await appFactory.InstallLocations.Location(machineName);
         var app = await appFactory.Apps.App(appKey);
         var versionToInstall = await app.Version(installVersionKey);
         var installation = await installLocation.CurrentInstallation(app);
-        await installation.Start(versionToInstall);
+        await installation.Start(versionToInstall, domain);
         return installation.ID.Value;
     }
 
-    public async Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName)
+    public async Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
     {
         var installLocation = await appFactory.InstallLocations.Location(machineName);
         var app = await appFactory.Apps.App(appKey);
         var appVersion = await app.Version(versionKey);
         var installation = await installLocation.VersionInstallation(appVersion);
-        await installation.Start();
+        await installation.Start(domain);
         return installation.ID.Value;
     }
 

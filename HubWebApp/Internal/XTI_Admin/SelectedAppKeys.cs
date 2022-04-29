@@ -4,7 +4,7 @@ namespace XTI_Admin;
 
 public sealed class SelectedAppKeys
 {
-    public SelectedAppKeys(AdminOptions options, PublishableFolder publishableFolder)
+    public SelectedAppKeys(AdminOptions options, SlnFolder publishableFolder)
     {
         if (options.AppKey().Equals(AppKey.Unknown))
         {

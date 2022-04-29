@@ -29,7 +29,7 @@ internal sealed class HubTestHost
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
-            new[] { new AppDefinitionModel(HubInfo.AppKey, "development.example.com") }
+            new[] { new AppDefinitionModel(HubInfo.AppKey) }
         );
         await hubAdmin.AddOrUpdateVersions
         (

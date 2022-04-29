@@ -24,9 +24,9 @@ public interface IHubAdministration
 
     Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName);
 
-    Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName);
+    Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain);
 
-    Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName);
+    Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain);
 
     Task Installed(int installationID);
 }

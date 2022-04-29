@@ -21,7 +21,6 @@ internal sealed class BeginPublishTest
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
             AppTemplate = apiFactory.CreateTemplate().ToModel(),
-            Domain = "webapps.example.com",
             VersionKey = version.VersionKey
         });
         tester.LoginAsAdmin();

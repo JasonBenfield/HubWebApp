@@ -95,27 +95,9 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         if(codeGenerator == ApiCodeGenerators.Dotnet)
         {
             return templ.DataType == typeof(LoginCredentials)
-                || templ.DataType == typeof(AppKey)
-                || templ.DataType == typeof(AppVersionKey)
-                || templ.DataType == typeof(AppEventSeverity)
-                || templ.DataType == typeof(AppType)
-                || templ.DataType == typeof(AppVersionStatus)
-                || templ.DataType == typeof(AppVersionType)
-                || templ.DataType == typeof(ResourceResultType)
-                || templ.DataType == typeof(XtiVersionModel)
-                || templ.DataType == typeof(AppVersionNumber)
-                || templ.DataType == typeof(AppUserModel)
-                || templ.DataType == typeof(AuthenticateSessionModel)
-                || templ.DataType == typeof(LogEventModel)
-                || templ.DataType == typeof(LogBatchModel)
-                || templ.DataType == typeof(StartSessionModel)
-                || templ.DataType == typeof(StartRequestModel)
-                || templ.DataType == typeof(EndRequestModel)
-                || templ.DataType == typeof(EndSessionModel)
-                || templ.DataType == typeof(NewInstallationResult)
-                || templ.DataType == typeof(AppDefinitionModel)
-                || templ.DataType == typeof(AppVersionName)
-                || templ.DataType == typeof(AppModel);
+                || templ.DataType.Namespace == "XTI_App.Abstractions"
+                || templ.DataType.Namespace == "XTI_TempLog.Abstractions"
+                || templ.DataType.Namespace == "XTI_Hub.Abstractions";
         }
         return false;
     }

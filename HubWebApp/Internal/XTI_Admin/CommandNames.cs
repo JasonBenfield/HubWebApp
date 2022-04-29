@@ -5,6 +5,7 @@ public enum CommandNames
     NotSet,
     PublishAndInstall,
     Build,
+    Setup,
     Publish,
     Install,
     LocalInstall,

@@ -4,9 +4,9 @@ namespace XTI_Admin;
 
 public sealed class FolderPublishedAssets : IPublishedAssets
 {
-    private readonly PublishFolder publishFolder;
+    private readonly PublishedFolder publishFolder;
 
-    public FolderPublishedAssets(PublishFolder publishFolder)
+    public FolderPublishedAssets(PublishedFolder publishFolder)
     {
         this.publishFolder = publishFolder;
     }
@@ -20,6 +20,13 @@ public sealed class FolderPublishedAssets : IPublishedAssets
     public Task LoadVersions()
     {
         VersionsPath = publishFolder.VersionsPath();
+        return Task.CompletedTask;
+    }
+
+    public Task LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    {
+        var sourceDir = publishFolder.AppDir(appKey, versionKey);
+        SetupAppPath = Path.Combine(sourceDir, "Setup");
         return Task.CompletedTask;
     }
 

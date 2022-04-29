@@ -10,5 +10,7 @@ public interface IPublishedAssets : IDisposable
 
     Task LoadVersions();
 
+    Task LoadSetup(AppKey appKey, AppVersionKey versionKey);
+
     Task LoadApps(AppKey appKey, AppVersionKey versionKey);
 }

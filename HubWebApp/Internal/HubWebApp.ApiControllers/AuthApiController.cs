@@ -14,4 +14,10 @@ public class AuthApiController : Controller
     {
         return api.Group("AuthApi").Action<LoginCredentials, LoginResult>("Authenticate").Execute(model);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> Logout()
+    {
+        return api.Group("AuthApi").Action<EmptyRequest, EmptyActionResult>("Logout").Execute(new EmptyRequest());
+    }
 }

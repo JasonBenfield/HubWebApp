@@ -30,24 +30,26 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.AddSystemUser("", request);
     }
 
-    public Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName)
+    public Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
     {
         var request = new BeginInstallationRequest
         {
             AppKey = appKey,
             VersionKey = installVersionKey,
-            QualifiedMachineName = machineName
+            QualifiedMachineName = machineName,
+            Domain = domain
         };
         return hubClient.Install.BeginCurrentInstallation("", request);
     }
 
-    public Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName)
+    public Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
     {
         var request = new BeginInstallationRequest
         {
             AppKey = appKey,
             VersionKey = versionKey,
-            QualifiedMachineName = machineName
+            QualifiedMachineName = machineName,
+            Domain = domain
         };
         return hubClient.Install.BeginVersionInstallation("", request);
     }

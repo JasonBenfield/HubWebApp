@@ -50,7 +50,6 @@ public sealed class SetupHostedService : IHostedService
         (
             new AppVersionName(options.VersionName),
             HubInfo.AppKey,
-            options.Domain,
             clock.Now()
         );
     }

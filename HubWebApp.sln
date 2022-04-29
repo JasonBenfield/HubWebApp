@@ -74,8 +74,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_Hub.Abstractions", "HubWebApp\Lib\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj", "{F785EB7E-E845-4ABA-90D4-685345340AD3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HubWebApp", "HubWebApp", "{CFDC37D7-E77E-430E-9943-5B9268042C50}"
+	ProjectSection(SolutionItems) = preProject
+		HubWebApp\install.Development.private.json = HubWebApp\install.Development.private.json
+		HubWebApp\install.Production.private.json = HubWebApp\install.Production.private.json
+		HubWebApp\install.Staging.private.json = HubWebApp\install.Staging.private.json
+		HubWebApp\install.Test.private.json = HubWebApp\install.Test.private.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportServiceApp", "SupportServiceApp", "{C5292EEC-32E7-4850-BAB7-B777F69D9445}"
+	ProjectSection(SolutionItems) = preProject
+		SupportServiceApp\install.Development.private.json = SupportServiceApp\install.Development.private.json
+		SupportServiceApp\install.Production.private.json = SupportServiceApp\install.Production.private.json
+		SupportServiceApp\install.Staging.private.json = SupportServiceApp\install.Staging.private.json
+		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{3F1AC81B-209F-407C-9CEC-8A521B5C6FE9}"
 EndProject
@@ -89,27 +101,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportSetupApp", "SupportS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_PermanentLog", "Internal\XTI_PermanentLog\XTI_PermanentLog.csproj", "{544529AB-4544-45C1-8F9B-764BAFE89947}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_PermanentLog", "Internal\XTI_PermanentLog\XTI_PermanentLog.csproj", "{544529AB-4544-45C1-8F9B-764BAFE89947}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthenticatorWebApp", "AuthenticatorWebApp", "{1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}"
+	ProjectSection(SolutionItems) = preProject
+		AuthenticatorWebApp\install.Development.private.json = AuthenticatorWebApp\install.Development.private.json
+		AuthenticatorWebApp\install.Production.private.json = AuthenticatorWebApp\install.Production.private.json
+		AuthenticatorWebApp\install.Staging.private.json = AuthenticatorWebApp\install.Staging.private.json
+		AuthenticatorWebApp\install.Test.private.json = AuthenticatorWebApp\install.Test.private.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{835E93D7-8AFC-4667-9839-6A2E401A85A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticatorWebApp", "AuthenticatorWebApp\Apps\AuthenticatorWebApp\AuthenticatorWebApp.csproj", "{49315194-3F46-4F47-BA35-35FAAFB9505F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorWebApp", "AuthenticatorWebApp\Apps\AuthenticatorWebApp\AuthenticatorWebApp.csproj", "{49315194-3F46-4F47-BA35-35FAAFB9505F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AD6146AC-F3CA-408E-A2F0-C6C244818713}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_AuthenticatorWebAppApi", "AuthenticatorWebApp\Internal\XTI_AuthenticatorWebAppApi\XTI_AuthenticatorWebAppApi.csproj", "{370ED141-7727-4E26-A6D6-130276C7758F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AuthenticatorWebAppApi", "AuthenticatorWebApp\Internal\XTI_AuthenticatorWebAppApi\XTI_AuthenticatorWebAppApi.csproj", "{370ED141-7727-4E26-A6D6-130276C7758F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticatorWebApp.ApiControllers", "AuthenticatorWebApp\Internal\AuthenticatorWebApp.ApiControllers\AuthenticatorWebApp.ApiControllers.csproj", "{8A0A97B6-2380-4F74-9337-CF386F112095}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorWebApp.ApiControllers", "AuthenticatorWebApp\Internal\AuthenticatorWebApp.ApiControllers\AuthenticatorWebApp.ApiControllers.csproj", "{8A0A97B6-2380-4F74-9337-CF386F112095}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{63FA7D19-DC2A-4275-B17D-F74D4CE11607}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_AuthenticatorAppClient", "AuthenticatorWebApp\Lib\XTI_AuthenticatorAppClient\XTI_AuthenticatorAppClient.csproj", "{2B7D1315-976B-4AEE-B380-1A7489A382E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AuthenticatorAppClient", "AuthenticatorWebApp\Lib\XTI_AuthenticatorAppClient\XTI_AuthenticatorAppClient.csproj", "{2B7D1315-976B-4AEE-B380-1A7489A382E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticatorApiGeneratorApp", "AuthenticatorWebApp\Apps\AuthenticatorApiGeneratorApp\AuthenticatorApiGeneratorApp.csproj", "{585CF6CB-B130-442F-BE1B-21A18F7B95FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorApiGeneratorApp", "AuthenticatorWebApp\Apps\AuthenticatorApiGeneratorApp\AuthenticatorApiGeneratorApp.csproj", "{585CF6CB-B130-442F-BE1B-21A18F7B95FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticatorSetupApp", "AuthenticatorWebApp\Apps\AuthenticatorSetupApp\AuthenticatorSetupApp.csproj", "{C1570A7F-BB7E-4B11-A99A-8F71D479128E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorSetupApp", "AuthenticatorWebApp\Apps\AuthenticatorSetupApp\AuthenticatorSetupApp.csproj", "{C1570A7F-BB7E-4B11-A99A-8F71D479128E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

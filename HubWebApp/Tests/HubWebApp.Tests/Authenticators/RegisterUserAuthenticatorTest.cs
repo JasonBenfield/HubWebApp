@@ -120,7 +120,7 @@ internal sealed class RegisterUserAuthenticatorTest
         );
         var factory = tester.Services.GetRequiredService<AppFactory>();
         var appKey = new AppKey(new AppName("Auth"), AppType.Values.WebApp);
-        var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, "auth.example.com", DateTimeOffset.Now);
+        var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
         await authApp.RegisterAsAuthenticator();
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);

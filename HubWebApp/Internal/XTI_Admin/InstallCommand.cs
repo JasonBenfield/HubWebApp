@@ -11,7 +11,7 @@ internal sealed class InstallCommand : ICommand
 
     public Task Execute()
     {
-        var appKeys = scopes.GetRequiredService<PublishableFolder>().AppKeys();
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
         return new InstallProcess(scopes).Run();

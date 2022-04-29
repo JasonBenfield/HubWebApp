@@ -11,7 +11,8 @@ internal sealed class PublishAndInstallCommand : ICommand
 
     public async Task Execute()
     {
-        var appKeys = scopes.GetRequiredService<PublishableFolder>().AppKeys();
+        var slnFolder = scopes.GetRequiredService<SlnFolder>();
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
         await new BuildProcess(scopes).Run();

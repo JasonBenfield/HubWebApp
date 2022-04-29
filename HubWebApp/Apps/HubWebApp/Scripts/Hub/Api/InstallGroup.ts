@@ -20,6 +20,7 @@ export class InstallGroup extends AppApiGroup {
 		this.BeginCurrentInstallationAction = this.createAction<IBeginInstallationRequest,number>('BeginCurrentInstallation', 'Begin Current Installation');
 		this.BeginVersionInstallationAction = this.createAction<IBeginInstallationRequest,number>('BeginVersionInstallation', 'Begin Version Installation');
 		this.InstalledAction = this.createAction<IInstalledRequest,IEmptyActionResult>('Installed', 'Installed');
+		this.SetUserAccessAction = this.createAction<ISetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
 	
 	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppWithModKeyModel>;
@@ -33,6 +34,7 @@ export class InstallGroup extends AppApiGroup {
 	readonly BeginCurrentInstallationAction: AppApiAction<IBeginInstallationRequest,number>;
 	readonly BeginVersionInstallationAction: AppApiAction<IBeginInstallationRequest,number>;
 	readonly InstalledAction: AppApiAction<IInstalledRequest,IEmptyActionResult>;
+	readonly SetUserAccessAction: AppApiAction<ISetUserAccessRequest,IEmptyActionResult>;
 	
 	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
 		return this.RegisterAppAction.execute(model, errorOptions || {});
@@ -66,5 +68,8 @@ export class InstallGroup extends AppApiGroup {
 	}
 	Installed(model: IInstalledRequest, errorOptions?: IActionErrorOptions) {
 		return this.InstalledAction.execute(model, errorOptions || {});
+	}
+	SetUserAccess(model: ISetUserAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.SetUserAccessAction.execute(model, errorOptions || {});
 	}
 }

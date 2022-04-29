@@ -37,6 +37,4 @@ public sealed class JwtAccess : AccessForAuthenticate
         var accessToken = tokenHandler.WriteToken(token);
         return Task.FromResult(accessToken);
     }
-
-    protected override Task _Logout() => Task.CompletedTask;
 }

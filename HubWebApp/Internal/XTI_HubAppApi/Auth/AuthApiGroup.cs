@@ -19,6 +19,15 @@ public sealed class AuthApiGroup : AppApiGroupWrapper
                 () => sp.GetRequiredService<AuthenticateAction>()
             )
         );
+        Logout = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(Logout),
+                () => sp.GetRequiredService<LogoutAction>()
+            )
+        );
     }
     public AppApiAction<LoginCredentials, LoginResult> Authenticate { get; }
+    public AppApiAction<EmptyRequest, EmptyActionResult> Logout { get; }
 }

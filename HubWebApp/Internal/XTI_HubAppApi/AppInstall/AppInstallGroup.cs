@@ -21,7 +21,7 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
             actions.Action
             (
                 nameof(AddOrUpdateApps),
-                () => sp.GetRequiredService<AddOrUpdateAppsValidation>(), 
+                () => sp.GetRequiredService<AddOrUpdateAppsValidation>(),
                 () => sp.GetRequiredService<AddOrUpdateAppsAction>()
             )
         );
@@ -75,6 +75,10 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
         (
             actions.Action(nameof(Installed), () => sp.GetRequiredService<InstalledAction>())
         );
+        SetUserAccess = source.AddAction
+        (
+            actions.Action(nameof(SetUserAccess), () => sp.GetRequiredService<SetUserAccessAction>())
+        );
     }
 
     public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
@@ -88,4 +92,5 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
     public AppApiAction<BeginInstallationRequest, int> BeginCurrentInstallation { get; }
     public AppApiAction<BeginInstallationRequest, int> BeginVersionInstallation { get; }
     public AppApiAction<InstalledRequest, EmptyActionResult> Installed { get; }
+    public AppApiAction<SetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
 }

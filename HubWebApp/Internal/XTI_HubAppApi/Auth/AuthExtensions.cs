@@ -27,7 +27,6 @@ internal static class AuthExtensions
             return new LoginAction(auth, anonClient);
         });
         services.AddScoped<LogoutAction>();
-        services.AddScoped<StartAction>();
         services.AddScoped<VerifyLoginAction>();
         services.AddScoped<VerifyLoginFormAction>();
     }

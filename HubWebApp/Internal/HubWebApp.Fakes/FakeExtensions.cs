@@ -1,12 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
+using XTI_App.Extensions;
 using XTI_App.Fakes;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
+using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes;
@@ -48,5 +53,6 @@ public static class FakeExtensions
         );
         services.AddScoped<IHubAdministration, DbHubAdministration>();
         services.AddScoped<PermanentLog>();
+        services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
     }
 }

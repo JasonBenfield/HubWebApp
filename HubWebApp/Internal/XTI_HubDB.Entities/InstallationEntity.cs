@@ -8,4 +8,5 @@ public sealed class InstallationEntity
     public int Status { get; set; }
     public bool IsCurrent { get; set; }
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
+    public string Domain { get; set; } = "";
 }

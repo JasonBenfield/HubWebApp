@@ -54,13 +54,4 @@ public sealed class CookieAccess : AccessForLogin
         }
         return token;
     }
-
-    protected override async Task _Logout()
-    {
-        var httpContext = httpContextAccessor.HttpContext;
-        if (httpContext != null)
-        {
-            await httpContext.SignOutAsync();
-        }
-    }
 }

@@ -38,6 +38,7 @@ sealed class Installer
                     var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
                     var release = context.Request.Form["release"].FirstOrDefault() ?? "";
                     var machineName = context.Request.Form["machineName"].FirstOrDefault() ?? "";
+                    var siteName = context.Request.Form["siteName"].FirstOrDefault() ?? "";
                     var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
                     var process = new XtiProcess(adminToolPath)
                         .WriteOutputToConsole()
@@ -56,7 +57,8 @@ sealed class Installer
                                 RepoOwner = repoOwner,
                                 RepoName = repoName,
                                 Release = release,
-                                DestinationMachine = machineName
+                                DestinationMachine = machineName,
+                                SiteName = siteName
                             }
                         );
                     await writer.WriteLineAsync($"Running {process.CommandText()}");

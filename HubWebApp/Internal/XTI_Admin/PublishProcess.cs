@@ -21,7 +21,7 @@ internal sealed class PublishProcess
     public async Task Run()
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var appKeys = scopes.GetRequiredService<PublishableFolder>().AppKeys();
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
         if (!appKeys.Any())
         {
             throw new ArgumentException("App keys are required");
@@ -41,12 +41,12 @@ internal sealed class PublishProcess
             var currentVersion = await new CurrentVersion(scopes, versionName).Value();
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
-        var publishFolder = scopes.GetRequiredService<PublishFolder>();
+        var publishFolder = scopes.GetRequiredService<PublishedFolder>();
         var versionsPath = publishFolder.VersionsPath();
-        publishFolder.TryCreateVersionDir();
-        if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
         if(appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)))
         {
+            publishFolder.TryCreateVersionDir();
+            if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
             var persistedVersions = new PersistedVersions(versionsPath);
             var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
             var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
@@ -73,7 +73,7 @@ internal sealed class PublishProcess
             {
                 Directory.Delete(publishDir, true);
             }
-            await publishSetup(appKey, versionKey);
+            await new PublishSetupProcess(scopes).Run(appKey, versionKey);
             if (!appKey.Type.Equals(AppType.Values.Package))
             {
                 await runDotNetPublish(appKey, versionKey);
@@ -141,39 +141,6 @@ internal sealed class PublishProcess
         }
     }
 
-    private async Task publishSetup(AppKey appKey, AppVersionKey versionKey)
-    {
-        Console.WriteLine("Publishing setup");
-        var setupAppDir = Path.Combine
-        (
-            Environment.CurrentDirectory,
-            "Apps",
-            $"{getAppName(appKey)}SetupApp"
-        );
-        if (Directory.Exists(setupAppDir))
-        {
-            var publishDir = getPublishDir(appKey, versionKey);
-            var publishSetupDir = Path.Combine(publishDir, "Setup");
-            Console.WriteLine($"Publishing setup to '{publishSetupDir}'");
-            var publishProcess = new WinProcess("dotnet")
-                .WriteOutputToConsole()
-                .UseArgumentNameDelimiter("")
-                .AddArgument("publish")
-                .AddArgument(new Quoted(setupAppDir))
-                .UseArgumentNameDelimiter("-")
-                .AddArgument("c", getConfiguration())
-                .UseArgumentValueDelimiter("=")
-                .AddArgument("p:PublishProfile", "Default")
-                .AddArgument("p:PublishDir", publishSetupDir);
-            var result = await publishProcess.Run();
-            result.EnsureExitCodeIsZero();
-        }
-        else
-        {
-            Console.WriteLine($"Setup App Not Found at '{setupAppDir}'");
-        }
-    }
-
     private async Task runDotNetPublish(AppKey appKey, AppVersionKey versionKey)
     {
         var publishDir = getPublishDir(appKey, versionKey);
@@ -200,7 +167,7 @@ internal sealed class PublishProcess
     }
 
     private string getPublishDir(AppKey appKey, AppVersionKey versionKey) =>
-        scopes.GetRequiredService<PublishFolder>().AppDir(appKey, versionKey);
+        scopes.GetRequiredService<PublishedFolder>().AppDir(appKey, versionKey);
 
     private static string getProjectDir(AppKey appKey)
     {
@@ -211,8 +178,6 @@ internal sealed class PublishProcess
             new AppDirectoryName(appKey).Value
         );
     }
-
-    private static string getAppName(AppKey appKey) => appKey.Name.DisplayText.Replace(" ", "");
 
     private string getConfiguration()
     {

@@ -8,5 +8,4 @@ public sealed class AppModel
     public AppKey AppKey { get; set; } = AppKey.Unknown;
     public AppVersionName VersionName { get; set; } = AppVersionName.Unknown;
     public string Title { get; set; } = "";
-    public string Domain { get; set; } = "";
 }

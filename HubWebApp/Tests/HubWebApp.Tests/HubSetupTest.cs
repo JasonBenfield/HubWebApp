@@ -58,7 +58,7 @@ internal sealed class HubSetupTest
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
-            new[] { new AppDefinitionModel(HubInfo.AppKey, "webapps.example.com") }
+            new[] { new AppDefinitionModel(HubInfo.AppKey) }
         );
         await hubAdmin.AddOrUpdateVersions
         (

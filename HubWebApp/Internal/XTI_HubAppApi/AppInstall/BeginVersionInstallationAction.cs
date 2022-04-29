@@ -1,5 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
+﻿using XTI_App.Api;
 using XTI_Hub.Abstractions;
 
 namespace XTI_HubAppApi.AppInstall;
@@ -14,5 +13,5 @@ public sealed class BeginVersionInstallationAction : AppAction<BeginInstallation
     }
 
     public Task<int> Execute(BeginInstallationRequest model) =>
-        hubAdministration.BeginVersionInstall(model.AppKey, model.VersionKey, model.QualifiedMachineName);
+        hubAdministration.BeginVersionInstall(model.AppKey, model.VersionKey, model.QualifiedMachineName, model.Domain);
 }

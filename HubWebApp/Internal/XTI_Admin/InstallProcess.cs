@@ -27,26 +27,32 @@ internal sealed class InstallProcess
             var versions = await versionReader.Versions();
             var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
             var appDefs = appKeys
-                .Select(a => new AppDefinitionModel(a, a.Type.Equals(AppType.Values.WebApp) ? options.Domain : ""))
+                .Select(a => new AppDefinitionModel(a))
                 .ToArray();
             await hubAdministration.AddOrUpdateApps(versionName, appDefs);
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
             foreach (var appKey in appKeys)
             {
-                var installMachineName = getMachineName();
-                await newInstallation
-                (
-                    appKey,
-                    installMachineName,
-                    versionName
-                );
-                if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+                var installations = scopes.GetRequiredService<InstallOptionsAccessor>().Installations(appKey);
+                foreach (var installation in installations)
                 {
-                    await new LocalInstallProcess(scopes, appKey, publishedAssets).Run();
-                }
-                else
-                {
-                    await new LocalInstallServiceProcess(scopes, appKey, versionName).Run();
+                    var installMachineName = string.IsNullOrWhiteSpace(installation.MachineName)
+                        ? Environment.MachineName
+                        : installation.MachineName;
+                    await newInstallation
+                    (
+                        appKey,
+                        installMachineName,
+                        versionName
+                    );
+                    if (string.IsNullOrWhiteSpace(installation.MachineName))
+                    {
+                        await new LocalInstallProcess(scopes, appKey, publishedAssets).Run(installation);
+                    }
+                    else
+                    {
+                        await new LocalInstallServiceProcess(scopes, appKey, versionName).Run(installation);
+                    }
                 }
             }
         }
@@ -57,20 +63,5 @@ internal sealed class InstallProcess
         Console.WriteLine("New installation");
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         return hubAdministration.NewInstallation(versionName, appKey, machineName);
-    }
-
-    private string getMachineName()
-    {
-        var options = scopes.GetRequiredService<AdminOptions>();
-        string machineName;
-        if (string.IsNullOrWhiteSpace(options.DestinationMachine))
-        {
-            machineName = Environment.MachineName;
-        }
-        else
-        {
-            machineName = options.DestinationMachine;
-        }
-        return machineName;
     }
 }

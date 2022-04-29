@@ -1,37 +1,62 @@
-﻿using XTI_App.Abstractions;
+﻿using System.Text.Json;
+using XTI_App.Abstractions;
+using XTI_Core;
 
 namespace XTI_Admin;
 
-public sealed class PublishableFolder
+public sealed class SlnFolder
 {
-    private readonly string folderPath;
+    private readonly List<SlnAppFolder> appFolders = new();
+    private readonly XtiEnvironment xtiEnv;
 
-    public PublishableFolder(string folderPath)
+    public SlnFolder(XtiEnvironment xtiEnv, string folderPath)
     {
-        this.folderPath = folderPath;
-    }
-
-    public AppKey[] AppKeys()
-    {
-        var appKeys = new List<AppKey>();
+        this.xtiEnv = xtiEnv;
         foreach (var folder in Directory.GetDirectories(folderPath))
         {
             var appKey = GetAppKey(folder);
             if (appKey != null)
             {
-                appKeys.Add(appKey);
+                var installOptions = getInstallOptions(folder);
+                appFolders.Add(new SlnAppFolder(appKey, installOptions));
             }
         }
-        if (!appKeys.Any())
+        if (!appFolders.Any())
         {
             var appKey = GetAppKey(folderPath);
             if (appKey != null)
             {
-                appKeys.Add(appKey);
+                var installOptions = getInstallOptions(folderPath);
+                appFolders.Add(new SlnAppFolder(appKey, installOptions));
             }
         }
-        return appKeys.ToArray();
     }
+
+    private InstallOptions getInstallOptions(string folder)
+    {
+        var installOptions = new InstallOptions
+        (
+            new InstallationOptions[] { new InstallationOptions("", "", "") },
+            999
+        );
+        var installConfigPath = Path.Combine(folder, $"install.{xtiEnv.EnvironmentName}.private.json");
+        if (File.Exists(installConfigPath))
+        {
+            var serialized = File.ReadAllText(installConfigPath);
+            var deserialized = JsonSerializer.Deserialize<InstallOptions>(serialized);
+            if (deserialized != null)
+            {
+                installOptions = deserialized;
+            }
+        }
+        return installOptions;
+    }
+
+    internal SlnAppFolder[] Folders() => appFolders.ToArray();
+
+    internal SlnAppFolder? Folder(AppKey appKey) => appFolders.FirstOrDefault(af => af.AppKey.Equals(appKey));
+
+    public AppKey[] AppKeys() => appFolders.OrderBy(f => f.InstallOptions.Sequence).Select(af => af.AppKey).ToArray();
 
     private AppKey? GetAppKey(string folderPath)
     {
@@ -42,7 +67,7 @@ public sealed class PublishableFolder
         if (packageNames.Contains(folderName, StringComparer.OrdinalIgnoreCase))
         {
             appType = AppType.Values.Package;
-            if(folderName.Equals("SharedWebApp", StringComparison.OrdinalIgnoreCase))
+            if (folderName.Equals("SharedWebApp", StringComparison.OrdinalIgnoreCase))
             {
                 folderName = "Shared";
             }
