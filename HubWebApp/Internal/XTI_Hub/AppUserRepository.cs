@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class AppUserRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public AppUserRepository(AppFactory factory)
+    public AppUserRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -58,7 +58,7 @@ public sealed class AppUserRepository
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID.Value)
+            .Where(a => a.AppID == authenticatorApp.ID)
             .Select(a => a.ID);
         var userIDs = factory.DB
             .UserAuthenticators.Retrieve()
@@ -76,7 +76,7 @@ public sealed class AppUserRepository
         return factory.User
         (
             userEntity
-            ?? throw new Exception($"User not found for authenticator '{authenticatorApp.Key().Name.DisplayText}' with user key '{externalUserKey}'")
+            ?? throw new ExternalUserNotFoundException(authenticatorApp.Key(), externalUserKey)
         );
     }
 

@@ -1,11 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Auth;
-using XTI_TempLog.Abstractions;
-using XTI_WebApp.Api;
+﻿using XTI_HubAppApi.Auth;
 
 namespace XTI_HubAppApi;
 
@@ -28,6 +21,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
             services
         )
     {
+        createHomeGroup(services);
         createAuth(services);
         createExternalAuth(services);
         createAuthenticators(services);
@@ -46,43 +40,48 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         createAppUser(services);
         createAppUserMaintenance(services);
         createUserMaintenance(services);
+        createStorageGroup(services);
     }
 
-    partial void createAuth(IServiceProvider services);
+    partial void createHomeGroup(IServiceProvider sp);
 
-    partial void createExternalAuth(IServiceProvider services);
+    partial void createAuth(IServiceProvider sp);
 
-    partial void createAuthenticators(IServiceProvider services);
+    partial void createExternalAuth(IServiceProvider sp);
 
-    partial void createUserList(IServiceProvider services);
+    partial void createAuthenticators(IServiceProvider sp);
+
+    partial void createUserList(IServiceProvider sp);
 
     partial void createPermanentLog(IServiceProvider sp);
 
-    partial void createAppList(IServiceProvider services);
+    partial void createAppList(IServiceProvider sp);
 
-    partial void createAppInquiry(IServiceProvider services);
+    partial void createAppInquiry(IServiceProvider sp);
 
-    partial void createInstall(IServiceProvider services);
+    partial void createInstall(IServiceProvider sp);
 
-    partial void createPublish(IServiceProvider services);
+    partial void createPublish(IServiceProvider sp);
 
-    partial void createAppPublish(IServiceProvider services);
+    partial void createAppPublish(IServiceProvider sp);
 
-    partial void createModCategory(IServiceProvider services);
+    partial void createModCategory(IServiceProvider sp);
 
-    partial void createResourceGroup(IServiceProvider services);
+    partial void createResourceGroup(IServiceProvider sp);
 
     partial void createResource(IServiceProvider sp);
 
-    partial void createAppUser(IServiceProvider services);
+    partial void createAppUser(IServiceProvider sp);
 
-    partial void createAppUserMaintenance(IServiceProvider services);
+    partial void createAppUserMaintenance(IServiceProvider sp);
 
-    partial void createVersion(IServiceProvider services);
+    partial void createVersion(IServiceProvider sp);
 
-    partial void createUserInquiry(IServiceProvider services);
+    partial void createUserInquiry(IServiceProvider sp);
 
-    partial void createUserMaintenance(IServiceProvider services);
+    partial void createUserMaintenance(IServiceProvider sp);
+
+    partial void createStorageGroup(IServiceProvider sp);
 
     protected override void ConfigureTemplate(AppApiTemplate template)
     {

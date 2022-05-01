@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.PermanentLog;
+﻿using XTI_HubAppApi.PermanentLog;
 
 namespace XTI_HubAppApi;
 

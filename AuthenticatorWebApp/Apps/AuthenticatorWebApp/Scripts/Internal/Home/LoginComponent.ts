@@ -36,7 +36,7 @@ export class LoginComponent {
             if (result.succeeded()) {
                 let cred = this.getCredentials();
                 this.alert.info('Opening page...');
-                this.postLogin(cred);
+                this.postLogin(cred, result.value);
             }
         }
         finally {
@@ -51,7 +51,7 @@ export class LoginComponent {
         };
     }
 
-    private postLogin(cred: ILoginCredentials) {
+    private postLogin(cred: ILoginCredentials, authKey: string) {
         let form = <HTMLFormElement>document.createElement('form');
         form.action = this.hubApi.Auth.Login
             .getUrl(null)
@@ -60,14 +60,16 @@ export class LoginComponent {
         form.style.top = '-100px';
         form.style.left = '-100px';
         form.method = 'POST';
-        let userNameInput = this.createInput('Credentials.UserName', cred.UserName, 'text');
-        let passwordInput = this.createInput('Credentials.Password', cred.Password, 'password');
+        let userNameInput = this.createInput('UserName', cred.UserName, 'text');
+        let passwordInput = this.createInput('Password', cred.Password, 'password');
         let urlBuilder = UrlBuilder.current();
-        let returnUrlInput = this.createInput('ReturnUrl', urlBuilder.getQueryValue('returnUrl'));
+        let authKeyInput = this.createInput('AuthKey', authKey);
+        let returnKeyInput = this.createInput('ReturnKey', urlBuilder.getQueryValue('returnKey'));
         form.append(
             userNameInput,
             passwordInput,
-            returnUrlInput
+            authKeyInput,
+            returnKeyInput
         );
         document.body.append(form);
         form.submit();

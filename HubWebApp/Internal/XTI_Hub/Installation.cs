@@ -5,17 +5,17 @@ namespace XTI_Hub;
 
 public class Installation
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly InstallationEntity entity;
 
-    protected Installation(AppFactory appFactory, InstallationEntity entity)
+    protected Installation(HubFactory appFactory, InstallationEntity entity)
     {
         this.appFactory = appFactory;
         this.entity = entity;
-        ID = new EntityID(entity.ID);
+        ID = entity.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
 
     public InstallStatus Status() => InstallStatus.Values.Value(entity.Status);
 
@@ -60,7 +60,7 @@ public class Installation
 
     public InstallationModel ToModel() => new InstallationModel
     {
-        ID = ID.Value,
+        ID = ID,
         Status = Status()
     };
 

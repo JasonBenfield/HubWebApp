@@ -7,9 +7,9 @@ namespace XTI_Hub;
 
 public sealed class XtiVersionRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal XtiVersionRepository(AppFactory factory)
+    internal XtiVersionRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -17,7 +17,7 @@ public sealed class XtiVersionRepository
     internal IQueryable<int> QueryAppVersionID(App app, XtiVersion version) =>
         factory.DB
             .AppVersions.Retrieve()
-            .Where(av => av.AppID == app.ID.Value && av.VersionID == version.ID.Value)
+            .Where(av => av.AppID == app.ID && av.VersionID == version.ID)
             .Select(av => av.ID);
 
     internal async Task<XtiVersion> AddIfNotFound
@@ -55,8 +55,8 @@ public sealed class XtiVersionRepository
             (
                 new AppXtiVersionEntity
                 {
-                    VersionID = version.ID.Value,
-                    AppID = app.ID.Value
+                    VersionID = version.ID,
+                    AppID = app.ID
                 }
             );
         }
@@ -65,7 +65,7 @@ public sealed class XtiVersionRepository
     private Task<AppXtiVersionEntity?> GetAppVersion(App app, XtiVersion version) =>
         factory.DB
             .AppVersions.Retrieve()
-            .FirstOrDefaultAsync(av => av.VersionID == version.ID.Value && av.AppID == app.ID.Value);
+            .FirstOrDefaultAsync(av => av.VersionID == version.ID && av.AppID == app.ID);
 
     internal async Task RemoveVersionFromApp(App app, XtiVersion version)
     {
@@ -234,7 +234,7 @@ public sealed class XtiVersionRepository
         var versionName = app.ToAppModel().VersionName.Value;
         var versionIDs = factory.DB
             .AppVersions.Retrieve()
-            .Where(av => av.AppID == app.ID.Value)
+            .Where(av => av.AppID == app.ID)
             .Select(av => av.VersionID);
         if (versionKey.Equals(AppVersionKey.Current))
         {
@@ -257,7 +257,7 @@ public sealed class XtiVersionRepository
                 .Retrieve()
                 .Where
                 (
-                    v => 
+                    v =>
                         versionIDs.Contains(v.ID) &&
                         v.VersionName == versionName &&
                         v.VersionKey == versionKey.Value
@@ -298,7 +298,7 @@ public sealed class XtiVersionRepository
     {
         var versionIDs = factory.DB
             .AppVersions.Retrieve()
-            .Where(av => av.AppID == app.ID.Value)
+            .Where(av => av.AppID == app.ID)
             .Select(av => av.VersionID);
         return factory.DB
             .Versions
@@ -316,25 +316,25 @@ public sealed class XtiVersionRepository
         }
         var lastVersion = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.VersionName == version.VersionName)
+            .Where(v => v.VersionName == version.VersionName && v.ID != version.ID)
             .OrderByDescending(v => v.Major)
             .ThenByDescending(v => v.Minor)
             .ThenByDescending(v => v.Patch)
-            .FirstOrDefaultAsync();
-        var nextVersion = new AppVersionNumber
+            .Select(v => new AppVersionNumber(v.Major, v.Minor, v.Patch))
+            .FirstOrDefaultAsync()
+            ?? new AppVersionNumber(0, 0, 0);
+        var nextVersion = lastVersion.Next(AppVersionType.Values.Value(version.Type));
+        await factory.DB.Versions.Update
         (
-            lastVersion?.Major ?? 0,
-            lastVersion?.Minor ?? 0,
-            lastVersion?.Patch ?? 0
-        )
-        .Next(AppVersionType.Values.Value(version.Type));
-        await factory.DB.Versions.Update(version, r =>
-        {
-            r.Status = AppVersionStatus.Values.Publishing.Value;
-            r.Major = nextVersion.Major;
-            r.Minor = nextVersion.Minor;
-            r.Patch = nextVersion.Patch;
-        });
+            version, 
+            r =>
+            {
+                r.Status = AppVersionStatus.Values.Publishing.Value;
+                r.Major = nextVersion.Major;
+                r.Minor = nextVersion.Minor;
+                r.Patch = nextVersion.Patch;
+            }
+        );
     }
 
     internal async Task Published(XtiVersionEntity version)

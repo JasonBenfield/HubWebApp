@@ -7,9 +7,9 @@ namespace XTI_Hub;
 
 public sealed class InstallationRepository
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public InstallationRepository(AppFactory appFactory)
+    public InstallationRepository(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }
@@ -33,7 +33,7 @@ public sealed class InstallationRepository
         var appVersionIDs = appFactory.DB
             .AppVersions
             .Retrieve()
-            .Where(v => v.AppID == app.ID.Value)
+            .Where(v => v.AppID == app.ID)
             .Select(v => v.ID);
         return appFactory.DB
             .Installations
@@ -42,7 +42,7 @@ public sealed class InstallationRepository
             (
                 inst =>
                     inst.IsCurrent
-                    && inst.LocationID == location.ID.Value
+                    && inst.LocationID == location.ID
                     && appVersionIDs.Contains(inst.AppVersionID)
             )
             .Select(inst => appFactory.CurrentInstallation(inst));
@@ -64,7 +64,7 @@ public sealed class InstallationRepository
             (
                 inst =>
                     !inst.IsCurrent
-                    && inst.LocationID == location.ID.Value
+                    && inst.LocationID == location.ID
                     && appVersionIDs.Contains(inst.AppVersionID)
             )
             .Select(inst => appFactory.VersionInstallation(inst));
@@ -87,7 +87,7 @@ public sealed class InstallationRepository
         var appVersionID = await appVersion.AppVersionID();
         var entity = new InstallationEntity
         {
-            LocationID = location.ID.Value,
+            LocationID = location.ID,
             AppVersionID = appVersionID,
             Status = InstallStatus.Values.InstallPending.Value,
             IsCurrent = isCurrent,

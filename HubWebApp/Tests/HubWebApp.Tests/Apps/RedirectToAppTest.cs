@@ -11,7 +11,7 @@ internal sealed class RedirectToAppTest
         var tester = await setup();
         tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
-        var result = await tester.Execute(hubApp.ID.Value);
+        var result = await tester.Execute(hubApp.ID);
         var hubAppModifier = await tester.HubAppModifier();
         Assert.That
         (

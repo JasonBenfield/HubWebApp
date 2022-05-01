@@ -5,17 +5,17 @@ namespace XTI_Hub;
 
 public sealed class InstallLocation
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly InstallLocationEntity entity;
 
-    internal InstallLocation(AppFactory appFactory, InstallLocationEntity entity)
+    internal InstallLocation(HubFactory appFactory, InstallLocationEntity entity)
     {
         this.appFactory = appFactory;
         this.entity = entity;
-        ID = new EntityID(entity.ID);
+        ID = entity.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
 
     public string QualifiedName() => entity.QualifiedMachineName;
 

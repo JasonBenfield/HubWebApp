@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_HubAppApi.AppPublish;
+﻿using XTI_HubAppApi.AppPublish;
 
 namespace XTI_HubAppApi;
 

@@ -1,13 +1,10 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppInstall;
+﻿namespace XTI_HubAppApi.AppInstall;
 
 public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithModKeyModel>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public RegisterAppAction(AppFactory appFactory)
+    public RegisterAppAction(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

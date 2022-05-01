@@ -31,6 +31,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         Modifiers = new EfDataRepository<ModifierEntity>(this);
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
+        StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
         unitOfWork = new UnitOfWork(this);
     }
 
@@ -55,6 +56,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new ModifierEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 
@@ -77,6 +79,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ModifierEntity> Modifiers { get; }
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
+    public DataRepository<StoredObjectEntity> StoredObjects { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 

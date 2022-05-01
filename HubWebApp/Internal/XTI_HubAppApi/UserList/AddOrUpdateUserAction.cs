@@ -1,17 +1,14 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
+﻿using XTI_Core;
 
 namespace XTI_HubAppApi.UserList;
 
 public sealed class AddOrUpdateUserAction : AppAction<AddUserModel, int>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public AddOrUpdateUserAction(AppFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public AddOrUpdateUserAction(HubFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.hashedPasswordFactory = hashedPasswordFactory;
@@ -31,6 +28,6 @@ public sealed class AddOrUpdateUserAction : AppAction<AddUserModel, int>
             new EmailAddress(model.Email),
             timeAdded
         );
-        return user.ID.Value;
+        return user.ID;
     }
 }

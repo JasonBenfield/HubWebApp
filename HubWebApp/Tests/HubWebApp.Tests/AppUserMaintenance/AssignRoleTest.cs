@@ -97,9 +97,9 @@ internal sealed class AssignRoleTest
     {
         return new UserRoleRequest
         {
-            UserID = userToEdit.ID.Value,
-            ModifierID = modifier.ID.Value,
-            RoleID = role.ID.Value
+            UserID = userToEdit.ID,
+            ModifierID = modifier.ID,
+            RoleID = role.ID
         };
     }
 
@@ -112,7 +112,7 @@ internal sealed class AssignRoleTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }

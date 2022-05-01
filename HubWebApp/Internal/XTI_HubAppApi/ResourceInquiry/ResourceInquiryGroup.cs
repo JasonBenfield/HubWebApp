@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.ResourceInquiry;
+﻿namespace XTI_HubAppApi.ResourceInquiry;
 
 public sealed class ResourceInquiryGroup : AppApiGroupWrapper
 {

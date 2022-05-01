@@ -15,7 +15,7 @@ internal sealed class PermanentLogTest
         tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         Assert.That(session.HasStarted(), Is.True, "Should start session on permanent log");
         Assert.That(session.HasEnded(), Is.False, "Should start session on permanent log");
@@ -30,7 +30,7 @@ internal sealed class PermanentLogTest
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
         await startRequest(tester, sessionKey, requestKey);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var requests = (await session.Requests()).ToArray();
         Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
@@ -46,7 +46,7 @@ internal sealed class PermanentLogTest
         var requestKey = generateKey();
         await startRequest(tester, sessionKey, requestKey);
         await endRequest(tester, requestKey);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var requests = (await session.Requests()).ToArray();
         Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
@@ -63,7 +63,7 @@ internal sealed class PermanentLogTest
         await startRequest(tester, sessionKey, requestKey);
         await endRequest(tester, requestKey);
         await endSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         Assert.That(session.HasEnded(), Is.True, "Should end session on permanent log");
     }
@@ -76,7 +76,7 @@ internal sealed class PermanentLogTest
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         await authenticateSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var user = await factory.Users.User(session.UserID);
         Assert.That(user.UserName(), Is.EqualTo("someone"), "Should authenticate session on permanent log");
@@ -101,7 +101,7 @@ internal sealed class PermanentLogTest
             exception = ex;
         }
         await logEvent(tester, requestKey, exception);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var requests = (await session.Requests()).ToArray();
         var events = (await requests[0].Events()).ToArray();
@@ -216,20 +216,20 @@ internal sealed class PermanentLogTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var appFactory = sp.GetRequiredService<AppFactory>();
+        var appFactory = sp.GetRequiredService<HubFactory>();
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();
         await hubApi.Install.AddOrUpdateApps.Invoke(new AddOrUpdateAppsRequest
         {
             VersionName = new AppVersionName("FakeWebApp"),
-            Apps = new[] { new AppDefinitionModel(new AppKey(new AppName("Fake"), AppType.Values.WebApp)) }
+            Apps = new[] { new AppDefinitionModel(AppKey.WebApp("Fake")) }
         });
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("FakeWebApp"),
             VersionType = AppVersionType.Values.Major,
-            AppKeys = new[] { new AppKey(new AppName("Fake"), AppType.Values.WebApp) }
+            AppKeys = new[] { AppKey.WebApp("Fake") }
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {

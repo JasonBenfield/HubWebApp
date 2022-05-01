@@ -20,7 +20,7 @@ public static class HubWebAppExtensions
         services.AddAppServices();
         services.AddWebAppServices();
         services.AddHubDbContextForSqlServer();
-        services.AddScoped<AppFactory>();
+        services.AddScoped<HubFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
         services.AddScoped<ISourceAppContext, DefaultAppContext>();
@@ -32,6 +32,7 @@ public static class HubWebAppExtensions
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
         services.AddScoped<IHubAdministration, DbHubAdministration>();
+        services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddHubAppApiServices();
         services.AddScoped
         (

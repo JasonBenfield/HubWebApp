@@ -4,7 +4,10 @@ public sealed partial class AppGroup : AppClientGroup
 {
     public AppGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "App")
     {
+        Actions = new AppActions(clientUrl);
     }
+
+    public AppActions Actions { get; }
 
     public Task<AppModel> GetApp(string modifier) => Post<AppModel, EmptyRequest>("GetApp", modifier, new EmptyRequest());
     public Task<AppRoleModel[]> GetRoles(string modifier) => Post<AppRoleModel[], EmptyRequest>("GetRoles", modifier, new EmptyRequest());

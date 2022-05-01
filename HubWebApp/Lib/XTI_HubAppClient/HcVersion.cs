@@ -10,11 +10,11 @@ internal sealed class HcVersion : IAppVersion
     {
         this.hubClient = hubClient;
         this.appContext = appContext;
-        ID = new EntityID(model.ID);
+        ID = model.ID;
         versionKey = model.VersionKey;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public AppVersionKey Key() => versionKey;
 
     public async Task<IResourceGroup> ResourceGroup(ResourceGroupName name)

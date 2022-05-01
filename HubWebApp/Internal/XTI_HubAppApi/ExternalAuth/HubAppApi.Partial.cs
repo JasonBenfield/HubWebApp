@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.ExternalAuth;
+﻿using XTI_HubAppApi.ExternalAuth;
 
 namespace XTI_HubAppApi;
 
@@ -12,7 +11,7 @@ partial class HubAppApi
         get => externalAuth ?? throw new ArgumentNullException(nameof(externalAuth));
     }
 
-    partial void createExternalAuth(IServiceProvider services)
+    partial void createExternalAuth(IServiceProvider sp)
     {
         externalAuth = new ExternalAuthGroup
         (
@@ -22,7 +21,7 @@ partial class HubAppApi
                 HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.Authenticator)
             ),
-            services
+            sp
         );
     }
 }

@@ -8,11 +8,11 @@ internal sealed class HcApp : IApp
     {
         this.hubClient = hubClient;
         this.appContext = appContext;
-        ID = new EntityID(model.ID);
+        ID = model.ID;
         Title = model.Title;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public string Title { get; }
 
     public async Task<IModifierCategory> ModCategory(ModifierCategoryName name)

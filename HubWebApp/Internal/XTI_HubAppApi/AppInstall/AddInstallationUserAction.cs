@@ -1,18 +1,14 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
+﻿using XTI_Core;
 
 namespace XTI_HubAppApi.AppInstall;
 
 public sealed class AddInstallationUserAction : AppAction<AddInstallationUserRequest, AppUserModel>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IClock clock;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
 
-    public AddInstallationUserAction(AppFactory appFactory, IClock clock, IHashedPasswordFactory hashedPasswordFactory)
+    public AddInstallationUserAction(HubFactory appFactory, IClock clock, IHashedPasswordFactory hashedPasswordFactory)
     {
         this.appFactory = appFactory;
         this.clock = clock;

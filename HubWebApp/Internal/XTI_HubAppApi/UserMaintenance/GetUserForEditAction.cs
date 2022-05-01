@@ -1,13 +1,10 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.UserMaintenance;
+﻿namespace XTI_HubAppApi.UserMaintenance;
 
 public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, object?>>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetUserForEditAction(AppFactory factory)
+    public GetUserForEditAction(HubFactory factory)
     {
         this.factory = factory;
     }

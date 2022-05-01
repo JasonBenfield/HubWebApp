@@ -1,14 +1,10 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.AppList;
+﻿namespace XTI_HubAppApi.AppList;
 
 internal sealed class GetAppDomainsAction : AppAction<EmptyRequest, AppDomainModel[]>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetAppDomainsAction(AppFactory factory)
+    public GetAppDomainsAction(HubFactory factory)
     {
         this.factory = factory;
     }

@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class AppEventRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public AppEventRepository(AppFactory factory)
+    public AppEventRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -20,7 +20,7 @@ public sealed class AppEventRepository
         {
             record = new AppEventEntity
             {
-                RequestID = request.ID.Value,
+                RequestID = request.ID,
                 EventKey = eventKey,
                 TimeOccurred = timeOccurred,
                 Severity = severity.Value,
@@ -38,7 +38,7 @@ public sealed class AppEventRepository
                 record,
                 evt =>
                 {
-                    evt.RequestID = request.ID.Value;
+                    evt.RequestID = request.ID;
                     evt.EventKey = eventKey;
                     evt.TimeOccurred = timeOccurred;
                     evt.Severity = severity.Value;
@@ -55,7 +55,7 @@ public sealed class AppEventRepository
     internal Task<AppEvent[]> RetrieveByRequest(AppRequest request)
     {
         return factory.DB.Events.Retrieve()
-            .Where(e => e.RequestID == request.ID.Value)
+            .Where(e => e.RequestID == request.ID)
             .Select(e => factory.CreateEvent(e))
             .ToArrayAsync();
     }
@@ -101,7 +101,7 @@ public sealed class AppEventRepository
                 res => res.ID,
                 (req, res) => new { RequestID = req.ID, GroupID = res.GroupID }
             )
-            .Where(rg => rg.GroupID == group.ID.Value)
+            .Where(rg => rg.GroupID == group.ID)
             .Select(rg => rg.RequestID);
         return mostRecentErrors(howMany, requestIDs);
     }
@@ -111,7 +111,7 @@ public sealed class AppEventRepository
         var requestIDs = factory.DB
             .Requests
             .Retrieve()
-            .Where(r => r.ResourceID == resource.ID.Value)
+            .Where(r => r.ResourceID == resource.ID)
             .Select(r => r.ResourceID);
         return mostRecentErrors(howMany, requestIDs);
     }

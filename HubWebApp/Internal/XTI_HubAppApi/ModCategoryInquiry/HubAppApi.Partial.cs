@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.ModCategoryInquiry;
+﻿using XTI_HubAppApi.ModCategoryInquiry;
 
 namespace XTI_HubAppApi;
 
@@ -9,7 +8,7 @@ partial class HubAppApi
 
     public ModCategoryGroup ModCategory { get => modCategory ?? throw new ArgumentNullException(nameof(modCategory)); }
 
-    partial void createModCategory(IServiceProvider services)
+    partial void createModCategory(IServiceProvider sp)
     {
         modCategory = new ModCategoryGroup
         (
@@ -19,7 +18,7 @@ partial class HubAppApi
                 HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.ViewApp)
             ),
-            services
+            sp
         );
     }
 }

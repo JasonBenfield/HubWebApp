@@ -19,7 +19,7 @@ internal sealed class SupportAppSetup : IAppSetup
         var systemUser = await hubClient.UserInquiry.GetUserByUserName(userName.Value);
         var app = await hubClient.Apps.GetAppByAppKey
         (
-            new GetAppByAppKeyRequest { AppKey = new AppKey("Hub", AppType.Values.WebApp) }
+            new GetAppByAppKeyRequest { AppKey = AppKey.WebApp("Hub") }
         );
         var permLogRole = await hubClient.App.GetRole(app.ModKey, "PermanentLog");
         await hubClient.AppUserMaintenance.AssignRole

@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.Auth;
+﻿namespace XTI_HubAppApi.Auth;
 
 public sealed class AuthApiGroup : AppApiGroupWrapper
 {
@@ -19,15 +15,6 @@ public sealed class AuthApiGroup : AppApiGroupWrapper
                 () => sp.GetRequiredService<AuthenticateAction>()
             )
         );
-        Logout = source.AddAction
-        (
-            actions.Action
-            (
-                nameof(Logout),
-                () => sp.GetRequiredService<LogoutAction>()
-            )
-        );
     }
     public AppApiAction<LoginCredentials, LoginResult> Authenticate { get; }
-    public AppApiAction<EmptyRequest, EmptyActionResult> Logout { get; }
 }

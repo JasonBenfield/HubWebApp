@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.AppList;
+﻿namespace XTI_HubAppApi.AppList;
 
 public sealed class AppListGroup : AppApiGroupWrapper
 {

@@ -14,7 +14,7 @@ internal sealed class GetUserModCategoriesTest
     {
         var tester = await setup();
         var user = await addUser(tester, "some.user");
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(user.ID.Value);
+        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(user.ID);
     }
 
     [Test]
@@ -26,7 +26,7 @@ internal sealed class GetUserModCategoriesTest
         var adminRole = await tester.AdminRole();
         var hubAppModifier = await tester.HubAppModifier();
         await user.Modifier(hubAppModifier).AssignRole(adminRole);
-        var modCategories = await tester.Execute(user.ID.Value, hubAppModifier.ModKey());
+        var modCategories = await tester.Execute(user.ID, hubAppModifier.ModKey());
         Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(1), "Should have access to one modifier");
         Assert.That(modCategories[0].Modifiers[0].ModKey, Is.EqualTo(hubAppModifier.ModKey()), "Should have access to one modifier");
     }
@@ -47,7 +47,7 @@ internal sealed class GetUserModCategoriesTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }

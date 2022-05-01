@@ -13,11 +13,11 @@ namespace XTI_HubAppClient
         {
             this.hubClient = hubClient;
             this.appContext = appContext;
-            ID = new EntityID(model.ID);
+            ID = model.ID;
             name = new ModifierCategoryName(model.Name);
         }
 
-        public EntityID ID { get; }
+        public int ID { get; }
         public ModifierCategoryName Name() => name;
 
         public async Task<IModifier> ModifierOrDefault(ModifierKey modKey)
@@ -25,7 +25,7 @@ namespace XTI_HubAppClient
             var appModifier = await appContext.GetModifierKey();
             var request = new GetModCategoryModifierRequest
             {
-                CategoryID = ID.Value,
+                CategoryID = ID,
                 ModifierKey = modKey.Value
             };
             var modifier = await hubClient.ModCategory.GetModifier(appModifier, request);

@@ -1,15 +1,12 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserMaintenance;
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
 
 internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionResult>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly ICachedUserContext userContext;
 
-    public UnassignRoleAction(AppFromPath appFromPath, AppFactory factory, ICachedUserContext userContext)
+    public UnassignRoleAction(AppFromPath appFromPath, HubFactory factory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.factory = factory;

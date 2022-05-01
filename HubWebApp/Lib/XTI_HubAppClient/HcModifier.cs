@@ -13,11 +13,11 @@ namespace XTI_HubAppClient
         {
             this.hubClient = hubClient;
             this.appContext = appContext;
-            ID = new EntityID(model.ID);
+            ID = model.ID;
             modKey = new ModifierKey(model.ModKey);
         }
 
-        public EntityID ID { get; }
+        public int ID { get; }
         public ModifierKey ModKey() => modKey;
 
         public async Task<IModifier> DefaultModifier()

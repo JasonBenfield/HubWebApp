@@ -9,9 +9,12 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class ExternalAuthGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'ExternalAuth');
-		this.Login = this.createView<IExternalLoginRequest>('Login');
+		this.ExternalAuthKeyAction = this.createAction<IExternalAuthKeyModel,string>('ExternalAuthKey', 'External Auth Key');
 	}
 	
-	readonly Login: AppApiView<IExternalLoginRequest>;
+	readonly ExternalAuthKeyAction: AppApiAction<IExternalAuthKeyModel,string>;
 	
+	ExternalAuthKey(model: IExternalAuthKeyModel, errorOptions?: IActionErrorOptions) {
+		return this.ExternalAuthKeyAction.execute(model, errorOptions || {});
+	}
 }

@@ -7,9 +7,9 @@ namespace XTI_Hub;
 
 public sealed class AppSessionRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal AppSessionRepository(AppFactory factory)
+    internal AppSessionRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -104,7 +104,7 @@ public sealed class AppSessionRepository
         var record = new AppSessionEntity
         {
             SessionKey = sessionKey,
-            UserID = user.ID.Value,
+            UserID = user.ID,
             TimeStarted = timeStarted,
             RequesterKey = requesterKey ?? "",
             TimeEnded = DateTimeOffset.MaxValue,
@@ -123,7 +123,7 @@ public sealed class AppSessionRepository
                 record,
                 r =>
                 {
-                    r.UserID = user.ID.Value;
+                    r.UserID = user.ID;
                     r.TimeStarted = timeStarted;
                     r.RequesterKey = requesterKey;
                     r.UserAgent = userAgent ?? "";

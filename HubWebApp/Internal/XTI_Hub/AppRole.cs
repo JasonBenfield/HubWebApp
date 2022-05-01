@@ -5,17 +5,17 @@ namespace XTI_Hub;
 
 public sealed class AppRole : IAppRole
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppRoleEntity record;
 
-    internal AppRole(AppFactory factory, AppRoleEntity record)
+    internal AppRole(HubFactory factory, AppRoleEntity record)
     {
         this.factory = factory;
         this.record = record ?? new AppRoleEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public AppRoleName Name() => new AppRoleName(record.Name);
 
     public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
@@ -32,9 +32,9 @@ public sealed class AppRole : IAppRole
 
     public AppRoleModel ToModel() => new AppRoleModel
     {
-        ID = ID.Value,
+        ID = ID,
         Name = Name().DisplayText
     };
 
-    public override string ToString() => $"{nameof(AppRole)} {ID.Value}";
+    public override string ToString() => $"{nameof(AppRole)} {ID}";
 }

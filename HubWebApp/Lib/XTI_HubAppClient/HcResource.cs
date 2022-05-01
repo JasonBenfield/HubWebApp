@@ -1,6 +1,4 @@
-﻿using XTI_App.Abstractions;
-
-namespace XTI_HubAppClient
+﻿namespace XTI_HubAppClient
 {
     internal sealed class HcResource : IResource
     {
@@ -8,11 +6,11 @@ namespace XTI_HubAppClient
 
         public HcResource(ResourceModel model)
         {
-            ID = new EntityID(model.ID);
+            ID = model.ID;
             name = new ResourceName(model.Name);
         }
 
-        public EntityID ID { get; }
+        public int ID { get; }
         public ResourceName Name() => name;
     }
 }

@@ -1,6 +1,4 @@
-﻿using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserInquiry;
+﻿namespace XTI_HubAppApi.AppUserInquiry;
 
 public sealed class UserModifierAccessModel
 {

@@ -1,14 +1,10 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.AppInstall;
+﻿namespace XTI_HubAppApi.AppInstall;
 
 internal sealed class GetVersionsAction : AppAction<GetVersionsRequest, XtiVersionModel[]>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public GetVersionsAction(AppFactory appFactory)
+    public GetVersionsAction(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

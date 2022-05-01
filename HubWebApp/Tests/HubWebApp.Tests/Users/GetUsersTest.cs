@@ -17,7 +17,7 @@ internal sealed class GetUsersTest
         var tester = await setup();
         var userName = new AppUserName("Test.User");
         await addUser(tester, userName);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var users = (await factory.Users.Users()).ToArray();
         Assert.That(users.Select(u => u.UserName()), Has.One.EqualTo(userName), "Should get all users");
     }

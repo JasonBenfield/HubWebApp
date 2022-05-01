@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class AppRoleRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal AppRoleRepository(AppFactory factory)
+    internal AppRoleRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -21,7 +21,7 @@ public sealed class AppRoleRepository
         {
             record = new AppRoleEntity
             {
-                AppID = app.ID.Value,
+                AppID = app.ID,
                 Name = name.Value
             };
             await factory.DB.Roles.Create(record);
@@ -32,7 +32,7 @@ public sealed class AppRoleRepository
     internal Task<AppRole[]> RolesForApp(App app)
     {
         return factory.DB.Roles.Retrieve()
-            .Where(r => r.AppID == app.ID.Value)
+            .Where(r => r.AppID == app.ID)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -66,7 +66,7 @@ public sealed class AppRoleRepository
     {
         return factory.DB.Roles
             .Retrieve()
-            .Where(r => r.AppID == app.ID.Value);
+            .Where(r => r.AppID == app.ID);
     }
 
     internal Task<AppRole[]> AllowedRolesForResourceGroup(ResourceGroup group)
@@ -80,7 +80,7 @@ public sealed class AppRoleRepository
         var roleIDs = factory.DB
             .ResourceGroupRoles
             .Retrieve()
-            .Where(gr => gr.GroupID == group.ID.Value && gr.IsAllowed == isAllowed)
+            .Where(gr => gr.GroupID == group.ID && gr.IsAllowed == isAllowed)
             .Select(gr => gr.RoleID);
         return factory.DB
             .Roles
@@ -122,7 +122,7 @@ public sealed class AppRoleRepository
         var modCategoryID = factory.DB
             .Modifiers
             .Retrieve()
-            .Where(m => m.ID == modifier.ID.Value)
+            .Where(m => m.ID == modifier.ID)
             .Select(m => m.CategoryID);
         var appID = factory.DB
             .ModifierCategories
@@ -137,7 +137,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .UserRoles
             .Retrieve()
-            .Where(ur => ur.UserID == user.ID.Value && ur.ModifierID == modifier.ID.Value)
+            .Where(ur => ur.UserID == user.ID && ur.ModifierID == modifier.ID)
             .Select(ur => ur.RoleID);
     }
 
@@ -152,7 +152,7 @@ public sealed class AppRoleRepository
         var roleIDs = factory.DB
             .ResourceRoles
             .Retrieve()
-            .Where(gr => gr.ResourceID == resource.ID.Value && gr.IsAllowed == isAllowed)
+            .Where(gr => gr.ResourceID == resource.ID && gr.IsAllowed == isAllowed)
             .Select(gr => gr.RoleID);
         return factory.DB
             .Roles

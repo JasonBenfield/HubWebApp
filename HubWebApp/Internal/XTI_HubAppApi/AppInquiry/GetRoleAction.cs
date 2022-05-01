@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppInquiry;
+﻿namespace XTI_HubAppApi.AppInquiry;
 
 public sealed class GetRoleAction : AppAction<string, AppRoleModel>
 {

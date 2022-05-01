@@ -12,7 +12,7 @@ internal static class TestExtensions
     {
         services.AddFakesForHubWebApp();
         services.AddSingleton<IClock, FakeClock>();
-        services.AddScoped<AppFactory>();
+        services.AddScoped<HubFactory>();
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped<AppApiFactory>(sp => sp.GetRequiredService<HubAppApiFactory>());
         services.AddScoped<FakeXtiPathAccessor>();

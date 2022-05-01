@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.ExternalAuth;
+﻿namespace XTI_HubAppApi.ExternalAuth;
 
 public sealed class ExternalAuthGroup : AppApiGroupWrapper
 {
@@ -10,14 +6,14 @@ public sealed class ExternalAuthGroup : AppApiGroupWrapper
         : base(source)
     {
         var actions = new WebAppApiActionFactory(source);
-        Login = source.AddAction
+        ExternalAuthKey = source.AddAction
         (
             actions.Action
             (
-                nameof(Login),
-                () => sp.GetRequiredService<ExternalLoginAction>()
+                nameof(ExternalAuthKey),
+                () => sp.GetRequiredService<ExternalAuthKeyAction>()
             )
         );
     }
-    public AppApiAction<ExternalLoginRequest, WebRedirectResult> Login { get; }
+    public AppApiAction<ExternalAuthKeyModel, string> ExternalAuthKey { get; }
 }

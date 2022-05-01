@@ -1,17 +1,12 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.AppList;
+﻿namespace XTI_HubAppApi.AppList;
 
 public sealed class RedirectToAppAction : AppAction<int, WebRedirectResult>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly XtiPath path;
     private readonly HubAppApi hubApi;
 
-    public RedirectToAppAction(AppFactory factory, XtiPath path, HubAppApi hubApi)
+    public RedirectToAppAction(HubFactory factory, XtiPath path, HubAppApi hubApi)
     {
         this.factory = factory;
         this.path = path;
@@ -23,7 +18,7 @@ public sealed class RedirectToAppAction : AppAction<int, WebRedirectResult>
         var app = await factory.Apps.App(appID);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await appsModCategory.ModifierByTargetID(app.ID.Value);
+        var modifier = await appsModCategory.ModifierByTargetID(app.ID);
         var redirectPath = path
             .WithNewGroup(hubApi.App.Index.Path)
             .WithModifier(modifier.ModKey());

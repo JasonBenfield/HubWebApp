@@ -13,8 +13,8 @@ internal sealed class DenyAccessTest
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
@@ -29,8 +29,8 @@ internal sealed class DenyAccessTest
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
@@ -51,8 +51,8 @@ internal sealed class DenyAccessTest
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         await tester.Execute(request, modifier.ModKey());
         var roles = await user.Modifier(modifier).AssignedRoles();
@@ -75,8 +75,8 @@ internal sealed class DenyAccessTest
         await user.Modifier(modifier).AssignRole(adminRole);
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         await tester.Execute(request, modifier.ModKey());
         var roles = await user.Modifier(modifier).AssignedRoles();
@@ -104,7 +104,7 @@ internal sealed class DenyAccessTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }

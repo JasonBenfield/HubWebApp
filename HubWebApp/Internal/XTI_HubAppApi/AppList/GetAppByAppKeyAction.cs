@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppList;
+﻿namespace XTI_HubAppApi.AppList;
 
 public sealed class GetAppByAppKeyRequest
 {
@@ -11,9 +7,9 @@ public sealed class GetAppByAppKeyRequest
 
 public sealed class GetAppByAppKeyAction : AppAction<GetAppByAppKeyRequest, AppWithModKeyModel>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetAppByAppKeyAction(AppFactory factory)
+    public GetAppByAppKeyAction(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -23,7 +19,7 @@ public sealed class GetAppByAppKeyAction : AppAction<GetAppByAppKeyRequest, AppW
         var app = await factory.Apps.App(request.AppKey);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await appsModCategory.ModifierByTargetID(app.ID.Value);
+        var modifier = await appsModCategory.ModifierByTargetID(app.ID);
         return new AppWithModKeyModel(hubApp.ToAppModel(), modifier.ModKey().Value);
     }
 }

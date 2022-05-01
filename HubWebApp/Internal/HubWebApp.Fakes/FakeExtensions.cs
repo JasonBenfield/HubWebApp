@@ -11,6 +11,7 @@ using XTI_Hub.Abstractions;
 using XTI_HubAppApi;
 using XTI_HubAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
+using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
@@ -21,8 +22,9 @@ public static class FakeExtensions
     public static void AddFakesForHubWebApp(this IServiceCollection services)
     {
         services.AddFakesForXtiWebApp();
+        services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddHubDbContextForInMemory();
-        services.AddScoped<AppFactory>();
+        services.AddScoped<HubFactory>();
         services.AddScoped<InitialSetup>();
         services.AddTransient<AppFromPath>();
         services.AddHubAppApiServices();
@@ -33,7 +35,7 @@ public static class FakeExtensions
         {
             return new HubAppSetup
             (
-                sp.GetRequiredService<AppFactory>(),
+                sp.GetRequiredService<HubFactory>(),
                 sp.GetRequiredService<HubAppApiFactory>()
             );
         });

@@ -5,9 +5,9 @@ namespace XTI_Hub;
 
 public sealed class InstallationUserRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal InstallationUserRepository(AppFactory factory)
+    internal InstallationUserRepository(HubFactory factory)
     {
         this.factory = factory;
     }

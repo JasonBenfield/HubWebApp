@@ -6,22 +6,22 @@ namespace XTI_Hub;
 
 public sealed class Modifier : IModifier
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly ModifierEntity record;
 
-    internal Modifier(AppFactory factory, ModifierEntity record)
+    internal Modifier(HubFactory factory, ModifierEntity record)
     {
         this.factory = factory;
         this.record = record ?? new ModifierEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public ModifierKey ModKey() => new ModifierKey(record.ModKey);
     public string TargetKey { get => record.TargetKey; }
     public int TargetID() => int.Parse(TargetKey);
 
-    public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID.Value == record.CategoryID;
+    public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID == record.CategoryID;
 
     public Task SetDisplayText(string displayText)
     {
@@ -54,12 +54,12 @@ public sealed class Modifier : IModifier
 
     public ModifierModel ToModel() => new ModifierModel
     {
-        ID = ID.Value,
+        ID = ID,
         CategoryID = record.CategoryID,
         ModKey = ModKey().DisplayText,
         TargetKey = TargetKey,
         DisplayText = record.DisplayText
     };
 
-    public override string ToString() => $"{nameof(Modifier)} {ID.Value}";
+    public override string ToString() => $"{nameof(Modifier)} {ID}";
 }

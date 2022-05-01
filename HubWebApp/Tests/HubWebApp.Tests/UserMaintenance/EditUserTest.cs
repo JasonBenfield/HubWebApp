@@ -31,8 +31,8 @@ internal sealed class EditUserTest
         var form = createEditUserForm(userToEdit);
         form.PersonName.SetValue("Changed Name");
         await tester.Execute(form);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ID.Value)).ToModel();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var userModel = (await factory.Users.User(userToEdit.ID)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo("Changed Name"), "Should update name");
     }
 
@@ -45,8 +45,8 @@ internal sealed class EditUserTest
         var form = createEditUserForm(userToEdit);
         form.PersonName.SetValue("");
         await tester.Execute(form);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ID.Value)).ToModel();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var userModel = (await factory.Users.User(userToEdit.ID)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo("usertoedit"), "Should update name from user name when name is blank");
     }
 
@@ -59,19 +59,19 @@ internal sealed class EditUserTest
         var form = createEditUserForm(userToEdit);
         form.Email.SetValue("changed@gmail.com");
         await tester.Execute(form);
-        var factory = tester.Services.GetRequiredService<AppFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ID.Value)).ToModel();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var userModel = (await factory.Users.User(userToEdit.ID)).ToModel();
         Assert.That(userModel.Email, Is.EqualTo("changed@gmail.com"), "Should update email");
     }
 
     private static EditUserForm createEditUserForm(AppUser userToEdit)
     {
         var form = new EditUserForm();
-        form.UserID.SetValue(userToEdit.ID.Value);
+        form.UserID.SetValue(userToEdit.ID);
         return form;
     }
 
-    private async Task<AppUser> addUser(HubActionTester<EditUserForm, EmptyActionResult> tester, string userName)
+    private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         addUserTester.LoginAsAdmin();
@@ -80,7 +80,7 @@ internal sealed class EditUserTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }

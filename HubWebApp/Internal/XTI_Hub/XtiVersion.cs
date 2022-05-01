@@ -6,17 +6,17 @@ namespace XTI_Hub;
 
 public sealed class XtiVersion
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly XtiVersionEntity record;
 
-    internal XtiVersion(AppFactory factory, XtiVersionEntity record)
+    internal XtiVersion(HubFactory factory, XtiVersionEntity record)
     {
         this.factory = factory;
         this.record = record ?? new XtiVersionEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
 
     public AppVersionKey Key() => AppVersionKey.Parse(record.VersionKey);
 
@@ -28,7 +28,7 @@ public sealed class XtiVersion
 
     public XtiVersionModel ToModel() => new XtiVersionModel
     {
-        ID = ID.Value,
+        ID = ID,
         VersionName = new AppVersionName(record.VersionName),
         VersionKey = Key(),
         VersionNumber = new AppVersionNumber(record.Major, record.Minor, record.Patch),
@@ -37,5 +37,5 @@ public sealed class XtiVersion
         TimeAdded = record.TimeAdded
     };
 
-    public override string ToString() => $"{nameof(XtiVersion)} {ID.Value}: {Key()}";
+    public override string ToString() => $"{nameof(XtiVersion)} {ID}: {Key()}";
 }

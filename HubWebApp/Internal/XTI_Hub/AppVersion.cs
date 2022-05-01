@@ -6,18 +6,18 @@ namespace XTI_Hub;
 
 public sealed class AppVersion : IAppVersion
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly App app;
     private readonly XtiVersion version;
 
-    internal AppVersion(AppFactory factory, App app, XtiVersion version)
+    internal AppVersion(HubFactory factory, App app, XtiVersion version)
     {
         this.factory = factory;
         this.app = app;
         this.version = version;
     }
 
-    public EntityID ID { get => version.ID; }
+    public int ID { get => version.ID; }
 
     public AppVersionKey Key() => version.Key();
 

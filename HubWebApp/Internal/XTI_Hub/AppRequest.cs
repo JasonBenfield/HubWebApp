@@ -6,21 +6,21 @@ namespace XTI_Hub;
 
 public sealed class AppRequest
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppRequestEntity record;
 
     internal AppRequest
     (
-        AppFactory factory,
+        HubFactory factory,
         AppRequestEntity record
     )
     {
         this.factory = factory;
         this.record = record ?? new AppRequestEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public bool HasEnded() => record.TimeEnded < DateTimeOffset.MaxValue;
 
     public bool HappendOnOrBefore(DateTimeOffset before)
@@ -63,7 +63,7 @@ public sealed class AppRequest
 
     public AppRequestModel ToModel() => new AppRequestModel
     {
-        ID = ID.Value,
+        ID = ID,
         SessionID = record.SessionID,
         Path = record.Path,
         ResourceID = record.ResourceID,
@@ -72,5 +72,5 @@ public sealed class AppRequest
         TimeEnded = record.TimeEnded
     };
 
-    public override string ToString() => $"{nameof(AppRequest)} {ID.Value}";
+    public override string ToString() => $"{nameof(AppRequest)} {ID}";
 }

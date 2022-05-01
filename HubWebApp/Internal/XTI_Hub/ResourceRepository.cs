@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class ResourceRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal ResourceRepository(AppFactory factory)
+    internal ResourceRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -17,12 +17,12 @@ public sealed class ResourceRepository
     {
         var record = await factory.DB
             .Resources.Retrieve()
-            .FirstOrDefaultAsync(r => r.GroupID == group.ID.Value && r.Name == name.Value);
+            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value);
         if (record == null)
         {
             record = new ResourceEntity
             {
-                GroupID = group.ID.Value,
+                GroupID = group.ID,
                 Name = name.Value,
                 ResultType = resultType.Value
             };
@@ -48,7 +48,7 @@ public sealed class ResourceRepository
         factory.DB
             .Resources
             .Retrieve()
-            .Where(r => r.GroupID == group.ID.Value)
+            .Where(r => r.GroupID == group.ID)
             .OrderBy(r => r.ResultType)
             .ThenBy(r => r.Name)
             .Select(r => factory.CreateResource(r))
@@ -85,7 +85,7 @@ public sealed class ResourceRepository
         factory.DB
             .Resources
             .Retrieve()
-            .FirstOrDefaultAsync(r => r.GroupID == group.ID.Value && r.Name == name.Value);
+            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value);
 
     internal async Task<Resource> ResourceForVersion(App app, XtiVersion version, int id)
     {

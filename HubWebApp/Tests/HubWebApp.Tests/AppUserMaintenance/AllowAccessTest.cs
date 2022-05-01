@@ -13,8 +13,8 @@ internal sealed class AllowAccessTest
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
@@ -29,8 +29,8 @@ internal sealed class AllowAccessTest
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
@@ -54,8 +54,8 @@ internal sealed class AllowAccessTest
         await user.Modifier(modifier).AssignRole(denyAccessRole);
         var request = new UserModifierKey
         {
-            UserID = user.ID.Value,
-            ModifierID = modifier.ID.Value
+            UserID = user.ID,
+            ModifierID = modifier.ID
         };
         await tester.Execute(request, modifier.ModKey());
         var roles = await user.Modifier(modifier).AssignedRoles();
@@ -83,7 +83,7 @@ internal sealed class AllowAccessTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }

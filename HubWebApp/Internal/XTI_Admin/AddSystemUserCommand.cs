@@ -18,7 +18,7 @@ internal sealed class AddSystemUserCommand : ICommand
     public async Task Execute()
     {
         var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package));
+        var appKeys = selectedAppKeys.Values.Where(a => a.Type.Equals(AppType.Values.Package));
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var options = scopes.GetRequiredService<AdminOptions>();
         var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();

@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.VersionInquiry;
+﻿using XTI_HubAppApi.VersionInquiry;
 
 namespace XTI_HubAppApi;
 
@@ -12,7 +11,7 @@ partial class HubAppApi
         get=>version ?? throw new ArgumentNullException(nameof(version));
     }
 
-    partial void createVersion(IServiceProvider services)
+    partial void createVersion(IServiceProvider sp)
     {
         version = new VersionInquiryGroup
         (
@@ -22,7 +21,7 @@ partial class HubAppApi
                 HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.ViewApp)
             ),
-            services
+            sp
         );
     }
 }

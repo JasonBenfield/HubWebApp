@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.VersionInquiry;
+﻿namespace XTI_HubAppApi.VersionInquiry;
 
 public sealed class GetVersionAction : AppAction<string, XtiVersionModel>
 {

@@ -5,9 +5,9 @@ namespace XTI_Hub;
 
 public sealed class InstallLocationRepository
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public InstallLocationRepository(AppFactory appFactory)
+    public InstallLocationRepository(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

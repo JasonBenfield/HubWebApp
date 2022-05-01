@@ -29,12 +29,13 @@ internal sealed class PublishProcess
         var versionKey = xtiEnv.IsProduction()
             ? new VersionKeyFromCurrentBranch(scopes).Value()
             : AppVersionKey.Current;
-        var semanticVersion = "";
+        string semanticVersion;
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
         if (xtiEnv.IsProduction())
         {
             var version = await new BeginPublishProcess(scopes).Run();
             semanticVersion = version.VersionNumber.Format();
+            Console.WriteLine($"Publishing Version '{semanticVersion}'");
         }
         else
         {

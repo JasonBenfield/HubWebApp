@@ -7,5 +7,4 @@ public sealed partial class AuthApiGroup : AppClientGroup
     }
 
     public Task<LoginResult> Authenticate(LoginCredentials model) => Post<LoginResult, LoginCredentials>("Authenticate", "", model);
-    public Task<EmptyActionResult> Logout() => Post<EmptyActionResult, EmptyRequest>("Logout", "", new EmptyRequest());
 }

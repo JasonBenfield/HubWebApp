@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_HubAppApi.PermanentLog;
+﻿using XTI_HubAppApi.PermanentLog;
 
 namespace XTI_HubAppApi;
 

@@ -6,11 +6,11 @@ namespace XTI_Hub;
 
 public sealed class AppUserModifier
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppUser user;
     private readonly Modifier modifier;
 
-    internal AppUserModifier(AppFactory factory, AppUser appUser, Modifier modifier)
+    internal AppUserModifier(HubFactory factory, AppUser appUser, Modifier modifier)
     {
         this.factory = factory;
         this.user = appUser;
@@ -24,9 +24,9 @@ public sealed class AppUserModifier
         {
             var record = new AppUserRoleEntity
             {
-                UserID = user.ID.Value,
-                RoleID = role.ID.Value,
-                ModifierID = modifier.ID.Value
+                UserID = user.ID,
+                RoleID = role.ID,
+                ModifierID = modifier.ID
             };
             await factory.DB.UserRoles.Create(record);
         }
@@ -47,9 +47,9 @@ public sealed class AppUserModifier
             .Retrieve()
             .Where
             (
-                ur => ur.UserID == user.ID.Value
-                    && ur.ModifierID == modifier.ID.Value
-                    && ur.RoleID == role.ID.Value
+                ur => ur.UserID == user.ID
+                    && ur.ModifierID == modifier.ID
+                    && ur.RoleID == role.ID
             );
 
     public Task<AppRole[]> ExplicitlyUnassignedRoles()

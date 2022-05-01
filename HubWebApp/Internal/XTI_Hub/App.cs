@@ -7,17 +7,17 @@ namespace XTI_Hub;
 
 public sealed class App : IApp
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppEntity record;
 
-    internal App(AppFactory factory, AppEntity record)
+    internal App(HubFactory factory, AppEntity record)
     {
         this.factory = factory;
         this.record = record ?? new AppEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
     public string Title { get => record.Title; }
 
@@ -25,13 +25,13 @@ public sealed class App : IApp
     {
         var authenticator = await factory.DB
             .Authenticators.Retrieve()
-            .Where(auth => auth.AppID == ID.Value)
+            .Where(auth => auth.AppID == ID)
             .FirstOrDefaultAsync();
         if (authenticator == null)
         {
             authenticator = new AuthenticatorEntity
             {
-                AppID = ID.Value
+                AppID = ID
             };
             await factory.DB.Authenticators.Create(authenticator);
         }
@@ -41,7 +41,7 @@ public sealed class App : IApp
     {
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.ModifierByTargetID(ID.Value);
+        var modifier = await modCategory.ModifierByTargetID(ID);
         return modifier.ModKey();
     }
 
@@ -158,13 +158,13 @@ public sealed class App : IApp
         var key = Key();
         return new AppModel
         {
-            ID = ID.Value,
+            ID = ID,
             AppKey = key,
             VersionName = new AppVersionName(record.VersionName),
             Title = record.Title
         };
     }
 
-    public override string ToString() => $"{nameof(App)} {ID.Value}: {record.Name}";
+    public override string ToString() => $"{nameof(App)} {ID}: {record.Name}";
 
 }

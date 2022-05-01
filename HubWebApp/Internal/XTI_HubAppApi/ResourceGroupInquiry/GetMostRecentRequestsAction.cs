@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.ResourceGroupInquiry;
+﻿namespace XTI_HubAppApi.ResourceGroupInquiry;
 
 public sealed class GetMostRecentRequestsAction : AppAction<GetResourceGroupLogRequest, AppRequestExpandedModel[]>
 {

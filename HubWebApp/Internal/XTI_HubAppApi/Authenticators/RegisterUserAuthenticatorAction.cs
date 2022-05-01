@@ -1,7 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.Authenticators;
+﻿namespace XTI_HubAppApi.Authenticators;
 
 public sealed class RegisterUserAuthenticatorRequest
 {
@@ -12,9 +9,9 @@ public sealed class RegisterUserAuthenticatorRequest
 internal sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAuthenticatorRequest, EmptyActionResult>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public RegisterUserAuthenticatorAction(AppFromPath appFromPath, AppFactory appFactory)
+    public RegisterUserAuthenticatorAction(AppFromPath appFromPath, HubFactory appFactory)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;

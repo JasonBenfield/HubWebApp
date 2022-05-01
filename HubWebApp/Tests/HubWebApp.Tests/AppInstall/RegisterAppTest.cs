@@ -19,7 +19,7 @@ public sealed class RegisterAppTest
 
     private static async Task<App> getApp(IHubActionTester tester)
     {
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(FakeInfo.AppKey);
         return app;
     }
@@ -74,9 +74,9 @@ public sealed class RegisterAppTest
         tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
-        Assert.That(app.ID.IsValid(), Is.True, "Should add unknown app");
+        Assert.That(app.ID, Is.GreaterThan(0), "Should add unknown app");
     }
 
     [Test]
@@ -86,11 +86,11 @@ public sealed class RegisterAppTest
         tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
-        Assert.That(group.ID.IsValid(), Is.True, "Should add unknown resource group");
+        Assert.That(group.ID, Is.GreaterThan(0), "Should add unknown resource group");
     }
 
     [Test]
@@ -100,12 +100,12 @@ public sealed class RegisterAppTest
         tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
         var resource = await group.ResourceByName(ResourceName.Unknown);
-        Assert.That(resource.ID.IsValid(), Is.True, "Should add unknown resource");
+        Assert.That(resource.ID, Is.GreaterThan(0), "Should add unknown resource");
     }
 
     [Test]
@@ -221,7 +221,7 @@ public sealed class RegisterAppTest
         await tester.Execute(request);
         var app = await getApp(tester);
         var category = await app.ModCategory(ModifierCategoryName.Default);
-        Assert.That(category.ID.IsValid(), Is.True, "Should add default modifier to app");
+        Assert.That(category.ID, Is.GreaterThan(0), "Should add default modifier to app");
     }
 
     [Test]

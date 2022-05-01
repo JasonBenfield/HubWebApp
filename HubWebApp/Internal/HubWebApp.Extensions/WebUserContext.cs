@@ -11,7 +11,7 @@ public sealed class WebUserContext : ISourceUserContext
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly DefaultUserContext userContext;
 
-    public WebUserContext(IHttpContextAccessor httpContextAccessor, AppFactory appFactory)
+    public WebUserContext(IHttpContextAccessor httpContextAccessor, HubFactory appFactory)
     {
         this.httpContextAccessor = httpContextAccessor;
         userContext = new DefaultUserContext(appFactory, getUserName);

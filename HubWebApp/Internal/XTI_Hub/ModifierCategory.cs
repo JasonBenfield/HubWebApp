@@ -5,17 +5,17 @@ namespace XTI_Hub;
 
 public sealed class ModifierCategory : IModifierCategory
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly ModifierCategoryEntity record;
 
-    internal ModifierCategory(AppFactory factory, ModifierCategoryEntity record)
+    internal ModifierCategory(HubFactory factory, ModifierCategoryEntity record)
     {
         this.factory = factory;
         this.record = record ?? new ModifierCategoryEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public ModifierCategoryName Name() => new ModifierCategoryName(record.Name);
 
     public Task<Modifier> AddOrUpdateModifier(int targetID, string displayText)
@@ -43,9 +43,9 @@ public sealed class ModifierCategory : IModifierCategory
 
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {
-        ID = ID.Value,
+        ID = ID,
         Name = Name().DisplayText
     };
 
-    public override string ToString() => $"{nameof(ModifierCategory)} {ID.Value}";
+    public override string ToString() => $"{nameof(ModifierCategory)} {ID}";
 }

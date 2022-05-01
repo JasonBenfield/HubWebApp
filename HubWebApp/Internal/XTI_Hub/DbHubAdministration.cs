@@ -7,11 +7,11 @@ namespace XTI_Hub;
 public sealed class DbHubAdministration : IHubAdministration
 {
     private readonly XtiEnvironment xtiEnv;
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public DbHubAdministration(XtiEnvironment xtiEnv, AppFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public DbHubAdministration(XtiEnvironment xtiEnv, HubFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
         this.xtiEnv = xtiEnv;
         this.appFactory = appFactory;
@@ -126,7 +126,7 @@ public sealed class DbHubAdministration : IHubAdministration
                 versionInstallation = await installLocation.NewVersionInstallation(appVersion, clock.Now());
             }
         }
-        return new NewInstallationResult(currentInstallation.ID.Value, versionInstallation?.ID.Value ?? 0);
+        return new NewInstallationResult(currentInstallation.ID, versionInstallation?.ID ?? 0);
     }
 
     public async Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
@@ -136,7 +136,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var versionToInstall = await app.Version(installVersionKey);
         var installation = await installLocation.CurrentInstallation(app);
         await installation.Start(versionToInstall, domain);
-        return installation.ID.Value;
+        return installation.ID;
     }
 
     public async Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
@@ -146,7 +146,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var appVersion = await app.Version(versionKey);
         var installation = await installLocation.VersionInstallation(appVersion);
         await installation.Start(domain);
-        return installation.ID.Value;
+        return installation.ID;
     }
 
     public async Task Installed(int installationID)
