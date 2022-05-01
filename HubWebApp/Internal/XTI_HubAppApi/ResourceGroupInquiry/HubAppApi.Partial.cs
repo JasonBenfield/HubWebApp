@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.ResourceGroupInquiry;
+﻿using XTI_HubAppApi.ResourceGroupInquiry;
 
 namespace XTI_HubAppApi;
 
@@ -12,7 +11,7 @@ partial class HubAppApi
         get => resourceGroup ?? throw new ArgumentNullException(nameof(resourceGroup));
     }
 
-    partial void createResourceGroup(IServiceProvider services)
+    partial void createResourceGroup(IServiceProvider sp)
     {
         resourceGroup = new ResourceGroupInquiryGroup
         (
@@ -22,7 +21,7 @@ partial class HubAppApi
                 HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.ViewApp)
             ),
-            services
+            sp
         );
     }
 }

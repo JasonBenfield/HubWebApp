@@ -12,7 +12,7 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationStatusToInstallStarted()
     {
         var tester = await setup();
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
         tester.LoginAsAdmin();
@@ -43,7 +43,7 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldReturnInstallationID()
     {
         var tester = await setup();
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
         tester.LoginAsAdmin();

@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class ResourceGroupRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal ResourceGroupRepository(AppFactory factory)
+    internal ResourceGroupRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -28,7 +28,7 @@ public sealed class ResourceGroupRepository
                 (
                     record, r =>
                     {
-                        r.ModCategoryID = modCategory.ID.Value;
+                        r.ModCategoryID = modCategory.ID;
                     }
                 );
         }
@@ -43,7 +43,7 @@ public sealed class ResourceGroupRepository
         {
             AppVersionID = appVersionID,
             Name = name.Value,
-            ModCategoryID = modCategory.ID.Value
+            ModCategoryID = modCategory.ID
         };
         await factory.DB.ResourceGroups.Create(record);
         return record;
@@ -120,7 +120,7 @@ public sealed class ResourceGroupRepository
         factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(g => g.ModCategoryID == modCategory.ID.Value)
+            .Where(g => g.ModCategoryID == modCategory.ID)
             .OrderBy(g => g.Name)
             .Select(g => factory.CreateGroup(g))
             .ToArrayAsync();

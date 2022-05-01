@@ -9,6 +9,8 @@ public sealed partial class AuthenticatorAppClient : AppClient
         Home = GetGroup((_clientFactory, _tokenAccessor, _url) => new HomeGroup(_clientFactory, _tokenAccessor, _url));
     }
 
+    public AuthenticatorRoleNames RoleNames { get; } = AuthenticatorRoleNames.Instance;
+    public string AppName { get; } = "Authenticator";
     public UserGroup User { get; }
 
     public UserCacheGroup UserCache { get; }

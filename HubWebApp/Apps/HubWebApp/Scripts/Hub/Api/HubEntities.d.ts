@@ -11,7 +11,10 @@ interface ILogoutRequest {
 interface IEmptyActionResult {
 }
 interface ILoginModel {
-	Credentials: ILoginCredentials;
+	AuthKey: string;
+	ReturnKey: string;
+}
+interface ILoginReturnModel {
 	ReturnUrl: string;
 }
 interface ILoginCredentials {
@@ -21,9 +24,17 @@ interface ILoginCredentials {
 interface ILoginResult {
 	Token: string;
 }
-interface IExternalLoginRequest {
+interface IExternalAuthKeyModel {
+	AppKey: IAppKey;
 	ExternalUserKey: string;
-	ReturnUrl: string;
+}
+interface IAppKey {
+	Name: IAppName;
+	Type: IAppType;
+}
+interface IAppName {
+	Value: string;
+	DisplayText: string;
 }
 interface IRegisterUserAuthenticatorRequest {
 	UserID: number;
@@ -84,14 +95,6 @@ interface IAppModel {
 	AppKey: IAppKey;
 	VersionName: IAppVersionName;
 	Title: string;
-}
-interface IAppKey {
-	Name: IAppName;
-	Type: IAppType;
-}
-interface IAppName {
-	Value: string;
-	DisplayText: string;
 }
 interface IAppVersionName {
 	Value: string;
@@ -337,6 +340,16 @@ interface IUserRoleRequest {
 	ModifierID: number;
 	RoleID: number;
 }
+interface IStoreObjectRequest {
+	StorageName: string;
+	Data: string;
+	TimeExpires: Date;
+	GeneratedStorageKeyType: IGeneratedStorageKeyType;
+}
+interface IGetStoredObjectRequest {
+	StorageName: string;
+	StorageKey: string;
+}
 interface IAppType {
 	Value: number;
 	DisplayText: string;
@@ -354,6 +367,10 @@ interface IAppVersionType {
 	DisplayText: string;
 }
 interface IAppVersionStatus {
+	Value: number;
+	DisplayText: string;
+}
+interface IGeneratedStorageKeyType {
 	Value: number;
 	DisplayText: string;
 }

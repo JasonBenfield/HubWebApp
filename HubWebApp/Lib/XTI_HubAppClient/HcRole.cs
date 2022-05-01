@@ -1,6 +1,4 @@
-﻿using XTI_App.Abstractions;
-
-namespace XTI_HubAppClient
+﻿namespace XTI_HubAppClient
 {
     public sealed class HcRole : IAppRole
     {
@@ -8,11 +6,11 @@ namespace XTI_HubAppClient
 
         public HcRole(AppRoleModel model)
         {
-            ID = new EntityID(model.ID);
+            ID = model.ID;
             name = new AppRoleName(model.Name);
         }
 
-        public EntityID ID { get; }
+        public int ID { get; }
 
         public AppRoleName Name() => name;
     }

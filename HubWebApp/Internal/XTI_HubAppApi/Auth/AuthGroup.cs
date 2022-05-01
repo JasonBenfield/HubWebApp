@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.Auth;
+﻿namespace XTI_HubAppApi.Auth;
 
 public sealed class AuthGroup : AppApiGroupWrapper
 {
@@ -31,13 +27,23 @@ public sealed class AuthGroup : AppApiGroupWrapper
             actions.Action
             (
                 nameof(Login),
-                () => new LoginModelValidation(),
                 () => sp.GetRequiredService<LoginAction>()
+            )
+        );
+        LoginReturnKey = source.AddAction
+        (
+            actions.Action
+            (
+                nameof(LoginReturnKey),
+                ResourceAccess.AllowAuthenticated()
+                    .WithAllowed(HubInfo.Roles.Admin, AppRoleName.System),
+                () => sp.GetRequiredService<LoginReturnKeyAction>()
             )
         );
 
     }
-    public AppApiAction<VerifyLoginForm, EmptyActionResult> VerifyLogin { get; }
+    public AppApiAction<VerifyLoginForm, string> VerifyLogin { get; }
     public AppApiAction<EmptyRequest, WebPartialViewResult> VerifyLoginForm { get; }
     public AppApiAction<LoginModel, WebRedirectResult> Login { get; }
+    public AppApiAction<LoginReturnModel, string> LoginReturnKey { get; }
 }

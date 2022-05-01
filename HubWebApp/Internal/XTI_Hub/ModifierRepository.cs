@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class ModifierRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal ModifierRepository(AppFactory factory)
+    internal ModifierRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -37,7 +37,7 @@ public sealed class ModifierRepository
     {
         var record = new ModifierEntity
         {
-            CategoryID = category.ID.Value,
+            CategoryID = category.ID,
             ModKey = modKey.Value,
             TargetKey = targetID,
             DisplayText = displayText
@@ -81,7 +81,7 @@ public sealed class ModifierRepository
         factory.DB
             .Modifiers
             .Retrieve()
-            .Where(m => m.CategoryID == modCategory.ID.Value && m.ModKey == modKey.Value)
+            .Where(m => m.CategoryID == modCategory.ID && m.ModKey == modKey.Value)
             .FirstOrDefaultAsync();
 
     internal async Task<Modifier> ModifierOrDefault(ModifierCategory modCategory, ModifierKey modKey)
@@ -113,7 +113,7 @@ public sealed class ModifierRepository
         var categoryIDs = factory.DB
             .ModifierCategories
             .Retrieve()
-            .Where(modCat => modCat.AppID == app.ID.Value)
+            .Where(modCat => modCat.AppID == app.ID)
             .Select(modCat => modCat.ID);
         var record = await factory.DB
             .Modifiers
@@ -144,5 +144,5 @@ public sealed class ModifierRepository
         factory.DB
             .Modifiers
             .Retrieve()
-            .Where(m => m.CategoryID == modCategory.ID.Value);
+            .Where(m => m.CategoryID == modCategory.ID);
 }

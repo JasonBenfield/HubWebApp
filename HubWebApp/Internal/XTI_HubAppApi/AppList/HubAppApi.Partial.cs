@@ -1,5 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_HubAppApi.AppList;
+﻿using XTI_HubAppApi.AppList;
 
 namespace XTI_HubAppApi
 {
@@ -8,12 +7,12 @@ namespace XTI_HubAppApi
         private AppListGroup? apps;
         public AppListGroup Apps { get => apps ?? throw new ArgumentNullException(nameof(apps)); }
 
-        partial void createAppList(IServiceProvider services)
+        partial void createAppList(IServiceProvider sp)
         {
             apps = new AppListGroup
             (
                 source.AddGroup(nameof(Apps), ResourceAccess.AllowAuthenticated()),
-                services
+                sp
             );
         }
     }

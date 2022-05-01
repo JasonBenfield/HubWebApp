@@ -1,15 +1,12 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserMaintenance;
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
 
 internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly ICachedUserContext userContext;
 
-    public AssignRoleAction(AppFromPath appFromPath, AppFactory appFactory, ICachedUserContext userContext)
+    public AssignRoleAction(AppFromPath appFromPath, HubFactory appFactory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;
@@ -32,6 +29,6 @@ internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         }
         await user.Modifier(modifier).AssignRole(role);
         userContext.ClearCache(user.UserName());
-        return role.ID.Value;
+        return role.ID;
     }
 }

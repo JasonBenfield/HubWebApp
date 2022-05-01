@@ -47,7 +47,7 @@ namespace XTI_HubAppClient
         {
             var appWithModifier = await hubClient.Apps.GetAppById
             (
-                new GetAppByIDRequest { AppID = app.ID.Value }
+                new GetAppByIDRequest { AppID = app.ID }
             );
             return new ModifierKey(appWithModifier.ModKey);
         }

@@ -43,7 +43,7 @@ public sealed class SetupHostedService : IHostedService
 
     private static Task addOrUpdateApp(IServiceScope scope)
     {
-        var appFactory = scope.ServiceProvider.GetRequiredService<AppFactory>();
+        var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
         var clock = scope.ServiceProvider.GetRequiredService<IClock>();
         return appFactory.Apps.AddOrUpdate
@@ -56,7 +56,7 @@ public sealed class SetupHostedService : IHostedService
 
     private static async Task addSystemUser(IServiceScope scope)
     {
-        var appFactory = scope.ServiceProvider.GetRequiredService<AppFactory>();
+        var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var hashedPasswordFactory = scope.ServiceProvider.GetRequiredService<IHashedPasswordFactory>();
         var clock = scope.ServiceProvider.GetRequiredService<IClock>();
         var password = Guid.NewGuid().ToString();

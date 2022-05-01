@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.UserList;
+﻿using XTI_HubAppApi.UserList;
 
 namespace XTI_HubAppApi;
 
@@ -12,12 +11,12 @@ partial class HubAppApi
         get => users ?? throw new ArgumentNullException(nameof(users));
     }
 
-    partial void createUserList(IServiceProvider services)
+    partial void createUserList(IServiceProvider sp)
     {
         users = new UserListGroup
         (
             source.AddGroup(nameof(Users), Access.WithAllowed(HubInfo.Roles.ViewUser)),
-            services
+            sp
         );
     }
 }

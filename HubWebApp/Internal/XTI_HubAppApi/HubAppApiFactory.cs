@@ -1,6 +1,4 @@
-﻿using XTI_App.Api;
-
-namespace XTI_HubAppApi;
+﻿namespace XTI_HubAppApi;
 
 public sealed class HubAppApiFactory : AppApiFactory
 {

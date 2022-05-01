@@ -86,7 +86,7 @@ await Host.CreateDefaultBuilder(args)
                 var config = sp.GetRequiredService<IXtiConfiguration>();
                 return config.Source.GetSection(DbOptions.DB).Get<DbOptions>();
             });
-            services.AddScoped<AppFactory>();
+            services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
             services.AddScoped(sp =>
             {

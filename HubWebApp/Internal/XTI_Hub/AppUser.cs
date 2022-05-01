@@ -7,17 +7,17 @@ namespace XTI_Hub;
 
 public sealed class AppUser : IAppUser
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppUserEntity record;
 
-    internal AppUser(AppFactory factory, AppUserEntity record)
+    internal AppUser(HubFactory factory, AppUserEntity record)
     {
         this.factory = factory;
         this.record = record ?? new AppUserEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public AppUserName UserName() => new AppUserName(record.UserName);
 
     public bool IsPasswordCorrect(IHashedPassword hashedPassword) =>
@@ -38,7 +38,7 @@ public sealed class AppUser : IAppUser
         var mod = modifier as Modifier;
         if (mod == null)
         {
-            mod = await factory.Modifiers.Modifier(modifier.ID.Value);
+            mod = await factory.Modifiers.Modifier(modifier.ID);
         }
         var roles = await Modifier(mod).AssignedRoles();
         return roles;
@@ -62,7 +62,7 @@ public sealed class AppUser : IAppUser
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID.Value)
+            .Where(a => a.AppID == authenticatorApp.ID)
             .Select(a => a.ID);
         var entity = await factory.DB
             .UserAuthenticators.Retrieve()
@@ -70,7 +70,7 @@ public sealed class AppUser : IAppUser
             (
                 ua =>
                     authenticatorIDs.Contains(ua.AuthenticatorID)
-                    && ua.UserID == ID.Value
+                    && ua.UserID == ID
             )
             .FirstOrDefaultAsync();
         if (entity == null)
@@ -79,7 +79,7 @@ public sealed class AppUser : IAppUser
             entity = new UserAuthenticatorEntity
             {
                 AuthenticatorID = authenticatorID,
-                UserID = ID.Value,
+                UserID = ID,
                 ExternalUserKey = externalUserKey
             };
             await factory.DB.UserAuthenticators.Create(entity);
@@ -96,11 +96,11 @@ public sealed class AppUser : IAppUser
 
     public AppUserModel ToModel() => new AppUserModel
     {
-        ID = ID.Value,
+        ID = ID,
         UserName = UserName().DisplayText,
         Name = new PersonName(record.Name).DisplayText,
         Email = new EmailAddress(record.Email).DisplayText
     };
 
-    public override string ToString() => $"{nameof(AppUser)} {ID.Value}";
+    public override string ToString() => $"{nameof(AppUser)} {ID}";
 }

@@ -2,6 +2,6 @@
 
 public sealed class LoginModel
 {
-    public LoginCredentials Credentials { get; set; } = new LoginCredentials();
-    public string ReturnUrl { get; set; } = "";
+    public string AuthKey { get; set; } = "";
+    public string ReturnKey { get; set; } = "";
 }

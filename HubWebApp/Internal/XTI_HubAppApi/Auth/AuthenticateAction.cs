@@ -1,6 +1,4 @@
-﻿using XTI_App.Api;
-
-namespace XTI_HubAppApi.Auth;
+﻿namespace XTI_HubAppApi.Auth;
 
 public sealed class AuthenticateAction : AppAction<LoginCredentials, LoginResult>
 {

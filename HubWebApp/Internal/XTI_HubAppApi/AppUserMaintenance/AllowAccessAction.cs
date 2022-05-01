@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserMaintenance;
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
 
 internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyActionResult>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly ICachedUserContext userContext;
 
-    public AllowAccessAction(AppFromPath appFromPath, AppFactory appFactory, ICachedUserContext userContext)
+    public AllowAccessAction(AppFromPath appFromPath, HubFactory appFactory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;

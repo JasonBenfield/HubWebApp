@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_TempLog.Abstractions;
-using XTI_WebApp.Api;
+﻿using XTI_TempLog.Abstractions;
 
 namespace XTI_HubAppApi.PermanentLog;
 

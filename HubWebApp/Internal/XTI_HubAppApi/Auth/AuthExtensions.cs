@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
-using XTI_App.Extensions;
-using XTI_Hub;
+﻿using XTI_App.Extensions;
+using XTI_Core;
 using XTI_HubAppApi.Auth;
 using XTI_TempLog;
-using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppApi;
 
@@ -24,17 +21,19 @@ internal static class AuthExtensions
             var access = sp.GetRequiredService<AccessForLogin>();
             var auth = createAuthentication(sp, access);
             var anonClient = sp.GetRequiredService<IAnonClient>();
-            return new LoginAction(auth, anonClient);
+            var hubFactory = sp.GetRequiredService<HubFactory>();
+            var clock = sp.GetRequiredService<IClock>();
+            return new LoginAction(auth, anonClient, hubFactory, clock);
         });
-        services.AddScoped<LogoutAction>();
         services.AddScoped<VerifyLoginAction>();
         services.AddScoped<VerifyLoginFormAction>();
+        services.AddScoped<LoginReturnKeyAction>();
     }
 
     private static Authentication createAuthentication(IServiceProvider sp, IAccess access)
     {
         var tempLogSession = sp.GetRequiredService<TempLogSession>();
-        var unverifiedUser = new UnverifiedUser(sp.GetRequiredService<AppFactory>());
+        var unverifiedUser = new UnverifiedUser(sp.GetRequiredService<HubFactory>());
         var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
         var userContext = sp.GetRequiredService<CachedUserContext>();
         return new Authentication

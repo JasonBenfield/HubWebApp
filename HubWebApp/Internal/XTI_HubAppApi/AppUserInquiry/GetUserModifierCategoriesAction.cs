@@ -1,15 +1,11 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserInquiry;
+﻿namespace XTI_HubAppApi.AppUserInquiry;
 
 public sealed class GetUserModifierCategoriesAction : AppAction<int, UserModifierCategoryModel[]>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetUserModifierCategoriesAction(AppFromPath appFromPath, AppFactory factory)
+    public GetUserModifierCategoriesAction(AppFromPath appFromPath, HubFactory factory)
     {
         this.appFromPath = appFromPath;
         this.factory = factory;
@@ -32,7 +28,7 @@ public sealed class GetUserModifierCategoriesAction : AppAction<int, UserModifie
             foreach (var modifier in modifiers)
             {
                 var assignedRoles = await user.Modifier(modifier).AssignedRoles();
-                if (assignedRoles.Any() && !assignedRoles.Any(r => r.ID.Equals(denyAccessRole.ID)))
+                if (assignedRoles.Any() && !assignedRoles.Any(r => r.ID == denyAccessRole.ID))
                 {
                     modifierModels.Add(modifier.ToModel());
                 }

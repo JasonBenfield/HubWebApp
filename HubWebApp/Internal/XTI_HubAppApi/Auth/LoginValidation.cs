@@ -1,15 +1,7 @@
-﻿using XTI_App.Api;
-using XTI_Core;
+﻿using XTI_Core;
 
 namespace XTI_HubAppApi.Auth;
 
-public sealed class LoginModelValidation : AppActionValidation<LoginModel>
-{
-    public Task Validate(ErrorList errors, LoginModel model)
-    {
-        return new LoginValidation().Validate(errors, model.Credentials ?? new LoginCredentials());
-    }
-}
 public sealed class LoginValidation : AppActionValidation<LoginCredentials>
 {
     public Task Validate(ErrorList errors, LoginCredentials model)

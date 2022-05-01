@@ -15,7 +15,7 @@ public sealed class AppSessionTest
     public async Task ShouldGetActiveSessions()
     {
         var services = await setup();
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var user = await factory.Users.Anon();
         var createdSession = await factory.Sessions.AddOrUpdate
         (
@@ -39,7 +39,7 @@ public sealed class AppSessionTest
     public async Task ShouldGetMostRecentRequest()
     {
         var services = await setup();
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var user = await factory.Users.Anon();
         var createdSession = await createSession(factory, user);
         await logRequest(services, createdSession);
@@ -52,7 +52,7 @@ public sealed class AppSessionTest
     public async Task ShouldGetMostRecentRequestsForApp()
     {
         var services = await setup();
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var user = await factory.Users.Anon();
         var createdSession = await createSession(factory, user);
         await logRequest(services, createdSession);
@@ -65,7 +65,7 @@ public sealed class AppSessionTest
     public async Task ShouldGetMostRecentErrorEventsForApp()
     {
         var services = await setup();
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var user = await factory.Users.Anon();
         var createdSession = await createSession(factory, user);
         var request = await logRequest(services, createdSession);
@@ -118,7 +118,7 @@ public sealed class AppSessionTest
         return scope.ServiceProvider;
     }
 
-    private static Task<AppSession> createSession(AppFactory factory, AppUser user)
+    private static Task<AppSession> createSession(HubFactory factory, AppUser user)
     {
         return factory.Sessions.AddOrUpdate
         (
@@ -133,7 +133,7 @@ public sealed class AppSessionTest
 
     private static async Task<AppRequest> logRequest(IServiceProvider services, AppSession createdSession)
     {
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.App(HubInfo.AppKey);
         var version = await app.CurrentVersion();
         var resourceGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));

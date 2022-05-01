@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.Authenticators;
+﻿namespace XTI_HubAppApi.Authenticators;
 
 public sealed class AuthenticatorsGroup : AppApiGroupWrapper
 {

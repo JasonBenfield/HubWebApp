@@ -10,9 +10,9 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> VerifyLogin([FromBody] VerifyLoginForm model)
+    public Task<ResultContainer<string>> VerifyLogin([FromBody] VerifyLoginForm model)
     {
-        return api.Group("Auth").Action<VerifyLoginForm, EmptyActionResult>("VerifyLogin").Execute(model);
+        return api.Group("Auth").Action<VerifyLoginForm, string>("VerifyLogin").Execute(model);
     }
 
     [ResponseCache(CacheProfileName = "Default")]
@@ -26,5 +26,11 @@ public class AuthController : Controller
     {
         var result = await api.Group("Auth").Action<LoginModel, WebRedirectResult>("Login").Execute(model);
         return Redirect(result.Data.Url);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel model)
+    {
+        return api.Group("Auth").Action<LoginReturnModel, string>("LoginReturnKey").Execute(model);
     }
 }

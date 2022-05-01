@@ -4,7 +4,7 @@ namespace XTI_Hub;
 
 public sealed class VersionInstallation : Installation
 {
-    internal VersionInstallation(AppFactory appFactory, InstallationEntity entity)
+    internal VersionInstallation(HubFactory appFactory, InstallationEntity entity)
         : base(appFactory, entity)
     {
     }

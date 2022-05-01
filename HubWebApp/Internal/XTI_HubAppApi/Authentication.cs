@@ -1,8 +1,5 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Extensions;
-using XTI_Hub;
+﻿using XTI_App.Extensions;
 using XTI_TempLog;
-using XTI_WebApp.Api;
 
 namespace XTI_HubAppApi;
 
@@ -30,20 +27,21 @@ public sealed class Authentication
         this.userContext = userContext;
     }
 
-    public async Task<LoginResult> Authenticate(string userName, string password)
+    public async Task<LoginResult> Authenticate(string userNameText, string password)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword);
-        var result = await Authenticate(user);
+        var userName = new AppUserName(userNameText);
+        await unverifiedUser.Verify(userName, hashedPassword);
+        var result =  await Authenticate(userName);
         return result;
     }
 
-    public async Task<LoginResult> Authenticate(AppUser user)
+    public async Task<LoginResult> Authenticate(AppUserName userName)
     {
-        var authSession = await tempLog.AuthenticateSession(user.UserName().Value);
-        var claims = new XtiClaimsCreator(authSession.SessionKey, user).Values();
+        var authSession = await tempLog.AuthenticateSession(userName.Value);
+        var claims = new XtiClaimsCreator(authSession.SessionKey, userName).Values();
         var token = await access.GenerateToken(claims);
-        userContext.ClearCache(user.UserName());
+        userContext.ClearCache(userName);
         return new LoginResult(token);
     }
 }

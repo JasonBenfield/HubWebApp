@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class ModifierCategoryRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal ModifierCategoryRepository(AppFactory factory)
+    internal ModifierCategoryRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -18,7 +18,7 @@ public sealed class ModifierCategoryRepository
         var record = await factory.DB
             .ModifierCategories
             .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID.Value && c.Name == name.Value);
+            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.Name == name.Value);
         if (record == null)
         {
             record = await AddModCategory(app, name);
@@ -30,7 +30,7 @@ public sealed class ModifierCategoryRepository
     {
         var record = new ModifierCategoryEntity
         {
-            AppID = app.ID.Value,
+            AppID = app.ID,
             Name = name.Value
         };
         await factory.DB.ModifierCategories.Create(record);
@@ -50,7 +50,7 @@ public sealed class ModifierCategoryRepository
         factory.DB
             .ModifierCategories
             .Retrieve()
-            .Where(c => c.AppID == app.ID.Value)
+            .Where(c => c.AppID == app.ID)
             .OrderBy(c => c.Name)
             .Select(c => factory.ModCategory(c))
             .ToArrayAsync();
@@ -60,7 +60,7 @@ public sealed class ModifierCategoryRepository
         var record = await factory.DB
             .ModifierCategories
             .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID.Value && c.ID == id);
+            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.ID == id);
         return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.Key().Serialize()}"));
     }
 
@@ -90,5 +90,5 @@ public sealed class ModifierCategoryRepository
         factory.DB
             .ModifierCategories
             .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID.Value && c.Name == name.Value);
+            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.Name == name.Value);
 }

@@ -6,17 +6,17 @@ namespace XTI_Hub;
 
 public sealed class ResourceGroup : IResourceGroup
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly ResourceGroupEntity record;
 
-    internal ResourceGroup(AppFactory factory, ResourceGroupEntity record)
+    internal ResourceGroup(HubFactory factory, ResourceGroupEntity record)
     {
         this.factory = factory;
         this.record = record ?? new ResourceGroupEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
 
     public ResourceGroupName Name() => new ResourceGroupName(record.Name);
 
@@ -71,7 +71,7 @@ public sealed class ResourceGroup : IResourceGroup
         var existingAllowedRoles = await AllowedRoles();
         foreach (var allowedRole in allowedRoles)
         {
-            if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID.Value)))
+            if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID)))
             {
                 await addGroupRole(allowedRole, true);
             }
@@ -80,16 +80,16 @@ public sealed class ResourceGroup : IResourceGroup
 
     private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles)
     {
-        var allowedRoleIDs = allowedRoles.Select(r => r.ID.Value);
+        var allowedRoleIDs = allowedRoles.Select(r => r.ID);
         var rolesToDelete = await factory.DB
             .ResourceGroupRoles
             .Retrieve()
             .Where
             (
-                gr => gr.GroupID == ID.Value
+                gr => gr.GroupID == ID
                     &&
                     (
-                        !allowedRoleIDs.Any(id => id == gr.RoleID) && gr.IsAllowed
+                        !allowedRoleIDs.Contains(gr.RoleID) && gr.IsAllowed
                     )
             )
             .ToArrayAsync();
@@ -106,8 +106,8 @@ public sealed class ResourceGroup : IResourceGroup
             (
                 new ResourceGroupRoleEntity
                 {
-                    GroupID = ID.Value,
-                    RoleID = role.ID.Value,
+                    GroupID = ID,
+                    RoleID = role.ID,
                     IsAllowed = isAllowed
                 }
             );
@@ -121,11 +121,11 @@ public sealed class ResourceGroup : IResourceGroup
     public ResourceGroupModel ToModel()
         => new ResourceGroupModel
         {
-            ID = ID.Value,
+            ID = ID,
             Name = Name().DisplayText,
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ModCategoryID = record.ModCategoryID
         };
 
-    public override string ToString() => $"{nameof(ResourceGroup)} {ID.Value}";
+    public override string ToString() => $"{nameof(ResourceGroup)} {ID}";
 }

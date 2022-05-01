@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppInstall;
+﻿namespace XTI_HubAppApi.AppInstall;
 
 public sealed class SetUserAccessRequest
 {
@@ -18,9 +14,9 @@ public sealed class SetUserAccessRoleRequest
 
 internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyActionResult>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public SetUserAccessAction(AppFactory appFactory)
+    public SetUserAccessAction(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

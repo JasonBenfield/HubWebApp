@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.AppInstall;
+﻿using XTI_HubAppApi.AppInstall;
 
 namespace XTI_HubAppApi;
 
@@ -9,7 +8,7 @@ partial class HubAppApi
 
     public AppInstallGroup Install { get=>install ?? throw new ArgumentNullException(nameof(install)); }
 
-    partial void createInstall(IServiceProvider services)
+    partial void createInstall(IServiceProvider sp)
     {
         install = new AppInstallGroup
         (
@@ -18,7 +17,7 @@ partial class HubAppApi
                 nameof(Install),
                 HubInfo.ModCategories.Apps
             ),
-            services
+            sp
         );
     }
 }

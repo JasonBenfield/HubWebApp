@@ -15,6 +15,7 @@ global using XTI_HubAppApi.ExternalAuth;
 global using XTI_HubAppApi.ModCategoryInquiry;
 global using XTI_HubAppApi.ResourceGroupInquiry;
 global using XTI_HubAppApi.ResourceInquiry;
+global using XTI_HubAppApi.Storage;
 global using XTI_HubAppApi.UserInquiry;
 global using XTI_HubAppApi.UserList;
 global using XTI_HubAppApi.VersionInquiry;

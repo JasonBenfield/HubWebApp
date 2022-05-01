@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_HubAppApi.ModCategoryInquiry;
+﻿using XTI_HubAppApi.ModCategoryInquiry;
 
 namespace XTI_HubAppApi;
 

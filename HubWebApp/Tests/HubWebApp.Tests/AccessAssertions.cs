@@ -28,6 +28,15 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
+    public void ShouldAllowAnonymous(TModel model, FakeModifier modifier)
+    {
+        Assert.DoesNotThrowAsync
+        (
+            () => tester.Execute(model, modifier.ModKey()),
+            "Should allow access to anonymous user"
+        );
+    }
+
     public void ShouldThrowError_WhenAccessIsDenied(TModel model, FakeModifier modifier, params AppRoleName[] allowedRoles)
     {
         var loggedInUser = tester.Login();

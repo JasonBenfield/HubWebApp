@@ -5,9 +5,9 @@ namespace XTI_Hub;
 
 public sealed class SystemUserRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal SystemUserRepository(AppFactory factory)
+    internal SystemUserRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -54,9 +54,11 @@ public sealed class SystemUserRepository
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
             var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-            var appModifier = await appModCategory.AddOrUpdateModifier(app.ID.Value, app.Title);
+            var appModifier = await appModCategory.AddOrUpdateModifier(app.ID, app.Title);
             var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);
+            var addStoredObject = await hubApp.AddRoleIfNotFound(HubInfo.Roles.AddStoredObject);
+            await systemUser.AssignRole(addStoredObject);
         }
         return systemUser;
     }

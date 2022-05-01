@@ -23,5 +23,6 @@ public interface IHubDbContext
     DataRepository<AppXtiVersionEntity> AppVersions { get; }
     DataRepository<InstallLocationEntity> InstallLocations { get; }
     DataRepository<InstallationEntity> Installations { get; }
+    DataRepository<StoredObjectEntity> StoredObjects { get; }
     Task Transaction(Func<Task> action);
 }

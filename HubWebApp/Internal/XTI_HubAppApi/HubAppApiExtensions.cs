@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace XTI_HubAppApi;
+﻿namespace XTI_HubAppApi;
 
 public static class HubAppApiExtensions
 {
     public static void AddHubAppApiServices(this IServiceCollection services)
     {
+        services.RegisterHomeGroupServices();
         services.AddAuthenticatorsGroupServices();
         services.AddAppInquiryGroupServices();
         services.AddAppInstallGroupServices();
@@ -23,5 +22,6 @@ public static class HubAppApiExtensions
         services.AddUserListGroupServices();
         services.AddUserMaintenanceGroupServices();
         services.AddVersionInquiryGroupServices();
+        services.AddStorageGroupServices();
     }
 }

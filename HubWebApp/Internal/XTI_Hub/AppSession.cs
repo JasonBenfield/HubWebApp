@@ -5,17 +5,17 @@ namespace XTI_Hub;
 
 public sealed class AppSession
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly AppSessionEntity record;
 
-    internal AppSession(AppFactory factory, AppSessionEntity record)
+    internal AppSession(HubFactory factory, AppSessionEntity record)
     {
         this.factory = factory;
         this.record = record ?? new AppSessionEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public int UserID { get => record.UserID; }
 
     public bool HasStarted() => record.TimeStarted > DateTimeOffset.MinValue;
@@ -37,7 +37,7 @@ public sealed class AppSession
             .Sessions
             .Update(record, r =>
             {
-                r.UserID = user.ID.Value;
+                r.UserID = user.ID;
             });
 
     public Task End(DateTimeOffset timeEnded)
@@ -53,5 +53,5 @@ public sealed class AppSession
     public Task<AppRequest[]> MostRecentRequests(int howMany)
         => factory.Requests.RetrieveMostRecent(this, howMany);
 
-    public override string ToString() => $"{nameof(AppSession)} {ID.Value}";
+    public override string ToString() => $"{nameof(AppSession)} {ID}";
 }

@@ -6,17 +6,17 @@ namespace XTI_Hub;
 
 public sealed class Resource : IResource
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly ResourceEntity record;
 
-    internal Resource(AppFactory factory, ResourceEntity record)
+    internal Resource(HubFactory factory, ResourceEntity record)
     {
         this.factory = factory;
         this.record = record ?? new ResourceEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public ResourceName Name() => new ResourceName(record.Name);
 
     public Task AllowAnonymous() => setIsAnonymousAllowed(true);
@@ -47,7 +47,7 @@ public sealed class Resource : IResource
         var existingAllowedRoles = await AllowedRoles();
         foreach (var allowedRole in allowedRoles)
         {
-            if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID.Value)))
+            if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID)))
             {
                 await addResourceRole(allowedRole, true);
             }
@@ -56,16 +56,16 @@ public sealed class Resource : IResource
 
     private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles)
     {
-        var allowedRoleIDs = allowedRoles.Select(r => r.ID.Value);
+        var allowedRoleIDs = allowedRoles.Select(r => r.ID);
         var rolesToDelete = await factory.DB
             .ResourceRoles
             .Retrieve()
             .Where
             (
-                rr => rr.ResourceID == ID.Value
+                rr => rr.ResourceID == ID
                     &&
                     (
-                        !allowedRoleIDs.Any(id => id == rr.RoleID) && rr.IsAllowed
+                        !allowedRoleIDs.Contains(rr.RoleID) && rr.IsAllowed
                     )
             )
             .ToArrayAsync();
@@ -82,8 +82,8 @@ public sealed class Resource : IResource
             (
                 new ResourceRoleEntity
                 {
-                    ResourceID = ID.Value,
-                    RoleID = role.ID.Value,
+                    ResourceID = ID,
+                    RoleID = role.ID,
                     IsAllowed = isAllowed
                 }
             );
@@ -97,11 +97,11 @@ public sealed class Resource : IResource
     public ResourceModel ToModel()
         => new ResourceModel
         {
-            ID = ID.Value,
+            ID = ID,
             Name = Name().DisplayText,
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ResultType = ResourceResultType.Values.Value(record.ResultType)
         };
 
-    public override string ToString() => $"{nameof(Resource)} {ID.Value}";
+    public override string ToString() => $"{nameof(Resource)} {ID}";
 }

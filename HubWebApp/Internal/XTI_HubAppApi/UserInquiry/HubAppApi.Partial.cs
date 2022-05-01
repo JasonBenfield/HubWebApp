@@ -1,24 +1,22 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.UserInquiry;
+﻿using XTI_HubAppApi.UserInquiry;
 
-namespace XTI_HubAppApi
+namespace XTI_HubAppApi;
+
+partial class HubAppApi
 {
-    partial class HubAppApi
+    private UserInquiryGroup? userInquiry;
+
+    public UserInquiryGroup UserInquiry
     {
-        private UserInquiryGroup? userInquiry;
+        get => userInquiry ?? throw new ArgumentNullException(nameof(userInquiry));
+    }
 
-        public UserInquiryGroup UserInquiry
-        {
-            get => userInquiry ?? throw new ArgumentNullException(nameof(userInquiry));
-        }
-
-        partial void createUserInquiry(IServiceProvider services)
-        {
-            userInquiry = new UserInquiryGroup
-            (
-                source.AddGroup(nameof(UserInquiry), Access.WithAllowed(HubInfo.Roles.ViewUser)),
-                services
-            );
-        }
+    partial void createUserInquiry(IServiceProvider sp)
+    {
+        userInquiry = new UserInquiryGroup
+        (
+            source.AddGroup(nameof(UserInquiry), Access.WithAllowed(HubInfo.Roles.ViewUser)),
+            sp
+        );
     }
 }

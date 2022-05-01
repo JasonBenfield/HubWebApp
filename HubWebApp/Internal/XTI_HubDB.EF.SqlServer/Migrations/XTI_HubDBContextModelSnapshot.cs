@@ -360,7 +360,8 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<string>("Domain")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsCurrent")
                         .HasColumnType("bit");
@@ -579,6 +580,39 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("ResourceRoles", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.StoredObjectEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("StorageName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("TimeExpires")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("StorageName", "StorageKey")
+                        .IsUnique();
+
+                    b.ToTable("StoredObjects", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.UserAuthenticatorEntity", b =>

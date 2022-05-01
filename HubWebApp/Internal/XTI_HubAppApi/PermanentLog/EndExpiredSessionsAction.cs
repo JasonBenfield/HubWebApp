@@ -1,15 +1,13 @@
-﻿using XTI_App.Api;
-using XTI_Core;
-using XTI_Hub;
+﻿using XTI_Core;
 
 namespace XTI_HubAppApi.PermanentLog;
 
 public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IClock clock;
 
-    public EndExpiredSessionsAction(AppFactory appFactory, IClock clock)
+    public EndExpiredSessionsAction(HubFactory appFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.clock = clock;

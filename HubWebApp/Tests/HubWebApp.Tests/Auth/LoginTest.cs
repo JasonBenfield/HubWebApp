@@ -1,14 +1,16 @@
 using HubWebApp.Fakes;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Text.Json;
 using XTI_App.Extensions;
 using XTI_Core;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.Auth;
+using XTI_HubAppApi.Storage;
 using XTI_HubAppApi.UserList;
 using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
-using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests;
@@ -20,15 +22,15 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        model.Credentials.UserName = "";
+        model.UserName.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
             () => tester.Execute(model)
         );
         Assert.That
         (
-            ex?.Errors,
-            Has.One.EqualTo(new ErrorModel(AuthErrors.UserNameIsRequired, "User Name", "UserName")),
+            ex?.Errors.Select(err => err.Source),
+            Is.EquivalentTo(new[] { "VerifyLoginForm_UserName" }),
             "Should require user name"
         );
     }
@@ -38,15 +40,15 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        model.Credentials.Password = "";
+        model.Password.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
             () => tester.Execute(model)
         );
         Assert.That
         (
-            ex?.Errors,
-            Has.One.EqualTo(new ErrorModel(AuthErrors.PasswordIsRequired, "Password", "Password")),
+            ex?.Errors.Select(err => err.Source),
+            Is.EquivalentTo(new[] { "VerifyLoginForm_Password" }),
             "Should require password"
         );
     }
@@ -56,7 +58,7 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        model.Credentials.Password = "Incorrect";
+        model.Password.SetValue("Incorrect");
         Assert.ThrowsAsync<PasswordIncorrectException>
         (
             () => tester.Execute(model)
@@ -64,12 +66,24 @@ internal sealed class LoginTest
     }
 
     [Test]
-    public async Task ShouldVerifyCorrectPassword()
+    public async Task ShouldReturnAuthKey()
     {
         var tester = await setup();
         var model = createLoginModel();
-        var result = await tester.Execute(model);
-        Assert.That(result.Url, Is.EqualTo(model.ReturnUrl), "Should redirect to return url if password is correct");
+        var authKey = await tester.Execute(model);
+        var authenticated = await getAuthenticated(tester, authKey);
+        Assert.That(authenticated.UserName, Is.EqualTo(model.UserName.Value()), "Should return auth key");
+    }
+
+    private async Task<AuthenticatedModel> getAuthenticated(IHubActionTester tester, string authKey)
+    {
+        var getAuthKeyTester = tester.Create(hubApi => hubApi.Storage.GetStoredObject);
+        var serialized = await getAuthKeyTester.Execute(new GetStoredObjectRequest
+        {
+            StorageName = "XTI Authenticated",
+            StorageKey = authKey
+        });
+        return JsonSerializer.Deserialize<AuthenticatedModel>(serialized) ?? new AuthenticatedModel();
     }
 
     [Test]
@@ -77,14 +91,16 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        await tester.Execute(model);
+        var authKey = await tester.Execute(model);
+        var returnKey = await loginReturnKey(tester, "./Home");
+        await login(tester, authKey, returnKey);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
         (
             access.Claims,
             Has.One.EqualTo
             (
-                new Claim("UserName", new AppUserName(model.Credentials.UserName).Value)
+                new Claim("UserName", new AppUserName(model.UserName.Value() ?? "").Value)
             )
             .Using<Claim>((x, y) => x.Type == y.Type && x.Value == y.Value),
             "Should authenticate user"
@@ -96,15 +112,17 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        await tester.Execute(model);
+        var authKey = await tester.Execute(model);
+        var returnKey = await loginReturnKey(tester, "./Home");
+        await login(tester, authKey, returnKey);
         var tempLog = tester.Services.GetRequiredService<TempLog>();
         var clock = tester.Services.GetRequiredService<IClock>();
         var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
         Assert.That(authSessionFiles.Length, Is.EqualTo(1), "Should authenticate session");
         var serializedAuthSession = await authSessionFiles[0].Read();
         var authSession = XtiSerializer.Deserialize<AuthenticateSessionModel>(serializedAuthSession);
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
-        var user = await appFactory.Users.UserByUserName(new AppUserName(model.Credentials.UserName));
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var user = await appFactory.Users.UserByUserName(new AppUserName(model.UserName.Value() ?? ""));
         Assert.That(authSession.UserName, Is.EqualTo(user.UserName().Value), "Should authenticate session");
     }
 
@@ -123,8 +141,8 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        var appFactory = tester.Services.GetRequiredService<AppFactory>();
-        var user = await appFactory.Users.UserByUserName(new AppUserName(model.Credentials.UserName));
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var user = await appFactory.Users.UserByUserName(new AppUserName(model.UserName.Value() ?? ""));
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
@@ -138,7 +156,23 @@ internal sealed class LoginTest
         Assert.That(ReferenceEquals(firstCachedUser, secondCachedUser), Is.False, "Should reset cache after login");
     }
 
-    private async Task<HubActionTester<LoginModel, WebRedirectResult>> setup()
+    private Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
+    {
+        var loginReturnKeyTester = tester.Create(hubApi => hubApi.Auth.LoginReturnKey);
+        loginReturnKeyTester.LoginAsAdmin();
+        return loginReturnKeyTester.Execute(new LoginReturnModel
+        {
+            ReturnUrl = returnUrl
+        });
+    }
+
+    private Task login(IHubActionTester tester, string authKey, string returnKey)
+    {
+        var loginTester = tester.Create(hubApi => hubApi.Auth.Login);
+        return loginTester.Execute(new LoginModel { AuthKey = authKey, ReturnKey = returnKey });
+    }
+
+    private async Task<HubActionTester<VerifyLoginForm, string>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup
@@ -149,7 +183,7 @@ internal sealed class LoginTest
                 s.AddScoped<IUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
             }
         );
-        var tester = HubActionTester.Create(services, hubApi => hubApi.Auth.Login);
+        var tester = HubActionTester.Create(services, hubApi => hubApi.Auth.VerifyLogin);
         await addUser(tester, "xartogg", "Password12345");
         return tester;
     }
@@ -163,19 +197,16 @@ internal sealed class LoginTest
             UserName = userName,
             Password = password
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
 
-    private LoginModel createLoginModel()
-        => new LoginModel
-        {
-            Credentials = new LoginCredentials
-            {
-                UserName = "xartogg",
-                Password = "Password12345"
-            },
-            ReturnUrl = "./Home"
-        };
+    private VerifyLoginForm createLoginModel()
+    {
+        var form = new VerifyLoginForm();
+        form.UserName.SetValue("xartogg");
+        form.Password.SetValue("Password12345");
+        return form;
+    }
 }

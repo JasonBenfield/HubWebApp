@@ -1,13 +1,11 @@
-﻿using XTI_App.Abstractions;
-using XTI_Hub;
-namespace XTI_HubAppApi;
+﻿namespace XTI_HubAppApi;
 
 public sealed class HubAppSetup : IAppSetup
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly HubAppApiFactory apiFactory;
 
-    public HubAppSetup(AppFactory appFactory, HubAppApiFactory apiFactory)
+    public HubAppSetup(HubFactory appFactory, HubAppApiFactory apiFactory)
     {
         this.appFactory = appFactory;
         this.apiFactory = apiFactory;

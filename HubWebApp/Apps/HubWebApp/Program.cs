@@ -1,11 +1,11 @@
+using HubWebApp.ApiControllers;
 using HubWebApp.Extensions;
-using XTI_Core.Extensions;
-using XTI_Core;
-using XTI_WebApp.Extensions;
-using XTI_Hub;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using HubWebApp.Controllers;
+using XTI_Core;
+using XTI_Core.Extensions;
+using XTI_Hub;
 using XTI_Secrets.Extensions;
+using XTI_WebApp.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);

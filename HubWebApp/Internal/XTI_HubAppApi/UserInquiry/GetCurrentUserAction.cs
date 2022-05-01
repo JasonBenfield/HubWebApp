@@ -1,15 +1,11 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.UserInquiry;
+﻿namespace XTI_HubAppApi.UserInquiry;
 
 public sealed class GetCurrentUserAction : AppAction<EmptyRequest, AppUserModel>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IUserContext userContext;
 
-    public GetCurrentUserAction(AppFactory appFactory, IUserContext userContext)
+    public GetCurrentUserAction(HubFactory appFactory, IUserContext userContext)
     {
         this.appFactory = appFactory;
         this.userContext = userContext;
@@ -18,7 +14,7 @@ public sealed class GetCurrentUserAction : AppAction<EmptyRequest, AppUserModel>
     public async Task<AppUserModel> Execute(EmptyRequest model)
     {
         var userFromContext = await userContext.User();
-        var user = await appFactory.Users.User(userFromContext.ID.Value);
+        var user = await appFactory.Users.User(userFromContext.ID);
         return user.ToModel();
     }
 }

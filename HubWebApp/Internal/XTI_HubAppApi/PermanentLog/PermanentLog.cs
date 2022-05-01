@@ -1,16 +1,14 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
-using XTI_Hub;
+﻿using XTI_Core;
 using XTI_TempLog.Abstractions;
 
 namespace XTI_HubAppApi.PermanentLog;
 
 public sealed class PermanentLog
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly IClock clock;
 
-    public PermanentLog(AppFactory appFactory, IClock clock)
+    public PermanentLog(HubFactory appFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.clock = clock;

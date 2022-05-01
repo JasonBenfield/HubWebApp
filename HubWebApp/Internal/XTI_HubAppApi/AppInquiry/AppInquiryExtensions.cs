@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_HubAppApi.AppInquiry;
+﻿using XTI_HubAppApi.AppInquiry;
 
 namespace XTI_HubAppApi;
 

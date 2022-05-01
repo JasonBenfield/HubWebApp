@@ -4,6 +4,7 @@ import { AppApi } from "@jasonbenfield/sharedwebapp/Api/AppApi";
 import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
 import { UserGroup } from "./UserGroup";
 import { UserCacheGroup } from "./UserCacheGroup";
+import { HomeGroup } from "./HomeGroup";
 import { AuthGroup } from "./AuthGroup";
 import { AuthApiGroup } from "./AuthApiGroup";
 import { ExternalAuthGroup } from "./ExternalAuthGroup";
@@ -22,6 +23,7 @@ import { UserInquiryGroup } from "./UserInquiryGroup";
 import { AppUserGroup } from "./AppUserGroup";
 import { AppUserMaintenanceGroup } from "./AppUserMaintenanceGroup";
 import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
+import { StorageGroup } from "./StorageGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -29,6 +31,7 @@ export class HubAppApi extends AppApi {
 		super(events, 'Hub');
 		this.User = this.addGroup((evts, resourceUrl) => new UserGroup(evts, resourceUrl));
 		this.UserCache = this.addGroup((evts, resourceUrl) => new UserCacheGroup(evts, resourceUrl));
+		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
 		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
 		this.ExternalAuth = this.addGroup((evts, resourceUrl) => new ExternalAuthGroup(evts, resourceUrl));
@@ -47,10 +50,12 @@ export class HubAppApi extends AppApi {
 		this.AppUser = this.addGroup((evts, resourceUrl) => new AppUserGroup(evts, resourceUrl));
 		this.AppUserMaintenance = this.addGroup((evts, resourceUrl) => new AppUserMaintenanceGroup(evts, resourceUrl));
 		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
+		this.Storage = this.addGroup((evts, resourceUrl) => new StorageGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
 	readonly UserCache: UserCacheGroup;
+	readonly Home: HomeGroup;
 	readonly Auth: AuthGroup;
 	readonly AuthApi: AuthApiGroup;
 	readonly ExternalAuth: ExternalAuthGroup;
@@ -69,4 +74,5 @@ export class HubAppApi extends AppApi {
 	readonly AppUser: AppUserGroup;
 	readonly AppUserMaintenance: AppUserMaintenanceGroup;
 	readonly UserMaintenance: UserMaintenanceGroup;
+	readonly Storage: StorageGroup;
 }

@@ -6,6 +6,7 @@ public sealed partial class HubAppClient : AppClient
     {
         User = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserGroup(_clientFactory, _tokenAccessor, _url));
         UserCache = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserCacheGroup(_clientFactory, _tokenAccessor, _url));
+        Home = GetGroup((_clientFactory, _tokenAccessor, _url) => new HomeGroup(_clientFactory, _tokenAccessor, _url));
         Auth = GetGroup((_clientFactory, _tokenAccessor, _url) => new AuthGroup(_clientFactory, _tokenAccessor, _url));
         AuthApi = GetGroup((_clientFactory, _tokenAccessor, _url) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url));
         ExternalAuth = GetGroup((_clientFactory, _tokenAccessor, _url) => new ExternalAuthGroup(_clientFactory, _tokenAccessor, _url));
@@ -24,11 +25,16 @@ public sealed partial class HubAppClient : AppClient
         AppUser = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppUserGroup(_clientFactory, _tokenAccessor, _url));
         AppUserMaintenance = GetGroup((_clientFactory, _tokenAccessor, _url) => new AppUserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
         UserMaintenance = GetGroup((_clientFactory, _tokenAccessor, _url) => new UserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
+        Storage = GetGroup((_clientFactory, _tokenAccessor, _url) => new StorageGroup(_clientFactory, _tokenAccessor, _url));
     }
 
+    public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
+    public string AppName { get; } = "Hub";
     public UserGroup User { get; }
 
     public UserCacheGroup UserCache { get; }
+
+    public HomeGroup Home { get; }
 
     public AuthGroup Auth { get; }
 
@@ -65,4 +71,6 @@ public sealed partial class HubAppClient : AppClient
     public AppUserMaintenanceGroup AppUserMaintenance { get; }
 
     public UserMaintenanceGroup UserMaintenance { get; }
+
+    public StorageGroup Storage { get; }
 }

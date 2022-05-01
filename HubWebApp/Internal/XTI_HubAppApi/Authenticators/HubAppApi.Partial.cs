@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.Authenticators;
+﻿using XTI_HubAppApi.Authenticators;
 
 namespace XTI_HubAppApi;
 
@@ -12,7 +11,7 @@ partial class HubAppApi
         get => authenticators ?? throw new ArgumentNullException(nameof(authenticators));
     }
 
-    partial void createAuthenticators(IServiceProvider services)
+    partial void createAuthenticators(IServiceProvider sp)
     {
         authenticators = new AuthenticatorsGroup
         (
@@ -21,7 +20,7 @@ partial class HubAppApi
                 nameof(Authenticators),
                 HubInfo.ModCategories.Apps
             ),
-            services
+            sp
         );
     }
 }

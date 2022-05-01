@@ -8,6 +8,7 @@ using XTI_Core.Extensions;
 using XTI_Core;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Api;
+using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppClient.WebApp.Extensions;
 
@@ -32,6 +33,8 @@ public static class XtiWebAppHost
             tokenAccessor.AddToken(() => sp.GetRequiredService<AuthCookieXtiToken>());
         });
         XTI_WebApp.Extensions.WebAppExtensions.AddWebAppServices(builder.Services);
+        builder.Services.AddScoped<ILoginReturnKey, LoginReturnKey>();
+        builder.Services.AddScoped<LoginUrl>();
         builder.Services.AddAppClients((sp, domains) => { });
         builder.Services.AddAppClientDomainSelector((sp, domains) => { });
         builder.Services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());

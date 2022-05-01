@@ -5,11 +5,11 @@ namespace XTI_Hub;
 
 public sealed class DefaultAppContext : ISourceAppContext
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly AppKey appKey;
     private readonly AppVersionKey versionKey;
 
-    public DefaultAppContext(AppFactory appFactory, AppKey appKey, AppVersionKey versionKey)
+    public DefaultAppContext(HubFactory appFactory, AppKey appKey, AppVersionKey versionKey)
     {
         this.appFactory = appFactory;
         this.appKey = appKey;
@@ -20,7 +20,7 @@ public sealed class DefaultAppContext : ISourceAppContext
 
     public async Task<ModifierKey> ModKeyInHubApps(IApp app)
     {
-        var theApp = await appFactory.Apps.App(app.ID.Value);
+        var theApp = await appFactory.Apps.App(app.ID);
         var modKey = await theApp.ModKeyInHubApps();
         return modKey;
     }

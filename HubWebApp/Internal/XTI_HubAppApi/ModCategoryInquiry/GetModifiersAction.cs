@@ -1,7 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.ModCategoryInquiry;
+﻿namespace XTI_HubAppApi.ModCategoryInquiry;
 
 public sealed class GetModifiersAction : AppAction<int, ModifierModel[]>
 {

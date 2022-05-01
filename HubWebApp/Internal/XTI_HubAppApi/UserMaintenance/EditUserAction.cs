@@ -1,14 +1,10 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.UserMaintenance;
+﻿namespace XTI_HubAppApi.UserMaintenance;
 
 public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public EditUserAction(AppFactory factory)
+    public EditUserAction(HubFactory factory)
     {
         this.factory = factory;
     }

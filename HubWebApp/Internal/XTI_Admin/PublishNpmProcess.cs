@@ -128,7 +128,9 @@ internal sealed class PublishNpmProcess
                 var npmVersionProcess = new WinProcess("npm")
                     .UseArgumentNameDelimiter("")
                     .UseArgumentValueDelimiter(" ")
-                    .AddArgument("version", versionNumber);
+                    .AddArgument("version", versionNumber)
+                    .UseArgumentNameDelimiter("--")
+                    .AddArgument("allow-same-version");
                 var npmVersionResult = await new CmdProcess(npmVersionProcess)
                     .SetWorkingDirectory(tempExportDistDir)
                     .WriteOutputToConsole()
@@ -160,8 +162,7 @@ internal sealed class PublishNpmProcess
                     .SetWorkingDirectory(exportScriptDir)
                     .WriteOutputToConsole();
                 Console.WriteLine(cmdPublishProcess.CommandText());
-                var npmPublishResult = await cmdPublishProcess
-                    .Run();
+                var npmPublishResult = await cmdPublishProcess.Run();
                 npmPublishResult.EnsureExitCodeIsZero();
             }
         }

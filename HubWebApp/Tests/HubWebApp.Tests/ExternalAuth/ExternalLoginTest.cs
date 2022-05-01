@@ -1,6 +1,7 @@
 ﻿using HubWebApp.Fakes;
 using System.Security.Claims;
 using XTI_Hub.Abstractions;
+using XTI_HubAppApi.Auth;
 using XTI_HubAppApi.ExternalAuth;
 using XTI_HubAppApi.UserList;
 using XTI_WebApp.Api;
@@ -9,8 +10,7 @@ namespace HubWebApp.Tests;
 
 internal sealed class ExternalLoginTest
 {
-    private static readonly AppKey authAppKey =
-        new AppKey(new AppName("Auth"), AppType.Values.WebApp);
+    private static readonly AppKey authAppKey = AppKey.WebApp("Auth");
 
     [Test]
     public async Task ShouldAuthenticateUser()
@@ -18,10 +18,14 @@ internal sealed class ExternalLoginTest
         var tester = await setup();
         var user = await addUser(tester, "someone");
         var authApp = await getAuthApp(tester);
-        await user.AddAuthenticator(authApp, "external.id");
-        var request = new ExternalLoginRequest
+        const string externalUserKey = "external.id";
+        await user.AddAuthenticator(authApp, externalUserKey);
+        var authKey = await externalAuthKey(tester, authApp.Key(), externalUserKey);
+        var returnKey = await loginReturnKey(tester, "/Home");
+        var request = new LoginModel
         {
-            ExternalUserKey = "external.id"
+            AuthKey = authKey,
+            ReturnKey = returnKey
         };
         await tester.Execute(request, getFakeAuthModifier(tester).ModKey());
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
@@ -37,28 +41,28 @@ internal sealed class ExternalLoginTest
         );
     }
 
-    private async Task<HubActionTester<ExternalLoginRequest, WebRedirectResult>> setup()
+    private async Task<HubActionTester<LoginModel, WebRedirectResult>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
         var tester = HubActionTester.Create
         (
             services,
-            hubApi => hubApi.ExternalAuth.Login
+            hubApi => hubApi.Auth.Login
         );
-        var factory = tester.Services.GetRequiredService<AppFactory>();
-        var appKey = new AppKey(new AppName("Auth"), AppType.Values.WebApp);
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var appKey = AppKey.WebApp("Auth");
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
         await authApp.RegisterAsAuthenticator();
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID.Value, authApp.Key().Name.DisplayText);
+        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
         var fakeHubApp = tester.FakeHubApp();
         fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
             .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
         return tester;
     }
-    private FakeModifier getFakeAuthModifier(HubActionTester<ExternalLoginRequest, WebRedirectResult> tester)
+    private FakeModifier getFakeAuthModifier(HubActionTester<LoginModel, WebRedirectResult> tester)
     {
         return tester.FakeHubApp()
             .ModCategory(HubInfo.ModCategories.Apps)
@@ -67,7 +71,7 @@ internal sealed class ExternalLoginTest
 
     private Task<App> getAuthApp(IHubActionTester tester)
     {
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         return factory.Apps.App(authAppKey);
     }
 
@@ -80,8 +84,29 @@ internal sealed class ExternalLoginTest
             UserName = userName,
             Password = "Password12345"
         });
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
+    }
+
+    private Task<string> externalAuthKey(IHubActionTester tester, AppKey appKey, string externalUserKey)
+    {
+        var externalAuthKeyTester = tester.Create(hubApi => hubApi.ExternalAuth.ExternalAuthKey);
+        externalAuthKeyTester.LoginAsAdmin();
+        return externalAuthKeyTester.Execute(new ExternalAuthKeyModel
+        {
+            AppKey = appKey,
+            ExternalUserKey = externalUserKey
+        });
+    }
+
+    private Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
+    {
+        var loginReturnKeyTester = tester.Create(hubApi => hubApi.Auth.LoginReturnKey);
+        loginReturnKeyTester.LoginAsAdmin();
+        return loginReturnKeyTester.Execute(new LoginReturnModel
+        {
+            ReturnUrl = returnUrl
+        });
     }
 }

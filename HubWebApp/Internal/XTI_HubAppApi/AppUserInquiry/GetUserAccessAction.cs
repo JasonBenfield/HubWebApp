@@ -1,15 +1,11 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserInquiry;
+﻿namespace XTI_HubAppApi.AppUserInquiry;
 
 public sealed class GetUserAccessAction : AppAction<UserModifierKey, UserAccessModel>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetUserAccessAction(AppFromPath appFromPath, AppFactory factory)
+    public GetUserAccessAction(AppFromPath appFromPath, HubFactory factory)
     {
         this.appFromPath = appFromPath;
         this.factory = factory;

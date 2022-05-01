@@ -2,9 +2,9 @@
 
 public sealed class InitialSetup
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public InitialSetup(AppFactory appFactory)
+    public InitialSetup(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

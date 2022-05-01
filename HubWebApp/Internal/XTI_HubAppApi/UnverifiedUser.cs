@@ -1,13 +1,10 @@
-﻿using XTI_App.Abstractions;
-using XTI_Hub;
-
-namespace XTI_HubAppApi;
+﻿namespace XTI_HubAppApi;
 
 public sealed class UnverifiedUser
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public UnverifiedUser(AppFactory factory)
+    public UnverifiedUser(HubFactory factory)
     {
         this.factory = factory;
     }

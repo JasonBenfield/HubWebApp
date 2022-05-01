@@ -1,8 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.VersionInquiry;
+﻿namespace XTI_HubAppApi.VersionInquiry;
 
 public sealed class GetResourceGroupAction : AppAction<GetVersionResourceGroupRequest, ResourceGroupModel>
 {

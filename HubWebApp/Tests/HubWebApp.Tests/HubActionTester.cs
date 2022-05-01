@@ -42,6 +42,12 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
 
     public IServiceProvider Services { get; }
 
+    public void Logout()
+    {
+        var userContext = Services.GetRequiredService<FakeUserContext>();
+        userContext.SetCurrentUser(AppUserName.Anon);
+    }
+
     public FakeAppUser LoginAsAdmin()
     {
         var userContext = Services.GetRequiredService<FakeUserContext>();
@@ -74,7 +80,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
 
     public Task<App> HubApp()
     {
-        var factory = Services.GetRequiredService<AppFactory>();
+        var factory = Services.GetRequiredService<HubFactory>();
         return factory.Apps.App(HubInfo.AppKey);
     }
 
@@ -97,7 +103,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var hubAppModifier = await appsModCategory.AddOrUpdateModifier
         (
-            hubApp.ID.Value.ToString(),
+            hubApp.ID.ToString(),
             hubApp.Key().Name.DisplayText
         );
         return hubAppModifier;
@@ -116,7 +122,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var modCategory = fakeHubApp.ModCategory(HubInfo.ModCategories.Apps);
         var appContext = Services.GetRequiredService<FakeAppContext>();
         var app = appContext.App();
-        return modCategory.ModifierByTargetID(app.ID.Value.ToString());
+        return modCategory.ModifierByTargetID(app.ID.ToString());
     }
 
     public Task<TResult> Execute(TModel model) =>

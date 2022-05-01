@@ -16,9 +16,9 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            UserID = userToEdit.ID.Value,
-            ModifierID = defaultModifier.ID.Value,
-            RoleID = viewAppRole.ID.Value
+            UserID = userToEdit.ID,
+            ModifierID = defaultModifier.ID,
+            RoleID = viewAppRole.ID
         };
         AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(request);
     }
@@ -34,9 +34,9 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            UserID = userToEdit.ID.Value,
-            ModifierID = defaultModifier.ID.Value,
-            RoleID = viewAppRole.ID.Value
+            UserID = userToEdit.ID,
+            ModifierID = defaultModifier.ID,
+            RoleID = viewAppRole.ID
         };
         var modifier = tester.FakeHubAppModifier();
         AccessAssertions.Create(tester)
@@ -62,9 +62,9 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            RoleID = viewAppRole.ID.Value,
-            ModifierID = defaultModifier.ID.Value,
-            UserID = userToEdit.ID.Value
+            RoleID = viewAppRole.ID,
+            ModifierID = defaultModifier.ID,
+            UserID = userToEdit.ID
         };
         var hubAppModifier = await tester.HubAppModifier();
         await tester.Execute(request, hubAppModifier.ModKey());
@@ -95,8 +95,8 @@ internal sealed class UnassignRoleTest
     {
         return new UserRoleRequest
         {
-            UserID = userToEdit.ID.Value,
-            RoleID = role.ID.Value
+            UserID = userToEdit.ID,
+            RoleID = role.ID
         };
     }
 
@@ -113,7 +113,7 @@ internal sealed class UnassignRoleTest
             },
             ModifierKey.Default
         );
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
@@ -129,9 +129,9 @@ internal sealed class UnassignRoleTest
         var hubAppModifier = await tester.HubAppModifier();
         var userRoleID = await assignRoleTester.Execute(new UserRoleRequest
         {
-            UserID = user.ID.Value,
-            ModifierID = defaultModifier.ID.Value,
-            RoleID = role.ID.Value
+            UserID = user.ID,
+            ModifierID = defaultModifier.ID,
+            RoleID = role.ID
         }, hubAppModifier.ModKey());
         return userRoleID;
     }

@@ -22,7 +22,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddScoped<HubDbReset>();
         services.AddScoped<HubDbBackup>();
         services.AddScoped<HubDbRestore>();
-        services.AddScoped<AppFactory>();
+        services.AddScoped<HubFactory>();
         services.AddScoped<InitialSetup>();
         services.AddHostedService<HostedService>();
     })

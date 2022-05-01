@@ -9,9 +9,9 @@ public class ExternalAuthController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Login(ExternalLoginRequest model)
+    [HttpPost]
+    public Task<ResultContainer<string>> ExternalAuthKey([FromBody] ExternalAuthKeyModel model)
     {
-        var result = await api.Group("ExternalAuth").Action<ExternalLoginRequest, WebRedirectResult>("Login").Execute(model);
-        return Redirect(result.Data.Url);
+        return api.Group("ExternalAuth").Action<ExternalAuthKeyModel, string>("ExternalAuthKey").Execute(model);
     }
 }

@@ -7,9 +7,9 @@ namespace XTI_Hub;
 
 public sealed class AppRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal AppRepository(AppFactory factory)
+    internal AppRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -126,7 +126,7 @@ public sealed class AppRepository
         var sessionIDs = factory.DB
             .Sessions
             .Retrieve()
-            .Where(s => s.UserID == user.ID.Value && s.TimeEnded > DateTimeOffset.Now.AddDays(1))
+            .Where(s => s.UserID == user.ID && s.TimeEnded > DateTimeOffset.Now.AddDays(1))
             .Select(s => s.ID);
         var appIDs = factory.DB
             .Requests

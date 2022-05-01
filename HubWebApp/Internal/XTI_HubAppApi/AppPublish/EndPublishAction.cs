@@ -1,7 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.AppPublish;
+﻿namespace XTI_HubAppApi.AppPublish;
 
 public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersionModel>
 {

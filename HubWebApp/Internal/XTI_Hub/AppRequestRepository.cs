@@ -6,9 +6,9 @@ namespace XTI_Hub;
 
 public sealed class AppRequestRepository
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    internal AppRequestRepository(AppFactory factory)
+    internal AppRequestRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -48,9 +48,9 @@ public sealed class AppRequestRepository
                     record,
                     r =>
                     {
-                        r.SessionID = session.ID.Value;
-                        r.ResourceID = resource.ID.Value;
-                        r.ModifierID = modifier.ID.Value;
+                        r.SessionID = session.ID;
+                        r.ResourceID = resource.ID;
+                        r.ModifierID = modifier.ID;
                         r.Path = path;
                         r.TimeStarted = timeRequested;
                         r.ActualCount = actualCount;
@@ -90,10 +90,10 @@ public sealed class AppRequestRepository
     {
         var record = new AppRequestEntity
         {
-            SessionID = session.ID.Value,
+            SessionID = session.ID,
             RequestKey = requestKey,
-            ResourceID = resource.ID.Value,
-            ModifierID = modifier.ID.Value,
+            ResourceID = resource.ID,
+            ModifierID = modifier.ID,
             Path = path ?? "",
             TimeStarted = timeRequested,
             ActualCount = actualCount
@@ -105,7 +105,7 @@ public sealed class AppRequestRepository
     internal Task<AppRequest[]> RetrieveBySession(AppSession session)
         => factory.DB.Requests
             .Retrieve()
-            .Where(r => r.SessionID == session.ID.Value)
+            .Where(r => r.SessionID == session.ID)
             .Select(r => factory.CreateRequest(r))
             .ToArrayAsync();
 
@@ -113,7 +113,7 @@ public sealed class AppRequestRepository
     {
         return factory.DB.Requests
             .Retrieve()
-            .Where(r => r.SessionID == session.ID.Value)
+            .Where(r => r.SessionID == session.ID)
             .OrderByDescending(r => r.TimeStarted)
             .Take(howMany)
             .Select(r => factory.CreateRequest(r))
@@ -157,7 +157,7 @@ public sealed class AppRequestRepository
                 factory.DB
                     .ResourceGroups
                     .Retrieve()
-                    .Where(rg => rg.ID == group.ID.Value),
+                    .Where(rg => rg.ID == group.ID),
                 res => res.GroupID,
                 rg => rg.ID,
                 (res, rg) => new ResourceWithGroupRecord
@@ -178,7 +178,7 @@ public sealed class AppRequestRepository
         var resources = factory.DB
             .Resources
             .Retrieve()
-            .Where(r => r.ID == resource.ID.Value)
+            .Where(r => r.ID == resource.ID)
             .Join
             (
                 factory.DB

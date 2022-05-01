@@ -11,10 +11,10 @@ public sealed class AppEvent
     internal AppEvent(AppEventEntity record)
     {
         this.record = record ?? new AppEventEntity();
-        ID = new EntityID(this.record.ID);
+        ID = this.record.ID;
     }
 
-    public EntityID ID { get; }
+    public int ID { get; }
     public string Caption { get => record.Caption; }
     public string Message { get => record.Message; }
     public string Detail { get => record.Detail; }
@@ -22,7 +22,7 @@ public sealed class AppEvent
 
     public AppEventModel ToModel() => new AppEventModel
     {
-        ID = ID.Value,
+        ID = ID,
         RequestID = record.RequestID,
         TimeOccurred = record.TimeOccurred,
         Severity = Severity(),
@@ -31,5 +31,5 @@ public sealed class AppEvent
         Detail = Detail
     };
 
-    public override string ToString() => $"{nameof(AppEvent)} {ID.Value}";
+    public override string ToString() => $"{nameof(AppEvent)} {ID}";
 }

@@ -1,7 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.AppInstall;
+﻿namespace XTI_HubAppApi.AppInstall;
 
 internal sealed class AddOrUpdateVersionsAction : AppAction<AddOrUpdateVersionsRequest, EmptyActionResult>
 {

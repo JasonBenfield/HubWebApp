@@ -2,9 +2,9 @@
 
 namespace XTI_Hub;
 
-public sealed class AppFactory
+public sealed class HubFactory
 {
-    public AppFactory(IHubDbContext db)
+    public HubFactory(IHubDbContext db)
     {
         DB = db;
     }
@@ -94,6 +94,10 @@ public sealed class AppFactory
     private InstallationRepository? installations;
 
     public InstallationRepository Installations { get => installations ??= new(this); }
+
+    private StoredObjectRepository? storedObjects;
+
+    public StoredObjectRepository StoredObjects { get => storedObjects ??= new(this); }
 
     internal Installation CreateInstallation(InstallationEntity entity)
         => entity.IsCurrent ? CurrentInstallation(entity) : VersionInstallation(entity);

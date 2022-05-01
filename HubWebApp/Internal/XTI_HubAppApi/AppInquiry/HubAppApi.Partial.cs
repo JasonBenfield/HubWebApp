@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.AppInquiry;
+﻿using XTI_HubAppApi.AppInquiry;
 
 namespace XTI_HubAppApi;
 
@@ -9,7 +8,7 @@ partial class HubAppApi
 
     public AppInquiryGroup App { get => app ?? throw new ArgumentNullException(nameof(app)); }
 
-    partial void createAppInquiry(IServiceProvider services)
+    partial void createAppInquiry(IServiceProvider sp)
     {
         app = new AppInquiryGroup
         (
@@ -19,7 +18,7 @@ partial class HubAppApi
                 HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.ViewApp)
             ),
-            services
+            sp
         );
     }
 }

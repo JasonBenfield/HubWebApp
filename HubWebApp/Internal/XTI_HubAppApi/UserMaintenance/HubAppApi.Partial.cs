@@ -1,5 +1,4 @@
-﻿using XTI_Hub;
-using XTI_HubAppApi.UserMaintenance;
+﻿using XTI_HubAppApi.UserMaintenance;
 
 namespace XTI_HubAppApi;
 
@@ -12,7 +11,7 @@ partial class HubAppApi
         get => userMaintenance ?? throw new ArgumentNullException(nameof(userMaintenance));
     }
 
-    partial void createUserMaintenance(IServiceProvider services)
+    partial void createUserMaintenance(IServiceProvider sp)
     {
         userMaintenance = new UserMaintenanceGroup
         (
@@ -21,7 +20,7 @@ partial class HubAppApi
                 nameof(UserMaintenance),
                 Access.WithAllowed(HubInfo.Roles.EditUser)
             ),
-            services
+            sp
         );
     }
 }

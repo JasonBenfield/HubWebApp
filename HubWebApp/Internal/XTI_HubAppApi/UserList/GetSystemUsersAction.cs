@@ -1,15 +1,10 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.UserList;
+﻿namespace XTI_HubAppApi.UserList;
 
 public sealed class GetSystemUsersAction : AppAction<AppKey, AppUserModel[]>
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
 
-    public GetSystemUsersAction(AppFactory appFactory)
+    public GetSystemUsersAction(HubFactory appFactory)
     {
         this.appFactory = appFactory;
     }

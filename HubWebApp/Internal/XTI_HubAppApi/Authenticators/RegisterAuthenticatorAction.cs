@@ -1,6 +1,4 @@
-﻿using XTI_App.Api;
-
-namespace XTI_HubAppApi.Authenticators;
+﻿namespace XTI_HubAppApi.Authenticators;
 
 internal sealed class RegisterAuthenticatorAction : AppAction<EmptyRequest, EmptyActionResult>
 {

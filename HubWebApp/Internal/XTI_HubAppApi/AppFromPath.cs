@@ -1,14 +1,11 @@
-﻿using XTI_App.Abstractions;
-using XTI_Hub;
-
-namespace XTI_HubAppApi;
+﻿namespace XTI_HubAppApi;
 
 public sealed class AppFromPath
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
     private readonly IXtiPathAccessor pathAccessor;
 
-    public AppFromPath(AppFactory factory, IXtiPathAccessor pathAccessor)
+    public AppFromPath(HubFactory factory, IXtiPathAccessor pathAccessor)
     {
         this.factory = factory;
         this.pathAccessor = pathAccessor;

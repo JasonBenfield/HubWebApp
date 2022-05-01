@@ -6,8 +6,7 @@ namespace HubWebApp.Tests;
 
 internal sealed class RegisterAuthenticatorTest
 {
-    private static readonly AppKey authAppKey = 
-        new AppKey(new AppName("Auth"), AppType.Values.WebApp);
+    private static readonly AppKey authAppKey = AppKey.WebApp("Auth");
 
     [Test]
     public async Task ShouldThrowError_WhenModifierIsBlank()
@@ -79,7 +78,7 @@ internal sealed class RegisterAuthenticatorTest
 
     private Task<App> getAuthApp(IHubActionTester tester)
     {
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         return factory.Apps.App(authAppKey);
     }
 
@@ -92,12 +91,12 @@ internal sealed class RegisterAuthenticatorTest
             services,
             hubApi => hubApi.Authenticators.RegisterAuthenticator
         );
-        var factory = tester.Services.GetRequiredService<AppFactory>();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), authAppKey, DateTimeOffset.Now);
-        var appKey = new AppKey(new AppName("Auth"), AppType.Values.WebApp);
+        var appKey = AppKey.WebApp("Auth");
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID.Value, authApp.Key().Name.DisplayText);
+        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
         var fakeHubApp = tester.FakeHubApp();
         fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
             .AddModifier(modifier.ID, modifier.ModKey(), "Auth");

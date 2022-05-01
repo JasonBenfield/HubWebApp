@@ -4,7 +4,7 @@ namespace XTI_Hub;
 
 public sealed class CurrentInstallation : Installation
 {
-    internal CurrentInstallation(AppFactory appFactory, InstallationEntity entity)
+    internal CurrentInstallation(HubFactory appFactory, InstallationEntity entity)
         : base(appFactory, entity)
     {
     }

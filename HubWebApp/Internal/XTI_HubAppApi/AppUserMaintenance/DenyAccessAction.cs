@@ -1,16 +1,12 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-
-namespace XTI_HubAppApi.AppUserMaintenance;
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
 
 internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionResult>
 {
     private readonly AppFromPath appFromPath;
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly ICachedUserContext userContext;
 
-    public DenyAccessAction(AppFromPath appFromPath, AppFactory appFactory, ICachedUserContext userContext)
+    public DenyAccessAction(AppFromPath appFromPath, HubFactory appFactory, ICachedUserContext userContext)
     {
         this.appFromPath = appFromPath;
         this.appFactory = appFactory;

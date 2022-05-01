@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Api;
-
-namespace XTI_HubAppApi.AppUserMaintenance;
+﻿namespace XTI_HubAppApi.AppUserMaintenance;
 
 public sealed class AppUserMaintenanceGroup : AppApiGroupWrapper
 {

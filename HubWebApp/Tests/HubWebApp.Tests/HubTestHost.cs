@@ -51,16 +51,16 @@ internal sealed class HubTestHost
         await setup.Run(AppVersionKey.Current);
         var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();
         await defaultFakeSetup.Run(AppVersionKey.Current);
-        var factory = sp.GetRequiredService<AppFactory>();
+        var factory = sp.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await appsModCategory.ModifierByTargetID(hubApp.ID.Value);
+        var modifier = await appsModCategory.ModifierByTargetID(hubApp.ID);
 
         var appContext = sp.GetRequiredService<FakeAppContext>();
         var fakeApp = appContext.App();
         var fakeHubApp = appContext.App(HubInfo.AppKey);
         var fakeModCategory = fakeHubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var fakeModifier = fakeModCategory.ModifierByTargetID(fakeApp.ID.Value.ToString());
+        var fakeModifier = fakeModCategory.ModifierByTargetID(fakeApp.ID.ToString());
         fakeModifier.SetModKey(modifier);
 
         var userContext = sp.GetRequiredService<FakeUserContext>();
@@ -72,7 +72,7 @@ internal sealed class HubTestHost
 
     private async Task<AppUser> addAdminUser(IServiceProvider services)
     {
-        var factory = services.GetRequiredService<AppFactory>();
+        var factory = services.GetRequiredService<HubFactory>();
         var adminUser = await factory.Users.Add(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var adminRole = await hubApp.Role(HubInfo.Roles.Admin);

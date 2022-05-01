@@ -1,8 +1,4 @@
-﻿using XTI_App.Api;
-using XTI_WebApp.Abstractions;
-using XTI_WebApp.Api;
-
-namespace XTI_HubAppApi.UserList;
+﻿namespace XTI_HubAppApi.UserList;
 
 public sealed class IndexAction : AppAction<EmptyRequest, WebViewResult>
 {

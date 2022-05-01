@@ -1,15 +1,10 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace XTI_HubAppApi.UserInquiry;
+﻿namespace XTI_HubAppApi.UserInquiry;
 
 public sealed class GetUserByUserNameAction : AppAction<string, AppUserModel>
 {
-    private readonly AppFactory factory;
+    private readonly HubFactory factory;
 
-    public GetUserByUserNameAction(AppFactory factory)
+    public GetUserByUserNameAction(HubFactory factory)
     {
         this.factory = factory;
     }

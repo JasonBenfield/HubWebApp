@@ -1,6 +1,4 @@
-﻿using XTI_App.Abstractions;
-
-namespace XTI_HubAppApi.AppInstall;
+﻿namespace XTI_HubAppApi.AppInstall;
 
 public sealed class BeginInstallationRequest
 {

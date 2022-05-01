@@ -5,15 +5,15 @@ namespace XTI_Hub;
 
 public sealed class DefaultUserContext : IUserContext
 {
-    private readonly AppFactory appFactory;
+    private readonly HubFactory appFactory;
     private readonly Func<string> getUserName;
 
-    public DefaultUserContext(AppFactory appFactory, string userName)
+    public DefaultUserContext(HubFactory appFactory, string userName)
         : this(appFactory, () => userName)
     {
     }
 
-    public DefaultUserContext(AppFactory appFactory, Func<string> getUserName)
+    public DefaultUserContext(HubFactory appFactory, Func<string> getUserName)
     {
         this.appFactory = appFactory;
         this.getUserName = getUserName;
