@@ -100,7 +100,8 @@ public sealed class XtiVersionRepository
                 throw new ArgumentException($"Version type {type} is not valid");
             }
             var versionNumber = new AppVersionNumber(0, 0, 0);
-            var entity = await AddVersion(versionName, AppVersionKey.None, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
+            var key = await NextKey(versionName);
+            var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
             version = factory.CreateVersion(entity);
             foreach (var appKey in appKeys)
             {
@@ -128,10 +129,11 @@ public sealed class XtiVersionRepository
         var entity = await GetVersionByName(versionName, AppVersionKey.Current);
         if (entity == null)
         {
+            var key = await NextKey(versionName);
             entity = await AddVersion
             (
                 versionName,
-                AppVersionKey.Current,
+                key,
                 timeAdded,
                 AppVersionType.Values.Major,
                 AppVersionStatus.Values.Current,
@@ -148,11 +150,11 @@ public sealed class XtiVersionRepository
 
     private async Task<XtiVersionEntity> AddVersion(AppVersionName versionName, AppVersionKey key, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, AppVersionNumber versionNumber)
     {
-        XtiVersionEntity? record = null;
         if (key.Equals(AppVersionKey.None) || key.Equals(AppVersionKey.Current))
         {
-            key = await NextKey(versionName);
+            throw new ArgumentException($"Unable to add version with key '{key.DisplayText}'");
         }
+        XtiVersionEntity? record = null;
         await factory.DB.Transaction(async () =>
         {
             record = new XtiVersionEntity
@@ -193,7 +195,7 @@ public sealed class XtiVersionRepository
             .Retrieve()
             .Where
             (
-                v => v.VersionName == versionName
+                v => v.VersionName == versionName.Value
             )
             .Select(v => factory.CreateVersion(v))
             .ToArrayAsync();
@@ -326,7 +328,7 @@ public sealed class XtiVersionRepository
         var nextVersion = lastVersion.Next(AppVersionType.Values.Value(version.Type));
         await factory.DB.Versions.Update
         (
-            version, 
+            version,
             r =>
             {
                 r.Status = AppVersionStatus.Values.Publishing.Value;

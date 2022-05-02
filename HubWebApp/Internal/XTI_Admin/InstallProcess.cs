@@ -31,7 +31,9 @@ internal sealed class InstallProcess
             var appDefs = appKeys
                 .Select(a => new AppDefinitionModel(a))
                 .ToArray();
+            Console.WriteLine("Adding or updating apps");
             await hubAdministration.AddOrUpdateApps(versionName, appDefs);
+            Console.WriteLine("Adding or updating versions");
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
             var password = Guid.NewGuid().ToString();
             await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password);
@@ -66,7 +68,7 @@ internal sealed class InstallProcess
 
     private Task newInstallation(AppKey appKey, string machineName, AppVersionName versionName)
     {
-        Console.WriteLine("New installation");
+        Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         return hubAdministration.NewInstallation(versionName, appKey, machineName);
     }

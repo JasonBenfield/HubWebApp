@@ -24,7 +24,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var apps = new List<AppModel>();
         foreach (var appDef in appDefs)
         {
-            var app =  await hubFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
+            var app = await hubFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
             apps.Add(app.ToAppModel());
         }
         return apps.ToArray();
@@ -56,19 +56,16 @@ public sealed class DbHubAdministration : IHubAdministration
             var versions = new List<XtiVersion>();
             foreach (var publishedVersion in publishedVersions)
             {
-                foreach (var versionModel in publishedVersions)
-                {
-                    var version = await hubFactory.Versions.AddIfNotFound
-                    (
-                        versionModel.VersionName,
-                        versionModel.VersionKey,
-                        clock.Now(),
-                        versionModel.Status,
-                        versionModel.VersionType,
-                        versionModel.VersionNumber
-                    );
-                    versions.Add(version);
-                }
+                var version = await hubFactory.Versions.AddIfNotFound
+                (
+                    publishedVersion.VersionName,
+                    publishedVersion.VersionKey,
+                    clock.Now(),
+                    publishedVersion.Status,
+                    publishedVersion.VersionType,
+                    publishedVersion.VersionNumber
+                );
+                versions.Add(version);
             }
             foreach (var appKey in appKeys)
             {
