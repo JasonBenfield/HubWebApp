@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="XTI_Git.Fakes" Version="1.2.10" />
+    <PackageReference Include="XTI_GitHub.Fakes" Version="1.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Internal\HubWebApp.Fakes\HubWebApp.Fakes.csproj" />
+    <ProjectReference Include="..\..\Lib\XTI_AppSetupApp.Extensions\XTI_AppSetupApp.Extensions.csproj" />
+    <ProjectReference Include="..\..\Internal\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>
