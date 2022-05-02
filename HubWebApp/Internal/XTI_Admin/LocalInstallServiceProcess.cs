@@ -45,8 +45,8 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("siteName", installation.SiteName)
             }
         );
-        var installServiceUrl = $"http://{options.DestinationMachine}:61862";
-        Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey} {options.InstallationUserName} {options.InstallationPassword} {release}");
+        var installServiceUrl = $"http://{installation.MachineName}:61862";
+        Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey.DisplayText} {options.InstallationUserName} {options.InstallationPassword} {release}");
         using var response = await client.PostAsync(installServiceUrl, content);
         var responseBody = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response: {response.StatusCode} {responseBody}");

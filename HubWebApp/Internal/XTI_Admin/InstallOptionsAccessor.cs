@@ -40,8 +40,8 @@ public sealed class InstallOptionsAccessor
                     new InstallationOptions
                     (
                         options.DestinationMachine,
-                        appKey.Equals(AppType.Values.WebApp) ? options.Domain : "",
-                        appKey.Equals(AppType.Values.WebApp) ? options.SiteName : ""
+                        appKey.Type.Equals(AppType.Values.WebApp) ? options.Domain : "",
+                        appKey.Type.Equals(AppType.Values.WebApp) ? options.SiteName : ""
                     )
                 );
             }

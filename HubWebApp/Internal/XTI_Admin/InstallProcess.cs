@@ -22,7 +22,9 @@ internal sealed class InstallProcess
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
             using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
-            await publishedAssets.LoadVersions();
+            var appVersion = await new CurrentVersion(scopes, versionName).Value();
+            var release = $"v{appVersion.VersionNumber.Format()}";
+            await publishedAssets.LoadVersions(release);
             var versionReader = new VersionReader(publishedAssets.VersionsPath);
             var versions = await versionReader.Versions();
             var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
@@ -31,6 +33,10 @@ internal sealed class InstallProcess
                 .ToArray();
             await hubAdministration.AddOrUpdateApps(versionName, appDefs);
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
+            var password = Guid.NewGuid().ToString();
+            await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password);
+            options.InstallationUserName = AppUserName.InstallationUser(Environment.MachineName).Value;
+            options.InstallationPassword = password;
             foreach (var appKey in appKeys)
             {
                 var installations = scopes.GetRequiredService<InstallOptionsAccessor>().Installations(appKey);

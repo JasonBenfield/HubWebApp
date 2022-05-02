@@ -17,7 +17,7 @@ public sealed class FolderPublishedAssets : IPublishedAssets
 
     public string AppPath { get; private set; } = "";
 
-    public Task LoadVersions()
+    public Task LoadVersions(string releaseTag)
     {
         VersionsPath = publishFolder.VersionsPath();
         return Task.CompletedTask;
