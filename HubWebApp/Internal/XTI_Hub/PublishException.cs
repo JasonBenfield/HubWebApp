@@ -9,7 +9,7 @@ public sealed class PublishException : AppException
         new PublishException($"Unable to begin publishing version '{versionKey.DisplayText}' when it's status is '{status.DisplayText}");
 
     public static PublishException Published(AppVersionKey versionKey, AppVersionStatus status) =>
-        new PublishException($"Unable to publish version '{versionKey.DisplayText} when it's status is '{status.DisplayText}'");
+        new PublishException($"Unable to publish version '{versionKey.DisplayText}' when it's status is '{status.DisplayText}'");
 
     public PublishException(string message)
         : base(message, "Invalid publish state")

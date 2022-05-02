@@ -6,16 +6,16 @@ public sealed partial class InstallGroup : AppClientGroup
     {
     }
 
-    public Task<AppWithModKeyModel> RegisterApp(string modifier, RegisterAppRequest model) => Post<AppWithModKeyModel, RegisterAppRequest>("RegisterApp", modifier, model);
-    public Task<AppModel[]> AddOrUpdateApps(string modifier, AddOrUpdateAppsRequest model) => Post<AppModel[], AddOrUpdateAppsRequest>("AddOrUpdateApps", modifier, model);
-    public Task<EmptyActionResult> AddOrUpdateVersions(string modifier, AddOrUpdateVersionsRequest model) => Post<EmptyActionResult, AddOrUpdateVersionsRequest>("AddOrUpdateVersions", modifier, model);
-    public Task<XtiVersionModel> GetVersion(string modifier, GetVersionRequest model) => Post<XtiVersionModel, GetVersionRequest>("GetVersion", modifier, model);
-    public Task<XtiVersionModel[]> GetVersions(string modifier, GetVersionsRequest model) => Post<XtiVersionModel[], GetVersionsRequest>("GetVersions", modifier, model);
-    public Task<AppUserModel> AddSystemUser(string modifier, AddSystemUserRequest model) => Post<AppUserModel, AddSystemUserRequest>("AddSystemUser", modifier, model);
-    public Task<AppUserModel> AddInstallationUser(string modifier, AddInstallationUserRequest model) => Post<AppUserModel, AddInstallationUserRequest>("AddInstallationUser", modifier, model);
-    public Task<NewInstallationResult> NewInstallation(string modifier, NewInstallationRequest model) => Post<NewInstallationResult, NewInstallationRequest>("NewInstallation", modifier, model);
-    public Task<int> BeginCurrentInstallation(string modifier, BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginCurrentInstallation", modifier, model);
-    public Task<int> BeginVersionInstallation(string modifier, BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginVersionInstallation", modifier, model);
-    public Task<EmptyActionResult> Installed(string modifier, InstalledRequest model) => Post<EmptyActionResult, InstalledRequest>("Installed", modifier, model);
-    public Task<EmptyActionResult> SetUserAccess(string modifier, SetUserAccessRequest model) => Post<EmptyActionResult, SetUserAccessRequest>("SetUserAccess", modifier, model);
+    public Task<AppWithModKeyModel> RegisterApp(RegisterAppRequest model) => Post<AppWithModKeyModel, RegisterAppRequest>("RegisterApp", "", model);
+    public Task<AppModel[]> AddOrUpdateApps(AddOrUpdateAppsRequest model) => Post<AppModel[], AddOrUpdateAppsRequest>("AddOrUpdateApps", "", model);
+    public Task<EmptyActionResult> AddOrUpdateVersions(AddOrUpdateVersionsRequest model) => Post<EmptyActionResult, AddOrUpdateVersionsRequest>("AddOrUpdateVersions", "", model);
+    public Task<XtiVersionModel> GetVersion(GetVersionRequest model) => Post<XtiVersionModel, GetVersionRequest>("GetVersion", "", model);
+    public Task<XtiVersionModel[]> GetVersions(GetVersionsRequest model) => Post<XtiVersionModel[], GetVersionsRequest>("GetVersions", "", model);
+    public Task<AppUserModel> AddSystemUser(AddSystemUserRequest model) => Post<AppUserModel, AddSystemUserRequest>("AddSystemUser", "", model);
+    public Task<AppUserModel> AddInstallationUser(AddInstallationUserRequest model) => Post<AppUserModel, AddInstallationUserRequest>("AddInstallationUser", "", model);
+    public Task<NewInstallationResult> NewInstallation(NewInstallationRequest model) => Post<NewInstallationResult, NewInstallationRequest>("NewInstallation", "", model);
+    public Task<int> BeginCurrentInstallation(BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginCurrentInstallation", "", model);
+    public Task<int> BeginVersionInstallation(BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginVersionInstallation", "", model);
+    public Task<EmptyActionResult> Installed(InstalledRequest model) => Post<EmptyActionResult, InstalledRequest>("Installed", "", model);
+    public Task<EmptyActionResult> SetUserAccess(SetUserAccessRequest model) => Post<EmptyActionResult, SetUserAccessRequest>("SetUserAccess", "", model);
 }

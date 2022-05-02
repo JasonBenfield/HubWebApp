@@ -16,7 +16,7 @@ public sealed class HcHubAdministration : IHubAdministration
             MachineName = machineName,
             Password = password
         };
-        return hubClient.Install.AddInstallationUser("", request);
+        return hubClient.Install.AddInstallationUser(request);
     }
 
     public Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password)
@@ -27,7 +27,7 @@ public sealed class HcHubAdministration : IHubAdministration
             MachineName = machineName,
             Password = password
         };
-        return hubClient.Install.AddSystemUser("", request);
+        return hubClient.Install.AddSystemUser(request);
     }
 
     public Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
@@ -39,7 +39,7 @@ public sealed class HcHubAdministration : IHubAdministration
             QualifiedMachineName = machineName,
             Domain = domain
         };
-        return hubClient.Install.BeginCurrentInstallation("", request);
+        return hubClient.Install.BeginCurrentInstallation(request);
     }
 
     public Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
@@ -51,7 +51,7 @@ public sealed class HcHubAdministration : IHubAdministration
             QualifiedMachineName = machineName,
             Domain = domain
         };
-        return hubClient.Install.BeginVersionInstallation("", request);
+        return hubClient.Install.BeginVersionInstallation(request);
     }
 
     public Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey)
@@ -61,7 +61,7 @@ public sealed class HcHubAdministration : IHubAdministration
             VersionName = versionName,
             VersionKey = versionKey
         };
-        return hubClient.Publish.BeginPublish("", request);
+        return hubClient.Publish.BeginPublish(request);
     }
 
     public Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey)
@@ -71,7 +71,7 @@ public sealed class HcHubAdministration : IHubAdministration
             VersionName = versionName,
             VersionKey = versionKey
         };
-        return hubClient.Publish.EndPublish("", request);
+        return hubClient.Publish.EndPublish(request);
     }
 
     public Task Installed(int installationID)
@@ -80,7 +80,7 @@ public sealed class HcHubAdministration : IHubAdministration
         {
             InstallationID = installationID
         };
-        return hubClient.Install.Installed("", request);
+        return hubClient.Install.Installed(request);
     }
 
     public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName)
@@ -91,7 +91,7 @@ public sealed class HcHubAdministration : IHubAdministration
             AppKey = appKey,
             QualifiedMachineName = machineName
         };
-        return hubClient.Install.NewInstallation("", request);
+        return hubClient.Install.NewInstallation(request);
     }
 
     public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
@@ -102,7 +102,7 @@ public sealed class HcHubAdministration : IHubAdministration
             VersionType = versionType,
             AppKeys = appKeys
         };
-        return hubClient.Publish.NewVersion("", request);
+        return hubClient.Publish.NewVersion(request);
     }
 
     public Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
@@ -112,16 +112,15 @@ public sealed class HcHubAdministration : IHubAdministration
             VersionName = versionName,
             VersionKey = versionKey
         };
-        return hubClient.Install.GetVersion("", request);
+        return hubClient.Install.GetVersion(request);
     }
 
     public Task<XtiVersionModel[]> Versions(AppVersionName versionName) => 
-        hubClient.Install.GetVersions("", new GetVersionsRequest { VersionName = versionName });
+        hubClient.Install.GetVersions(new GetVersionsRequest { VersionName = versionName });
 
     public Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions) =>
         hubClient.Install.AddOrUpdateVersions
         (
-            "", 
             new AddOrUpdateVersionsRequest
             {
                 Apps = appKeys,
@@ -132,7 +131,6 @@ public sealed class HcHubAdministration : IHubAdministration
     public Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs) =>
         hubClient.Install.AddOrUpdateApps
         (
-            "",
             new AddOrUpdateAppsRequest
             {
                 VersionName = versionName,

@@ -83,4 +83,5 @@ public sealed class HubDbContext : DbContext, IHubDbContext
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 
+    public void ClearCache() => ChangeTracker.Clear();
 }

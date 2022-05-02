@@ -7,14 +7,14 @@ namespace XTI_Hub;
 public sealed class DbHubAdministration : IHubAdministration
 {
     private readonly XtiEnvironment xtiEnv;
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public DbHubAdministration(XtiEnvironment xtiEnv, HubFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public DbHubAdministration(XtiEnvironment xtiEnv, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
         this.xtiEnv = xtiEnv;
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.clock = clock;
     }
@@ -24,7 +24,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var apps = new List<AppModel>();
         foreach (var appDef in appDefs)
         {
-            var app =  await appFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
+            var app =  await hubFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
             apps.Add(app.ToAppModel());
         }
         return apps.ToArray();
@@ -32,13 +32,13 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
         return version.ToModel();
     }
 
     public async Task<XtiVersionModel[]> Versions(AppVersionName versionName)
     {
-        var versions = await appFactory.Versions.VersionsByName(versionName);
+        var versions = await hubFactory.Versions.VersionsByName(versionName);
         return versions.Select(v => v.ToModel()).ToArray();
     }
 
@@ -58,7 +58,7 @@ public sealed class DbHubAdministration : IHubAdministration
             {
                 foreach (var versionModel in publishedVersions)
                 {
-                    var version = await appFactory.Versions.AddIfNotFound
+                    var version = await hubFactory.Versions.AddIfNotFound
                     (
                         versionModel.VersionName,
                         versionModel.VersionKey,
@@ -72,7 +72,7 @@ public sealed class DbHubAdministration : IHubAdministration
             }
             foreach (var appKey in appKeys)
             {
-                var app = await appFactory.Apps.App(appKey);
+                var app = await hubFactory.Apps.App(appKey);
                 foreach (var version in versions)
                 {
                     await app.AddVersionIfNotFound(version);
@@ -83,25 +83,25 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
         await version.Publishing();
         return version.ToModel();
     }
 
     public async Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey)
     {
-        var version = await appFactory.Versions.VersionByName(versionName, versionKey);
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
         await version.Published();
         return version.ToModel();
     }
 
     public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName)
     {
-        var version = await appFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
-        var app = await appFactory.Apps.App(appKey);
+        var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
+        var app = await hubFactory.Apps.App(appKey);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
-        var installLocation = await appFactory.InstallLocations.TryAdd(machineName);
+        var installLocation = await hubFactory.InstallLocations.TryAdd(machineName);
         Installation currentInstallation;
         var hasCurrentInstallation = await installLocation.HasCurrentInstallation(app);
         if (hasCurrentInstallation)
@@ -131,8 +131,8 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
     {
-        var installLocation = await appFactory.InstallLocations.Location(machineName);
-        var app = await appFactory.Apps.App(appKey);
+        var installLocation = await hubFactory.InstallLocations.Location(machineName);
+        var app = await hubFactory.Apps.App(appKey);
         var versionToInstall = await app.Version(installVersionKey);
         var installation = await installLocation.CurrentInstallation(app);
         await installation.Start(versionToInstall, domain);
@@ -141,8 +141,8 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
     {
-        var installLocation = await appFactory.InstallLocations.Location(machineName);
-        var app = await appFactory.Apps.App(appKey);
+        var installLocation = await hubFactory.InstallLocations.Location(machineName);
+        var app = await hubFactory.Apps.App(appKey);
         var appVersion = await app.Version(versionKey);
         var installation = await installLocation.VersionInstallation(appVersion);
         await installation.Start(domain);
@@ -151,7 +151,7 @@ public sealed class DbHubAdministration : IHubAdministration
 
     public async Task Installed(int installationID)
     {
-        var installation = await appFactory.Installations.Installation(installationID);
+        var installation = await hubFactory.Installations.Installation(installationID);
         await installation.Installed();
     }
 
@@ -159,7 +159,7 @@ public sealed class DbHubAdministration : IHubAdministration
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await appFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
@@ -177,13 +177,13 @@ public sealed class DbHubAdministration : IHubAdministration
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await appFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
     public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
     {
-        var version = await appFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appKeys);
+        var version = await hubFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appKeys);
         return version.ToModel();
     }
 }

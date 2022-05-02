@@ -16,18 +16,17 @@ public sealed class BuildProcess
 
     public async Task Run()
     {
+        Console.WriteLine("Add or Update Apps");
         var version = await new BranchVersion(scopes).Value();
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var prodHubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var versions = await prodHubAdmin.Versions(versionName);
         var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
         var options = scopes.GetRequiredService<AdminOptions>();
         var appDefs = appKeys
             .Select(a => new AppDefinitionModel(a))
             .ToArray();
         await hubAdmin.AddOrUpdateApps(versionName, appDefs);
-        await hubAdmin.AddOrUpdateVersions(appKeys, versions);
+        Console.WriteLine("Building Apps");
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {

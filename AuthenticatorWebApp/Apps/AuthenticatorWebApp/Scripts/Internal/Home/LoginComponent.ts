@@ -2,6 +2,7 @@
 import { MessageAlert } from '@jasonbenfield/sharedwebapp/MessageAlert';
 import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 import { HubAppApi } from "@hub/Api/HubAppApi";
+import { PostToLogin } from "@hub/PostToLogin";
 import { VerifyLoginForm } from "@hub/Api/VerifyLoginForm";
 import { LoginComponentView } from "./LoginComponentView";
 
@@ -36,6 +37,7 @@ export class LoginComponent {
             if (result.succeeded()) {
                 let cred = this.getCredentials();
                 this.alert.info('Opening page...');
+                new PostToLogin(this.hubApi).execute(cred, result.value);
                 this.postLogin(cred, result.value);
             }
         }

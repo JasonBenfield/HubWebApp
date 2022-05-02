@@ -10,7 +10,7 @@ public static class Extensions
 {
     public static void AddHubDbContextForInMemory(this IServiceCollection services)
     {
-        services.AddDbContext<HubDbContext>(options =>
+        services.AddDbContextFactory<HubDbContext>(options =>
         {
             options
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())

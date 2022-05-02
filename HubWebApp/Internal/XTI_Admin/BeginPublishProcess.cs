@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_Hub.Abstractions;
+using XTI_HubDB.Entities;
 
 namespace XTI_Admin;
 

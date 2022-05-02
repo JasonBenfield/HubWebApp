@@ -39,7 +39,6 @@ public sealed class DefaultAppSetup : IAppSetup
         var template = apiFactory.CreateTemplate();
         await hubClient.Install.AddOrUpdateApps
         (
-            "",
             new AddOrUpdateAppsRequest
             {
                 VersionName = versionName,
@@ -49,7 +48,6 @@ public sealed class DefaultAppSetup : IAppSetup
         var password = Guid.NewGuid().ToString();
         var systemUser = await hubClient.Install.AddSystemUser
         (
-            "",
             new AddSystemUserRequest
             {
                 AppKey = template.AppKey,
@@ -70,7 +68,7 @@ public sealed class DefaultAppSetup : IAppSetup
             AppTemplate = ToClientTemplateModel(template.ToModel()),
             VersionKey = versionKey
         };
-        var result = await hubClient.Install.RegisterApp("", request);
+        var result = await hubClient.Install.RegisterApp(request);
         app = result.App;
         modKey = result.ModKey;
     }

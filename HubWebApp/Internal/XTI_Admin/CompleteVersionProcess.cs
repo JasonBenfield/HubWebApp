@@ -1,4 +1,5 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using XTI_App.Abstractions;
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
@@ -36,7 +37,7 @@ public sealed class CompleteVersionProcess
         {
             Console.WriteLine($"***Error Checking out branch {repoInfo.DefaultBranch}***\r\n{ex}");
         }
-        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
+        var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
         var versionKey = AppVersionKey.Parse(versionBranchName.Version.Key);
         await hubAdmin.EndPublish
         (

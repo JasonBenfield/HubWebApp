@@ -12,13 +12,13 @@ public sealed class InstallationUserRepository
         this.factory = factory;
     }
 
-    public Task<AppUser[]> InstallationUsers()
-        => factory.DB
-        .Users
-        .Retrieve()
-        .Where(u => u.UserName.StartsWith("xti_inst_"))
-        .Select(u => factory.User(u))
-        .ToArrayAsync();
+    public Task<AppUser[]> InstallationUsers() =>
+        factory.DB
+            .Users
+            .Retrieve()
+            .Where(u => u.UserName.StartsWith("xti_inst_"))
+            .Select(u => factory.User(u))
+            .ToArrayAsync();
 
     public async Task<AppUser> AddOrUpdateInstallationUser(string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
     {

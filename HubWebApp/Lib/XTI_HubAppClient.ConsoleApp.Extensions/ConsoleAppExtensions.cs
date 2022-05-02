@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Hosting;
@@ -21,7 +20,7 @@ public static class ConsoleAppExtensions
                 var api = sp.GetRequiredService<IAppApi>();
                 if (api is ConsoleAppApiWrapper)
                 {
-                    b.AddImmediate(new ResourceGroupName("Lifetime"), new ResourceName("StopApplication"));
+                    b.AddImmediate<ConsoleAppApiWrapper>(consoleApi => consoleApi.Lifetime.StopApplication);
                 }
             }
         );

@@ -25,4 +25,5 @@ public interface IHubDbContext
     DataRepository<InstallationEntity> Installations { get; }
     DataRepository<StoredObjectEntity> StoredObjects { get; }
     Task Transaction(Func<Task> action);
+    void ClearCache();
 }
