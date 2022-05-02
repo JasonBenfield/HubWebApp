@@ -8,7 +8,7 @@ public interface IPublishedAssets : IDisposable
     string SetupAppPath { get; }
     string AppPath { get; }
 
-    Task LoadVersions();
+    Task LoadVersions(string releaseTag);
 
     Task LoadSetup(AppKey appKey, AppVersionKey versionKey);
 

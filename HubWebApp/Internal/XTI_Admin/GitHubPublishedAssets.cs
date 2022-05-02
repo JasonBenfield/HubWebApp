@@ -98,7 +98,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
 
     private Task<GitHubRelease> getRelease() => gitHubRepo.Release(options.Release);
 
-    public async Task LoadVersions()
+    public async Task LoadVersions(string releaseTag)
     {
         VersionsPath = "";
         if (!Directory.Exists(tempDir))
@@ -110,7 +110,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         {
             File.Delete(versionsPath);
         }
-        var release = await gitHubRepo.Release(options.Release);
+        var release = await gitHubRepo.Release(releaseTag);
         var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
         if (versionsAsset != null)
         {
