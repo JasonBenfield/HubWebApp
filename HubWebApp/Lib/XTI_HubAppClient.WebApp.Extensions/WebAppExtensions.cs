@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,12 @@ public static class WebAppExtensions
 {
     public static void ConfigureXtiCookieAndTokenAuthentication(this IServiceCollection services, XtiEnvironment xtiEnv, IConfiguration config) =>
         CookieAndTokenAuthentication.ConfigureXtiCookieAndTokenAuthentication(services, xtiEnv, config);
+
+    public static void SetXtiCookieOptions(this CookieAuthenticationOptions options, XtiEnvironment xtiEnv, IConfiguration config) =>
+        CookieAndTokenAuthentication.SetXtiCookieOptions(options, xtiEnv, config);
+
+    public static void SetXtiJwtBearerOptions(this JwtBearerOptions options, IConfiguration config) =>
+        CookieAndTokenAuthentication.SetXtiJwtBearerOptions(options, config);
 
     public static void UseXtiDefaults(this WebApplication app) =>
         XTI_WebApp.Extensions.WebAppExtensions.UseXtiDefaults(app);

@@ -46,11 +46,13 @@ public sealed class SystemUserRepository
             );
         }
         var app = await factory.Apps.App(appKey);
-        var systemRole = await app.AddRoleIfNotFound(AppRoleName.System);
-        await systemUser.AssignRole(systemRole);
+        var selfAdminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
+        await systemUser.AssignRole(selfAdminRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         if (hubApp.Key().Equals(HubInfo.AppKey))
         {
+            var hubSystemRole = await hubApp.AddRoleIfNotFound(AppRoleName.System);
+            await systemUser.AssignRole(hubSystemRole);
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
             var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);

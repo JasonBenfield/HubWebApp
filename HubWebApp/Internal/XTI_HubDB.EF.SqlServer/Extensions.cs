@@ -13,7 +13,7 @@ public static class Extensions
     public static void AddHubDbContextForSqlServer(this IServiceCollection services)
     {
         services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
-        services.AddDbContextFactory<HubDbContext>((sp, options) =>
+        services.AddDbContext<HubDbContext>((sp, options) =>
         {
             var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
             var hubDbOptions = sp.GetRequiredService<DbOptions>();
