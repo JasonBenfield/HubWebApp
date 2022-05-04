@@ -75,6 +75,7 @@ internal sealed class PublishProcess
                 Directory.Delete(publishDir, true);
             }
             await new PublishSetupProcess(scopes).Run(appKey, versionKey);
+            await new PublishToolsProcess(scopes).Run(appKey, versionKey);
             if (!appKey.Type.Equals(AppType.Values.Package))
             {
                 await runDotNetPublish(appKey, versionKey);
@@ -140,6 +141,22 @@ internal sealed class PublishProcess
                 await gitHubRepo.UploadReleaseAsset(release, new FileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
             }
         }
+        var toolsPath = Path.Combine(publishDir, "Tools");
+        if (Directory.Exists(toolsPath))
+        {
+            var toolsZipPath = Path.Combine(publishDir, $"{appKeyText}Tools.zip");
+            if (File.Exists(toolsZipPath))
+            {
+                File.Delete(toolsZipPath);
+            }
+            ZipFile.CreateFromDirectory(toolsPath, toolsZipPath);
+            using (var toolsStream = new MemoryStream(File.ReadAllBytes(toolsZipPath)))
+            {
+                toolsStream.Seek(0, SeekOrigin.Begin);
+                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"));
+            }
+        }
+
     }
 
     private async Task runDotNetPublish(AppKey appKey, AppVersionKey versionKey)

@@ -7,13 +7,16 @@ namespace XTI_Admin;
 
 public sealed class GitHubPublishedAssets : IPublishedAssets
 {
+    private readonly Scopes scopes;
     private readonly AdminOptions options;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AppVersionName versionName;
     private string tempDir = "";
+    private GitHubRelease? release;
 
-    public GitHubPublishedAssets(AdminOptions options, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
+    public GitHubPublishedAssets(Scopes scopes, AdminOptions options, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
     {
+        this.scopes = scopes;
         this.options = options;
         this.gitHubRepo = gitHubRepo;
         versionName = versionNameAccessor.Value;
@@ -24,32 +27,79 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         );
     }
 
-    public string VersionsPath { get; private set; } = "";
-
-    public string SetupAppPath { get; private set; } = "";
-
-    public string AppPath { get; private set; } = "";
-
-    public async Task LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadSetup(AppKey appKey, AppVersionKey versionKey)
     {
-        SetupAppPath = "";
-        AppPath = "";
         var appTempDir = prepareTempDir(appKey);
         var appKeyText = getAppKeyText(appKey);
         var release = await getRelease();
-        await downloadSetup(appTempDir, appKeyText, release);
+        var setupPath = await downloadSetup(appTempDir, appKeyText, release);
+        return setupPath;
     }
 
-    public async Task LoadApps(AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadApps(AppKey appKey, AppVersionKey versionKey)
     {
-        SetupAppPath = "";
-        AppPath = "";
         var appTempDir = prepareTempDir(appKey);
         var appKeyText = getAppKeyText(appKey);
         var release = await getRelease();
-        await downloadSetup(appTempDir, appKeyText, release);
-        await downloadApp(appTempDir, appKeyText, release);
+        var appPath = await downloadApp(appTempDir, appKeyText, release);
+        return appPath;
     }
+
+    private async Task<string> downloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
+    {
+        var setupAppPath = "";
+        var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
+        if (setupAsset != null)
+        {
+            Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
+            var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
+            var setupZipPath = Path.Combine(appTempDir, "setup.zip");
+            await File.WriteAllBytesAsync(setupZipPath, setupContent);
+            setupAppPath = Path.Combine(appTempDir, "Setup");
+            ZipFile.ExtractToDirectory(setupZipPath, setupAppPath);
+        }
+        return setupAppPath;
+    }
+
+    private async Task<string> downloadApp(string appTempDir, string appKeyText, GitHubRelease release)
+    {
+        var appPath = "";
+        var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
+        if (appAsset != null)
+        {
+            Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
+            var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
+            var appZipPath = Path.Combine(appTempDir, "setup.zip");
+            await File.WriteAllBytesAsync(appZipPath, appContent);
+            appPath = Path.Combine(appTempDir, "App");
+            ZipFile.ExtractToDirectory(appZipPath, appPath);
+        }
+        return appPath;
+    }
+
+    public async Task<string> LoadVersions(string releaseTag)
+    {
+        if (!Directory.Exists(tempDir))
+        {
+            Directory.CreateDirectory(tempDir);
+        }
+        var versionsPath = Path.Combine(tempDir, "versions.json");
+        if (File.Exists(versionsPath))
+        {
+            File.Delete(versionsPath);
+        }
+        var release = await gitHubRepo.Release(releaseTag);
+        var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
+        if (versionsAsset != null)
+        {
+            Console.WriteLine($"Downloading versions.json {release.TagName} {versionsAsset.Name}");
+            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
+            await File.WriteAllBytesAsync(versionsPath, versionsContent);
+        }
+        return versionsPath;
+    }
+
+    private static string getAppKeyText(AppKey appKey) => $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
 
     private string prepareTempDir(AppKey appKey)
     {
@@ -66,59 +116,19 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return appTempDir;
     }
 
-    private static string getAppKeyText(AppKey appKey) => $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
-
-    private async Task downloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
+    private async Task<GitHubRelease> getRelease()
     {
-        var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
-        if (setupAsset != null)
+        if (release == null)
         {
-            Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
-            var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
-            var setupZipPath = Path.Combine(appTempDir, "setup.zip");
-            await File.WriteAllBytesAsync(setupZipPath, setupContent);
-            SetupAppPath = Path.Combine(appTempDir, "Setup");
-            ZipFile.ExtractToDirectory(setupZipPath, SetupAppPath);
+            var releaseTag = options.Release;
+            if (string.IsNullOrWhiteSpace(releaseTag))
+            {
+                var currentVersion = await new CurrentVersion(scopes, versionName).Value();
+                releaseTag = $"v{currentVersion.VersionNumber.Format()}";
+            }
+            release = await gitHubRepo.Release(releaseTag);
         }
-    }
-
-    private async Task downloadApp(string appTempDir, string appKeyText, GitHubRelease release)
-    {
-        var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
-        if (appAsset != null)
-        {
-            Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
-            var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
-            var appZipPath = Path.Combine(appTempDir, "setup.zip");
-            await File.WriteAllBytesAsync(appZipPath, appContent);
-            AppPath = Path.Combine(appTempDir, "App");
-            ZipFile.ExtractToDirectory(appZipPath, AppPath);
-        }
-    }
-
-    private Task<GitHubRelease> getRelease() => gitHubRepo.Release(options.Release);
-
-    public async Task LoadVersions(string releaseTag)
-    {
-        VersionsPath = "";
-        if (!Directory.Exists(tempDir))
-        {
-            Directory.CreateDirectory(tempDir);
-        }
-        var versionsPath = Path.Combine(tempDir, "versions.json");
-        if (File.Exists(versionsPath))
-        {
-            File.Delete(versionsPath);
-        }
-        var release = await gitHubRepo.Release(releaseTag);
-        var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
-        if (versionsAsset != null)
-        {
-            Console.WriteLine($"Downloading versions.json {release.TagName} {versionsAsset.Name}");
-            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
-            VersionsPath = versionsPath;
-            await File.WriteAllBytesAsync(VersionsPath, versionsContent);
-        }
+        return release;
     }
 
     public void Dispose()

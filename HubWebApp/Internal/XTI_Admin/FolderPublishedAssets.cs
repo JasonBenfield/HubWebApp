@@ -11,31 +11,38 @@ public sealed class FolderPublishedAssets : IPublishedAssets
         this.publishFolder = publishFolder;
     }
 
-    public string VersionsPath { get; private set; } = "";
-
-    public string SetupAppPath { get; private set; } = "";
-
-    public string AppPath { get; private set; } = "";
-
-    public Task LoadVersions(string releaseTag)
+    public Task<string> LoadVersions(string releaseTag)
     {
-        VersionsPath = publishFolder.VersionsPath();
-        return Task.CompletedTask;
+        var versionsPath = publishFolder.VersionsPath();
+        return Task.FromResult(versionsPath);
     }
 
-    public Task LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    public Task<string> LoadSetup(AppKey appKey, AppVersionKey versionKey)
     {
         var sourceDir = publishFolder.AppDir(appKey, versionKey);
-        SetupAppPath = Path.Combine(sourceDir, "Setup");
-        return Task.CompletedTask;
+        var setupAppPath = Path.Combine(sourceDir, "Setup");
+        return Task.FromResult(setupAppPath);
     }
 
-    public Task LoadApps(AppKey appKey, AppVersionKey versionKey)
+    public Task<string> LoadApps(AppKey appKey, AppVersionKey versionKey)
     {
         var sourceDir = publishFolder.AppDir(appKey, versionKey);
-        SetupAppPath = Path.Combine(sourceDir, "Setup");
-        AppPath = Path.Combine(sourceDir, "App");
-        return Task.CompletedTask;
+        var appPath = Path.Combine(sourceDir, "App");
+        return Task.FromResult(appPath);
+    }
+
+    public Task<string> LoadTools(AppKey appKey, AppVersionKey versionKey)
+    {
+        var sourceDir = publishFolder.AppDir(appKey, versionKey);
+        var toolsPath = Path.Combine(sourceDir, "Tools");
+        return Task.FromResult(toolsPath);
+    }
+
+    public Task<string> LoadPowershell(AppKey appKey, AppVersionKey versionKey)
+    {
+        var sourceDir = publishFolder.AppDir(appKey, versionKey);
+        var psPath = Path.Combine(sourceDir, "Powershell");
+        return Task.FromResult(psPath);
     }
 
     public void Dispose() { }

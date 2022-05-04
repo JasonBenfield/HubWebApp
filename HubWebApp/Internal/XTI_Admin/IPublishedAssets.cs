@@ -4,13 +4,9 @@ namespace XTI_Admin;
 
 public interface IPublishedAssets : IDisposable
 {
-    string VersionsPath { get; }
-    string SetupAppPath { get; }
-    string AppPath { get; }
+    Task<string> LoadVersions(string releaseTag);
 
-    Task LoadVersions(string releaseTag);
+    Task<string> LoadSetup(AppKey appKey, AppVersionKey versionKey);
 
-    Task LoadSetup(AppKey appKey, AppVersionKey versionKey);
-
-    Task LoadApps(AppKey appKey, AppVersionKey versionKey);
+    Task<string> LoadApps(AppKey appKey, AppVersionKey versionKey);
 }
