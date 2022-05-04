@@ -21,5 +21,11 @@ Xti-Install -EnvName <EnvironmentName> -RepoOwner JasonBenfield -RepoName HubWeb
 
 Xti-Install -EnvName <EnvironmentName> -RepoOwner JasonBenfield -RepoName HubWebApp -AppName Support -AppType ServiceApp -InstallationSource GitHub -DestinationMachine <MachineName>
 
+Run Command:
+
+sc create xti_install_service start= auto displayname= "XTI Install Service" binpath= "C:\XTI\Tools\XTI_InstallService\XTI_InstallService.exe"
+
+Start XTI Install Service
+
 # Apply certificate to iis express for a custom domain
 c:\\Program Files (x86)\\IIS Express\\IisExpressAdminCmd.exe setupsslUrl -url:https://development.domain.com:44303/ -CertHash:THUMB
