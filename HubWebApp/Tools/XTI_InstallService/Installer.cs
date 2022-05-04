@@ -1,7 +1,7 @@
 ﻿using XTI_Core;
 using XTI_Processes;
 
-namespace LocalInstallService;
+namespace XTI_InstallService;
 
 sealed class Installer
 {

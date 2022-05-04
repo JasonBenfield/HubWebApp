@@ -4,6 +4,8 @@ if(Test-Path ".\xti.private.ps1"){
 . .\xti.Private.ps1
 }
 
+$BaseXtiPublish = $Function:Xti-Publish
+
 function Xti-Publish {
     param(
         [ValidateSet("Production", "Development")]
@@ -15,8 +17,10 @@ function Xti-Publish {
     $PsBoundParameters.Add("Domain", $Domain)
     $SiteName = Get-SiteName -EnvName $EnvName
     $PsBoundParameters.Add("SiteName", $SiteName)
-    BaseXti-Publish @PsBoundParameters
+    & $BaseXtiPublish @PsBoundParameters
 }
+
+$BaseXtiInstall = $Function:Xti-Install
 
 function Xti-Install {
     param(
@@ -31,8 +35,10 @@ function Xti-Install {
         [ValidateSet("Default", "GitHub")]
         $InstallationSource = "Default"
     )
-    BaseXti-Install @PsBoundParameters
+    & $BaseXtiInstall @PsBoundParameters
 }
+
+$BaseXtiPublishLib = $Function:Xti-PublishLib
 
 function Xti-PublishLib {
     param (
@@ -42,7 +48,7 @@ function Xti-PublishLib {
         [ValidateSet("Default", "DB")]
         $HubAdministrationType = "Default"
     )
-    BaseXti-PublishLib @PsBoundParameters
+    & $BaseXtiPublishLib @PsBoundParameters
 }
 
 function Add-HubDBMigrations {

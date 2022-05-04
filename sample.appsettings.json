@@ -1,0 +1,16 @@
+{
+  "HubClient": {
+    "Domain": "webapps.example.com"
+  },
+  "XtiAuthentication": {
+    "JwtSecret": "Secret Phrase",
+    "CookieName": "XTI_AUTH",
+    "CookieDomain": "example.com",
+    "AuthenticatorUrl": "https://development.example.com/Authenticator/Current/Home"
+  },
+  "DB": {
+    "Source": "",
+    "UserName": "",
+    "Password": ""
+  }
+}
