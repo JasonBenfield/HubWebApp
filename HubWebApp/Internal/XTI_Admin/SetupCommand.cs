@@ -37,8 +37,8 @@ internal sealed class SetupCommand : ICommand
         {
             setCurrentDirectory(slnDir, appKey);
             await new PublishSetupProcess(scopes).Run(appKey, versionKey);
-            await publishedAssets.LoadSetup(appKey, versionKey);
-            await new RunSetupProcess(xtiEnv).Run(versionName, appKey, options.VersionKey, publishedAssets.SetupAppPath);
+            var setupAppPath = await publishedAssets.LoadSetup(appKey, versionKey);
+            await new RunSetupProcess(xtiEnv).Run(versionName, appKey, options.VersionKey, setupAppPath);
         }
         Environment.CurrentDirectory = slnDir;
     }

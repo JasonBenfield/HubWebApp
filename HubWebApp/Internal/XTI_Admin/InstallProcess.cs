@@ -24,8 +24,8 @@ internal sealed class InstallProcess
             using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
             var appVersion = await new CurrentVersion(scopes, versionName).Value();
             var release = $"v{appVersion.VersionNumber.Format()}";
-            await publishedAssets.LoadVersions(release);
-            var versionReader = new VersionReader(publishedAssets.VersionsPath);
+            var versionsPath = await publishedAssets.LoadVersions(release);
+            var versionReader = new VersionReader(versionsPath);
             var versions = await versionReader.Versions();
             var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
             var appDefs = appKeys

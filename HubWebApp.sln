@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		readme.md = readme.md
+		sample.appsettings.json = sample.appsettings.json
 		xti.private.ps1 = xti.private.ps1
 		xti.ps1 = xti.ps1
 	EndProjectSection
@@ -59,15 +60,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubDB.EF.SqlServer", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubDbTool", "Tools\HubDbTool\HubDbTool.csproj", "{2ADA9DA1-5E50-4BC7-A94D-1C8DBCEB8973}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalInstallService", "Tools\LocalInstallService\LocalInstallService.csproj", "{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.WebApp.Extensions", "HubWebApp\Lib\XTI_HubAppClient.WebApp.Extensions\XTI_HubAppClient.WebApp.Extensions.csproj", "{C2D83760-4760-4DD0-B3A3-506A43C7AC45}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.ServiceApp.Extensions", "HubWebApp\Lib\XTI_HubAppClient.ServiceApp.Extensions\XTI_HubAppClient.ServiceApp.Extensions.csproj", "{0B6B94D6-869D-4192-95DC-0881882149EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.ConsoleApp.Extensions", "HubWebApp\Lib\XTI_HubAppClient.ConsoleApp.Extensions\XTI_HubAppClient.ConsoleApp.Extensions.csproj", "{930E22B7-5A87-4AFB-B8E1-777A037D6B24}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AdminTool", "Tools\XTI_AdminTool\XTI_AdminTool.csproj", "{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_Admin", "HubWebApp\Internal\XTI_Admin\XTI_Admin.csproj", "{5D14A8EE-8FE6-4103-9DC2-0980F09925D7}"
 EndProject
@@ -128,6 +125,23 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorApiGeneratorApp", "AuthenticatorWebApp\Apps\AuthenticatorApiGeneratorApp\AuthenticatorApiGeneratorApp.csproj", "{585CF6CB-B130-442F-BE1B-21A18F7B95FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorSetupApp", "AuthenticatorWebApp\Apps\AuthenticatorSetupApp\AuthenticatorSetupApp.csproj", "{C1570A7F-BB7E-4B11-A99A-8F71D479128E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0EC7B552-1958-47D8-8730-FC9601B23AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_AdminTool", "HubWebApp\Tools\XTI_AdminTool\XTI_AdminTool.csproj", "{5BF9532D-3013-4C81-B90C-00CA7A31B563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_InstallService", "HubWebApp\Tools\XTI_InstallService\XTI_InstallService.csproj", "{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell", "Powershell", "{23386590-35E2-4038-BE9A-BF9EC3E93D3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowershellForXti", "PowershellForXti", "{7F983166-B9FC-4852-A179-1BE159F4E46F}"
+	ProjectSection(SolutionItems) = preProject
+		HubWebApp\Powershell\PowershellForXti\PowershellForXti.psd1 = HubWebApp\Powershell\PowershellForXti\PowershellForXti.psd1
+		HubWebApp\Powershell\PowershellForXti\PowershellForXti.psm1 = HubWebApp\Powershell\PowershellForXti\PowershellForXti.psm1
+		HubWebApp\Powershell\PowershellForXti\Xti-Dotnet.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Dotnet.ps1
+		HubWebApp\Powershell\PowershellForXti\Xti-Publish.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Publish.ps1
+		HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -211,10 +225,6 @@ Global
 		{2ADA9DA1-5E50-4BC7-A94D-1C8DBCEB8973}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ADA9DA1-5E50-4BC7-A94D-1C8DBCEB8973}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ADA9DA1-5E50-4BC7-A94D-1C8DBCEB8973}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2D83760-4760-4DD0-B3A3-506A43C7AC45}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -227,10 +237,6 @@ Global
 		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{930E22B7-5A87-4AFB-B8E1-777A037D6B24}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D14A8EE-8FE6-4103-9DC2-0980F09925D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D14A8EE-8FE6-4103-9DC2-0980F09925D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D14A8EE-8FE6-4103-9DC2-0980F09925D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -279,6 +285,14 @@ Global
 		{C1570A7F-BB7E-4B11-A99A-8F71D479128E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1570A7F-BB7E-4B11-A99A-8F71D479128E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1570A7F-BB7E-4B11-A99A-8F71D479128E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BF9532D-3013-4C81-B90C-00CA7A31B563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BF9532D-3013-4C81-B90C-00CA7A31B563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BF9532D-3013-4C81-B90C-00CA7A31B563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BF9532D-3013-4C81-B90C-00CA7A31B563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -307,11 +321,9 @@ Global
 		{1AB670D3-B3C1-4896-AFED-B1AEE7147FF1} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{9AA8C2B3-B90B-4A4C-A8E5-7CCEC08F51A6} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{2ADA9DA1-5E50-4BC7-A94D-1C8DBCEB8973} = {D413D9EB-8AC4-40F8-AC7A-99A519E71533}
-		{B1D3FF5F-9158-4B4D-B96E-B10D40F45DE7} = {D413D9EB-8AC4-40F8-AC7A-99A519E71533}
 		{C2D83760-4760-4DD0-B3A3-506A43C7AC45} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
 		{0B6B94D6-869D-4192-95DC-0881882149EE} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
 		{930E22B7-5A87-4AFB-B8E1-777A037D6B24} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
-		{ED691AAC-B93C-4C14-B0E1-9E0E7B287EF1} = {D413D9EB-8AC4-40F8-AC7A-99A519E71533}
 		{5D14A8EE-8FE6-4103-9DC2-0980F09925D7} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{F785EB7E-E845-4ABA-90D4-685345340AD3} = {B6B22FB8-21DB-4AC1-B692-CAB07561AF94}
 		{3F1AC81B-209F-407C-9CEC-8A521B5C6FE9} = {C5292EEC-32E7-4850-BAB7-B777F69D9445}
@@ -329,6 +341,11 @@ Global
 		{2B7D1315-976B-4AEE-B380-1A7489A382E8} = {63FA7D19-DC2A-4275-B17D-F74D4CE11607}
 		{585CF6CB-B130-442F-BE1B-21A18F7B95FB} = {835E93D7-8AFC-4667-9839-6A2E401A85A7}
 		{C1570A7F-BB7E-4B11-A99A-8F71D479128E} = {835E93D7-8AFC-4667-9839-6A2E401A85A7}
+		{0EC7B552-1958-47D8-8730-FC9601B23AE5} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
+		{5BF9532D-3013-4C81-B90C-00CA7A31B563} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
+		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
+		{23386590-35E2-4038-BE9A-BF9EC3E93D3B} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
+		{7F983166-B9FC-4852-A179-1BE159F4E46F} = {23386590-35E2-4038-BE9A-BF9EC3E93D3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}
