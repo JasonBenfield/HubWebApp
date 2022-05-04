@@ -15,7 +15,6 @@ internal sealed class PublishToolsProcess
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey)
     {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var publishDir = scopes.GetRequiredService<PublishedFolder>().AppDir(appKey, versionKey);
         var srcPsDir = Path.Combine(Environment.CurrentDirectory, "Powershell");
         if (Directory.Exists(srcPsDir))

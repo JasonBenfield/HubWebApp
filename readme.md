@@ -1,11 +1,11 @@
 # Setup XTI Environment
 Set XTI_Dir environment variable to override the default XTI directory of c:\\Xti
 
-Download Tools.zip from release
+Download HubWebAppTools.zip from release
 
 Extract to %XTI_Dir%
 
-Download Powershell.zip from release
+Download HubWebAppPowershell.zip from release
 
 Extract to %XTI_Dir%
 

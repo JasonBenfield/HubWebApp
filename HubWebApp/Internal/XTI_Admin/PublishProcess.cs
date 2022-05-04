@@ -156,7 +156,21 @@ internal sealed class PublishProcess
                 await gitHubRepo.UploadReleaseAsset(release, new FileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"));
             }
         }
-
+        var psPath = Path.Combine(publishDir, "Powershell");
+        if (Directory.Exists(psPath))
+        {
+            var psZipPath = Path.Combine(publishDir, $"{appKeyText}Powershell.zip");
+            if (File.Exists(psZipPath))
+            {
+                File.Delete(psZipPath);
+            }
+            ZipFile.CreateFromDirectory(psPath, psZipPath);
+            using (var toolsStream = new MemoryStream(File.ReadAllBytes(psZipPath)))
+            {
+                toolsStream.Seek(0, SeekOrigin.Begin);
+                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(toolsStream, $"{appKeyText}Powershell.zip", "application/zip"));
+            }
+        }
     }
 
     private async Task runDotNetPublish(AppKey appKey, AppVersionKey versionKey)
