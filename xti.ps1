@@ -4,7 +4,7 @@ if(Test-Path ".\xti.private.ps1"){
 . .\xti.Private.ps1
 }
 
-$BaseXtiPublish = $Function:Xti-Publish
+$BaseXtiPublish = ${Function:Xti-Publish}
 
 function Xti-Publish {
     param(
@@ -20,7 +20,7 @@ function Xti-Publish {
     & $BaseXtiPublish @PsBoundParameters
 }
 
-$BaseXtiInstall = $Function:Xti-Install
+$BaseXtiInstall = ${Function:Xti-Install}
 
 function Xti-Install {
     param(
@@ -38,7 +38,7 @@ function Xti-Install {
     & $BaseXtiInstall @PsBoundParameters
 }
 
-$BaseXtiPublishLib = $Function:Xti-PublishLib
+$BaseXtiPublishLib = ${Function:Xti-PublishLib}
 
 function Xti-PublishLib {
     param (

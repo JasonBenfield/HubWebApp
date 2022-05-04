@@ -108,7 +108,7 @@ internal sealed class InstallWebAppProcess
             Directory.CreateDirectory(appPhysPath);
         }
         await writeAppOffline(appKey, versionKey);
-        await Task.Delay(5000);
+        await Task.Delay(10000);
     }
 
     private async Task<CredentialValue> retrieveCredentials(string credentialKey)

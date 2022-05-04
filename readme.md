@@ -15,13 +15,11 @@ Add appsettings.json to %XTI_DIR%\\AppData\\<EnvironmentName> see [sample appset
 
 Run Powershell Commands:
 
-`
 Xti-Install -EnvName <EnvironmentName> -RepoOwner JasonBenfield -RepoName HubWebApp -AppName Hub -AppType WebApp -InstallationSource GitHub -DestinationMachine <MachineName> -SiteName <SiteName> -Domain <Domain>
 
 Xti-Install -EnvName <EnvironmentName> -RepoOwner JasonBenfield -RepoName HubWebApp -AppName Authenticator -AppType WebApp -InstallationSource GitHub -DestinationMachine <MachineName> -SiteName <SiteName> -Domain <Domain>
 
 Xti-Install -EnvName <EnvironmentName> -RepoOwner JasonBenfield -RepoName HubWebApp -AppName Support -AppType ServiceApp -InstallationSource GitHub -DestinationMachine <MachineName>
-`
 
 # Apply certificate to iis express for a custom domain
 c:\\Program Files (x86)\\IIS Express\\IisExpressAdminCmd.exe setupsslUrl -url:https://development.domain.com:44303/ -CertHash:THUMB
