@@ -14,8 +14,7 @@ public sealed class AdminOptions
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
-    public string InstallationUserName { get; set; } = "";
-    public string InstallationPassword { get; set; } = "";
+    public string RemoteInstallKey { get; set; } = "";
     public InstallationSources InstallationSource { get; set; } = InstallationSources.Default;
     public string Release { get; set; } = "";
     public string VersionType { get; set; } = "";

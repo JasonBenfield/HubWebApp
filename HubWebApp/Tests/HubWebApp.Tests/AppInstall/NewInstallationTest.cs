@@ -124,7 +124,8 @@ sealed class NewInstallationTest
         await tester.Execute(request);
         await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
-        var installations = await db.Installations.Retrieve().ToArrayAsync();
+        var unknownLocation = await getUnknownInstallLocation(db);
+        var installations = await db.Installations.Retrieve().Where(inst=>inst.LocationID != unknownLocation.ID).ToArrayAsync();
         var currentInstallations = installations.Where(inst => inst.IsCurrent).ToArray();
         Assert.That(currentInstallations.Length, Is.EqualTo(1), "Should not add duplicate current locations");
     }
@@ -212,13 +213,14 @@ sealed class NewInstallationTest
     private static Task<InstallLocationEntity[]> getInstallLocations(IHubActionTester tester)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
-        return db.InstallLocations.Retrieve().ToArrayAsync();
+        return db.InstallLocations.Retrieve().Where(loc => loc.QualifiedMachineName != "unknown").ToArrayAsync();
     }
 
     private static async Task<InstallationEntity> getCurrentInstallation(IHubActionTester tester)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
-        var installations = await db.Installations.Retrieve().ToArrayAsync();
+        var unknownLocation = await getUnknownInstallLocation(db);
+        var installations = await db.Installations.Retrieve().Where(inst => inst.LocationID != unknownLocation.ID).ToArrayAsync();
         var currentInstallation = installations.First(inst => inst.IsCurrent);
         return currentInstallation;
     }
@@ -237,10 +239,16 @@ sealed class NewInstallationTest
         var appVersionID = db.AppVersions.Retrieve()
             .Where(av => av.AppID == appVersion.ToAppModel().ID && av.VersionID == appVersion.ToVersionModel().ID)
             .Select(av => av.ID);
-        var installations = await db.Installations.Retrieve().ToArrayAsync();
+        var unknownLocation = await getUnknownInstallLocation(db);
+        var installations = await db.Installations.Retrieve().Where(inst => inst.LocationID != unknownLocation.ID).ToArrayAsync();
         var versionInstallation = installations
             .First(inst => !inst.IsCurrent && appVersionID.Contains(inst.AppVersionID));
         return versionInstallation;
+    }
+
+    private static async Task<InstallLocationEntity> getUnknownInstallLocation(HubDbContext db)
+    {
+        return await db.InstallLocations.Retrieve().FirstAsync(loc => loc.QualifiedMachineName == "unknown");
     }
 
     private async Task<HubActionTester<NewInstallationRequest, NewInstallationResult>> setup()

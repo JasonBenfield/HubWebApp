@@ -4,13 +4,13 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppEvent
+public sealed class AppLogEntry
 {
-    private readonly AppEventEntity record;
+    private readonly AppLogEntryEntity record;
 
-    internal AppEvent(AppEventEntity record)
+    internal AppLogEntry(AppLogEntryEntity record)
     {
-        this.record = record ?? new AppEventEntity();
+        this.record = record ?? new AppLogEntryEntity();
         ID = this.record.ID;
     }
 
@@ -20,7 +20,7 @@ public sealed class AppEvent
     public string Detail { get => record.Detail; }
     public AppEventSeverity Severity() => AppEventSeverity.Values.Value(record.Severity);
 
-    public AppEventModel ToModel() => new AppEventModel
+    public AppLogEntryModel ToModel() => new AppLogEntryModel
     {
         ID = ID,
         RequestID = record.RequestID,
@@ -31,5 +31,5 @@ public sealed class AppEvent
         Detail = Detail
     };
 
-    public override string ToString() => $"{nameof(AppEvent)} {ID}";
+    public override string ToString() => $"{nameof(AppLogEntry)} {ID}";
 }

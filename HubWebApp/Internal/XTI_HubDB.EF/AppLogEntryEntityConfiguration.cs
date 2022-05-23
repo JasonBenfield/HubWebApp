@@ -4,9 +4,9 @@ using XTI_HubDB.Entities;
 
 namespace XTI_HubDB.EF;
 
-public sealed class AppEventEntityConfiguration : IEntityTypeConfiguration<AppEventEntity>
+public sealed class AppLogEntryEntityConfiguration : IEntityTypeConfiguration<AppLogEntryEntity>
     {
-        public void Configure(EntityTypeBuilder<AppEventEntity> builder)
+        public void Configure(EntityTypeBuilder<AppLogEntryEntity> builder)
         {
             builder.HasKey(e => e.ID);
             builder.Property(e => e.ID).ValueGeneratedOnAdd();
@@ -20,6 +20,6 @@ public sealed class AppEventEntityConfiguration : IEntityTypeConfiguration<AppEv
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasForeignKey(e => e.RequestID);
-            builder.ToTable("Events");
+            builder.ToTable("LogEntries");
         }
     }

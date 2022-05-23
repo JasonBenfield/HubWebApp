@@ -17,13 +17,33 @@ public sealed class AppRequestRepository
     (
         AppSession session, 
         string requestKey, 
-        Resource resource, 
-        Modifier modifier, 
+        Installation installation, 
         string path, 
         DateTimeOffset timeRequested, 
         int actualCount
     )
     {
+        XtiPath xtiPath;
+        try
+        {
+            xtiPath = XtiPath.Parse(path);
+        }
+        catch
+        {
+            xtiPath = new XtiPath(AppName.Unknown.Value);
+        }
+        if (string.IsNullOrWhiteSpace(xtiPath.Group))
+        {
+            xtiPath = xtiPath.WithGroup("Home");
+        }
+        if (string.IsNullOrWhiteSpace(xtiPath.Action))
+        {
+            xtiPath = xtiPath.WithAction("Index");
+        }
+        var resourceGroup = await installation.ResourceGroupOrDefault(xtiPath.Group);
+        var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action);
+        var modCategory = await resourceGroup.ModCategory();
+        var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier);
         var record = await factory.DB.Requests.Retrieve()
             .FirstOrDefaultAsync(r => r.RequestKey == requestKey);
         if (record == null)
@@ -32,6 +52,7 @@ public sealed class AppRequestRepository
             (
                 session,
                 requestKey,
+                installation,
                 resource,
                 modifier,
                 path,
@@ -49,6 +70,7 @@ public sealed class AppRequestRepository
                     r =>
                     {
                         r.SessionID = session.ID;
+                        r.InstallationID = installation.ID;
                         r.ResourceID = resource.ID;
                         r.ModifierID = modifier.ID;
                         r.Path = path;
@@ -62,20 +84,22 @@ public sealed class AppRequestRepository
 
     public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now)
     {
-        var requestRecord = await factory.DB.Requests.Retrieve()
+        var requestEntity = await factory.DB.Requests.Retrieve()
             .FirstOrDefaultAsync(r => r.RequestKey == requestKey);
-        if (requestRecord == null)
+        if (requestEntity == null)
         {
             var session = await factory.Sessions.DefaultSession(now);
             var app = await factory.Apps.App(AppKey.Unknown);
-            var version = await app.CurrentVersion();
-            var resourceGroup = await version.ResourceGroupOrDefault(ResourceGroupName.Unknown);
+            var unknownLocation = await factory.InstallLocations.AddIfNotFound("unknown");
+            var installation = await unknownLocation.CurrentInstallation(app);
+            var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown);
             var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown);
             var modifier = await app.DefaultModifier();
-            requestRecord = await Add
+            requestEntity = await Add
             (
                 session,
                 string.IsNullOrWhiteSpace(requestKey) ? new GeneratedKey().Value() : requestKey,
+                installation,
                 resource,
                 modifier,
                 "",
@@ -83,15 +107,16 @@ public sealed class AppRequestRepository
                 1
             );
         }
-        return factory.CreateRequest(requestRecord);
+        return factory.CreateRequest(requestEntity);
     }
 
-    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested, int actualCount)
+    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Installation installation, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested, int actualCount)
     {
         var record = new AppRequestEntity
         {
             SessionID = session.ID,
             RequestKey = requestKey,
+            InstallationID = installation.ID,
             ResourceID = resource.ID,
             ModifierID = modifier.ID,
             Path = path ?? "",

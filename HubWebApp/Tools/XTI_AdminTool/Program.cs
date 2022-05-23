@@ -185,35 +185,68 @@ await Host.CreateDefaultBuilder(args)
             (
                 sp =>
                 {
-                    IHubAdministration hubAdministration;
                     var options = sp.GetRequiredService<AdminOptions>();
-                    if (options.HubAdministrationType == HubAdministrationTypes.Default)
+                    var hubDbType = options.HubAdministrationType;
+                    if (hubDbType == HubAdministrationTypes.Default)
                     {
                         var appKeys = sp.GetRequiredService<SelectedAppKeys>();
                         if (appKeys.Values.Any(appKey => appKey.Equals(HubInfo.AppKey)))
                         {
-                            options.HubAdministrationType = HubAdministrationTypes.DB;
+                            hubDbType = HubAdministrationTypes.DB;
                         }
                         else
                         {
-                            options.HubAdministrationType = HubAdministrationTypes.HubClient;
+                            hubDbType = HubAdministrationTypes.HubClient;
                         }
                     }
-                    if (options.HubAdministrationType == HubAdministrationTypes.DB)
+                    return new HubDbTypeAccessor(hubDbType);
+                }
+            );
+            services.AddScoped
+            (
+                sp =>
+                {
+                    IHubAdministration hubAdministration;
+                    var hubDbType = sp.GetRequiredService<HubDbTypeAccessor>().Value;
+                    if (hubDbType == HubAdministrationTypes.DB)
                     {
                         hubAdministration = sp.GetRequiredService<DbHubAdministration>();
                     }
-                    else if (options.HubAdministrationType == HubAdministrationTypes.HubClient)
+                    else if (hubDbType == HubAdministrationTypes.HubClient)
                     {
                         hubAdministration = sp.GetRequiredService<HcHubAdministration>();
                     }
                     else
                     {
-                        throw new NotSupportedException($"'{options.HubAdministrationType}' is not supported.");
+                        throw new NotSupportedException($"'{hubDbType}' is not supported.");
                     }
                     return hubAdministration;
                 }
             );
+            services.AddScoped<EfStoredObjectDB>();
+            services.AddScoped<HcStoredObjectDB>();
+            services.AddScoped
+            (
+                sp =>
+                {
+                    IStoredObjectDB storedObjectDB;
+                    var hubDbType = sp.GetRequiredService<HubDbTypeAccessor>().Value;
+                    if (hubDbType == HubAdministrationTypes.DB)
+                    {
+                        storedObjectDB = sp.GetRequiredService<EfStoredObjectDB>();
+                    }
+                    else if (hubDbType == HubAdministrationTypes.HubClient)
+                    {
+                        storedObjectDB = sp.GetRequiredService<HcStoredObjectDB>();
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"'{hubDbType}' is not supported.");
+                    }
+                    return storedObjectDB;
+                }
+            );
+            services.AddScoped<StoredObjectFactory>();
             services.AddSingleton<CommandFactory>();
             services.AddHostedService<HostedService>();
         }

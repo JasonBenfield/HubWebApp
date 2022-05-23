@@ -13,6 +13,9 @@ public sealed class ModifierRepository
         this.factory = factory;
     }
 
+    internal Task<Modifier> AddDefaultModifierIfNotFound(ModifierCategory category) =>
+        AddOrUpdateByModKey(category, ModifierKey.Default, "", "");
+
     internal async Task<Modifier> AddOrUpdateByModKey(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
     {
         var record = await GetModifierByModKey(category, modKey);

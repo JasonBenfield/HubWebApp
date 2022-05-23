@@ -1,6 +1,6 @@
 ﻿using XTI_Core;
 
-namespace XTI_Hub;
+namespace XTI_Hub.Abstractions;
 
 public sealed class StorageName : TextValue, IEquatable<StorageName>
 {

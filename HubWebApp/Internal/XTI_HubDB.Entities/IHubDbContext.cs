@@ -5,7 +5,7 @@ namespace XTI_HubDB.Entities;
 public interface IHubDbContext
 {
     DataRepository<AppEntity> Apps { get; }
-    DataRepository<AppEventEntity> Events { get; }
+    DataRepository<AppLogEntryEntity> LogEntries { get; }
     DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     DataRepository<ModifierEntity> Modifiers { get; }
     DataRepository<AppRequestEntity> Requests { get; }

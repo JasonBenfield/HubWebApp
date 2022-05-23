@@ -28,8 +28,8 @@ public class ResourceController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppEventModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceLogRequest model)
+    public Task<ResultContainer<AppLogEntryModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceLogRequest model)
     {
-        return api.Group("Resource").Action<GetResourceLogRequest, AppEventModel[]>("GetMostRecentErrorEvents").Execute(model);
+        return api.Group("Resource").Action<GetResourceLogRequest, AppLogEntryModel[]>("GetMostRecentErrorEvents").Execute(model);
     }
 }

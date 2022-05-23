@@ -4,21 +4,21 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppEventRepository
+public sealed class AppLogEntryRepository
 {
     private readonly HubFactory factory;
 
-    public AppEventRepository(HubFactory factory)
+    public AppLogEntryRepository(HubFactory factory)
     {
         this.factory = factory;
     }
 
-    public async Task<AppEvent> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
+    public async Task<AppLogEntry> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
     {
-        var record = await factory.DB.Events.Retrieve().FirstOrDefaultAsync(evt => evt.EventKey == eventKey);
+        var record = await factory.DB.LogEntries.Retrieve().FirstOrDefaultAsync(evt => evt.EventKey == eventKey);
         if (record == null)
         {
-            record = new AppEventEntity
+            record = new AppLogEntryEntity
             {
                 RequestID = request.ID,
                 EventKey = eventKey,
@@ -29,11 +29,11 @@ public sealed class AppEventRepository
                 Detail = detail,
                 ActualCount = actualCount
             };
-            await factory.DB.Events.Create(record);
+            await factory.DB.LogEntries.Create(record);
         }
         else
         {
-            await factory.DB.Events.Update
+            await factory.DB.LogEntries.Update
             (
                 record,
                 evt =>
@@ -52,15 +52,15 @@ public sealed class AppEventRepository
         return factory.CreateEvent(record);
     }
 
-    internal Task<AppEvent[]> RetrieveByRequest(AppRequest request)
+    internal Task<AppLogEntry[]> RetrieveByRequest(AppRequest request)
     {
-        return factory.DB.Events.Retrieve()
+        return factory.DB.LogEntries.Retrieve()
             .Where(e => e.RequestID == request.ID)
             .Select(e => factory.CreateEvent(e))
             .ToArrayAsync();
     }
 
-    internal Task<AppEvent[]> MostRecentErrorsForVersion(App app, XtiVersion version, int howMany)
+    internal Task<AppLogEntry[]> MostRecentLoggedErrorsForVersion(App app, XtiVersion version, int howMany)
     {
         var appVersionID = factory.Versions.QueryAppVersionID(app, version);
         var requestIDs = factory.DB
@@ -87,7 +87,7 @@ public sealed class AppEventRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    internal Task<AppEvent[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany)
+    internal Task<AppLogEntry[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany)
     {
         var requestIDs = factory.DB
             .Requests
@@ -106,7 +106,7 @@ public sealed class AppEventRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    internal Task<AppEvent[]> MostRecentErrorsForResource(Resource resource, int howMany)
+    internal Task<AppLogEntry[]> MostRecentErrorsForResource(Resource resource, int howMany)
     {
         var requestIDs = factory.DB
             .Requests
@@ -116,9 +116,9 @@ public sealed class AppEventRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    private Task<AppEvent[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
+    private Task<AppLogEntry[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
         factory.DB
-            .Events
+            .LogEntries
             .Retrieve()
             .Where
             (

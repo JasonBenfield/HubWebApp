@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubAppApi.AppInquiry;
 
-public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppEventModel[]>
+public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppLogEntryModel[]>
 {
     private readonly AppFromPath appFromPath;
 
@@ -9,10 +9,10 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppEventMode
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppEventModel[]> Execute(int howMany)
+    public async Task<AppLogEntryModel[]> Execute(int howMany)
     {
         var app = await appFromPath.Value();
-        var events = await app.MostRecentErrorEvents(howMany);
+        var events = await app.MostRecentErrorLogEntries(howMany);
         return events.Select(evt => evt.ToModel()).ToArray();
     }
 }

@@ -17,9 +17,8 @@ internal sealed class LocalInstallServiceProcess
         this.versionName = versionName;
     }
 
-    public async Task Run(InstallationOptions installation)
+    public async Task Run(string machineName, string remoteInstallKey)
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
         var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
         var appVersion = await new CurrentVersion(scopes, versionName).Value();
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
@@ -37,16 +36,12 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("versionKey", appVersion.VersionKey.DisplayText),
                 KeyValuePair.Create("repoOwner", gitRepoInfo.RepoOwner),
                 KeyValuePair.Create("repoName", gitRepoInfo.RepoName),
-                KeyValuePair.Create("installationUserName", options.InstallationUserName),
-                KeyValuePair.Create("installationPassword", options.InstallationPassword),
-                KeyValuePair.Create("release", release),
-                KeyValuePair.Create("destinationMachine", installation.MachineName),
-                KeyValuePair.Create("domain", installation.Domain),
-                KeyValuePair.Create("siteName", installation.SiteName)
+                KeyValuePair.Create("RemoteInstallKey", remoteInstallKey),
+                KeyValuePair.Create("release", release)
             }
         );
-        var installServiceUrl = $"http://{installation.MachineName}:61862";
-        Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey.DisplayText} {options.InstallationUserName} {options.InstallationPassword} {release}");
+        var installServiceUrl = $"http://{machineName}:61862";
+        Console.WriteLine($"Posting to '{installServiceUrl}' {appKey.Name.Value} {appKey.Type.DisplayText} {appVersion.VersionKey.DisplayText} {remoteInstallKey} {release}");
         using var response = await client.PostAsync(installServiceUrl, content);
         var responseBody = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response: {response.StatusCode} {responseBody}");

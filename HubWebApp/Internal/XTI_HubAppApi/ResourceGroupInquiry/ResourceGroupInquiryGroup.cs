@@ -20,5 +20,5 @@ public sealed class ResourceGroupInquiryGroup : AppApiGroupWrapper
     public AppApiAction<GetResourceGroupRoleAccessRequest, AppRoleModel[]> GetRoleAccess { get; }
     public AppApiAction<GetResourceGroupModCategoryRequest, ModifierCategoryModel> GetModCategory { get; }
     public AppApiAction<GetResourceGroupLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests { get; }
-    public AppApiAction<GetResourceGroupLogRequest, AppEventModel[]> GetMostRecentErrorEvents { get; }
+    public AppApiAction<GetResourceGroupLogRequest, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
 }

@@ -18,6 +18,9 @@ public sealed class ModifierCategory : IModifierCategory
     public int ID { get; }
     public ModifierCategoryName Name() => new ModifierCategoryName(record.Name);
 
+    public Task<Modifier> AddDefaultModifierIfNotFound()
+        => factory.Modifiers.AddDefaultModifierIfNotFound(this);
+
     public Task<Modifier> AddOrUpdateModifier(int targetID, string displayText)
         => AddOrUpdateModifier(targetID.ToString(), displayText);
 
@@ -39,7 +42,7 @@ public sealed class ModifierCategory : IModifierCategory
 
     public Task<Modifier[]> Modifiers() => factory.Modifiers.Modifiers(this);
 
-    public Task<ResourceGroup[]> ResourceGroups() => factory.Groups.Groups(this);
+    public Task<ResourceGroup[]> ResourceGroups(AppVersion appVersion) => factory.Groups.Groups(appVersion, this);
 
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {

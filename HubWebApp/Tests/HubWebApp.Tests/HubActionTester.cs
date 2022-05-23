@@ -75,9 +75,6 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return user;
     }
 
-    public void AddRole(FakeAppUser user, AppRoleName roleName)=>
-        user.AddRole(roleName);
-
     public Task<App> HubApp()
     {
         var factory = Services.GetRequiredService<HubFactory>();
@@ -107,13 +104,6 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             hubApp.Key().Name.DisplayText
         );
         return hubAppModifier;
-    }
-
-    public FakeModifier FakeDefaultModifier()
-    {
-        var fakeApp = FakeHubApp();
-        var modCategory = fakeApp.ModCategory(HubInfo.ModCategories.Default);
-        return modCategory.ModifierOrDefault(ModifierKey.Default);
     }
 
     public FakeModifier FakeHubAppModifier()

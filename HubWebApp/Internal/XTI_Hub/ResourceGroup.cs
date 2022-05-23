@@ -115,8 +115,8 @@ public sealed class ResourceGroup : IResourceGroup
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
         => factory.Requests.MostRecentForResourceGroup(this, howMany);
 
-    public Task<AppEvent[]> MostRecentErrorEvents(int howMany)
-        => factory.Events.MostRecentErrorsForResourceGroup(this, howMany);
+    public Task<AppLogEntry[]> MostRecentErrorEvents(int howMany)
+        => factory.LogEntries.MostRecentErrorsForResourceGroup(this, howMany);
 
     public ResourceGroupModel ToModel()
         => new ResourceGroupModel

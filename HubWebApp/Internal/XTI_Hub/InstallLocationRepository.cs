@@ -12,7 +12,7 @@ public sealed class InstallLocationRepository
         this.appFactory = appFactory;
     }
 
-    public async Task<InstallLocation> TryAdd(string qualifiedMachineName)
+    public async Task<InstallLocation> AddIfNotFound(string qualifiedMachineName)
     {
         qualifiedMachineName = qualifiedMachineName.ToLower().Trim();
         var location = await appFactory.DB

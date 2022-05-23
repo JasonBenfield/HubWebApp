@@ -17,7 +17,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
         Requests = new EfDataRepository<AppRequestEntity>(this);
-        Events = new EfDataRepository<AppEventEntity>(this);
+        LogEntries = new EfDataRepository<AppLogEntryEntity>(this);
         Apps = new EfDataRepository<AppEntity>(this);
         Versions = new EfDataRepository<XtiVersionEntity>(this);
         AppVersions = new EfDataRepository<AppXtiVersionEntity>(this);
@@ -42,7 +42,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new AppEventEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AppLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEntityConfiguration());
         modelBuilder.ApplyConfiguration(new XtiVersionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppXtiVersionEntityConfiguration());
@@ -65,7 +65,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }
     public DataRepository<AppRequestEntity> Requests { get; }
-    public DataRepository<AppEventEntity> Events { get; }
+    public DataRepository<AppLogEntryEntity> LogEntries { get; }
     public DataRepository<AppEntity> Apps { get; }
     public DataRepository<XtiVersionEntity> Versions { get; }
     public DataRepository<AppXtiVersionEntity> AppVersions { get; }

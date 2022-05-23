@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Internal\XTI_HubDB.EF.InMemory\XTI_HubDB.EF.InMemory.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ModCategory\" />
+  </ItemGroup>
+
 </Project>

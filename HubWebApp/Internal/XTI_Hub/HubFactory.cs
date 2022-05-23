@@ -79,11 +79,11 @@ public sealed class HubFactory
 
     internal AppRequest CreateRequest(AppRequestEntity record) => new(this, record);
 
-    private AppEventRepository? events;
+    private AppLogEntryRepository? events;
 
-    public AppEventRepository Events { get => events ??= new(this); }
+    public AppLogEntryRepository LogEntries { get => events ??= new(this); }
 
-    internal AppEvent CreateEvent(AppEventEntity record) => new(record);
+    internal AppLogEntry CreateEvent(AppLogEntryEntity record) => new(record);
 
     private InstallLocationRepository? installLocations;
 

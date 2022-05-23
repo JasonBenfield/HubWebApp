@@ -70,6 +70,7 @@ function Xti-Install {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
+        [ValidateSet("", "WebApp", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]

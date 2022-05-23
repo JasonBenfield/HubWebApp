@@ -1,5 +1,7 @@
 ﻿using HubWebApp.Extensions;
 using Microsoft.Extensions.Hosting;
+using XTI_Admin;
+using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Hub.Abstractions;
 
@@ -11,11 +13,11 @@ internal sealed class PersistedVersionsTest
     public async Task ShouldPersistVersions()
     {
         var sp = setup("Production");
-        var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "HubWebAppVersions.json");
+        var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "versions.json");
         var persistedVersions = new XTI_Hub.PersistedVersions(path);
         await persistedVersions.Store
         (
-            new []
+            new[]
             {
                 new XtiVersionModel
                 {
@@ -29,6 +31,15 @@ internal sealed class PersistedVersionsTest
                 }
             }
         );
+    }
+
+    [Test]
+    public async Task ShouldReadVersions()
+    {
+        var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "versions.json");
+        var reader = new VersionReader(path);
+        var versions = await reader.Versions();
+        Console.WriteLine(XtiSerializer.Serialize(versions));
     }
 
     private static IServiceProvider setup(string envName = "Development")

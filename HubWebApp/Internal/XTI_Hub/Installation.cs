@@ -5,12 +5,12 @@ namespace XTI_Hub;
 
 public class Installation
 {
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
     private readonly InstallationEntity entity;
 
-    protected Installation(HubFactory appFactory, InstallationEntity entity)
+    protected Installation(HubFactory hubFactory, InstallationEntity entity)
     {
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
         this.entity = entity;
         ID = entity.ID;
     }
@@ -24,16 +24,16 @@ public class Installation
     public Task Installed() => SetStatus(InstallStatus.Values.Installed);
 
     private Task SetStatus(InstallStatus status) =>
-        appFactory.DB
+        hubFactory.DB
             .Installations
             .Update(entity, inst => inst.Status = status.Value);
 
     protected Task StartVersion(string domain) =>
-        appFactory.DB
+        hubFactory.DB
             .Installations
             .Update
             (
-                entity, 
+                entity,
                 inst =>
                 {
                     inst.Status = InstallStatus.Values.InstallStarted.Value;
@@ -44,7 +44,7 @@ public class Installation
     protected async Task StartCurrent(AppVersion appVersion, string domain)
     {
         var appVersionID = await appVersion.AppVersionID();
-        await appFactory.DB
+        await hubFactory.DB
             .Installations
             .Update
             (
@@ -57,6 +57,9 @@ public class Installation
                 }
             );
     }
+
+    public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName groupName) =>
+        hubFactory.Groups.GroupOrDefault(entity.AppVersionID, groupName);
 
     public InstallationModel ToModel() => new InstallationModel
     {

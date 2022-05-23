@@ -1,22 +1,19 @@
-﻿using XTI_Core;
-
-namespace XTI_HubAppApi.Storage;
+﻿namespace XTI_HubAppApi.Storage;
 
 internal sealed class GetStoredObjectAction : AppAction<GetStoredObjectRequest, string>
 {
-    private readonly HubFactory appFactory;
-    private readonly IClock clock;
+    private readonly StoredObjectFactory storedObjectFactory;
 
-    public GetStoredObjectAction(HubFactory appFactory, IClock clock)
+    public GetStoredObjectAction(StoredObjectFactory storedObjectFactory)
     {
-        this.appFactory = appFactory;
-        this.clock = clock;
+        this.storedObjectFactory = storedObjectFactory; 
     }
 
     public async Task<string> Execute(GetStoredObjectRequest model)
     {
         var storageName = new StorageName(model.StorageName);
-        var data = await appFactory.StoredObjects.StoredObject(storageName, model.StorageKey, clock.Now());
+        var storedObject = storedObjectFactory.CreateStoredObject(storageName);
+        var data = await storedObject.SerializedValue(model.StorageKey);
         if (string.IsNullOrWhiteSpace(data))
         {
             throw new StoredObjectNotFoundException(model.StorageName, model.StorageKey);

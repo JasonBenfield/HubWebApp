@@ -27,20 +27,20 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         );
     }
 
-    public async Task<string> LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadSetup(string releaseTag, AppKey appKey, AppVersionKey versionKey)
     {
         var appTempDir = prepareTempDir(appKey);
         var appKeyText = getAppKeyText(appKey);
-        var release = await getRelease();
+        var release = await getRelease(releaseTag);
         var setupPath = await downloadSetup(appTempDir, appKeyText, release);
         return setupPath;
     }
 
-    public async Task<string> LoadApps(AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadApps(string releaseTag, AppKey appKey, AppVersionKey versionKey)
     {
         var appTempDir = prepareTempDir(appKey);
         var appKeyText = getAppKeyText(appKey);
-        var release = await getRelease();
+        var release = await getRelease(releaseTag);
         var appPath = await downloadApp(appTempDir, appKeyText, release);
         return appPath;
     }
@@ -116,11 +116,10 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return appTempDir;
     }
 
-    private async Task<GitHubRelease> getRelease()
+    private async Task<GitHubRelease> getRelease(string releaseTag)
     {
-        if (release == null)
+        if (release == null || release.TagName != releaseTag)
         {
-            var releaseTag = options.Release;
             if (string.IsNullOrWhiteSpace(releaseTag))
             {
                 var currentVersion = await new CurrentVersion(scopes, versionName).Value();

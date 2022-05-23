@@ -98,7 +98,7 @@ public sealed class DbHubAdministration : IHubAdministration
         var app = await hubFactory.Apps.App(appKey);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
-        var installLocation = await hubFactory.InstallLocations.TryAdd(machineName);
+        var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName);
         Installation currentInstallation;
         var hasCurrentInstallation = await installLocation.HasCurrentInstallation(app);
         if (hasCurrentInstallation)

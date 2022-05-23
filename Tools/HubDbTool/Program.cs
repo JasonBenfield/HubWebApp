@@ -19,9 +19,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddConfigurationOptions<HubDbToolOptions>();
         services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddHubDbContextForSqlServer();
-        services.AddScoped<HubDbReset>();
-        services.AddScoped<HubDbBackup>();
-        services.AddScoped<HubDbRestore>();
+        services.AddScoped<DbAdmin<HubDbContext>>();
         services.AddScoped<HubFactory>();
         services.AddScoped<InitialSetup>();
         services.AddHostedService<HostedService>();

@@ -6,26 +6,25 @@ namespace XTI_HubAppApi.ExternalAuth;
 internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, string>
 {
     private readonly HubFactory hubFactory;
-    private readonly IClock clock;
+    private readonly StoredObjectFactory storedObjectFactory;
 
-    public ExternalAuthKeyAction(HubFactory hubFactory, IClock clock)
+    public ExternalAuthKeyAction(HubFactory hubFactory, StoredObjectFactory storedObjectFactory)
     {
         this.hubFactory = hubFactory;
-        this.clock = clock;
+        this.storedObjectFactory = storedObjectFactory;
     }
 
     public async Task<string> Execute(ExternalAuthKeyModel model)
     {
         var app = await hubFactory.Apps.App(model.AppKey);
         var user = await hubFactory.Users.UserByExternalKey(app, model.ExternalUserKey);
-        var authKey = await new StoreObjectProcess(hubFactory)
-            .Run
-            (
-                new StorageName("XTI Authenticated"),
-                GeneratedStorageKeyType.Values.SixDigit,
-                JsonSerializer.Serialize(new AuthenticatedModel { UserName = user.UserName().Value }),
-                clock.Now().AddMinutes(30)
-            );
+        var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
+        var authKey = await storedObject.Store
+        (
+            GeneratedStorageKeyType.Values.SixDigit,
+            new AuthenticatedModel { UserName = user.UserName().Value },
+            TimeSpan.FromMinutes(30)
+        );
         return authKey;
     }
 }

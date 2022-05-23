@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubDB.Entities;
 
-public sealed class AppEventEntity
+public sealed class AppLogEntryEntity
 {
     public int ID { get; set; }
     public string EventKey { get; set; } = "";

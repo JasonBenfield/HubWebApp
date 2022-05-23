@@ -58,7 +58,7 @@ public sealed class InstallationUserRepository
             timeAdded
         );
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var role = await hubApp.Role(HubInfo.Roles.Admin);
+        var role = await hubApp.AddRoleIfNotFound(HubInfo.Roles.Admin);
         await user.AssignRole(role);
         return user;
     }

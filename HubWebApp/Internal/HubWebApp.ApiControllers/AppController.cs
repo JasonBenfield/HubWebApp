@@ -46,9 +46,9 @@ public class AppController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppEventModel[]>> GetMostRecentErrorEvents([FromBody] int model)
+    public Task<ResultContainer<AppLogEntryModel[]>> GetMostRecentErrorEvents([FromBody] int model)
     {
-        return api.Group("App").Action<int, AppEventModel[]>("GetMostRecentErrorEvents").Execute(model);
+        return api.Group("App").Action<int, AppLogEntryModel[]>("GetMostRecentErrorEvents").Execute(model);
     }
 
     [HttpPost]
