@@ -10,7 +10,6 @@ public sealed class InstallationEntityConfiguration : IEntityTypeConfiguration<I
     {
         builder.HasKey(inst => inst.ID);
         builder.Property(inst => inst.ID).ValueGeneratedOnAdd();
-        builder.HasIndex(inst => new { inst.LocationID, inst.AppVersionID, inst.IsCurrent }).IsUnique();
         builder.Property(r => r.Domain).HasMaxLength(100);
         builder
             .HasOne<InstallLocationEntity>()

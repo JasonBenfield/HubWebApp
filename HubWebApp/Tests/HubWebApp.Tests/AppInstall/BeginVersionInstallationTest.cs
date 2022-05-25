@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_Core;
-using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
 using XTI_HubAppApi.AppInstall;
 using XTI_HubDB.Entities;
 
@@ -26,11 +21,9 @@ sealed class BeginVersionInstallationTest
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new BeginInstallationRequest
+        var request = new InstallationRequest
         {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey,
-            VersionKey = version.Key()
+            InstallationID = newInstResult.VersionInstallationID
         };
         await tester.Execute(request);
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
@@ -39,35 +32,6 @@ sealed class BeginVersionInstallationTest
             InstallStatus.Values.Value(versionInstallation.Status),
             Is.EqualTo(InstallStatus.Values.InstallStarted),
             "Should set version installation status to install started"
-        );
-    }
-
-    [Test]
-    public async Task ShouldReturnVersionInstallationID()
-    {
-        var tester = await setup();
-        var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
-        const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await newInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = version.ToVersionModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
-        var request = new BeginInstallationRequest
-        {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey,
-            VersionKey = version.Key()
-        };
-        var installationID = await tester.Execute(request);
-        Assert.That
-        (
-            installationID,
-            Is.EqualTo(newInstResult.VersionInstallationID),
-            "Should return version install ID"
         );
     }
 
@@ -86,10 +50,10 @@ sealed class BeginVersionInstallationTest
         return result.Data;
     }
 
-    private async Task<HubActionTester<BeginInstallationRequest, int>> setup()
+    private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        return HubActionTester.Create(sp, hubApi => hubApi.Install.BeginVersionInstallation);
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.BeginInstallation);
     }
 }

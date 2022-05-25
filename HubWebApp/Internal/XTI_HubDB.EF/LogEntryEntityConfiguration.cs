@@ -4,9 +4,9 @@ using XTI_HubDB.Entities;
 
 namespace XTI_HubDB.EF;
 
-public sealed class AppLogEntryEntityConfiguration : IEntityTypeConfiguration<AppLogEntryEntity>
+public sealed class LogEntryEntityConfiguration : IEntityTypeConfiguration<LogEntryEntity>
     {
-        public void Configure(EntityTypeBuilder<AppLogEntryEntity> builder)
+        public void Configure(EntityTypeBuilder<LogEntryEntity> builder)
         {
             builder.HasKey(e => e.ID);
             builder.Property(e => e.ID).ValueGeneratedOnAdd();

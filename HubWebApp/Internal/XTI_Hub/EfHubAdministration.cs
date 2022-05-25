@@ -4,14 +4,14 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
-public sealed class DbHubAdministration : IHubAdministration
+public sealed class EfHubAdministration : IHubAdministration
 {
     private readonly XtiEnvironment xtiEnv;
     private readonly HubFactory hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public DbHubAdministration(XtiEnvironment xtiEnv, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public EfHubAdministration(XtiEnvironment xtiEnv, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
         this.xtiEnv = xtiEnv;
         this.hubFactory = hubFactory;
@@ -92,58 +92,26 @@ public sealed class DbHubAdministration : IHubAdministration
         return version.ToModel();
     }
 
-    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName)
+    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain)
     {
         var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
         var app = await hubFactory.Apps.App(appKey);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
         var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName);
-        Installation currentInstallation;
-        var hasCurrentInstallation = await installLocation.HasCurrentInstallation(app);
-        if (hasCurrentInstallation)
-        {
-            currentInstallation = await installLocation.CurrentInstallation(app);
-        }
-        else
-        {
-            currentInstallation = await installLocation.NewCurrentInstallation(appVersion, clock.Now());
-        }
+        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, clock.Now());
         Installation? versionInstallation = null;
         if (xtiEnv.IsProduction())
         {
-            var hasVersionInstallation = await installLocation.HasVersionInstallation(appVersion);
-            if (hasVersionInstallation)
-            {
-                versionInstallation = await installLocation.VersionInstallation(appVersion);
-                await versionInstallation.InstallPending();
-            }
-            else
-            {
-                versionInstallation = await installLocation.NewVersionInstallation(appVersion, clock.Now());
-            }
+            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, clock.Now());
         }
         return new NewInstallationResult(currentInstallation.ID, versionInstallation?.ID ?? 0);
     }
 
-    public async Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain)
+    public async Task BeginInstall(int installationID)
     {
-        var installLocation = await hubFactory.InstallLocations.Location(machineName);
-        var app = await hubFactory.Apps.App(appKey);
-        var versionToInstall = await app.Version(installVersionKey);
-        var installation = await installLocation.CurrentInstallation(app);
-        await installation.Start(versionToInstall, domain);
-        return installation.ID;
-    }
-
-    public async Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain)
-    {
-        var installLocation = await hubFactory.InstallLocations.Location(machineName);
-        var app = await hubFactory.Apps.App(appKey);
-        var appVersion = await app.Version(versionKey);
-        var installation = await installLocation.VersionInstallation(appVersion);
-        await installation.Start(domain);
-        return installation.ID;
+        var installation = await hubFactory.Installations.Installation(installationID);
+        await installation.Start();
     }
 
     public async Task Installed(int installationID)

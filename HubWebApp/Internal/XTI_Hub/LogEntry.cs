@@ -1,16 +1,15 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppLogEntry
+public sealed class LogEntry
 {
-    private readonly AppLogEntryEntity record;
+    private readonly LogEntryEntity record;
 
-    internal AppLogEntry(AppLogEntryEntity record)
+    internal LogEntry(LogEntryEntity record)
     {
-        this.record = record ?? new AppLogEntryEntity();
+        this.record = record ?? new LogEntryEntity();
         ID = this.record.ID;
     }
 
@@ -31,5 +30,5 @@ public sealed class AppLogEntry
         Detail = Detail
     };
 
-    public override string ToString() => $"{nameof(AppLogEntry)} {ID}";
+    public override string ToString() => $"{nameof(LogEntry)} {ID}";
 }

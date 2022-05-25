@@ -7,82 +7,26 @@ namespace XTI_Hub;
 
 public sealed class InstallationRepository
 {
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
 
-    public InstallationRepository(HubFactory appFactory)
+    internal InstallationRepository(HubFactory hubFactory)
     {
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
     }
 
-    public Task<Installation> Installation(int installationID)
-        => appFactory.DB
-            .Installations
-            .Retrieve()
-            .Where(inst => inst.ID == installationID)
-            .Select(inst => appFactory.CreateInstallation(inst))
-            .SingleAsync();
-
-    internal Task<bool> HasCurrentInstallation(InstallLocation location, App app)
-        => currentInstallation(location, app).AnyAsync();
-
-    internal Task<CurrentInstallation> CurrentInstallation(InstallLocation location, App app)
-        => currentInstallation(location, app).FirstAsync();
-
-    private IQueryable<CurrentInstallation> currentInstallation(InstallLocation location, App app)
+    internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded)
     {
-        var appVersionIDs = appFactory.DB
-            .AppVersions
-            .Retrieve()
-            .Where(v => v.AppID == app.ID)
-            .Select(v => v.ID);
-        return appFactory.DB
-            .Installations
-            .Retrieve()
-            .Where
-            (
-                inst =>
-                    inst.IsCurrent
-                    && inst.LocationID == location.ID
-                    && appVersionIDs.Contains(inst.AppVersionID)
-            )
-            .Select(inst => appFactory.CurrentInstallation(inst));
+        var entity = await NewInstallation(location, appVersion, domain, timeAdded, true);
+        return hubFactory.CreateInstallation(entity);
     }
 
-    internal Task<bool> HasVersionInstallation(InstallLocation location, AppVersion appVersion)
-        => versionInstallation(location, appVersion).AnyAsync();
-
-    internal Task<VersionInstallation> VersionInstallation(InstallLocation location, AppVersion appVersion)
-        => versionInstallation(location, appVersion).FirstAsync();
-
-    private IQueryable<VersionInstallation> versionInstallation(InstallLocation location, AppVersion appVersion)
+    internal async Task<Installation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded)
     {
-        var appVersionIDs = appVersion.QueryAppVersionID();
-        return appFactory.DB
-            .Installations
-            .Retrieve()
-            .Where
-            (
-                inst =>
-                    !inst.IsCurrent
-                    && inst.LocationID == location.ID
-                    && appVersionIDs.Contains(inst.AppVersionID)
-            )
-            .Select(inst => appFactory.VersionInstallation(inst));
+        var entity = await NewInstallation(location, appVersion, domain, timeAdded, false);
+        return hubFactory.CreateInstallation(entity);
     }
 
-    internal async Task<CurrentInstallation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded)
-    {
-        var entity = await NewInstallation(location, appVersion, timeAdded, true);
-        return appFactory.CurrentInstallation(entity);
-    }
-
-    internal async Task<VersionInstallation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded)
-    {
-        var entity = await NewInstallation(location, appVersion, timeAdded, false);
-        return appFactory.VersionInstallation(entity);
-    }
-
-    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, DateTimeOffset timeAdded, bool isCurrent)
+    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded, bool isCurrent)
     {
         var appVersionID = await appVersion.AppVersionID();
         var entity = new InstallationEntity
@@ -92,14 +36,86 @@ public sealed class InstallationRepository
             Status = InstallStatus.Values.InstallPending.Value,
             IsCurrent = isCurrent,
             TimeAdded = timeAdded,
-            Domain = ""
+            Domain = domain
         };
-        await appFactory.DB.Installations.Create(entity);
+        await hubFactory.DB.Installations.Create(entity);
         return entity;
     }
 
+    internal Task StartInstallation(InstallationEntity entity) =>
+        hubFactory.DB
+            .Installations
+            .Update
+            (
+                entity,
+                inst =>
+                {
+                    inst.Status = InstallStatus.Values.InstallStarted.Value;
+                }
+            );
+
+    internal Task Installed(InstallationEntity entity)=>
+        hubFactory.DB.Transaction
+        (
+            async () =>
+            {
+                var previousInstallations = await hubFactory.DB
+                    .Installations.Retrieve()
+                    .Where
+                    (
+                        inst =>
+                            inst.ID != entity.ID &&
+                            inst.LocationID == entity.LocationID &&
+                            inst.AppVersionID == entity.AppVersionID &&
+                            inst.IsCurrent == entity.IsCurrent
+                    )
+                    .ToArrayAsync();
+                foreach (var previousInst in previousInstallations)
+                {
+                    await SetInstallationStatus(previousInst, InstallStatus.Values.Deleted);
+                }
+                await SetInstallationStatus(entity, InstallStatus.Values.Installed);
+            }
+        );
+
+    private Task SetInstallationStatus(InstallationEntity entity, InstallStatus status) =>
+        hubFactory.DB
+            .Installations
+            .Update(entity, inst => inst.Status = status.Value);
+
+    public Task<Installation> Installation(int installationID)
+        => hubFactory.DB
+            .Installations
+            .Retrieve()
+            .Where(inst => inst.ID == installationID)
+            .Select(inst => hubFactory.CreateInstallation(inst))
+            .SingleAsync();
+
+    internal Task<bool> HasCurrentInstallation(InstallLocation location, AppVersion appVersion)
+        => currentInstallation(location, appVersion).AnyAsync();
+
+    internal Task<Installation> CurrentInstallation(InstallLocation location, AppVersion appVersion)
+        => currentInstallation(location, appVersion).FirstAsync();
+
+    private IQueryable<Installation> currentInstallation(InstallLocation location, AppVersion appVersion)
+    {
+        var appVersionIDs = appVersion.QueryAppVersionID();
+        return hubFactory.DB
+            .Installations
+            .Retrieve()
+            .Where
+            (
+                inst =>
+                    inst.IsCurrent
+                    && inst.LocationID == location.ID
+                    && appVersionIDs.Contains(inst.AppVersionID)
+                    && inst.Status == InstallStatus.Values.Installed.Value
+            )
+            .Select(inst => hubFactory.CreateInstallation(inst));
+    }
+
     public Task<AppDomainModel[]> AppDomains() =>
-        appFactory.DB
+        hubFactory.DB
             .Installations
             .Retrieve()
             .Where
@@ -108,14 +124,14 @@ public sealed class InstallationRepository
             )
         .Join
         (
-            appFactory.DB.AppVersions.Retrieve(),
+            hubFactory.DB.AppVersions.Retrieve(),
             inst => inst.AppVersionID,
             av => av.ID,
             (inst, av) => new { Installation = inst, AppVersion = av }
         )
         .Join
         (
-            appFactory.DB.Apps.Retrieve(),
+            hubFactory.DB.Apps.Retrieve(),
             grouped => grouped.AppVersion.AppID,
             a => a.ID,
             (grouped, app) => new AppDomainModel

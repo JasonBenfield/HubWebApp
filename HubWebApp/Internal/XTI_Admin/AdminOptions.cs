@@ -16,7 +16,6 @@ public sealed class AdminOptions
     public string DestinationMachine { get; set; } = "";
     public string RemoteInstallKey { get; set; } = "";
     public InstallationSources InstallationSource { get; set; } = InstallationSources.Default;
-    public string Release { get; set; } = "";
     public string VersionType { get; set; } = "";
     public string IssueTitle { get; set; } = "";
     public int IssueNumber { get; set; }

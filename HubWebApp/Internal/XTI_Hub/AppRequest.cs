@@ -37,9 +37,9 @@ public sealed class AppRequest
         return date <= before;
     }
 
-    public Task<AppLogEntry[]> Events() => factory.LogEntries.RetrieveByRequest(this);
+    public Task<LogEntry[]> Events() => factory.LogEntries.RetrieveByRequest(this);
 
-    public Task<AppLogEntry> LogEvent
+    public Task<LogEntry> LogEvent
     (
         string eventKey,
         AppEventSeverity severity,

@@ -33,9 +33,9 @@ internal sealed class LocalInstallProcess
         {
             if (xtiEnv.IsProduction())
             {
-                await new InstallWebAppProcess(scopes).Run(appPath, appKey, versionKey, versionKey, adminInstOptions.Options);
+                await new InstallWebAppProcess(scopes).Run(appPath, adminInstOptions, versionKey);
             }
-            await new InstallWebAppProcess(scopes).Run(appPath, appKey, versionKey, AppVersionKey.Current, adminInstOptions.Options);
+            await new InstallWebAppProcess(scopes).Run(appPath, adminInstOptions, AppVersionKey.Current);
         }
         else if (appKey.Type.Equals(AppType.Values.ServiceApp))
         {

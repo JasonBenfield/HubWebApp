@@ -59,7 +59,8 @@ internal sealed class InstallProcess
                     (
                         appKey,
                         installMachineName,
-                        versionName
+                        versionName,
+                        installationOptions.Domain
                     );
                     var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
                     var adminInstallOptions = new AdminInstallOptions
@@ -91,7 +92,7 @@ internal sealed class InstallProcess
                                 adminInstallOptions, 
                                 TimeSpan.FromMinutes(30)
                             );
-                        await new LocalInstallServiceProcess(scopes, appKey, versionName)
+                        await new LocalInstallServiceProcess(scopes)
                             .Run(installationOptions.MachineName, remoteInstallKey);
                     }
                 }
@@ -99,10 +100,10 @@ internal sealed class InstallProcess
         }
     }
 
-    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName)
+    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain)
     {
         Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        return hubAdministration.NewInstallation(versionName, appKey, machineName);
+        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain);
     }
 }

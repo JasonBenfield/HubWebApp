@@ -225,18 +225,13 @@ interface INewInstallationRequest {
 	VersionName: IAppVersionName;
 	AppKey: IAppKey;
 	QualifiedMachineName: string;
+	Domain: string;
 }
 interface INewInstallationResult {
 	CurrentInstallationID: number;
 	VersionInstallationID: number;
 }
-interface IBeginInstallationRequest {
-	QualifiedMachineName: string;
-	AppKey: IAppKey;
-	VersionKey: IAppVersionKey;
-	Domain: string;
-}
-interface IInstalledRequest {
+interface IInstallationRequest {
 	InstallationID: number;
 }
 interface ISetUserAccessRequest {

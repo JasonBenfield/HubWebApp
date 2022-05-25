@@ -58,21 +58,15 @@ public class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> BeginCurrentInstallation([FromBody] BeginInstallationRequest model)
+    public Task<ResultContainer<EmptyActionResult>> BeginInstallation([FromBody] InstallationRequest model)
     {
-        return api.Group("Install").Action<BeginInstallationRequest, int>("BeginCurrentInstallation").Execute(model);
+        return api.Group("Install").Action<InstallationRequest, EmptyActionResult>("BeginInstallation").Execute(model);
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> BeginVersionInstallation([FromBody] BeginInstallationRequest model)
+    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] InstallationRequest model)
     {
-        return api.Group("Install").Action<BeginInstallationRequest, int>("BeginVersionInstallation").Execute(model);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] InstalledRequest model)
-    {
-        return api.Group("Install").Action<InstalledRequest, EmptyActionResult>("Installed").Execute(model);
+        return api.Group("Install").Action<InstallationRequest, EmptyActionResult>("Installed").Execute(model);
     }
 
     [HttpPost]

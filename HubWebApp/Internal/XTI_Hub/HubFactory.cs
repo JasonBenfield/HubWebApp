@@ -83,7 +83,7 @@ public sealed class HubFactory
 
     public AppLogEntryRepository LogEntries { get => events ??= new(this); }
 
-    internal AppLogEntry CreateEvent(AppLogEntryEntity record) => new(record);
+    internal LogEntry CreateEvent(LogEntryEntity record) => new(record);
 
     private InstallLocationRepository? installLocations;
 
@@ -100,11 +100,7 @@ public sealed class HubFactory
     public StoredObjectRepository StoredObjects { get => storedObjects ??= new(this); }
 
     internal Installation CreateInstallation(InstallationEntity entity)
-        => entity.IsCurrent ? CurrentInstallation(entity) : VersionInstallation(entity);
-
-    internal CurrentInstallation CurrentInstallation(InstallationEntity entity) => new(this, entity);
-
-    internal VersionInstallation VersionInstallation(InstallationEntity entity) => new(this, entity);
+        => new Installation(this, entity);
 
     public Task Transaction(Func<Task> action) => DB.Transaction(action);
 }

@@ -90,8 +90,8 @@ public sealed class AppRequestRepository
         {
             var session = await factory.Sessions.DefaultSession(now);
             var app = await factory.Apps.App(AppKey.Unknown);
-            var unknownLocation = await factory.InstallLocations.AddIfNotFound("unknown");
-            var installation = await unknownLocation.CurrentInstallation(app);
+            var currentVersion = await app.CurrentVersion();
+            var installation = await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
             var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown);
             var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown);
             var modifier = await app.DefaultModifier();

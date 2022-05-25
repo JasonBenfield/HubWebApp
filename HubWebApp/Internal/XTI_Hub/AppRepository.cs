@@ -28,12 +28,7 @@ public sealed class AppRepository
         );
         await factory.Versions.AddVersionToAppIfNotFound(app, version);
         var currentVersion = await app.CurrentVersion();
-        var unknownLocation = await factory.InstallLocations.AddIfNotFound("unknown");
-        var hasCurrentInstallation = await unknownLocation.HasCurrentInstallation(app);
-        if (!hasCurrentInstallation)
-        {
-            await unknownLocation.NewCurrentInstallation(currentVersion, DateTimeOffset.Now);
-        }
+        await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
         var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
         await defaultModCategory.AddDefaultModifierIfNotFound();
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);

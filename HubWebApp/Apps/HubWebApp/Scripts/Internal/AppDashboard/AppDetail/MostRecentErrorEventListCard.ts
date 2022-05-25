@@ -21,7 +21,7 @@ export class MostRecentErrorEventListCard {
         let errorEvents = await this.getErrorEvents();
         this.errorEvents.setItems(
             errorEvents,
-            (errorEvent: IAppEventModel, itemView: EventListItemView) =>
+            (errorEvent: IAppLogEntryModel, itemView: EventListItemView) =>
                 new EventListItem(errorEvent, itemView)
         );
         if (errorEvents.length === 0) {
@@ -30,7 +30,7 @@ export class MostRecentErrorEventListCard {
     }
 
     private async getErrorEvents() {
-        let errorEvents: IAppEventModel[];
+        let errorEvents: IAppLogEntryModel[];
         await this.alert.infoAction(
             'Loading...',
             async () => {

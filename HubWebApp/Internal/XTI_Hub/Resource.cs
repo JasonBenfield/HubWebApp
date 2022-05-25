@@ -91,7 +91,7 @@ public sealed class Resource : IResource
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
         => factory.Requests.MostRecentForResource(this, howMany);
 
-    public Task<AppLogEntry[]> MostRecentErrorEvents(int howMany)
+    public Task<LogEntry[]> MostRecentErrorEvents(int howMany)
         => factory.LogEntries.MostRecentErrorsForResource(this, howMany);
 
     public ResourceModel ToModel()

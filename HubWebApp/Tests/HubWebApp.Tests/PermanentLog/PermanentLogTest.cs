@@ -242,21 +242,19 @@ internal sealed class PermanentLogTest
             VersionName = version.VersionName,
             VersionKey = version.VersionKey
         });
-        await hubApi.Install.NewInstallation.Invoke(new NewInstallationRequest
+        var newInstResult = await hubApi.Install.NewInstallation.Invoke(new NewInstallationRequest
         {
             AppKey = AppKey.WebApp("Fake"),
             VersionName = version.VersionName,
-            QualifiedMachineName = "destination.xartogg.com"
+            QualifiedMachineName = "destination.xartogg.com",
+            Domain = "test.xartogg.com"
         });
-        var installationID = await hubApi.Install.BeginCurrentInstallation.Invoke(new BeginInstallationRequest
+        await hubApi.Install.BeginInstallation.Invoke(new InstallationRequest
         {
-            AppKey = AppKey.WebApp("Fake"),
-            VersionKey = version.VersionKey,
-            Domain = "test.xartogg.com",
-            QualifiedMachineName = "destination.xartogg.com"
+            InstallationID = newInstResult.CurrentInstallationID
         });
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
-        installationIDAccessor.SetInstallationID(installationID);
+        installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
         await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
         await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
 

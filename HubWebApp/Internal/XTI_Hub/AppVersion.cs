@@ -44,7 +44,7 @@ public sealed class AppVersion : IAppVersion
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>
         factory.Requests.MostRecentForVersion(app, version, howMany);
 
-    public Task<AppLogEntry[]> MostRecentLoggedErrors(int howMany) =>
+    public Task<LogEntry[]> MostRecentLoggedErrors(int howMany) =>
         factory.LogEntries.MostRecentLoggedErrorsForVersion(app, version, howMany);
 
     internal Task<int> AppVersionID() => QueryAppVersionID().FirstAsync();

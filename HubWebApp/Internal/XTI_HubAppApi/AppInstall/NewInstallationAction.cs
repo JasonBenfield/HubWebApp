@@ -15,7 +15,8 @@ public sealed class NewInstallationAction : AppAction<NewInstallationRequest, Ne
         (
             model.VersionName,
             model.AppKey,
-            model.QualifiedMachineName
+            model.QualifiedMachineName,
+            model.Domain
         );
         return result;
     }

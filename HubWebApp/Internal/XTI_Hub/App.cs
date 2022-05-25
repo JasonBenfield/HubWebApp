@@ -146,7 +146,7 @@ public sealed class App : IApp
         return requests;
     }
 
-    public async Task<AppLogEntry[]> MostRecentErrorLogEntries(int howMany)
+    public async Task<LogEntry[]> MostRecentErrorLogEntries(int howMany)
     {
         var version = await CurrentVersion();
         var requests = await version.MostRecentLoggedErrors(howMany);

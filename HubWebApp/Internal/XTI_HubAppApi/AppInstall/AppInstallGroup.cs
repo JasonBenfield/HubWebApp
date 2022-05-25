@@ -57,13 +57,9 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
                 () => sp.GetRequiredService<NewInstallationAction>()
             )
         );
-        BeginCurrentInstallation = source.AddAction
+        BeginInstallation = source.AddAction
         (
-            actions.Action(nameof(BeginCurrentInstallation), () => sp.GetRequiredService<BeginCurrentInstallationAction>())
-        );
-        BeginVersionInstallation = source.AddAction
-        (
-            actions.Action(nameof(BeginVersionInstallation), () => sp.GetRequiredService<BeginVersionInstallationAction>())
+            actions.Action(nameof(BeginInstallation), () => sp.GetRequiredService<BeginInstallationAction>())
         );
         Installed = source.AddAction
         (
@@ -83,8 +79,7 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }
-    public AppApiAction<BeginInstallationRequest, int> BeginCurrentInstallation { get; }
-    public AppApiAction<BeginInstallationRequest, int> BeginVersionInstallation { get; }
-    public AppApiAction<InstalledRequest, EmptyActionResult> Installed { get; }
+    public AppApiAction<InstallationRequest, EmptyActionResult> BeginInstallation { get; }
+    public AppApiAction<InstallationRequest, EmptyActionResult> Installed { get; }
     public AppApiAction<SetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
 }

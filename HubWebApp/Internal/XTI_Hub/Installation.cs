@@ -3,12 +3,12 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public class Installation
+public sealed class Installation
 {
     private readonly HubFactory hubFactory;
     private readonly InstallationEntity entity;
 
-    protected Installation(HubFactory hubFactory, InstallationEntity entity)
+    internal Installation(HubFactory hubFactory, InstallationEntity entity)
     {
         this.hubFactory = hubFactory;
         this.entity = entity;
@@ -19,44 +19,9 @@ public class Installation
 
     public InstallStatus Status() => InstallStatus.Values.Value(entity.Status);
 
-    public Task InstallPending() => SetStatus(InstallStatus.Values.InstallPending);
+    public Task Installed() => hubFactory.Installations.Installed(entity);
 
-    public Task Installed() => SetStatus(InstallStatus.Values.Installed);
-
-    private Task SetStatus(InstallStatus status) =>
-        hubFactory.DB
-            .Installations
-            .Update(entity, inst => inst.Status = status.Value);
-
-    protected Task StartVersion(string domain) =>
-        hubFactory.DB
-            .Installations
-            .Update
-            (
-                entity,
-                inst =>
-                {
-                    inst.Status = InstallStatus.Values.InstallStarted.Value;
-                    inst.Domain = domain;
-                }
-            );
-
-    protected async Task StartCurrent(AppVersion appVersion, string domain)
-    {
-        var appVersionID = await appVersion.AppVersionID();
-        await hubFactory.DB
-            .Installations
-            .Update
-            (
-                entity,
-                inst =>
-                {
-                    inst.Status = InstallStatus.Values.InstallStarted.Value;
-                    inst.AppVersionID = appVersionID;
-                    inst.Domain = domain;
-                }
-            );
-    }
+    public Task Start() => hubFactory.Installations.StartInstallation(entity);
 
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName groupName) =>
         hubFactory.Groups.GroupOrDefault(entity.AppVersionID, groupName);

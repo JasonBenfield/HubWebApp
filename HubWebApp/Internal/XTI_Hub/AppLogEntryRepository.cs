@@ -13,12 +13,12 @@ public sealed class AppLogEntryRepository
         this.factory = factory;
     }
 
-    public async Task<AppLogEntry> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
+    public async Task<LogEntry> LogEvent(AppRequest request, string eventKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
     {
         var record = await factory.DB.LogEntries.Retrieve().FirstOrDefaultAsync(evt => evt.EventKey == eventKey);
         if (record == null)
         {
-            record = new AppLogEntryEntity
+            record = new LogEntryEntity
             {
                 RequestID = request.ID,
                 EventKey = eventKey,
@@ -52,7 +52,7 @@ public sealed class AppLogEntryRepository
         return factory.CreateEvent(record);
     }
 
-    internal Task<AppLogEntry[]> RetrieveByRequest(AppRequest request)
+    internal Task<LogEntry[]> RetrieveByRequest(AppRequest request)
     {
         return factory.DB.LogEntries.Retrieve()
             .Where(e => e.RequestID == request.ID)
@@ -60,7 +60,7 @@ public sealed class AppLogEntryRepository
             .ToArrayAsync();
     }
 
-    internal Task<AppLogEntry[]> MostRecentLoggedErrorsForVersion(App app, XtiVersion version, int howMany)
+    internal Task<LogEntry[]> MostRecentLoggedErrorsForVersion(App app, XtiVersion version, int howMany)
     {
         var appVersionID = factory.Versions.QueryAppVersionID(app, version);
         var requestIDs = factory.DB
@@ -87,7 +87,7 @@ public sealed class AppLogEntryRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    internal Task<AppLogEntry[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany)
+    internal Task<LogEntry[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany)
     {
         var requestIDs = factory.DB
             .Requests
@@ -106,7 +106,7 @@ public sealed class AppLogEntryRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    internal Task<AppLogEntry[]> MostRecentErrorsForResource(Resource resource, int howMany)
+    internal Task<LogEntry[]> MostRecentErrorsForResource(Resource resource, int howMany)
     {
         var requestIDs = factory.DB
             .Requests
@@ -116,7 +116,7 @@ public sealed class AppLogEntryRepository
         return mostRecentErrors(howMany, requestIDs);
     }
 
-    private Task<AppLogEntry[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
+    private Task<LogEntry[]> mostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
         factory.DB
             .LogEntries
             .Retrieve()

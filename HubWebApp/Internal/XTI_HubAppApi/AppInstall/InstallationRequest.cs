@@ -1,10 +1,10 @@
 ﻿namespace XTI_HubAppApi.AppInstall;
 
-public sealed class InstalledRequest
+public sealed class InstallationRequest
 {
-    public InstalledRequest() { }
+    public InstallationRequest() { }
 
-    public InstalledRequest(int installationID)
+    public InstallationRequest(int installationID)
     {
         InstallationID = installationID;
     }

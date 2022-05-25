@@ -31,7 +31,7 @@ public static class HubWebAppExtensions
         services.AddSingleton(_ => HubInfo.AppKey);
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
-        services.AddScoped<IHubAdministration, DbHubAdministration>();
+        services.AddScoped<IHubAdministration, EfHubAdministration>();
         services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
         services.AddScoped<StoredObjectFactory>();
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();

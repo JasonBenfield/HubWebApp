@@ -179,7 +179,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped<InstallationUserCredentials>();
             services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
             services.AddScoped<InstallationUserXtiToken>();
-            services.AddScoped<DbHubAdministration>();
+            services.AddScoped<EfHubAdministration>();
             services.AddScoped<HcHubAdministration>();
             services.AddScoped
             (
@@ -210,7 +210,7 @@ await Host.CreateDefaultBuilder(args)
                     var hubDbType = sp.GetRequiredService<HubDbTypeAccessor>().Value;
                     if (hubDbType == HubAdministrationTypes.DB)
                     {
-                        hubAdministration = sp.GetRequiredService<DbHubAdministration>();
+                        hubAdministration = sp.GetRequiredService<EfHubAdministration>();
                     }
                     else if (hubDbType == HubAdministrationTypes.HubClient)
                     {
