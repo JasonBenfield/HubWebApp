@@ -10,30 +10,30 @@ using XTI_Secrets;
 namespace XTI_Admin;
 
 [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Windows Service")]
-internal sealed class InstallServiceProcess
+internal sealed class InstallServiceAppProcess :  InstallAppProcess
 {
     private readonly Scopes scopes;
 
-    public InstallServiceProcess(Scopes scopes)
+    public InstallServiceAppProcess(Scopes scopes)
     {
         this.scopes = scopes;
     }
 
-    public async Task Run(string publishedAppDir, AppKey appKey, AppVersionKey installVersionKey)
+    public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         ServiceController? sc = null;
         if (installVersionKey.Equals(AppVersionKey.Current))
         {
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            var appName = appKey.Name.DisplayText.Replace(" ", "");
+            var appName = adminInstOptions.AppKey.Name.DisplayText.Replace(" ", "");
             var serviceName = $"Xti_{xtiEnv.EnvironmentName}_{appName}";
             sc = getService(serviceName);
             if (sc == null)
             {
                 var binPath = Path.Combine
                 (
-                    xtiFolder.InstallPath(appKey, AppVersionKey.Current),
+                    xtiFolder.InstallPath(adminInstOptions.AppKey, AppVersionKey.Current),
                     $"{appName}ServiceApp.exe"
                 );
                 binPath = $"{binPath} --Environment {xtiEnv.EnvironmentName}";
@@ -62,7 +62,7 @@ internal sealed class InstallServiceProcess
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
             }
         }
-        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, appKey, installVersionKey, true);
+        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, true);
         if (sc != null)
         {
             Console.WriteLine($"Starting services '{sc.DisplayName}'");

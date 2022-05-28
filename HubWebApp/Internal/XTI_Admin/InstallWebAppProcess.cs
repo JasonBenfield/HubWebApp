@@ -8,7 +8,7 @@ using XTI_Secrets;
 
 namespace XTI_Admin;
 
-internal sealed class InstallWebAppProcess
+internal sealed class InstallWebAppProcess : InstallAppProcess
 {
     private readonly Scopes scopes;
 
@@ -21,24 +21,12 @@ internal sealed class InstallWebAppProcess
 
     public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
-        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        int installationID;
-        if (installVersionKey.Equals(AppVersionKey.Current))
-        {
-            installationID = adminInstOptions.CurrentInstallationID;
-        }
-        else
-        {
-            installationID = adminInstOptions.VersionInstallationID;
-        }
-        await hubAdministration.BeginInstall(installationID);
         Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
         await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
         deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
         await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
         var appOfflinePath = getAppOfflinePath(adminInstOptions.AppKey, installVersionKey);
         File.Delete(appOfflinePath);
-        await hubAdministration.Installed(installationID);
     }
 
     private void deleteExistingWebFiles(AppKey appKey, AppVersionKey installVersionKey)

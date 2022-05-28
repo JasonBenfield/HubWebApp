@@ -3,6 +3,7 @@ using XTI_App.Extensions;
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -38,36 +39,39 @@ internal sealed class LocalInstallProcess
         var appPath = await publishedAssets.LoadApps(adminInstOptions.Release, appKey, versionKey);
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
         await new RunSetupProcess(xtiEnv).Run(versionName, appKey, adminInstOptions.VersionKey, setupAppPath);
+        var installAppProcess = getInstallAppProcess(appKey);
+        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
+        if (xtiEnv.IsProduction())
+        {
+            await hubAdministration.BeginInstall(adminInstOptions.VersionInstallationID);
+            await installAppProcess.Run(appPath, adminInstOptions, versionKey);
+            await hubAdministration.Installed(adminInstOptions.VersionInstallationID);
+            await WriteInstallationID(adminInstOptions.VersionInstallationID, appKey, versionKey);
+        }
+        await hubAdministration.BeginInstall(adminInstOptions.CurrentInstallationID);
+        await installAppProcess.Run(appPath, adminInstOptions, AppVersionKey.Current);
+        await hubAdministration.Installed(adminInstOptions.CurrentInstallationID);
+        await WriteInstallationID(adminInstOptions.CurrentInstallationID, appKey, AppVersionKey.Current);
+        Console.WriteLine("Installation Complete");
+    }
+
+    private InstallAppProcess getInstallAppProcess(AppKey appKey)
+    {
+        InstallAppProcess installAppProcess;
         if (appKey.Type.Equals(AppType.Values.WebApp))
         {
-            if (xtiEnv.IsProduction())
-            {
-                await new InstallWebAppProcess(scopes).Run(appPath, adminInstOptions, versionKey);
-            }
-            await new InstallWebAppProcess(scopes).Run(appPath, adminInstOptions, AppVersionKey.Current);
+            installAppProcess = new InstallWebAppProcess(scopes);
         }
         else if (appKey.Type.Equals(AppType.Values.ServiceApp))
         {
-            if (xtiEnv.IsProduction())
-            {
-                await new InstallServiceProcess(scopes).Run(appPath, appKey, versionKey);
-            }
-            await new InstallServiceProcess(scopes).Run(appPath, appKey, AppVersionKey.Current);
+            installAppProcess = new InstallServiceAppProcess(scopes);
         }
-        else if (appKey.Type.Equals(AppType.Values.ConsoleApp))
+        else
         {
-            if (xtiEnv.IsProduction())
-            {
-                await new CopyToInstallDirProcess(scopes).Run(appPath, appKey, versionKey, true);
-            }
-            await new CopyToInstallDirProcess(scopes).Run(appPath, appKey, AppVersionKey.Current, true);
+            installAppProcess = new InstallDefaultAppProcess(scopes);
         }
-        if (xtiEnv.IsProduction())
-        {
-            await WriteInstallationID(adminInstOptions.VersionInstallationID, appKey, versionKey);
-        }
-        await WriteInstallationID(adminInstOptions.CurrentInstallationID, appKey, AppVersionKey.Current);
-        Console.WriteLine("Installation Complete");
+
+        return installAppProcess;
     }
 
     private async Task WriteInstallationID(int installationID, AppKey appKey, AppVersionKey versionKey)

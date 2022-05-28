@@ -59,17 +59,31 @@ public sealed class InstallationRepository
         (
             async () =>
             {
-                var previousInstallations = await hubFactory.DB
-                    .Installations.Retrieve()
-                    .Where
-                    (
-                        inst =>
-                            inst.ID != entity.ID &&
-                            inst.LocationID == entity.LocationID &&
-                            inst.AppVersionID == entity.AppVersionID &&
-                            inst.IsCurrent == entity.IsCurrent
-                    )
-                    .ToArrayAsync();
+                var query = hubFactory.DB.Installations.Retrieve();
+                if (entity.IsCurrent)
+                {
+                    query = query
+                        .Where
+                        (
+                            inst =>
+                                inst.ID != entity.ID &&
+                                inst.LocationID == entity.LocationID &&
+                                inst.IsCurrent == entity.IsCurrent
+                        );
+                }
+                else
+                {
+                    query = query
+                        .Where
+                        (
+                            inst =>
+                                inst.ID != entity.ID &&
+                                inst.LocationID == entity.LocationID &&
+                                inst.AppVersionID == entity.AppVersionID &&
+                                inst.IsCurrent == entity.IsCurrent
+                        );
+                }
+                var previousInstallations = await query.ToArrayAsync();
                 foreach (var previousInst in previousInstallations)
                 {
                     await SetInstallationStatus(previousInst, InstallStatus.Values.Deleted);
