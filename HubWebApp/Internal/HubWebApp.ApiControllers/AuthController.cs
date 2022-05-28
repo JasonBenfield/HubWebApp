@@ -29,6 +29,7 @@ public class AuthController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel model)
     {
         return api.Group("Auth").Action<LoginReturnModel, string>("LoginReturnKey").Execute(model);
