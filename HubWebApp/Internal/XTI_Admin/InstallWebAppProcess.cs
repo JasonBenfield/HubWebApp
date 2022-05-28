@@ -19,27 +19,24 @@ internal sealed class InstallWebAppProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string publishedAppDir, AppKey appKey, AppVersionKey versionKey, AppVersionKey installVersionKey, InstallationOptions installation)
+    public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         int installationID;
-        var machineName =
-            string.IsNullOrWhiteSpace(installation.MachineName)
-                ? Environment.MachineName
-                : installation.MachineName;
         if (installVersionKey.Equals(AppVersionKey.Current))
         {
-            installationID = await hubAdministration.BeginCurrentInstall(appKey, installVersionKey, machineName, installation.Domain);
+            installationID = adminInstOptions.CurrentInstallationID;
         }
         else
         {
-            installationID = await hubAdministration.BeginVersionInstall(appKey, versionKey, machineName, installation.Domain);
+            installationID = adminInstOptions.VersionInstallationID;
         }
-        Console.WriteLine($"Installing {appKey.Name.DisplayText} {versionKey.DisplayText} to website {installation.SiteName}");
-        await prepareIis(appKey, installVersionKey, installation.SiteName);
-        deleteExistingWebFiles(appKey, installVersionKey);
-        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, appKey, installVersionKey, false);
-        var appOfflinePath = getAppOfflinePath(appKey, installVersionKey);
+        await hubAdministration.BeginInstall(installationID);
+        Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
+        await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
+        deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
+        var appOfflinePath = getAppOfflinePath(adminInstOptions.AppKey, installVersionKey);
         File.Delete(appOfflinePath);
         await hubAdministration.Installed(installationID);
     }

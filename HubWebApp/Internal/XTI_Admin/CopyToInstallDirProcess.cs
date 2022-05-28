@@ -14,7 +14,7 @@ internal sealed class CopyToInstallDirProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string sourceDir, AppKey appKey, AppVersionKey installVersionKey, bool purge)
+    public Task Run(string sourceDir, AppKey appKey, AppVersionKey installVersionKey, bool purge)
     {
         var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
@@ -32,6 +32,6 @@ internal sealed class CopyToInstallDirProcess
         {
             process.Purge();
         }
-        await process.Run();
+        return process.Run();
     }
 }

@@ -14,7 +14,7 @@ internal sealed class RunSetupProcess
         this.xtiEnv = xtiEnv;
     }
 
-    public async Task Run(AppVersionName versionName, AppKey appKey, string versionKey, string setupAppDir)
+    public async Task Run(AppVersionName versionName, AppKey appKey, AppVersionKey versionKey, string setupAppDir)
     {
         var appName = appKey.Name.DisplayText.Replace(" ", "");
         var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{appName}SetupApp.exe"))
@@ -25,7 +25,7 @@ internal sealed class RunSetupProcess
                 new
                 {
                     VersionName = versionName.Value,
-                    VersionKey = versionKey
+                    VersionKey = versionKey.Value
                 }
             )
             .Run();

@@ -19,6 +19,11 @@ public sealed class AppRequestEntityConfiguration : IEntityTypeConfiguration<App
             .OnDelete(DeleteBehavior.Restrict)
             .HasForeignKey(r => r.SessionID);
         builder
+            .HasOne<InstallationEntity>()
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(r => r.InstallationID);
+        builder
             .HasOne<ResourceEntity>()
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict)

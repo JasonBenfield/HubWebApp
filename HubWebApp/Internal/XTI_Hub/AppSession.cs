@@ -24,13 +24,12 @@ public sealed class AppSession
     public Task<AppRequest> LogRequest
     (
         string requestKey,
-        Resource resource,
-        Modifier modifier,
+        Installation installation,
         string path,
         DateTimeOffset timeRequested,
         int actualCount
     )
-        => factory.Requests.AddOrUpdate(this, requestKey, resource, modifier, path, timeRequested, actualCount);
+        => factory.Requests.AddOrUpdate(this, requestKey, installation, path, timeRequested, actualCount);
 
     public Task Authenticate(IAppUser user)
         => factory.DB

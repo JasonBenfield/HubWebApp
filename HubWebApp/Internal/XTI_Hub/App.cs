@@ -146,10 +146,10 @@ public sealed class App : IApp
         return requests;
     }
 
-    public async Task<AppEvent[]> MostRecentErrorEvents(int howMany)
+    public async Task<LogEntry[]> MostRecentErrorLogEntries(int howMany)
     {
         var version = await CurrentVersion();
-        var requests = await version.MostRecentErrorEvents(howMany);
+        var requests = await version.MostRecentLoggedErrors(howMany);
         return requests;
     }
 

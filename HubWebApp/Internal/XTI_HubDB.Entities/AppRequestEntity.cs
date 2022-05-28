@@ -6,6 +6,7 @@ public sealed class AppRequestEntity
     public string RequestKey { get; set; } = "";
     public int SessionID { get; set; }
     public string Path { get; set; } = "";
+    public int InstallationID { get; set; }
     public int ResourceID { get; set; }
     public int ModifierID { get; set; }
     public DateTimeOffset TimeStarted { get; set; } = DateTimeOffset.MinValue;

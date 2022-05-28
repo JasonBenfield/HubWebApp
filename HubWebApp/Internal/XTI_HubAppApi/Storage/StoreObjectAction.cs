@@ -2,19 +2,18 @@
 
 internal sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
 {
-    private readonly HubFactory appFactory;
+    private readonly StoredObjectFactory storedObjectFactory;
 
-    public StoreObjectAction(HubFactory appFactory)
+    public StoreObjectAction(StoredObjectFactory storedObjectFactory)
     {
-        this.appFactory = appFactory;
+        this.storedObjectFactory = storedObjectFactory;
     }
 
     public Task<string> Execute(StoreObjectRequest model) =>
-        new StoreObjectProcess(appFactory).Run
+        storedObjectFactory.CreateStoredObject(new StorageName(model.StorageName)).Store
         (
-            new StorageName(model.StorageName), 
             model.GeneratedStorageKeyType, 
             model.Data, 
-            model.TimeExpires
+            model.ExpireAfter
         );
 }

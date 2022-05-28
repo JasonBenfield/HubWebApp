@@ -15,7 +15,7 @@ export class ResourceGroupGroup extends AppApiGroup {
 		this.GetRoleAccessAction = this.createAction<IGetResourceGroupRoleAccessRequest,IAppRoleModel[]>('GetRoleAccess', 'Get Role Access');
 		this.GetModCategoryAction = this.createAction<IGetResourceGroupModCategoryRequest,IModifierCategoryModel>('GetModCategory', 'Get Mod Category');
 		this.GetMostRecentRequestsAction = this.createAction<IGetResourceGroupLogRequest,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
-		this.GetMostRecentErrorEventsAction = this.createAction<IGetResourceGroupLogRequest,IAppEventModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+		this.GetMostRecentErrorEventsAction = this.createAction<IGetResourceGroupLogRequest,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 	}
 	
 	readonly GetResourceGroupAction: AppApiAction<IGetResourceGroupRequest,IResourceGroupModel>;
@@ -24,7 +24,7 @@ export class ResourceGroupGroup extends AppApiGroup {
 	readonly GetRoleAccessAction: AppApiAction<IGetResourceGroupRoleAccessRequest,IAppRoleModel[]>;
 	readonly GetModCategoryAction: AppApiAction<IGetResourceGroupModCategoryRequest,IModifierCategoryModel>;
 	readonly GetMostRecentRequestsAction: AppApiAction<IGetResourceGroupLogRequest,IAppRequestExpandedModel[]>;
-	readonly GetMostRecentErrorEventsAction: AppApiAction<IGetResourceGroupLogRequest,IAppEventModel[]>;
+	readonly GetMostRecentErrorEventsAction: AppApiAction<IGetResourceGroupLogRequest,IAppLogEntryModel[]>;
 	
 	GetResourceGroup(model: IGetResourceGroupRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetResourceGroupAction.execute(model, errorOptions || {});

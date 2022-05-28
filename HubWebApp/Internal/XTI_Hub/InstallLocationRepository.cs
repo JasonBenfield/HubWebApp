@@ -12,7 +12,28 @@ public sealed class InstallLocationRepository
         this.appFactory = appFactory;
     }
 
-    public async Task<InstallLocation> TryAdd(string qualifiedMachineName)
+    public Task<InstallLocation> UnknownLocation() =>
+        Location("unknown");
+
+    public async Task<Installation> AddUnknownIfNotFound(AppVersion appVersion)
+    {
+        Installation installation;
+        var loc = await AddIfNotFound("unknown");
+        var hasCurrent = await loc.HasCurrentInstallation(appVersion);
+        if (!hasCurrent)
+        {
+            installation = await loc.NewCurrentInstallation(appVersion, "", DateTimeOffset.Now);
+            await installation.Start();
+            await installation.Installed();
+        }
+        else
+        {
+            installation = await loc.CurrentInstallation(appVersion);
+        }
+        return installation;
+    }
+
+    public async Task<InstallLocation> AddIfNotFound(string qualifiedMachineName)
     {
         qualifiedMachineName = qualifiedMachineName.ToLower().Trim();
         var location = await appFactory.DB

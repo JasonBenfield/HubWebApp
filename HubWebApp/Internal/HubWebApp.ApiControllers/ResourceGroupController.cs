@@ -46,8 +46,8 @@ public class ResourceGroupController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppEventModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceGroupLogRequest model)
+    public Task<ResultContainer<AppLogEntryModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceGroupLogRequest model)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppEventModel[]>("GetMostRecentErrorEvents").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppLogEntryModel[]>("GetMostRecentErrorEvents").Execute(model);
     }
 }

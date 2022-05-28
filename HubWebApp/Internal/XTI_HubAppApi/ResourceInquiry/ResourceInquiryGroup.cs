@@ -15,5 +15,5 @@ public sealed class ResourceInquiryGroup : AppApiGroupWrapper
     public AppApiAction<GetResourceRequest, ResourceModel> GetResource { get; }
     public AppApiAction<GetResourceRoleAccessRequest, AppRoleModel[]> GetRoleAccess { get; }
     public AppApiAction<GetResourceLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests { get; }
-    public AppApiAction<GetResourceLogRequest, AppEventModel[]> GetMostRecentErrorEvents { get; }
+    public AppApiAction<GetResourceLogRequest, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
 }

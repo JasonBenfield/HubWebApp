@@ -43,7 +43,7 @@ interface IRegisterUserAuthenticatorRequest {
 interface ILogBatchModel {
 	StartSessions: IStartSessionModel[];
 	StartRequests: IStartRequestModel[];
-	LogEvents: ILogEventModel[];
+	LogEntries: ILogEntryModel[];
 	EndRequests: IEndRequestModel[];
 	AuthenticateSessions: IAuthenticateSessionModel[];
 	EndSessions: IEndSessionModel[];
@@ -59,12 +59,12 @@ interface IStartSessionModel {
 interface IStartRequestModel {
 	RequestKey: string;
 	SessionKey: string;
-	AppType: string;
 	Path: string;
+	InstallationID: number;
 	TimeStarted: Date;
 	ActualCount: number;
 }
-interface ILogEventModel {
+interface ILogEntryModel {
 	EventKey: string;
 	RequestKey: string;
 	Severity: number;
@@ -129,7 +129,7 @@ interface IAppRequestExpandedModel {
 	TimeStarted: Date;
 	TimeEnded: Date;
 }
-interface IAppEventModel {
+interface IAppLogEntryModel {
 	ID: number;
 	RequestID: number;
 	TimeOccurred: Date;
@@ -217,6 +217,10 @@ interface IAppUserModel {
 	Name: string;
 	Email: string;
 }
+interface IAddAdminUserRequest {
+	UserName: string;
+	Password: string;
+}
 interface IAddInstallationUserRequest {
 	MachineName: string;
 	Password: string;
@@ -225,18 +229,13 @@ interface INewInstallationRequest {
 	VersionName: IAppVersionName;
 	AppKey: IAppKey;
 	QualifiedMachineName: string;
+	Domain: string;
 }
 interface INewInstallationResult {
 	CurrentInstallationID: number;
 	VersionInstallationID: number;
 }
-interface IBeginInstallationRequest {
-	QualifiedMachineName: string;
-	AppKey: IAppKey;
-	VersionKey: IAppVersionKey;
-	Domain: string;
-}
-interface IInstalledRequest {
+interface IInstallationRequest {
 	InstallationID: number;
 }
 interface ISetUserAccessRequest {
@@ -343,7 +342,7 @@ interface IUserRoleRequest {
 interface IStoreObjectRequest {
 	StorageName: string;
 	Data: string;
-	TimeExpires: Date;
+	ExpireAfter: string;
 	GeneratedStorageKeyType: IGeneratedStorageKeyType;
 }
 interface IGetStoredObjectRequest {

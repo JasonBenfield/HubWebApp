@@ -24,7 +24,7 @@ public sealed class AppInquiryGroup : AppApiGroupWrapper
     public AppApiAction<string, AppRoleModel> GetRole { get; }
     public AppApiAction<EmptyRequest, ResourceGroupModel[]> GetResourceGroups { get; }
     public AppApiAction<int, AppRequestExpandedModel[]> GetMostRecentRequests { get; }
-    public AppApiAction<int, AppEventModel[]> GetMostRecentErrorEvents { get; }
+    public AppApiAction<int, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
     public AppApiAction<EmptyRequest, ModifierCategoryModel[]> GetModifierCategories { get; }
     public AppApiAction<string, ModifierCategoryModel> GetModifierCategory { get; }
     public AppApiAction<EmptyRequest, ModifierModel> GetDefaultModifier { get; }

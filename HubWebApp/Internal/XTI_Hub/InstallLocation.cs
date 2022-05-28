@@ -5,12 +5,12 @@ namespace XTI_Hub;
 
 public sealed class InstallLocation
 {
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
     private readonly InstallLocationEntity entity;
 
-    internal InstallLocation(HubFactory appFactory, InstallLocationEntity entity)
+    internal InstallLocation(HubFactory hubFactory, InstallLocationEntity entity)
     {
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
         this.entity = entity;
         ID = entity.ID;
     }
@@ -29,23 +29,17 @@ public sealed class InstallLocation
         return entity.QualifiedMachineName;
     }
 
-    public Task<bool> HasCurrentInstallation(App app)
-        => appFactory.Installations.HasCurrentInstallation(this, app);
+    public Task<bool> HasCurrentInstallation(AppVersion appVersion)
+        => hubFactory.Installations.HasCurrentInstallation(this, appVersion);
 
-    public Task<CurrentInstallation> CurrentInstallation(App app)
-        => appFactory.Installations.CurrentInstallation(this, app);
+    public Task<Installation> CurrentInstallation(AppVersion appVersion)
+        => hubFactory.Installations.CurrentInstallation(this, appVersion);
 
-    public Task<CurrentInstallation> NewCurrentInstallation(AppVersion appVersion, DateTimeOffset timeAdded)
-        => appFactory.Installations.NewCurrentInstallation(this, appVersion, timeAdded);
+    public Task<Installation> NewCurrentInstallation(AppVersion appVersion, string domain, DateTimeOffset timeAdded)
+        => hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, timeAdded);
 
-    public Task<bool> HasVersionInstallation(AppVersion appVersion)
-        => appFactory.Installations.HasVersionInstallation(this, appVersion);
-
-    public Task<VersionInstallation> VersionInstallation(AppVersion appVersion)
-        => appFactory.Installations.VersionInstallation(this, appVersion);
-
-    public Task<VersionInstallation> NewVersionInstallation(AppVersion appVersion, DateTimeOffset timeAdded)
-        => appFactory.Installations.NewVersionInstallation(this, appVersion, timeAdded);
+    public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, DateTimeOffset timeAdded)
+        => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, timeAdded);
 
     public override string ToString() => $"{nameof(InstallLocation)} {entity.ID}";
 }

@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubAppApi.ResourceInquiry;
 
-public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceLogRequest, AppEventModel[]>
+public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceLogRequest, AppLogEntryModel[]>
 {
     private readonly AppFromPath appFromPath;
 
@@ -9,7 +9,7 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceLogReq
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppEventModel[]> Execute(GetResourceLogRequest model)
+    public async Task<AppLogEntryModel[]> Execute(GetResourceLogRequest model)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

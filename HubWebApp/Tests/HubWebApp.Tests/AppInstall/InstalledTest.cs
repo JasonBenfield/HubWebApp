@@ -21,15 +21,13 @@ sealed class InstalledTest
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        await startCurrentInstallation(tester, new BeginInstallationRequest
+        await startInstallation(tester, new InstallationRequest
         {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = hubApp.Key(),
-            VersionKey = version.Key()
+            InstallationID = newInstResult.CurrentInstallationID
         });
         await tester.Execute
         (
-            new InstalledRequest(newInstResult.CurrentInstallationID)
+            new InstallationRequest(newInstResult.CurrentInstallationID)
         );
         var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
         Assert.That
@@ -54,15 +52,13 @@ sealed class InstalledTest
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        await startVersionInstallation(tester, new BeginInstallationRequest
+        await startInstallation(tester, new InstallationRequest
         {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = hubApp.Key(),
-            VersionKey = version.Key()
+            InstallationID = newInstResult.VersionInstallationID
         });
         await tester.Execute
         (
-            new InstalledRequest(newInstResult.VersionInstallationID)
+            new InstallationRequest(newInstResult.VersionInstallationID)
         );
         var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
         Assert.That
@@ -73,7 +69,40 @@ sealed class InstalledTest
         );
     }
 
-    private async Task<HubActionTester<InstalledRequest, EmptyActionResult>> setup()
+    [Test]
+    public async Task ShouldDeletePreviousCurrentInstallation()
+    {
+        var tester = await setup();
+        var hubApp = await tester.HubApp();
+        var version = await hubApp.CurrentVersion();
+        tester.LoginAsAdmin();
+        const string qualifiedMachineName = "machine.example.com";
+        var newInstResult1 = await newInstallation(tester, new NewInstallationRequest
+        {
+            VersionName = version.ToVersionModel().VersionName,
+            QualifiedMachineName = qualifiedMachineName,
+            AppKey = HubInfo.AppKey
+        });
+        var newInstResult2 = await newInstallation(tester, new NewInstallationRequest
+        {
+            VersionName = version.ToVersionModel().VersionName,
+            QualifiedMachineName = qualifiedMachineName,
+            AppKey = HubInfo.AppKey
+        });
+        await startInstallation(tester, new InstallationRequest
+        {
+            InstallationID = newInstResult2.CurrentInstallationID
+        });
+        await tester.Execute
+        (
+            new InstallationRequest(newInstResult2.CurrentInstallationID)
+        );
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID);
+        Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
+    }
+
+    private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
@@ -87,18 +116,10 @@ sealed class InstalledTest
         return result.Data;
     }
 
-    private async Task<int> startCurrentInstallation(IHubActionTester tester, BeginInstallationRequest model)
+    private Task startInstallation(IHubActionTester tester, InstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.BeginCurrentInstallation.Execute(model);
-        return result.Data;
-    }
-
-    private async Task<int> startVersionInstallation(IHubActionTester tester, BeginInstallationRequest model)
-    {
-        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.BeginVersionInstallation.Execute(model);
-        return result.Data;
+        return hubApi.Install.BeginInstallation.Execute(model);
     }
 
     private static Task<InstallationEntity> getInstallation(IHubActionTester tester, int installationID)

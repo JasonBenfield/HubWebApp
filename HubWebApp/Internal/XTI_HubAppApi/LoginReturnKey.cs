@@ -5,21 +5,19 @@ namespace XTI_HubAppApi;
 
 public sealed class LoginReturnKey : ILoginReturnKey
 {
-    private readonly HubFactory factory;
-    private readonly IClock clock;
+    private readonly StoredObjectFactory storedObjectFactory;
 
-    public LoginReturnKey(HubFactory factory, IClock clock)
+    public LoginReturnKey(StoredObjectFactory storedObjectFactory)
     {
-        this.factory = factory;
-        this.clock = clock;
+        this.storedObjectFactory = storedObjectFactory;
     }
 
     public Task<string> Value(string returnUrl) =>
-        new StoreObjectProcess(factory).Run
-        (
-            new StorageName("Login Return"),
-            GeneratedStorageKeyType.Values.SixDigit,
-            JsonSerializer.Serialize(new LoginReturnModel { ReturnUrl = returnUrl }),
-            clock.Now().AddMonths(3)
-        );
+        storedObjectFactory.CreateStoredObject(new StorageName("Login Return"))
+            .Store
+            (
+                GeneratedStorageKeyType.Values.SixDigit,
+                new LoginReturnModel { ReturnUrl = returnUrl },
+                TimeSpan.FromDays(90)
+            );
 }

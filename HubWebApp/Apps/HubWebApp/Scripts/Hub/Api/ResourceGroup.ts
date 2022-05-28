@@ -12,13 +12,13 @@ export class ResourceGroup extends AppApiGroup {
 		this.GetResourceAction = this.createAction<IGetResourceRequest,IResourceModel>('GetResource', 'Get Resource');
 		this.GetRoleAccessAction = this.createAction<IGetResourceRoleAccessRequest,IAppRoleModel[]>('GetRoleAccess', 'Get Role Access');
 		this.GetMostRecentRequestsAction = this.createAction<IGetResourceLogRequest,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
-		this.GetMostRecentErrorEventsAction = this.createAction<IGetResourceLogRequest,IAppEventModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+		this.GetMostRecentErrorEventsAction = this.createAction<IGetResourceLogRequest,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 	}
 	
 	readonly GetResourceAction: AppApiAction<IGetResourceRequest,IResourceModel>;
 	readonly GetRoleAccessAction: AppApiAction<IGetResourceRoleAccessRequest,IAppRoleModel[]>;
 	readonly GetMostRecentRequestsAction: AppApiAction<IGetResourceLogRequest,IAppRequestExpandedModel[]>;
-	readonly GetMostRecentErrorEventsAction: AppApiAction<IGetResourceLogRequest,IAppEventModel[]>;
+	readonly GetMostRecentErrorEventsAction: AppApiAction<IGetResourceLogRequest,IAppLogEntryModel[]>;
 	
 	GetResource(model: IGetResourceRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetResourceAction.execute(model, errorOptions || {});

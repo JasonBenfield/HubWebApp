@@ -15,11 +15,11 @@ export class InstallGroup extends AppApiGroup {
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
 		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
+		this.AddAdminUserAction = this.createAction<IAddAdminUserRequest,IAppUserModel>('AddAdminUser', 'Add Admin User');
 		this.AddInstallationUserAction = this.createAction<IAddInstallationUserRequest,IAppUserModel>('AddInstallationUser', 'Add Installation User');
 		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
-		this.BeginCurrentInstallationAction = this.createAction<IBeginInstallationRequest,number>('BeginCurrentInstallation', 'Begin Current Installation');
-		this.BeginVersionInstallationAction = this.createAction<IBeginInstallationRequest,number>('BeginVersionInstallation', 'Begin Version Installation');
-		this.InstalledAction = this.createAction<IInstalledRequest,IEmptyActionResult>('Installed', 'Installed');
+		this.BeginInstallationAction = this.createAction<IInstallationRequest,IEmptyActionResult>('BeginInstallation', 'Begin Installation');
+		this.InstalledAction = this.createAction<IInstallationRequest,IEmptyActionResult>('Installed', 'Installed');
 		this.SetUserAccessAction = this.createAction<ISetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
 	
@@ -29,11 +29,11 @@ export class InstallGroup extends AppApiGroup {
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IXtiVersionModel>;
 	readonly GetVersionsAction: AppApiAction<IGetVersionsRequest,IXtiVersionModel[]>;
 	readonly AddSystemUserAction: AppApiAction<IAddSystemUserRequest,IAppUserModel>;
+	readonly AddAdminUserAction: AppApiAction<IAddAdminUserRequest,IAppUserModel>;
 	readonly AddInstallationUserAction: AppApiAction<IAddInstallationUserRequest,IAppUserModel>;
 	readonly NewInstallationAction: AppApiAction<INewInstallationRequest,INewInstallationResult>;
-	readonly BeginCurrentInstallationAction: AppApiAction<IBeginInstallationRequest,number>;
-	readonly BeginVersionInstallationAction: AppApiAction<IBeginInstallationRequest,number>;
-	readonly InstalledAction: AppApiAction<IInstalledRequest,IEmptyActionResult>;
+	readonly BeginInstallationAction: AppApiAction<IInstallationRequest,IEmptyActionResult>;
+	readonly InstalledAction: AppApiAction<IInstallationRequest,IEmptyActionResult>;
 	readonly SetUserAccessAction: AppApiAction<ISetUserAccessRequest,IEmptyActionResult>;
 	
 	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
@@ -54,19 +54,19 @@ export class InstallGroup extends AppApiGroup {
 	AddSystemUser(model: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddSystemUserAction.execute(model, errorOptions || {});
 	}
+	AddAdminUser(model: IAddAdminUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddAdminUserAction.execute(model, errorOptions || {});
+	}
 	AddInstallationUser(model: IAddInstallationUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddInstallationUserAction.execute(model, errorOptions || {});
 	}
 	NewInstallation(model: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.NewInstallationAction.execute(model, errorOptions || {});
 	}
-	BeginCurrentInstallation(model: IBeginInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginCurrentInstallationAction.execute(model, errorOptions || {});
+	BeginInstallation(model: IInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.BeginInstallationAction.execute(model, errorOptions || {});
 	}
-	BeginVersionInstallation(model: IBeginInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginVersionInstallationAction.execute(model, errorOptions || {});
-	}
-	Installed(model: IInstalledRequest, errorOptions?: IActionErrorOptions) {
+	Installed(model: IInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.InstalledAction.execute(model, errorOptions || {});
 	}
 	SetUserAccess(model: ISetUserAccessRequest, errorOptions?: IActionErrorOptions) {

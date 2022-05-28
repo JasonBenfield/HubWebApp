@@ -57,7 +57,6 @@ internal sealed class EndToEndTest
             (
                 (hostContext, services) =>
                 {
-                    services.AddConfigurationOptions<AppOptions>(AppOptions.App);
                     services.AddHttpClient();
                     services.AddFileSecretCredentials(XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
                     services.AddScoped

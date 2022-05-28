@@ -30,127 +30,101 @@ internal sealed class PublishNpmProcess
         );
         if (Directory.Exists(sourceScriptPath))
         {
-            var tempExportDir = Path.Combine(Path.GetTempPath(), getAppName(appKey), "NpmExports");
+            var tempExportDistDir = Path.Combine(Path.GetTempPath(), getAppName(appKey), "NpmExports");
             var exportScriptDir = Path.Combine(publishDir, "npm");
-            if (Directory.Exists(tempExportDir))
+            if (Directory.Exists(tempExportDistDir))
             {
-                Directory.Delete(tempExportDir, true);
+                Directory.Delete(tempExportDistDir, true);
             }
-            var tempExportSrcDir = Path.Combine(tempExportDir, "src");
-            var tempExportDistDir = Path.Combine(tempExportDir, "dist");
-            try
+            Console.WriteLine($"Running tsc at '{sourceScriptPath}'");
+            var tscProcess = new WinProcess("tsc")
+                .UseArgumentNameDelimiter("--")
+                .AddArgument("declaration", "true")
+                .AddArgument("outDir", tempExportDistDir);
+            var tscResult = await new CmdProcess(tscProcess)
+                .SetWorkingDirectory(sourceScriptPath)
+                .WriteOutputToConsole()
+                .Run();
+            tscResult.EnsureExitCodeIsZero();
+
+            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                .CopySubdirectoriesIncludingEmpty()
+                .Pattern("*.d.ts")
+                .NoFileClassLogging()
+                .NoFileLogging()
+                .NoDirectoryLogging()
+                .NoJobHeader()
+                .NoJobSummary()
+                .Run();
+
+            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                .CopySubdirectoriesIncludingEmpty()
+                .Pattern("*.html")
+                .NoFileClassLogging()
+                .NoFileLogging()
+                .NoDirectoryLogging()
+                .NoJobHeader()
+                .NoJobSummary()
+                .Run();
+
+            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+                .CopySubdirectoriesIncludingEmpty()
+                .Pattern("*.scss")
+                .NoFileClassLogging()
+                .NoFileLogging()
+                .NoDirectoryLogging()
+                .NoJobHeader()
+                .NoJobSummary()
+                .Run();
+
+            new IndexFile(tempExportDistDir).Write();
+            var npmrcPath = Path.Combine(projectDir, ".npmrc");
+            if (File.Exists(npmrcPath))
             {
-                Console.WriteLine($"Copying '{sourceScriptPath}' to '{tempExportSrcDir}'");
-                await new RobocopyProcess(sourceScriptPath, tempExportSrcDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-
-                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .Pattern("*.d.ts")
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-
-                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .Pattern("*.html")
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-
-                await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .Pattern("*.scss")
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
-
-                new IndexFile(tempExportSrcDir).Write();
-                var npmrcPath = Path.Combine(projectDir, ".npmrc");
-                if (File.Exists(npmrcPath))
-                {
-                    File.Copy
-                    (
-                        npmrcPath,
-                        Path.Combine(tempExportSrcDir, ".npmrc")
-                    );
-                }
                 File.Copy
                 (
-                    Path.Combine(projectDir, "package.json"),
-                    Path.Combine(tempExportSrcDir, "package.json")
+                    npmrcPath,
+                    Path.Combine(tempExportDistDir, ".npmrc")
                 );
-                Console.WriteLine($"Running npm install at '{tempExportSrcDir}'");
-                var npmProcess = new WinProcess("npm")
-                    .UseArgumentNameDelimiter("")
-                    .AddArgument("install");
-                var npmResult = await new CmdProcess(npmProcess)
-                    .WriteOutputToConsole()
-                    .SetWorkingDirectory(tempExportSrcDir)
-                    .Run();
-                npmResult.EnsureExitCodeIsZero();
-                File.Copy
-                (
-                    Path.Combine(projectDir, "package.json"),
-                    Path.Combine(tempExportDistDir, "package.json")
-                );
-                Console.WriteLine($"Running tsc at '{tempExportSrcDir}'");
-                var tscProcess = new WinProcess("tsc")
-                    .UseArgumentNameDelimiter("--")
-                    .AddArgument("declaration", "true")
-                    .AddArgument("outDir", "../dist");
-                var tscResult = await new CmdProcess(tscProcess)
-                    .SetWorkingDirectory(tempExportSrcDir)
-                    .WriteOutputToConsole()
-                    .Run();
-                tscResult.EnsureExitCodeIsZero();
-
-                File.Delete(Path.Combine(tempExportDistDir, "main.d.ts"));
-                File.Delete(Path.Combine(tempExportDistDir, "_references.d.ts"));
-
-                new IndexDeclarationFile(tempExportDistDir).Write();
-
-                var npmVersionProcess = new WinProcess("npm")
-                    .UseArgumentNameDelimiter("")
-                    .UseArgumentValueDelimiter(" ")
-                    .AddArgument("version", versionNumber)
-                    .UseArgumentNameDelimiter("--")
-                    .AddArgument("allow-same-version");
-                var npmVersionResult = await new CmdProcess(npmVersionProcess)
-                    .SetWorkingDirectory(tempExportDistDir)
-                    .WriteOutputToConsole()
-                    .Run();
-                npmVersionResult.EnsureExitCodeIsZero();
-
-                await new RobocopyProcess(tempExportDistDir, exportScriptDir)
-                    .CopySubdirectoriesIncludingEmpty()
-                    .Purge()
-                    .NoFileClassLogging()
-                    .NoFileLogging()
-                    .NoDirectoryLogging()
-                    .NoJobHeader()
-                    .NoJobSummary()
-                    .Run();
             }
-            finally
-            {
-                Directory.Delete(tempExportDir, true);
-            }
+            File.Copy
+            (
+                Path.Combine(projectDir, "package.json"),
+                Path.Combine(tempExportDistDir, "package.json")
+            );
+            Console.WriteLine($"Running npm install at '{tempExportDistDir}'");
+            var npmProcess = new WinProcess("npm")
+                .UseArgumentNameDelimiter("")
+                .AddArgument("install");
+            var npmResult = await new CmdProcess(npmProcess)
+                .WriteOutputToConsole()
+                .SetWorkingDirectory(tempExportDistDir)
+                .Run();
+            npmResult.EnsureExitCodeIsZero();
+            File.Delete(Path.Combine(tempExportDistDir, "main.d.ts"));
+            File.Delete(Path.Combine(tempExportDistDir, "_references.d.ts"));
+            new IndexDeclarationFile(tempExportDistDir).Write();
+            var npmVersionProcess = new WinProcess("npm")
+                .UseArgumentNameDelimiter("")
+                .UseArgumentValueDelimiter(" ")
+                .AddArgument("version", versionNumber)
+                .UseArgumentNameDelimiter("--")
+                .AddArgument("allow-same-version");
+            var npmVersionResult = await new CmdProcess(npmVersionProcess)
+                .SetWorkingDirectory(tempExportDistDir)
+                .WriteOutputToConsole()
+                .Run();
+            npmVersionResult.EnsureExitCodeIsZero();
+
+            await new RobocopyProcess(tempExportDistDir, exportScriptDir)
+                .CopySubdirectoriesIncludingEmpty()
+                .Purge()
+                .NoFileClassLogging()
+                .NoFileLogging()
+                .NoDirectoryLogging()
+                .NoJobHeader()
+                .NoJobSummary()
+                .Run();
             if (xtiEnv.IsProduction())
             {
                 var npmPublishProcess = new WinProcess("npm")

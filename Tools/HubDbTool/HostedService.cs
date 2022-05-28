@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Core;
+using XTI_DB;
 using XTI_Hub;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
@@ -31,8 +31,8 @@ internal sealed class HostedService : IHostedService
                 {
                     throw new ArgumentException("Database reset can only be run for the test environment");
                 }
-                var mainDbReset = scope.ServiceProvider.GetRequiredService<HubDbReset>();
-                await mainDbReset.Run();
+                var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
+                await dbAdmin.Reset();
             }
             else if (options.Command == "backup")
             {
@@ -40,8 +40,8 @@ internal sealed class HostedService : IHostedService
                 {
                     throw new ArgumentException("Backup file path is required for backup");
                 }
-                var mainDbBackup = scope.ServiceProvider.GetRequiredService<HubDbBackup>();
-                await mainDbBackup.Run(xtiEnv.EnvironmentName, options.BackupFilePath);
+                var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
+                await dbAdmin.BackupTo(options.BackupFilePath);
             }
             else if (options.Command == "restore")
             {
@@ -53,13 +53,13 @@ internal sealed class HostedService : IHostedService
                 {
                     throw new ArgumentException("Backup file path is required for restore");
                 }
-                var mainDbRestore = scope.ServiceProvider.GetRequiredService<HubDbRestore>();
-                await mainDbRestore.Run(xtiEnv.EnvironmentName, options.BackupFilePath);
+                var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
+                await dbAdmin.RestoreFrom(options.BackupFilePath);
             }
             else if (options.Command == "update")
             {
-                var mainDbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
-                await mainDbContext.Database.MigrateAsync();
+                var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
+                await dbAdmin.Update();
                 var setup = scope.ServiceProvider.GetRequiredService<InitialSetup>();
                 await setup.Run();
             }
@@ -77,5 +77,5 @@ internal sealed class HostedService : IHostedService
         lifetime.StopApplication();
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)=> Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

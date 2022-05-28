@@ -28,17 +28,7 @@ sealed class Installer
                 if (command.Equals("localinstall", StringComparison.OrdinalIgnoreCase))
                 {
                     var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
-                    var appName = context.Request.Form["appName"].FirstOrDefault() ?? "";
-                    var appType = context.Request.Form["appType"].FirstOrDefault() ?? "";
-                    var installationUserName = context.Request.Form["installationUserName"].FirstOrDefault() ?? "";
-                    var installationPassword = context.Request.Form["installationPassword"].FirstOrDefault() ?? "";
-                    var versionKey = context.Request.Form["versionKey"].FirstOrDefault() ?? "";
-                    var domain = context.Request.Form["domain"].FirstOrDefault() ?? "";
-                    var repoOwner = context.Request.Form["repoOwner"].FirstOrDefault() ?? "";
-                    var repoName = context.Request.Form["repoName"].FirstOrDefault() ?? "";
-                    var release = context.Request.Form["release"].FirstOrDefault() ?? "";
-                    var machineName = context.Request.Form["machineName"].FirstOrDefault() ?? "";
-                    var siteName = context.Request.Form["siteName"].FirstOrDefault() ?? "";
+                    var remoteInstallKey = context.Request.Form["RemoteInstallKey"].FirstOrDefault() ?? "";
                     var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
                     var process = new XtiProcess(adminToolPath)
                         .WriteOutputToConsole()
@@ -48,17 +38,7 @@ sealed class Installer
                             new
                             {
                                 Command = "Install",
-                                AppName = appName,
-                                AppType = appType,
-                                VersionKey = versionKey,
-                                InstallationUserName = installationUserName,
-                                InstallationPassword = installationPassword,
-                                Domain = domain,
-                                RepoOwner = repoOwner,
-                                RepoName = repoName,
-                                Release = release,
-                                DestinationMachine = machineName,
-                                SiteName = siteName
+                                RemoteInstallKey = remoteInstallKey
                             }
                         );
                     await writer.WriteLineAsync($"Running {process.CommandText()}");

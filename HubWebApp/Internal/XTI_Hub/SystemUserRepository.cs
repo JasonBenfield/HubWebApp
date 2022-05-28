@@ -55,7 +55,7 @@ public sealed class SystemUserRepository
             await systemUser.AssignRole(hubSystemRole);
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
-            var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+            var appModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.Apps);
             var appModifier = await appModCategory.AddOrUpdateModifier(app.ID, app.Title);
             var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);

@@ -5,7 +5,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class VersionReader
+public sealed class VersionReader
 {
     private readonly string path;
 

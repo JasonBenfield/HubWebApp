@@ -15,7 +15,7 @@ export class AppGroup extends AppApiGroup {
 		this.GetRoleAction = this.createAction<string,IAppRoleModel>('GetRole', 'Get Role');
 		this.GetResourceGroupsAction = this.createAction<IEmptyRequest,IResourceGroupModel[]>('GetResourceGroups', 'Get Resource Groups');
 		this.GetMostRecentRequestsAction = this.createAction<number,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
-		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppEventModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
+		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 		this.GetModifierCategoriesAction = this.createAction<IEmptyRequest,IModifierCategoryModel[]>('GetModifierCategories', 'Get Modifier Categories');
 		this.GetModifierCategoryAction = this.createAction<string,IModifierCategoryModel>('GetModifierCategory', 'Get Modifier Category');
 		this.GetDefaultModifierAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModifier', 'Get Default Modifier');
@@ -27,7 +27,7 @@ export class AppGroup extends AppApiGroup {
 	readonly GetRoleAction: AppApiAction<string,IAppRoleModel>;
 	readonly GetResourceGroupsAction: AppApiAction<IEmptyRequest,IResourceGroupModel[]>;
 	readonly GetMostRecentRequestsAction: AppApiAction<number,IAppRequestExpandedModel[]>;
-	readonly GetMostRecentErrorEventsAction: AppApiAction<number,IAppEventModel[]>;
+	readonly GetMostRecentErrorEventsAction: AppApiAction<number,IAppLogEntryModel[]>;
 	readonly GetModifierCategoriesAction: AppApiAction<IEmptyRequest,IModifierCategoryModel[]>;
 	readonly GetModifierCategoryAction: AppApiAction<string,IModifierCategoryModel>;
 	readonly GetDefaultModifierAction: AppApiAction<IEmptyRequest,IModifierModel>;

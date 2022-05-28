@@ -23,11 +23,9 @@ sealed class BeginCurrentInstallationTest
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new BeginInstallationRequest
+        var request = new InstallationRequest
         {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey,
-            VersionKey = version.Key()
+            InstallationID = newInstResult.CurrentInstallationID
         };
         await tester.Execute(request);
         var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
@@ -36,36 +34,6 @@ sealed class BeginCurrentInstallationTest
             InstallStatus.Values.Value(currentInstallation.Status),
             Is.EqualTo(InstallStatus.Values.InstallStarted),
             "Should set current installation status to install started"
-        );
-    }
-
-    [Test]
-    public async Task ShouldReturnInstallationID()
-    {
-        var tester = await setup();
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
-        const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await newInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = version.ToVersionModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
-        var request = new BeginInstallationRequest
-        {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey,
-            VersionKey = version.Key()
-        };
-        var installationID = await tester.Execute(request);
-        Assert.That
-        (
-            installationID,
-            Is.EqualTo(newInstResult.CurrentInstallationID),
-            "Should return current installation ID"
         );
     }
 
@@ -113,20 +81,18 @@ sealed class BeginCurrentInstallationTest
                 VersionKey = nextVersion.VersionKey
             }
         );
-        await newInstallation(tester, new NewInstallationRequest
+        var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
             VersionName = nextVersion.VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new BeginInstallationRequest
+        var request = new InstallationRequest
         {
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey,
-            VersionKey = nextVersion.VersionKey
+            InstallationID = newInstResult.CurrentInstallationID
         };
-        var installationID = await tester.Execute(request);
-        var currentInstallation = await getInstallation(tester, installationID);
+        await tester.Execute(request);
+        var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
         var installationVersion = await getVersion(tester, currentInstallation);
         Assert.That
         (
@@ -158,10 +124,10 @@ sealed class BeginCurrentInstallationTest
         return hubApi.Install.NewInstallation.Invoke(model);
     }
 
-    private async Task<HubActionTester<BeginInstallationRequest, int>> setup()
+    private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.BeginCurrentInstallation);
+        return HubActionTester.Create(services, hubApi => hubApi.Install.BeginInstallation);
     }
 }

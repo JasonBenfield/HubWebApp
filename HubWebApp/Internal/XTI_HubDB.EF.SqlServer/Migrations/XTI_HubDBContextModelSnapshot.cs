@@ -61,56 +61,6 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("Apps", (string)null);
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.AppEventEntity", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<int>("ActualCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Caption")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Detail")
-                        .IsRequired()
-                        .HasMaxLength(32000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventKey")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("TimeOccurred")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EventKey")
-                        .IsUnique();
-
-                    b.HasIndex("RequestID");
-
-                    b.ToTable("Events", (string)null);
-                });
-
             modelBuilder.Entity("XTI_HubDB.Entities.AppRequestEntity", b =>
                 {
                     b.Property<int>("ID")
@@ -120,6 +70,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("ActualCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstallationID")
                         .HasColumnType("int");
 
                     b.Property<int>("ModifierID")
@@ -148,6 +101,8 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("InstallationID");
 
                     b.HasIndex("ModifierID");
 
@@ -379,8 +334,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasIndex("AppVersionID");
 
-                    b.HasIndex("LocationID", "AppVersionID", "IsCurrent")
-                        .IsUnique();
+                    b.HasIndex("LocationID");
 
                     b.ToTable("Installations", (string)null);
                 });
@@ -404,6 +358,56 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("InstallLocations", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.LogEntryEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("ActualCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasMaxLength(32000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EventKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TimeOccurred")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EventKey")
+                        .IsUnique();
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("LogEntries", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ModifierCategoryEntity", b =>
@@ -695,17 +699,14 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("XtiVersions", (string)null);
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.AppEventEntity", b =>
-                {
-                    b.HasOne("XTI_HubDB.Entities.AppRequestEntity", null)
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("XTI_HubDB.Entities.AppRequestEntity", b =>
                 {
+                    b.HasOne("XTI_HubDB.Entities.InstallationEntity", null)
+                        .WithMany()
+                        .HasForeignKey("InstallationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("XTI_HubDB.Entities.ModifierEntity", null)
                         .WithMany()
                         .HasForeignKey("ModifierID")
@@ -799,6 +800,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.InstallLocationEntity", null)
                         .WithMany()
                         .HasForeignKey("LocationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.LogEntryEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.AppRequestEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

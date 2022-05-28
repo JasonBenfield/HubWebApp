@@ -1,4 +1,5 @@
 ﻿using XTI_Core.Fakes;
+using XTI_Hub.Abstractions;
 using XTI_HubAppApi.Storage;
 
 namespace HubWebApp.Tests;
@@ -229,10 +230,10 @@ internal sealed class StoreObjectTest
         {
             StorageName = "something",
             Data = "Whatever1",
-            TimeExpires = clock.Now().AddMinutes(1)
+            ExpireAfter = TimeSpan.FromMinutes(1)
         };
         var storageKey = await tester.Execute(request);
-        clock.Set(request.TimeExpires.AddSeconds(1));
+        clock.Add(request.ExpireAfter.Add(TimeSpan.FromSeconds(1)));
         Assert.ThrowsAsync<StoredObjectNotFoundException>(() => GetStoredObject(tester, request.StorageName, storageKey));
     }
 

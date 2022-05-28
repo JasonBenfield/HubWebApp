@@ -50,8 +50,8 @@ internal sealed class DecryptTempLogCommand : ICommand
         var authSessionFiles = startProcessingFiles(logs, l => l.AuthSessionFiles(modifiedBefore));
         logBatch.AuthenticateSessions = await deserializeFiles<AuthenticateSessionModel>(authSessionFiles);
         var logEventFiles = startProcessingFiles(logs, l => l.LogEventFiles(modifiedBefore));
-        var logEvents = await deserializeFiles<LogEventModel>(logEventFiles);
-        logBatch.LogEvents = logEvents.OrderByDescending(evt => evt.TimeOccurred).ToArray();
+        var logEvents = await deserializeFiles<LogEntryModel>(logEventFiles);
+        logBatch.LogEntries = logEvents.OrderByDescending(evt => evt.TimeOccurred).ToArray();
         var endRequestFiles = startProcessingFiles(logs, l => l.EndRequestFiles(modifiedBefore));
         logBatch.EndRequests = await deserializeFiles<EndRequestModel>(endRequestFiles);
         var endSessionFiles = startProcessingFiles(logs, l => l.EndSessionFiles(modifiedBefore));

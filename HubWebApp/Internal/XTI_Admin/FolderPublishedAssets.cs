@@ -17,14 +17,14 @@ public sealed class FolderPublishedAssets : IPublishedAssets
         return Task.FromResult(versionsPath);
     }
 
-    public Task<string> LoadSetup(AppKey appKey, AppVersionKey versionKey)
+    public Task<string> LoadSetup(string releaseTag, AppKey appKey, AppVersionKey versionKey)
     {
         var sourceDir = publishFolder.AppDir(appKey, versionKey);
         var setupAppPath = Path.Combine(sourceDir, "Setup");
         return Task.FromResult(setupAppPath);
     }
 
-    public Task<string> LoadApps(AppKey appKey, AppVersionKey versionKey)
+    public Task<string> LoadApps(string releaseTag, AppKey appKey, AppVersionKey versionKey)
     {
         var sourceDir = publishFolder.AppDir(appKey, versionKey);
         var appPath = Path.Combine(sourceDir, "App");

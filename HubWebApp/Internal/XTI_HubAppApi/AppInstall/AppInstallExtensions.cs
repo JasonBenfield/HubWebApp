@@ -12,8 +12,7 @@ internal static class AppInstallExtensions
         services.AddScoped<AddSystemUserValidation>();
         services.AddScoped<AddInstallationUserAction>();
         services.AddScoped<AddSystemUserAction>();
-        services.AddScoped<BeginCurrentInstallationAction>();
-        services.AddScoped<BeginVersionInstallationAction>();
+        services.AddScoped<BeginInstallationAction>();
         services.AddScoped<GetVersionAction>();
         services.AddScoped<GetVersionsAction>();
         services.AddScoped<InstalledAction>();

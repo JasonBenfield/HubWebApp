@@ -41,7 +41,7 @@ public sealed class TempToPermanentLog
         return logBatch.StartSessions.Any()
             || logBatch.StartRequests.Any()
             || logBatch.AuthenticateSessions.Any()
-            || logBatch.LogEvents.Any()
+            || logBatch.LogEntries.Any()
             || logBatch.EndRequests.Any()
             || logBatch.EndSessions.Any();
     }
@@ -56,7 +56,7 @@ public sealed class TempToPermanentLog
         var authSessionFiles = startProcessingFiles(logs, l => l.AuthSessionFiles(modifiedBefore));
         logBatch.AuthenticateSessions = await deserializeFiles<AuthenticateSessionModel>(authSessionFiles);
         var logEventFiles = startProcessingFiles(logs, l => l.LogEventFiles(modifiedBefore));
-        logBatch.LogEvents = await deserializeFiles<LogEventModel>(logEventFiles);
+        logBatch.LogEntries = await deserializeFiles<LogEntryModel>(logEventFiles);
         var endRequestFiles = startProcessingFiles(logs, l => l.EndRequestFiles(modifiedBefore));
         logBatch.EndRequests = await deserializeFiles<EndRequestModel>(endRequestFiles);
         var endSessionFiles = startProcessingFiles(logs, l => l.EndSessionFiles(modifiedBefore));

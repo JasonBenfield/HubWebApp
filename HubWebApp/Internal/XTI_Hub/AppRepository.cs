@@ -28,7 +28,9 @@ public sealed class AppRepository
         );
         await factory.Versions.AddVersionToAppIfNotFound(app, version);
         var currentVersion = await app.CurrentVersion();
-        var defaultModCategory = await app.ModCategory(ModifierCategoryName.Default);
+        await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
+        var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
+        await defaultModCategory.AddDefaultModifierIfNotFound();
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
     }
@@ -64,7 +66,7 @@ public sealed class AppRepository
             var entity = await AddEntity(versionName, appKey, title, timeAdded);
             app = factory.CreateApp(entity);
             var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
-            await factory.Modifiers.AddOrUpdateByModKey(defaultModCategory, ModifierKey.Default, "", "");
+            await defaultModCategory.AddDefaultModifierIfNotFound();
         });
         return app ?? throw new ArgumentNullException(nameof(app));
     }
@@ -111,7 +113,7 @@ public sealed class AppRepository
     public async Task<App> AppOrUnknown(AppKey appKey)
     {
         var record = await GetAppByKey(appKey);
-        if (record == null)
+        if (record == null && !appKey.Equals(AppKey.Unknown))
         {
             record = await GetAppByKey(AppKey.Unknown);
         }

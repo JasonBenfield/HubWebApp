@@ -1,9 +1,7 @@
-﻿using System.Text.Json.Serialization;
-using XTI_Core;
+﻿using XTI_Core;
 
 namespace XTI_Hub.Abstractions;
 
-[JsonConverter(typeof(AppVersionNameJsonConverter))]
 public sealed class AppVersionName : TextValue, IEquatable<AppVersionName>
 {
     public static readonly AppVersionName None = new AppVersionName();

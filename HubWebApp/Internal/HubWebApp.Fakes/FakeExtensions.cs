@@ -53,7 +53,9 @@ public static class FakeExtensions
                 sp.GetRequiredService<FakeAppContext>()
             )
         );
-        services.AddScoped<IHubAdministration, DbHubAdministration>();
+        services.AddScoped<IHubAdministration, EfHubAdministration>();
+        services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
+        services.AddScoped<StoredObjectFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
     }

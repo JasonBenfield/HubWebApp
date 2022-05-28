@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubAppApi.ResourceGroupInquiry;
 
-public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceGroupLogRequest, AppEventModel[]>
+public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceGroupLogRequest, AppLogEntryModel[]>
 {
     private readonly AppFromPath appFromPath;
 
@@ -9,7 +9,7 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceGroupL
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppEventModel[]> Execute(GetResourceGroupLogRequest model)
+    public async Task<AppLogEntryModel[]> Execute(GetResourceGroupLogRequest model)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

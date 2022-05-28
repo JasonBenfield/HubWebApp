@@ -22,11 +22,11 @@ public interface IHubAdministration
 
     Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password);
 
-    Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName);
+    Task<AppUserModel> AddOrUpdateAdminUser(AppUserName userName, string password);
 
-    Task<int> BeginCurrentInstall(AppKey appKey, AppVersionKey installVersionKey, string machineName, string domain);
+    Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain);
 
-    Task<int> BeginVersionInstall(AppKey appKey, AppVersionKey versionKey, string machineName, string domain);
+    Task BeginInstall(int installationID);
 
     Task Installed(int installationID);
 }

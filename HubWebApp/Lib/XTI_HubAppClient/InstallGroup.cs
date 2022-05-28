@@ -12,10 +12,10 @@ public sealed partial class InstallGroup : AppClientGroup
     public Task<XtiVersionModel> GetVersion(GetVersionRequest model) => Post<XtiVersionModel, GetVersionRequest>("GetVersion", "", model);
     public Task<XtiVersionModel[]> GetVersions(GetVersionsRequest model) => Post<XtiVersionModel[], GetVersionsRequest>("GetVersions", "", model);
     public Task<AppUserModel> AddSystemUser(AddSystemUserRequest model) => Post<AppUserModel, AddSystemUserRequest>("AddSystemUser", "", model);
+    public Task<AppUserModel> AddAdminUser(AddAdminUserRequest model) => Post<AppUserModel, AddAdminUserRequest>("AddAdminUser", "", model);
     public Task<AppUserModel> AddInstallationUser(AddInstallationUserRequest model) => Post<AppUserModel, AddInstallationUserRequest>("AddInstallationUser", "", model);
     public Task<NewInstallationResult> NewInstallation(NewInstallationRequest model) => Post<NewInstallationResult, NewInstallationRequest>("NewInstallation", "", model);
-    public Task<int> BeginCurrentInstallation(BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginCurrentInstallation", "", model);
-    public Task<int> BeginVersionInstallation(BeginInstallationRequest model) => Post<int, BeginInstallationRequest>("BeginVersionInstallation", "", model);
-    public Task<EmptyActionResult> Installed(InstalledRequest model) => Post<EmptyActionResult, InstalledRequest>("Installed", "", model);
+    public Task<EmptyActionResult> BeginInstallation(InstallationRequest model) => Post<EmptyActionResult, InstallationRequest>("BeginInstallation", "", model);
+    public Task<EmptyActionResult> Installed(InstallationRequest model) => Post<EmptyActionResult, InstallationRequest>("Installed", "", model);
     public Task<EmptyActionResult> SetUserAccess(SetUserAccessRequest model) => Post<EmptyActionResult, SetUserAccessRequest>("SetUserAccess", "", model);
 }

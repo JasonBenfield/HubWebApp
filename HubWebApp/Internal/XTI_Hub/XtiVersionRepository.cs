@@ -67,15 +67,6 @@ public sealed class XtiVersionRepository
             .AppVersions.Retrieve()
             .FirstOrDefaultAsync(av => av.VersionID == version.ID && av.AppID == app.ID);
 
-    internal async Task RemoveVersionFromApp(App app, XtiVersion version)
-    {
-        var appVersion = await GetAppVersion(app, version);
-        if (appVersion != null)
-        {
-            await factory.DB.AppVersions.Delete(appVersion);
-        }
-    }
-
     private async Task<AppVersionKey> NextKey(AppVersionName versionName)
     {
         var keys = await factory.DB

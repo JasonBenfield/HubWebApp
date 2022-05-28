@@ -32,7 +32,7 @@ internal sealed class PermanentLogTest
         await startRequest(tester, sessionKey, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
-        var requests = (await session.Requests()).ToArray();
+        var requests = await session.Requests();
         Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
     }
 
@@ -48,7 +48,7 @@ internal sealed class PermanentLogTest
         await endRequest(tester, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
-        var requests = (await session.Requests()).ToArray();
+        var requests = await session.Requests();
         Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
     }
 
@@ -122,18 +122,19 @@ internal sealed class PermanentLogTest
         return tester.Execute(new LogBatchModel { StartSessions = new[] { startSessionModel } });
     }
 
-    private static Task startRequest(HubActionTester<LogBatchModel, EmptyActionResult> tester, string sessionKey, string requestKey)
+    private static async Task startRequest(HubActionTester<LogBatchModel, EmptyActionResult> tester, string sessionKey, string requestKey)
     {
         var clock = tester.Services.GetRequiredService<IClock>();
+        var installationID = await tester.Services.GetRequiredService<InstallationIDAccessor>().Value();
         var startRequestModel = new StartRequestModel
         {
             RequestKey = requestKey,
             SessionKey = sessionKey,
             TimeStarted = clock.Now(),
-            AppType = AppType.Values.WebApp.DisplayText,
+            InstallationID = installationID,
             Path = "/Fake/Current/Test/Action1"
         };
-        return tester.Execute(new LogBatchModel { StartRequests = new[] { startRequestModel } });
+        await tester.Execute(new LogBatchModel { StartRequests = new[] { startRequestModel } });
     }
 
     private static Task endRequest(HubActionTester<LogBatchModel, EmptyActionResult> tester, string requestKey)
@@ -195,9 +196,9 @@ internal sealed class PermanentLogTest
         (
             new LogBatchModel
             {
-                LogEvents = new[]
+                LogEntries = new[]
                 {
-                    new LogEventModel
+                    new LogEntryModel
                     {
                         EventKey = generateKey(),
                         RequestKey = requestKey,
@@ -241,8 +242,22 @@ internal sealed class PermanentLogTest
             VersionName = version.VersionName,
             VersionKey = version.VersionKey
         });
+        var newInstResult = await hubApi.Install.NewInstallation.Invoke(new NewInstallationRequest
+        {
+            AppKey = AppKey.WebApp("Fake"),
+            VersionName = version.VersionName,
+            QualifiedMachineName = "destination.xartogg.com",
+            Domain = "test.xartogg.com"
+        });
+        await hubApi.Install.BeginInstallation.Invoke(new InstallationRequest
+        {
+            InstallationID = newInstResult.CurrentInstallationID
+        });
+        var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
+        installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
         await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
         await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+
         return HubActionTester.Create(sp, hubApi => hubApi.PermanentLog.LogBatch);
     }
 }

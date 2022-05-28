@@ -9,5 +9,5 @@ public sealed partial class ResourceGroup : AppClientGroup
     public Task<ResourceModel> GetResource(string modifier, GetResourceRequest model) => Post<ResourceModel, GetResourceRequest>("GetResource", modifier, model);
     public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceRoleAccessRequest model) => Post<AppRoleModel[], GetResourceRoleAccessRequest>("GetRoleAccess", modifier, model);
     public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceLogRequest model) => Post<AppRequestExpandedModel[], GetResourceLogRequest>("GetMostRecentRequests", modifier, model);
-    public Task<AppEventModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest model) => Post<AppEventModel[], GetResourceLogRequest>("GetMostRecentErrorEvents", modifier, model);
+    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest model) => Post<AppLogEntryModel[], GetResourceLogRequest>("GetMostRecentErrorEvents", modifier, model);
 }
