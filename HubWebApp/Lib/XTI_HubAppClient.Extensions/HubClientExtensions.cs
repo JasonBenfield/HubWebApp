@@ -13,6 +13,7 @@ public static class HubClientExtensions
     {
         services.AddHttpClient();
         services.AddConfigurationOptions<HubClientOptions>(HubClientOptions.HubClient);
+        services.AddScoped<AnonymousXtiToken>();
         services.AddXtiTokenAccessor((sp, accessor) => { });
         services.AddScoped<HubClientOptionsAppClientDomain>();
         services.AddScoped<HubClientAppClientDomain>();

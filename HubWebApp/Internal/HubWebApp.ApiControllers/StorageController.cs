@@ -16,6 +16,7 @@ public class StorageController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest model)
     {
         return api.Group("Storage").Action<GetStoredObjectRequest, string>("GetStoredObject").Execute(model);
