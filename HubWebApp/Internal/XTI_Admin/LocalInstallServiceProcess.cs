@@ -1,6 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
-using XTI_Hub.Abstractions;
+﻿using XTI_Core;
 
 namespace XTI_Admin;
 
@@ -16,6 +14,7 @@ internal sealed class LocalInstallServiceProcess
     public async Task Run(string machineName, string remoteInstallKey)
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+        var hubDbTypeAccessor = scopes.GetRequiredService<HubDbTypeAccessor>();
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
         using var client = httpClientFactory.CreateClient();
         using var content = new FormUrlEncodedContent
@@ -24,7 +23,8 @@ internal sealed class LocalInstallServiceProcess
             {
                 KeyValuePair.Create("command", "localInstall"),
                 KeyValuePair.Create("envName", xtiEnv.EnvironmentName),
-                KeyValuePair.Create("RemoteInstallKey", remoteInstallKey)
+                KeyValuePair.Create("RemoteInstallKey", remoteInstallKey),
+                KeyValuePair.Create("HubAdministrationType", hubDbTypeAccessor.Value.ToString())
             }
         );
         var installServiceUrl = $"http://{machineName}:61862";

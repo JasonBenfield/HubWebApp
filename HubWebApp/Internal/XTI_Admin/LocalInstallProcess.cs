@@ -20,7 +20,7 @@ internal sealed class LocalInstallProcess
         var appKey = adminInstOptions.AppKey;
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var versionKey = AppVersionKey.Current;
-        if (xtiEnv.IsProduction() && !string.IsNullOrWhiteSpace(adminInstOptions.VersionKey))
+        if (xtiEnv.IsProduction() && !adminInstOptions.VersionKey.Equals(AppVersionKey.None))
         {
             versionKey = adminInstOptions.VersionKey;
         }

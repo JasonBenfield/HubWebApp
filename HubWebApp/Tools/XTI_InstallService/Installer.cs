@@ -3,7 +3,7 @@ using XTI_Processes;
 
 namespace XTI_InstallService;
 
-sealed class Installer
+internal sealed class Installer
 {
     private readonly XtiEnvironment xtiEnv;
 
@@ -27,25 +27,7 @@ sealed class Installer
                 var command = context.Request.Form["command"].FirstOrDefault() ?? "";
                 if (command.Equals("localinstall", StringComparison.OrdinalIgnoreCase))
                 {
-                    var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
-                    var remoteInstallKey = context.Request.Form["RemoteInstallKey"].FirstOrDefault() ?? "";
-                    var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
-                    var process = new XtiProcess(adminToolPath)
-                        .WriteOutputToConsole()
-                        .UseEnvironment(envName)
-                        .AddConfigOptions
-                        (
-                            new
-                            {
-                                Command = "Install",
-                                RemoteInstallKey = remoteInstallKey
-                            }
-                        );
-                    await writer.WriteLineAsync($"Running {process.CommandText()}");
-                    var result = await process.Run();
-                    await writer.WriteLineAsync($"Ran {process.CommandText()}\r\nExit Code: {result.ExitCode}\r\nOutput:\r\n");
-                    await writer.WriteLineAsync(string.Join("\r\n", result.OutputLines));
-                    result.EnsureExitCodeIsZero();
+                    await runLocalInstall(context, xtiFolder, writer, command);
                 }
             }
             else
@@ -58,5 +40,30 @@ sealed class Installer
             await writer.WriteLineAsync($"***Error***\r\n{ex}");
             throw;
         }
+    }
+
+    private static async Task runLocalInstall(HttpContext context, XtiFolder xtiFolder, StreamWriter writer, string command)
+    {
+        var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
+        var remoteInstallKey = context.Request.Form["RemoteInstallKey"].FirstOrDefault() ?? "";
+        var hubAdministrationType = context.Request.Form["HubAdministrationType"].FirstOrDefault() ?? "";
+        var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
+        var process = new XtiProcess(adminToolPath)
+            .WriteOutputToConsole()
+            .UseEnvironment(envName)
+            .AddConfigOptions
+            (
+                new
+                {
+                    Command = command,
+                    RemoteInstallKey = remoteInstallKey,
+                    HubAdministrationType = hubAdministrationType
+                }
+            );
+        await writer.WriteLineAsync($"Running {process.CommandText()}");
+        var result = await process.Run();
+        await writer.WriteLineAsync($"Ran {process.CommandText()}\r\nExit Code: {result.ExitCode}\r\nOutput:\r\n");
+        await writer.WriteLineAsync(string.Join("\r\n", result.OutputLines));
+        result.EnsureExitCodeIsZero();
     }
 }

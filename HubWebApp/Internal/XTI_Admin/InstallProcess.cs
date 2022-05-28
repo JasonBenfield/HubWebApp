@@ -1,5 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Secrets;
+using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub.Abstractions;
 
@@ -22,7 +23,6 @@ internal sealed class InstallProcess
         if (appKeys.Any())
         {
             Console.WriteLine("Beginning Install");
-            var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
             using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
             var appVersion = await new CurrentVersion(scopes, versionName).Value();
@@ -47,6 +47,12 @@ internal sealed class InstallProcess
                 password
             );
             await credentials.Update(installerCreds);
+            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+            var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
+            if (xtiEnv.IsProduction() && versionKey.Equals(AppVersionKey.Current))
+            {
+                versionKey = versions.First(v => v.Status.Equals(AppVersionStatus.Values.Current)).VersionKey;
+            }
             foreach (var appKey in appKeys)
             {
                 var installations = scopes.GetRequiredService<InstallOptionsAccessor>().Installations(appKey);

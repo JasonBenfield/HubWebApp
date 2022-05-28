@@ -42,29 +42,8 @@ internal sealed class PublishProcess
             var currentVersion = await new CurrentVersion(scopes, versionName).Value();
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
+        var release = await createGitHubRelease(versionKey, semanticVersion);
         var publishFolder = scopes.GetRequiredService<PublishedFolder>();
-        var versionsPath = publishFolder.VersionsPath();
-        if(appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)))
-        {
-            publishFolder.TryCreateVersionDir();
-            if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
-            var persistedVersions = new PersistedVersions(versionsPath);
-            var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-            var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
-            await persistedVersions.Store(versions);
-        }
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
-        GitHubRelease? release = null;
-        if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
-        {
-            var tagName = $"v{semanticVersion}";
-            await gitHubRepo.DeleteReleaseIfExists(tagName);
-            Console.WriteLine($"Creating release {tagName}");
-            release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "");
-            Console.WriteLine("Uploading versions.json");
-            using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
-            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, "versions.json", "text/plain"));
-        }
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {
@@ -84,7 +63,7 @@ internal sealed class PublishProcess
             await new PublishNpmProcess(xtiEnv, xtiFolder, publishFolder).Run(appKey, versionKey, semanticVersion);
             if (!appKey.Type.Equals(AppType.Values.Package) && release != null)
             {
-                await uploadReleaseAssets(appKey, versionKey, gitHubRepo, release);
+                await uploadReleaseAssets(appKey, versionKey, release);
             }
             await new PublishLibProcess(scopes).Run(semanticVersion);
             Environment.CurrentDirectory = slnDir;
@@ -92,11 +71,53 @@ internal sealed class PublishProcess
         if (xtiEnv.IsProduction())
         {
             await new CompleteVersionProcess(scopes).Run();
-            if (release != null)
-            {
-                Console.WriteLine($"Finalizing release {release.TagName}");
-                await gitHubRepo.FinalizeRelease(release);
-            }
+        }
+        await publishVersions(release);
+        if (xtiEnv.IsProduction() && release != null)
+        {
+            Console.WriteLine($"Finalizing release {release.TagName}");
+            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+            await gitHubRepo.FinalizeRelease(release);
+        }
+    }
+
+    private async Task<GitHubRelease?> createGitHubRelease(AppVersionKey versionKey, string semanticVersion)
+    {
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
+        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+        GitHubRelease? release = null;
+        if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
+        {
+            var tagName = $"v{semanticVersion}";
+            await gitHubRepo.DeleteReleaseIfExists(tagName);
+            Console.WriteLine($"Creating release {tagName}");
+            release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "");
+        }
+        return release;
+    }
+
+    private async Task publishVersions(GitHubRelease? release)
+    {
+        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
+        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+        var publishFolder = scopes.GetRequiredService<PublishedFolder>();
+        var versionsPath = publishFolder.VersionsPath();
+        if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)))
+        {
+            publishFolder.TryCreateVersionDir();
+            if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
+            var persistedVersions = new PersistedVersions(versionsPath);
+            var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
+            var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
+            await persistedVersions.Store(versions);
+        }
+        if (release != null)
+        {
+            Console.WriteLine("Uploading versions.json");
+            using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
+            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, "versions.json", "text/plain"));
         }
     }
 
@@ -109,8 +130,9 @@ internal sealed class PublishProcess
         }
     }
 
-    private async Task uploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, XtiGitHubRepository gitHubRepo, GitHubRelease release)
+    private async Task uploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, GitHubRelease release)
     {
+        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         Console.WriteLine("Uploading app.zip");
         var publishDir = getPublishDir(appKey, versionKey);
         var appKeyText = $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");

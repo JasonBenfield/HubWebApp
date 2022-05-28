@@ -8,16 +8,14 @@ namespace XTI_Admin;
 public sealed class GitHubPublishedAssets : IPublishedAssets
 {
     private readonly Scopes scopes;
-    private readonly AdminOptions options;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AppVersionName versionName;
     private string tempDir = "";
     private GitHubRelease? release;
 
-    public GitHubPublishedAssets(Scopes scopes, AdminOptions options, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
+    public GitHubPublishedAssets(Scopes scopes, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
     {
         this.scopes = scopes;
-        this.options = options;
         this.gitHubRepo = gitHubRepo;
         versionName = versionNameAccessor.Value;
         tempDir = Path.Combine
@@ -54,8 +52,17 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
             var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
             var setupZipPath = Path.Combine(appTempDir, "setup.zip");
+            if (File.Exists(setupZipPath))
+            {
+                File.Delete(setupZipPath);
+            }
             await File.WriteAllBytesAsync(setupZipPath, setupContent);
             setupAppPath = Path.Combine(appTempDir, "Setup");
+            if (Directory.Exists(setupAppPath))
+            {
+                Directory.Delete(setupAppPath, true);
+            }
+            Directory.CreateDirectory(setupAppPath);
             ZipFile.ExtractToDirectory(setupZipPath, setupAppPath);
         }
         return setupAppPath;
@@ -70,8 +77,17 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
             var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
             var appZipPath = Path.Combine(appTempDir, "setup.zip");
+            if (File.Exists(appZipPath))
+            {
+                File.Delete(appZipPath);
+            }
             await File.WriteAllBytesAsync(appZipPath, appContent);
             appPath = Path.Combine(appTempDir, "App");
+            if (Directory.Exists(appPath))
+            {
+                Directory.Delete(appPath, true);
+            }
+            Directory.CreateDirectory(appPath);
             ZipFile.ExtractToDirectory(appZipPath, appPath);
         }
         return appPath;
@@ -108,11 +124,10 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
             tempDir,
             $"xti_{appKey.Name.Value}_{appKey.Type.DisplayText.Replace(" ", "")}"
         );
-        if (Directory.Exists(appTempDir))
+        if (!Directory.Exists(appTempDir))
         {
-            Directory.Delete(appTempDir, true);
+            Directory.CreateDirectory(appTempDir);
         }
-        Directory.CreateDirectory(appTempDir);
         return appTempDir;
     }
 
