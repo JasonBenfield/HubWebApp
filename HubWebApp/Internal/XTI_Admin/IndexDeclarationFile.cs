@@ -48,7 +48,7 @@ internal sealed class IndexDeclarationFile
             var fileName = Path.GetFileName(filePath);
             writer.WriteLine($"/// <reference path=\"{location}{fileName}\" />");
         }
-        foreach (var childDir in Directory.GetDirectories(dir))
+        foreach (var childDir in Directory.GetDirectories(dir).Where(d => !new DirectoryInfo(d).Name.Equals("node_modules", StringComparison.OrdinalIgnoreCase)))
         {
             var childParentDirs = parentDirs
                 .Union(new[] { new DirectoryInfo(childDir).Name })
