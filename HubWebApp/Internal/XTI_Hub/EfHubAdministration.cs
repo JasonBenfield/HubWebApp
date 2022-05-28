@@ -110,13 +110,13 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task BeginInstall(int installationID)
     {
-        var installation = await hubFactory.Installations.Installation(installationID);
+        var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
         await installation.Start();
     }
 
     public async Task Installed(int installationID)
     {
-        var installation = await hubFactory.Installations.Installation(installationID);
+        var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
         await installation.Installed();
     }
 
@@ -144,6 +144,23 @@ public sealed class EfHubAdministration : IHubAdministration
         var hashedPassword = hashedPasswordFactory.Create(password);
         var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
+    }
+
+    public async Task<AppUserModel> AddOrUpdateAdminUser(AppUserName userName, string password)
+    {
+        var hashedPassword = hashedPasswordFactory.Create(password);
+        var user = await hubFactory.Users.AddOrUpdate
+        (
+            userName, 
+            hashedPassword, 
+            new PersonName(userName.DisplayText), 
+            new EmailAddress(""), 
+            clock.Now()
+        );
+        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
+        var hubAdminRole = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
+        await user.AssignRole(hubAdminRole);
+        return user.ToModel();
     }
 
     public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)

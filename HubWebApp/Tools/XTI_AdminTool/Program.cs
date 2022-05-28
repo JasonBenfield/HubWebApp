@@ -119,7 +119,21 @@ await Host.CreateDefaultBuilder(args)
                 var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
                 return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
             });
-            services.AddScoped<PublishedFolder>();
+            services.AddScoped(sp =>
+            {
+                var xtiFolder = sp.GetRequiredService<XtiFolder>();
+                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+                if (xtiEnv.IsTest())
+                {
+                    xtiEnv = XtiEnvironment.Development;
+                }
+                else if (xtiEnv.IsStaging())
+                {
+                    xtiEnv = XtiEnvironment.Production;
+                }
+                var appVersionNameAccessor = sp.GetRequiredService<AppVersionNameAccessor>();
+                return new PublishedFolder(xtiFolder, xtiEnv, appVersionNameAccessor);
+            });
             services.AddScoped<FolderPublishedAssets>();
             services.AddScoped<GitHubPublishedAssets>();
             services.AddTransient(sp =>

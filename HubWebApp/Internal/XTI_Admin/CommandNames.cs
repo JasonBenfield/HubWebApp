@@ -16,6 +16,7 @@ public enum CommandNames
     CompleteIssue,
     AddInstallationUser,
     AddSystemUser,
+    AddAdminUser,
     ShowCredentials,
     StoreCredentials,
     DecryptTempLog,

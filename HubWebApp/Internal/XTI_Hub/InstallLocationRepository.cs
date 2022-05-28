@@ -12,6 +12,9 @@ public sealed class InstallLocationRepository
         this.appFactory = appFactory;
     }
 
+    public Task<InstallLocation> UnknownLocation() =>
+        Location("unknown");
+
     public async Task<Installation> AddUnknownIfNotFound(AppVersion appVersion)
     {
         Installation installation;

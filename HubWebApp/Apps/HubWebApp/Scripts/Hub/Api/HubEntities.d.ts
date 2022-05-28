@@ -217,6 +217,10 @@ interface IAppUserModel {
 	Name: string;
 	Email: string;
 }
+interface IAddAdminUserRequest {
+	UserName: string;
+	Password: string;
+}
 interface IAddInstallationUserRequest {
 	MachineName: string;
 	Password: string;

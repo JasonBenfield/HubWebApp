@@ -67,6 +67,10 @@ public sealed class CommandFactory
         {
             command = new AddSystemUserCommand(scopes);
         }
+        else if (commandName == CommandNames.AddAdminUser)
+        {
+            command = new AddAdminUserCommand(scopes);
+        }
         else if(commandName == CommandNames.ShowCredentials)
         {
             command = new ShowCredentialsCommand(scopes);

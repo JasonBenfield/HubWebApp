@@ -12,6 +12,7 @@ public sealed partial class InstallGroup : AppClientGroup
     public Task<XtiVersionModel> GetVersion(GetVersionRequest model) => Post<XtiVersionModel, GetVersionRequest>("GetVersion", "", model);
     public Task<XtiVersionModel[]> GetVersions(GetVersionsRequest model) => Post<XtiVersionModel[], GetVersionsRequest>("GetVersions", "", model);
     public Task<AppUserModel> AddSystemUser(AddSystemUserRequest model) => Post<AppUserModel, AddSystemUserRequest>("AddSystemUser", "", model);
+    public Task<AppUserModel> AddAdminUser(AddAdminUserRequest model) => Post<AppUserModel, AddAdminUserRequest>("AddAdminUser", "", model);
     public Task<AppUserModel> AddInstallationUser(AddInstallationUserRequest model) => Post<AppUserModel, AddInstallationUserRequest>("AddInstallationUser", "", model);
     public Task<NewInstallationResult> NewInstallation(NewInstallationRequest model) => Post<NewInstallationResult, NewInstallationRequest>("NewInstallation", "", model);
     public Task<EmptyActionResult> BeginInstallation(InstallationRequest model) => Post<EmptyActionResult, InstallationRequest>("BeginInstallation", "", model);

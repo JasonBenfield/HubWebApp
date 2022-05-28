@@ -22,6 +22,8 @@ public interface IHubAdministration
 
     Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password);
 
+    Task<AppUserModel> AddOrUpdateAdminUser(AppUserName userName, string password);
+
     Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain);
 
     Task BeginInstall(int installationID);

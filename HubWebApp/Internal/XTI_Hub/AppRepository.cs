@@ -113,7 +113,7 @@ public sealed class AppRepository
     public async Task<App> AppOrUnknown(AppKey appKey)
     {
         var record = await GetAppByKey(appKey);
-        if (record == null)
+        if (record == null && !appKey.Equals(AppKey.Unknown))
         {
             record = await GetAppByKey(AppKey.Unknown);
         }

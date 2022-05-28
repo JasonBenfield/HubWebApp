@@ -46,6 +46,12 @@ public class InstallController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppUserModel>> AddAdminUser([FromBody] AddAdminUserRequest model)
+    {
+        return api.Group("Install").Action<AddAdminUserRequest, AppUserModel>("AddAdminUser").Execute(model);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppUserModel>> AddInstallationUser([FromBody] AddInstallationUserRequest model)
     {
         return api.Group("Install").Action<AddInstallationUserRequest, AppUserModel>("AddInstallationUser").Execute(model);

@@ -30,6 +30,16 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.AddSystemUser(request);
     }
 
+    public Task<AppUserModel> AddOrUpdateAdminUser(AppUserName userName, string password) =>
+        hubClient.Install.AddAdminUser
+        (
+            new AddAdminUserRequest
+            {
+                UserName = userName.Value,
+                Password = password
+            }
+        );
+
     public Task BeginInstall(int installationID)
     {
         var request = new InstallationRequest
@@ -123,4 +133,5 @@ public sealed class HcHubAdministration : IHubAdministration
                 Apps = appDefs
             }
         );
+
 }

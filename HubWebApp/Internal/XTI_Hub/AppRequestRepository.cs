@@ -57,6 +57,7 @@ public sealed class AppRequestRepository
                 modifier,
                 path,
                 timeRequested,
+                DateTimeOffset.MaxValue,
                 actualCount
             );
         }
@@ -104,13 +105,14 @@ public sealed class AppRequestRepository
                 modifier,
                 "",
                 now,
+                now,
                 1
             );
         }
         return factory.CreateRequest(requestEntity);
     }
 
-    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Installation installation, Resource resource, Modifier modifier, string path, DateTimeOffset timeRequested, int actualCount)
+    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Installation installation, Resource resource, Modifier modifier, string path, DateTimeOffset timeStarted, DateTimeOffset timeEnded, int actualCount)
     {
         var record = new AppRequestEntity
         {
@@ -120,7 +122,8 @@ public sealed class AppRequestRepository
             ResourceID = resource.ID,
             ModifierID = modifier.ID,
             Path = path ?? "",
-            TimeStarted = timeRequested,
+            TimeStarted = timeStarted,
+            TimeEnded = timeEnded,
             ActualCount = actualCount
         };
         await factory.DB.Requests.Create(record);

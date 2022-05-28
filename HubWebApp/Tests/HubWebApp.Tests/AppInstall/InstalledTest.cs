@@ -98,7 +98,7 @@ sealed class InstalledTest
             new InstallationRequest(newInstResult2.CurrentInstallationID)
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var installation1 = await factory.Installations.Installation(newInstResult1.CurrentInstallationID);
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
     }
 

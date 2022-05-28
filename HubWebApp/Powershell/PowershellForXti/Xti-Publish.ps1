@@ -138,6 +138,23 @@ function Xti-AddSystemUser {
     Xti-Admin -EnvName $EnvName -Command AddSystemUser -AppName "`"$($AppName)`"" -AppType $AppType -Domain "`"$($Domain)`"" -HubAdministrationType $HubAdministrationType
 }
 
+function Xti-AddAdminUser {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $UserName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $Password = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $CredentialKey = "",
+        [ValidateSet("Default", "DB")]
+        $HubAdministrationType = "Default"
+    )
+    Xti-Admin -EnvName $EnvName -Command AddAdminUser -UserName "`"$($UserName)`"" -Password "`"$($Password)`"" -CredentialKey "`"$($CredentialKey)`"" -HubAdministrationType $HubAdministrationType
+}
+
 function Xti-DecryptTempLog {
     param (
         [ValidateSet("Production", “Development", "Staging", "Test")]
@@ -161,7 +178,7 @@ function Xti-Admin {
         [ValidateSet("Production", “Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
-        [ValidateSet("PublishAndInstall", “Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials")]
+        [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials")]
         [Parameter(Mandatory)]
         $Command,
         [Parameter(ValueFromPipelineByPropertyName = $true)]

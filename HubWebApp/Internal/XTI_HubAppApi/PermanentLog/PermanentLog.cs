@@ -82,7 +82,7 @@ public sealed class PermanentLog
         try
         {
             var session = await hubFactory.Sessions.SessionOrPlaceHolder(startRequest.SessionKey, clock.Now());
-            var installation = await hubFactory.Installations.Installation(startRequest.InstallationID);
+            var installation = await hubFactory.Installations.InstallationOrDefault(startRequest.InstallationID);
             var request = await session.LogRequest
             (
                 startRequest.RequestKey,

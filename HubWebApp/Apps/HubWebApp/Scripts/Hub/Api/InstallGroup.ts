@@ -15,6 +15,7 @@ export class InstallGroup extends AppApiGroup {
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
 		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
+		this.AddAdminUserAction = this.createAction<IAddAdminUserRequest,IAppUserModel>('AddAdminUser', 'Add Admin User');
 		this.AddInstallationUserAction = this.createAction<IAddInstallationUserRequest,IAppUserModel>('AddInstallationUser', 'Add Installation User');
 		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
 		this.BeginInstallationAction = this.createAction<IInstallationRequest,IEmptyActionResult>('BeginInstallation', 'Begin Installation');
@@ -28,6 +29,7 @@ export class InstallGroup extends AppApiGroup {
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IXtiVersionModel>;
 	readonly GetVersionsAction: AppApiAction<IGetVersionsRequest,IXtiVersionModel[]>;
 	readonly AddSystemUserAction: AppApiAction<IAddSystemUserRequest,IAppUserModel>;
+	readonly AddAdminUserAction: AppApiAction<IAddAdminUserRequest,IAppUserModel>;
 	readonly AddInstallationUserAction: AppApiAction<IAddInstallationUserRequest,IAppUserModel>;
 	readonly NewInstallationAction: AppApiAction<INewInstallationRequest,INewInstallationResult>;
 	readonly BeginInstallationAction: AppApiAction<IInstallationRequest,IEmptyActionResult>;
@@ -51,6 +53,9 @@ export class InstallGroup extends AppApiGroup {
 	}
 	AddSystemUser(model: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddSystemUserAction.execute(model, errorOptions || {});
+	}
+	AddAdminUser(model: IAddAdminUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddAdminUserAction.execute(model, errorOptions || {});
 	}
 	AddInstallationUser(model: IAddInstallationUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddInstallationUserAction.execute(model, errorOptions || {});

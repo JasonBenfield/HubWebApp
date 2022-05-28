@@ -83,13 +83,23 @@ public sealed class InstallationRepository
             .Installations
             .Update(entity, inst => inst.Status = status.Value);
 
-    public Task<Installation> Installation(int installationID)
-        => hubFactory.DB
+    public async Task<Installation> InstallationOrDefault(int installationID)
+    {
+        var installation = await hubFactory.DB
             .Installations
             .Retrieve()
             .Where(inst => inst.ID == installationID)
             .Select(inst => hubFactory.CreateInstallation(inst))
-            .SingleAsync();
+            .FirstOrDefaultAsync();
+        if(installation == null)
+        {
+            var unknownLoc = await hubFactory.InstallLocations.UnknownLocation();
+            var unknownApp = await hubFactory.Apps.AppOrUnknown(AppKey.Unknown);
+            var currentVersion = await unknownApp.CurrentVersion();
+            installation = await unknownLoc.CurrentInstallation(currentVersion);
+        }
+        return installation;
+    }
 
     internal Task<bool> HasCurrentInstallation(InstallLocation location, AppVersion appVersion)
         => currentInstallation(location, appVersion).AnyAsync();
