@@ -171,9 +171,11 @@ await Host.CreateDefaultBuilder(args)
                     var xtiTokenAccessor = new XtiTokenAccessor(cache, xtiEnv.EnvironmentName);
                     xtiTokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
                     xtiTokenAccessor.UseToken<InstallationUserXtiToken>();
+                    xtiTokenAccessor.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
                     return xtiTokenAccessor;
                 }
             );
+            services.AddScoped<IAdminTokenAccessor, AdminTokenAccessor>();
             services.AddScoped<IPermanentLogClient, PermanentLogClient>();
             services.AddScoped
             (

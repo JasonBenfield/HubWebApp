@@ -12,7 +12,7 @@ public sealed class HubAppClientVersion
         string value;
         if (hostEnv.IsProduction())
         {
-            value = "V1395";
+            value = "V1169";
         }
         else
         {

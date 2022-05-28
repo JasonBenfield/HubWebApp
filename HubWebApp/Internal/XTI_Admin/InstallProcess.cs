@@ -38,15 +38,6 @@ internal sealed class InstallProcess
             await hubAdministration.AddOrUpdateApps(versionName, appDefs);
             Console.WriteLine("Adding or updating versions");
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
-            var password = Guid.NewGuid().ToString();
-            var installationUser = await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password);
-            var credentials = scopes.GetRequiredService<InstallationUserCredentials>();
-            var installerCreds = new CredentialValue
-            (
-                AppUserName.InstallationUser(Environment.MachineName).Value,
-                password
-            );
-            await credentials.Update(installerCreds);
             var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             if (xtiEnv.IsProduction() && versionKey.Equals(AppVersionKey.Current))
@@ -68,6 +59,7 @@ internal sealed class InstallProcess
                         versionName,
                         installationOptions.Domain
                     );
+                    var installerCreds = await getInstallerCredentials(hubAdministration, installMachineName);
                     var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
                     var adminInstallOptions = new AdminInstallOptions
                     (
@@ -94,8 +86,8 @@ internal sealed class InstallProcess
                         var remoteInstallKey = await storedObjFactory.CreateStoredObject(storageName)
                             .Store
                             (
-                                GeneratedStorageKeyType.Values.SixDigit, 
-                                adminInstallOptions, 
+                                GeneratedStorageKeyType.Values.SixDigit,
+                                adminInstallOptions,
                                 TimeSpan.FromMinutes(30)
                             );
                         await new LocalInstallServiceProcess(scopes)
@@ -104,6 +96,30 @@ internal sealed class InstallProcess
                 }
             }
         }
+    }
+
+    private readonly Dictionary<string, CredentialValue> machineCredentials = new ();
+
+    private async Task<CredentialValue> getInstallerCredentials(IHubAdministration hubAdministration, string installMachineName)
+    {
+        var dotIndex = installMachineName.IndexOf('.');
+        if(dotIndex > -1)
+        {
+            installMachineName = installMachineName.Substring(0, dotIndex);
+        }
+        var key = installMachineName.ToLower();
+        if(!machineCredentials.TryGetValue(key, out var installerCreds))
+        {
+            var password = Guid.NewGuid().ToString();
+            var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password);
+            installerCreds = new CredentialValue
+            (
+                installationUser.UserName,
+                password
+            );
+            machineCredentials.Add(key, installerCreds);
+        }
+        return installerCreds;
     }
 
     private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain)

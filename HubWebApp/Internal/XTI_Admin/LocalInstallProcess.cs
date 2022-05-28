@@ -1,6 +1,8 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Extensions;
+using XTI_App.Secrets;
 using XTI_Core;
+using XTI_Credentials;
 
 namespace XTI_Admin;
 
@@ -17,6 +19,13 @@ internal sealed class LocalInstallProcess
 
     public async Task Run(AdminInstallOptions adminInstOptions)
     {
+        var installerCreds = new CredentialValue
+        (
+            adminInstOptions.InstallerUserName,
+            adminInstOptions.InstallerPassword
+        );
+        var credentials = scopes.GetRequiredService<InstallationUserCredentials>();
+        await credentials.Update(installerCreds);
         var appKey = adminInstOptions.AppKey;
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var versionKey = AppVersionKey.Current;
