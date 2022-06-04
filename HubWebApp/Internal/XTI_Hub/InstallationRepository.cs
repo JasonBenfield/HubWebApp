@@ -62,12 +62,20 @@ public sealed class InstallationRepository
                 var query = hubFactory.DB.Installations.Retrieve();
                 if (entity.IsCurrent)
                 {
+                    var appID = await hubFactory.DB.AppVersions.Retrieve()
+                        .Where(av => av.ID == entity.AppVersionID)
+                        .Select(av => av.AppID)
+                        .FirstAsync();
+                    var appVersionIDs = hubFactory.DB.AppVersions.Retrieve()
+                        .Where(av => av.AppID == appID)
+                        .Select(av => av.ID);
                     query = query
                         .Where
                         (
                             inst =>
                                 inst.ID != entity.ID &&
                                 inst.LocationID == entity.LocationID &&
+                                appVersionIDs.Contains(inst.AppVersionID) &&
                                 inst.IsCurrent == entity.IsCurrent
                         );
                 }
@@ -145,8 +153,8 @@ public sealed class InstallationRepository
             .Retrieve()
             .Where
             (
-                inst => 
-                    !string.IsNullOrWhiteSpace(inst.Domain) && 
+                inst =>
+                    !string.IsNullOrWhiteSpace(inst.Domain) &&
                     inst.Status == InstallStatus.Values.Installed.Value
             )
             .Join
