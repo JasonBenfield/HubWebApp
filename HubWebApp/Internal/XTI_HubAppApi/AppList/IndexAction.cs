@@ -2,15 +2,13 @@
 
 public sealed class IndexAction : AppAction<EmptyRequest, WebViewResult>
 {
-    private readonly IPageContext pageContext;
+    private readonly WebViewResultFactory viewFactory;
 
-    public IndexAction(IPageContext pageContext)
+    public IndexAction(WebViewResultFactory viewFactory)
     {
-        this.pageContext = pageContext;
+        this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
-    {
-        return new TitledViewAppAction<EmptyRequest>(pageContext, "Index", "Apps").Execute(model, stoppingToken);
-    }
+    public Task<WebViewResult> Execute(EmptyRequest model, CancellationToken stoppingToken) =>
+       Task.FromResult(viewFactory.Default("apps", "Apps"));
 }
