@@ -83,7 +83,21 @@ namespace XTI_HubDB.EF.SqlServer
             migrationBuilder.Sql
             (
                 @"
-alter view [dbo].[ExpandedSessions] as
+CREATE OR ALTER FUNCTION [ToEST](
+    @dt datetimeoffset
+)
+RETURNS datetime2
+AS 
+BEGIN
+    RETURN cast(@dt at time zone 'Eastern Standard Time' as datetime2) 
+END
+"
+            );
+
+            migrationBuilder.Sql
+            (
+                @"
+create or alter view [ExpandedSessions] as
 with
 RequestCounts as
 (
@@ -111,7 +125,7 @@ on a.id = c.sessionid
             migrationBuilder.Sql
             (
                 @"
-CREATE FUNCTION [dbo].[InstallationStatusDisplayText](
+CREATE or ALTER FUNCTION [InstallationStatusDisplayText](
     @status INT
 )
 RETURNS varchar(50)
@@ -127,7 +141,7 @@ END;
             migrationBuilder.Sql
             (
                 @"
-ALTER view [dbo].[ExpandedRequests] as
+CREATE or ALTER view [ExpandedRequests] as
 with 
 LogEntrySeverityCounts as
 (
@@ -221,13 +235,13 @@ on a.ID = errorCounts.RequestID
             migrationBuilder.Sql
             (
                 @"
-drop view [dbo].[ExpandedEvents]
+drop view [ExpandedEvents]
 "
             );
             migrationBuilder.Sql
             (
                 @"
-CREATE view [dbo].[ExpandedLogEntries] as
+CREATE view [ExpandedLogEntries] as
 select 
 	j.ID EventID, j.caption, j.message, j.detail, 
 	j.TimeOccurred, 

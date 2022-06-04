@@ -11,7 +11,7 @@ public sealed class MoveToPermanentAction : AppAction<EmptyRequest, EmptyActionR
         this.tempToPerm = tempToPerm;
     }
 
-    public async Task<EmptyActionResult> Execute(EmptyRequest model)
+    public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         await tempToPerm.Move();
         return new EmptyActionResult();

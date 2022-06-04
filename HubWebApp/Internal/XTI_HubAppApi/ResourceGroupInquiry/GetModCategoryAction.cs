@@ -9,7 +9,7 @@ public sealed class GetModCategoryAction : AppAction<GetResourceGroupModCategory
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ModifierCategoryModel> Execute(GetResourceGroupModCategoryRequest model)
+    public async Task<ModifierCategoryModel> Execute(GetResourceGroupModCategoryRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

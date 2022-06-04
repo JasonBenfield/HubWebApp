@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using XTI_Core;
-
-namespace XTI_HubAppApi.Auth;
+﻿namespace XTI_HubAppApi.Auth;
 
 public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
 {
@@ -18,7 +15,7 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public async Task<string> Execute(VerifyLoginForm model)
+    public async Task<string> Execute(VerifyLoginForm model, CancellationToken stoppingToken)
     {
         var userName = model.UserName.Value() ?? "";
         var password = model.Password.Value() ?? "";

@@ -9,7 +9,7 @@ public sealed class GetResourcesAction : AppAction<GetResourcesRequest, Resource
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ResourceModel[]> Execute(GetResourcesRequest model)
+    public async Task<ResourceModel[]> Execute(GetResourcesRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

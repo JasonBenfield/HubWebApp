@@ -9,7 +9,7 @@ internal sealed class RegisterAuthenticatorAction : AppAction<EmptyRequest, Empt
         this.appFromPath = appFromPath;
     }
 
-    public async Task<EmptyActionResult> Execute(EmptyRequest model)
+    public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         await app.RegisterAsAuthenticator();

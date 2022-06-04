@@ -9,7 +9,7 @@ public sealed class GetRoleAction : AppAction<string, AppRoleModel>
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppRoleModel> Execute(string roleName)
+    public async Task<AppRoleModel> Execute(string roleName, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var role = await app.Role(new AppRoleName(roleName));

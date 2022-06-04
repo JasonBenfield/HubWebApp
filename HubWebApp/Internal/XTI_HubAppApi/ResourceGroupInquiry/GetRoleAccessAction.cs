@@ -9,7 +9,7 @@ public sealed class GetRoleAccessAction : AppAction<GetResourceGroupRoleAccessRe
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppRoleModel[]> Execute(GetResourceGroupRoleAccessRequest model)
+    public async Task<AppRoleModel[]> Execute(GetResourceGroupRoleAccessRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

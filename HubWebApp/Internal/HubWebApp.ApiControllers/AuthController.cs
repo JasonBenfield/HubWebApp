@@ -10,28 +10,28 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> VerifyLogin([FromBody] VerifyLoginForm model)
+    public Task<ResultContainer<string>> VerifyLogin([FromBody] VerifyLoginForm model, CancellationToken ct)
     {
-        return api.Group("Auth").Action<VerifyLoginForm, string>("VerifyLogin").Execute(model);
+        return api.Group("Auth").Action<VerifyLoginForm, string>("VerifyLogin").Execute(model, ct);
     }
 
     [ResponseCache(CacheProfileName = "Default")]
-    public async Task<IActionResult> VerifyLoginForm()
+    public async Task<IActionResult> VerifyLoginForm(CancellationToken ct)
     {
-        var result = await api.Group("Auth").Action<EmptyRequest, WebPartialViewResult>("VerifyLoginForm").Execute(new EmptyRequest());
+        var result = await api.Group("Auth").Action<EmptyRequest, WebPartialViewResult>("VerifyLoginForm").Execute(new EmptyRequest(), ct);
         return PartialView(result.Data.ViewName);
     }
 
-    public async Task<IActionResult> Login(LoginModel model)
+    public async Task<IActionResult> Login(LoginModel model, CancellationToken ct)
     {
-        var result = await api.Group("Auth").Action<LoginModel, WebRedirectResult>("Login").Execute(model);
+        var result = await api.Group("Auth").Action<LoginModel, WebRedirectResult>("Login").Execute(model, ct);
         return Redirect(result.Data.Url);
     }
 
     [HttpPost]
     [Authorize]
-    public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel model)
+    public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel model, CancellationToken ct)
     {
-        return api.Group("Auth").Action<LoginReturnModel, string>("LoginReturnKey").Execute(model);
+        return api.Group("Auth").Action<LoginReturnModel, string>("LoginReturnKey").Execute(model, ct);
     }
 }

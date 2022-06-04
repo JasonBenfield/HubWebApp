@@ -157,7 +157,7 @@ function Xti-AddAdminUser {
 
 function Xti-DecryptTempLog {
     param (
-        [ValidateSet("Production", “Development", "Staging", "Test")]
+        [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName
     )
@@ -166,11 +166,37 @@ function Xti-DecryptTempLog {
 
 function Xti-UploadTempLog {
     param (
-        [ValidateSet("Production", “Development", "Staging", "Test")]
+        [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName
     )
     Xti-Admin -EnvName $EnvName -Command UploadTempLog
+}
+
+function Xti-StoreCredentials {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$CredentialKey = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$UserName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$Password = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command StoreCredentials -CredentialKey "`"$($CredentialKey)`"" -UserName "`"$($UserName)`"" -Password "`"$($Password)`""
+}
+
+function Xti-ShowCredentials {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$CredentialKey = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command ShowCredentials -CredentialKey "`"$($CredentialKey)`""
 }
 
 function Xti-Admin {

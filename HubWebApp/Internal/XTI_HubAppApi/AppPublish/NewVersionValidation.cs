@@ -4,7 +4,7 @@ namespace XTI_HubAppApi.AppPublish;
 
 internal sealed class NewVersionValidation : AppActionValidation<NewVersionRequest>
 {
-    public Task Validate(ErrorList errors, NewVersionRequest model)
+    public Task Validate(ErrorList errors, NewVersionRequest model, CancellationToken stoppingToken)
     {
         if (model.VersionType.Equals(AppVersionType.Values.NotSet))
         {

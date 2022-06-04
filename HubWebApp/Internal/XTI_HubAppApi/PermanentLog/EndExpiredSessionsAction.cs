@@ -13,7 +13,7 @@ public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActi
         this.clock = clock;
     }
 
-    public async Task<EmptyActionResult> Execute(EmptyRequest model)
+    public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var timeRange = DateTimeRange.OnOrBefore(clock.Now().AddHours(-5));
         var activeSessions = await appFactory.Sessions.ActiveSessions(timeRange);

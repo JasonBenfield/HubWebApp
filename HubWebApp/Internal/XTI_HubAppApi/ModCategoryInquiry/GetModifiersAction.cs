@@ -9,7 +9,7 @@ public sealed class GetModifiersAction : AppAction<int, ModifierModel[]>
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ModifierModel[]> Execute(int modCategoryID)
+    public async Task<ModifierModel[]> Execute(int modCategoryID, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var modCategory = await app.ModCategory(modCategoryID);

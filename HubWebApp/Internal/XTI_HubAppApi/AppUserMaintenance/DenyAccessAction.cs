@@ -13,7 +13,7 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
         this.userContext = userContext;
     }
 
-    public async Task<EmptyActionResult> Execute(UserModifierKey model)
+    public async Task<EmptyActionResult> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var denyAccessRole = await app.Role(AppRoleName.DenyAccess);

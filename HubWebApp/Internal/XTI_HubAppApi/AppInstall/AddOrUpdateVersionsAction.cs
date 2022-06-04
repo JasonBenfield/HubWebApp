@@ -9,7 +9,7 @@ internal sealed class AddOrUpdateVersionsAction : AppAction<AddOrUpdateVersionsR
         this.hubAdmin = hubAdmin;
     }
 
-    public async Task<EmptyActionResult> Execute(AddOrUpdateVersionsRequest model)
+    public async Task<EmptyActionResult> Execute(AddOrUpdateVersionsRequest model, CancellationToken stoppingToken)
     {
         await hubAdmin.AddOrUpdateVersions(model.Apps, model.Versions);
         return new EmptyActionResult();

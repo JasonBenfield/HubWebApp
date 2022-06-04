@@ -9,7 +9,7 @@ public sealed class GetSystemUsersAction : AppAction<AppKey, AppUserModel[]>
         this.appFactory = appFactory;
     }
 
-    public async Task<AppUserModel[]> Execute(AppKey appKey)
+    public async Task<AppUserModel[]> Execute(AppKey appKey, CancellationToken stoppingToken)
     {
         var users = await appFactory.SystemUsers.SystemUsers(appKey);
         var userModels = users.Select(u => u.ToModel()).ToArray();

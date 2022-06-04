@@ -9,27 +9,27 @@ public class AppUserController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(int model)
+    public async Task<IActionResult> Index(int model, CancellationToken ct)
     {
-        var result = await api.Group("AppUser").Action<int, WebViewResult>("Index").Execute(model);
+        var result = await api.Group("AppUser").Action<int, WebViewResult>("Index").Execute(model, ct);
         return View(result.Data.ViewName);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAccessModel>> GetUserAccess([FromBody] UserModifierKey model)
+    public Task<ResultContainer<UserAccessModel>> GetUserAccess([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUser").Action<UserModifierKey, UserAccessModel>("GetUserAccess").Execute(model);
+        return api.Group("AppUser").Action<UserModifierKey, UserAccessModel>("GetUserAccess").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] UserModifierKey model)
+    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model);
+        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserModifierCategoryModel[]>> GetUserModCategories([FromBody] int model)
+    public Task<ResultContainer<UserModifierCategoryModel[]>> GetUserModCategories([FromBody] int model, CancellationToken ct)
     {
-        return api.Group("AppUser").Action<int, UserModifierCategoryModel[]>("GetUserModCategories").Execute(model);
+        return api.Group("AppUser").Action<int, UserModifierCategoryModel[]>("GetUserModCategories").Execute(model, ct);
     }
 }

@@ -9,6 +9,6 @@ internal sealed class AddOrUpdateAppsAction : AppAction<AddOrUpdateAppsRequest, 
         this.hubAdmin = hubAdmin;
     }
 
-    public Task<AppModel[]> Execute(AddOrUpdateAppsRequest model) =>
+    public Task<AppModel[]> Execute(AddOrUpdateAppsRequest model, CancellationToken stoppingToken) =>
         hubAdmin.AddOrUpdateApps(model.VersionName, model.Apps);
 }

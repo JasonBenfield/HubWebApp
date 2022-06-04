@@ -10,26 +10,26 @@ public class AppUserMaintenanceController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> AssignRole([FromBody] UserRoleRequest model)
+    public Task<ResultContainer<int>> AssignRole([FromBody] UserRoleRequest model, CancellationToken ct)
     {
-        return api.Group("AppUserMaintenance").Action<UserRoleRequest, int>("AssignRole").Execute(model);
+        return api.Group("AppUserMaintenance").Action<UserRoleRequest, int>("AssignRole").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest model)
+    public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest model, CancellationToken ct)
     {
-        return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model);
+        return api.Group("AppUserMaintenance").Action<UserRoleRequest, EmptyActionResult>("UnassignRole").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> DenyAccess([FromBody] UserModifierKey model)
+    public Task<ResultContainer<EmptyActionResult>> DenyAccess([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("DenyAccess").Execute(model);
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("DenyAccess").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> AllowAccess([FromBody] UserModifierKey model)
+    public Task<ResultContainer<EmptyActionResult>> AllowAccess([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("AllowAccess").Execute(model);
+        return api.Group("AppUserMaintenance").Action<UserModifierKey, EmptyActionResult>("AllowAccess").Execute(model, ct);
     }
 }

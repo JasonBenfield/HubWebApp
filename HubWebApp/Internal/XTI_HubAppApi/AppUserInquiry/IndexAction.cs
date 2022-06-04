@@ -9,9 +9,9 @@ public sealed class IndexAction : AppAction<int, WebViewResult>
         this.pageContext = pageContext;
     }
 
-    public Task<WebViewResult> Execute(int model)
+    public Task<WebViewResult> Execute(int model, CancellationToken stoppingToken)
     {
         var action = new TitledViewAppAction<int>(pageContext, "Index", "App User");
-        return action.Execute(model);
+        return action.Execute(model, stoppingToken);
     }
 }

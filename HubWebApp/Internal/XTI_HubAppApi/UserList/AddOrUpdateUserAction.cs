@@ -15,7 +15,7 @@ public sealed class AddOrUpdateUserAction : AppAction<AddUserModel, int>
         this.clock = clock;
     }
 
-    public async Task<int> Execute(AddUserModel model)
+    public async Task<int> Execute(AddUserModel model, CancellationToken stoppingToken)
     {
         var userName = new AppUserName(model.UserName);
         var hashedPassword = hashedPasswordFactory.Create(model.Password);

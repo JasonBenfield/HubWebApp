@@ -2,4 +2,4 @@
 
 namespace XTI_Hub.Abstractions;
 
-public sealed record AppDomainModel(AppKey AppKey, string Domain);
+public sealed record AppDomainModel(AppKey AppKey, AppVersionKey VersionKey, string Domain);

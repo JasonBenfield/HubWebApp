@@ -9,7 +9,7 @@ public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, ob
         this.factory = factory;
     }
 
-    public async Task<IDictionary<string, object?>> Execute(int userID)
+    public async Task<IDictionary<string, object?>> Execute(int userID, CancellationToken stoppingToken)
     {
         var user = await factory.Users.User(userID);
         var userModel = user.ToModel();

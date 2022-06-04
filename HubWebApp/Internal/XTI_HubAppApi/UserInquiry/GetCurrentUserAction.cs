@@ -11,7 +11,7 @@ public sealed class GetCurrentUserAction : AppAction<EmptyRequest, AppUserModel>
         this.userContext = userContext;
     }
 
-    public async Task<AppUserModel> Execute(EmptyRequest model)
+    public async Task<AppUserModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var userFromContext = await userContext.User();
         var user = await appFactory.Users.User(userFromContext.ID);

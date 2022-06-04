@@ -21,13 +21,13 @@ internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, Empt
         this.appFactory = appFactory;
     }
 
-    public async Task<EmptyActionResult> Execute(SetUserAccessRequest model)
+    public async Task<EmptyActionResult> Execute(SetUserAccessRequest model, CancellationToken stoppingToken)
     {
         var user = await appFactory.Users.User(model.UserID);
-        foreach(var assignment in model.RoleAssignments)
+        foreach (var assignment in model.RoleAssignments)
         {
             var app = await appFactory.Apps.App(assignment.AppKey);
-            foreach(var roleName in assignment.RoleNames)
+            foreach (var roleName in assignment.RoleNames)
             {
                 var role = await app.Role(roleName);
                 await user.AssignRole(role);

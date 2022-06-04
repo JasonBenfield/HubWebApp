@@ -13,7 +13,7 @@ internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         this.userContext = userContext;
     }
 
-    public async Task<int> Execute(UserRoleRequest model)
+    public async Task<int> Execute(UserRoleRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var role = await app.Role(model.RoleID);

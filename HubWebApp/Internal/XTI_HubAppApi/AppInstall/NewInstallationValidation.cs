@@ -4,7 +4,7 @@ namespace XTI_HubAppApi.AppInstall;
 
 internal sealed class NewInstallationValidation : AppActionValidation<NewInstallationRequest>
 {
-    public Task Validate(ErrorList errors, NewInstallationRequest model)
+    public Task Validate(ErrorList errors, NewInstallationRequest model, CancellationToken stoppingToken)
     {
         if (model.VersionName.Equals(AppVersionName.None) || model.VersionName.Equals(AppVersionName.Unknown))
         {

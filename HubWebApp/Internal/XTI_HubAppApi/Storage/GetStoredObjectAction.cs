@@ -9,7 +9,7 @@ internal sealed class GetStoredObjectAction : AppAction<GetStoredObjectRequest, 
         this.storedObjectFactory = storedObjectFactory; 
     }
 
-    public async Task<string> Execute(GetStoredObjectRequest model)
+    public async Task<string> Execute(GetStoredObjectRequest model, CancellationToken stoppingToken)
     {
         var storageName = new StorageName(model.StorageName);
         var storedObject = storedObjectFactory.CreateStoredObject(storageName);

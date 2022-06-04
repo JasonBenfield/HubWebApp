@@ -9,7 +9,7 @@ public sealed class GetUserAction : AppAction<int, AppUserModel>
         this.factory = factory;
     }
 
-    public async Task<AppUserModel> Execute(int userID)
+    public async Task<AppUserModel> Execute(int userID, CancellationToken stoppingToken)
     {
         var user = await factory.Users.User(userID);
         return user.ToModel();

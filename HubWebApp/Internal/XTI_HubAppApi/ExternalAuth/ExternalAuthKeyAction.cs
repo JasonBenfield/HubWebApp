@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using XTI_Core;
-
-namespace XTI_HubAppApi.ExternalAuth;
+﻿namespace XTI_HubAppApi.ExternalAuth;
 
 internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, string>
 {
@@ -14,7 +11,7 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public async Task<string> Execute(ExternalAuthKeyModel model)
+    public async Task<string> Execute(ExternalAuthKeyModel model, CancellationToken stoppingToken)
     {
         var app = await hubFactory.Apps.App(model.AppKey);
         var user = await hubFactory.Users.UserByExternalKey(app, model.ExternalUserKey);

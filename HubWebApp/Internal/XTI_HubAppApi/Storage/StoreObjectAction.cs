@@ -9,7 +9,7 @@ internal sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public Task<string> Execute(StoreObjectRequest model) =>
+    public Task<string> Execute(StoreObjectRequest model, CancellationToken stoppingToken) =>
         storedObjectFactory.CreateStoredObject(new StorageName(model.StorageName)).Store
         (
             model.GeneratedStorageKeyType, 

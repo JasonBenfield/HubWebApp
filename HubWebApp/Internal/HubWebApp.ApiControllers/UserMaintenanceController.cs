@@ -10,14 +10,14 @@ public class UserMaintenanceController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm model)
+    public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm model, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<EditUserForm, EmptyActionResult>("EditUser").Execute(model);
+        return api.Group("UserMaintenance").Action<EditUserForm, EmptyActionResult>("EditUser").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int model)
+    public Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int model, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<int, IDictionary<string, object>>("GetUserForEdit").Execute(model);
+        return api.Group("UserMaintenance").Action<int, IDictionary<string, object>>("GetUserForEdit").Execute(model, ct);
     }
 }

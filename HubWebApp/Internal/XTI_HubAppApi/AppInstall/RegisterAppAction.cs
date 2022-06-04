@@ -9,7 +9,7 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithMod
         this.appFactory = appFactory;
     }
 
-    public async Task<AppWithModKeyModel> Execute(RegisterAppRequest model)
+    public async Task<AppWithModKeyModel> Execute(RegisterAppRequest model, CancellationToken stoppingToken)
     {
         var appWithModifier = await new AppRegistration(appFactory).Run
         (

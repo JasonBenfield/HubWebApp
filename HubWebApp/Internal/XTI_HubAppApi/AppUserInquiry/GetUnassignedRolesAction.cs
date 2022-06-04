@@ -11,7 +11,7 @@ public sealed class GetUnassignedRolesAction : AppAction<UserModifierKey, AppRol
         this.factory = factory;
     }
 
-    public async Task<AppRoleModel[]> Execute(UserModifierKey model)
+    public async Task<AppRoleModel[]> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var user = await factory.Users.User(model.UserID);

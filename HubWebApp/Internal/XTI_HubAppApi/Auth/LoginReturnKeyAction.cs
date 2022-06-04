@@ -9,5 +9,5 @@ internal sealed class LoginReturnKeyAction : AppAction<LoginReturnModel, string>
         this.returnKey = returnKey;
     }
 
-    public Task<string> Execute(LoginReturnModel model) => returnKey.Value(model.ReturnUrl);
+    public Task<string> Execute(LoginReturnModel model, CancellationToken stoppingToken) => returnKey.Value(model.ReturnUrl);
 }
