@@ -9,7 +9,7 @@ public sealed class GetMostRecentRequestsAction : AppAction<GetResourceGroupLogR
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppRequestExpandedModel[]> Execute(GetResourceGroupLogRequest model)
+    public async Task<AppRequestExpandedModel[]> Execute(GetResourceGroupLogRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

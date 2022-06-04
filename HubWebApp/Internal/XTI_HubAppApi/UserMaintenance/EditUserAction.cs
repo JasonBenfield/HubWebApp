@@ -9,7 +9,7 @@ public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
         this.factory = factory;
     }
 
-    public async Task<EmptyActionResult> Execute(EditUserForm model)
+    public async Task<EmptyActionResult> Execute(EditUserForm model, CancellationToken stoppingToken)
     {
         var userID = model.UserID.Value() ?? 0;
         var user = await factory.Users.User(userID);

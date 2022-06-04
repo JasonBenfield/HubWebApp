@@ -4,7 +4,7 @@ namespace XTI_HubAppApi.AppInstall;
 
 internal sealed class AddSystemUserValidation : AppActionValidation<AddSystemUserRequest>
 {
-    public Task Validate(ErrorList errors, AddSystemUserRequest model)
+    public Task Validate(ErrorList errors, AddSystemUserRequest model, CancellationToken stoppingToken)
     {
         if (model.AppKey.Name.Equals(AppName.Unknown))
         {

@@ -10,8 +10,8 @@ public class AuthApiController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginCredentials model)
+    public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginCredentials model, CancellationToken ct)
     {
-        return api.Group("AuthApi").Action<LoginCredentials, LoginResult>("Authenticate").Execute(model);
+        return api.Group("AuthApi").Action<LoginCredentials, LoginResult>("Authenticate").Execute(model, ct);
     }
 }

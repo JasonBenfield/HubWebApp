@@ -10,14 +10,14 @@ public class PermanentLogController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> LogBatch([FromBody] LogBatchModel model)
+    public Task<ResultContainer<EmptyActionResult>> LogBatch([FromBody] LogBatchModel model, CancellationToken ct)
     {
-        return api.Group("PermanentLog").Action<LogBatchModel, EmptyActionResult>("LogBatch").Execute(model);
+        return api.Group("PermanentLog").Action<LogBatchModel, EmptyActionResult>("LogBatch").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> EndExpiredSessions()
+    public Task<ResultContainer<EmptyActionResult>> EndExpiredSessions(CancellationToken ct)
     {
-        return api.Group("PermanentLog").Action<EmptyRequest, EmptyActionResult>("EndExpiredSessions").Execute(new EmptyRequest());
+        return api.Group("PermanentLog").Action<EmptyRequest, EmptyActionResult>("EndExpiredSessions").Execute(new EmptyRequest(), ct);
     }
 }

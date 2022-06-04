@@ -24,10 +24,10 @@ internal sealed class HubClientAppClientDomain : IAppClientDomain
             cache.Set("appDomains", appDomains, TimeSpan.FromHours(1));
         }
         var appKey = AppKey.WebApp(appName);
-        var appDomain = appDomains.FirstOrDefault
-        (
-            ad => ad.AppKey.Equals(appKey)
-        );
+        var appDomainsForApp = appDomains.Where(ad => ad.AppKey.Equals(appKey));
+        var appDomain = 
+            appDomainsForApp.FirstOrDefault(ad => ad.VersionKey.Equals(version)) ??
+            appDomainsForApp.FirstOrDefault();
         return appDomain?.Domain ?? "";
     }
 }

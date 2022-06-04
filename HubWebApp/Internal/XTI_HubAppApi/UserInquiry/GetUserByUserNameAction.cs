@@ -9,7 +9,7 @@ public sealed class GetUserByUserNameAction : AppAction<string, AppUserModel>
         this.factory = factory;
     }
 
-    public async Task<AppUserModel> Execute(string userName)
+    public async Task<AppUserModel> Execute(string userName, CancellationToken stoppingToken)
     {
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user.ToModel();

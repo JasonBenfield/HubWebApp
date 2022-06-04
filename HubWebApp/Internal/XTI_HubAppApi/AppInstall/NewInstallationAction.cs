@@ -9,7 +9,7 @@ public sealed class NewInstallationAction : AppAction<NewInstallationRequest, Ne
         this.hubAdministration = hubAdministration;
     }
 
-    public async Task<NewInstallationResult> Execute(NewInstallationRequest model)
+    public async Task<NewInstallationResult> Execute(NewInstallationRequest model, CancellationToken stoppingToken)
     {
         var result = await hubAdministration.NewInstallation
         (

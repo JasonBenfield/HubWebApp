@@ -9,7 +9,7 @@ public sealed class GetDefaultModifierAction : AppAction<EmptyRequest, ModifierM
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ModifierModel> Execute(EmptyRequest model)
+    public async Task<ModifierModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var modifier = await app.DefaultModifier();

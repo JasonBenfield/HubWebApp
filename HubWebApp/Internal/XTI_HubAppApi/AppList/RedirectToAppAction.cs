@@ -13,7 +13,7 @@ public sealed class RedirectToAppAction : AppAction<int, WebRedirectResult>
         this.hubApi = hubApi;
     }
 
-    public async Task<WebRedirectResult> Execute(int appID)
+    public async Task<WebRedirectResult> Execute(int appID, CancellationToken stoppingToken)
     {
         var app = await factory.Apps.App(appID);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);

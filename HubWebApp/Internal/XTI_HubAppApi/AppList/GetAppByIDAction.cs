@@ -14,7 +14,7 @@ public sealed class GetAppByIDAction : AppAction<GetAppByIDRequest, AppWithModKe
         this.factory = factory;
     }
 
-    public async Task<AppWithModKeyModel> Execute(GetAppByIDRequest request)
+    public async Task<AppWithModKeyModel> Execute(GetAppByIDRequest request, CancellationToken stoppingToken)
     {
         var app = await factory.Apps.App(request.AppID);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);

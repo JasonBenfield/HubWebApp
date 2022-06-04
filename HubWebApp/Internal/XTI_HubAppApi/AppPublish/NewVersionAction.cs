@@ -9,7 +9,7 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionMo
         this.hubAdministration = hubAdministration;
     }
 
-    public async Task<XtiVersionModel> Execute(NewVersionRequest model)
+    public async Task<XtiVersionModel> Execute(NewVersionRequest model, CancellationToken stoppingToken)
     {
         var version = await hubAdministration.StartNewVersion
         (

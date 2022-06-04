@@ -4,7 +4,7 @@ namespace XTI_HubAppApi.AppInstall;
 
 internal sealed class AddOrUpdateAppsValidation : AppActionValidation<AddOrUpdateAppsRequest>
 {
-    public Task Validate(ErrorList errors, AddOrUpdateAppsRequest model)
+    public Task Validate(ErrorList errors, AddOrUpdateAppsRequest model, CancellationToken stoppingToken)
     {
         if (model.Apps.Any(ad => ad.AppKey.Equals(AppKey.Unknown)))
         {

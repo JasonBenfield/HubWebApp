@@ -10,26 +10,26 @@ public class PublishController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel>> NewVersion([FromBody] NewVersionRequest model)
+    public Task<ResultContainer<XtiVersionModel>> NewVersion([FromBody] NewVersionRequest model, CancellationToken ct)
     {
-        return api.Group("Publish").Action<NewVersionRequest, XtiVersionModel>("NewVersion").Execute(model);
+        return api.Group("Publish").Action<NewVersionRequest, XtiVersionModel>("NewVersion").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel>> BeginPublish([FromBody] PublishVersionRequest model)
+    public Task<ResultContainer<XtiVersionModel>> BeginPublish([FromBody] PublishVersionRequest model, CancellationToken ct)
     {
-        return api.Group("Publish").Action<PublishVersionRequest, XtiVersionModel>("BeginPublish").Execute(model);
+        return api.Group("Publish").Action<PublishVersionRequest, XtiVersionModel>("BeginPublish").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel>> EndPublish([FromBody] PublishVersionRequest model)
+    public Task<ResultContainer<XtiVersionModel>> EndPublish([FromBody] PublishVersionRequest model, CancellationToken ct)
     {
-        return api.Group("Publish").Action<PublishVersionRequest, XtiVersionModel>("EndPublish").Execute(model);
+        return api.Group("Publish").Action<PublishVersionRequest, XtiVersionModel>("EndPublish").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] AppKey model)
+    public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] AppKey model, CancellationToken ct)
     {
-        return api.Group("Publish").Action<AppKey, XtiVersionModel[]>("GetVersions").Execute(model);
+        return api.Group("Publish").Action<AppKey, XtiVersionModel[]>("GetVersions").Execute(model, ct);
     }
 }

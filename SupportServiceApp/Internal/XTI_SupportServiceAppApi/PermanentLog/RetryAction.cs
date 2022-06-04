@@ -23,7 +23,7 @@ internal sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
 
     private static readonly string processingExtension = ".processing";
 
-    public Task<EmptyActionResult> Execute(EmptyRequest model)
+    public Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var filesInProgress = getFilesInProgress();
         foreach (var file in filesInProgress)

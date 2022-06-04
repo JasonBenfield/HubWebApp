@@ -4,7 +4,7 @@ namespace XTI_HubAppApi.Storage;
 
 internal sealed class GetStoredObjectValidation : AppActionValidation<GetStoredObjectRequest>
 {
-    public Task Validate(ErrorList errors, GetStoredObjectRequest model)
+    public Task Validate(ErrorList errors, GetStoredObjectRequest model, CancellationToken stoppingToken)
     {
         if (string.IsNullOrWhiteSpace(model.StorageName))
         {

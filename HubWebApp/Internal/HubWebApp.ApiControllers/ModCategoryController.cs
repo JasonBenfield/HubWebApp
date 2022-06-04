@@ -10,26 +10,26 @@ public class ModCategoryController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] int model)
+    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] int model, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ModifierCategoryModel>("GetModCategory").Execute(model);
+        return api.Group("ModCategory").Action<int, ModifierCategoryModel>("GetModCategory").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel[]>> GetModifiers([FromBody] int model)
+    public Task<ResultContainer<ModifierModel[]>> GetModifiers([FromBody] int model, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ModifierModel[]>("GetModifiers").Execute(model);
+        return api.Group("ModCategory").Action<int, ModifierModel[]>("GetModifiers").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModCategoryModifierRequest model)
+    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModCategoryModifierRequest model, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<GetModCategoryModifierRequest, ModifierModel>("GetModifier").Execute(model);
+        return api.Group("ModCategory").Action<GetModCategoryModifierRequest, ModifierModel>("GetModifier").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceGroupModel[]>> GetResourceGroups([FromBody] int model)
+    public Task<ResultContainer<ResourceGroupModel[]>> GetResourceGroups([FromBody] int model, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ResourceGroupModel[]>("GetResourceGroups").Execute(model);
+        return api.Group("ModCategory").Action<int, ResourceGroupModel[]>("GetResourceGroups").Execute(model, ct);
     }
 }

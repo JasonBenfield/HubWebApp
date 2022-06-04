@@ -13,7 +13,7 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
         this.userContext = userContext;
     }
 
-    public async Task<EmptyActionResult> Execute(UserRoleRequest model)
+    public async Task<EmptyActionResult> Execute(UserRoleRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var user = await factory.Users.User(model.UserID);

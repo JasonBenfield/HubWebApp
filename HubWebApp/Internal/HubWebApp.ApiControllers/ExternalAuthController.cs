@@ -10,8 +10,8 @@ public class ExternalAuthController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> ExternalAuthKey([FromBody] ExternalAuthKeyModel model)
+    public Task<ResultContainer<string>> ExternalAuthKey([FromBody] ExternalAuthKeyModel model, CancellationToken ct)
     {
-        return api.Group("ExternalAuth").Action<ExternalAuthKeyModel, string>("ExternalAuthKey").Execute(model);
+        return api.Group("ExternalAuth").Action<ExternalAuthKeyModel, string>("ExternalAuthKey").Execute(model, ct);
     }
 }

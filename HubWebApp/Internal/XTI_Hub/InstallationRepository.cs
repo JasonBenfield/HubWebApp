@@ -54,7 +54,7 @@ public sealed class InstallationRepository
                 }
             );
 
-    internal Task Installed(InstallationEntity entity)=>
+    internal Task Installed(InstallationEntity entity) =>
         hubFactory.DB.Transaction
         (
             async () =>
@@ -105,7 +105,7 @@ public sealed class InstallationRepository
             .Where(inst => inst.ID == installationID)
             .Select(inst => hubFactory.CreateInstallation(inst))
             .FirstOrDefaultAsync();
-        if(installation == null)
+        if (installation == null)
         {
             var unknownLoc = await hubFactory.InstallLocations.UnknownLocation();
             var unknownApp = await hubFactory.Apps.AppOrUnknown(AppKey.Unknown);
@@ -138,32 +138,64 @@ public sealed class InstallationRepository
             .Select(inst => hubFactory.CreateInstallation(inst));
     }
 
-    public Task<AppDomainModel[]> AppDomains() =>
-        hubFactory.DB
+    public async Task<AppDomainModel[]> AppDomains()
+    {
+        var appDomainEntities = await hubFactory.DB
             .Installations
             .Retrieve()
             .Where
             (
-                inst => inst.IsCurrent && !string.IsNullOrWhiteSpace(inst.Domain)
+                inst => 
+                    !string.IsNullOrWhiteSpace(inst.Domain) && 
+                    inst.Status == InstallStatus.Values.Installed.Value
             )
-        .Join
-        (
-            hubFactory.DB.AppVersions.Retrieve(),
-            inst => inst.AppVersionID,
-            av => av.ID,
-            (inst, av) => new { Installation = inst, AppVersion = av }
-        )
-        .Join
-        (
-            hubFactory.DB.Apps.Retrieve(),
-            grouped => grouped.AppVersion.AppID,
-            a => a.ID,
-            (grouped, app) => new AppDomainModel
+            .Join
             (
-                new AppKey(new AppName(app.Name), AppType.Values.Value(app.Type)),
-                grouped.Installation.Domain
+                hubFactory.DB.AppVersions.Retrieve(),
+                inst => inst.AppVersionID,
+                av => av.ID,
+                (inst, av) => new { Installation = inst, AppVersion = av }
             )
-        )
-        .ToArrayAsync();
+            .Join
+            (
+                hubFactory.DB.Versions.Retrieve(),
+                grouped => grouped.AppVersion.VersionID,
+                v => v.ID,
+                (grouped, v) => new
+                {
+                    Installation = grouped.Installation,
+                    AppVersion = grouped.AppVersion,
+                    Version = v
+                }
+            )
+            .Join
+            (
+                hubFactory.DB.Apps.Retrieve(),
+                grouped => grouped.AppVersion.AppID,
+                a => a.ID,
+                (grouped, app) => new
+                {
+                    App = app,
+                    Version = grouped.Version,
+                    Domain = grouped.Installation.Domain
+                }
+            )
+            .ToArrayAsync();
+        return appDomainEntities
+            .Select
+            (
+                ad => new AppDomainModel
+                (
+                    new AppKey
+                    (
+                        new AppName(ad.App.Name),
+                        AppType.Values.Value(ad.App.Type)
+                    ),
+                    AppVersionKey.Parse(ad.Version.VersionKey),
+                    ad.Domain
+                )
+            )
+            .ToArray();
+    }
 
 }

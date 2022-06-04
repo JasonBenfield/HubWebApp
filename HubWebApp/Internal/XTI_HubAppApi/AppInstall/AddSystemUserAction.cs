@@ -9,6 +9,6 @@ public sealed class AddSystemUserAction : AppAction<AddSystemUserRequest, AppUse
         this.hubAdmin = hubAdmin;
     }
 
-    public Task<AppUserModel> Execute(AddSystemUserRequest model) =>
+    public Task<AppUserModel> Execute(AddSystemUserRequest model, CancellationToken stoppingToken) =>
         hubAdmin.AddOrUpdateSystemUser(model.AppKey, model.MachineName, model.Password);
 }

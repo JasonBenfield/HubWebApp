@@ -11,7 +11,7 @@ public sealed class GetUserAccessAction : AppAction<UserModifierKey, UserAccessM
         this.factory = factory;
     }
 
-    public async Task<UserAccessModel> Execute(UserModifierKey model)
+    public async Task<UserAccessModel> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var user = await factory.Users.User(model.UserID);

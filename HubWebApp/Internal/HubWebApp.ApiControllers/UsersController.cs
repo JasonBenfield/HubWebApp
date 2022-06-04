@@ -9,27 +9,27 @@ public class UsersController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var result = await api.Group("Users").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest());
+        var result = await api.Group("Users").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
         return View(result.Data.ViewName);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel[]>> GetUsers()
+    public Task<ResultContainer<AppUserModel[]>> GetUsers(CancellationToken ct)
     {
-        return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest());
+        return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel[]>> GetSystemUsers([FromBody] AppKey model)
+    public Task<ResultContainer<AppUserModel[]>> GetSystemUsers([FromBody] AppKey model, CancellationToken ct)
     {
-        return api.Group("Users").Action<AppKey, AppUserModel[]>("GetSystemUsers").Execute(model);
+        return api.Group("Users").Action<AppKey, AppUserModel[]>("GetSystemUsers").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddUserModel model)
+    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddUserModel model, CancellationToken ct)
     {
-        return api.Group("Users").Action<AddUserModel, int>("AddOrUpdateUser").Execute(model);
+        return api.Group("Users").Action<AddUserModel, int>("AddOrUpdateUser").Execute(model, ct);
     }
 }

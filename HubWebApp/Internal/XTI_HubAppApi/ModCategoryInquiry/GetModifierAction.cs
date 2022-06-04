@@ -9,7 +9,7 @@ public sealed class GetModifierAction : AppAction<GetModCategoryModifierRequest,
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ModifierModel> Execute(GetModCategoryModifierRequest model)
+    public async Task<ModifierModel> Execute(GetModCategoryModifierRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var modCategory = await app.ModCategory(model.CategoryID);

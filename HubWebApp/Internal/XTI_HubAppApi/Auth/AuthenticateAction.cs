@@ -9,5 +9,6 @@ public sealed class AuthenticateAction : AppAction<LoginCredentials, LoginResult
         this.auth = auth;
     }
 
-    public Task<LoginResult> Execute(LoginCredentials model) => auth.Authenticate(model.UserName, model.Password);
+    public Task<LoginResult> Execute(LoginCredentials model, CancellationToken stoppingToken) => 
+        auth.Authenticate(model.UserName, model.Password);
 }

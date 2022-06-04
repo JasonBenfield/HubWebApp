@@ -18,7 +18,7 @@ internal sealed class LoginAction : AppAction<LoginModel, WebRedirectResult>
         this.clock = clock;
     }
 
-    public async Task<WebRedirectResult> Execute(LoginModel model)
+    public async Task<WebRedirectResult> Execute(LoginModel model, CancellationToken stoppingToken)
     {
         var serializedAuthenticated = await hubFactory.StoredObjects.StoredObject
         (

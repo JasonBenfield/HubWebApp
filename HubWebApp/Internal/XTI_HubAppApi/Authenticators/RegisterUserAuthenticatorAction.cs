@@ -1,11 +1,5 @@
 ﻿namespace XTI_HubAppApi.Authenticators;
 
-public sealed class RegisterUserAuthenticatorRequest
-{
-    public int UserID { get; set; }
-    public string ExternalUserKey { get; set; } = "";
-}
-
 internal sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAuthenticatorRequest, EmptyActionResult>
 {
     private readonly AppFromPath appFromPath;
@@ -17,7 +11,7 @@ internal sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAu
         this.appFactory = appFactory;
     }
 
-    public async Task<EmptyActionResult> Execute(RegisterUserAuthenticatorRequest model)
+    public async Task<EmptyActionResult> Execute(RegisterUserAuthenticatorRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var user = await appFactory.Users.User(model.UserID);

@@ -9,7 +9,7 @@ public sealed class GetResourceGroupsAction : AppAction<int, ResourceGroupModel[
         this.appFromPath = appFromPath;
     }
 
-    public async Task<ResourceGroupModel[]> Execute(int categoryID)
+    public async Task<ResourceGroupModel[]> Execute(int categoryID, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var currentVersion = await app.CurrentVersion();

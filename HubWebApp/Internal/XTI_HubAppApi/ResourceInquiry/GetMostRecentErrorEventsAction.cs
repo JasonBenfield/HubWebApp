@@ -9,7 +9,7 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceLogReq
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppLogEntryModel[]> Execute(GetResourceLogRequest model)
+    public async Task<AppLogEntryModel[]> Execute(GetResourceLogRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var versionKey = AppVersionKey.Parse(model.VersionKey);

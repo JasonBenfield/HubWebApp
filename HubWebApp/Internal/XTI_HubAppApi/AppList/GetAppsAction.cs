@@ -11,7 +11,7 @@ public sealed class GetAppsAction : AppAction<EmptyRequest, AppWithModKeyModel[]
         this.userContext = userContext;
     }
 
-    public async Task<AppWithModKeyModel[]> Execute(EmptyRequest model)
+    public async Task<AppWithModKeyModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var currentUser = await userContext.User();
         var user = await appFactory.Users.User(currentUser.ID);

@@ -10,44 +10,44 @@ public class ResourceGroupController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetResourceGroupRequest model)
+    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetResourceGroupRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceModel[]>> GetResources([FromBody] GetResourcesRequest model)
+    public Task<ResultContainer<ResourceModel[]>> GetResources([FromBody] GetResourcesRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourcesRequest, ResourceModel[]>("GetResources").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourcesRequest, ResourceModel[]>("GetResources").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceModel>> GetResource([FromBody] GetResourceGroupResourceRequest model)
+    public Task<ResultContainer<ResourceModel>> GetResource([FromBody] GetResourceGroupResourceRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupResourceRequest, ResourceModel>("GetResource").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupResourceRequest, ResourceModel>("GetResource").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetRoleAccess([FromBody] GetResourceGroupRoleAccessRequest model)
+    public Task<ResultContainer<AppRoleModel[]>> GetRoleAccess([FromBody] GetResourceGroupRoleAccessRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupRoleAccessRequest, AppRoleModel[]>("GetRoleAccess").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupRoleAccessRequest, AppRoleModel[]>("GetRoleAccess").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] GetResourceGroupModCategoryRequest model)
+    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] GetResourceGroupModCategoryRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupModCategoryRequest, ModifierCategoryModel>("GetModCategory").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupModCategoryRequest, ModifierCategoryModel>("GetModCategory").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRequestExpandedModel[]>> GetMostRecentRequests([FromBody] GetResourceGroupLogRequest model)
+    public Task<ResultContainer<AppRequestExpandedModel[]>> GetMostRecentRequests([FromBody] GetResourceGroupLogRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppRequestExpandedModel[]>("GetMostRecentRequests").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppRequestExpandedModel[]>("GetMostRecentRequests").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppLogEntryModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceGroupLogRequest model)
+    public Task<ResultContainer<AppLogEntryModel[]>> GetMostRecentErrorEvents([FromBody] GetResourceGroupLogRequest model, CancellationToken ct)
     {
-        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppLogEntryModel[]>("GetMostRecentErrorEvents").Execute(model);
+        return api.Group("ResourceGroup").Action<GetResourceGroupLogRequest, AppLogEntryModel[]>("GetMostRecentErrorEvents").Execute(model, ct);
     }
 }

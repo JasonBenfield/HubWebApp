@@ -10,14 +10,14 @@ public class AuthenticatorsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RegisterAuthenticator()
+    public Task<ResultContainer<EmptyActionResult>> RegisterAuthenticator(CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<EmptyRequest, EmptyActionResult>("RegisterAuthenticator").Execute(new EmptyRequest());
+        return api.Group("Authenticators").Action<EmptyRequest, EmptyActionResult>("RegisterAuthenticator").Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest model)
+    public Task<ResultContainer<EmptyActionResult>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest model, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<RegisterUserAuthenticatorRequest, EmptyActionResult>("RegisterUserAuthenticator").Execute(model);
+        return api.Group("Authenticators").Action<RegisterUserAuthenticatorRequest, EmptyActionResult>("RegisterUserAuthenticator").Execute(model, ct);
     }
 }

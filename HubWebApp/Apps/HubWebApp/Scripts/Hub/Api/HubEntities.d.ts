@@ -108,7 +108,12 @@ interface IGetAppByAppKeyRequest {
 }
 interface IAppDomainModel {
 	AppKey: IAppKey;
+	VersionKey: IAppVersionKey;
 	Domain: string;
+}
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppRoleModel {
 	ID: number;
@@ -152,10 +157,6 @@ interface IModifierModel {
 interface IRegisterAppRequest {
 	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
-}
-interface IAppVersionKey {
-	Value: string;
-	DisplayText: string;
 }
 interface IAppApiTemplateModel {
 	AppKey: IAppKey;

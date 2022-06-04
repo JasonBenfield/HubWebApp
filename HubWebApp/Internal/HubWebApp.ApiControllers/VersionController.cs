@@ -10,14 +10,14 @@ public class VersionController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string model)
+    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string model, CancellationToken ct)
     {
-        return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model);
+        return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetVersionResourceGroupRequest model)
+    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetVersionResourceGroupRequest model, CancellationToken ct)
     {
-        return api.Group("Version").Action<GetVersionResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model);
+        return api.Group("Version").Action<GetVersionResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model, ct);
     }
 }

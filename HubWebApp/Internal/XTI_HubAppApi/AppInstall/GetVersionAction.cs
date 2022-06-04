@@ -9,7 +9,7 @@ public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionMo
         this.appFactory = appFactory;
     }
 
-    public async Task<XtiVersionModel> Execute(GetVersionRequest model)
+    public async Task<XtiVersionModel> Execute(GetVersionRequest model, CancellationToken stoppingToken)
     {
         var version = await appFactory.Versions.VersionByName(model.VersionName, model.VersionKey);
         return version.ToModel();

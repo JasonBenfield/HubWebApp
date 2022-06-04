@@ -9,7 +9,7 @@ public sealed class BeginInstallationAction : AppAction<InstallationRequest, Emp
         this.hubAdministration = hubAdministration;
     }
 
-    public async Task<EmptyActionResult> Execute(InstallationRequest model)
+    public async Task<EmptyActionResult> Execute(InstallationRequest model, CancellationToken stoppingToken)
     {
         await hubAdministration.BeginInstall(model.InstallationID);
         return new EmptyActionResult();

@@ -9,5 +9,5 @@ public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersi
         this.hubAdministration = hubAdministration;
     }
 
-    public Task<XtiVersionModel> Execute(PublishVersionRequest model) => hubAdministration.EndPublish(model.VersionName, model.VersionKey);
+    public Task<XtiVersionModel> Execute(PublishVersionRequest model, CancellationToken stoppingToken) => hubAdministration.EndPublish(model.VersionName, model.VersionKey);
 }

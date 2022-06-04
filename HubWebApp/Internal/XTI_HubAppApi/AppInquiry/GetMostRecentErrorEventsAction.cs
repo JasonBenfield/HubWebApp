@@ -9,7 +9,7 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<int, AppLogEntryM
         this.appFromPath = appFromPath;
     }
 
-    public async Task<AppLogEntryModel[]> Execute(int howMany)
+    public async Task<AppLogEntryModel[]> Execute(int howMany, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
         var events = await app.MostRecentErrorLogEntries(howMany);

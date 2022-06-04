@@ -11,7 +11,7 @@ public sealed class GetUserModifierCategoriesAction : AppAction<int, UserModifie
         this.factory = factory;
     }
 
-    public async Task<UserModifierCategoryModel[]> Execute(int userID)
+    public async Task<UserModifierCategoryModel[]> Execute(int userID, CancellationToken stoppingToken)
     {
         var user = await factory.Users.User(userID);
         var app = await appFromPath.Value();
