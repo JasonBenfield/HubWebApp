@@ -102,6 +102,47 @@ sealed class InstalledTest
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
     }
 
+    [Test]
+    public async Task ShouldNotDeletePreviousCurrentInstallationOfADifferentApp()
+    {
+        var tester = await setup();
+        var hubApp = await tester.HubApp();
+        var version = await hubApp.CurrentVersion();
+        tester.LoginAsAdmin();
+        const string qualifiedMachineName = "machine.example.com";
+        var fakeApp = await registerFakeApp(tester);
+        var fakeVersion = await fakeApp.CurrentVersion();
+        var newInstResult1 = await newInstallation(tester, new NewInstallationRequest
+        {
+            VersionName = fakeVersion.ToVersionModel().VersionName,
+            QualifiedMachineName = qualifiedMachineName,
+            AppKey = FakeInfo.AppKey
+        });
+        var newInstResult2 = await newInstallation(tester, new NewInstallationRequest
+        {
+            VersionName = version.ToVersionModel().VersionName,
+            QualifiedMachineName = qualifiedMachineName,
+            AppKey = HubInfo.AppKey
+        });
+        await startInstallation(tester, new InstallationRequest
+        {
+            InstallationID = newInstResult2.CurrentInstallationID
+        });
+        await tester.Execute
+        (
+            new InstallationRequest(newInstResult2.CurrentInstallationID)
+        );
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID);
+        Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.InstallPending), "Should not delete previous current installation of a different app");
+    }
+
+    private Task<App> registerFakeApp(IHubActionTester tester)
+    {
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        return factory.Apps.AddOrUpdate(new AppVersionName("fake"), FakeInfo.AppKey, DateTimeOffset.Now);
+    }
+
     private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
     {
         var host = new HubTestHost();
