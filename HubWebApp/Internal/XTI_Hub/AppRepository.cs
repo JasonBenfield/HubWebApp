@@ -123,7 +123,7 @@ public sealed class AppRepository
         );
     }
 
-    public Task<App[]> WebAppsWithOpenSessions(IAppUser user)
+    public Task<App[]> WebAppsWithOpenSessions(AppUser user)
     {
         var sessionIDs = factory.DB
             .Sessions

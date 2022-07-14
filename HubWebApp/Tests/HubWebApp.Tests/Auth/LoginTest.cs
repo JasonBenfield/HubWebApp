@@ -1,13 +1,15 @@
 using HubWebApp.Fakes;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Auth;
-using XTI_HubAppApi.Storage;
-using XTI_HubAppApi.UserList;
+using XTI_HubDB.Entities;
+using XTI_HubWebAppApi.Auth;
+using XTI_HubWebAppApi.Storage;
+using XTI_HubWebAppApi.UserList;
 using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
@@ -141,8 +143,8 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await appFactory.Users.UserByUserName(new AppUserName(model.UserName.Value() ?? ""));
+        var user = await tester.Services.GetRequiredService<ISourceUserContext>()
+            .User(new AppUserName(model.UserName.Value() ?? ""));
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
@@ -151,9 +153,12 @@ internal sealed class LoginTest
         await tester.Execute(model);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
+        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.User.ID);
+        await db.Users.Update(userEntity, u => u.Name = "Changed Name");
         await tester.Execute(model);
         var secondCachedUser = await userContext.User();
-        Assert.That(ReferenceEquals(firstCachedUser, secondCachedUser), Is.False, "Should reset cache after login");
+        Assert.That(secondCachedUser.User.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
 
     private Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)

@@ -1,0 +1,20 @@
+﻿namespace XTI_HubWebAppApi.UserInquiry;
+
+public sealed class GetCurrentUserAction : AppAction<EmptyRequest, AppUserModel>
+{
+    private readonly HubFactory appFactory;
+    private readonly IUserContext userContext;
+
+    public GetCurrentUserAction(HubFactory appFactory, IUserContext userContext)
+    {
+        this.appFactory = appFactory;
+        this.userContext = userContext;
+    }
+
+    public async Task<AppUserModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
+    {
+        var userFromContext = await userContext.User();
+        var user = await appFactory.Users.User(userFromContext.User.ID);
+        return user.ToModel();
+    }
+}

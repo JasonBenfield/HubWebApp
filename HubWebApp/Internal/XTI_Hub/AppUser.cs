@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppUser : IAppUser
+public sealed class AppUser
 {
     private readonly HubFactory factory;
     private readonly AppUserEntity record;
@@ -30,19 +29,19 @@ public sealed class AppUser : IAppUser
         await Modifier(modifier).AssignRole(role);
     }
 
+    public async Task<AppUserModifier[]> Modifiers(App app)
+    {
+        var modifiers = await app.Modifiers();
+        var userModifiers = new List<AppUserModifier>();
+        foreach(var modifier in modifiers)
+        {
+            userModifiers.Add(Modifier(modifier));
+        }
+        return userModifiers.ToArray();
+    }
+
     public AppUserModifier Modifier(Modifier modifier) =>
         new AppUserModifier(factory, this, modifier);
-
-    async Task<IAppRole[]> IAppUser.Roles(IModifier modifier)
-    {
-        var mod = modifier as Modifier;
-        if (mod == null)
-        {
-            mod = await factory.Modifiers.Modifier(modifier.ID);
-        }
-        var roles = await Modifier(mod).AssignedRoles();
-        return roles;
-    }
 
     public Task ChangePassword(IHashedPassword password)
         => factory.DB.Users.Update(record, u => u.Password = password.Value());
@@ -97,8 +96,8 @@ public sealed class AppUser : IAppUser
     public AppUserModel ToModel() => new AppUserModel
     {
         ID = ID,
-        UserName = UserName().DisplayText,
-        Name = new PersonName(record.Name).DisplayText,
+        UserName = UserName(),
+        Name = new PersonName(record.Name),
         Email = new EmailAddress(record.Email).DisplayText
     };
 

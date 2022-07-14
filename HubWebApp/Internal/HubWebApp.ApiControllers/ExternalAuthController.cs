@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class ExternalAuthController : Controller
+public sealed partial class ExternalAuthController : Controller
 {
     private readonly HubAppApi api;
     public ExternalAuthController(HubAppApi api)

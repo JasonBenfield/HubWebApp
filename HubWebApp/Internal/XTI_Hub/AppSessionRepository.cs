@@ -85,7 +85,7 @@ public sealed class AppSessionRepository
             .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
-    public async Task<AppSession> AddOrUpdate(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = await GetSession(sessionKey);
         if (record == null)
@@ -99,7 +99,7 @@ public sealed class AppSessionRepository
         return factory.CreateSession(record);
     }
 
-    private async Task<AppSessionEntity> Add(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = new AppSessionEntity
         {
@@ -115,7 +115,7 @@ public sealed class AppSessionRepository
         return record;
     }
 
-    public Task Update(AppSessionEntity record, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
         => factory.DB
             .Sessions
             .Update

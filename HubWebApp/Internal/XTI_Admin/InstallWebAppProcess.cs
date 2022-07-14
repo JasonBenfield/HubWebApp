@@ -55,6 +55,10 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
         }
         var site = server.Sites[siteName];
         var appName = appKey.Name.DisplayText.Replace(" ", "");
+        if (appKey.Type.Equals(AppType.Values.WebService))
+        {
+            appName += "Service";
+        }
         var appPoolName = $"Xti_{xtiEnv.EnvironmentName}_{appName}_{versionKey.DisplayText}";
         var appPool = server.ApplicationPools.FirstOrDefault(ap => ap.Name.Equals(appPoolName, StringComparison.OrdinalIgnoreCase));
         if (appPool == null)

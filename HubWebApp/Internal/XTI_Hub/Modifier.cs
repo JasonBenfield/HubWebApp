@@ -4,7 +4,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class Modifier : IModifier
+public sealed class Modifier
 {
     private readonly HubFactory factory;
     private readonly ModifierEntity record;
@@ -56,7 +56,7 @@ public sealed class Modifier : IModifier
     {
         ID = ID,
         CategoryID = record.CategoryID,
-        ModKey = ModKey().DisplayText,
+        ModKey = ModKey(),
         TargetKey = TargetKey,
         DisplayText = record.DisplayText
     };

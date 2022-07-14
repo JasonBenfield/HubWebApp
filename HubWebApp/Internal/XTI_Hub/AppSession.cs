@@ -31,7 +31,7 @@ public sealed class AppSession
     )
         => factory.Requests.AddOrUpdate(this, requestKey, installation, path, timeRequested, actualCount);
 
-    public Task Authenticate(IAppUser user)
+    public Task Authenticate(AppUser user)
         => factory.DB
             .Sessions
             .Update(record, r =>

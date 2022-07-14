@@ -1,4 +1,4 @@
-﻿using XTI_Hub.Abstractions;
+﻿using XTI_App.Abstractions;
 
 namespace XTI_Hub;
 

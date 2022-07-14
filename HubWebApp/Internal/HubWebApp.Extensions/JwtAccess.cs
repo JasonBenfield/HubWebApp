@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;

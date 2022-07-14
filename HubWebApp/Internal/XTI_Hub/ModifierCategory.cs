@@ -3,7 +3,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class ModifierCategory : IModifierCategory
+public sealed class ModifierCategory
 {
     private readonly HubFactory factory;
     private readonly ModifierCategoryEntity record;
@@ -27,9 +27,6 @@ public sealed class ModifierCategory : IModifierCategory
     public Task<Modifier> AddOrUpdateModifier(string targetKey, string displayText)
         => factory.Modifiers.AddOrUpdateByTargetKey(this, targetKey, displayText);
 
-    async Task<IModifier> IModifierCategory.ModifierOrDefault(ModifierKey modKey)
-        => await ModifierByModKeyOrDefault(modKey);
-
     public Task<Modifier> ModifierByModKey(ModifierKey modKey) => factory.Modifiers.ModifierByModKey(this, modKey);
 
     public Task<Modifier> ModifierByModKeyOrDefault(ModifierKey modKey) => factory.Modifiers.ModifierOrDefault(this, modKey);
@@ -47,7 +44,7 @@ public sealed class ModifierCategory : IModifierCategory
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {
         ID = ID,
-        Name = Name().DisplayText
+        Name = Name()
     };
 
     public override string ToString() => $"{nameof(ModifierCategory)} {ID}";

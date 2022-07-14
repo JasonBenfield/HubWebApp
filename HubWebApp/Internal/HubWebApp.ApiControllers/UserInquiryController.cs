@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class UserInquiryController : Controller
+public sealed partial class UserInquiryController : Controller
 {
     private readonly HubAppApi api;
     public UserInquiryController(HubAppApi api)

@@ -91,7 +91,7 @@ public sealed class AppRoleRepository
             .ToArrayAsync();
     }
 
-    internal Task<AppRole[]> RolesNotAssignedToUser(IAppUser user, IModifier modifier)
+    internal Task<AppRole[]> RolesNotAssignedToUser(AppUser user, Modifier modifier)
     {
         var appID = getAppID(modifier);
         var roleIDs = userRoleIDs(user, modifier);
@@ -104,7 +104,7 @@ public sealed class AppRoleRepository
             .ToArrayAsync();
     }
 
-    internal Task<AppRole[]> RolesAssignedToUser(IAppUser user, IModifier modifier)
+    internal Task<AppRole[]> RolesAssignedToUser(AppUser user, Modifier modifier)
     {
         var appID = getAppID(modifier);
         var roleIDs = userRoleIDs(user, modifier);
@@ -117,7 +117,7 @@ public sealed class AppRoleRepository
             .ToArrayAsync();
     }
 
-    private IQueryable<int> getAppID(IModifier modifier)
+    private IQueryable<int> getAppID(Modifier modifier)
     {
         var modCategoryID = factory.DB
             .Modifiers
@@ -132,7 +132,7 @@ public sealed class AppRoleRepository
         return appID;
     }
 
-    private IQueryable<int> userRoleIDs(IAppUser user, IModifier modifier)
+    private IQueryable<int> userRoleIDs(AppUser user, Modifier modifier)
     {
         return factory.DB
             .UserRoles

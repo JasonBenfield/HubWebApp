@@ -58,7 +58,7 @@ internal sealed class LocalInstallProcess
     private InstallAppProcess getInstallAppProcess(AppKey appKey)
     {
         InstallAppProcess installAppProcess;
-        if (appKey.Type.Equals(AppType.Values.WebApp))
+        if (appKey.Type.Equals(AppType.Values.WebApp) || appKey.Type.Equals(AppType.Values.WebService))
         {
             installAppProcess = new InstallWebAppProcess(scopes);
         }

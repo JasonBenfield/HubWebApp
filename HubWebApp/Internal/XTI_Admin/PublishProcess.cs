@@ -61,7 +61,7 @@ internal sealed class PublishProcess
             }
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
             await new PublishNpmProcess(xtiEnv, xtiFolder, publishFolder).Run(appKey, versionKey, semanticVersion);
-            if (!appKey.Type.Equals(AppType.Values.Package) && release != null)
+            if (!appKey.Type.Equals(AppType.Values.Package) && !appKey.Type.Equals(AppType.Values.WebPackage) && release != null)
             {
                 await uploadReleaseAssets(appKey, versionKey, release);
             }

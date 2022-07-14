@@ -5,7 +5,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class App : IApp
+public sealed class App
 {
     private readonly HubFactory factory;
     private readonly AppEntity record;
@@ -48,6 +48,8 @@ public sealed class App : IApp
     internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
 
+    internal Task<Modifier[]> Modifiers() => factory.Modifiers.ModifiersForApp(this);
+
     public Task<Modifier> Modifier(int modifierID)
         => factory.Modifiers.ModifierForApp(this, modifierID);
 
@@ -64,16 +66,11 @@ public sealed class App : IApp
     public Task<ModifierCategory> ModCategory(int modCategoryID)
         => factory.ModCategories.Category(this, modCategoryID);
 
-    async Task<IModifierCategory> IApp.ModCategory(ModifierCategoryName name)
-        => await ModCategory(name);
-
     public Task<ModifierCategory> ModCategory(ModifierCategoryName name)
         => factory.ModCategories.Category(this, name);
 
     public Task<AppRole> AddRoleIfNotFound(AppRoleName name) =>
         factory.Roles.AddIfNotFound(this, name);
-
-    async Task<IAppRole[]> IApp.Roles() => await Roles();
 
     public async Task<AppRole[]> Roles()
     {
@@ -129,8 +126,6 @@ public sealed class App : IApp
             await role.Deactivate(DateTimeOffset.Now);
         }
     }
-
-    async Task<IAppVersion> IApp.Version(AppVersionKey versionKey) => await Version(versionKey);
 
     public Task<AppVersion> Version(AppVersionKey versionKey) => factory.Versions.VersionByApp(this, versionKey);
 

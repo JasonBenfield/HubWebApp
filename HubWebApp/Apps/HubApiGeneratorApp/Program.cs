@@ -4,7 +4,7 @@ using XTI_ApiGeneratorApp.Extensions;
 using XTI_App.Api;
 using XTI_Core.Extensions;
 using XTI_Hub;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>

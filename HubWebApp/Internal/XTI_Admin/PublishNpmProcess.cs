@@ -26,7 +26,7 @@ internal sealed class PublishNpmProcess
         (
             projectDir,
             "Scripts",
-            getAppName(appKey)
+            "Lib"
         );
         if (Directory.Exists(sourceScriptPath))
         {

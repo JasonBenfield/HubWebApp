@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class VersionController : Controller
+public sealed partial class VersionController : Controller
 {
     private readonly HubAppApi api;
     public VersionController(HubAppApi api)

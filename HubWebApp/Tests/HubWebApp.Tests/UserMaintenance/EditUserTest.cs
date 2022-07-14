@@ -1,5 +1,5 @@
-﻿using XTI_HubAppApi.UserList;
-using XTI_HubAppApi.UserMaintenance;
+﻿using XTI_HubWebAppApi.UserList;
+using XTI_HubWebAppApi.UserMaintenance;
 
 namespace HubWebApp.Tests;
 

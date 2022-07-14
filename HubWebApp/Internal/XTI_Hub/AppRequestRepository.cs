@@ -30,7 +30,7 @@ public sealed class AppRequestRepository
         }
         catch
         {
-            xtiPath = new XtiPath(AppName.Unknown.Value);
+            xtiPath = new XtiPath(AppKey.Unknown);
         }
         if (string.IsNullOrWhiteSpace(xtiPath.Group))
         {

@@ -35,6 +35,17 @@ internal sealed class PublishLibCommand : ICommand
         {
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
-        await new PublishLibProcess(scopes).Run(semanticVersion);
+        var slnDir = Environment.CurrentDirectory;
+        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
+        foreach(var appKey in appKeys)
+        {
+            var projectDir = Path.Combine(slnDir, new AppDirectoryName(appKey).Value);
+            if (Directory.Exists(projectDir))
+            {
+                Environment.CurrentDirectory = projectDir;
+            }
+            await new PublishLibProcess(scopes).Run(semanticVersion);
+            Environment.CurrentDirectory = slnDir;
+        }
     }
 }

@@ -1,0 +1,79 @@
+﻿using XTI_App.Abstractions;
+using XTI_App.Api;
+
+namespace XTI_Hub;
+
+public sealed class EfAppContext : ISourceAppContext
+{
+    private readonly HubFactory appFactory;
+    private readonly AppKey currentAppKey;
+    private readonly AppVersionKey versionKey;
+
+    public EfAppContext(HubFactory appFactory, AppKey currentAppKey, AppVersionKey versionKey)
+    {
+        this.appFactory = appFactory;
+        this.currentAppKey = currentAppKey;
+        this.versionKey = versionKey;
+    }
+
+    public Task<AppContextModel> App() => App(currentAppKey);
+
+    public async Task<AppContextModel> App(AppKey appKey)
+    {
+        var app = await appFactory.Apps.AppOrUnknown(appKey);
+        var modKey = await app.ModKeyInHubApps();
+        var appVersion = await app.Version(versionKey);
+        var roles = await app.Roles();
+        var roleModels = roles.Select(r => r.ToModel()).ToArray();
+        var modCategories = await app.ModCategories();
+        var modCategoryModels = new List<AppContextModifierCategoryModel>();
+        foreach (var modCategory in modCategories)
+        {
+            var modifiers = await modCategory.Modifiers();
+            modCategoryModels.Add
+            (
+                new AppContextModifierCategoryModel
+                (
+                    modCategory.ToModel(),
+                    modifiers.Select(m => m.ToModel()).ToArray()
+                )
+            );
+        }
+        var resourceGroups = await appVersion.ResourceGroups();
+        var resourceGroupModels = new List<AppContextResourceGroupModel>();
+        foreach (var resourceGroup in resourceGroups)
+        {
+            var resources = await resourceGroup.Resources();
+            var resourceModels = new List<AppContextResourceModel>();
+            foreach (var resource in resources)
+            {
+                var allowedRoles = await resource.AllowedRoles();
+                resourceModels.Add
+                (
+                    new AppContextResourceModel
+                    (
+                        resource.ToModel(),
+                        allowedRoles.Select(r => roleModels.First(rm => r.ID == rm.ID)).ToArray()
+                    )
+                );
+            }
+            resourceGroupModels.Add
+            (
+                new AppContextResourceGroupModel
+                (
+                    resourceGroup.ToModel(),
+                    resourceModels.ToArray()
+                )
+            );
+        }
+        return new AppContextModel
+        (
+            app.ToAppModel(),
+            modKey,
+            appVersion.ToVersionModel(),
+            roleModels,
+            modCategoryModels.ToArray(),
+            resourceGroupModels.ToArray()
+        );
+    }
+}

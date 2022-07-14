@@ -3,7 +3,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppRole : IAppRole
+public sealed class AppRole
 {
     private readonly HubFactory factory;
     private readonly AppRoleEntity record;
@@ -33,7 +33,7 @@ public sealed class AppRole : IAppRole
     public AppRoleModel ToModel() => new AppRoleModel
     {
         ID = ID,
-        Name = Name().DisplayText
+        Name = Name()
     };
 
     public override string ToString() => $"{nameof(AppRole)} {ID}";

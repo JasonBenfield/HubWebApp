@@ -1,7 +1,7 @@
 // Generated Code
 namespace AuthenticatorWebApp.ApiControllers;
 [Authorize]
-public class UserController : Controller
+public sealed partial class UserController : Controller
 {
     private readonly AuthenticatorAppApi api;
     public UserController(AuthenticatorAppApi api)

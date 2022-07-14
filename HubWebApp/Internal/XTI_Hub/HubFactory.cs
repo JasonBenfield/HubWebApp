@@ -19,9 +19,9 @@ public sealed class HubFactory
 
     public SystemUserRepository SystemUsers { get => systemUsers ??= new(this); }
 
-    private InstallationUserRepository? installationUsers;
+    private InstallerRepository? installers;
 
-    public InstallationUserRepository InstallationUsers { get => installationUsers ??= new(this); }
+    public InstallerRepository Installers { get => installers ??= new(this); }
 
     internal AppUser User(AppUserEntity record) => new(this, record);
 

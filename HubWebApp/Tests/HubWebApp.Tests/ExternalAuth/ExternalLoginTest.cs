@@ -1,9 +1,9 @@
 ﻿using HubWebApp.Fakes;
 using System.Security.Claims;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Auth;
-using XTI_HubAppApi.ExternalAuth;
-using XTI_HubAppApi.UserList;
+using XTI_HubWebAppApi.Auth;
+using XTI_HubWebAppApi.ExternalAuth;
+using XTI_HubWebAppApi.UserList;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.Tests;
@@ -62,6 +62,7 @@ internal sealed class ExternalLoginTest
             .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
         return tester;
     }
+
     private FakeModifier getFakeAuthModifier(HubActionTester<LoginModel, WebRedirectResult> tester)
     {
         return tester.FakeHubApp()

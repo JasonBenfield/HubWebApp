@@ -13,11 +13,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_Processes" Version="1.10.10" />
+		<PackageReference Include="XTI_Processes" Version="1.10.12" />
 		<PackageReference Include="XTI_GitHub" Version="1.2.10" />
 		<PackageReference Include="XTI_Git" Version="1.2.10" />
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.19" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.10" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.22-dev220714143115302" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.12" />
 	</ItemGroup>
 
 	<ItemGroup>

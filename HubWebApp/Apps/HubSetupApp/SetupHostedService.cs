@@ -7,7 +7,7 @@ using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 using XTI_HubDB.EF;
 
 namespace HubSetupApp;

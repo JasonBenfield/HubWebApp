@@ -124,7 +124,7 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await hubFactory.InstallationUsers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.Installers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
@@ -142,11 +142,11 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(appKey, machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(new SystemUserName(appKey, machineName), hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
-    public async Task<AppUserModel> AddOrUpdateAdminUser(AppUserName userName, string password)
+    public async Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
         var user = await hubFactory.Users.AddOrUpdate
@@ -157,9 +157,9 @@ public sealed class EfHubAdministration : IHubAdministration
             new EmailAddress(""), 
             clock.Now()
         );
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
-        var hubAdminRole = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
-        await user.AssignRole(hubAdminRole);
+        var app = await hubFactory.Apps.App(appKey);
+        var adminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
+        await user.AssignRole(adminRole);
         return user.ToModel();
     }
 

@@ -19,7 +19,9 @@ internal sealed class InstallProcess
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package)).ToArray();
+        var appKeys = selectedAppKeys.Values
+            .Where(a => !a.Type.Equals(AppType.Values.Package) && !a.Type.Equals(AppType.Values.WebPackage))
+            .ToArray();
         if (appKeys.Any())
         {
             Console.WriteLine("Beginning Install");

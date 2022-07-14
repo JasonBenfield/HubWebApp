@@ -6,8 +6,8 @@ using XTI_App.Api;
 using XTI_App.Fakes;
 using XTI_Core;
 using XTI_Hub;
-using XTI_HubAppApi;
-using XTI_HubAppApi.UserList;
+using XTI_HubWebAppApi;
+using XTI_HubWebAppApi.UserList;
 using XTI_HubDB.EF;
 
 namespace HubWebApp.Tests;

@@ -132,7 +132,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var appApiFactory = Services.GetRequiredService<AppApiFactory>();
         var hubApiForSuperUser = (HubAppApi)appApiFactory.CreateForSuperUser();
         var actionForSuperUser = getAction(hubApiForSuperUser);
-        httpContextAccessor.HttpContext.Request.PathBase = $"/{actionForSuperUser.Path.App.DisplayText}/{actionForSuperUser.Path.Version.DisplayText}".Replace(" ", "");
+        httpContextAccessor.HttpContext.Request.PathBase = $"/{actionForSuperUser.Path.App}/{actionForSuperUser.Path.Version.DisplayText}".Replace(" ", "");
         var modKeyPath = modKey.Equals(ModifierKey.Default) ? "" : $"/{modKey.Value}";
         httpContextAccessor.HttpContext.Request.Path = $"/{actionForSuperUser.Path.Group.DisplayText}/{actionForSuperUser.Path.Action.DisplayText}{modKeyPath}".Replace(" ", "");
         var appKey = Services.GetRequiredService<AppKey>();
@@ -140,7 +140,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var pathAccessor = Services.GetRequiredService<FakeXtiPathAccessor>();
         var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
         pathAccessor.SetPath(path);
-        httpContextAccessor.HttpContext.Request.PathBase = $"/{path.App.Value}/{path.Version.Value}";
+        httpContextAccessor.HttpContext.Request.PathBase = $"/{path.App}/{path.Version.Value}";
         httpContextAccessor.HttpContext.Request.Path = $"/{path.Group.Value}/{path.Action.Value}/";
         if (!path.Modifier.Equals(ModifierKey.Default))
         {

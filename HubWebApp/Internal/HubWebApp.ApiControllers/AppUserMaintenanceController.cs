@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class AppUserMaintenanceController : Controller
+public sealed partial class AppUserMaintenanceController : Controller
 {
     private readonly HubAppApi api;
     public AppUserMaintenanceController(HubAppApi api)

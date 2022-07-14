@@ -9,11 +9,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.7.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.21" />
+		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.22-dev220714143115302" />
 	</ItemGroup>
 
 	<ItemGroup>

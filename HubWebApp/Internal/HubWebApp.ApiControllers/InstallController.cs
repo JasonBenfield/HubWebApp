@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class InstallController : Controller
+public sealed partial class InstallController : Controller
 {
     private readonly HubAppApi api;
     public InstallController(HubAppApi api)

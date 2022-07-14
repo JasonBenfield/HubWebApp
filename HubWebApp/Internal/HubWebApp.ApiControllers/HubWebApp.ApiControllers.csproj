@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Internal\XTI_HubAppApi\XTI_HubAppApi.csproj" />
+    <ProjectReference Include="..\..\Internal\XTI_HubWebAppApi\XTI_HubWebAppApi.csproj" />
   </ItemGroup>
 
 </Project>

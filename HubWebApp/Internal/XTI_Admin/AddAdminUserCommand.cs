@@ -20,7 +20,16 @@ internal sealed class AddAdminUserCommand : ICommand
         var options = scopes.GetRequiredService<AdminOptions>();
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
-        await hubAdmin.AddOrUpdateAdminUser(new AppUserName(options.UserName), options.Password);
+        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
+        foreach(var appKey in appKeys)
+        {
+            await hubAdmin.AddOrUpdateAdminUser
+            (
+                appKey, 
+                new AppUserName(options.UserName), 
+                options.Password
+            );
+        }
         if (!string.IsNullOrWhiteSpace(options.CredentialKey))
         {
             var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();

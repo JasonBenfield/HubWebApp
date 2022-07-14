@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class UserCacheController : Controller
+public sealed partial class UserCacheController : Controller
 {
     private readonly HubAppApi api;
     public UserCacheController(HubAppApi api)

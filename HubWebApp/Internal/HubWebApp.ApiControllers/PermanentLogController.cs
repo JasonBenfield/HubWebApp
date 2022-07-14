@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class PermanentLogController : Controller
+public sealed partial class PermanentLogController : Controller
 {
     private readonly HubAppApi api;
     public PermanentLogController(HubAppApi api)

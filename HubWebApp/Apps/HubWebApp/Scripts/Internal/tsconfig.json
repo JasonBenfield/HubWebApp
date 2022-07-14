@@ -18,7 +18,7 @@
   },
   "include": [
     "./**/*.ts",
-    "../Hub/**/*.d.ts",
+    "../Lib/**/*.d.ts",
     "../../node_modules/@jasonbenfield/**/*.d.ts"
   ],
   "exclude": [

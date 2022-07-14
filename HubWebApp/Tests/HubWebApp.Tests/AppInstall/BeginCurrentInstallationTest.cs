@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
-using XTI_HubAppApi.AppPublish;
+using XTI_HubWebAppApi.AppInstall;
+using XTI_HubWebAppApi.AppPublish;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;

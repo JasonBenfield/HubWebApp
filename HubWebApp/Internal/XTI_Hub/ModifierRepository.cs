@@ -121,12 +121,31 @@ public sealed class ModifierRepository
         var record = await factory.DB
             .Modifiers
             .Retrieve()
-            .Where(m => categoryIDs.Any(id => id == m.CategoryID) && m.ID == modifierID)
+            .Where(m => categoryIDs.Contains(m.CategoryID) && m.ID == modifierID)
             .FirstOrDefaultAsync();
         return factory.CreateModifier
         (
             record ?? throw new ModifierNotFoundException(modifierID, app)
         );
+    }
+
+    internal async Task<Modifier[]> ModifiersForApp(App app)
+    {
+        var categoryIDs = factory.DB
+            .ModifierCategories
+            .Retrieve()
+            .Where(modCat => modCat.AppID == app.ID)
+            .Select(modCat => modCat.ID);
+        var modifierIDs = factory.DB
+            .Modifiers.Retrieve()
+            .Where(m => categoryIDs.Contains(m.CategoryID))
+            .Select(m => m.ID);
+        var records = await factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => modifierIDs.Contains(m.ID))
+            .ToArrayAsync();
+        return records.Select(m => factory.CreateModifier(m)).ToArray();
     }
 
     internal async Task<Modifier> ModifierByTargetKey(ModifierCategory category, string targetKey)

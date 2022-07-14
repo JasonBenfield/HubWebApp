@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
+using XTI_HubWebAppApi.AppInstall;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 

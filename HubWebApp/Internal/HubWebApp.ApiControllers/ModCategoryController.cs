@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class ModCategoryController : Controller
+public sealed partial class ModCategoryController : Controller
 {
     private readonly HubAppApi api;
     public ModCategoryController(HubAppApi api)

@@ -7,7 +7,7 @@ using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Hub;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 using XTI_HubDB.Extensions;
 using XTI_Secrets.Extensions;
 

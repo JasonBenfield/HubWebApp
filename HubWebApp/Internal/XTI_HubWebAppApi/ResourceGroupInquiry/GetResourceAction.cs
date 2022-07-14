@@ -1,0 +1,23 @@
+﻿namespace XTI_HubWebAppApi.ResourceGroupInquiry;
+
+public sealed class GetResourceAction : AppAction<GetResourceGroupResourceRequest, ResourceModel>
+{
+    private readonly AppFromPath appFromPath;
+
+    public GetResourceAction(AppFromPath appFromPath)
+    {
+        this.appFromPath = appFromPath;
+    }
+
+    public async Task<ResourceModel> Execute(GetResourceGroupResourceRequest model, CancellationToken stoppingToken)
+    {
+        var app = await appFromPath.Value();
+        var versionKey = AppVersionKey.Parse(model.VersionKey);
+        var version = await app.Version(versionKey);
+        var group = await version.ResourceGroup(model.GroupID);
+        var resourceName = new ResourceName(model.ResourceName);
+        var resource = await group.ResourceByName(resourceName);
+        var resourceModel = resource.ToModel();
+        return resourceModel;
+    }
+}

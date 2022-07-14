@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class AppsController : Controller
+public sealed partial class AppsController : Controller
 {
     private readonly HubAppApi api;
     public AppsController(HubAppApi api)
@@ -22,9 +22,9 @@ public class AppsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppWithModKeyModel>> GetAppById([FromBody] GetAppByIDRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppWithModKeyModel>> GetAppByID([FromBody] GetAppByIDRequest model, CancellationToken ct)
     {
-        return api.Group("Apps").Action<GetAppByIDRequest, AppWithModKeyModel>("GetAppById").Execute(model, ct);
+        return api.Group("Apps").Action<GetAppByIDRequest, AppWithModKeyModel>("GetAppByID").Execute(model, ct);
     }
 
     [HttpPost]

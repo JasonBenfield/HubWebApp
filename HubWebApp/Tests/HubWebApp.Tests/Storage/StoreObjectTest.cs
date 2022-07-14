@@ -1,6 +1,6 @@
 ﻿using XTI_Core.Fakes;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Storage;
+using XTI_HubWebAppApi.Storage;
 
 namespace HubWebApp.Tests;
 

@@ -4,8 +4,8 @@ using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.UserList;
+using XTI_HubWebAppApi;
+using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 

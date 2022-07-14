@@ -1,7 +1,7 @@
 // Generated Code
 namespace AuthenticatorWebApp.ApiControllers;
 [AllowAnonymous]
-public class HomeController : Controller
+public sealed partial class HomeController : Controller
 {
     private readonly AuthenticatorAppApi api;
     public HomeController(AuthenticatorAppApi api)

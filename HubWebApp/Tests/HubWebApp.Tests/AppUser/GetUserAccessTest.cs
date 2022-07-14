@@ -1,5 +1,5 @@
-﻿using XTI_HubAppApi.AppUserInquiry;
-using XTI_HubAppApi.UserList;
+﻿using XTI_HubWebAppApi.AppUserInquiry;
+using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
