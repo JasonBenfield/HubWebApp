@@ -1,9 +1,9 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { UserListCardView } from "./UserListCardView";
 import { UserListItem } from "./UserListItem";
 import { UserListItemView } from "./UserListItemView";
@@ -19,10 +19,10 @@ export class UserListCard {
         private readonly hubApi: HubAppApi,
         private readonly view: UserListCardView
     ) {
-        new TextBlock('Users', this.view.titleHeader);
+        new TextComponent(this.view.titleHeader).setText('Users');
         this.alert = new CardAlert(this.view.alert).alert;
         this.users = new ListGroup(this.view.users);
-        this.users.itemClicked.register(this.onUserClicked.bind(this));
+        this.users.registerItemClicked(this.onUserClicked.bind(this));
     }
 
     private onUserClicked(listItem: UserListItem) {

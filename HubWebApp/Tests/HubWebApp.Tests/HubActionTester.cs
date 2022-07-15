@@ -44,34 +44,48 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
 
     public void Logout()
     {
-        var userContext = Services.GetRequiredService<FakeUserContext>();
-        userContext.SetCurrentUser(AppUserName.Anon);
+        var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(AppUserName.Anon);
     }
 
-    public FakeAppUser LoginAsAdmin()
+    public Task<AppUser> LoginAsAdmin()
     {
-        var userContext = Services.GetRequiredService<FakeUserContext>();
-        var user = userContext.User(new AppUserName("hubadmin"));
-        userContext.SetCurrentUser(user.UserName());
-        return user;
+        var factory = Services.GetRequiredService<HubFactory>();
+        return factory.Users.UserByUserName(new AppUserName("hubadmin"));
     }
 
-    public FakeAppUser Login(params AppRoleName[]? roleNames)
-    {
-        var appContext = Services.GetRequiredService<FakeAppContext>();
-        var defaultModifier = appContext.App().DefaultModifier();
-        return Login(defaultModifier, roleNames);
-    }
+    public Task<AppUser> Login(params AppRoleName[]? roleNames) =>
+        Login(ModifierKey.Default, roleNames);
 
-    public FakeAppUser Login(FakeModifier modifier, params AppRoleName[]? roleNames)
+    public async Task<AppUser> Login(ModifierKey modKey, params AppRoleName[]? roleNames)
     {
-        var userContext = Services.GetRequiredService<FakeUserContext>();
-        var user = userContext.AddUser(new AppUserName("loggedinUser"));
-        if(roleNames != null)
+        var factory = Services.GetRequiredService<HubFactory>();
+        var user = await factory.Users.AddOrUpdate
+        (
+            new AppUserName("loggedinUser"),
+            new FakeHashedPassword(""),
+            new PersonName("loggedin User"),
+            new EmailAddress(""),
+            DateTimeOffset.Now
+        );
+        var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(user.ToModel().UserName);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        Modifier modifier;
+        if (modKey.Equals(ModifierKey.Default))
         {
-            user.AddRoles(modifier, roleNames);
+            modifier = await hubApp.DefaultModifier();
         }
-        userContext.SetCurrentUser(user.UserName());
+        else
+        {
+            var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+            modifier = await appsModCategory.ModifierByModKey(modKey);
+        }
+        foreach (var roleName in roleNames ?? new AppRoleName[0])
+        {
+            var role = await hubApp.Role(roleName);
+            await user.Modifier(modifier).AssignRole(role);
+        }
         return user;
     }
 
@@ -81,12 +95,6 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return factory.Apps.App(HubInfo.AppKey);
     }
 
-    public FakeApp FakeHubApp()
-    {
-        var appContext = Services.GetRequiredService<FakeAppContext>();
-        return appContext.App();
-    }
-
     public async Task<AppRole> AdminRole()
     {
         var app = await HubApp();
@@ -94,29 +102,32 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return role;
     }
 
+    public async Task<Modifier> DefaultModifier()
+    {
+        var hubApp = await HubApp();
+        var defaultModifier = await hubApp.DefaultModifier();
+        return defaultModifier;
+    }
+
     public async Task<Modifier> HubAppModifier()
     {
         var hubApp = await HubApp();
+        var hubAppModel = hubApp.ToAppModel();
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var hubAppModifier = await appsModCategory.AddOrUpdateModifier
         (
-            hubApp.ID.ToString(),
-            hubApp.Key().Name.DisplayText
+            hubAppModel.PublicKey,
+            hubAppModel.ID.ToString(),
+            hubAppModel.AppKey.Format()
         );
         return hubAppModifier;
     }
 
-    public FakeModifier FakeHubAppModifier()
-    {
-        var fakeHubApp = FakeHubApp();
-        var modCategory = fakeHubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var appContext = Services.GetRequiredService<FakeAppContext>();
-        var app = appContext.App();
-        return modCategory.ModifierByTargetID(app.ID.ToString());
-    }
-
     public Task<TResult> Execute(TModel model) =>
         Execute(model, ModifierKey.Default);
+
+    public Task<TResult> Execute(TModel model, Modifier modifier) =>
+        Execute(model, modifier.ToModel().ModKey);
 
     public async Task<TResult> Execute(TModel model, ModifierKey modKey)
     {
@@ -147,7 +158,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             httpContextAccessor.HttpContext.Request.Path += path.Modifier.Value;
         }
         var currentUserName = Services.GetRequiredService<ICurrentUserName>();
-        var apiUser = new AppApiUser(appContext, userContext, currentUserName, pathAccessor);
+        var apiUser = new AppApiUser(userContext, appContext, currentUserName, pathAccessor);
         var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
         var action = getAction(hubApi);
         var result = await action.Invoke(model);

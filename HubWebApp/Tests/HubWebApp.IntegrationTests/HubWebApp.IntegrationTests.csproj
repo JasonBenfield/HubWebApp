@@ -12,7 +12,7 @@
 		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
 		<PackageReference Include="XTI_Core.Extensions" Version="1.10.12" />
-		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.22-dev220714143115302" />
+		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.22-dev220714204434484" />
 	</ItemGroup>
 
 	<ItemGroup>

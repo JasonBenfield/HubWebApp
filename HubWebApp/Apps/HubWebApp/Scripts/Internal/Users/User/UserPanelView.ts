@@ -1,29 +1,33 @@
-﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
+import { CssLengthUnit } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
+import { GridView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { ToolbarView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
 import { AppListCardView } from "../../Apps/AppListCardView";
 import { HubTheme } from "../../HubTheme";
 import { UserComponentView } from "./UserComponentView";
 
-export class UserPanelView extends Block {
+export class UserPanelView extends GridView {
     readonly userComponent: UserComponentView;
     readonly appListCard: AppListCardView;
-    readonly backButton: ButtonCommandItem;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.setViewName(UserPanelView.name);
         this.height100();
-        this.setName(UserPanelView.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.userComponent = flexFill.container.addContent(new UserComponentView())
-            .configure(c => c.setMargin(MarginCss.bottom(3)));
-        this.appListCard = flexFill.container.addContent(new AppListCardView());
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.userComponent = mainContent.addView(UserComponentView)
+        this.userComponent.setMargin(MarginCss.bottom(3));
+        this.appListCard = mainContent.addView(AppListCardView);
         this.appListCard.setMargin(MarginCss.bottom(3));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(HubTheme.instance.commandToolbar.backButton());
+        let toolbar = this.addView(ToolbarView)
+            .configure(t => HubTheme.instance.commandToolbar.toolbar(t));
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
         this.backButton.setText('App Permissions');
     }
 }

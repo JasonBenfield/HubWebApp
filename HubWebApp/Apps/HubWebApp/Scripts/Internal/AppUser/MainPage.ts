@@ -1,10 +1,9 @@
-﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
-import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
-import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Url } from '@jasonbenfield/sharedwebapp/Url';
+import { BasicPage } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicPage';
+import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AddRolePanel } from './AddRolePanel';
 import { AppUserDataPanel } from './AppUserDataPanel';
@@ -13,8 +12,8 @@ import { SelectModCategoryPanel } from './SelectModCategoryPanel';
 import { SelectModifierPanel } from './SelectModifierPanel';
 import { UserRolesPanel } from './UserRolesPanel';
 
-class MainPage {
-    private readonly view: MainPageView;
+class MainPage extends BasicPage {
+    protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
 
     private readonly panels: SingleActivePanel;
@@ -24,9 +23,9 @@ class MainPage {
     private readonly userRolesPanel: UserRolesPanel;
     private readonly addRolePanel: AddRolePanel;
 
-    constructor(page: PageFrameView) {
-        this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).Hub();
+    constructor() {
+        super(new MainPageView());
+        this.hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
             new AppUserDataPanel(this.hubApi, this.view.appUserDataPanel)
@@ -44,7 +43,7 @@ class MainPage {
             new AddRolePanel(this.hubApi, this.view.addRolePanel)
         );
         let userIDValue = Url.current().getQueryValue('userID');
-        if (XtiUrl.current.path.modifier && userIDValue) {
+        if (XtiUrl.current().path.modifier && userIDValue) {
             let userID = Number(userIDValue);
             this.activateStartPanel(userID);
         }
@@ -118,4 +117,4 @@ class MainPage {
         }
     }
 }
-new MainPage(new Startup().build());
+new MainPage();

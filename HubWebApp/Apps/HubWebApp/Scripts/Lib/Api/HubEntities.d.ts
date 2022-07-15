@@ -95,8 +95,13 @@ interface IAppModel {
 	AppKey: IAppKey;
 	VersionName: IAppVersionName;
 	Title: string;
+	PublicKey: IModifierKey;
 }
 interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
+interface IModifierKey {
 	Value: string;
 	DisplayText: string;
 }
@@ -164,10 +169,6 @@ interface IModifierModel {
 	CategoryID: number;
 	ModKey: IModifierKey;
 	TargetKey: string;
-	DisplayText: string;
-}
-interface IModifierKey {
-	Value: string;
 	DisplayText: string;
 }
 interface IRegisterAppRequest {
@@ -377,7 +378,6 @@ interface IGetStoredObjectRequest {
 }
 interface IAppContextModel {
 	App: IAppModel;
-	ModKey: IModifierKey;
 	Version: IXtiVersionModel;
 	Roles: IAppRoleModel[];
 	ModifierCategories: IAppContextModifierCategoryModel[];
@@ -403,6 +403,7 @@ interface IUserContextModel {
 	ModifiedRoles: IUserContextRoleModel[];
 }
 interface IUserContextRoleModel {
+	ModifierCategoryID: number;
 	ModifierKey: IModifierKey;
 	Roles: IAppRoleModel[];
 }

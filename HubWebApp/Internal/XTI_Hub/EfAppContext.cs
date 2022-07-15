@@ -21,7 +21,6 @@ public sealed class EfAppContext : ISourceAppContext
     public async Task<AppContextModel> App(AppKey appKey)
     {
         var app = await appFactory.Apps.AppOrUnknown(appKey);
-        var modKey = await app.ModKeyInHubApps();
         var appVersion = await app.Version(versionKey);
         var roles = await app.Roles();
         var roleModels = roles.Select(r => r.ToModel()).ToArray();
@@ -69,7 +68,6 @@ public sealed class EfAppContext : ISourceAppContext
         return new AppContextModel
         (
             app.ToAppModel(),
-            modKey,
             appVersion.ToVersionModel(),
             roleModels,
             modCategoryModels.ToArray(),

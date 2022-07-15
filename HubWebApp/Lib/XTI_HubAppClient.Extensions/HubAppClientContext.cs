@@ -20,7 +20,8 @@ public sealed class HubAppClientContext
         var appKey = sp.GetRequiredService<AppKey>();
         var versionKey = sp.GetRequiredService<AppVersionKey>();
         AppContext = new HcAppContext(hubClient);
-        UserContext = new HcUserContext(hubClient);
+        var currentUserName = sp.GetRequiredService<ICurrentUserName>();
+        UserContext = new HcUserContext(hubClient, currentUserName);
     }
 
     public HcAppContext AppContext { get; }

@@ -1,8 +1,10 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
+import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
 import { ModifierButtonListItemView } from "./ModifierButtonListItemView";
 
-export class ModifierListItem {
+export class ModifierListItem extends BasicComponent {
     constructor(readonly modifier: IModifierModel, view: ModifierButtonListItemView) {
-        new TextBlock(modifier.DisplayText, view.displayText);
+        super(view);
+        new TextComponent(view.displayText).setText(modifier.DisplayText);
     }
 }

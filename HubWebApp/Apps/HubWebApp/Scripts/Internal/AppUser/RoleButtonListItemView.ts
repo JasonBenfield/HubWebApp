@@ -1,11 +1,13 @@
-﻿import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
+﻿import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicTextComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicTextComponentView";
+import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
 
 export class RoleButtonListItemView extends ButtonListGroupItemView {
-    readonly roleName: ITextComponentView;
+    readonly roleName: BasicTextComponentView;
 
-    constructor() {
-        super();
-        this.roleName = this.addContent(new TextSpanView());
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.roleName = this.addView(TextSpanView);
     }
 }

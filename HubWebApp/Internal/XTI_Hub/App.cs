@@ -37,14 +37,6 @@ public sealed class App
         }
     }
 
-    public async Task<ModifierKey> ModKeyInHubApps()
-    {
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.ModifierByTargetID(ID);
-        return modifier.ModKey();
-    }
-
     internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
 
@@ -152,14 +144,15 @@ public sealed class App
     {
         var key = Key();
         return new AppModel
-        {
-            ID = ID,
-            AppKey = key,
-            VersionName = new AppVersionName(record.VersionName),
-            Title = record.Title
-        };
+        (
+            ID: ID,
+            AppKey: key,
+            VersionName: new AppVersionName(record.VersionName),
+            Title: record.Title,
+            PublicKey: new ModifierKey(key.Format())
+        );
     }
 
-    public override string ToString() => $"{nameof(App)} {ID}: {record.Name}";
+    public override string ToString() => $"{nameof(App)} {ID}: {Key().Format()}";
 
 }

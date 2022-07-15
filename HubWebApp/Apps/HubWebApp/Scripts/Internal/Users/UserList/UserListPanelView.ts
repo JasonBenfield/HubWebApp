@@ -1,17 +1,19 @@
-﻿import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
+﻿import { CssLengthUnit } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
+import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { GridView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { HubTheme } from "../../HubTheme";
 import { UserListCardView } from "./UserListCardView";
 
-export class UserListPanelView extends Block {
+export class UserListPanelView extends GridView {
     readonly userListCard: UserListCardView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.setViewName(UserListPanelView.name);
         this.height100();
-        this.setName(UserListPanelView.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.userListCard = flexFill.container.addContent(new UserListCardView());
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1));
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.userListCard = mainContent.addView(UserListCardView);
     }
 }

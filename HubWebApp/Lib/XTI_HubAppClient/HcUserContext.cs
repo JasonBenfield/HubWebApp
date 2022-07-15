@@ -5,10 +5,12 @@ namespace XTI_HubAppClient
     public sealed class HcUserContext : ISourceUserContext
     {
         private readonly HubAppClient hubClient;
+        private readonly ICurrentUserName currentUserName;
 
-        public HcUserContext(HubAppClient hubClient)
+        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName)
         {
             this.hubClient = hubClient;
+            this.currentUserName = currentUserName; 
         }
 
         public Task<UserContextModel> User(AppUserName userName) =>
@@ -16,8 +18,8 @@ namespace XTI_HubAppClient
 
         public async Task<UserContextModel> User()
         {
-            var userName = await hubClient.UserName();
-            var user = await User(new AppUserName(userName));
+            var userName = await currentUserName.Value();
+            var user = await User(userName);
             return user;
         }
     }

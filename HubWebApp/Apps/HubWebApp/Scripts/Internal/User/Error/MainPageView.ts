@@ -1,27 +1,32 @@
-﻿import { Alert } from '@jasonbenfield/sharedwebapp/Alert';
-import { ContextualClass } from '@jasonbenfield/sharedwebapp/ContextualClass';
-import { Block } from '@jasonbenfield/sharedwebapp/Html/Block';
-import { FlexColumn } from '@jasonbenfield/sharedwebapp/Html/FlexColumn';
-import { FlexColumnFill } from '@jasonbenfield/sharedwebapp/Html/FlexColumnFill';
-import { TextBlockView } from '@jasonbenfield/sharedwebapp/Html/TextBlockView';
-import { TextHeading1View } from '@jasonbenfield/sharedwebapp/Html/TextHeading1View';
+﻿import { ContextualClass } from '@jasonbenfield/sharedwebapp/ContextualClass';
+import { FlexCss } from '@jasonbenfield/sharedwebapp/FlexCss';
 import { MarginCss } from '@jasonbenfield/sharedwebapp/MarginCss';
-import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+import { AlertView } from '@jasonbenfield/sharedwebapp/Views/AlertView';
+import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+import { BasicTextComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicTextComponentView';
+import { BlockView } from '@jasonbenfield/sharedwebapp/Views/BlockView';
+import { TextBlockView } from '@jasonbenfield/sharedwebapp/Views/TextBlockView';
+import { TextHeading1View } from '@jasonbenfield/sharedwebapp/Views/TextHeadings';
 
-export class MainPageView {
-    readonly caption: ITextComponentView;
-    readonly message: ITextComponentView;
+export class MainPageView extends BasicPageView {
+    readonly caption: BasicTextComponentView;
+    readonly message: BasicTextComponentView;
 
-    constructor(private readonly page: PageFrameView) {
-        let container = this.page.addContent(new Block());
+    constructor() {
+        super();
+        const container = this.addView(BlockView);
         container.height100();
-        let flexColumn = container.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.caption = flexFill.addContent(new TextHeading1View())
+        let flexColumn = container.addView(BlockView);
+        flexColumn.setFlexCss(new FlexCss().column())
+        const flexFill = flexColumn.addView(BlockView)
+            .configure(b => b.positionAbsoluteFill())
+            .addView(BlockView)
+            .configure(b => b.addCssName('container'));
+        this.caption = flexFill.addView(TextHeading1View)
             .configure(h1 => h1.setMargin(MarginCss.top(3).xs({ bottom: 3 })));
-        let alert = flexFill.addContent(new Alert())
+        const alert = flexFill.addView(AlertView)
             .configure(a => a.setMargin(MarginCss.bottom(3)));
         alert.setContext(ContextualClass.danger);
-        this.message = alert.addContent(new TextBlockView());
+        this.message = alert.addView(TextBlockView);
     }
 }

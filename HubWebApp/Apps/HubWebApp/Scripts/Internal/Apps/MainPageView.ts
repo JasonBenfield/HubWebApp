@@ -1,12 +1,11 @@
-﻿import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
-import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+﻿import { BasicPageView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicPageView';
 import { AppListPanelView } from './AppListPanelView';
 
-export class MainPageView {
+export class MainPageView extends BasicPageView {
     readonly appListPanel: AppListPanelView;
 
-    constructor(private readonly page: PageFrameView) {
-        this.appListPanel = this.page.content.addContent(new AppListPanelView());
-        this.page.content.setPadding(PaddingCss.top(3));
+    constructor() {
+        super();
+        this.appListPanel = this.addView(AppListPanelView);
     }
 }

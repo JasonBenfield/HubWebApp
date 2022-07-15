@@ -1,7 +1,6 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
 import { RoleAccessListItemView } from "./RoleAccessListItemView";
 
 export class ResourceAccessCardView extends CardView {
@@ -9,10 +8,11 @@ export class ResourceAccessCardView extends CardView {
     readonly alert: CardAlertView;
     readonly accessItems: ListGroupView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.accessItems = this.addUnorderedListGroup(() => new RoleAccessListItemView());
+        this.accessItems = this.addView(ListGroupView);
+        this.accessItems.setItemViewType(RoleAccessListItemView);
     }
 }

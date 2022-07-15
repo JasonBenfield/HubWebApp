@@ -94,10 +94,10 @@ internal sealed class RegisterUserAuthenticatorTest
             UserID = user.ID,
             ExternalUserKey = "external.id"
         };
-        var modKey = getFakeAuthModifier(tester).ModKey();
-        await tester.Execute(request, modKey);
+        var modifier = await getFakeAuthModifier(tester);
+        await tester.Execute(request, modifier);
         request.ExternalUserKey = "external.id2";
-        await tester.Execute(request, modKey);
+        await tester.Execute(request, modifier);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve().ToArrayAsync();
         Assert.That
@@ -123,18 +123,24 @@ internal sealed class RegisterUserAuthenticatorTest
         await authApp.RegisterAsAuthenticator();
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
-        var fakeHubApp = tester.FakeHubApp();
-        fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
-            .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
+        var authAppModel = authApp.ToAppModel();
+        var modifier = await modCategory.AddOrUpdateModifier
+        (
+            authAppModel.PublicKey,
+            authAppModel.ID, 
+            authAppModel.AppKey.Format()
+        );
         return tester;
     }
 
-    private FakeModifier getFakeAuthModifier(HubActionTester<RegisterUserAuthenticatorRequest, EmptyActionResult> tester)
+    private async Task<Modifier> getFakeAuthModifier(IHubActionTester tester)
     {
-        return tester.FakeHubApp()
-            .ModCategory(HubInfo.ModCategories.Apps)
-            .ModifierByTargetID("Auth");
+        var hubApp = await tester.HubApp();
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var authApp = await factory.Apps.App(authAppKey);
+        var modifier = await appsModCategory.ModifierByModKey(authApp.ToAppModel().PublicKey);
+        return modifier;
     }
 
     private Task<App> getAuthApp(IHubActionTester tester)
@@ -146,7 +152,7 @@ internal sealed class RegisterUserAuthenticatorTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,

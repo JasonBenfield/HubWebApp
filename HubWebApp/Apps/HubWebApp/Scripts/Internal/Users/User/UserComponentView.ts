@@ -1,43 +1,35 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { TextValueFormGroupView } from "@jasonbenfield/sharedwebapp/Html/TextValueFormGroupView";
-import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
+﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { CardAlertView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
+import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
 import { HubTheme } from "../../HubTheme";
 
 export class UserComponentView extends CardView {
     readonly alert: CardAlertView;
-    readonly userName: TextValueFormGroupView;
-    readonly fullName: TextValueFormGroupView;
-    readonly email: TextValueFormGroupView;
-    readonly editButton: ButtonCommandItem;
+    readonly userName: FormGroupTextView;
+    readonly fullName: FormGroupTextView;
+    readonly email: FormGroupTextView;
+    readonly editButton: ButtonCommandView;
 
-    constructor() {
-        super();
-        this.setName(UserComponentView.name);
-        let headerRow = this.addCardHeader()
-            .addContent(new Row());
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.setViewName(UserComponentView.name);
+        const headerRow = this.addCardHeader().addView(RowView);
         headerRow.addColumn()
-            .addContent(new TextSpanView())
+            .addView(TextSpanView)
             .configure(ts => ts.setText('User'));
         this.editButton = headerRow.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(HubTheme.instance.cardHeader.editButton());
+            .addView(ButtonCommandView)
+            .configure(b => HubTheme.instance.cardHeader.editButton(b));
         this.alert = this.addCardAlert();
-        let body = this.addCardBody();
-        this.userName = this.addBodyRow(body);
-        this.fullName = this.addBodyRow(body);
-        this.email = this.addBodyRow(body);
-    }
-
-    private addBodyRow(body: Block) {
-        let formGroup = body.addContent(new TextValueFormGroupView());
-        formGroup.captionColumn.setColumnCss(ColumnCss.xs(4));
-        formGroup.valueColumn.setTextCss(new TextCss().truncate());
-        return formGroup;
+        const body = this.addCardBody()
+            .addView(FormGroupGridView);
+        this.userName = body.addFormGroup(FormGroupTextView);
+        this.fullName = body.addFormGroup(FormGroupTextView);
+        this.email = body.addFormGroup(FormGroupTextView);
     }
 }

@@ -21,7 +21,8 @@ public sealed class GetAppsAction : AppAction<EmptyRequest, AppWithModKeyModel[]
         var allowedApps = new List<AppWithModKeyModel>();
         foreach (var app in apps.Where(a => !a.Key().Equals(AppKey.Unknown)))
         {
-            var modifier = await appsModCategory.AddOrUpdateModifier(app.ID, app.Key().Name.DisplayText);
+            var appModel = app.ToAppModel();
+            var modifier = await appsModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.AppKey.Format());
             var userRoles = await user.Modifier(modifier).AssignedRoles();
             if (userRoles.Any() && !userRoles.Any(ur => ur.Name().Equals(AppRoleName.DenyAccess)))
             {

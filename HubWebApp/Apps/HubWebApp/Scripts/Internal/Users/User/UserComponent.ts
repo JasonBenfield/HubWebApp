@@ -1,9 +1,9 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Html/TextValueFormGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { UserComponentView } from "./UserComponentView";
 
 export class UserComponent {
@@ -23,13 +23,10 @@ export class UserComponent {
         this.alert = new CardAlert(this.view.alert).alert;
         this.userName = new TextValueFormGroup(view.userName);
         this.userName.setCaption('User Name');
-        this.userName.syncValueTitleWithText();
         this.fullName = new TextValueFormGroup(view.fullName);
         this.fullName.setCaption('Name');
-        this.fullName.syncValueTitleWithText();
         this.email = new TextValueFormGroup(view.email);
         this.email.setCaption('Email');
-        this.email.syncValueTitleWithText();
         this.editCommand.add(this.view.editButton);
     }
 
@@ -42,9 +39,9 @@ export class UserComponent {
     }
 
     async refresh() {
-        let user = await this.getUser(this.userID);
-        this.userName.setValue(user.UserName);
-        this.fullName.setValue(user.Name);
+        const user = await this.getUser(this.userID);
+        this.userName.setValue(user.UserName.DisplayText);
+        this.fullName.setValue(user.Name.DisplayText);
         this.email.setValue(user.Email);
     }
 

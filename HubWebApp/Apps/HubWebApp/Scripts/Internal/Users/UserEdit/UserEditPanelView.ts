@@ -1,45 +1,39 @@
-﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
-import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
-import { EditUserFormView } from "../../../Hub/Api/EditUserFormView";
+﻿import { CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { CssLengthUnit } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
+import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { ButtonCommandView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Commands";
+import { GridView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { ToolbarView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
+import { EditUserFormView } from "../../../Lib/Api/EditUserFormView";
 import { HubTheme } from "../../HubTheme";
 
-export class UserEditPanelView extends Block {
+export class UserEditPanelView extends GridView {
     readonly alert: MessageAlertView;
     readonly editUserForm: EditUserFormView;
     readonly titleHeader: CardTitleHeaderView;
-    readonly cancelButton: ButtonCommandItem;
-    readonly saveButton: ButtonCommandItem;
+    readonly cancelButton: ButtonCommandView;
+    readonly saveButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        this.setName(UserEditPanelView.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.alert = flexFill.container.addContent(new MessageAlertView());
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.cancelButton = toolbar.columnEnd.addContent(
-            HubTheme.instance.commandToolbar.cancelButton()
-        );
-        this.saveButton = toolbar.columnEnd.addContent(
-            HubTheme.instance.commandToolbar.saveButton()
-        );
-        let editCard = flexFill.addContent(new CardView());
+        this.setViewName(UserEditPanelView.name);
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.alert = mainContent.addView(MessageAlertView);
+        const toolbar = this.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.cancelButton = toolbar.columnEnd.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.cancelButton(this.cancelButton);
+        this.saveButton = toolbar.columnEnd.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.saveButton(this.saveButton);
+        const editCard = mainContent.addView(CardView);
         this.titleHeader = editCard.addCardTitleHeader();
         let cardBody = editCard.addCardBody();
-        this.editUserForm = cardBody.addContent(new EditUserFormView());
+        this.editUserForm = cardBody.addView(EditUserFormView);
+        this.editUserForm.addContent();
         this.editUserForm.addOffscreenSubmit();
-        this.editUserForm.executeLayout();
-        this.editUserForm.forEachFormGroup(fg => {
-            fg.captionColumn.setColumnCss(ColumnCss.xs(4));
-            fg.captionColumn.setTextCss(new TextCss().end());
-        });
     }
 }

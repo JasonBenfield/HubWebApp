@@ -1,18 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Fakes;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
+using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApi.PermanentLog;
-using XTI_HubDB.Extensions;
 using XTI_WebApp.Abstractions;
-using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Fakes;
@@ -22,6 +18,10 @@ public static class FakeExtensions
     public static void AddFakesForHubWebApp(this IServiceCollection services)
     {
         services.AddFakesForXtiWebApp();
+        services.AddScoped<ISourceAppContext, EfAppContext>();
+        services.AddScoped<IAppContext>(sp => sp.GetRequiredService<ISourceAppContext>());
+        services.AddScoped<ISourceUserContext, EfUserContext>();
+        services.AddScoped<IUserContext>(sp => sp.GetRequiredService<ISourceUserContext>());
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddHubDbContextForInMemory();
         services.AddScoped<HubFactory>();

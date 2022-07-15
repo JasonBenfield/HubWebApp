@@ -1,25 +1,25 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { UserListCard } from "./UserListCard";
 import { UserListPanelView } from "./UserListPanelView";
 
-interface Results {
+interface IResult {
     userSelected?: { user: IAppUserModel};
 }
 
-export class UserListPanelResult {
+class Result {
     static userSelected(user: IAppUserModel) {
-        return new UserListPanelResult({ userSelected: { user: user} });
+        return new Result({ userSelected: { user: user} });
     }
 
-    private constructor(private readonly results: Results) { }
+    private constructor(private readonly results: IResult) { }
 
     get userSelected() { return this.results.userSelected; }
 }
 
 export class UserListPanel implements IPanel {
     private readonly userListCard: UserListCard;
-    private readonly awaitable = new Awaitable<UserListPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -31,7 +31,7 @@ export class UserListPanel implements IPanel {
 
     private onUserSelected(user: IAppUserModel) {
         this.awaitable.resolve(
-            UserListPanelResult.userSelected(user)
+            Result.userSelected(user)
         );
     }
 

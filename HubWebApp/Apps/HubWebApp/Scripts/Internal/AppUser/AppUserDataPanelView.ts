@@ -1,16 +1,18 @@
-﻿import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
+﻿import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { CssLengthUnit } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
+import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { GridView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { HubTheme } from "../HubTheme";
 
-export class AppUserDataPanelView extends Block {
+export class AppUserDataPanelView extends GridView {
     readonly alert: MessageAlertView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.alert = flexFill.addContent(new MessageAlertView());
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1));
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.alert = mainContent.addView(MessageAlertView);
     }
 }

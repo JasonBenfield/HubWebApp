@@ -1,6 +1,6 @@
 ﻿namespace XTI_Hub;
 
-public interface IGeneratedStorageKey
+public interface IGeneratedKey
 {
     string Value();
 }

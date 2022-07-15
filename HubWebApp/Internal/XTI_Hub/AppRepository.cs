@@ -38,7 +38,7 @@ public sealed class AppRepository
     public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded)
     {
         App app;
-        var title = appKey.Name.DisplayText;
+        var title = appKey.Format();
         var record = await GetAppByKey(appKey);
         if (record == null)
         {

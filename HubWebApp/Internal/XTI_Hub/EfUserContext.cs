@@ -3,7 +3,7 @@ using XTI_App.Api;
 
 namespace XTI_Hub;
 
-public sealed class EfUserContext : IUserContext
+public sealed class EfUserContext : ISourceUserContext
 {
     private readonly HubFactory hubFactory;
     private readonly AppKey appKey;
@@ -32,11 +32,13 @@ public sealed class EfUserContext : IUserContext
         foreach (var userModifier in userModifiers)
         {
             var roles = await userModifier.AssignedRoles();
+            var modifierModel = userModifier.ToModifierModel();
             roleModels.Add
             (
                 new UserContextRoleModel
                 (
-                    userModifier.ToModifierModel().ModKey,
+                    modifierModel.CategoryID,
+                    modifierModel.ModKey,
                     roles.Select(r => r.ToModel()).ToArray()
                 )
             );

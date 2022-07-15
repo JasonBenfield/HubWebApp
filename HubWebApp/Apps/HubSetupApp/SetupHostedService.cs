@@ -62,8 +62,7 @@ public sealed class SetupHostedService : IHostedService
         var password = Guid.NewGuid().ToString();
         var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
         (
-            HubInfo.AppKey,
-            Environment.MachineName,
+            new SystemUserName(HubInfo.AppKey, Environment.MachineName),
             hashedPasswordFactory.Create(password),
             clock.Now()
         );

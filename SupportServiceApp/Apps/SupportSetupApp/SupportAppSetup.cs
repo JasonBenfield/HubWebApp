@@ -15,8 +15,8 @@ internal sealed class SupportAppSetup : IAppSetup
 
     public async Task Run(AppVersionKey versionKey)
     {
-        var userName = AppUserName.SystemUser(SupportInfo.AppKey, Environment.MachineName);
-        var systemUser = await hubClient.UserInquiry.GetUserByUserName(userName.Value);
+        var systemUserName = new SystemUserName(SupportInfo.AppKey, Environment.MachineName);
+        var systemUser = await hubClient.UserInquiry.GetUserByUserName(systemUserName.Value.Value);
         var app = await hubClient.Apps.GetAppByAppKey
         (
             new GetAppByAppKeyRequest { AppKey = AppKey.WebApp("Hub") }

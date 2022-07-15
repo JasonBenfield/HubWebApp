@@ -84,7 +84,13 @@ public sealed class AppRegistration
     {
         var hubApp = await appFactory.Apps.App(HubInfo.AppKey);
         var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var appModifier = await appModCategory.AddOrUpdateModifier(app.ID, $"{appKey.Name.DisplayText} {appKey.Type.DisplayText}");
+        var appModel = app.ToAppModel();
+        var appModifier = await appModCategory.AddOrUpdateModifier
+        (
+            appModel.PublicKey,
+            appModel.ID, 
+            appKey.Format()
+        );
         var systemUsers = await appFactory.SystemUsers.SystemUsers(appKey);
         var hubAdminRole = await hubApp.Role(AppRoleName.Admin);
         foreach (var systemUser in systemUsers)

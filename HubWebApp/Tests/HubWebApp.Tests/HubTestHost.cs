@@ -53,20 +53,9 @@ internal sealed class HubTestHost
         await defaultFakeSetup.Run(AppVersionKey.Current);
         var factory = sp.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await appsModCategory.ModifierByTargetID(hubApp.ID);
-
-        var appContext = sp.GetRequiredService<FakeAppContext>();
-        var fakeApp = appContext.App();
-        var fakeHubApp = appContext.App(HubInfo.AppKey);
-        var fakeModCategory = fakeHubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var fakeModifier = fakeModCategory.ModifierByTargetID(fakeApp.ID.ToString());
-        fakeModifier.SetModKey(modifier);
-
-        var userContext = sp.GetRequiredService<FakeUserContext>();
         var adminUser = await addAdminUser(sp);
-        var fakeAdminUser = userContext.AddUser(adminUser);
-        fakeAdminUser.AddRole(HubInfo.Roles.Admin);
+        var currentUserName = sp.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(adminUser.ToModel().UserName);
         return sp;
     }
 

@@ -1,19 +1,20 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
+import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
 
 export class UserListItemView extends ButtonListGroupItemView {
     readonly userName: TextSpanView;
     readonly fullName: TextSpanView;
 
-    constructor() {
-        super();
-        let row = this.addContent(new Row());
+    constructor(container: BasicComponentView) {
+        super(container);
+        let row = this.addView(RowView);
         this.userName = row.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs(4)))
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.fullName = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
     }
 }

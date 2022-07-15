@@ -1,19 +1,19 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonListGroupView, ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
 import { UserListItemView } from "./UserListItemView";
 
 export class UserListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly users: ListGroupView;
+    readonly users: ButtonListGroupView;
 
-    constructor() {
-        super();
-        this.setName(UserListCardView.name);
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.setViewName(UserListCardView.name);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.users = this.addBlockListGroup(() => new UserListItemView());
+        this.users = this.addView(ButtonListGroupView);
+        this.users.setItemViewType(UserListItemView);
     }
 }

@@ -45,6 +45,7 @@ public sealed class SystemUserRepository
             );
         }
         var app = await factory.Apps.App(systemUserName.AppKey);
+        var appModel = app.ToAppModel();
         var selfAdminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
         await systemUser.AssignRole(selfAdminRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
@@ -55,7 +56,7 @@ public sealed class SystemUserRepository
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
             var appModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.Apps);
-            var appModifier = await appModCategory.AddOrUpdateModifier(app.ID, app.Title);
+            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, app.Title);
             var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);
             var addStoredObject = await hubApp.AddRoleIfNotFound(HubInfo.Roles.AddStoredObject);

@@ -1,29 +1,26 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppListCard } from "./AppListCard";
 import { AppListPanelView } from "./AppListPanelView";
 
-interface Results {
+interface IResult {
     appSelected?: { app: IAppModel; };
 }
 
-export class AppListPanelResult {
+class Result {
     static appSelected(app: IAppModel) {
-        return new AppListPanelResult({ appSelected: { app: app } });
+        return new Result({ appSelected: { app: app } });
     }
 
-    private constructor(private readonly results: Results) {
+    private constructor(private readonly results: IResult) {
     }
 
     get appSelected() { return this.results.appSelected; }
 }
 
 export class AppListPanel {
-    public static readonly ResultKeys = {
-    }
-
     private readonly appListCard: AppListCard;
-    private readonly awaitable = new Awaitable<AppListPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -39,7 +36,7 @@ export class AppListPanel {
 
     private onAppSelected(app: IAppModel) {
         this.awaitable.resolve(
-            AppListPanelResult.appSelected(app)
+            Result.appSelected(app)
         );
     }
 

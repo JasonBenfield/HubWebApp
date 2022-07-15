@@ -1,54 +1,45 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { ListBlockViewModel } from "@jasonbenfield/sharedwebapp/Html/ListBlockViewModel";
-import { ListItem } from "@jasonbenfield/sharedwebapp/Html/ListItem";
-import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
-import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonListGroupView, ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { TextBlockView } from "@jasonbenfield/sharedwebapp/Views/TextBlockView";
+import { CssLengthUnit } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
+import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { ButtonCommandView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Commands";
+import { GridView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { ToolbarView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 
-export class SelectModCategoryPanelView extends Block {
-    private readonly defaultModListItem: ButtonListGroupItemView;
+export class SelectModCategoryPanelView extends GridView {
+    readonly defaultModList: ListGroupView;
     readonly defaultModClicked: IEventHandler<any>;
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly modCategories: ListGroupView;
-    readonly backButton: ButtonCommandItem;
+    readonly modCategories: ButtonListGroupView;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        this.setName(SelectModCategoryPanelView.name);
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        let defaultModList = flexFill.addContent(
-            new ListGroupView(() => new ListItem(), new ListBlockViewModel())
-        );
-        defaultModList.setMargin(MarginCss.bottom(3));
-        this.defaultModClicked = defaultModList.itemClicked;
-        this.defaultModListItem = defaultModList.addButtonListGroupItem();
-        this.defaultModListItem
-            .addContent(new TextBlockView())
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.setViewName(SelectModCategoryPanelView.name);
+        this.defaultModList = mainContent.addView(ListGroupView);
+        this.defaultModList.setMargin(MarginCss.bottom(3));
+        const defaultModListItem = this.defaultModList.addListGroupItem();
+        defaultModListItem
+            .addView(TextBlockView)
             .configure(tb => tb.setText('Default Modifier'));
-
-        let card = flexFill.addContent(new CardView());
+        const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.modCategories = card.addBlockListGroup(
-            () => new ModCategoryButtonListItemView()
-        );
+        this.modCategories = card.addView(ButtonListGroupView);
+        this.modCategories.setItemViewType(ModCategoryButtonListItemView);
         card.setMargin(MarginCss.bottom(3));
-
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(
-            HubTheme.instance.commandToolbar.backButton()
-        );
+        const toolbar = this.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
     }
 }

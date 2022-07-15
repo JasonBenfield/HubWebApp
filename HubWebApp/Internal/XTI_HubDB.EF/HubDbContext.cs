@@ -13,6 +13,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         : base(options)
     {
         Authenticators = new EfDataRepository<AuthenticatorEntity>(this);
+        UserGroups = new EfDataRepository<UserGroupEntity>(this);
         Users = new EfDataRepository<AppUserEntity>(this);
         UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
@@ -38,6 +39,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserAuthenticatorEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new UserGroupEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AuthenticatorEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
@@ -61,6 +63,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     }
 
     public DataRepository<AuthenticatorEntity> Authenticators { get; }
+    public DataRepository<UserGroupEntity> UserGroups { get; }
     public DataRepository<AppUserEntity> Users { get; }
     public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }

@@ -16,15 +16,15 @@ public sealed class EfStoredObjectDB : IStoredObjectDB
 
     public Task<string> Store(StorageName storageName, GeneratedStorageKeyType generatedStorageKeyType, string data, TimeSpan expiresAfter)
     {
-        IGeneratedStorageKey generatedStorageKey;
+        IGeneratedKey generatedStorageKey;
         if (generatedStorageKeyType.Equals(GeneratedStorageKeyType.Values.Guid))
         {
-            generatedStorageKey = new GuidGeneratedStorageKey();
+            generatedStorageKey = new GuidGeneratedKey();
         }
         else
         {
             var numberOfDigits = generatedStorageKeyType.Value;
-            generatedStorageKey = new RandomGeneratedStorageKey(numberOfDigits);
+            generatedStorageKey = new RandomGeneratedKey(numberOfDigits);
         }
         return hubFactory.StoredObjects.AddOrUpdate
         (

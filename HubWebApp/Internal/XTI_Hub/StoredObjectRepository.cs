@@ -13,7 +13,7 @@ public sealed class StoredObjectRepository
         this.factory = factory;
     }
 
-    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedStorageKey generatedStorageKey, string data, DateTimeOffset timeExpires)
+    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires)
     {
         var entity = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync(so => so.StorageName == storageName.Value && so.Data == data);

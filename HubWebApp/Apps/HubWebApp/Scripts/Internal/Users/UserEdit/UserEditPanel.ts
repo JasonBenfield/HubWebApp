@@ -1,24 +1,23 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { EditUserForm } from '../../../Hub/Api/EditUserForm';
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { EditUserForm } from '../../../Lib/Api/EditUserForm';
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { UserEditPanelView } from "./UserEditPanelView";
 
-interface Results {
+interface IResult {
     canceled?: {};
     saved?: {};
 }
 
-export class UserEditPanelResult {
-    static get canceled() { return new UserEditPanelResult({ canceled: {} }); }
+class Result {
+    static canceled() { return new Result({ canceled: {} }); }
 
-    static get saved() { return new UserEditPanelResult({ saved: {} }); }
+    static saved() { return new Result({ saved: {} }); }
 
-    private constructor(private readonly results: Results) {
+    private constructor(private readonly results: IResult) {
     }
 
     get canceled() { return this.results.canceled; }
@@ -30,7 +29,7 @@ export class UserEditPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly editUserForm: EditUserForm;
     private userID: number;
-    private readonly awaitable = new Awaitable<UserEditPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
     private readonly cancelCommand = new Command(this.cancel.bind(this));
     private readonly saveCommand = new AsyncCommand(this.save.bind(this));
 
@@ -41,7 +40,7 @@ export class UserEditPanel implements IPanel {
         this.alert = new MessageAlert(this.view.alert);
         this.cancelCommand.add(this.view.cancelButton);
         this.saveCommand.add(this.view.saveButton);
-        new TextBlock('Edit User', this.view.titleHeader);
+        new TextComponent(this.view.titleHeader).setText('Edit User');
         this.editUserForm = new EditUserForm(this.view.editUserForm);
     }
 
@@ -50,7 +49,7 @@ export class UserEditPanel implements IPanel {
     }
 
     async refresh() {
-        let userForm = await this.getUserForEdit(this.userID);
+        const userForm = await this.getUserForEdit(this.userID);
         this.editUserForm.import(userForm);
         await new DelayedAction(
             () => this.editUserForm.PersonName.setFocus(),
@@ -74,13 +73,13 @@ export class UserEditPanel implements IPanel {
     }
 
     private cancel() {
-        this.awaitable.resolve(UserEditPanelResult.canceled);
+        this.awaitable.resolve(Result.canceled());
     }
 
     private async save() {
-        let result = await this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction);
+        const result = await this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction);
         if (result.succeeded()) {
-            this.awaitable.resolve(UserEditPanelResult.saved);
+            this.awaitable.resolve(Result.saved());
         }
     }
 

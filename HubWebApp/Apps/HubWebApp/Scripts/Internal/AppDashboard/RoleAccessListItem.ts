@@ -1,8 +1,10 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
 import { RoleAccessListItemView } from "./RoleAccessListItemView";
 
-export class RoleAccessListItem {
+export class RoleAccessListItem extends BasicComponent {
     constructor(accessItem: IRoleAccessItem, view: RoleAccessListItemView) {
-        new TextBlock(accessItem.role.Name, view.roleName);
+        super(view);
+        new TextComponent(view.roleName).setText(accessItem.role.Name);
     }
 }

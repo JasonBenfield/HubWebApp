@@ -1,28 +1,28 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { AppListCard } from "../../Apps/AppListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
 
-interface Results {
+interface IResults {
     backRequested?: {};
     appSelected?: { app: IAppModel; };
     editRequested?: { userID: number;};
 }
 
-export class UserPanelResult {
-    static get backRequested() { return new UserPanelResult({ backRequested: {} }); }
+class Result {
+    static backRequested() { return new Result({ backRequested: {} }); }
 
     static appSelected(app: IAppModel) {
-        return new UserPanelResult({ appSelected: { app: app } });
+        return new Result({ appSelected: { app: app } });
     }
 
     static editRequested(userID: number) {
-        return new UserPanelResult({ editRequested: { userID: userID } });
+        return new Result({ editRequested: { userID: userID } });
     }
 
-    private constructor(private readonly results: Results) { }
+    private constructor(private readonly results: IResults) { }
 
     get backRequested() { return this.results.backRequested; }
 
@@ -35,7 +35,7 @@ export class UserPanel implements IPanel {
     private readonly userComponent: UserComponent;
     private readonly appListCard: AppListCard;
     private userID: number;
-    private readonly awaitable = new Awaitable<UserPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
     private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
@@ -55,13 +55,13 @@ export class UserPanel implements IPanel {
 
     private onAppSelected(app: IAppModel) {
         this.awaitable.resolve(
-            UserPanelResult.appSelected(app)
+            Result.appSelected(app)
         );
     }
 
     private onEditRequested(userID: number) {
         this.awaitable.resolve(
-            UserPanelResult.editRequested(userID)
+            Result.editRequested(userID)
         );
     }
 
@@ -83,9 +83,7 @@ export class UserPanel implements IPanel {
     }
 
     private back() {
-        this.awaitable.resolve(
-            UserPanelResult.backRequested
-        );
+        this.awaitable.resolve(Result.backRequested());
     }
 
     activate() { this.view.show(); }

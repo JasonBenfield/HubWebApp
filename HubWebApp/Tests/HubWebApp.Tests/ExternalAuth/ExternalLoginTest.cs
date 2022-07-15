@@ -27,7 +27,7 @@ internal sealed class ExternalLoginTest
             AuthKey = authKey,
             ReturnKey = returnKey
         };
-        await tester.Execute(request, getFakeAuthModifier(tester).ModKey());
+        await tester.Execute(request, authApp.ToAppModel().PublicKey);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
         (
@@ -56,18 +56,13 @@ internal sealed class ExternalLoginTest
         await authApp.RegisterAsAuthenticator();
         var hubApp = await tester.HubApp();
         var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
-        var fakeHubApp = tester.FakeHubApp();
-        fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
-            .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
+        var modifier = await modCategory.AddOrUpdateModifier
+        (
+            authApp.ToAppModel().PublicKey,
+            authApp.ID, 
+            authApp.Key().Name.DisplayText
+        );
         return tester;
-    }
-
-    private FakeModifier getFakeAuthModifier(HubActionTester<LoginModel, WebRedirectResult> tester)
-    {
-        return tester.FakeHubApp()
-            .ModCategory(HubInfo.ModCategories.Apps)
-            .ModifierByTargetID("Auth");
     }
 
     private Task<App> getAuthApp(IHubActionTester tester)
@@ -79,7 +74,7 @@ internal sealed class ExternalLoginTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,
@@ -101,13 +96,14 @@ internal sealed class ExternalLoginTest
         });
     }
 
-    private Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
+    private async Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
     {
         var loginReturnKeyTester = tester.Create(hubApi => hubApi.Auth.LoginReturnKey);
-        loginReturnKeyTester.LoginAsAdmin();
-        return loginReturnKeyTester.Execute(new LoginReturnModel
+        await loginReturnKeyTester.LoginAsAdmin();
+        var result = await loginReturnKeyTester.Execute(new LoginReturnModel
         {
             ReturnUrl = returnUrl
         });
+        return result;
     }
 }

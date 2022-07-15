@@ -1,36 +1,36 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { FilteredArray } from "@jasonbenfield/sharedwebapp/Enumerable";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 import { ModCategoryListItem } from "./ModCategoryListItem";
 import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
 
-interface Results {
+interface IResult {
     back?: {};
     defaultModSelected?: {};
     modCategorySelected?: { modCategory: IModifierCategoryModel; };
 }
 
-export class SelectModCategoryPanelResult {
-    static back() { return new SelectModCategoryPanelResult({ back: {} }); }
+class Result {
+    static back() { return new Result({ back: {} }); }
 
     static defaultModSelected() {
-        return new SelectModCategoryPanelResult({ defaultModSelected: {} });
+        return new Result({ defaultModSelected: {} });
     }
 
     static modCategorySelected(modCategory: IModifierCategoryModel) {
-        return new SelectModCategoryPanelResult({
+        return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
     }
 
-    private constructor(private readonly results: Results) { }
+    private constructor(private readonly results: IResult) { }
 
     get back() { return this.results.back; }
 
@@ -44,7 +44,7 @@ export class SelectModCategoryPanelResult {
 }
 
 export class SelectModCategoryPanel implements IPanel {
-    private readonly awaitable = new Awaitable<SelectModCategoryPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly modCategories: ListGroup;
 
@@ -52,25 +52,25 @@ export class SelectModCategoryPanel implements IPanel {
         private readonly hubApi: HubAppApi,
         private readonly view: SelectModCategoryPanelView
     ) {
-        new TextBlock('Modifier Categories', this.view.titleHeader);
+        new TextComponent(this.view.titleHeader).setText('Modifier Categories');
         this.view.defaultModClicked.register(this.onDefaultModifierClicked.bind(this));
         this.alert = new CardAlert(this.view.alert).alert;
         this.modCategories = new ListGroup(this.view.modCategories);
-        this.modCategories.itemClicked.register(this.onModCategoryClicked.bind(this));
+        this.modCategories.registerItemClicked(this.onModCategoryClicked.bind(this));
         new Command(this.back.bind(this)).add(this.view.backButton);
     }
 
     private onDefaultModifierClicked() {
-        this.awaitable.resolve(SelectModCategoryPanelResult.defaultModSelected());
+        this.awaitable.resolve(Result.defaultModSelected());
     }
 
     private back() {
-        this.awaitable.resolve(SelectModCategoryPanelResult.back());
+        this.awaitable.resolve(Result.back());
     }
 
     private onModCategoryClicked(item: ModCategoryListItem) {
         this.awaitable.resolve(
-            SelectModCategoryPanelResult.modCategorySelected(item.modCategory)
+            Result.modCategorySelected(item.modCategory)
         );
     }
 
@@ -89,7 +89,7 @@ export class SelectModCategoryPanel implements IPanel {
             mc => mc.Name.toLowerCase() !== 'default'
         ).value();
         if (modCategories.length === 0) {
-            this.awaitable.resolve(SelectModCategoryPanelResult.defaultModSelected());
+            this.awaitable.resolve(Result.defaultModSelected());
         }
         else {
             this.modCategories.setItems(
