@@ -6,6 +6,7 @@ import { MainPageView } from './MainPageView';
 import { UserPanel } from './User/UserPanel';
 import { UserEditPanel } from './UserEdit/UserEditPanel';
 import { UserListPanel } from './UserList/UserListPanel';
+import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 
 class MainPage extends BasicPage {
     protected readonly view: MainPageView;
@@ -47,10 +48,11 @@ class MainPage extends BasicPage {
             this.activateUserEditPanel(userID);
         }
         else if (result.appSelected) {
-            this.hubApi.UserInquiry.RedirectToAppUser.open({
-                UserID: userID,
-                AppID: result.appSelected.app.ID
-            });
+            const url = this.hubApi.AppUser.Index.getModifierUrl(
+                result.appSelected.app.PublicKey.DisplayText,
+                userID
+            );
+            new WebPage(url).open();
         }
     }
 

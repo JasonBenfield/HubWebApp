@@ -2,7 +2,7 @@
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
-import { ButtonCommandView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Commands";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 
 export class AuthenticatorTheme {
     public static readonly instance = new AuthenticatorTheme();

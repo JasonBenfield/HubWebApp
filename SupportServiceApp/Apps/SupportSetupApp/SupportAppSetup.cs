@@ -17,18 +17,22 @@ internal sealed class SupportAppSetup : IAppSetup
     {
         var systemUserName = new SystemUserName(SupportInfo.AppKey, Environment.MachineName);
         var systemUser = await hubClient.UserInquiry.GetUserByUserName(systemUserName.Value.Value);
-        var app = await hubClient.Apps.GetAppByAppKey
+        await hubClient.Install.SetUserAccess
         (
-            new GetAppByAppKeyRequest { AppKey = AppKey.WebApp("Hub") }
-        );
-        var permLogRole = await hubClient.App.GetRole(app.ModKey, "PermanentLog");
-        await hubClient.AppUserMaintenance.AssignRole
-        (
-            app.ModKey, 
-            new UserRoleRequest
+            new SetUserAccessRequest
             {
                 UserID = systemUser.ID,
-                RoleID = permLogRole.ID
+                RoleAssignments = new[]
+                {
+                    new SetUserAccessRoleRequest
+                    {
+                        AppKey = AppKey.WebApp("Hub"),
+                        RoleNames = new []
+                        {
+                            new AppRoleName(hubClient.RoleNames.PermanentLog)
+                        }
+                    }
+                }
             }
         );
     }

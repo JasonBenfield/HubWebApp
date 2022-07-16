@@ -1,13 +1,12 @@
-﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
+﻿import { VerifyLoginFormView } from "@hub/Api/VerifyLoginFormView";
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { TextCss } from '@jasonbenfield/sharedwebapp/TextCss';
-import { VerifyLoginFormView } from "@hub/Api/VerifyLoginFormView";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 
 export class LoginComponentView extends BlockView {
     readonly verifyLoginForm: VerifyLoginFormView;

@@ -26,10 +26,4 @@ public sealed partial class AppUserController : Controller
     {
         return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model, ct);
     }
-
-    [HttpPost]
-    public Task<ResultContainer<UserModifierCategoryModel[]>> GetUserModCategories([FromBody] int model, CancellationToken ct)
-    {
-        return api.Group("AppUser").Action<int, UserModifierCategoryModel[]>("GetUserModCategories").Execute(model, ct);
-    }
 }

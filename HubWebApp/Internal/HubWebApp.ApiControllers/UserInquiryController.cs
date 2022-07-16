@@ -20,16 +20,4 @@ public sealed partial class UserInquiryController : Controller
     {
         return api.Group("UserInquiry").Action<string, AppUserModel>("GetUserByUserName").Execute(model, ct);
     }
-
-    [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetCurrentUser(CancellationToken ct)
-    {
-        return api.Group("UserInquiry").Action<EmptyRequest, AppUserModel>("GetCurrentUser").Execute(new EmptyRequest(), ct);
-    }
-
-    public async Task<IActionResult> RedirectToAppUser(RedirectToAppUserRequest model, CancellationToken ct)
-    {
-        var result = await api.Group("UserInquiry").Action<RedirectToAppUserRequest, WebRedirectResult>("RedirectToAppUser").Execute(model, ct);
-        return Redirect(result.Data.Url);
-    }
 }

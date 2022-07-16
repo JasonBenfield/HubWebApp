@@ -1,4 +1,5 @@
 ﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AppListPanel } from './AppListPanel';
@@ -20,7 +21,11 @@ class MainPage extends BasicPage {
         this.appListPanel.refresh();
         const result = await this.appListPanel.start();
         if (result.appSelected) {
-            this.hubApi.Apps.RedirectToApp.open(result.appSelected.app.ID);
+            const url = this.hubApi.Apps.Index.getModifierUrl(
+                result.appSelected.app.PublicKey.DisplayText,
+                {}
+            );
+            new WebPage(url).open();
         }
     }
 }

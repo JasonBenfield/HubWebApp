@@ -4,12 +4,8 @@ public sealed partial class UserInquiryGroup : AppClientGroup
 {
     public UserInquiryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "UserInquiry")
     {
-        Actions = new UserInquiryActions(clientUrl);
     }
-
-    public UserInquiryActions Actions { get; }
 
     public Task<AppUserModel> GetUser(int model) => Post<AppUserModel, int>("GetUser", "", model);
     public Task<AppUserModel> GetUserByUserName(string model) => Post<AppUserModel, string>("GetUserByUserName", "", model);
-    public Task<AppUserModel> GetCurrentUser() => Post<AppUserModel, EmptyRequest>("GetCurrentUser", "", new EmptyRequest());
 }

@@ -22,18 +22,6 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetRoles(CancellationToken ct)
-    {
-        return api.Group("App").Action<EmptyRequest, AppRoleModel[]>("GetRoles").Execute(new EmptyRequest(), ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<AppRoleModel>> GetRole([FromBody] string model, CancellationToken ct)
-    {
-        return api.Group("App").Action<string, AppRoleModel>("GetRole").Execute(model, ct);
-    }
-
-    [HttpPost]
     public Task<ResultContainer<ResourceGroupModel[]>> GetResourceGroups(CancellationToken ct)
     {
         return api.Group("App").Action<EmptyRequest, ResourceGroupModel[]>("GetResourceGroups").Execute(new EmptyRequest(), ct);
@@ -55,12 +43,6 @@ public sealed partial class AppController : Controller
     public Task<ResultContainer<ModifierCategoryModel[]>> GetModifierCategories(CancellationToken ct)
     {
         return api.Group("App").Action<EmptyRequest, ModifierCategoryModel[]>("GetModifierCategories").Execute(new EmptyRequest(), ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<ModifierCategoryModel>> GetModifierCategory([FromBody] string model, CancellationToken ct)
-    {
-        return api.Group("App").Action<string, ModifierCategoryModel>("GetModifierCategory").Execute(model, ct);
     }
 
     [HttpPost]

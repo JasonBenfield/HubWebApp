@@ -6,9 +6,7 @@ public sealed class VersionInquiryGroup : AppApiGroupWrapper
         : base(source)
     {
         GetVersion = source.AddAction(nameof(GetVersion), () => sp.GetRequiredService<GetVersionAction>());
-        GetResourceGroup = source.AddAction(nameof(GetResourceGroup), () => sp.GetRequiredService<GetResourceGroupAction>());
     }
 
     public AppApiAction<string, XtiVersionModel> GetVersion { get; }
-    public AppApiAction<GetVersionResourceGroupRequest, ResourceGroupModel> GetResourceGroup { get; }
 }

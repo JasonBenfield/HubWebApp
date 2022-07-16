@@ -9,7 +9,6 @@ internal static class ResourceGroupInquiryExtensions
         services.AddScoped<GetModCategoryAction>();
         services.AddScoped<GetMostRecentErrorEventsAction>();
         services.AddScoped<GetMostRecentRequestsAction>();
-        services.AddScoped<GetResourceAction>();
         services.AddScoped<GetResourceGroupAction>();
         services.AddScoped<GetResourcesAction>();
         services.AddScoped<GetRoleAccessAction>();

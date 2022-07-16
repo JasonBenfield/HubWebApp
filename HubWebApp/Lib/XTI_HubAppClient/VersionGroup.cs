@@ -7,5 +7,4 @@ public sealed partial class VersionGroup : AppClientGroup
     }
 
     public Task<XtiVersionModel> GetVersion(string modifier, string model) => Post<XtiVersionModel, string>("GetVersion", modifier, model);
-    public Task<ResourceGroupModel> GetResourceGroup(string modifier, GetVersionResourceGroupRequest model) => Post<ResourceGroupModel, GetVersionResourceGroupRequest>("GetResourceGroup", modifier, model);
 }

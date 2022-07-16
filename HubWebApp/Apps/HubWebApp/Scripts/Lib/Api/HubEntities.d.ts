@@ -105,26 +105,12 @@ interface IModifierKey {
 	Value: string;
 	DisplayText: string;
 }
-interface IGetAppByIDRequest {
-	AppID: number;
-}
-interface IGetAppByAppKeyRequest {
-	AppKey: IAppKey;
-}
 interface IAppDomainModel {
 	AppKey: IAppKey;
 	VersionKey: IAppVersionKey;
 	Domain: string;
 }
 interface IAppVersionKey {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppRoleModel {
-	ID: number;
-	Name: IAppRoleName;
-}
-interface IAppRoleName {
 	Value: string;
 	DisplayText: string;
 }
@@ -273,6 +259,10 @@ interface ISetUserAccessRoleRequest {
 	AppKey: IAppKey;
 	RoleNames: IAppRoleName[];
 }
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
+}
 interface INewVersionRequest {
 	VersionName: IAppVersionName;
 	VersionType: IAppVersionType;
@@ -281,10 +271,6 @@ interface INewVersionRequest {
 interface IPublishVersionRequest {
 	VersionName: IAppVersionName;
 	VersionKey: IAppVersionKey;
-}
-interface IGetVersionResourceGroupRequest {
-	VersionKey: string;
-	GroupName: string;
 }
 interface IGetResourceGroupRequest {
 	VersionKey: string;
@@ -304,14 +290,13 @@ interface IResourceName {
 	Value: string;
 	DisplayText: string;
 }
-interface IGetResourceGroupResourceRequest {
-	VersionKey: string;
-	GroupID: number;
-	ResourceName: string;
-}
 interface IGetResourceGroupRoleAccessRequest {
 	VersionKey: string;
 	GroupID: number;
+}
+interface IAppRoleModel {
+	ID: number;
+	Name: IAppRoleName;
 }
 interface IGetResourceGroupModCategoryRequest {
 	VersionKey: string;
@@ -335,19 +320,11 @@ interface IGetResourceLogRequest {
 	ResourceID: number;
 	HowMany: number;
 }
-interface IGetModCategoryModifierRequest {
-	CategoryID: number;
-	ModifierKey: string;
-}
 interface IAddUserModel {
 	UserName: string;
 	Password: string;
 	PersonName: string;
 	Email: string;
-}
-interface IRedirectToAppUserRequest {
-	AppID: number;
-	UserID: number;
 }
 interface IUserModifierKey {
 	UserID: number;
@@ -356,10 +333,6 @@ interface IUserModifierKey {
 interface IUserAccessModel {
 	HasAccess: boolean;
 	AssignedRoles: IAppRoleModel[];
-}
-interface IUserModifierCategoryModel {
-	ModCategory: IModifierCategoryModel;
-	Modifiers: IModifierModel[];
 }
 interface IUserRoleRequest {
 	UserID: number;

@@ -14,10 +14,4 @@ public sealed partial class VersionController : Controller
     {
         return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model, ct);
     }
-
-    [HttpPost]
-    public Task<ResultContainer<ResourceGroupModel>> GetResourceGroup([FromBody] GetVersionResourceGroupRequest model, CancellationToken ct)
-    {
-        return api.Group("Version").Action<GetVersionResourceGroupRequest, ResourceGroupModel>("GetResourceGroup").Execute(model, ct);
-    }
 }

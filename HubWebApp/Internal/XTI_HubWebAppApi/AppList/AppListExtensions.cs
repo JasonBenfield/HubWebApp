@@ -8,8 +8,6 @@ internal static class AppListExtensions
     {
         services.AddScoped<IndexAction>();
         services.AddScoped<GetAppsAction>();
-        services.AddScoped<GetAppByAppKeyAction>();
-        services.AddScoped<RedirectToAppAction>();
         services.AddScoped<GetAppDomainsAction>();
     }
 }

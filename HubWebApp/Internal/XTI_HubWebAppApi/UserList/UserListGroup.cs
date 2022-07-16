@@ -7,7 +7,6 @@ public sealed class UserListGroup : AppApiGroupWrapper
     {
         Index = source.AddAction(nameof(Index), () => sp.GetRequiredService<IndexAction>());
         GetUsers = source.AddAction(nameof(GetUsers), () => sp.GetRequiredService<GetUsersAction>());
-        GetSystemUsers = source.AddAction(nameof(GetSystemUsers), () => sp.GetRequiredService<GetSystemUsersAction>());
         AddOrUpdateUser = source.AddAction
         (
             nameof(AddOrUpdateUser),
@@ -18,6 +17,5 @@ public sealed class UserListGroup : AppApiGroupWrapper
     }
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
-    public AppApiAction<AppKey, AppUserModel[]> GetSystemUsers { get; }
     public AppApiAction<AddUserModel, int> AddOrUpdateUser { get; }
 }

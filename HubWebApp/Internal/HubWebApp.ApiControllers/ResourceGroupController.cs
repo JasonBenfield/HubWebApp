@@ -22,12 +22,6 @@ public sealed partial class ResourceGroupController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceModel>> GetResource([FromBody] GetResourceGroupResourceRequest model, CancellationToken ct)
-    {
-        return api.Group("ResourceGroup").Action<GetResourceGroupResourceRequest, ResourceModel>("GetResource").Execute(model, ct);
-    }
-
-    [HttpPost]
     public Task<ResultContainer<AppRoleModel[]>> GetRoleAccess([FromBody] GetResourceGroupRoleAccessRequest model, CancellationToken ct)
     {
         return api.Group("ResourceGroup").Action<GetResourceGroupRoleAccessRequest, AppRoleModel[]>("GetRoleAccess").Execute(model, ct);

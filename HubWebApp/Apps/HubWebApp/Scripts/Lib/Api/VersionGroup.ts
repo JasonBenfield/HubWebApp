@@ -10,16 +10,11 @@ export class VersionGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Version');
 		this.GetVersionAction = this.createAction<string,IXtiVersionModel>('GetVersion', 'Get Version');
-		this.GetResourceGroupAction = this.createAction<IGetVersionResourceGroupRequest,IResourceGroupModel>('GetResourceGroup', 'Get Resource Group');
 	}
 	
 	readonly GetVersionAction: AppApiAction<string,IXtiVersionModel>;
-	readonly GetResourceGroupAction: AppApiAction<IGetVersionResourceGroupRequest,IResourceGroupModel>;
 	
 	GetVersion(model: string, errorOptions?: IActionErrorOptions) {
 		return this.GetVersionAction.execute(model, errorOptions || {});
-	}
-	GetResourceGroup(model: IGetVersionResourceGroupRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetResourceGroupAction.execute(model, errorOptions || {});
 	}
 }

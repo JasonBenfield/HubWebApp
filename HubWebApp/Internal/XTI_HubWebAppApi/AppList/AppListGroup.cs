@@ -10,19 +10,6 @@ public sealed class AppListGroup : AppApiGroupWrapper
             nameof(GetApps),
             () => sp.GetRequiredService<GetAppsAction>()
         );
-        GetAppByID = source.AddAction
-        (
-            nameof(GetAppByID), () => sp.GetRequiredService<GetAppByIDAction>()
-        );
-        GetAppByAppKey = source.AddAction
-        (
-            nameof(GetAppByAppKey), () => sp.GetRequiredService<GetAppByAppKeyAction>()
-        );
-        RedirectToApp = source.AddAction
-        (
-            nameof(RedirectToApp),
-            () => sp.GetRequiredService<RedirectToAppAction>()
-        );
         GetAppDomains = source.AddAction
         (
             nameof(GetAppDomains),
@@ -32,8 +19,5 @@ public sealed class AppListGroup : AppApiGroupWrapper
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
     public AppApiAction<EmptyRequest, AppWithModKeyModel[]> GetApps { get; }
-    public AppApiAction<GetAppByIDRequest, AppWithModKeyModel> GetAppByID { get; }
-    public AppApiAction<GetAppByAppKeyRequest, AppWithModKeyModel> GetAppByAppKey { get; }
-    public AppApiAction<int, WebRedirectResult> RedirectToApp { get; }
     public AppApiAction<EmptyRequest, AppDomainModel[]> GetAppDomains { get; }
 }

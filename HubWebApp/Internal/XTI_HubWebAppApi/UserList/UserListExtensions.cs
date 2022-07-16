@@ -9,7 +9,6 @@ internal static class UserListExtensions
         services.AddScoped<IndexAction>();
         services.AddScoped<AddOrUpdateUserAction>();
         services.AddScoped<AddUserValidation>();
-        services.AddScoped<GetSystemUsersAction>();
         services.AddScoped<GetUsersAction>();
     }
 }
