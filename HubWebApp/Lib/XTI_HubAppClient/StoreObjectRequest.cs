@@ -6,5 +6,5 @@ public sealed partial class StoreObjectRequest
     public string Data { get; set; } = "";
     public TimeSpan ExpireAfter { get; set; }
 
-    public GeneratedStorageKeyType GeneratedStorageKeyType { get; set; } = GeneratedStorageKeyType.Values.GetDefault();
+    public GenerateKeyModel GenerateKey { get; set; } = new GenerateKeyModel();
 }

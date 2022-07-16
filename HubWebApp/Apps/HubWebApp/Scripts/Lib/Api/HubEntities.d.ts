@@ -343,7 +343,11 @@ interface IStoreObjectRequest {
 	StorageName: string;
 	Data: string;
 	ExpireAfter: string;
-	GeneratedStorageKeyType: IGeneratedStorageKeyType;
+	GenerateKey: IGenerateKeyModel;
+}
+interface IGenerateKeyModel {
+	KeyType: IGeneratedKeyType;
+	Value: string;
 }
 interface IGetStoredObjectRequest {
 	StorageName: string;
@@ -400,7 +404,7 @@ interface IAppVersionStatus {
 	Value: number;
 	DisplayText: string;
 }
-interface IGeneratedStorageKeyType {
+interface IGeneratedKeyType {
 	Value: number;
 	DisplayText: string;
 }

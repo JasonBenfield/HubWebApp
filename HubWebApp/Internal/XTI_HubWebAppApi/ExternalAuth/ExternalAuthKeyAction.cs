@@ -18,7 +18,7 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
         var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
         var authKey = await storedObject.Store
         (
-            GeneratedStorageKeyType.Values.SixDigit,
+            GenerateKeyModel.SixDigit(),
             new AuthenticatedModel { UserName = user.ToModel().UserName.Value },
             TimeSpan.FromMinutes(30)
         );

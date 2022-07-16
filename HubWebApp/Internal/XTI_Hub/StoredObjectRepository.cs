@@ -22,6 +22,10 @@ public sealed class StoredObjectRepository
             var storageKey = generatedStorageKey.Value();
             var keyAttempts = 1;
             var keyExists = await checkKeyExists(storageName, storageKey);
+            if(keyExists && generatedStorageKey is FixedGeneratedKey)
+            {
+                throw new Exception("Unable to generate a unique key");
+            }
             while (keyExists)
             {
                 storageKey = generatedStorageKey.Value();

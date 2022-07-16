@@ -24,7 +24,7 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
         var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
         var authKey = await storedObject.Store
         (
-            GeneratedStorageKeyType.Values.SixDigit,
+            GenerateKeyModel.SixDigit(),
             new AuthenticatedModel {  UserName = userName },
             TimeSpan.FromMinutes(30)
         );

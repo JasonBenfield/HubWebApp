@@ -88,7 +88,7 @@ internal sealed class InstallProcess
                         var remoteInstallKey = await storedObjFactory.CreateStoredObject(storageName)
                             .Store
                             (
-                                GeneratedStorageKeyType.Values.SixDigit,
+                                GenerateKeyModel.SixDigit(),
                                 adminInstallOptions,
                                 TimeSpan.FromMinutes(30)
                             );

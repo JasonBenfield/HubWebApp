@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using XTI_Core;
-
-namespace XTI_HubWebAppApi;
+﻿namespace XTI_HubWebAppApi;
 
 public sealed class LoginReturnKey : ILoginReturnKey
 {
@@ -16,7 +13,7 @@ public sealed class LoginReturnKey : ILoginReturnKey
         storedObjectFactory.CreateStoredObject(new StorageName("Login Return"))
             .Store
             (
-                GeneratedStorageKeyType.Values.SixDigit,
+                GenerateKeyModel.SixDigit(),
                 new LoginReturnModel { ReturnUrl = returnUrl },
                 TimeSpan.FromDays(90)
             );

@@ -9,13 +9,13 @@ public sealed class HcStoredObjectDB : IStoredObjectDB
         this.hubClient = hubClient;
     }
 
-    public Task<string> Store(StorageName storageName, GeneratedStorageKeyType generatedStorageKeyType, string data, TimeSpan expiresAfter) =>
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, string data, TimeSpan expiresAfter) =>
         hubClient.Storage.StoreObject
         (
             new StoreObjectRequest
             {
                 StorageName = storageName.Value,
-                GeneratedStorageKeyType = generatedStorageKeyType,
+                GenerateKey = generateKey,
                 Data = data,
                 ExpireAfter = expiresAfter
             }

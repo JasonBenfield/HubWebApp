@@ -12,7 +12,7 @@ internal sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
     public Task<string> Execute(StoreObjectRequest model, CancellationToken stoppingToken) =>
         storedObjectFactory.CreateStoredObject(new StorageName(model.StorageName)).Store
         (
-            model.GeneratedStorageKeyType, 
+            model.GenerateKey, 
             model.Data, 
             model.ExpireAfter
         );
