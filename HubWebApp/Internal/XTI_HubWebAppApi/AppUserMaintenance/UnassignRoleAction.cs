@@ -28,7 +28,7 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
         }
         var role = await app.Role(model.RoleID);
         await user.Modifier(modifier).UnassignRole(role);
-        userContext.ClearCache(user.UserName());
+        userContext.ClearCache(user.ToModel().UserName);
         return new EmptyActionResult();
     }
 }

@@ -71,7 +71,7 @@ public sealed class SetupHostedService : IHostedService
         (
             new CredentialValue
             (
-                systemUser.UserName().Value,
+                systemUser.ToModel().UserName.Value,
                 password
             )
         );

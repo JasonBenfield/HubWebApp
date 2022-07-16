@@ -1,4 +1,4 @@
-﻿import { BasicPage } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicPage';
+﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends BasicPage {

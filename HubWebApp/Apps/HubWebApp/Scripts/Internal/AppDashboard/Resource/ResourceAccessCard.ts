@@ -1,9 +1,8 @@
-﻿/// <reference path="../../index.d.ts" />
-import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
 import { RoleAccessListItemView } from "../RoleAccessListItemView";
@@ -16,11 +15,11 @@ export class ResourceAccessCard {
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: ResourceAccessCardView
+        view: ResourceAccessCardView
     ) {
-        new TextBlock('Permissions', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.accessItems = new ListGroup(this.view.accessItems);
+        new TextComponent(view.titleHeader).setText('Permissions');
+        this.alert = new CardAlert(view.alert).alert;
+        this.accessItems = new ListGroup(view.accessItems);
     }
 
     setResourceID(resourceID: number) {
@@ -28,7 +27,7 @@ export class ResourceAccessCard {
     }
 
     async refresh() {
-        let accessItems = await this.getRoleAccessItems();
+        const accessItems = await this.getRoleAccessItems();
         this.accessItems.setItems(
             accessItems,
             (sourceItem: IRoleAccessItem, listItem: RoleAccessListItemView) =>
@@ -50,7 +49,7 @@ export class ResourceAccessCard {
                 });
             }
         );
-        let accessItems: IRoleAccessItem[] = [];
+        const accessItems: IRoleAccessItem[] = [];
         for (let allowedRole of roles) {
             accessItems.push({
                 isAllowed: true,

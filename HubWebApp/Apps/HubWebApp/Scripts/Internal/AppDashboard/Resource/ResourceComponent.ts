@@ -1,24 +1,24 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
-import { ResourceResultType } from '../../../Hub/Api/ResourceResultType';
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { ResourceResultType } from '../../../Lib/Api/ResourceResultType';
 import { ResourceComponentView } from "./ResourceComponentView";
 
 export class ResourceComponent {
     private readonly alert: MessageAlert;
     private resourceID: number;
-    private readonly resourceName: TextBlock;
-    private readonly resultType: TextBlock;
+    private readonly resourceName: TextComponent;
+    private readonly resultType: TextComponent;
 
     constructor(
         private readonly hubApi: HubAppApi,
         private readonly view: ResourceComponentView
     ) {
-        new TextBlock('Resource', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.resourceName = new TextBlock('', view.resourceName);
-        this.resultType = new TextBlock('', view.resultType);
+        new TextComponent(view.titleHeader).setText('Resource');
+        this.alert = new CardAlert(view.alert).alert;
+        this.resourceName = new TextComponent(view.resourceName);
+        this.resultType = new TextComponent(view.resultType);
     }
 
     setResourceID(resourceID: number) {
@@ -29,15 +29,15 @@ export class ResourceComponent {
     }
 
     async refresh() {
-        let resource = await this.getResource(this.resourceID);
-        this.resourceName.setText(resource.Name);
+        const resource = await this.getResource(this.resourceID);
+        this.resourceName.setText(resource.Name.DisplayText);
         if (resource.IsAnonymousAllowed) {
             this.view.showAnon();
         }
         else {
             this.view.hideAnon();
         }
-        let resultType = ResourceResultType.values.value(resource.ResultType.Value);
+        const resultType = ResourceResultType.values.value(resource.ResultType.Value);
         let resultTypeText: string;
         if (
             resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)

@@ -1,7 +1,7 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { CardAlertView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
-import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";

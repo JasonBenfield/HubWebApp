@@ -1,5 +1,4 @@
-﻿using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppPublish;
+﻿using XTI_HubWebAppApi.AppPublish;
 
 namespace HubWebApp.Tests;
 
@@ -9,7 +8,7 @@ sealed class NewVersionTest
     public async Task ShouldCreateNewPatch()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var model = new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -31,7 +30,7 @@ sealed class NewVersionTest
             VersionType = AppVersionType.Values.Minor,
             AppKeys = new[] { HubInfo.AppKey }
         };
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Minor), "Should start new minor version");
     }
@@ -46,7 +45,7 @@ sealed class NewVersionTest
             VersionType = AppVersionType.Values.Major,
             AppKeys = new[] { HubInfo.AppKey }
         };
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.VersionType, Is.EqualTo(AppVersionType.Values.Major), "Should start new major version");
     }

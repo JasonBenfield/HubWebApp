@@ -1,9 +1,9 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
@@ -11,20 +11,25 @@ import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 export class ResourceGroupListCard {
     private readonly alert: MessageAlert;
     private readonly resourceGroups: ListGroup;
-    readonly resourceGroupClicked: IEventHandler<ResourceGroupListItem>;
+    private readonly _resourceGroupClicked = new DefaultEvent<ResourceGroupListItem>(this);
+    readonly resourceGroupClicked = this._resourceGroupClicked;
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: ResourceGroupListCardView
+        view: ResourceGroupListCardView
     ) {
-        new TextBlock('Resource Groups', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.resourceGroups = new ListGroup(this.view.resourceGroups);
-        this.resourceGroupClicked = this.resourceGroups.itemClicked;
+        new TextComponent(view.titleHeader).setText('Resource Groups');
+        this.alert = new CardAlert(view.alert).alert;
+        this.resourceGroups = new ListGroup(view.resourceGroups);
+        this.resourceGroups.registerItemClicked(this.onResourceGroupClicked.bind(this));
+    }
+
+    private onResourceGroupClicked(resourceGroup: ResourceGroupListItem) {
+        this._resourceGroupClicked.invoke(resourceGroup);
     }
 
     async refresh() {
-        let resourceGroups = await this.getResourceGroups();
+        const resourceGroups = await this.getResourceGroups();
         this.resourceGroups.setItems(
             resourceGroups,
             (sourceItem: IResourceGroupModel, listItem: ResourceGroupListItemView) =>

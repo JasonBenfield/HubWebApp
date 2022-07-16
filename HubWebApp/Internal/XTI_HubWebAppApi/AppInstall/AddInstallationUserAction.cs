@@ -18,7 +18,7 @@ public sealed class AddInstallationUserAction : AppAction<AddInstallationUserReq
     public async Task<AppUserModel> Execute(AddInstallationUserRequest model, CancellationToken stoppingToken)
     {
         var hashedPassword = hashedPasswordFactory.Create(model.Password);
-        var systemUser = await appFactory.Installers.AddOrUpdateInstallationUser
+        var systemUser = await appFactory.Installers.AddOrUpdateInstaller
         (
             model.MachineName,
             hashedPassword, 

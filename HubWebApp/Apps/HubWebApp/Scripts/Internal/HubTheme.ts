@@ -1,10 +1,10 @@
-﻿import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
+﻿import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
-import { GridCellView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
-import { BlockView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BlockView";
+import { GridCellView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 
 export class HubTheme {
     public static readonly instance = new HubTheme();

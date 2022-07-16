@@ -1,4 +1,4 @@
-﻿import { BasicPageView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicPageView';
+﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
 import { AddRolePanelView } from './AddRolePanelView';
 import { AppUserDataPanelView } from './AppUserDataPanelView';
 import { SelectModCategoryPanelView } from './SelectModCategoryPanelView';

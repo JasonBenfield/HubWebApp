@@ -1,6 +1,6 @@
 ﻿import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
-import { LinkComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/LinkComponent";
+import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { AppListItemView } from "./AppListItemView";
 
 export class AppListItem extends BasicComponent {

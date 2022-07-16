@@ -19,7 +19,7 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
         var authKey = await storedObject.Store
         (
             GeneratedStorageKeyType.Values.SixDigit,
-            new AuthenticatedModel { UserName = user.UserName().Value },
+            new AuthenticatedModel { UserName = user.ToModel().UserName.Value },
             TimeSpan.FromMinutes(30)
         );
         return authKey;

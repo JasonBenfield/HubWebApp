@@ -1,6 +1,6 @@
 ﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { LinkListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { AppListItemView } from "./AppListItemView";
 
 export class AppListCardView extends CardView {

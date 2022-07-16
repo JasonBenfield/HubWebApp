@@ -1,9 +1,9 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { ModifierCategoryListItem } from "./ModifierCategoryListItem";
 import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
@@ -17,12 +17,12 @@ export class ModifierCategoryListCard {
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: ModifierCategoryListCardView
+        view: ModifierCategoryListCardView
     ) {
-        new TextBlock('Modifier Categories', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.modCategories = new ListGroup(this.view.modCategories);
-        this.modCategories.itemClicked.register(this.onItemSelected.bind(this));
+        new TextComponent(view.titleHeader).setText('Modifier Categories');
+        this.alert = new CardAlert(view.alert).alert;
+        this.modCategories = new ListGroup(view.modCategories);
+        this.modCategories.registerItemClicked(this.onItemSelected.bind(this));
     }
 
     private onItemSelected(item: ModifierCategoryListItem) {
@@ -30,7 +30,7 @@ export class ModifierCategoryListCard {
     }
 
     async refresh() {
-        let modCategories = await this.getModCategories();
+        const modCategories = await this.getModCategories();
         this.modCategories.setItems(
             modCategories,
             (modCategory, itemView: ModifierCategoryListItemView) =>

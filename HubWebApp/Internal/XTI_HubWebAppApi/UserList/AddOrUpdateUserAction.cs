@@ -28,6 +28,6 @@ public sealed class AddOrUpdateUserAction : AppAction<AddUserModel, int>
             new EmailAddress(model.Email),
             timeAdded
         );
-        return user.ID;
+        return user.ToModel().ID;
     }
 }

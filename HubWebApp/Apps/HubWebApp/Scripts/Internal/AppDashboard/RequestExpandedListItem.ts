@@ -1,6 +1,6 @@
 ﻿import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
-import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
+import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { RequestExpandedListItemView } from "./RequestExpandedListItemView";
 
 export class RequestExpandedListItem extends BasicComponent {

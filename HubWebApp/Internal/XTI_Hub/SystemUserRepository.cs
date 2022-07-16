@@ -31,7 +31,7 @@ public sealed class SystemUserRepository
     public async Task<AppUser> AddOrUpdateSystemUser(SystemUserName systemUserName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
         var systemUser = await SystemUserOrAnon(systemUserName);
-        if (systemUser.UserName().Equals(systemUserName.Value))
+        if (systemUser.ToModel().UserName.Equals(systemUserName.Value))
         {
             await systemUser.ChangePassword(hashedPassword);
         }

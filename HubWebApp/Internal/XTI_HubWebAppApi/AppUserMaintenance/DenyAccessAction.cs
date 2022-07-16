@@ -25,7 +25,7 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
             await user.Modifier(modifier).UnassignRole(role);
         }
         await user.Modifier(modifier).AssignRole(denyAccessRole);
-        userContext.ClearCache(user.UserName());
+        userContext.ClearCache(user.ToModel().UserName);
         return new EmptyActionResult();
     }
 }

@@ -14,7 +14,7 @@ internal sealed class AssignRoleTest
         var defaultModifier = await app.DefaultModifier();
         var viewAppRole = await getViewAppRole(tester);
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(model);
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(model);
     }
 
     [Test]
@@ -26,8 +26,8 @@ internal sealed class AssignRoleTest
         var defaultModifier = await app.DefaultModifier();
         var viewAppRole = await getViewAppRole(tester);
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
-        var modifier = tester.FakeHubAppModifier();
-        AccessAssertions.Create(tester)
+        var modifier = await tester.HubAppModifier();
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 model,
@@ -41,8 +41,8 @@ internal sealed class AssignRoleTest
     public async Task ShouldAssignRoleToUser()
     {
         var tester = await setup();
-        tester.Login(HubInfo.Roles.EditUser);
         var userToEdit = await addUser(tester, "userToEdit");
+        await tester.Login(HubInfo.Roles.EditUser);
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
         var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
@@ -62,7 +62,7 @@ internal sealed class AssignRoleTest
     public async Task ShouldReturnUserRoleID()
     {
         var tester = await setup();
-        tester.Login(HubInfo.Roles.EditUser);
+        await tester.Login(HubInfo.Roles.EditUser);
         var userToEdit = await addUser(tester, "userToEdit");
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
@@ -97,7 +97,7 @@ internal sealed class AssignRoleTest
     {
         return new UserRoleRequest
         {
-            UserID = userToEdit.ID,
+            UserID = userToEdit.ToModel().ID,
             ModifierID = modifier.ID,
             RoleID = role.ID
         };
@@ -106,7 +106,7 @@ internal sealed class AssignRoleTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,

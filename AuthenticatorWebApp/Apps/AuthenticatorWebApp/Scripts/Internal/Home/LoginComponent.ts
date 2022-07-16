@@ -1,5 +1,5 @@
-﻿import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
-import { MessageAlert } from '@jasonbenfield/sharedwebapp/MessageAlert';
+﻿import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
 import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 import { HubAppApi } from "@hub/Api/HubAppApi";
 import { PostToLogin } from "@hub/PostToLogin";
@@ -18,12 +18,12 @@ export class LoginComponent {
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: LoginComponentView
+        view: LoginComponentView
     ) {
-        this.verifyLoginForm = new VerifyLoginForm(this.view.verifyLoginForm);
-        this.alert = new MessageAlert(this.view.alert);
-        this.view.formSubmitted.register(this.onSubmit.bind(this));
-        this.loginCommand.add(this.view.loginButton);
+        this.verifyLoginForm = new VerifyLoginForm(view.verifyLoginForm);
+        this.verifyLoginForm.handleSubmit(this.onSubmit.bind(this));
+        this.alert = new MessageAlert(view.alert);
+        this.loginCommand.add(view.loginButton);
     }
 
     private onSubmit() {
@@ -33,9 +33,9 @@ export class LoginComponent {
     private async login() {
         this.alert.info('Verifying login...');
         try {
-            let result = await this.verifyLoginForm.save(this.hubApi.Auth.VerifyLoginAction);
+            const result = await this.verifyLoginForm.save(this.hubApi.Auth.VerifyLoginAction);
             if (result.succeeded()) {
-                let cred = this.getCredentials();
+                const cred = this.getCredentials();
                 this.alert.info('Opening page...');
                 new PostToLogin(this.hubApi).execute(cred, result.value);
                 this.postLogin(cred, result.value);
@@ -54,7 +54,7 @@ export class LoginComponent {
     }
 
     private postLogin(cred: ILoginCredentials, authKey: string) {
-        let form = <HTMLFormElement>document.createElement('form');
+        const form = <HTMLFormElement>document.createElement('form');
         form.action = this.hubApi.Auth.Login
             .getUrl(null)
             .value();
@@ -78,7 +78,7 @@ export class LoginComponent {
     }
 
     private createInput(name: string, value: string, type: string = 'hidden') {
-        let input = <HTMLInputElement>document.createElement('input');
+        const input = <HTMLInputElement>document.createElement('input');
         input.type = type;
         input.name = name;
         input.value = value;

@@ -1,14 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_App.Fakes;
 using XTI_Core;
-using XTI_Hub;
-using XTI_HubWebAppApi;
-using XTI_HubWebAppApi.UserList;
 using XTI_HubDB.EF;
+using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -18,7 +11,7 @@ internal sealed class AddUserTest
     public async Task ShouldRequireUserName()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var model = createModel();
         model.UserName = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
@@ -37,7 +30,7 @@ internal sealed class AddUserTest
     public async Task ShouldRequirePassword()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var model = createModel();
         model.Password = "";
         var ex = Assert.ThrowsAsync<ValidationFailedException>
@@ -56,19 +49,19 @@ internal sealed class AddUserTest
     public async Task ShouldAddUser()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var model = createModel();
         await tester.Execute(model);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(model.UserName));
-        Assert.That(user.UserName(), Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
+        Assert.That(user.ToModel().UserName, Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
     }
 
     [Test]
     public async Task ShouldHashPassword()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var model = createModel();
         var userID = await tester.Execute(model);
         var hubDbContext = tester.Services.GetRequiredService<HubDbContext>();

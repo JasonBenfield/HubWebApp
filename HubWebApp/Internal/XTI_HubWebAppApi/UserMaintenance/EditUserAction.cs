@@ -16,7 +16,7 @@ public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
         var name = new PersonName(model.PersonName.Value() ?? "");
         if (string.IsNullOrWhiteSpace(name))
         {
-            name = new PersonName(user.UserName().Value);
+            name = new PersonName(user.ToModel().UserName.Value);
         }
         var email = new EmailAddress(model.Email.Value() ?? "");
         await user.Edit(name, email);

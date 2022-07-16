@@ -1,5 +1,5 @@
-﻿import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
-import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
+﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 
 export class ModCategoryListItem extends BasicComponent {
@@ -8,6 +8,6 @@ export class ModCategoryListItem extends BasicComponent {
         view: ModCategoryButtonListItemView
     ) {
         super(view);
-        new TextComponent(view.categoryName).setText(modCategory.Name);
+        new TextComponent(view.categoryName).setText(modCategory.Name.DisplayText);
     }
 }

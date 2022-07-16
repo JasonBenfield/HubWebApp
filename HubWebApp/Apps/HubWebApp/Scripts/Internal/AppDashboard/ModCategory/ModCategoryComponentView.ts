@@ -1,21 +1,20 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
-import { UnorderedList } from "@jasonbenfield/sharedwebapp/Html/UnorderedList";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { TextBlockView } from "@jasonbenfield/sharedwebapp/Views/TextBlockView";
+import { UnorderedListView } from "@jasonbenfield/sharedwebapp/Views/UnorderedListView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 
 export class ModCategoryComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
     readonly modCategoryName: TextBlockView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
         let listItem = this.addCardBody()
-            .addContent(new UnorderedList())
+            .addView(UnorderedListView)
             .addListItem();
-        this.modCategoryName = listItem.addContent(new TextBlockView());
+        this.modCategoryName = listItem.addView(TextBlockView);
     }
 }

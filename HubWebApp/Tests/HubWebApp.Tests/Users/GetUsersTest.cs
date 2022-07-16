@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi;
-using XTI_HubWebAppApi.UserList;
+﻿using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -19,7 +12,7 @@ internal sealed class GetUsersTest
         await addUser(tester, userName);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var users = (await factory.Users.Users()).ToArray();
-        Assert.That(users.Select(u => u.UserName()), Has.One.EqualTo(userName), "Should get all users");
+        Assert.That(users.Select(u => u.ToModel().UserName), Has.One.EqualTo(userName), "Should get all users");
     }
 
     private async Task addUser(IHubActionTester tester, AppUserName userName)

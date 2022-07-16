@@ -1,8 +1,8 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { EventListItem } from "../EventListItem";
 import { EventListItemView } from "../EventListItemView";
 import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCardView";
@@ -11,14 +11,14 @@ export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
     private readonly errorEvents: ListGroup;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: MostRecentErrorEventListCardView) {
-        new TextBlock('Most Recent Errors', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.errorEvents = new ListGroup(this.view.errorEvents);
+    constructor(private readonly hubApi: HubAppApi, view: MostRecentErrorEventListCardView) {
+        new TextComponent(view.titleHeader).setText('Most Recent Errors');
+        this.alert = new CardAlert(view.alert).alert;
+        this.errorEvents = new ListGroup(view.errorEvents);
     }
 
     async refresh() {
-        let errorEvents = await this.getErrorEvents();
+        const errorEvents = await this.getErrorEvents();
         this.errorEvents.setItems(
             errorEvents,
             (errorEvent: IAppLogEntryModel, itemView: EventListItemView) =>

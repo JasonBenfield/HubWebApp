@@ -1,21 +1,20 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceAccessCard } from "./ResourceAccessCard";
 import { ResourceComponent } from "./ResourceComponent";
 import { ResourcePanelView } from "./ResourcePanelView";
 
-interface Results {
+interface IResult {
     backRequested: {};
 }
 
-export class ResourcePanelResult {
-    static get backRequested() { return new ResourcePanelResult({ backRequested: {} }); }
+class Result {
+    static backRequested() { return new Result({ backRequested: {} }); }
 
-    private constructor(private readonly results: Results) {
-    }
+    private constructor(private readonly results: IResult) { }
 
     get backRequested() { return this.results.backRequested; }
 }
@@ -25,7 +24,7 @@ export class ResourcePanel implements IPanel {
     private readonly resourceAccessCard: ResourceAccessCard;
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
-    private readonly awaitable = new Awaitable<ResourcePanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
     readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
@@ -47,7 +46,7 @@ export class ResourcePanel implements IPanel {
     }
 
     refresh() {
-        let promises: Promise<any>[] = [
+        const promises: Promise<any>[] = [
             this.resourceComponent.refresh(),
             this.resourceAccessCard.refresh(),
             this.mostRecentRequestListCard.refresh(),
@@ -61,7 +60,7 @@ export class ResourcePanel implements IPanel {
     }
 
     private back() {
-        this.awaitable.resolve(ResourcePanelResult.backRequested);
+        this.awaitable.resolve(Result.backRequested());
     }
 
     activate() { this.view.show(); }

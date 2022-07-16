@@ -1,5 +1,4 @@
-﻿using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppInstall;
+﻿using XTI_HubWebAppApi.AppInstall;
 using XTI_HubWebAppApi.AppPublish;
 
 namespace HubWebApp.Tests;
@@ -24,7 +23,7 @@ internal sealed class EndPublishTest
             VersionKey = newVersion.VersionKey
         };
         await hubApi.Publish.BeginPublish.Invoke(request);
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var version = await tester.Execute(request);
         Assert.That(version.Status, Is.EqualTo(AppVersionStatus.Values.Current), "Should set status to current when published");
     }

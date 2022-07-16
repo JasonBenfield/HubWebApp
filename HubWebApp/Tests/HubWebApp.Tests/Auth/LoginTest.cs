@@ -13,6 +13,7 @@ using XTI_HubWebAppApi.UserList;
 using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
+using XTI_WebApp.Api;
 using XTI_WebApp.Fakes;
 
 namespace HubWebApp.Tests;
@@ -125,7 +126,7 @@ internal sealed class LoginTest
         var authSession = XtiSerializer.Deserialize<AuthenticateSessionModel>(serializedAuthSession);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var user = await appFactory.Users.UserByUserName(new AppUserName(model.UserName.Value() ?? ""));
-        Assert.That(authSession.UserName, Is.EqualTo(user.UserName().Value), "Should authenticate session");
+        Assert.That(authSession.UserName, Is.EqualTo(user.ToModel().UserName.Value), "Should authenticate session");
     }
 
     [Test]
@@ -142,6 +143,9 @@ internal sealed class LoginTest
     public async Task ShouldResetCache()
     {
         var tester = await setup();
+        var returnKey = await loginReturnKey(tester, "./Home");
+        var currentUserName = tester.Services.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(AppUserName.Anon);
         var model = createLoginModel();
         var user = await tester.Services.GetRequiredService<ISourceUserContext>()
             .User(new AppUserName(model.UserName.Value() ?? ""));
@@ -150,31 +154,38 @@ internal sealed class LoginTest
         {
             User = new FakeHttpUser().Create("", user)
         };
-        await tester.Execute(model);
+        var authKey = await tester.Execute(model);
+        await login(tester, authKey, returnKey);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.User.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
-        await tester.Execute(model);
+        authKey = await tester.Execute(model);
+        await login(tester, authKey, returnKey);
         var secondCachedUser = await userContext.User();
         Assert.That(secondCachedUser.User.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
 
-    private Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
+    private async Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
     {
         var loginReturnKeyTester = tester.Create(hubApi => hubApi.Auth.LoginReturnKey);
-        loginReturnKeyTester.LoginAsAdmin();
-        return loginReturnKeyTester.Execute(new LoginReturnModel
+        await loginReturnKeyTester.LoginAsAdmin();
+        var result = await loginReturnKeyTester.Execute(new LoginReturnModel
         {
             ReturnUrl = returnUrl
         });
+        return result;
     }
 
-    private Task login(IHubActionTester tester, string authKey, string returnKey)
+    private async Task login(IHubActionTester tester, string authKey, string returnKey)
     {
         var loginTester = tester.Create(hubApi => hubApi.Auth.Login);
-        return loginTester.Execute(new LoginModel { AuthKey = authKey, ReturnKey = returnKey });
+        await loginTester.Execute(new LoginModel { AuthKey = authKey, ReturnKey = returnKey });
+        var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
+        var claims = new XtiClaims(httpContextAccessor.HttpContext!);
+        var currentUserName = tester.Services.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(claims.UserName());
     }
 
     private async Task<HubActionTester<VerifyLoginForm, string>> setup()
@@ -196,7 +207,7 @@ internal sealed class LoginTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,

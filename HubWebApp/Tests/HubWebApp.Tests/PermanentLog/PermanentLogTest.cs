@@ -12,7 +12,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldStartSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
@@ -25,7 +25,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldStartRequestOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -40,7 +40,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldEndRequestOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -56,7 +56,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldEndSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -72,21 +72,21 @@ internal sealed class PermanentLogTest
     public async Task ShouldAuthenticateSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         await authenticateSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var user = await factory.Users.User(session.UserID);
-        Assert.That(user.UserName(), Is.EqualTo("someone"), "Should authenticate session on permanent log");
+        Assert.That(user.ToModel().UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
     }
 
     [Test]
     public async Task ShouldLogEventOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();

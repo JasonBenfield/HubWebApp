@@ -48,10 +48,13 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         currentUserName.SetUserName(AppUserName.Anon);
     }
 
-    public Task<AppUser> LoginAsAdmin()
+    public async Task<AppUser> LoginAsAdmin()
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        return factory.Users.UserByUserName(new AppUserName("hubadmin"));
+        var user = await factory.Users.UserByUserName(new AppUserName("hubadmin"));
+        var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
+        currentUserName.SetUserName(user.ToModel().UserName);
+        return user;
     }
 
     public Task<AppUser> Login(params AppRoleName[]? roleNames) =>
@@ -109,16 +112,28 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return defaultModifier;
     }
 
-    public async Task<Modifier> HubAppModifier()
+    public Task<Modifier> HubAppModifier() => AppModifier(HubInfo.AppKey);
+
+    public async Task<Modifier> AppModifier(AppKey appKey)
     {
-        var hubApp = await HubApp();
-        var hubAppModel = hubApp.ToAppModel();
+        var factory = Services.GetRequiredService<HubFactory>();
+        var app = await factory.Apps.App(appKey);
+        var appModel = app.ToAppModel();
+        App hubApp;
+        if (appKey.Equals(HubInfo.AppKey))
+        {
+            hubApp = app;
+        }
+        else
+        {
+            hubApp = await HubApp();
+        }
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var hubAppModifier = await appsModCategory.AddOrUpdateModifier
         (
-            hubAppModel.PublicKey,
-            hubAppModel.ID.ToString(),
-            hubAppModel.AppKey.Format()
+            appModel.PublicKey,
+            appModel.ID.ToString(),
+            appModel.AppKey.Format()
         );
         return hubAppModifier;
     }

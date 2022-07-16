@@ -1,37 +1,36 @@
-﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../../HubTheme";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 import { ModifierListCardView } from "./ModifierListCardView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
-export class ModCategoryPanelView extends Block {
+export class ModCategoryPanelView extends GridView {
     readonly modCategoryComponent: ModCategoryComponentView;
     readonly modifierListCard: ModifierListCardView;
     readonly resourceGroupListCard: ResourceGroupListCardView;
-    readonly backButton: ButtonCommandItem;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.modCategoryComponent = flexFill
-            .addContent(new ModCategoryComponentView())
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.modCategoryComponent = mainContent.addView(ModCategoryComponentView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.modifierListCard = flexFill
-            .addContent(new ModifierListCardView())
+        this.modifierListCard = mainContent.addView(ModifierListCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.resourceGroupListCard = flexFill
-            .addContent(new ResourceGroupListCardView())
+        this.resourceGroupListCard = mainContent.addView(ResourceGroupListCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(
-            HubTheme.instance.commandToolbar.backButton()
-        );
+        let toolbar = mainContent.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
         this.backButton.setText('App');
     }
 }

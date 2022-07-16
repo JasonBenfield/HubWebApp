@@ -68,9 +68,10 @@ const exportModule = {
 const outputFilename = '[name].js';
 
 const resolve = {
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
         '@hub': path.resolve(__dirname, '../../../hubwebapp/apps/hubwebapp/scripts/hub'),
-        '@jasonbenfield': path.resolve(__dirname, 'node_modules', '@jasonbenfield')
+        '@jasonbenfield/sharedwebapp': 'C:/XTI/src/JasonBenfield/SharedWebApp/Apps/SharedWebApp/Scripts/Lib'
     }
 };
 const plugins = [

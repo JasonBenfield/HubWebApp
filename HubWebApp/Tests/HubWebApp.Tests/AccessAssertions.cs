@@ -59,9 +59,10 @@ internal sealed class AppModifierAssertions<TModel, TResult>
                 $"Should have access with role '{roleName.DisplayText}'"
             );
         }
-        var roles = tester.FakeHubApp()
-            .Roles
-            .Select(r => r.Name)
+        var hubApp = await tester.HubApp();
+        var hubAppRoles = await hubApp.Roles();
+        var roles = hubAppRoles
+            .Select(r => r.ToModel().Name)
             .Where(r => !r.Equals(AppRoleName.DenyAccess));
         var deniedRoles = roles.Except(allowedRoles).ToArray();
         foreach (var roleName in deniedRoles)

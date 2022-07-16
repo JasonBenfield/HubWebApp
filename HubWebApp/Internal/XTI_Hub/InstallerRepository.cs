@@ -20,29 +20,29 @@ public sealed class InstallerRepository
             .Select(u => factory.User(u))
             .ToArrayAsync();
 
-    public async Task<AppUser> AddOrUpdateInstallationUser(string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
+    public async Task<AppUser> AddOrUpdateInstaller(string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
-        var installationUser = await InstallationUserOrAnon(machineName);
-        if (installationUser.UserName().Equals(new InstallerUserName(machineName).Value))
+        var installer = await InstallerOrAnon(machineName);
+        if (installer.ToModel().UserName.Equals(new InstallerUserName(machineName).Value))
         {
-            await installationUser.ChangePassword(hashedPassword);
+            await installer.ChangePassword(hashedPassword);
         }
         else
         {
-            installationUser = await AddInstallationUser
+            installer = await AddInstaller
             (
                 machineName,
                 hashedPassword,
                 now
             );
         }
-        return installationUser;
+        return installer;
     }
 
-    public Task<AppUser> InstallationUserOrAnon(string machineName)
+    public Task<AppUser> InstallerOrAnon(string machineName)
         => factory.Users.UserOrAnon(new InstallerUserName(machineName).Value);
 
-    private async Task<AppUser> AddInstallationUser
+    private async Task<AppUser> AddInstaller
     (
         string machineName,
         IHashedPassword password,

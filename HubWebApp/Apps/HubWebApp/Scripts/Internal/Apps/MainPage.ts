@@ -1,4 +1,4 @@
-﻿import { BasicPage } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicPage';
+﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AppListPanel } from './AppListPanel';

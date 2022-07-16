@@ -1,9 +1,9 @@
-﻿import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
+﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 
 export class CurrentVersionComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
@@ -11,16 +11,16 @@ export class CurrentVersionComponentView extends CardView {
     readonly versionKey: TextSpanView;
     readonly version: TextSpanView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert().alert;
-        let row = this.addCardBody()
-            .addContent(new Row());
+        const row = this.addCardBody()
+            .addView(RowView);
         this.versionKey = row.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.version = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
     }
 } 

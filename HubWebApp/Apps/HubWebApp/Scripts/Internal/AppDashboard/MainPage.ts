@@ -1,9 +1,8 @@
-﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
-import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
-import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AppDetailPanel } from './AppDetail/AppDetailPanel';
 import { MainPageView } from './MainPageView';
@@ -11,8 +10,8 @@ import { ModCategoryPanel } from './ModCategory/ModCategoryPanel';
 import { ResourcePanel } from './Resource/ResourcePanel';
 import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
 
-class MainPage {
-    private readonly view: MainPageView;
+class MainPage extends BasicPage {
+    protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
     private readonly panels: SingleActivePanel;
     private readonly appDetailPanel: AppDetailPanel;
@@ -20,15 +19,15 @@ class MainPage {
     private readonly resourcePanel: ResourcePanel;
     private readonly modCategoryPanel: ModCategoryPanel;
 
-    constructor(page: PageFrameView) {
-        this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).Hub();
+    constructor() {
+        super(new MainPageView());
+        this.hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubApi, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubApi, this.view.resourceGroupPanel));
         this.resourcePanel = this.panels.add(new ResourcePanel(this.hubApi, this.view.resourcePanel));
         this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubApi, this.view.modCategoryPanel));
-        if (XtiUrl.current.path.modifier) {
+        if (XtiUrl.current().path.modifier) {
             this.activateAppDetailPanel();
         }
         else {
@@ -39,7 +38,7 @@ class MainPage {
     private async activateAppDetailPanel() {
         this.panels.activate(this.appDetailPanel);
         this.appDetailPanel.refresh();
-        let result = await this.appDetailPanel.start();
+        const result = await this.appDetailPanel.start();
         if (result.backRequested) {
             this.hubApi.Apps.Index.open({});
         }
@@ -57,7 +56,7 @@ class MainPage {
             this.resourceGroupPanel.setGroupID(groupID);
         }
         this.resourceGroupPanel.refresh();
-        let result = await this.resourceGroupPanel.start();
+        const result = await this.resourceGroupPanel.start();
         if (result.backRequested) {
             this.activateAppDetailPanel();
         }
@@ -94,4 +93,4 @@ class MainPage {
         }
     }
 }
-new MainPage(new Startup().build());
+new MainPage();

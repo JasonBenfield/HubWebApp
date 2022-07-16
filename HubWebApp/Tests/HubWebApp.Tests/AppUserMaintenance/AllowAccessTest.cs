@@ -8,15 +8,15 @@ internal sealed class AllowAccessTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var user = await addUser(tester, "someone");
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
     }
 
@@ -24,19 +24,19 @@ internal sealed class AllowAccessTest
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var user = await addUser(tester, "someone");
         var modifier = await tester.HubAppModifier();
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                tester.FakeHubAppModifier(),
+                modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser
             );
@@ -46,7 +46,7 @@ internal sealed class AllowAccessTest
     public async Task ShouldRemoveDenyAccessRole()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var user = await addUser(tester, "someone");
         var hubApp = await tester.HubApp();
         var denyAccessRole = await hubApp.Role(AppRoleName.DenyAccess);
@@ -54,7 +54,7 @@ internal sealed class AllowAccessTest
         await user.Modifier(modifier).AssignRole(denyAccessRole);
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
         await tester.Execute(request, modifier.ModKey());
@@ -77,7 +77,7 @@ internal sealed class AllowAccessTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,

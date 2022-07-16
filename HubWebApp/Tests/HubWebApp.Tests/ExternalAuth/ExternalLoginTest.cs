@@ -34,7 +34,7 @@ internal sealed class ExternalLoginTest
             access.Claims,
             Has.One.EqualTo
             (
-                new Claim("UserName", user.UserName().Value)
+                new Claim("UserName", user.ToModel().UserName.Value)
             )
             .Using<Claim>((x, y) => x.Type == y.Type && x.Value == y.Value),
             "Should authenticate user"

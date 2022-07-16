@@ -16,8 +16,7 @@ public sealed class AppUser
         ID = this.record.ID;
     }
 
-    public int ID { get; }
-    public AppUserName UserName() => new AppUserName(record.UserName);
+    internal int ID { get; }
 
     public bool IsPasswordCorrect(IHashedPassword hashedPassword) =>
         hashedPassword.Equals(record.Password);
@@ -96,7 +95,7 @@ public sealed class AppUser
     public AppUserModel ToModel() => new AppUserModel
     {
         ID = ID,
-        UserName = UserName(),
+        UserName = new AppUserName(record.UserName),
         Name = new PersonName(record.Name),
         Email = new EmailAddress(record.Email).DisplayText
     };

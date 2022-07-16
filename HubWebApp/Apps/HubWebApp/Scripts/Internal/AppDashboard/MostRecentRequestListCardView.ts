@@ -1,6 +1,6 @@
 ﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { RequestExpandedListItemView } from "./RequestExpandedListItemView";
 
 export class MostRecentRequestListCardView extends CardView {

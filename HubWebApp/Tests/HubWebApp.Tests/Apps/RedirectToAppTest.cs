@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using XTI_WebApp.Api;
+﻿using XTI_WebApp.Api;
 
 namespace HubWebApp.Tests;
 
@@ -9,7 +8,7 @@ internal sealed class RedirectToAppTest
     public async Task ShouldAddModifierToUrl()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
         var result = await tester.Execute(hubApp.ID);
         var hubAppModifier = await tester.HubAppModifier();

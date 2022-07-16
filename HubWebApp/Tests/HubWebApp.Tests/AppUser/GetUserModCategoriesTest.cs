@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
-using XTI_HubWebAppApi.AppUserInquiry;
+﻿using XTI_HubWebAppApi.AppUserInquiry;
 using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
@@ -14,19 +10,19 @@ internal sealed class GetUserModCategoriesTest
     {
         var tester = await setup();
         var user = await addUser(tester, "some.user");
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(user.ID);
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(user.ToModel().ID);
     }
 
     [Test]
     public async Task ShouldGetUserModifiers_WhenUserDoesNotHaveAccessToAllModifiers()
     {
         var tester = await setup();
-        tester.Login(HubInfo.Roles.ViewUser);
+        await tester.Login(HubInfo.Roles.ViewUser);
         var user = await addUser(tester, "some.user");
         var adminRole = await tester.AdminRole();
         var hubAppModifier = await tester.HubAppModifier();
         await user.Modifier(hubAppModifier).AssignRole(adminRole);
-        var modCategories = await tester.Execute(user.ID, hubAppModifier.ModKey());
+        var modCategories = await tester.Execute(user.ToModel().ID, hubAppModifier.ModKey());
         Assert.That(modCategories[0].Modifiers.Length, Is.EqualTo(1), "Should have access to one modifier");
         Assert.That(modCategories[0].Modifiers[0].ModKey, Is.EqualTo(hubAppModifier.ModKey()), "Should have access to one modifier");
     }
@@ -41,7 +37,7 @@ internal sealed class GetUserModCategoriesTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute(new AddUserModel
         {
             UserName = userName,

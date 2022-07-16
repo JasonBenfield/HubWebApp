@@ -16,11 +16,11 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            UserID = userToEdit.ID,
+            UserID = userToEdit.ToModel().ID,
             ModifierID = defaultModifier.ID,
             RoleID = viewAppRole.ID
         };
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(request);
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(request);
     }
 
     [Test]
@@ -34,12 +34,12 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            UserID = userToEdit.ID,
+            UserID = userToEdit.ToModel().ID,
             ModifierID = defaultModifier.ID,
             RoleID = viewAppRole.ID
         };
-        var modifier = tester.FakeHubAppModifier();
-        AccessAssertions.Create(tester)
+        var modifier = await tester.HubAppModifier();
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
@@ -53,7 +53,7 @@ internal sealed class UnassignRoleTest
     public async Task ShouldUnassignRoleFromUser()
     {
         var tester = await setup();
-        tester.Login(HubInfo.Roles.EditUser);
+        await tester.Login(HubInfo.Roles.EditUser);
         var userToEdit = await addUser(tester, "userToEdit");
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
@@ -64,7 +64,7 @@ internal sealed class UnassignRoleTest
         {
             RoleID = viewAppRole.ID,
             ModifierID = defaultModifier.ID,
-            UserID = userToEdit.ID
+            UserID = userToEdit.ToModel().ID
         };
         var hubAppModifier = await tester.HubAppModifier();
         await tester.Execute(request, hubAppModifier.ModKey());
@@ -95,7 +95,7 @@ internal sealed class UnassignRoleTest
     {
         return new UserRoleRequest
         {
-            UserID = userToEdit.ID,
+            UserID = userToEdit.ToModel().ID,
             RoleID = role.ID
         };
     }
@@ -103,7 +103,7 @@ internal sealed class UnassignRoleTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
+        await addUserTester.LoginAsAdmin();
         var userID = await addUserTester.Execute
         (
             new AddUserModel
@@ -121,18 +121,20 @@ internal sealed class UnassignRoleTest
     private async Task<int> assignRole(IHubActionTester tester, AppUser user, AppRole role)
     {
         var assignRoleTester = tester.Create(hubApi => hubApi.AppUserMaintenance.AssignRole);
-        assignRoleTester.LoginAsAdmin();
+        await assignRoleTester.LoginAsAdmin();
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
-        var appContext = tester.Services.GetRequiredService<FakeAppContext>();
-        var fakeDefaultModifier = appContext.App().DefaultModifier();
         var hubAppModifier = await tester.HubAppModifier();
-        var userRoleID = await assignRoleTester.Execute(new UserRoleRequest
-        {
-            UserID = user.ID,
-            ModifierID = defaultModifier.ID,
-            RoleID = role.ID
-        }, hubAppModifier.ModKey());
+        var userRoleID = await assignRoleTester.Execute
+        (
+            new UserRoleRequest
+            {
+                UserID = user.ToModel().ID,
+                ModifierID = defaultModifier.ID,
+                RoleID = role.ID
+            },
+            hubAppModifier
+        );
         return userRoleID;
     }
 }

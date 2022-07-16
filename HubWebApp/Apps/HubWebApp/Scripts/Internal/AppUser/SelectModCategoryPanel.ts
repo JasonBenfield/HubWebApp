@@ -5,7 +5,7 @@ import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { FilteredArray } from "@jasonbenfield/sharedwebapp/Enumerable";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 import { ModCategoryListItem } from "./ModCategoryListItem";
@@ -86,7 +86,7 @@ export class SelectModCategoryPanel implements IPanel {
         );
         modCategories = new FilteredArray(
             modCategories,
-            mc => mc.Name.toLowerCase() !== 'default'
+            mc => mc.Name.Value.toLowerCase() !== 'default'
         ).value();
         if (modCategories.length === 0) {
             this.awaitable.resolve(Result.defaultModSelected());

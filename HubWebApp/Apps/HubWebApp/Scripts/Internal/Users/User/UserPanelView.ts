@@ -1,9 +1,9 @@
 ﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
-import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Commands";
-import { CssLengthUnit } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
-import { GridView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
-import { ToolbarView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { AppListCardView } from "../../Apps/AppListCardView";
 import { HubTheme } from "../../HubTheme";
 import { UserComponentView } from "./UserComponentView";

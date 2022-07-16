@@ -10,12 +10,13 @@ import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSmallView } from "@jasonbenfield/sharedwebapp/Views/TextSmallView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { CssLengthUnit } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
-import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
-import { BasicTextComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicTextComponentView";
-import { ButtonCommandView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Commands";
-import { GridView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { HubTheme } from "../HubTheme";
+import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 
 export class UserRolesPanelView extends GridView {
@@ -91,6 +92,13 @@ export class UserRolesPanelView extends GridView {
         this.defaultUserRolesTitle = this.defaultUserRolesCard.addCardTitleHeader();
         this.defaultUserRoles = this.defaultUserRolesCard.addUnorderedListGroup();
         this.defaultUserRoles.setItemViewType(UserRoleListItemView);
+    }
+
+    handleUserRoleDeleteClicked(action: (el: HTMLElement) => void) {
+        this.userRoles.on('click')
+            .select('button.deleteButton')
+            .execute(action)
+            .subscribe();
     }
 
     private addNavLinkButton(navPills: NavView) {

@@ -20,7 +20,7 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
         var user = await appFactory.Users.User(model.UserID);
         var modifier = await app.Modifier(model.ModifierID);
         await user.Modifier(modifier).UnassignRole(denyAccessRole);
-        userContext.ClearCache(user.UserName());
+        userContext.ClearCache(user.ToModel().UserName);
         return new EmptyActionResult();
     }
 }

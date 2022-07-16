@@ -1,6 +1,6 @@
 ﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { ButtonListGroupView, ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { UserListItemView } from "./UserListItemView";
 
 export class UserListCardView extends CardView {

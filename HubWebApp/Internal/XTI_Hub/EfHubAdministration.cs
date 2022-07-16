@@ -124,7 +124,7 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = getMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await hubFactory.Installers.AddOrUpdateInstallationUser(machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.Installers.AddOrUpdateInstaller(machineName, hashedPassword, clock.Now());
         return installationUser.ToModel();
     }
 
