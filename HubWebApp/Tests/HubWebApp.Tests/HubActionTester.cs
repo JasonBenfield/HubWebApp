@@ -16,6 +16,7 @@ internal interface IHubActionTester
     HubActionTester<TOtherModel, TOtherResult> Create<TOtherModel, TOtherResult>(Func<HubAppApi, AppApiAction<TOtherModel, TOtherResult>> getAction);
     Task<App> HubApp();
     Task<Modifier> HubAppModifier();
+    Task<Modifier> GeneralUserGroupModifier();
 }
 
 internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
@@ -57,13 +58,18 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return user;
     }
 
-    public Task<AppUser> Login(params AppRoleName[]? roleNames) =>
-        Login(ModifierKey.Default, roleNames);
+    public async Task<AppUser> Login(params AppRoleName[]? roleNames)
+    {
+        var modifier = await DefaultModifier();
+        var user = await Login(modifier, roleNames);
+        return user;
+    }
 
-    public async Task<AppUser> Login(ModifierKey modKey, params AppRoleName[]? roleNames)
+    public async Task<AppUser> Login(Modifier modifier, params AppRoleName[]? roleNames)
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.AddOrUpdate
+        var userGroup = await factory.UserGroups.GetGeneral();
+        var user = await userGroup.AddOrUpdate
         (
             new AppUserName("loggedinUser"),
             new FakeHashedPassword(""),
@@ -74,16 +80,6 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        Modifier modifier;
-        if (modKey.Equals(ModifierKey.Default))
-        {
-            modifier = await hubApp.DefaultModifier();
-        }
-        else
-        {
-            var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-            modifier = await appsModCategory.ModifierByModKey(modKey);
-        }
         foreach (var roleName in roleNames ?? new AppRoleName[0])
         {
             var role = await hubApp.Role(roleName);
@@ -105,6 +101,25 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return role;
     }
 
+    public Task<Modifier> GeneralUserGroupModifier() =>
+        UserGroupModifier(AppUserGroupName.General);
+
+    public async Task<Modifier> UserGroupModifier(AppUserGroupName name)
+    {
+        var factory = Services.GetRequiredService<HubFactory>();
+        var userGroup = await factory.UserGroups.UserGroup(name);
+        var userGroupModel = userGroup.ToModel();
+        var hubApp = await HubApp();
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var userGroupModifier = await userGroupsModCategory.AddOrUpdateModifier
+        (
+            userGroupModel.PublicKey,
+            userGroupModel.ID.ToString(),
+            userGroupModel.GroupName.DisplayText
+        );
+        return userGroupModifier;
+    }
+
     public async Task<Modifier> DefaultModifier()
     {
         var hubApp = await HubApp();
@@ -118,7 +133,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
     {
         var factory = Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.App(appKey);
-        var appModel = app.ToAppModel();
+        var appModel = app.ToModel();
         App hubApp;
         if (appKey.Equals(HubInfo.AppKey))
         {

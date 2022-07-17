@@ -18,16 +18,17 @@ internal sealed class ExternalLoginTest
         var tester = await setup();
         var user = await addUser(tester, "someone");
         var authApp = await getAuthApp(tester);
+        var authAppModel = authApp.ToModel();
         const string externalUserKey = "external.id";
         await user.AddAuthenticator(authApp, externalUserKey);
-        var authKey = await externalAuthKey(tester, authApp.Key(), externalUserKey);
+        var authKey = await externalAuthKey(tester, authAppModel.AppKey, externalUserKey);
         var returnKey = await loginReturnKey(tester, "/Home");
         var request = new LoginModel
         {
             AuthKey = authKey,
             ReturnKey = returnKey
         };
-        await tester.Execute(request, authApp.ToAppModel().PublicKey);
+        await tester.Execute(request, authAppModel.PublicKey);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
         (
@@ -53,15 +54,17 @@ internal sealed class ExternalLoginTest
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var appKey = AppKey.WebApp("Auth");
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
-        await authApp.RegisterAsAuthenticator();
-        var hubApp = await tester.HubApp();
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier
+        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
+        await appRegistration.Run
         (
-            authApp.ToAppModel().PublicKey,
-            authApp.ID, 
-            authApp.Key().Name.DisplayText
+            new AppApiTemplateModel
+            {
+                AppKey = appKey,
+                GroupTemplates = new AppApiGroupTemplateModel[0]
+            },
+            AppVersionKey.Current
         );
+        await authApp.RegisterAsAuthenticator();
         return tester;
     }
 
@@ -75,25 +78,31 @@ internal sealed class ExternalLoginTest
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
 
-    private Task<string> externalAuthKey(IHubActionTester tester, AppKey appKey, string externalUserKey)
+    private async Task<string> externalAuthKey(IHubActionTester tester, AppKey appKey, string externalUserKey)
     {
         var externalAuthKeyTester = tester.Create(hubApi => hubApi.ExternalAuth.ExternalAuthKey);
-        externalAuthKeyTester.LoginAsAdmin();
-        return externalAuthKeyTester.Execute(new ExternalAuthKeyModel
+        await externalAuthKeyTester.LoginAsAdmin();
+        var authKey = await externalAuthKeyTester.Execute(new ExternalAuthKeyModel
         {
             AppKey = appKey,
             ExternalUserKey = externalUserKey
         });
+        return authKey;
     }
 
     private async Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)

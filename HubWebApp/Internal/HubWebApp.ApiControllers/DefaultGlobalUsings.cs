@@ -15,5 +15,6 @@ global using XTI_HubWebAppApi.ResourceGroupInquiry;
 global using XTI_HubWebAppApi.ResourceInquiry;
 global using XTI_HubWebAppApi.Storage;
 global using XTI_HubWebAppApi.System;
+global using XTI_HubWebAppApi.UserGroups;
 global using XTI_HubWebAppApi.UserList;
 global using XTI_WebApp.Api;

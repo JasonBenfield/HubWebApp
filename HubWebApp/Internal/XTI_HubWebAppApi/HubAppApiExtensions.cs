@@ -4,7 +4,8 @@ public static class HubAppApiExtensions
 {
     public static void AddHubAppApiServices(this IServiceCollection services)
     {
-        services.RegisterHomeGroupServices();
+        services.AddScoped<UserGroupFromPath>();
+        services.AddHomeGroupServices();
         services.AddAuthenticatorsGroupServices();
         services.AddAppInquiryGroupServices();
         services.AddAppInstallGroupServices();
@@ -24,5 +25,6 @@ public static class HubAppApiExtensions
         services.AddVersionInquiryGroupServices();
         services.AddStorageGroupServices();
         services.AddSystemGroupServices();
+        services.AddUserGroupsGroupServices();
     }
 }

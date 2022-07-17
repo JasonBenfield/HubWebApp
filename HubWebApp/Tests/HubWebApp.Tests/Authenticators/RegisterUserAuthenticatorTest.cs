@@ -61,7 +61,7 @@ internal sealed class RegisterUserAuthenticatorTest
             .ToArrayAsync();
         Assert.That(userAuthenticators.Length, Is.EqualTo(1), "Should add authenticator to user");
         var authenticator = await db.Authenticators.Retrieve()
-            .FirstAsync(a => a.AppID == app.ID);
+            .FirstAsync(a => a.AppID == app.ToModel().ID);
         Assert.That(userAuthenticators[0].AuthenticatorID, Is.EqualTo(authenticator.ID));
         Assert.That(userAuthenticators[0].UserID, Is.EqualTo(user.ToModel().ID));
         Assert.That(userAuthenticators[0].ExternalUserKey, Is.EqualTo("external.id"));
@@ -122,15 +122,17 @@ internal sealed class RegisterUserAuthenticatorTest
         var appKey = AppKey.WebApp("Auth");
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
         await authApp.RegisterAsAuthenticator();
-        var hubApp = await tester.HubApp();
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var authAppModel = authApp.ToAppModel();
-        var modifier = await modCategory.AddOrUpdateModifier
+        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
+        await appRegistration.Run
         (
-            authAppModel.PublicKey,
-            authAppModel.ID, 
-            authAppModel.AppKey.Format()
+            new AppApiTemplateModel
+            {
+                AppKey = appKey,
+                GroupTemplates = new AppApiGroupTemplateModel[0]
+            },
+            AppVersionKey.Current
         );
+        var hubApp = await tester.HubApp();
         return tester;
     }
 
@@ -140,7 +142,7 @@ internal sealed class RegisterUserAuthenticatorTest
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var authApp = await factory.Apps.App(authAppKey);
-        var modifier = await appsModCategory.ModifierByModKey(authApp.ToAppModel().PublicKey);
+        var modifier = await appsModCategory.ModifierByModKey(authApp.ToModel().PublicKey);
         return modifier;
     }
 
@@ -154,11 +156,16 @@ internal sealed class RegisterUserAuthenticatorTest
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;

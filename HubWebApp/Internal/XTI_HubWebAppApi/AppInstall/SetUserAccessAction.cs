@@ -2,7 +2,7 @@
 
 public sealed class SetUserAccessRequest
 {
-    public int UserID { get; set; }
+    public AppUserName UserName { get; set; } = AppUserName.Anon;
     public SetUserAccessRoleRequest[] RoleAssignments { get; set; } = new SetUserAccessRoleRequest[0];
 }
 
@@ -23,7 +23,7 @@ internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, Empt
 
     public async Task<EmptyActionResult> Execute(SetUserAccessRequest model, CancellationToken stoppingToken)
     {
-        var user = await appFactory.Users.User(model.UserID);
+        var user = await appFactory.Users.UserByUserName(model.UserName);
         foreach (var assignment in model.RoleAssignments)
         {
             var app = await appFactory.Apps.App(assignment.AppKey);

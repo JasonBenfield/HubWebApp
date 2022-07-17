@@ -49,7 +49,8 @@ public sealed class InstallerRepository
         DateTimeOffset timeAdded
     )
     {
-        var user = await factory.Users.AddOrUpdate
+        var xtiUserGroup = await factory.UserGroups.GetXti();
+        var user = await xtiUserGroup.AddOrUpdate
         (
             new InstallerUserName(machineName).Value,
             password,

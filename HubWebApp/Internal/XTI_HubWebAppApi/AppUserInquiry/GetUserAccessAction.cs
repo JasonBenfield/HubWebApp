@@ -18,10 +18,10 @@ public sealed class GetUserAccessAction : AppAction<UserModifierKey, UserAccessM
         var modifier = await app.Modifier(model.ModifierID);
         var roles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
         var roleModels = roles
-            .Where(r => !r.Name().Equals(AppRoleName.DenyAccess))
+            .Where(r => !r.IsDenyAccess())
             .Select(r => r.ToModel())
             .ToArray();
-        var hasAccess = !roles.Any(r => r.Name().Equals(AppRoleName.DenyAccess));
+        var hasAccess = !roles.Any(r => r.IsDenyAccess());
         return new UserAccessModel(hasAccess, roleModels);
     }
 }

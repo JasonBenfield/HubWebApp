@@ -18,6 +18,6 @@ public sealed class AppListGroup : AppApiGroupWrapper
     }
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
-    public AppApiAction<EmptyRequest, AppWithModKeyModel[]> GetApps { get; }
+    public AppApiAction<EmptyRequest, AppModel[]> GetApps { get; }
     public AppApiAction<EmptyRequest, AppDomainModel[]> GetAppDomains { get; }
 }

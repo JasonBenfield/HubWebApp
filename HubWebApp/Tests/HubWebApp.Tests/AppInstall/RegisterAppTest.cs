@@ -13,8 +13,9 @@ public sealed class RegisterAppTest
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
-        Assert.That(app.Key(), Is.EqualTo(FakeInfo.AppKey), "Should add app");
-        Assert.That(app.Title, Is.EqualTo($"{FakeInfo.AppKey.Name.DisplayText} {FakeInfo.AppKey.Type.DisplayText}"), "Should set app title");
+        var appModel = app.ToModel();
+        Assert.That(appModel.AppKey, Is.EqualTo(FakeInfo.AppKey), "Should add app");
+        Assert.That(appModel.Title, Is.EqualTo($"{FakeInfo.AppKey.Name.DisplayText} {FakeInfo.AppKey.Type.DisplayText}"), "Should set app title");
     }
 
     private static async Task<App> getApp(IHubActionTester tester)
@@ -64,7 +65,7 @@ public sealed class RegisterAppTest
             FakeInfo.Roles.Viewer
         };
         var appRoles = await app.Roles();
-        Assert.That(appRoles.Select(r => r.Name()), Is.EquivalentTo(roleNames), "Should add role names from app role names");
+        Assert.That(appRoles.Select(r => r.ToModel().Name), Is.EquivalentTo(roleNames), "Should add role names from app role names");
     }
 
     [Test]
@@ -76,7 +77,7 @@ public sealed class RegisterAppTest
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
-        Assert.That(app.ID, Is.GreaterThan(0), "Should add unknown app");
+        Assert.That(app.ToModel().ID, Is.GreaterThan(0), "Should add unknown app");
     }
 
     [Test]
@@ -150,7 +151,7 @@ public sealed class RegisterAppTest
         var allowedRoles = await employeeGroup.AllowedRoles();
         Assert.That
         (
-            allowedRoles.Select(r => r.Name()),
+            allowedRoles.Select(r => r.ToModel().Name),
             Is.EquivalentTo(new[] { AppRoleName.Admin }),
             "Should add allowed group roles from group template"
         );
@@ -189,7 +190,7 @@ public sealed class RegisterAppTest
         var allowedRoles = await addEmployeeAction.AllowedRoles();
         Assert.That
         (
-            allowedRoles.Select(r => r.Name()),
+            allowedRoles.Select(r => r.ToModel().Name),
             Is.EquivalentTo(new[] { AppRoleName.Admin, FakeAppRoles.Instance.Manager }),
             "Should add allowed resource roles from action template"
         );
@@ -296,7 +297,7 @@ public sealed class RegisterAppTest
         Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }
 
-    private async Task<HubActionTester<RegisterAppRequest, AppWithModKeyModel>> setup()
+    private async Task<HubActionTester<RegisterAppRequest, AppModel>> setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

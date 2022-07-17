@@ -86,10 +86,6 @@ interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: Date;
 }
-interface IAppWithModKeyModel {
-	App: IAppModel;
-	ModKey: string;
-}
 interface IAppModel {
 	ID: number;
 	AppKey: IAppKey;
@@ -252,7 +248,7 @@ interface IInstallationRequest {
 	InstallationID: number;
 }
 interface ISetUserAccessRequest {
-	UserID: number;
+	UserName: IAppUserName;
 	RoleAssignments: ISetUserAccessRoleRequest[];
 }
 interface ISetUserAccessRoleRequest {
@@ -383,6 +379,18 @@ interface IUserContextRoleModel {
 	ModifierCategoryID: number;
 	ModifierKey: IModifierKey;
 	Roles: IAppRoleModel[];
+}
+interface IAddUserGroupIfNotExistsRequest {
+	GroupName: string;
+}
+interface IAppUserGroupModel {
+	ID: number;
+	GroupName: IAppUserGroupName;
+	PublicKey: IModifierKey;
+}
+interface IAppUserGroupName {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppType {
 	Value: number;

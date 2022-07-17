@@ -16,12 +16,11 @@ internal sealed class SupportAppSetup : IAppSetup
     public async Task Run(AppVersionKey versionKey)
     {
         var systemUserName = new SystemUserName(SupportInfo.AppKey, Environment.MachineName);
-        var systemUser = await hubClient.UserInquiry.GetUserByUserName(systemUserName.Value.Value);
         await hubClient.Install.SetUserAccess
         (
             new SetUserAccessRequest
             {
-                UserID = systemUser.ID,
+                UserName = systemUserName.Value,
                 RoleAssignments = new[]
                 {
                     new SetUserAccessRoleRequest

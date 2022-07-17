@@ -4,13 +4,13 @@ namespace XTI_HubWebAppApi;
 
 partial class HubAppApi
 {
-    private AppUserGroup? appUser;
+    private AppUserInquiry.AppUserGroup? appUser;
 
-    public AppUserGroup AppUser { get=>appUser ?? throw new ArgumentNullException(nameof(appUser)); }
+    public AppUserInquiry.AppUserGroup AppUser { get=>appUser ?? throw new ArgumentNullException(nameof(appUser)); }
 
     partial void createAppUser(IServiceProvider sp)
     {
-        appUser = new AppUserGroup
+        appUser = new AppUserInquiry.AppUserGroup
         (
             source.AddGroup
             (

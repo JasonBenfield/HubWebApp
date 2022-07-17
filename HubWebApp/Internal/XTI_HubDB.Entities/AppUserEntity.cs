@@ -8,4 +8,5 @@ public sealed class AppUserEntity
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
+    public int GroupID { get; set; }
 }

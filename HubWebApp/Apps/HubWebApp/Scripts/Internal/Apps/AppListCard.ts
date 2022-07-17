@@ -27,14 +27,14 @@ export class AppListCard {
     }
 
     private onAppSelected(listItem: AppListItem) {
-        this._appSelected.invoke(listItem.appWithModKey.App);
+        this._appSelected.invoke(listItem.app);
     }
 
     async refresh() {
         const apps = await this.getApps();
         this.apps.setItems(
             apps,
-            (sourceItem: IAppWithModKeyModel, listItem: AppListItemView) =>
+            (sourceItem: IAppModel, listItem: AppListItemView) =>
                 new AppListItem(sourceItem, this.appRedirectUrl, listItem)
         );
         if (apps.length === 0) {

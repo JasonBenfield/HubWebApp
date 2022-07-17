@@ -10,9 +10,9 @@ public sealed partial class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppWithModKeyModel>> RegisterApp([FromBody] RegisterAppRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppModel>> RegisterApp([FromBody] RegisterAppRequest model, CancellationToken ct)
     {
-        return api.Group("Install").Action<RegisterAppRequest, AppWithModKeyModel>("RegisterApp").Execute(model, ct);
+        return api.Group("Install").Action<RegisterAppRequest, AppModel>("RegisterApp").Execute(model, ct);
     }
 
     [HttpPost]

@@ -2,16 +2,17 @@
 
 public sealed class GetUsersAction : AppAction<EmptyRequest, AppUserModel[]>
 {
-    private readonly HubFactory factory;
+    private readonly UserGroupFromPath userGroupFromPath;
 
-    public GetUsersAction(HubFactory factory)
+    public GetUsersAction(UserGroupFromPath userGroupFromPath)
     {
-        this.factory = factory;
+        this.userGroupFromPath = userGroupFromPath;
     }
 
     public async Task<AppUserModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var users = await factory.Users.Users();
+        var userGroup = await userGroupFromPath.Value();
+        var users = await userGroup.Users();
         return users.Select(u => u.ToModel()).ToArray();
     }
 }

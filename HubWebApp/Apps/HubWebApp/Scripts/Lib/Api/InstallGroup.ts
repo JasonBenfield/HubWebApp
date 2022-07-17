@@ -9,7 +9,7 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class InstallGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Install');
-		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppWithModKeyModel>('RegisterApp', 'Register App');
+		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppModel>('RegisterApp', 'Register App');
 		this.AddOrUpdateAppsAction = this.createAction<IAddOrUpdateAppsRequest,IAppModel[]>('AddOrUpdateApps', 'Add Or Update Apps');
 		this.AddOrUpdateVersionsAction = this.createAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>('AddOrUpdateVersions', 'Add Or Update Versions');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
@@ -23,7 +23,7 @@ export class InstallGroup extends AppApiGroup {
 		this.SetUserAccessAction = this.createAction<ISetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
 	
-	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppWithModKeyModel>;
+	readonly RegisterAppAction: AppApiAction<IRegisterAppRequest,IAppModel>;
 	readonly AddOrUpdateAppsAction: AppApiAction<IAddOrUpdateAppsRequest,IAppModel[]>;
 	readonly AddOrUpdateVersionsAction: AppApiAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>;
 	readonly GetVersionAction: AppApiAction<IGetVersionRequest,IXtiVersionModel>;

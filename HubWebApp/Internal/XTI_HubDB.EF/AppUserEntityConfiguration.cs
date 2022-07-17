@@ -27,6 +27,11 @@ public sealed class AppUserEntityConfiguration : IEntityTypeConfiguration<AppUse
         builder
             .Property(u => u.Email)
             .HasMaxLength(100);
+        builder
+            .HasOne<UserGroupEntity>()
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(r => r.GroupID);
         builder.ToTable("Users");
     }
 }

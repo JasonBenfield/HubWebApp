@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -17,9 +16,9 @@ public sealed class App
         ID = this.record.ID;
     }
 
-    public int ID { get; }
-    public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
-    public string Title { get => record.Title; }
+    internal int ID { get; }
+
+    public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
     public async Task RegisterAsAuthenticator()
     {
@@ -89,7 +88,7 @@ public sealed class App
         {
             await addRoles(roleNames, existingRoles);
             var rolesToDelete = existingRoles
-                .Where(r => !r.IsDeactivated() && !roleNames.Any(rn => r.Name().Equals(rn)))
+                .Where(r => !r.IsDeactivated() && !roleNames.Any(rn => r.NameEquals(rn)))
                 .ToArray();
             await deleteRoles(rolesToDelete);
         });
@@ -99,7 +98,7 @@ public sealed class App
     {
         foreach (var roleName in roleNames)
         {
-            var existingRole = existingRoles.FirstOrDefault(r => r.Name().Equals(roleName));
+            var existingRole = existingRoles.FirstOrDefault(r => r.NameEquals(roleName));
             if (existingRole == null)
             {
                 await AddRoleIfNotFound(roleName);
@@ -140,9 +139,9 @@ public sealed class App
         return requests;
     }
 
-    public AppModel ToAppModel()
+    public AppModel ToModel()
     {
-        var key = Key();
+        var key = ToAppKey();
         return new AppModel
         (
             ID: ID,
@@ -153,6 +152,7 @@ public sealed class App
         );
     }
 
-    public override string ToString() => $"{nameof(App)} {ID}: {Key().Format()}";
+    public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
 
+    private AppKey ToAppKey() => new AppKey(record.Name, AppType.Values.Value(record.Type));
 }

@@ -285,35 +285,6 @@ internal sealed class StoreObjectTest
         Assert.That(storageKey, Is.EqualTo("SomeKey"), "Should generate fixed key");
     }
 
-    [Test]
-    public async Task ShouldThrowError_WhenGenerateFixedKeyIsADuplicate()
-    {
-        var tester = await Setup();
-        await tester.LoginAsAdmin();
-        var storageKey = await tester.Execute
-        (
-            new StoreObjectRequest
-            {
-                StorageName = "Something",
-                Data = "Whatever",
-                GenerateKey = GenerateKeyModel.Fixed("SomeKey")
-            }
-        );
-        Assert.ThrowsAsync<Exception>
-        (
-            () => tester.Execute
-            (
-                new StoreObjectRequest
-                {
-                    StorageName = "SomethingElse",
-                    Data = "Whatever",
-                    GenerateKey = GenerateKeyModel.Fixed("SomeKey")
-                }
-            )
-        );
-        Assert.That(storageKey, Is.EqualTo("SomeKey"), "Should generate fixed key");
-    }
-
     private Task<string> GetStoredObject(IHubActionTester tester, string storageName, string storageKey)
     {
         var getStoredObj = tester.Create((hubApi) => hubApi.Storage.GetStoredObject);

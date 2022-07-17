@@ -48,7 +48,7 @@ public sealed class AppVersion
 
     internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(app, version);
 
-    public AppModel ToAppModel() => app.ToAppModel();
+    public AppModel ToAppModel() => app.ToModel();
 
     public XtiVersionModel ToVersionModel() => version.ToModel();
 }

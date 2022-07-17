@@ -94,15 +94,15 @@ internal sealed class RegisterAuthenticatorTest
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), authAppKey, DateTimeOffset.Now);
-        var appKey = AppKey.WebApp("Auth");
-        var hubApp = await tester.HubApp();
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var authAppModel = authApp.ToAppModel();
-        var modifier = await modCategory.AddOrUpdateModifier
+        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
+        await appRegistration.Run
         (
-            authAppModel.PublicKey, 
-            authAppModel.ID, 
-            authAppModel.AppKey.Format()
+            new AppApiTemplateModel
+            {
+                AppKey = authAppKey,
+                GroupTemplates = new AppApiGroupTemplateModel[0]
+            },
+            AppVersionKey.Current
         );
         return tester;
     }
@@ -113,7 +113,7 @@ internal sealed class RegisterAuthenticatorTest
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var authApp = await factory.Apps.App(authAppKey);
-        var modifier = await appsModCategory.ModifierByModKey(authApp.ToAppModel().PublicKey);
+        var modifier = await appsModCategory.ModifierByModKey(authApp.ToModel().PublicKey);
         return modifier;
     }
 

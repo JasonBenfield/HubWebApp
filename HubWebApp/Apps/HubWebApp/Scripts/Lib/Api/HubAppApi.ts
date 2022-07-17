@@ -26,6 +26,7 @@ import { AppUserMaintenanceGroup } from "./AppUserMaintenanceGroup";
 import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 import { StorageGroup } from "./StorageGroup";
 import { SystemGroup } from "./SystemGroup";
+import { UserGroupsGroup } from "./UserGroupsGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -54,6 +55,7 @@ export class HubAppApi extends AppApi {
 		this.UserMaintenance = this.addGroup((evts, resourceUrl) => new UserMaintenanceGroup(evts, resourceUrl));
 		this.Storage = this.addGroup((evts, resourceUrl) => new StorageGroup(evts, resourceUrl));
 		this.System = this.addGroup((evts, resourceUrl) => new SystemGroup(evts, resourceUrl));
+		this.UserGroups = this.addGroup((evts, resourceUrl) => new UserGroupsGroup(evts, resourceUrl));
 	}
 	
 	readonly User: UserGroup;
@@ -79,4 +81,5 @@ export class HubAppApi extends AppApi {
 	readonly UserMaintenance: UserMaintenanceGroup;
 	readonly Storage: StorageGroup;
 	readonly System: SystemGroup;
+	readonly UserGroups: UserGroupsGroup;
 }

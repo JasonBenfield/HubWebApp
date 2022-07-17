@@ -25,7 +25,7 @@ public sealed class EfHubAdministration : IHubAdministration
         foreach (var appDef in appDefs)
         {
             var app = await hubFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
-            apps.Add(app.ToAppModel());
+            apps.Add(app.ToModel());
         }
         return apps.ToArray();
     }
@@ -149,7 +149,8 @@ public sealed class EfHubAdministration : IHubAdministration
     public async Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var user = await hubFactory.Users.AddOrUpdate
+        var defaultUserGroup = await hubFactory.UserGroups.GetGeneral();
+        var user = await defaultUserGroup.AddOrUpdate
         (
             userName, 
             hashedPassword, 

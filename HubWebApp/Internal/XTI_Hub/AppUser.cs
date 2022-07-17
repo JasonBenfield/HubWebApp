@@ -32,7 +32,7 @@ public sealed class AppUser
     {
         var modifiers = await app.Modifiers();
         var userModifiers = new List<AppUserModifier>();
-        foreach(var modifier in modifiers)
+        foreach (var modifier in modifiers)
         {
             userModifiers.Add(Modifier(modifier));
         }
@@ -90,6 +90,91 @@ public sealed class AppUser
                 ua => ua.ExternalUserKey = externalUserKey
             );
         }
+    }
+
+    public async Task<AppPermission[]> GetAppPermissions()
+    {
+        var apps = await factory.Apps.All();
+        var hubApp = apps.First(a => a.AppKeyEquals(HubInfo.AppKey));
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var appPermissions = new List<AppPermission>();
+        var viewRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
+        var editRoles = new[] { AppRoleName.Admin };
+        foreach (var app in apps)
+        {
+            var appModel = app.ToModel();
+            var modifier = await appsModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.AppKey.Format());
+            var userRoles = await Modifier(modifier).AssignedRoles();
+            var userRoleModels = userRoles.Select(ur => ur.ToModel());
+            AppPermission permission;
+            if (userRoleModels.Any(ur => ur.Name.Equals(AppRoleName.DenyAccess)))
+            {
+                permission = new AppPermission(app, false, false);
+            }
+            else
+            {
+                permission = new AppPermission
+                (
+                    App: app,
+                    CanView: userRoleModels
+                        .Any(ur => ur.Name.EqualsAny(viewRoles)),
+                    CanEdit: userRoleModels
+                        .Any(ur => ur.Name.EqualsAny(editRoles))
+                );
+            }
+            appPermissions.Add(permission);
+        }
+        return appPermissions.ToArray();
+    }
+
+    private static readonly AppRoleName[] viewUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewUser };
+    private static readonly AppRoleName[] editUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.EditUser };
+
+    public async Task<AppUserGroupPermission[]> GetUserGroupPermissions()
+    {
+        var userGroups = await factory.UserGroups.UserGroups();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var userGroupPermissions = new List<AppUserGroupPermission>();
+        foreach (var userGroup in userGroups)
+        {
+            var userGroupPermission = await GetUserGroupPermission(userGroupsModCategory, userGroup);
+            userGroupPermissions.Add(userGroupPermission);
+        }
+        return userGroupPermissions.ToArray();
+    }
+
+    public async Task<AppUserGroupPermission> GetUserGroupPermission(AppUserGroup userGroup)
+    {
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var permission = await GetUserGroupPermission(userGroupsModCategory, userGroup);
+        return permission;
+    }
+
+    private async Task<AppUserGroupPermission> GetUserGroupPermission(ModifierCategory userGroupsModCategory, AppUserGroup userGroup)
+    {
+        AppUserGroupPermission userGroupPermission;
+        var userGroupModel = userGroup.ToModel();
+        var modifier = await userGroupsModCategory.AddOrUpdateModifier(userGroupModel.PublicKey, userGroupModel.ID, userGroupModel.GroupName.DisplayText);
+        var userRoles = await Modifier(modifier).AssignedRoles();
+        var userRoleModels = userRoles.Select(ur => ur.ToModel());
+        if (userRoles.Any(ur => ur.IsDenyAccess()))
+        {
+            userGroupPermission = new AppUserGroupPermission(userGroup, false, false);
+        }
+        else
+        {
+            userGroupPermission = new AppUserGroupPermission
+            (
+                UserGroup: userGroup,
+                CanView: userRoleModels
+                    .Any(ur => ur.Name.EqualsAny(viewUserRoles)),
+                CanEdit: userRoleModels
+                    .Any(ur => ur.Name.EqualsAny(editUserRoles))
+            );
+        }
+        return userGroupPermission;
     }
 
     public AppUserModel ToModel() => new AppUserModel

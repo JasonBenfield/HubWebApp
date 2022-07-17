@@ -63,7 +63,7 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
         );
     }
 
-    public AppApiAction<RegisterAppRequest, AppWithModKeyModel> RegisterApp { get; }
+    public AppApiAction<RegisterAppRequest, AppModel> RegisterApp { get; }
     public AppApiAction<GetVersionRequest, XtiVersionModel> GetVersion { get; }
     public AppApiAction<GetVersionsRequest, XtiVersionModel[]> GetVersions { get; }
     public AppApiAction<AddOrUpdateAppsRequest, AppModel[]> AddOrUpdateApps { get; }

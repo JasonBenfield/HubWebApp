@@ -1,5 +1,6 @@
 ﻿const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const entry = {
     user: './Scripts/Internal/User/Start/MainPage.ts',
     accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
@@ -70,7 +71,7 @@ const outputFilename = '[name].js';
 const resolve = {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-        '@hub': path.resolve(__dirname, '../../../hubwebapp/apps/hubwebapp/scripts/hub'),
+        '@hub': path.resolve(__dirname, '../../../hubwebapp/apps/hubwebapp/scripts/lib'),
         '@jasonbenfield/sharedwebapp': 'C:/XTI/src/JasonBenfield/SharedWebApp/Apps/SharedWebApp/Scripts/Lib'
     }
 };
@@ -78,7 +79,8 @@ const plugins = [
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin()
 ];
 module.exports = [
     {

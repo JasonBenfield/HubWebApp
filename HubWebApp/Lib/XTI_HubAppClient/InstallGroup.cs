@@ -6,7 +6,7 @@ public sealed partial class InstallGroup : AppClientGroup
     {
     }
 
-    public Task<AppWithModKeyModel> RegisterApp(RegisterAppRequest model) => Post<AppWithModKeyModel, RegisterAppRequest>("RegisterApp", "", model);
+    public Task<AppModel> RegisterApp(RegisterAppRequest model) => Post<AppModel, RegisterAppRequest>("RegisterApp", "", model);
     public Task<AppModel[]> AddOrUpdateApps(AddOrUpdateAppsRequest model) => Post<AppModel[], AddOrUpdateAppsRequest>("AddOrUpdateApps", "", model);
     public Task<EmptyActionResult> AddOrUpdateVersions(AddOrUpdateVersionsRequest model) => Post<EmptyActionResult, AddOrUpdateVersionsRequest>("AddOrUpdateVersions", "", model);
     public Task<XtiVersionModel> GetVersion(GetVersionRequest model) => Post<XtiVersionModel, GetVersionRequest>("GetVersion", "", model);

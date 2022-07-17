@@ -8,7 +8,7 @@ internal sealed class GetAppsTest
         var tester = await setup();
         await tester.LoginAsAdmin();
         var apps = await tester.Execute(new EmptyRequest());
-        var appNames = apps.Select(a => a.App.AppKey);
+        var appNames = apps.Select(a => a.AppKey);
         Assert.That
         (
             appNames,
@@ -21,15 +21,10 @@ internal sealed class GetAppsTest
     public async Task ShouldOnlyGetAllowedApps()
     {
         var tester = await setup();
-        var adminUser = await tester.LoginAsAdmin();
-        var app = await tester.HubApp();
-        var adminRole = await app.Role(AppRoleName.Admin);
-        var defaultModifier = await app.DefaultModifier();
-        await adminUser.Modifier(defaultModifier).UnassignRole(adminRole);
         var hubAppModifier = await tester.HubAppModifier();
-        await adminUser.Modifier(hubAppModifier).AssignRole(adminRole);
+        await tester.Login(hubAppModifier, HubInfo.Roles.ViewApp);
         var apps = await tester.Execute(new EmptyRequest());
-        var appNames = apps.Select(a => a.App.AppKey);
+        var appNames = apps.Select(a => a.AppKey);
         Assert.That
         (
             appNames,
@@ -38,7 +33,7 @@ internal sealed class GetAppsTest
         );
     }
 
-    private async Task<HubActionTester<EmptyRequest, AppWithModKeyModel[]>> setup()
+    private async Task<HubActionTester<EmptyRequest, AppModel[]>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

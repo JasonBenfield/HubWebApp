@@ -5,13 +5,13 @@ import { AppListItemView } from "./AppListItemView";
 
 export class AppListItem extends BasicComponent {
     constructor(
-        readonly appWithModKey: IAppWithModKeyModel,
+        readonly app: IAppModel,
         appRedirectUrl: (modKey: string) => string, view: AppListItemView
     ) {
         super(view);
-        new TextComponent(view.appName).setText(appWithModKey.App.AppKey.Name.DisplayText);
-        new TextComponent(view.appTitle).setText(appWithModKey.App.Title);
-        new TextComponent(view.appType).setText(appWithModKey.App.AppKey.Type.DisplayText);
-        new LinkComponent(view).setHref(appRedirectUrl(appWithModKey.ModKey));
+        new TextComponent(view.appName).setText(app.AppKey.Name.DisplayText);
+        new TextComponent(view.appTitle).setText(app.Title);
+        new TextComponent(view.appType).setText(app.AppKey.Type.DisplayText);
+        new LinkComponent(view).setHref(appRedirectUrl(app.PublicKey.DisplayText));
     }
 }

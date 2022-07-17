@@ -2,17 +2,18 @@
 
 public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
 {
-    private readonly HubFactory factory;
+    private readonly UserGroupFromPath userGroupFromPath;
 
-    public EditUserAction(HubFactory factory)
+    public EditUserAction(UserGroupFromPath userGroupFromPath)
     {
-        this.factory = factory;
+        this.userGroupFromPath = userGroupFromPath;
     }
 
     public async Task<EmptyActionResult> Execute(EditUserForm model, CancellationToken stoppingToken)
     {
         var userID = model.UserID.Value() ?? 0;
-        var user = await factory.Users.User(userID);
+        var userGroup = await userGroupFromPath.Value();
+        var user = await userGroup.User(userID);
         var name = new PersonName(model.PersonName.Value() ?? "");
         if (string.IsNullOrWhiteSpace(name))
         {

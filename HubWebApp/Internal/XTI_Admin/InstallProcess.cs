@@ -116,7 +116,7 @@ internal sealed class InstallProcess
             var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password);
             installerCreds = new CredentialValue
             (
-                installationUser.UserName,
+                installationUser.UserName.Value,
                 password
             );
             machineCredentials.Add(key, installerCreds);

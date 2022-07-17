@@ -11,6 +11,10 @@ public sealed class HubFactory
 
     internal IHubDbContext DB { get; }
 
+    private AppUserGroupRepository? userGroups;
+
+    public AppUserGroupRepository UserGroups { get => userGroups ??= new(this); }
+
     private AppUserRepository? users;
 
     public AppUserRepository Users { get => users ??= new(this); }

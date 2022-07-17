@@ -2,16 +2,17 @@
 
 public sealed class GetUserAction : AppAction<int, AppUserModel>
 {
-    private readonly HubFactory factory;
+    private readonly UserGroupFromPath userGroupFromPath;
 
-    public GetUserAction(HubFactory factory)
+    public GetUserAction(UserGroupFromPath userGroupFromPath)
     {
-        this.factory = factory;
+        this.userGroupFromPath = userGroupFromPath;
     }
 
     public async Task<AppUserModel> Execute(int userID, CancellationToken stoppingToken)
     {
-        var user = await factory.Users.User(userID);
+        var userGroup = await userGroupFromPath.Value();
+        var user = await userGroup.User(userID);
         return user.ToModel();
     }
 }

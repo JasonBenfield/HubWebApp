@@ -59,7 +59,7 @@ public sealed class DefaultAppSetup : IAppSetup
         (
             new CredentialValue
             (
-                systemUser.UserName,
+                systemUser.UserName.Value,
                 password
             )
         );
@@ -68,9 +68,8 @@ public sealed class DefaultAppSetup : IAppSetup
             AppTemplate = ToClientTemplateModel(template.ToModel()),
             VersionKey = versionKey
         };
-        var result = await hubClient.Install.RegisterApp(request);
-        app = result.App;
-        modKey = result.ModKey;
+        app = await hubClient.Install.RegisterApp(request);
+        modKey = app.PublicKey;
     }
 
     private XTI_HubAppClient.AppApiTemplateModel ToClientTemplateModel(XTI_App.Api.AppApiTemplateModel model)

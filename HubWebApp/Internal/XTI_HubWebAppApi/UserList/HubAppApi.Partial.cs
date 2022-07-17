@@ -15,7 +15,11 @@ partial class HubAppApi
     {
         users = new UserListGroup
         (
-            source.AddGroup(nameof(Users), Access.WithAllowed(HubInfo.Roles.ViewUser)),
+            source.AddGroup
+            (
+                nameof(Users), 
+                HubInfo.ModCategories.UserGroups
+            ),
             sp
         );
     }

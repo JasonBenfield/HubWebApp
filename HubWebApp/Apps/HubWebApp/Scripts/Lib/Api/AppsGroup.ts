@@ -10,12 +10,12 @@ export class AppsGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Apps');
 		this.Index = this.createView<IEmptyRequest>('Index');
-		this.GetAppsAction = this.createAction<IEmptyRequest,IAppWithModKeyModel[]>('GetApps', 'Get Apps');
+		this.GetAppsAction = this.createAction<IEmptyRequest,IAppModel[]>('GetApps', 'Get Apps');
 		this.GetAppDomainsAction = this.createAction<IEmptyRequest,IAppDomainModel[]>('GetAppDomains', 'Get App Domains');
 	}
 	
 	readonly Index: AppApiView<IEmptyRequest>;
-	readonly GetAppsAction: AppApiAction<IEmptyRequest,IAppWithModKeyModel[]>;
+	readonly GetAppsAction: AppApiAction<IEmptyRequest,IAppModel[]>;
 	readonly GetAppDomainsAction: AppApiAction<IEmptyRequest,IAppDomainModel[]>;
 	
 	GetApps(errorOptions?: IActionErrorOptions) {

@@ -27,11 +27,11 @@ internal sealed class EndToEndTest
             Password = NewUserCredentials.Password
         };
         var hubClient = sp.GetRequiredService<HubAppClient>();
-        await hubClient.Users.AddOrUpdateUser(addUserModel);
+        await hubClient.Users.AddOrUpdateUser("", addUserModel);
         hubClient.UseToken<NewUserXtiToken>();
         var ex = Assert.ThrowsAsync<AppClientException>(async () =>
         {
-            await hubClient.Users.AddOrUpdateUser(new AddUserModel
+            await hubClient.Users.AddOrUpdateUser("", new AddUserModel
             {
                 UserName = "TestUser2",
                 Password = "Password12345"

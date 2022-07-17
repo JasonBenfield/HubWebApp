@@ -67,7 +67,7 @@ public sealed class EfAppContext : ISourceAppContext
         }
         return new AppContextModel
         (
-            app.ToAppModel(),
+            app.ToModel(),
             appVersion.ToVersionModel(),
             roleModels,
             modCategoryModels.ToArray(),

@@ -4,23 +4,24 @@ namespace XTI_HubWebAppApi.UserList;
 
 public sealed class AddOrUpdateUserAction : AppAction<AddUserModel, int>
 {
-    private readonly HubFactory appFactory;
+    private readonly UserGroupFromPath userGroupFromPath;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public AddOrUpdateUserAction(HubFactory appFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public AddOrUpdateUserAction(UserGroupFromPath userGroupFromPath, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
-        this.appFactory = appFactory;
+        this.userGroupFromPath = userGroupFromPath;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.clock = clock;
     }
 
     public async Task<int> Execute(AddUserModel model, CancellationToken stoppingToken)
     {
+        var userGroup = await userGroupFromPath.Value();
         var userName = new AppUserName(model.UserName);
         var hashedPassword = hashedPasswordFactory.Create(model.Password);
         var timeAdded = clock.Now();
-        var user = await appFactory.Users.AddOrUpdate
+        var user = await userGroup.AddOrUpdate
         (
             userName,
             hashedPassword,

@@ -9,6 +9,6 @@ public sealed partial class UsersGroup : AppClientGroup
 
     public UsersActions Actions { get; }
 
-    public Task<AppUserModel[]> GetUsers() => Post<AppUserModel[], EmptyRequest>("GetUsers", "", new EmptyRequest());
-    public Task<int> AddOrUpdateUser(AddUserModel model) => Post<int, AddUserModel>("AddOrUpdateUser", "", model);
+    public Task<AppUserModel[]> GetUsers(string modifier) => Post<AppUserModel[], EmptyRequest>("GetUsers", modifier, new EmptyRequest());
+    public Task<int> AddOrUpdateUser(string modifier, AddUserModel model) => Post<int, AddUserModel>("AddOrUpdateUser", modifier, model);
 }

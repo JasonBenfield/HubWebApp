@@ -18,7 +18,7 @@ internal sealed class UnassignRoleTest
         {
             UserID = userToEdit.ToModel().ID,
             ModifierID = defaultModifier.ID,
-            RoleID = viewAppRole.ID
+            RoleID = viewAppRole.ToModel().ID
         };
         await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(request);
     }
@@ -36,7 +36,7 @@ internal sealed class UnassignRoleTest
         {
             UserID = userToEdit.ToModel().ID,
             ModifierID = defaultModifier.ID,
-            RoleID = viewAppRole.ID
+            RoleID = viewAppRole.ToModel().ID
         };
         var modifier = await tester.HubAppModifier();
         await AccessAssertions.Create(tester)
@@ -62,7 +62,7 @@ internal sealed class UnassignRoleTest
         await assignRole(tester, userToEdit, viewAppRole);
         var request = new UserRoleRequest
         {
-            RoleID = viewAppRole.ID,
+            RoleID = viewAppRole.ToModel().ID,
             ModifierID = defaultModifier.ID,
             UserID = userToEdit.ToModel().ID
         };
@@ -71,7 +71,7 @@ internal sealed class UnassignRoleTest
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
-            userRoles.Select(r => r.Name()),
+            userRoles.Select(r => r.ToModel().Name),
             Has.None.EqualTo(HubInfo.Roles.ViewApp),
             "Should unassign role from user"
         );
@@ -96,7 +96,7 @@ internal sealed class UnassignRoleTest
         return new UserRoleRequest
         {
             UserID = userToEdit.ToModel().ID,
-            RoleID = role.ID
+            RoleID = role.ToModel().ID
         };
     }
 
@@ -104,6 +104,7 @@ internal sealed class UnassignRoleTest
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
+        var modifier = await tester.GeneralUserGroupModifier();
         var userID = await addUserTester.Execute
         (
             new AddUserModel
@@ -111,7 +112,7 @@ internal sealed class UnassignRoleTest
                 UserName = userName,
                 Password = "Password12345"
             },
-            ModifierKey.Default
+            modifier
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
@@ -131,7 +132,7 @@ internal sealed class UnassignRoleTest
             {
                 UserID = user.ToModel().ID,
                 ModifierID = defaultModifier.ID,
-                RoleID = role.ID
+                RoleID = role.ToModel().ID
             },
             hubAppModifier
         );

@@ -2,16 +2,18 @@
 
 public sealed class InitialSetup
 {
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
 
-    public InitialSetup(HubFactory appFactory)
+    public InitialSetup(HubFactory hubFactory)
     {
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
     }
 
     public async Task Run()
     {
-        await appFactory.Users.AddAnonIfNotExists(DateTimeOffset.Now);
-        await appFactory.Apps.AddUnknownIfNotFound();
+        await hubFactory.Apps.AddUnknownIfNotFound();
+        var xtiUserGroup = await hubFactory.UserGroups.AddXtiIfNotExists();
+        await xtiUserGroup.AddAnonIfNotExists(DateTimeOffset.Now);
+        await hubFactory.UserGroups.AddGeneralIfNotExists();
     }
 }

@@ -27,6 +27,7 @@ public sealed partial class HubAppClient : AppClient
         UserMaintenance = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
         Storage = CreateGroup((_clientFactory, _tokenAccessor, _url) => new StorageGroup(_clientFactory, _tokenAccessor, _url));
         System = CreateGroup((_clientFactory, _tokenAccessor, _url) => new SystemGroup(_clientFactory, _tokenAccessor, _url));
+        UserGroups = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserGroupsGroup(_clientFactory, _tokenAccessor, _url));
     }
 
     public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
@@ -76,4 +77,6 @@ public sealed partial class HubAppClient : AppClient
     public StorageGroup Storage { get; }
 
     public SystemGroup System { get; }
+
+    public UserGroupsGroup UserGroups { get; }
 }

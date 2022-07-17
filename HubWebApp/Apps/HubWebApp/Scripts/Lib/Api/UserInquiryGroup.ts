@@ -10,16 +10,11 @@ export class UserInquiryGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'UserInquiry');
 		this.GetUserAction = this.createAction<number,IAppUserModel>('GetUser', 'Get User');
-		this.GetUserByUserNameAction = this.createAction<string,IAppUserModel>('GetUserByUserName', 'Get User By User Name');
 	}
 	
 	readonly GetUserAction: AppApiAction<number,IAppUserModel>;
-	readonly GetUserByUserNameAction: AppApiAction<string,IAppUserModel>;
 	
 	GetUser(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAction.execute(model, errorOptions || {});
-	}
-	GetUserByUserName(model: string, errorOptions?: IActionErrorOptions) {
-		return this.GetUserByUserNameAction.execute(model, errorOptions || {});
 	}
 }

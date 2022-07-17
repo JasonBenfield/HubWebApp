@@ -45,18 +45,18 @@ public sealed class SystemUserRepository
             );
         }
         var app = await factory.Apps.App(systemUserName.AppKey);
-        var appModel = app.ToAppModel();
+        var appModel = app.ToModel();
         var selfAdminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
         await systemUser.AssignRole(selfAdminRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
-        if (hubApp.Key().Equals(HubInfo.AppKey))
+        if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
             var hubSystemRole = await hubApp.AddRoleIfNotFound(AppRoleName.System);
             await systemUser.AssignRole(hubSystemRole);
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
             var appModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.Apps);
-            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, app.Title);
+            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.Title);
             var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);
             var addStoredObject = await hubApp.AddRoleIfNotFound(HubInfo.Roles.AddStoredObject);
@@ -68,13 +68,15 @@ public sealed class SystemUserRepository
     public Task<AppUser> SystemUserOrAnon(SystemUserName systemUserName) =>
         factory.Users.UserOrAnon(systemUserName.Value);
 
-    private Task<AppUser> AddSystemUser
+    private async Task<AppUser> AddSystemUser
     (
         SystemUserName systemUserName,
         IHashedPassword password,
         DateTimeOffset timeAdded
-    ) =>
-        factory.Users.AddOrUpdate
+    )
+    {
+        var xtiUserGroup = await factory.UserGroups.GetXti();
+        var user = await xtiUserGroup.AddOrUpdate
         (
             systemUserName.Value,
             password,
@@ -82,4 +84,6 @@ public sealed class SystemUserRepository
             new EmailAddress(""),
             timeAdded
         );
+        return user;
+    }
 }

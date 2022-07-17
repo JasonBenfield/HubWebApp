@@ -61,7 +61,7 @@ internal sealed class AllowAccessTest
         var roles = await user.Modifier(modifier).AssignedRoles();
         Assert.That
         (
-            roles.Select(r => r.Name()),
+            roles.Select(r => r.ToModel().Name),
             Is.EqualTo(new AppRoleName[0]),
             "Should remove deny access role"
         );
@@ -78,11 +78,16 @@ internal sealed class AllowAccessTest
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;

@@ -62,7 +62,8 @@ internal sealed class HubTestHost
     private async Task<AppUser> addAdminUser(IServiceProvider services)
     {
         var factory = services.GetRequiredService<HubFactory>();
-        var adminUser = await factory.Users.Add(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
+        var userGroup = await factory.UserGroups.GetGeneral();
+        var adminUser = await userGroup.AddOrUpdate(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var adminRole = await hubApp.Role(HubInfo.Roles.Admin);
         await adminUser.AssignRole(adminRole);

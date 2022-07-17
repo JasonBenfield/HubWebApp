@@ -15,7 +15,7 @@ public sealed class AppRole
         ID = this.record.ID;
     }
 
-    public int ID { get; }
+    internal int ID { get; }
     public AppRoleName Name() => new AppRoleName(record.Name);
 
     public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
@@ -30,10 +30,14 @@ public sealed class AppRole
 
     internal Task<App> App() => factory.Apps.App(record.AppID);
 
+    public bool IsDenyAccess() => NameEquals(AppRoleName.DenyAccess);
+
+    public bool NameEquals(AppRoleName roleName) => new AppRoleName(record.Name).Equals(roleName);
+
     public AppRoleModel ToModel() => new AppRoleModel
     {
         ID = ID,
-        Name = Name()
+        Name = new AppRoleName(record.Name)
     };
 
     public override string ToString() => $"{nameof(AppRole)} {ID}";

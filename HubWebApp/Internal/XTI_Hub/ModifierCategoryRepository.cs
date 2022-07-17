@@ -61,7 +61,7 @@ public sealed class ModifierCategoryRepository
             .ModifierCategories
             .Retrieve()
             .FirstOrDefaultAsync(c => c.AppID == app.ID && c.ID == id);
-        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.Key().Serialize()}"));
+        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.ToModel().AppKey.Format()}"));
     }
 
     internal async Task<ModifierCategory> CategoryOrDefault(App app, ModifierCategoryName name)

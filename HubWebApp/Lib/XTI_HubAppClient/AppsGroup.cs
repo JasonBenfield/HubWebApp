@@ -9,6 +9,6 @@ public sealed partial class AppsGroup : AppClientGroup
 
     public AppsActions Actions { get; }
 
-    public Task<AppWithModKeyModel[]> GetApps() => Post<AppWithModKeyModel[], EmptyRequest>("GetApps", "", new EmptyRequest());
+    public Task<AppModel[]> GetApps() => Post<AppModel[], EmptyRequest>("GetApps", "", new EmptyRequest());
     public Task<AppDomainModel[]> GetAppDomains() => Post<AppDomainModel[], EmptyRequest>("GetAppDomains", "", new EmptyRequest());
 }

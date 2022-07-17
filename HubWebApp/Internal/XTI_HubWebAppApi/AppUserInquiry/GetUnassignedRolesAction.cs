@@ -18,7 +18,7 @@ public sealed class GetUnassignedRolesAction : AppAction<UserModifierKey, AppRol
         var modifier = await app.Modifier(model.ModifierID);
         var unassignedRoles = await user.Modifier(modifier).ExplicitlyUnassignedRoles();
         return unassignedRoles
-            .Where(role => !role.Name().Equals(AppRoleName.DenyAccess))
+            .Where(role => !role.IsDenyAccess())
             .Select(role => role.ToModel())
             .ToArray();
     }

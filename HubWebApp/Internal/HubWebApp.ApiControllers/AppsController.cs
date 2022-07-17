@@ -16,9 +16,9 @@ public sealed partial class AppsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppWithModKeyModel[]>> GetApps(CancellationToken ct)
+    public Task<ResultContainer<AppModel[]>> GetApps(CancellationToken ct)
     {
-        return api.Group("Apps").Action<EmptyRequest, AppWithModKeyModel[]>("GetApps").Execute(new EmptyRequest(), ct);
+        return api.Group("Apps").Action<EmptyRequest, AppModel[]>("GetApps").Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]

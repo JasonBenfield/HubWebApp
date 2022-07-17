@@ -15,7 +15,12 @@ partial class HubAppApi
     {
         userInquiry = new UserInquiryGroup
         (
-            source.AddGroup(nameof(UserInquiry), Access.WithAllowed(HubInfo.Roles.ViewUser)),
+            source.AddGroup
+            (
+                nameof(UserInquiry), 
+                HubInfo.ModCategories.UserGroups,
+                Access.WithAllowed(HubInfo.Roles.ViewUser)
+            ),
             sp
         );
     }

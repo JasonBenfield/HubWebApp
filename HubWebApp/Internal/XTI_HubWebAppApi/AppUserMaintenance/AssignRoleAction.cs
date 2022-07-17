@@ -29,6 +29,6 @@ internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         }
         await user.Modifier(modifier).AssignRole(role);
         userContext.ClearCache(user.ToModel().UserName);
-        return role.ID;
+        return role.ToModel().ID;
     }
 }

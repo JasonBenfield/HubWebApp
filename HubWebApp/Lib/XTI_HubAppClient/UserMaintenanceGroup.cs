@@ -6,6 +6,6 @@ public sealed partial class UserMaintenanceGroup : AppClientGroup
     {
     }
 
-    public Task<EmptyActionResult> EditUser(EditUserForm model) => Post<EmptyActionResult, EditUserForm>("EditUser", "", model);
-    public Task<IDictionary<string, object>> GetUserForEdit(int model) => Post<IDictionary<string, object>, int>("GetUserForEdit", "", model);
+    public Task<EmptyActionResult> EditUser(string modifier, EditUserForm model) => Post<EmptyActionResult, EditUserForm>("EditUser", modifier, model);
+    public Task<IDictionary<string, object>> GetUserForEdit(string modifier, int model) => Post<IDictionary<string, object>, int>("GetUserForEdit", modifier, model);
 }

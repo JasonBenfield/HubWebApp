@@ -53,6 +53,7 @@ public static class FakeExtensions
                 sp.GetRequiredService<FakeAppContext>()
             )
         );
+        services.AddScoped<AppRegistration>();
         services.AddScoped<IHubAdministration, EfHubAdministration>();
         services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
         services.AddScoped<StoredObjectFactory>();

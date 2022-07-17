@@ -6,6 +6,5 @@ public sealed partial class UserInquiryGroup : AppClientGroup
     {
     }
 
-    public Task<AppUserModel> GetUser(int model) => Post<AppUserModel, int>("GetUser", "", model);
-    public Task<AppUserModel> GetUserByUserName(string model) => Post<AppUserModel, string>("GetUserByUserName", "", model);
+    public Task<AppUserModel> GetUser(string modifier, int model) => Post<AppUserModel, int>("GetUser", modifier, model);
 }

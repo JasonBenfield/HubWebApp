@@ -8,15 +8,38 @@ namespace HubWebApp.Tests;
 internal sealed class AddUserTest
 {
     [Test]
+    public async Task ShouldThrowError_WhenModifierIsBlank()
+    {
+        var tester = await setup();
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(createModel());
+    }
+
+    [Test]
+    public async Task ShouldThrowError_WhenAccessIsDenied()
+    {
+        var tester = await setup();
+        var modifier = await tester.GeneralUserGroupModifier();
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenAccessIsDenied
+            (
+                createModel(),
+                modifier,
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.AddUser
+            );
+    }
+
+    [Test]
     public async Task ShouldRequireUserName()
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
         var model = createModel();
         model.UserName = "";
+        var modifier = await tester.GeneralUserGroupModifier();
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => tester.Execute(model)
+            () => tester.Execute(model, modifier)
         );
         Assert.That
         (
@@ -33,9 +56,10 @@ internal sealed class AddUserTest
         await tester.LoginAsAdmin();
         var model = createModel();
         model.Password = "";
+        var modifier = await tester.GeneralUserGroupModifier();
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
-            () => tester.Execute(model)
+            () => tester.Execute(model, modifier)
         );
         Assert.That
         (
@@ -51,7 +75,8 @@ internal sealed class AddUserTest
         var tester = await setup();
         await tester.LoginAsAdmin();
         var model = createModel();
-        await tester.Execute(model);
+        var modifier = await tester.GeneralUserGroupModifier();
+        await tester.Execute(model, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(model.UserName));
         Assert.That(user.ToModel().UserName, Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
@@ -63,7 +88,8 @@ internal sealed class AddUserTest
         var tester = await setup();
         await tester.LoginAsAdmin();
         var model = createModel();
-        var userID = await tester.Execute(model);
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await tester.Execute(model, modifier);
         var hubDbContext = tester.Services.GetRequiredService<HubDbContext>();
         var user = await hubDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
         Assert.That(user?.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");

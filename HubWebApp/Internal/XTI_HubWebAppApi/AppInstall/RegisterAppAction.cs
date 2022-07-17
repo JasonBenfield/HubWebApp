@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.AppInstall;
 
-public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithModKeyModel>
+public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppModel>
 {
     private readonly HubFactory appFactory;
 
@@ -9,13 +9,13 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppWithMod
         this.appFactory = appFactory;
     }
 
-    public async Task<AppWithModKeyModel> Execute(RegisterAppRequest model, CancellationToken stoppingToken)
+    public async Task<AppModel> Execute(RegisterAppRequest model, CancellationToken stoppingToken)
     {
-        var appWithModifier = await new AppRegistration(appFactory).Run
+        var app = await new AppRegistration(appFactory).Run
         (
             model.AppTemplate,
             model.VersionKey
         );
-        return appWithModifier;
+        return app;
     }
 }

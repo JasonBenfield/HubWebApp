@@ -12,6 +12,6 @@ public sealed class GetAppAction : AppAction<EmptyRequest, AppModel>
     public async Task<AppModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
         var app = await appFromPath.Value();
-        return app.ToAppModel();
+        return app.ToModel();
     }
 }

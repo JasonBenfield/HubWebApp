@@ -2,16 +2,17 @@
 
 public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, object?>>
 {
-    private readonly HubFactory factory;
+    private readonly UserGroupFromPath userGroupFromPath;
 
-    public GetUserForEditAction(HubFactory factory)
+    public GetUserForEditAction(UserGroupFromPath userGroupFromPath)
     {
-        this.factory = factory;
+        this.userGroupFromPath = userGroupFromPath;
     }
 
     public async Task<IDictionary<string, object?>> Execute(int userID, CancellationToken stoppingToken)
     {
-        var user = await factory.Users.User(userID);
+        var userGroup = await userGroupFromPath.Value();
+        var user = await userGroup.User(userID);
         var userModel = user.ToModel();
         var form = new EditUserForm();
         form.UserID.SetValue(userModel.ID);

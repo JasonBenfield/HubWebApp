@@ -46,7 +46,7 @@ public sealed class AppRoleRepository
         return factory.CreateRole
         (
             record
-            ?? throw new Exception($"Role {roleID} not found for app '{app.Key().Name.DisplayText} {app.Key().Type.DisplayText}'")
+            ?? throw new Exception($"Role {roleID} not found for app '{app.ToModel().AppKey.Format()}'")
         );
     }
 
@@ -58,7 +58,7 @@ public sealed class AppRoleRepository
         return factory.CreateRole
         (
             record
-            ?? throw new Exception($"Role '{roleName.DisplayText}' not found for app '{app.Key().Name.DisplayText} {app.Key().Type.DisplayText}'")
+            ?? throw new Exception($"Role '{roleName.DisplayText}' not found for app '{app.ToModel().AppKey.Format()}'")
         );
     }
 
@@ -157,7 +157,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => roleIDs.Any(id => id == r.ID))
+            .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated == DateTimeOffset.MaxValue)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();

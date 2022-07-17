@@ -42,6 +42,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         createUserMaintenance(sp);
         createStorageGroup(sp);
         createSystemGroup(sp);
+        createUserGroupsGroup(sp);
     }
 
     partial void createHomeGroup(IServiceProvider sp);
@@ -85,6 +86,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     partial void createStorageGroup(IServiceProvider sp);
 
     partial void createSystemGroup(IServiceProvider sp);
+
+    partial void createUserGroupsGroup(IServiceProvider sp);
 
     protected override void ConfigureTemplate(AppApiTemplate template)
     {

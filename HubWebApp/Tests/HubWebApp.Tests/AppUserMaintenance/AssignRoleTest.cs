@@ -52,7 +52,7 @@ internal sealed class AssignRoleTest
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
-            userRoles.Select(r => r.Name()),
+            userRoles.Select(r => r.ToModel().Name),
             Has.One.EqualTo(HubInfo.Roles.ViewApp),
             "Should assign role to user"
         );
@@ -73,7 +73,7 @@ internal sealed class AssignRoleTest
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
-            userRoles.Select(r => r.ID),
+            userRoles.Select(r => r.ToModel().ID),
             Has.One.EqualTo(userRoleID),
             "Should return user role ID"
         );
@@ -99,7 +99,7 @@ internal sealed class AssignRoleTest
         {
             UserID = userToEdit.ToModel().ID,
             ModifierID = modifier.ID,
-            RoleID = role.ID
+            RoleID = role.ToModel().ID
         };
     }
 
@@ -107,11 +107,16 @@ internal sealed class AssignRoleTest
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;

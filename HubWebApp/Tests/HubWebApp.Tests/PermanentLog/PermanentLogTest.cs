@@ -217,7 +217,7 @@ internal sealed class PermanentLogTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var appFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<HubFactory>();
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();
@@ -255,8 +255,9 @@ internal sealed class PermanentLogTest
         });
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
         installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
-        await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
-        await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        var userGroup = await hubFactory.UserGroups.GetGeneral();
+        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
 
         return HubActionTester.Create(sp, hubApi => hubApi.PermanentLog.LogBatch);
     }
