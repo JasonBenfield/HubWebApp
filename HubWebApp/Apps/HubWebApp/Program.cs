@@ -6,6 +6,7 @@ using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Extensions;
+using Microsoft.AspNetCore.OData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
@@ -16,6 +17,12 @@ builder.Services.AddFileSecretCredentials(xtiEnv);
 builder.Services.AddServicesForHub();
 builder.Services
     .AddMvc()
+    .AddOData(options =>
+    {
+        var edmModel = new EdmModelBuilder().GetEdmModel();
+        options.EnableQueryFeatures(10000)
+            .AddRouteComponents("odata", edmModel);
+    })
     .AddJsonOptions(options =>
     {
         options.SetDefaultJsonOptions();
@@ -46,6 +53,7 @@ if (xtiEnv.IsDevelopment())
     );
 }
 var app = builder.Build();
+app.UseODataQueryRequest();
 if (xtiEnv.IsDevelopment())
 {
     app.UseCors();

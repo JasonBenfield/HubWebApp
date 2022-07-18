@@ -380,6 +380,9 @@ interface IUserContextRoleModel {
 	ModifierKey: IModifierKey;
 	Roles: IAppRoleModel[];
 }
+interface IUserGroupKey {
+	UserGroupName: string;
+}
 interface IAddUserGroupIfNotExistsRequest {
 	GroupName: string;
 }
@@ -391,6 +394,30 @@ interface IAppUserGroupModel {
 interface IAppUserGroupName {
 	Value: string;
 	DisplayText: string;
+}
+interface IExpandedUser {
+	UserID: number;
+	UserName: string;
+	PersonName: string;
+	Email: string;
+	TimeUserAdded: Date;
+	UserGroupID: number;
+	UserGroupName: string;
+}
+interface IWebFileResult {
+	FileStream: IStream;
+	ContentType: string;
+	DownloadName: string;
+}
+interface IStream {
+	CanRead: boolean;
+	CanWrite: boolean;
+	CanSeek: boolean;
+	CanTimeout: boolean;
+	Length: number;
+	Position: number;
+	ReadTimeout: number;
+	WriteTimeout: number;
 }
 interface IAppType {
 	Value: number;

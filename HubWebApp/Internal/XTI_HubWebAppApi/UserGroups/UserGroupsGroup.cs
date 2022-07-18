@@ -5,6 +5,12 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
     public UserGroupsGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
+        Index = source.AddAction
+        (
+            nameof(Index),
+            () => sp.GetRequiredService<IndexView>(),
+            access: ResourceAccess.AllowAuthenticated()
+        );
         AddUserGroupIfNotExists = source.AddAction
         (
             nameof(AddUserGroupIfNotExists),
@@ -19,6 +25,7 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
         );
     }
 
+    public AppApiAction<UserGroupKey, WebViewResult> Index { get; }
     public AppApiAction<AddUserGroupIfNotExistsRequest, AppUserGroupModel> AddUserGroupIfNotExists { get; }
     public AppApiAction<EmptyRequest, AppUserGroupModel[]> GetUserGroups { get; }
 }

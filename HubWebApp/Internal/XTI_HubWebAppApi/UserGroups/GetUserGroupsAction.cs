@@ -2,22 +2,20 @@
 
 internal sealed class GetUserGroupsAction : AppAction<EmptyRequest, AppUserGroupModel[]>
 {
-    private readonly IUserContext userContext;
-    private readonly HubFactory hubFactory;
+    private readonly CurrentUser currentUser;
 
-    public GetUserGroupsAction(IUserContext userContext, HubFactory hubFactory)
+    public GetUserGroupsAction(CurrentUser currentUser)
     {
-        this.userContext = userContext;
-        this.hubFactory = hubFactory;
+        this.currentUser = currentUser;
     }
 
     public async Task<AppUserGroupModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var userContextModel = await userContext.User();
-        var user = await hubFactory.Users.User(userContextModel.User.ID);
+        var user = await currentUser.Value();
         var permissions = await user.GetUserGroupPermissions();
         var userGroupModels = permissions.Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel())
+            .OrderBy(ug => ug.GroupName.DisplayText)
             .ToArray();
         return userGroupModels;
     }

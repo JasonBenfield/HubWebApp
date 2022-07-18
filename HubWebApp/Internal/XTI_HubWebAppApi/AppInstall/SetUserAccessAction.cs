@@ -14,19 +14,19 @@ public sealed class SetUserAccessRoleRequest
 
 internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyActionResult>
 {
-    private readonly HubFactory appFactory;
+    private readonly HubFactory hubFactory;
 
-    public SetUserAccessAction(HubFactory appFactory)
+    public SetUserAccessAction(HubFactory hubFactory)
     {
-        this.appFactory = appFactory;
+        this.hubFactory = hubFactory;
     }
 
     public async Task<EmptyActionResult> Execute(SetUserAccessRequest model, CancellationToken stoppingToken)
     {
-        var user = await appFactory.Users.UserByUserName(model.UserName);
+        var user = await hubFactory.Users.UserByUserName(model.UserName);
         foreach (var assignment in model.RoleAssignments)
         {
-            var app = await appFactory.Apps.App(assignment.AppKey);
+            var app = await hubFactory.Apps.App(assignment.AppKey);
             foreach (var roleName in assignment.RoleNames)
             {
                 var role = await app.Role(roleName);

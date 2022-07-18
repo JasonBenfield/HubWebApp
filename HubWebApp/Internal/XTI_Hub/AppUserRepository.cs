@@ -61,7 +61,11 @@ public sealed class AppUserRepository
     public async Task<AppUser> UserByUserName(AppUserName userName)
     {
         var record = await GetUser(userName);
-        return factory.User(record ?? throw new ArgumentNullException(nameof(record)));
+        return factory.User
+        (
+            record 
+            ?? throw new ArgumentNullException(nameof(record), $"User not found with user name '{userName.Value}'")
+        );
     }
 
     public async Task<AppUser> UserByExternalKey(App authenticatorApp, string externalUserKey)

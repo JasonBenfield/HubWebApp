@@ -56,6 +56,7 @@ export class HubAppApi extends AppApi {
 		this.Storage = this.addGroup((evts, resourceUrl) => new StorageGroup(evts, resourceUrl));
 		this.System = this.addGroup((evts, resourceUrl) => new SystemGroup(evts, resourceUrl));
 		this.UserGroups = this.addGroup((evts, resourceUrl) => new UserGroupsGroup(evts, resourceUrl));
+		this.UserQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IUserGroupKey, IExpandedUser>(evts, resourceUrl.odata('UserQuery'), 'UserQuery'));
 	}
 	
 	readonly User: UserGroup;
@@ -82,4 +83,5 @@ export class HubAppApi extends AppApi {
 	readonly Storage: StorageGroup;
 	readonly System: SystemGroup;
 	readonly UserGroups: UserGroupsGroup;
+	readonly UserQuery: AppApiQuery<IUserGroupKey, IExpandedUser>;
 }

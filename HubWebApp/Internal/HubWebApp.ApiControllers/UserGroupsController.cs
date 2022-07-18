@@ -9,6 +9,12 @@ public sealed partial class UserGroupsController : Controller
         this.api = api;
     }
 
+    public async Task<IActionResult> Index(UserGroupKey model, CancellationToken ct)
+    {
+        var result = await api.Group("UserGroups").Action<UserGroupKey, WebViewResult>("Index").Execute(model, ct);
+        return View(result.Data.ViewName);
+    }
+
     [HttpPost]
     public Task<ResultContainer<AppUserGroupModel>> AddUserGroupIfNotExists([FromBody] AddUserGroupIfNotExistsRequest model, CancellationToken ct)
     {

@@ -2,19 +2,16 @@
 
 public sealed class GetAppsAction : AppAction<EmptyRequest, AppModel[]>
 {
-    private readonly HubFactory appFactory;
-    private readonly IUserContext userContext;
+    private readonly CurrentUser currentUser;
 
-    public GetAppsAction(HubFactory appFactory, IUserContext userContext)
+    public GetAppsAction(CurrentUser currentUser)
     {
-        this.appFactory = appFactory;
-        this.userContext = userContext;
+        this.currentUser = currentUser;
     }
 
     public async Task<AppModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var currentUser = await userContext.User();
-        var user = await appFactory.Users.User(currentUser.User.ID);
+        var user = await currentUser.Value();
         var permissions = await user.GetAppPermissions();
         var allowedApps = new List<AppModel>();
         foreach (var permission in permissions.Where(p => p.CanView))
