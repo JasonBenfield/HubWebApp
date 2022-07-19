@@ -188,7 +188,8 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             httpContextAccessor.HttpContext.Request.Path += path.Modifier.Value;
         }
         var currentUserName = Services.GetRequiredService<ICurrentUserName>();
-        var apiUser = new AppApiUser(userContext, appContext, currentUserName, pathAccessor);
+        var currentUserAccess = new CurrentUserAccess(userContext, appContext, currentUserName);
+        var apiUser = new AppApiUser(currentUserAccess, pathAccessor);
         var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
         var action = getAction(hubApi);
         var result = await action.Invoke(model);

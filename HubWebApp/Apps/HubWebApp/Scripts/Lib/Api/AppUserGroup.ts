@@ -9,12 +9,12 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class AppUserGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUser');
-		this.Index = this.createView<number>('Index');
+		this.Index = this.createView<IGetUserRequest>('Index');
 		this.GetUserAccessAction = this.createAction<IUserModifierKey,IUserAccessModel>('GetUserAccess', 'Get User Access');
 		this.GetUnassignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetUnassignedRoles', 'Get Unassigned Roles');
 	}
 	
-	readonly Index: AppApiView<number>;
+	readonly Index: AppApiView<IGetUserRequest>;
 	readonly GetUserAccessAction: AppApiAction<IUserModifierKey,IUserAccessModel>;
 	readonly GetUnassignedRolesAction: AppApiAction<IUserModifierKey,IAppRoleModel[]>;
 	

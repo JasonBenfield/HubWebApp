@@ -1,11 +1,11 @@
 ﻿namespace XTI_HubWebAppApi.AppUserInquiry;
 
-public sealed class GetUserAccessAction : AppAction<UserModifierKey, UserAccessModel>
+public sealed class GetUserAccessByUserModifierAction : AppAction<UserModifierKey, UserAccessModel>
 {
     private readonly AppFromPath appFromPath;
     private readonly HubFactory factory;
 
-    public GetUserAccessAction(AppFromPath appFromPath, HubFactory factory)
+    public GetUserAccessByUserModifierAction(AppFromPath appFromPath, HubFactory factory)
     {
         this.appFromPath = appFromPath;
         this.factory = factory;

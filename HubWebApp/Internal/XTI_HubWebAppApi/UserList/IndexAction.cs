@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.UserList;
 
-public sealed class IndexAction : AppAction<EmptyRequest, WebViewResult>
+public sealed class IndexAction : AppAction<GetUserRequest, WebViewResult>
 {
     private readonly WebViewResultFactory viewFactory;
 
@@ -9,6 +9,6 @@ public sealed class IndexAction : AppAction<EmptyRequest, WebViewResult>
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(EmptyRequest model, CancellationToken stoppingToken) =>
+    public Task<WebViewResult> Execute(GetUserRequest model, CancellationToken stoppingToken) =>
         Task.FromResult(viewFactory.Default("users", "Users"));
 }

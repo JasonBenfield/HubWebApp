@@ -46,22 +46,25 @@ public sealed class EfAppContext : ISourceAppContext
             var resourceModels = new List<AppContextResourceModel>();
             foreach (var resource in resources)
             {
-                var allowedRoles = await resource.AllowedRoles();
+                var allowedResourceRoles = await resource.AllowedRoles();
                 resourceModels.Add
                 (
                     new AppContextResourceModel
                     (
                         resource.ToModel(),
-                        allowedRoles.Select(r => roleModels.First(rm => r.ID == rm.ID)).ToArray()
+                        allowedResourceRoles.Select(r => roleModels.First(rm => r.ID == rm.ID)).ToArray()
                     )
                 );
             }
+            var allowedGroupRoles = await resourceGroup.AllowedRoles();
             resourceGroupModels.Add
             (
                 new AppContextResourceGroupModel
                 (
                     resourceGroup.ToModel(),
-                    resourceModels.ToArray()
+                    resourceModels.ToArray(),
+                    allowedGroupRoles.Select(r => roleModels.First(rm => r.ID == rm.ID)).ToArray()
+
                 )
             );
         }

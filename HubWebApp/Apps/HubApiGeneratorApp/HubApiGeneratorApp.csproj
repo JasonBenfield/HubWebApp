@@ -23,7 +23,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-		<PackageReference Include="XTI_ApiGeneratorApp.Extensions" Version="1.3.24-dev220716173304827" />
+		<PackageReference Include="XTI_ApiGeneratorApp.Extensions" Version="1.3.24-dev220718133352676" />
 	</ItemGroup>
 
 	<ItemGroup>

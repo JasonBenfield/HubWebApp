@@ -1,69 +1,33 @@
 ﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { ApiODataClient } from '@jasonbenfield/sharedwebapp/OData/ApiODataClient';
-import { ODataComponent } from '@jasonbenfield/sharedwebapp/OData/ODataComponent';
-import { ODataComponentOptionsBuilder } from '@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder';
-import { ListGroup } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/ListGroup';
-import { MessageAlert } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/MessageAlert';
-import { Url } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url';
-import { TextLinkListGroupItemView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup';
+import { SingleActivePanel } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Panel/SingleActivePanel';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
-import { ODataExpandedUserColumnsBuilder } from '../../Lib/Api/ODataExpandedUserColumnsBuilder';
 import { Apis } from '../Apis';
 import { MainPageView } from './MainPageView';
-import { UserGroupListItem } from './UserGroupListItem';
+import { UserGroupsPanel } from './UserGroupsPanel';
 
 class MainPage extends BasicPage {
     protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
-    private readonly alert: MessageAlert;
-    private readonly userGroups: ListGroup;
-    private readonly odataComponent: ODataComponent<IExpandedUser>;
+    private readonly userGroupsPanel: UserGroupsPanel;
+    private readonly panels: SingleActivePanel;
 
     constructor() {
         super(new MainPageView());
         this.hubApi = new Apis(this.view.modalError).Hub();
-        this.alert = new MessageAlert(this.view.alert);
-        this.userGroups = new ListGroup(this.view.userGroups);
-        const columns = new ODataExpandedUserColumnsBuilder(this.view.columns);
-        columns.UserID.require();
-        const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
-        options.query.select.addFields(
-            columns.UserName,
-            columns.PersonName,
-            columns.Email
+        this.panels = new SingleActivePanel();
+        this.userGroupsPanel = this.panels.add(
+            new UserGroupsPanel(this.hubApi, this.view.userGroupsPanel)
         );
-        options.saveChanges();
-        const userGroupName = Url.current().getQueryValue('UserGroupName');
-        options.setODataClient(
-            new ApiODataClient(this.hubApi.UserQuery, { UserGroupName: userGroupName })
-        );
-        this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.load();
+        this.userGroupsPanel.refresh();
+        this.activateUserGroupsPanel();
     }
 
-    private async load() {
-        const userGroups = await this.getUserGroups();
-        userGroups.splice(0, 0, null);
-        const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
-        this.userGroups.setItems(
-            userGroups,
-            (ug, itemView: TextLinkListGroupItemView) => {
-                const listItem = new UserGroupListItem(this.hubApi, ug, itemView);
-                const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
-                if (userGroupName === listItemGroupName) {
-                    listItem.makeActive();
-                }
-                return listItem;
-            }
-        );
-        this.odataComponent.refresh();
-    }
+    private async activateUserGroupsPanel() {
+        this.panels.activate(this.userGroupsPanel);
+        const result = await this.userGroupsPanel.start();
+        if (result.addRequested) {
 
-    private getUserGroups() {
-        return this.alert.infoAction(
-            'Loading...',
-            () => this.hubApi.UserGroups.GetUserGroups()
-        );
+        }
     }
 }
 new MainPage();

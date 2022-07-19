@@ -1,18 +1,17 @@
-﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Url } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { MainPageView } from './MainPageView';
 import { UserPanel } from './User/UserPanel';
 import { UserEditPanel } from './UserEdit/UserEditPanel';
-import { UserListPanel } from './UserList/UserListPanel';
-import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 
 class MainPage extends BasicPage {
     protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
     private readonly panels: SingleActivePanel;
-    private readonly userListPanel: UserListPanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
 
@@ -20,19 +19,15 @@ class MainPage extends BasicPage {
         super(new MainPageView());
         this.hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
-        this.userListPanel = this.panels.add(new UserListPanel(this.hubApi, this.view.userListPanel));
         this.userPanel = this.panels.add(new UserPanel(this.hubApi, this.view.userPanel));
         this.userEditPanel = this.panels.add(new UserEditPanel(this.hubApi, this.view.userEditPanel));
-        this.activateUserListPanel();
-    }
-
-
-    private async activateUserListPanel() {
-        this.panels.activate(this.userListPanel);
-        this.userListPanel.refresh();
-        const result = await this.userListPanel.start();
-        if (result.userSelected) {
-            this.activateUserPanel(result.userSelected.user.ID);
+        const userIDValue = Url.current().getQueryValue('UserID');
+        const userID = userIDValue ? Number(userIDValue) : 0;
+        if (userID) {
+            this.activateUserPanel(userID);
+        }
+        else {
+            this.hubApi.UserGroups.Index.open({});
         }
     }
 
@@ -42,7 +37,7 @@ class MainPage extends BasicPage {
         this.userPanel.refresh();
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            this.activateUserListPanel();
+            this.hubApi.UserGroups.Index.open({});
         }
         else if (result.editRequested) {
             this.activateUserEditPanel(userID);
@@ -50,7 +45,7 @@ class MainPage extends BasicPage {
         else if (result.appSelected) {
             const url = this.hubApi.AppUser.Index.getModifierUrl(
                 result.appSelected.app.PublicKey.DisplayText,
-                userID
+                { UserID: userID }
             );
             new WebPage(url).open();
         }

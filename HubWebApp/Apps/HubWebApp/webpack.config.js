@@ -2,13 +2,13 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const entry = {
-    user: './Scripts/Internal/User/Start/MainPage.ts',
     accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
     error: './Scripts/Internal/User/Error/MainPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
     userGroups: './Scripts/Internal/UserGroups/MainPage.ts',
+    userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',
     appUser: './Scripts/Internal/AppUser/MainPage.ts'
 };

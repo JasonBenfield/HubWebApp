@@ -45,7 +45,7 @@ export class UserPanel implements IPanel {
         this.userComponent = new UserComponent(this.hubApi, this.view.userComponent);
         this.appListCard = new AppListCard(
             this.hubApi,
-            modKey => this.hubApi.AppUser.Index.getModifierUrl(modKey, this.userID).toString(),
+            modKey => this.hubApi.AppUser.Index.getModifierUrl(modKey, { UserID: this.userID }).toString(),
             this.view.appListCard
         );
         this.backCommand.add(this.view.backButton);

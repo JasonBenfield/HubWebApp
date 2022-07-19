@@ -4,8 +4,8 @@ public sealed partial class AppUserActions
 {
     internal AppUserActions(AppClientUrl appClientUrl)
     {
-        Index = new AppClientGetAction<int>(appClientUrl, "Index");
+        Index = new AppClientGetAction<GetUserRequest>(appClientUrl, "Index");
     }
 
-    public AppClientGetAction<int> Index { get; }
+    public AppClientGetAction<GetUserRequest> Index { get; }
 }

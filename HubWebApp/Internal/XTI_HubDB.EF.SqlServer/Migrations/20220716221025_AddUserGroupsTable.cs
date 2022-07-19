@@ -76,6 +76,23 @@ where UserName not like 'xti_%'
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Restrict);
 
+			migrationBuilder.Sql
+			(
+				@"
+CREATE OR ALTER     FUNCTION [ToEST](
+    @dt datetimeoffset
+)
+RETURNS datetime
+AS 
+BEGIN
+    RETURN case when datepart(year,@dt) < 9999 or datepart(year,@dt) > 1900
+		then cast(@dt at time zone 'Eastern Standard Time' as datetime) 
+		else cast(@dt as datetime)
+		end
+END;
+"
+			);
+
             migrationBuilder.Sql
             (
                 @"
@@ -134,7 +151,7 @@ select
 	dbo.ToEst(Requests.TimeEnded) RequestTimeEndedLocal,
 	dbo.TimeElapsedDisplayText(Requests.TimeStarted, Requests.TimeEnded) RequestTimeElapsed,
 	Requests.ActualCount,
-	cast(case when Requests.TimeEnded < '9999-12-31 23:59:59.9999999 +00:00' and errorCounts.ErrorCount is null then 1 else 0 end as bit) Succeeded,
+	cast(case when datepart(year,Requests.TimeEnded) < 9999 and errorCounts.ErrorCount is null then 1 else 0 end as bit) Succeeded,
 	isnull(criticalErrorCounts.LogEntryCount, 0) CriticalErrorCount,
 	isnull(accessDeniedCounts.LogEntryCount, 0) AccessDeniedCount,
 	isnull(appErrorCounts.LogEntryCount, 0) AppErrorCount,

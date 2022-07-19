@@ -1,7 +1,13 @@
 // Generated code
 
-interface IUserStartRequest {
-	ReturnUrl: string;
+interface IResourcePath {
+	Group: string;
+	Action: string;
+	ModKey: string;
+}
+interface IResourcePathAccess {
+	Path: IResourcePath;
+	HasAccess: boolean;
 }
 interface IEmptyRequest {
 }
@@ -316,6 +322,9 @@ interface IGetResourceLogRequest {
 	ResourceID: number;
 	HowMany: number;
 }
+interface IGetUserRequest {
+	UserID: number;
+}
 interface IAddUserModel {
 	UserName: string;
 	Password: string;
@@ -363,6 +372,7 @@ interface IAppContextModifierCategoryModel {
 interface IAppContextResourceGroupModel {
 	ResourceGroup: IResourceGroupModel;
 	Resources: IAppContextResourceModel[];
+	AllowedRoles: IAppRoleModel[];
 }
 interface IAppContextResourceModel {
 	Resource: IResourceModel;

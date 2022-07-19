@@ -11,6 +11,12 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
             () => sp.GetRequiredService<IndexView>(),
             access: ResourceAccess.AllowAuthenticated()
         );
+        UserQuery = source.AddAction
+        (
+            nameof(UserQuery),
+            () => sp.GetRequiredService<UserQueryView>(),
+            access: ResourceAccess.AllowAuthenticated()
+        );
         AddUserGroupIfNotExists = source.AddAction
         (
             nameof(AddUserGroupIfNotExists),
@@ -25,7 +31,8 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
         );
     }
 
-    public AppApiAction<UserGroupKey, WebViewResult> Index { get; }
+    public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
+    public AppApiAction<UserGroupKey, WebViewResult> UserQuery { get; }
     public AppApiAction<AddUserGroupIfNotExistsRequest, AppUserGroupModel> AddUserGroupIfNotExists { get; }
     public AppApiAction<EmptyRequest, AppUserGroupModel[]> GetUserGroups { get; }
 }

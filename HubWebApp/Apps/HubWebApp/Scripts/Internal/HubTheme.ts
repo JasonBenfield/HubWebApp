@@ -63,6 +63,7 @@ export class HubTheme {
             return toolbar
                 .configure(t => {
                     t.setBackgroundContext(ContextualClass.secondary);
+                    t.addCssName('bg-opacity-50');
                     t.setPadding(PaddingCss.xs(3));
                 });
         },
@@ -91,6 +92,24 @@ export class HubTheme {
                     b.setText('Save');
                     b.setTitle('Save');
                     b.setContext(ContextualClass.primary);
+                });
+        },
+        addButton(button: ButtonCommandView) {
+            return button
+                .configure(b => {
+                    b.icon.solidStyle('plus');
+                    b.setText('Add');
+                    b.setTitle('Add');
+                    b.setContext(ContextualClass.light);
+                });
+        },
+        refreshButton(button: ButtonCommandView) {
+            return button
+                .configure(b => {
+                    b.icon.solidStyle('rotate');
+                    b.setText('');
+                    b.setTitle('Refresh');
+                    b.setContext(ContextualClass.light);
                 });
         }
     };

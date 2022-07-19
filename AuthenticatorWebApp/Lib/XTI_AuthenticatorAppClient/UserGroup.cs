@@ -8,4 +8,6 @@ public sealed partial class UserGroup : AppClientGroup
     }
 
     public UserActions Actions { get; }
+
+    public Task<ResourcePathAccess[]> GetUserAccess(ResourcePath[] model) => Post<ResourcePathAccess[], ResourcePath[]>("GetUserAccess", "", model);
 }

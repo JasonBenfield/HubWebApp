@@ -25,7 +25,7 @@ public sealed class UserListGroup : AppApiGroupWrapper
             Access.WithAllowed(HubInfo.Roles.AddUser)
         );
     }
-    public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
+    public AppApiAction<GetUserRequest, WebViewResult> Index { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
     public AppApiAction<AddUserModel, int> AddOrUpdateUser { get; }
 }

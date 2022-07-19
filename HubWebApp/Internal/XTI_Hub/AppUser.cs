@@ -103,7 +103,7 @@ public sealed class AppUser
         foreach (var app in apps)
         {
             var appModel = app.ToModel();
-            var modifier = await appsModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.AppKey.Format());
+            var modifier = await appsModCategory.ModifierByTargetID(appModel.ID);
             var userRoles = await Modifier(modifier).AssignedRoles();
             var userRoleModels = userRoles.Select(ur => ur.ToModel());
             AppPermission permission;

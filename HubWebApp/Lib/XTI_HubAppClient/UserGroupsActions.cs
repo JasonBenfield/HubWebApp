@@ -4,8 +4,11 @@ public sealed partial class UserGroupsActions
 {
     internal UserGroupsActions(AppClientUrl appClientUrl)
     {
-        Index = new AppClientGetAction<UserGroupKey>(appClientUrl, "Index");
+        Index = new AppClientGetAction<EmptyRequest>(appClientUrl, "Index");
+        UserQuery = new AppClientGetAction<UserGroupKey>(appClientUrl, "UserQuery");
     }
 
-    public AppClientGetAction<UserGroupKey> Index { get; }
+    public AppClientGetAction<EmptyRequest> Index { get; }
+
+    public AppClientGetAction<UserGroupKey> UserQuery { get; }
 }

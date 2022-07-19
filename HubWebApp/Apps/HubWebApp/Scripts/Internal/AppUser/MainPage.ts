@@ -42,19 +42,19 @@ class MainPage extends BasicPage {
         this.addRolePanel = this.panels.add(
             new AddRolePanel(this.hubApi, this.view.addRolePanel)
         );
-        let userIDValue = Url.current().getQueryValue('userID');
+        const userIDValue = Url.current().getQueryValue('UserID');
         if (XtiUrl.current().path.modifier && userIDValue) {
-            let userID = Number(userIDValue);
+            const userID = Number(userIDValue);
             this.activateStartPanel(userID);
         }
         else {
-            new WebPage(this.hubApi.Users.Index.getUrl({})).open();
+            new WebPage(this.hubApi.UserGroups.Index.getUrl({})).open();
         }
     }
 
     private async activateStartPanel(userID: number) {
         this.panels.activate(this.appUserDataPanel);
-        let result = await this.appUserDataPanel.start(userID);
+        const result = await this.appUserDataPanel.start(userID);
         if (result.done) {
             this.userRolesPanel.setAppUserOptions(result.done.appUserOptions);
             this.userRolesPanel.setDefaultModifier();
@@ -66,7 +66,7 @@ class MainPage extends BasicPage {
 
     private async activateSelectModCategoryPanel() {
         this.panels.activate(this.selectModCategoryPanel);
-        let result = await this.selectModCategoryPanel.start();
+        const result = await this.selectModCategoryPanel.start();
         if (result.defaultModSelected) {
             this.userRolesPanel.setDefaultModifier();
             this.addRolePanel.setDefaultModifier();
@@ -84,7 +84,7 @@ class MainPage extends BasicPage {
 
     private async activateSelectModifierPanel() {
         this.panels.activate(this.selectModifierPanel);
-        let result = await this.selectModifierPanel.start();
+        const result = await this.selectModifierPanel.start();
         if (result.modifierSelected) {
             this.userRolesPanel.setModifier(result.modifierSelected.modifier);
             this.addRolePanel.setModifier(result.modifierSelected.modifier);
@@ -97,7 +97,7 @@ class MainPage extends BasicPage {
 
     private async activateUserRolesPanel() {
         this.panels.activate(this.userRolesPanel);
-        let result = await this.userRolesPanel.start();
+        const result = await this.userRolesPanel.start();
         if (result.addRequested) {
             this.activateAddRolePanel();
         }
@@ -108,7 +108,7 @@ class MainPage extends BasicPage {
 
     private async activateAddRolePanel() {
         this.panels.activate(this.addRolePanel);
-        let result = await this.addRolePanel.start();
+        const result = await this.addRolePanel.start();
         if (result.back) {
             this.activateUserRolesPanel();
         }

@@ -9,13 +9,13 @@ export class UserGroupListItem extends BasicComponent {
         super(view);
         if (userGroup === null) {
             new LinkComponent(view).setHref(
-                hubApi.UserGroups.Index.getUrl({ UserGroupName: '' })
+                hubApi.UserGroups.UserQuery.getUrl({ UserGroupName: '' })
             );
             new TextComponent(view).setText('All');
         }
         else {
             new LinkComponent(view).setHref(
-                hubApi.UserGroups.Index.getUrl({ UserGroupName: userGroup.GroupName.DisplayText })
+                hubApi.UserGroups.UserQuery.getUrl({ UserGroupName: userGroup.GroupName.DisplayText })
             );
             new TextComponent(view).setText(userGroup.GroupName.DisplayText);
         }

@@ -12,7 +12,6 @@ import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 
 export class SelectModCategoryPanelView extends GridView {
     readonly defaultModList: ListGroupView;
-    readonly defaultModClicked: IEventHandler<any>;
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
     readonly modCategories: ButtonListGroupView;
