@@ -2,20 +2,28 @@
 
 public sealed class GetUnassignedRolesAction : AppAction<UserModifierKey, AppRoleModel[]>
 {
-    private readonly AppFromPath appFromPath;
+    private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory factory;
+    private readonly CurrentUser currentUser;
 
-    public GetUnassignedRolesAction(AppFromPath appFromPath, HubFactory factory)
+    public GetUnassignedRolesAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentUser currentUser)
     {
-        this.appFromPath = appFromPath;
+        this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;
+        this.currentUser = currentUser;
     }
 
     public async Task<AppRoleModel[]> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var user = await factory.Users.User(model.UserID);
-        var modifier = await app.Modifier(model.ModifierID);
+        var userGroup = await userGroupFromPath.Value();
+        var user = await userGroup.User(model.UserID);
+        var modifier = await factory.Modifiers.Modifier(model.ModifierID);
+        var app = await modifier.App();
+        var permission = await currentUser.GetPermissionsToApp(app);
+        if (!permission.CanView)
+        {
+            throw new AccessDeniedException("Access denied to this user");
+        }
         var unassignedRoles = await user.Modifier(modifier).ExplicitlyUnassignedRoles();
         return unassignedRoles
             .Where(role => !role.IsDenyAccess())

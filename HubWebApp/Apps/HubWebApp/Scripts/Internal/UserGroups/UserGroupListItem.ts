@@ -1,7 +1,7 @@
-﻿import { BasicComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/BasicComponent";
-import { LinkComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/LinkComponent";
-import { TextComponent } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/TextComponent";
-import { TextLinkListGroupItemView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup";
+﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 
 export class UserGroupListItem extends BasicComponent {

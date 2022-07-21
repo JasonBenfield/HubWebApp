@@ -33,8 +33,11 @@ export class AppUserDataPanel implements IPanel {
         this.alert = new MessageAlert(this.view.alert);
     }
 
-    start(userID: number) {
+    setUserID(userID: number) {
         this.userID = userID;
+    }
+
+    start() {
         new DelayedAction(this.delayedStart.bind(this), 1).execute();
         return this.awaitable.start();
     }
@@ -44,9 +47,9 @@ export class AppUserDataPanel implements IPanel {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                let app = await this.hubApi.App.GetApp();
-                let user = await this.hubApi.UserInquiry.GetUser(this.userID);
-                let defaultModifier = await this.hubApi.App.GetDefaultModifier();
+                const app = await this.hubApi.App.GetApp();
+                const user = await this.hubApi.UserInquiry.GetUser(this.userID);
+                const defaultModifier = await this.hubApi.App.GetDefaultModifier();
                 appUserData = new AppUserOptions(app, user, defaultModifier);
             }
         );

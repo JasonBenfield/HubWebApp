@@ -1,12 +1,12 @@
-﻿import { CssLengthUnit } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
-import { PaddingCss } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/PaddingCss";
-import { BasicComponentView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
-import { BlockView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BlockView";
-import { ButtonCommandView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Command";
-import { GridView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
-import { LinkListGroupView, TextLinkListGroupItemView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup";
-import { MessageAlertView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/MessageAlertView";
-import { ToolbarView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 
 export class UserGroupsPanelView extends GridView {

@@ -66,7 +66,7 @@ public sealed class ModifierRepository
             .Select(m => factory.CreateModifier(m))
             .ToArrayAsync();
 
-    internal async Task<Modifier> Modifier(int id)
+    public async Task<Modifier> Modifier(int id)
     {
         var entity = await factory.DB
             .Modifiers.Retrieve()

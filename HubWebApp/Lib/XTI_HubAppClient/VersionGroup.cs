@@ -2,9 +2,13 @@
 namespace XTI_HubAppClient;
 public sealed partial class VersionGroup : AppClientGroup
 {
-    public VersionGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Version")
+    public VersionGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Version")
     {
+        Actions = new VersionGroupActions(GetVersion: CreatePostAction<string, XtiVersionModel>("GetVersion"));
     }
 
-    public Task<XtiVersionModel> GetVersion(string modifier, string model) => Post<XtiVersionModel, string>("GetVersion", modifier, model);
+    public VersionGroupActions Actions { get; }
+
+    public Task<XtiVersionModel> GetVersion(string modifier, string model) => Actions.GetVersion.Post(modifier, model);
+    public sealed record VersionGroupActions(AppClientPostAction<string, XtiVersionModel> GetVersion);
 }

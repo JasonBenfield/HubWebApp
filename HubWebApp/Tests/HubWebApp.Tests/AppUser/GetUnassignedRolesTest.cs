@@ -8,12 +8,12 @@ internal sealed class GetUnassignedRolesTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        var hubAppModifier = await tester.HubAppModifier();
+        var modifier = await tester.GeneralUserGroupModifier();
         var user = await addUser(tester, "someone");
         var request = new UserModifierKey
         {
             UserID = user.ToModel().ID,
-            ModifierID = hubAppModifier.ID
+            ModifierID = modifier.ID
         };
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
@@ -30,13 +30,14 @@ internal sealed class GetUnassignedRolesTest
             UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                hubAppModifier,
+                new[] { HubInfo.Roles.ViewApp }, 
+                generalUserGroupModifier,
                 HubInfo.Roles.Admin,
-                HubInfo.Roles.ViewApp,
                 HubInfo.Roles.ViewUser
             );
     }
@@ -56,7 +57,8 @@ internal sealed class GetUnassignedRolesTest
             UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var unassignedRoles = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var unassignedRoles = await tester.Execute(request, generalUserGroupModifier);
         var unassignedRoleNames = unassignedRoles.Select(r => r.Name);
         Assert.That
         (
@@ -85,7 +87,8 @@ internal sealed class GetUnassignedRolesTest
             UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var unassignedRoles = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var unassignedRoles = await tester.Execute(request, generalUserGroupModifier);
         Assert.That
         (
             unassignedRoles.Select(r => r.Name),

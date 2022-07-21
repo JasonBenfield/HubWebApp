@@ -6,10 +6,19 @@ public sealed class AppUserGroup : AppApiGroupWrapper
         : base(source)
     {
         Index = source.AddAction(nameof(Index), () => sp.GetRequiredService<IndexAction>());
-        GetUserAccess = source.AddAction(nameof(GetUserAccess), () => sp.GetRequiredService<GetUserAccessByUserModifierAction>());
-        GetUnassignedRoles = source.AddAction(nameof(GetUnassignedRoles), () => sp.GetRequiredService<GetUnassignedRolesAction>());
+        GetUserAccess = source.AddAction
+        (
+            nameof(GetUserAccess), 
+            () => sp.GetRequiredService<GetUserAccessByUserModifierAction>()
+        );
+        GetUnassignedRoles = source.AddAction
+        (
+            nameof(GetUnassignedRoles), 
+            () => sp.GetRequiredService<GetUnassignedRolesAction>()
+        );
     }
-    public AppApiAction<GetUserRequest, WebViewResult> Index { get; }
+
+    public AppApiAction<GetAppUserRequest, WebViewResult> Index { get; }
     public AppApiAction<UserModifierKey, UserAccessModel> GetUserAccess { get; }
     public AppApiAction<UserModifierKey, AppRoleModel[]> GetUnassignedRoles { get; }
 }

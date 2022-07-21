@@ -2,30 +2,30 @@
 
 internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionResult>
 {
-    private readonly AppFromPath appFromPath;
+    private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory factory;
+    private readonly CurrentUser currentUser;
     private readonly ICachedUserContext userContext;
 
-    public UnassignRoleAction(AppFromPath appFromPath, HubFactory factory, ICachedUserContext userContext)
+    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentUser currentUser, ICachedUserContext userContext)
     {
-        this.appFromPath = appFromPath;
+        this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;
+        this.currentUser = currentUser;
         this.userContext = userContext;
     }
 
     public async Task<EmptyActionResult> Execute(UserRoleRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var user = await factory.Users.User(model.UserID);
-        Modifier modifier;
-        if (model.ModifierID > 0)
+        var modifier = await factory.Modifiers.Modifier(model.ModifierID);
+        var app = await modifier.App();
+        var permission = await currentUser.GetPermissionsToApp(app);
+        if (!permission.CanView)
         {
-            modifier = await app.Modifier(model.ModifierID);
+            throw new AccessDeniedException("Access denied to this user");
         }
-        else
-        {
-            modifier = await app.DefaultModifier();
-        }
+        var userGroup = await userGroupFromPath.Value();
+        var user = await userGroup.User(model.UserID);
         var role = await app.Role(model.RoleID);
         await user.Modifier(modifier).UnassignRole(role);
         userContext.ClearCache(user.ToModel().UserName);

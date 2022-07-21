@@ -3,8 +3,8 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { EditUserForm } from '../../../Lib/Api/EditUserForm';
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { EditUserForm } from '../../Lib/Api/EditUserForm';
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { UserEditPanelView } from "./UserEditPanelView";
 
 interface IResult {
@@ -77,7 +77,10 @@ export class UserEditPanel implements IPanel {
     }
 
     private async save() {
-        const result = await this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction);
+        const result = await this.alert.infoAction(
+            'Saving...',
+            () => this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction),
+        );
         if (result.succeeded()) {
             this.awaitable.resolve(Result.saved());
         }

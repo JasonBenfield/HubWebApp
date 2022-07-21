@@ -65,8 +65,11 @@ public sealed class AppRepository
         {
             var entity = await AddEntity(versionName, appKey, title, timeAdded);
             app = factory.CreateApp(entity);
-            var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
-            await defaultModCategory.AddDefaultModifierIfNotFound();
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+            {
+                var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
+                await defaultModCategory.AddDefaultModifierIfNotFound();
+            }
         });
         return app ?? throw new ArgumentNullException(nameof(app));
     }

@@ -28,7 +28,7 @@ export class AppListPanel {
     ) {
         this.appListCard = new AppListCard(
             this.hubApi,
-            modKey => this.hubApi.App.Index.getModifierUrl(modKey, {}).toString(),
+            app => this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
             this.view.appListCard
         );
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));

@@ -4,30 +4,30 @@ public sealed partial class HubAppClient : AppClient
 {
     public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Hub", version.Value)
     {
-        User = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserGroup(_clientFactory, _tokenAccessor, _url));
-        UserCache = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserCacheGroup(_clientFactory, _tokenAccessor, _url));
-        Home = CreateGroup((_clientFactory, _tokenAccessor, _url) => new HomeGroup(_clientFactory, _tokenAccessor, _url));
-        Auth = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AuthGroup(_clientFactory, _tokenAccessor, _url));
-        AuthApi = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url));
-        ExternalAuth = CreateGroup((_clientFactory, _tokenAccessor, _url) => new ExternalAuthGroup(_clientFactory, _tokenAccessor, _url));
-        Authenticators = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AuthenticatorsGroup(_clientFactory, _tokenAccessor, _url));
-        PermanentLog = CreateGroup((_clientFactory, _tokenAccessor, _url) => new PermanentLogGroup(_clientFactory, _tokenAccessor, _url));
-        Apps = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AppsGroup(_clientFactory, _tokenAccessor, _url));
-        App = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AppGroup(_clientFactory, _tokenAccessor, _url));
-        Install = CreateGroup((_clientFactory, _tokenAccessor, _url) => new InstallGroup(_clientFactory, _tokenAccessor, _url));
-        Publish = CreateGroup((_clientFactory, _tokenAccessor, _url) => new PublishGroup(_clientFactory, _tokenAccessor, _url));
-        Version = CreateGroup((_clientFactory, _tokenAccessor, _url) => new VersionGroup(_clientFactory, _tokenAccessor, _url));
-        ResourceGroup = CreateGroup((_clientFactory, _tokenAccessor, _url) => new ResourceGroupGroup(_clientFactory, _tokenAccessor, _url));
-        Resource = CreateGroup((_clientFactory, _tokenAccessor, _url) => new ResourceGroup(_clientFactory, _tokenAccessor, _url));
-        ModCategory = CreateGroup((_clientFactory, _tokenAccessor, _url) => new ModCategoryGroup(_clientFactory, _tokenAccessor, _url));
-        Users = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UsersGroup(_clientFactory, _tokenAccessor, _url));
-        UserInquiry = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserInquiryGroup(_clientFactory, _tokenAccessor, _url));
-        AppUser = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AppUserGroup(_clientFactory, _tokenAccessor, _url));
-        AppUserMaintenance = CreateGroup((_clientFactory, _tokenAccessor, _url) => new AppUserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
-        UserMaintenance = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserMaintenanceGroup(_clientFactory, _tokenAccessor, _url));
-        Storage = CreateGroup((_clientFactory, _tokenAccessor, _url) => new StorageGroup(_clientFactory, _tokenAccessor, _url));
-        System = CreateGroup((_clientFactory, _tokenAccessor, _url) => new SystemGroup(_clientFactory, _tokenAccessor, _url));
-        UserGroups = CreateGroup((_clientFactory, _tokenAccessor, _url) => new UserGroupsGroup(_clientFactory, _tokenAccessor, _url));
+        User = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserGroup(_clientFactory, _tokenAccessor, _url, _options));
+        UserCache = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserCacheGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Home = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new HomeGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Auth = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthGroup(_clientFactory, _tokenAccessor, _url, _options));
+        AuthApi = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url, _options));
+        ExternalAuth = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ExternalAuthGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Authenticators = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthenticatorsGroup(_clientFactory, _tokenAccessor, _url, _options));
+        PermanentLog = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new PermanentLogGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Apps = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppsGroup(_clientFactory, _tokenAccessor, _url, _options));
+        App = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Install = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new InstallGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Publish = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new PublishGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Version = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new VersionGroup(_clientFactory, _tokenAccessor, _url, _options));
+        ResourceGroup = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ResourceGroupGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Resource = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ResourceGroup(_clientFactory, _tokenAccessor, _url, _options));
+        ModCategory = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ModCategoryGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Users = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UsersGroup(_clientFactory, _tokenAccessor, _url, _options));
+        UserInquiry = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserInquiryGroup(_clientFactory, _tokenAccessor, _url, _options));
+        AppUser = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppUserGroup(_clientFactory, _tokenAccessor, _url, _options));
+        AppUserMaintenance = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppUserMaintenanceGroup(_clientFactory, _tokenAccessor, _url, _options));
+        UserMaintenance = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserMaintenanceGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Storage = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new StorageGroup(_clientFactory, _tokenAccessor, _url, _options));
+        System = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new SystemGroup(_clientFactory, _tokenAccessor, _url, _options));
+        UserGroups = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserGroupsGroup(_clientFactory, _tokenAccessor, _url, _options));
         UserQuery = CreateODataGroup<UserGroupKey, ExpandedUser>("UserQuery");
     }
 

@@ -26,12 +26,13 @@ internal sealed class AssignRoleTest
         var defaultModifier = await app.DefaultModifier();
         var viewAppRole = await getViewAppRole(tester);
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
-        var modifier = await tester.HubAppModifier();
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 model,
-                modifier,
+                new AppRoleName[] { HubInfo.Roles.ViewApp },
+                generalUserGroupModifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser
             );
@@ -42,13 +43,14 @@ internal sealed class AssignRoleTest
     {
         var tester = await setup();
         var userToEdit = await addUser(tester, "userToEdit");
-        await tester.Login(HubInfo.Roles.EditUser);
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        await tester.Login(new[] { HubInfo.Roles.ViewApp }, generalUserGroupModifier, HubInfo.Roles.EditUser);
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
         var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();
-        await tester.Execute(model, hubAppModifier.ModKey());
+        await tester.Execute(model, generalUserGroupModifier);
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
@@ -69,7 +71,8 @@ internal sealed class AssignRoleTest
         var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
         var model = createModel(userToEdit, defaultModifier, viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();
-        var userRoleID = await tester.Execute(model, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userRoleID = await tester.Execute(model, generalUserGroupModifier);
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (

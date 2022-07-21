@@ -1,12 +1,10 @@
-﻿using XTI_HubWebAppApi.AppUserInquiry;
-
-namespace XTI_HubWebAppApi;
+﻿namespace XTI_HubWebAppApi;
 
 partial class HubAppApi
 {
     private AppUserInquiry.AppUserGroup? appUser;
 
-    public AppUserInquiry.AppUserGroup AppUser { get=>appUser ?? throw new ArgumentNullException(nameof(appUser)); }
+    public AppUserInquiry.AppUserGroup AppUser { get => appUser ?? throw new ArgumentNullException(nameof(appUser)); }
 
     partial void createAppUser(IServiceProvider sp)
     {
@@ -15,8 +13,8 @@ partial class HubAppApi
             source.AddGroup
             (
                 nameof(AppUser),
-                HubInfo.ModCategories.Apps,
-                Access.WithAllowed(HubInfo.Roles.ViewApp, HubInfo.Roles.ViewUser)
+                HubInfo.ModCategories.UserGroups,
+                Access.WithAllowed(HubInfo.Roles.ViewUser)
             ),
             sp
         );

@@ -18,7 +18,7 @@ partial class HubAppApi
             source.AddGroup
             (
                 nameof(AppUserMaintenance),
-                HubInfo.ModCategories.Apps,
+                HubInfo.ModCategories.UserGroups,
                 Access.WithAllowed(HubInfo.Roles.EditUser)
             ),
             sp

@@ -65,7 +65,10 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return user;
     }
 
-    public async Task<AppUser> Login(Modifier modifier, params AppRoleName[]? roleNames)
+    public Task<AppUser> Login(Modifier modifier, params AppRoleName[]? roleNames) =>
+        Login(new AppRoleName[0], modifier, roleNames);
+
+    public async Task<AppUser> Login(AppRoleName[] defaultRoleNames, Modifier modifier, params AppRoleName[]? roleNames)
     {
         var factory = Services.GetRequiredService<HubFactory>();
         var userGroup = await factory.UserGroups.GetGeneral();
@@ -80,6 +83,11 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        foreach (var roleName in defaultRoleNames)
+        {
+            var role = await hubApp.Role(roleName);
+            await user.AssignRole(role);
+        }
         foreach (var roleName in roleNames ?? new AppRoleName[0])
         {
             var role = await hubApp.Role(roleName);

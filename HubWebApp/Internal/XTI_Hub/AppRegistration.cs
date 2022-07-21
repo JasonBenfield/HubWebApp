@@ -110,13 +110,19 @@ public sealed class AppRegistration
         var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
         var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var apps = await hubFactory.Apps.All();
-        foreach (var app in apps.Where(a => !a.AppKeyEquals(HubInfo.AppKey)))
+        var appModels = apps
+            .Select(a => a.ToModel())
+            .Where
+            (
+                a => !a.AppKey.Equals(HubInfo.AppKey) &&
+                    !a.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
+            );
+        foreach (var appModel in appModels)
         {
-            var appModel = app.ToModel();
             await appModCategory.AddOrUpdateModifier
             (
-                appModel.PublicKey, 
-                appModel.ID, 
+                appModel.PublicKey,
+                appModel.ID,
                 appModel.AppKey.Format()
             );
         }
@@ -132,8 +138,8 @@ public sealed class AppRegistration
             var userGroupModel = userGroup.ToModel();
             await userGroupsModCategory.AddOrUpdateModifier
             (
-                userGroupModel.PublicKey, 
-                userGroupModel.ID, 
+                userGroupModel.PublicKey,
+                userGroupModel.ID,
                 userGroupModel.GroupName.DisplayText
             );
         }

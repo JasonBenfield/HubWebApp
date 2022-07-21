@@ -8,5 +8,6 @@ internal static class UserMaintenanceExtensions
     {
         services.AddScoped<EditUserAction>();
         services.AddScoped<GetUserForEditAction>();
+        services.AddScoped<ChangePasswordAction>();
     }
 }

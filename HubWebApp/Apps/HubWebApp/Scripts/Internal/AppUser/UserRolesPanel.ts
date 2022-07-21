@@ -169,7 +169,7 @@ export class UserRolesPanel implements IPanel {
         else {
             this.allowAccessCommand.show();
         }
-        let userRoleListItems = this.userRoles.setItems(
+        const userRoleListItems = this.userRoles.setItems(
             userAccess.AssignedRoles,
             (role: IAppRoleModel, itemView: UserRoleListItemView) =>
                 new UserRoleListItem(role, itemView)
@@ -179,7 +179,12 @@ export class UserRolesPanel implements IPanel {
             this.view.hideDefaultUserRoles();
         }
         else {
-            this.view.showDefaultUserRoles();
+            if (defaultUserAccess.AssignedRoles.length > 0) {
+                this.view.showDefaultUserRoles();
+            }
+            else {
+                this.view.hideDefaultUserRoles();
+            }
             this.defaultUserRoles.setItems(
                 defaultUserAccess.AssignedRoles,
                 (role: IAppRoleModel, itemView: UserRoleListItemView) => {

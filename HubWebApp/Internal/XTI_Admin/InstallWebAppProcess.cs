@@ -23,7 +23,15 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
     {
         Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
         await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
-        deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+        try
+        {
+            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+        }
+        catch
+        {
+            await Task.Delay(TimeSpan.FromSeconds(15));
+            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+        }
         await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
         var appOfflinePath = getAppOfflinePath(adminInstOptions.AppKey, installVersionKey);
         File.Delete(appOfflinePath);

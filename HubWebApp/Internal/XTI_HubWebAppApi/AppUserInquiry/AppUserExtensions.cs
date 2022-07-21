@@ -8,6 +8,6 @@ internal static class AppUserExtensions
     {
         services.AddScoped<IndexAction>();
         services.AddScoped<GetUnassignedRolesAction>();
-        services.AddScoped<GetUserAccessAction>();
+        services.AddScoped<GetUserAccessByUserModifierAction>();
     }
 }

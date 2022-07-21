@@ -42,19 +42,24 @@ class MainPage extends BasicPage {
         this.addRolePanel = this.panels.add(
             new AddRolePanel(this.hubApi, this.view.addRolePanel)
         );
-        const userIDValue = Url.current().getQueryValue('UserID');
-        if (XtiUrl.current().path.modifier && userIDValue) {
+        const url = Url.current();
+        const appModKey = url.getQueryValue('App');
+        const userIDValue = url.getQueryValue('UserID');
+        if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
             const userID = Number(userIDValue);
-            this.activateStartPanel(userID);
+            this.hubApi.App.withModifier(appModKey);
+            this.hubApi.ModCategory.withModifier(appModKey);
+            this.appUserDataPanel.setUserID(userID);
+            this.activateAppUserDataPanel();
         }
         else {
             new WebPage(this.hubApi.UserGroups.Index.getUrl({})).open();
         }
     }
 
-    private async activateStartPanel(userID: number) {
+    private async activateAppUserDataPanel() {
         this.panels.activate(this.appUserDataPanel);
-        const result = await this.appUserDataPanel.start(userID);
+        const result = await this.appUserDataPanel.start();
         if (result.done) {
             this.userRolesPanel.setAppUserOptions(result.done.appUserOptions);
             this.userRolesPanel.setDefaultModifier();

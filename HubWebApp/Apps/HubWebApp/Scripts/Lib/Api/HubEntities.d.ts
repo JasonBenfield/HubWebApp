@@ -1,16 +1,5 @@
 // Generated code
 
-interface IResourcePath {
-	Group: string;
-	Action: string;
-	ModKey: string;
-}
-interface IResourcePathAccess {
-	Path: IResourcePath;
-	HasAccess: boolean;
-}
-interface IEmptyRequest {
-}
 interface ILogoutRequest {
 	ReturnUrl: string;
 }
@@ -330,6 +319,10 @@ interface IAddUserModel {
 	Password: string;
 	PersonName: string;
 	Email: string;
+}
+interface IGetAppUserRequest {
+	App: string;
+	UserID: number;
 }
 interface IUserModifierKey {
 	UserID: number;

@@ -38,12 +38,13 @@ internal sealed class UnassignRoleTest
             ModifierID = defaultModifier.ID,
             RoleID = viewAppRole.ToModel().ID
         };
-        var modifier = await tester.HubAppModifier();
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                modifier,
+                new[] { HubInfo.Roles.ViewApp },
+                generalUserGroupModifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser
             );
@@ -66,8 +67,9 @@ internal sealed class UnassignRoleTest
             ModifierID = defaultModifier.ID,
             UserID = userToEdit.ToModel().ID
         };
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        await tester.Execute(request, generalUserGroupModifier);
         var hubAppModifier = await tester.HubAppModifier();
-        await tester.Execute(request, hubAppModifier.ModKey());
         var userRoles = await userToEdit.Modifier(hubAppModifier).AssignedRoles();
         Assert.That
         (
@@ -125,7 +127,7 @@ internal sealed class UnassignRoleTest
         await assignRoleTester.LoginAsAdmin();
         var app = await tester.HubApp();
         var defaultModifier = await app.DefaultModifier();
-        var hubAppModifier = await tester.HubAppModifier();
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         var userRoleID = await assignRoleTester.Execute
         (
             new UserRoleRequest
@@ -134,7 +136,7 @@ internal sealed class UnassignRoleTest
                 ModifierID = defaultModifier.ID,
                 RoleID = role.ToModel().ID
             },
-            hubAppModifier
+            generalUserGroupModifier
         );
         return userRoleID;
     }

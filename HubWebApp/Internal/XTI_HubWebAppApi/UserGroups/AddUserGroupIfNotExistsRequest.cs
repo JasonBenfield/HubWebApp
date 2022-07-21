@@ -2,5 +2,5 @@
 
 public sealed class AddUserGroupIfNotExistsRequest
 {
-    public string GroupName { get; set; }
+    public string GroupName { get; set; } = "";
 }

@@ -32,11 +32,13 @@ internal sealed class DenyAccessTest
             UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                modifier,
+                new [] {HubInfo.Roles.ViewApp },
+                generalUserGroupModifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser
             );
@@ -54,7 +56,8 @@ internal sealed class DenyAccessTest
             UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
-        await tester.Execute(request, modifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        await tester.Execute(request, generalUserGroupModifier);
         var roles = await user.Modifier(modifier).AssignedRoles();
         Assert.That
         (
@@ -78,7 +81,8 @@ internal sealed class DenyAccessTest
             UserID = user.ToModel().ID,
             ModifierID = modifier.ID
         };
-        await tester.Execute(request, modifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        await tester.Execute(request, generalUserGroupModifier);
         var roles = await user.Modifier(modifier).AssignedRoles();
         Assert.That
         (

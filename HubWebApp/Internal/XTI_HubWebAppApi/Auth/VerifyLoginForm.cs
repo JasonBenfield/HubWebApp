@@ -9,12 +9,12 @@ public sealed class VerifyLoginForm : Form
     {
         UserName = AddTextInput(nameof(UserName));
         UserName.MustNotBeNull();
-        UserName.AddConstraints(new NotWhitespaceConstraint());
+        UserName.MustNotBeWhiteSpace();
         UserName.MaxLength = 100;
         Password = AddTextInput(nameof(Password));
-        Password.IsProtected = true;
+        Password.Protect();
         Password.MustNotBeNull();
-        Password.AddConstraints(new NotWhitespaceConstraint());
+        Password.MustNotBeWhiteSpace();
         Password.MaxLength = 100;
     }
 

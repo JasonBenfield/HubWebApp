@@ -85,7 +85,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => roleIDs.Any(id => id == r.ID))
+            .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -157,7 +157,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated == DateTimeOffset.MaxValue)
+            .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();

@@ -1,8 +1,8 @@
-﻿import { Awaitable } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Awaitable";
-import { AsyncCommand } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/Command";
-import { ListGroup } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/ListGroup";
-import { MessageAlert } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/MessageAlert";
-import { TextLinkListGroupItemView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { UserGroupListItem } from "./UserGroupListItem";
 import { UserGroupsPanelView } from "./UserGroupsPanelView";

@@ -148,7 +148,9 @@ public sealed class App
             AppKey: key,
             VersionName: new AppVersionName(record.VersionName),
             Title: record.Title,
-            PublicKey: new ModifierKey(key.Format())
+            PublicKey: key.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
+                ? ModifierKey.Default
+                : new ModifierKey(key.Format())
         );
     }
 

@@ -17,7 +17,7 @@ export class AppListCard {
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly appRedirectUrl: (modKey: string) => string,
+        private readonly appRedirectUrl: (app: IAppModel) => string,
         private readonly view: AppListCardView
     ) {
         new TextComponent(this.view.titleHeader).setText('Apps');

@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.AppUserInquiry;
 
-public sealed class IndexAction : AppAction<GetUserRequest, WebViewResult>
+public sealed class IndexAction : AppAction<GetAppUserRequest, WebViewResult>
 {
     private readonly WebViewResultFactory viewFactory;
 
@@ -9,6 +9,6 @@ public sealed class IndexAction : AppAction<GetUserRequest, WebViewResult>
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(GetUserRequest model, CancellationToken stoppingToken) =>
+    public Task<WebViewResult> Execute(GetAppUserRequest model, CancellationToken stoppingToken) =>
         Task.FromResult(viewFactory.Default("appUser", "App User"));
 }

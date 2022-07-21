@@ -1,56 +1,5 @@
 ﻿Import-Module PowershellForXti -Force
 
-if(Test-Path ".\xti.private.ps1"){
-. .\xti.Private.ps1
-}
-
-$BaseXtiPublish = ${Function:Xti-Publish}
-
-function Xti-Publish {
-    param(
-        [ValidateSet("Production", "Development")]
-        [string] $EnvName="Development"
-    )
-    $DestinationMachine = Get-DestinationMachine -EnvName $EnvName
-    $PsBoundParameters.Add("DestinationMachine", $DestinationMachine)
-    $Domain = Get-Domain -EnvName $EnvName
-    $PsBoundParameters.Add("Domain", $Domain)
-    $SiteName = Get-SiteName -EnvName $EnvName
-    $PsBoundParameters.Add("SiteName", $SiteName)
-    & $BaseXtiPublish @PsBoundParameters
-}
-
-$BaseXtiInstall = ${Function:Xti-Install}
-
-function Xti-Install {
-    param(
-        [ValidateSet("Development", "Production", "Staging", "Test")]
-        $EnvName = "Development",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppName = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppType = "",
-        [ValidateSet("Default", "DB")]
-        $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub")]
-        $InstallationSource = "Default"
-    )
-    & $BaseXtiInstall @PsBoundParameters
-}
-
-$BaseXtiPublishLib = ${Function:Xti-PublishLib}
-
-function Xti-PublishLib {
-    param (
-        [ValidateSet("Production", "Development", "Staging", "Test")]
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName,
-        [ValidateSet("Default", "DB")]
-        $HubAdministrationType = "Default"
-    )
-    & $BaseXtiPublishLib @PsBoundParameters
-}
-
 function Add-HubDBMigrations {
     param ([Parameter(Mandatory)]$Name)
     $env:DOTNET_ENVIRONMENT="Development"

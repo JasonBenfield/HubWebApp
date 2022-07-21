@@ -5,6 +5,7 @@ import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { GridCellView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
+import { MarginCss } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
 
 export class HubTheme {
     public static readonly instance = new HubTheme();
@@ -83,6 +84,7 @@ export class HubTheme {
                     b.setText('Cancel');
                     b.setTitle('Cancel');
                     b.setContext(ContextualClass.danger);
+                    b.setMargin(MarginCss.end(3));
                 });
         },
         saveButton(button: ButtonCommandView) {

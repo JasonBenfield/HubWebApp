@@ -2,17 +2,17 @@
 import { ApiODataClient } from '@jasonbenfield/sharedwebapp/OData/ApiODataClient';
 import { ODataComponent } from '@jasonbenfield/sharedwebapp/OData/ODataComponent';
 import { ODataComponentOptionsBuilder } from '@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder';
-import { ListGroup } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/ListGroup';
-import { MessageAlert } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/MessageAlert';
-import { Url } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url';
-import { TextLinkListGroupItemView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup';
+import { ListGroup } from '@jasonbenfield/sharedwebapp/Components/ListGroup';
+import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
+import { Url } from '@jasonbenfield/sharedwebapp/Url';
+import { TextLinkListGroupItemView } from '@jasonbenfield/sharedwebapp/Views/ListGroup';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { ODataExpandedUserColumnsBuilder } from '../../Lib/Api/ODataExpandedUserColumnsBuilder';
 import { Apis } from '../Apis';
 import { MainPageView } from './MainPageView';
 import { UserGroupListItem } from '../UserGroups/UserGroupListItem';
-import { ODataCellClickedEventArgs } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataCellClickedEventArgs';
-import { WebPage } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Api/WebPage';
+import { ODataCellClickedEventArgs } from '@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs';
+import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 
 class MainPage extends BasicPage {
     protected readonly view: MainPageView;

@@ -92,40 +92,65 @@ public sealed class AppUser
         }
     }
 
+    private static readonly AppRoleName[] viewAppRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
+    private static readonly AppRoleName[] editAppRoles = new[] { AppRoleName.Admin };
+
     public async Task<AppPermission[]> GetAppPermissions()
     {
         var apps = await factory.Apps.All();
         var hubApp = apps.First(a => a.AppKeyEquals(HubInfo.AppKey));
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var appPermissions = new List<AppPermission>();
-        var viewRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
-        var editRoles = new[] { AppRoleName.Admin };
         foreach (var app in apps)
         {
-            var appModel = app.ToModel();
-            var modifier = await appsModCategory.ModifierByTargetID(appModel.ID);
-            var userRoles = await Modifier(modifier).AssignedRoles();
-            var userRoleModels = userRoles.Select(ur => ur.ToModel());
-            AppPermission permission;
-            if (userRoleModels.Any(ur => ur.Name.Equals(AppRoleName.DenyAccess)))
-            {
-                permission = new AppPermission(app, false, false);
-            }
-            else
-            {
-                permission = new AppPermission
-                (
-                    App: app,
-                    CanView: userRoleModels
-                        .Any(ur => ur.Name.EqualsAny(viewRoles)),
-                    CanEdit: userRoleModels
-                        .Any(ur => ur.Name.EqualsAny(editRoles))
-                );
-            }
+            var permission = await GetAppPermission(hubApp, appsModCategory, app);
             appPermissions.Add(permission);
         }
         return appPermissions.ToArray();
     }
+
+    public async Task<AppPermission> GetAppPermission(App app)
+    {
+        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var permission = await GetAppPermission(hubApp, appsModCategory, app);
+        return permission;
+    }
+
+    private async Task<AppPermission> GetAppPermission(App hubApp, ModifierCategory appsModCategory, App app)
+    {
+        var appModel = app.ToModel();
+        Modifier modifier;
+        if(appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+        {
+            modifier = await hubApp.DefaultModifier();
+        }
+        else
+        {
+            modifier = await appsModCategory.ModifierByTargetID(appModel.ID);
+        }
+        var userRoles = await Modifier(modifier).AssignedRoles();
+        var userRoleModels = userRoles.Select(ur => ur.ToModel());
+        AppPermission permission;
+        if (userRoleModels.Any(ur => ur.Name.Equals(AppRoleName.DenyAccess)))
+        {
+            permission = new AppPermission(app, false, false);
+        }
+        else
+        {
+            permission = new AppPermission
+            (
+                App: app,
+                CanView: userRoleModels
+                    .Any(ur => ur.Name.EqualsAny(viewAppRoles)),
+                CanEdit: userRoleModels
+                    .Any(ur => ur.Name.EqualsAny(editAppRoles))
+            );
+        }
+        return permission;
+    }
+
+    public Task<AppUserGroup> UserGroup() => factory.UserGroups.UserGroup(record.GroupID);
 
     private static readonly AppRoleName[] viewUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewUser };
     private static readonly AppRoleName[] editUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.EditUser };

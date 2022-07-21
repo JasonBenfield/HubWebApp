@@ -5,7 +5,8 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { HubTheme } from "../../HubTheme";
+import { NavView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/NavView";
+import { HubTheme } from "../HubTheme";
 
 export class UserComponentView extends CardView {
     readonly alert: CardAlertView;
@@ -13,6 +14,7 @@ export class UserComponentView extends CardView {
     readonly fullName: FormGroupTextView;
     readonly email: FormGroupTextView;
     readonly editButton: ButtonCommandView;
+    readonly changePasswordButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -26,10 +28,13 @@ export class UserComponentView extends CardView {
             .addView(ButtonCommandView)
             .configure(b => HubTheme.instance.cardHeader.editButton(b));
         this.alert = this.addCardAlert();
-        const body = this.addCardBody()
-            .addView(FormGroupGridView);
-        this.userName = body.addFormGroup(FormGroupTextView);
-        this.fullName = body.addFormGroup(FormGroupTextView);
-        this.email = body.addFormGroup(FormGroupTextView);
+        const body = this.addCardBody();
+        const formGroupGrid = body.addView(FormGroupGridView);
+        this.userName = formGroupGrid.addFormGroup(FormGroupTextView);
+        this.fullName = formGroupGrid.addFormGroup(FormGroupTextView);
+        this.email = formGroupGrid.addFormGroup(FormGroupTextView);
+        const nav = body.addView(NavView);
+        this.changePasswordButton = nav.addButtonCommandView();
+        this.changePasswordButton.setText('Change Password');
     }
 }

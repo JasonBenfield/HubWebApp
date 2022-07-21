@@ -1,11 +1,11 @@
 ﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
-import { CssLengthUnit } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit';
-import { GridView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid';
-import { LinkListGroupView, TextLinkListGroupItemView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ListGroup';
+import { CssLengthUnit } from '@jasonbenfield/sharedwebapp/CssLengthUnit';
+import { GridView } from '@jasonbenfield/sharedwebapp/Views/Grid';
+import { LinkListGroupView, TextLinkListGroupItemView } from '@jasonbenfield/sharedwebapp/Views/ListGroup';
 import { ODataComponentView } from '@jasonbenfield/sharedwebapp/OData/ODataComponentView';
 import { ODataExpandedUserColumnViewsBuilder } from '../../Lib/Api/ODataExpandedUserColumnsBuilder';
-import { MessageAlertView } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/MessageAlertView';
-import { PaddingCss } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/PaddingCss';
+import { MessageAlertView } from '@jasonbenfield/sharedwebapp/Views/MessageAlertView';
+import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
 
 export class MainPageView extends BasicPageView {
     readonly alert: MessageAlertView;

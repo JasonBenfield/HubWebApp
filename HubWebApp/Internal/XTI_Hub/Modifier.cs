@@ -23,6 +23,13 @@ public sealed class Modifier
 
     public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID == record.CategoryID;
 
+    public async Task<App> App()
+    {
+        var category = await factory.ModCategories.Category(record.CategoryID);
+        var app = await category.App();
+        return app;
+    }
+
     public Task SetDisplayText(string displayText)
     {
         return factory.DB.Modifiers.Update(record, r =>

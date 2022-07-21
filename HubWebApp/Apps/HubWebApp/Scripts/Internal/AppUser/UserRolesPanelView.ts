@@ -1,22 +1,21 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { Heading1View, Heading3View } from "@jasonbenfield/sharedwebapp/Views/Headings";
 import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSmallView } from "@jasonbenfield/sharedwebapp/Views/TextSmallView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
-import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
-import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
-import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { HubTheme } from "../HubTheme";
-import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 
 export class UserRolesPanelView extends GridView {
@@ -44,11 +43,13 @@ export class UserRolesPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         const userHeading = mainContent.addView(Heading1View);
         this.personName = userHeading.addView(TextSpanView);
+        this.personName.setMargin(MarginCss.end(3));
         this.userName = userHeading.addView(TextSmallView);
         userHeading.setMargin(MarginCss.bottom(3));
 
         const appHeading = mainContent.addView(Heading3View);
         this.appName = appHeading.addView(TextSpanView);
+        this.appName.setMargin(MarginCss.end(3));
         this.appType = appHeading.addView(TextSmallView);
         appHeading.setMargin(MarginCss.bottom(3));
 
@@ -58,7 +59,9 @@ export class UserRolesPanelView extends GridView {
         const modCol = categoryRow.addColumn()
             .configure(c => c.setPadding(PaddingCss.top(1)));
         this.categoryName = modCol.addView(TextSpanView);
+        this.categoryName.setMargin(MarginCss.end(3));
         this.modifierDisplayText = modCol.addView(TextSpanView);
+        this.modifierDisplayText.setMargin(MarginCss.end(3));
         modCol.addView(TextSpanView)
             .configure(ts => ts.setText('Roles'));
         this.addButton = categoryRow
