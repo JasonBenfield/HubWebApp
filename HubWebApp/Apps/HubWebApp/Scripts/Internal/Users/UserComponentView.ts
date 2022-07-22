@@ -34,7 +34,7 @@ export class UserComponentView extends CardView {
         this.fullName = formGroupGrid.addFormGroup(FormGroupTextView);
         this.email = formGroupGrid.addFormGroup(FormGroupTextView);
         const nav = body.addView(NavView);
-        this.changePasswordButton = nav.addButtonCommandView();
+        this.changePasswordButton = nav.addButtonCommand();
         this.changePasswordButton.setText('Change Password');
     }
 }

@@ -32,24 +32,6 @@ internal sealed class EditUserTest
     }
 
     [Test]
-    public async Task ShouldThrowError_WhenRoleIsNotAssignedToUser()
-    {
-        var tester = await setup();
-        await tester.Login();
-        var userToEdit = await addUser(tester, "userToEdit");
-        var form = createEditUserForm(userToEdit);
-        var modifier = await tester.GeneralUserGroupModifier();
-        await AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenAccessIsDenied
-            (
-                form,
-                modifier,
-                HubInfo.Roles.Admin,
-                HubInfo.Roles.EditUser
-            );
-    }
-
-    [Test]
     public async Task ShouldUpdateName()
     {
         var tester = await setup();

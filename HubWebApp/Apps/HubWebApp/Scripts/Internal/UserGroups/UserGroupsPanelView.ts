@@ -7,11 +7,13 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { MarginCss } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
 import { HubTheme } from "../HubTheme";
 
 export class UserGroupsPanelView extends GridView {
     readonly alert: MessageAlertView;
     readonly userGroups: LinkListGroupView;
+    readonly menuButton: ButtonCommandView;
     readonly refreshButton: ButtonCommandView;
     readonly addButton: ButtonCommandView;
 
@@ -39,11 +41,18 @@ export class UserGroupsPanelView extends GridView {
         this.userGroups = mainContent
             .addView(LinkListGroupView);
         this.userGroups.setItemViewType(TextLinkListGroupItemView);
-        const toolbar = this.addCell().addView(ToolbarView);
-        HubTheme.instance.commandToolbar.toolbar(toolbar);
-        this.refreshButton = toolbar.columnStart.addView(ButtonCommandView);
-        HubTheme.instance.commandToolbar.refreshButton(this.refreshButton);
-        this.addButton = toolbar.columnEnd.addView(ButtonCommandView);
-        HubTheme.instance.commandToolbar.addButton(this.addButton);
+        const toolbar = HubTheme.instance.commandToolbar.toolbar(
+            this.addCell().addView(ToolbarView)
+        );
+        this.menuButton = HubTheme.instance.commandToolbar.menuButton(
+            toolbar.columnStart.addView(ButtonCommandView)
+        );
+        this.menuButton.setMargin(MarginCss.end(1));
+        this.refreshButton = HubTheme.instance.commandToolbar.refreshButton(
+            toolbar.columnStart.addView(ButtonCommandView)
+        );
+        this.addButton = HubTheme.instance.commandToolbar.addButton(
+            toolbar.columnEnd.addView(ButtonCommandView)
+        );
     }
 }

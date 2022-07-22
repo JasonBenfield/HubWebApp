@@ -2,6 +2,7 @@
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
+import { MainMenuPanel } from '../MainMenuPanel';
 import { MainPageView } from './MainPageView';
 import { UserGroupsPanel } from './UserGroupsPanel';
 
@@ -10,6 +11,7 @@ class MainPage extends BasicPage {
     private readonly hubApi: HubAppApi;
     private readonly userGroupsPanel: UserGroupsPanel;
     private readonly panels: SingleActivePanel;
+    private readonly mainMenuPanel: MainMenuPanel;
 
     constructor() {
         super(new MainPageView());
@@ -17,6 +19,9 @@ class MainPage extends BasicPage {
         this.panels = new SingleActivePanel();
         this.userGroupsPanel = this.panels.add(
             new UserGroupsPanel(this.hubApi, this.view.userGroupsPanel)
+        );
+        this.mainMenuPanel = this.panels.add(
+            new MainMenuPanel(this.hubApi, this.view.mainMenuPanel)
         );
         this.userGroupsPanel.refresh();
         this.activateUserGroupsPanel();
@@ -27,6 +32,17 @@ class MainPage extends BasicPage {
         const result = await this.userGroupsPanel.start();
         if (result.addRequested) {
 
+        }
+        else if (result.mainMenuRequested) {
+            this.activateMainMenuPanel();
+        }
+    }
+
+    private async activateMainMenuPanel() {
+        this.panels.activate(this.mainMenuPanel);
+        const result = await this.mainMenuPanel.start();
+        if (result.back) {
+            this.activateUserGroupsPanel();
         }
     }
 }

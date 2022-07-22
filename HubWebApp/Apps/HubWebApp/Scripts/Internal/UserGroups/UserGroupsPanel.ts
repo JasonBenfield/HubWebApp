@@ -1,5 +1,5 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
@@ -9,14 +9,19 @@ import { UserGroupsPanelView } from "./UserGroupsPanelView";
 
 interface IResult {
     addRequested?: {};
+    mainMenuRequested?: {};
 }
 
 class Result {
     static addRequested() { return new Result({ addRequested: {} }); }
 
+    static mainMenuRequested() { return new Result({ mainMenuRequested: {} }); }
+
     private constructor(private readonly result: IResult) { }
 
     get addRequested() { return this.result.addRequested; }
+
+    get mainMenuRequested() { return this.result.mainMenuRequested; }
 }
 
 export class UserGroupsPanel implements IPanel {
@@ -31,7 +36,10 @@ export class UserGroupsPanel implements IPanel {
         this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
         this.refreshCommand.add(view.refreshButton);
         this.refreshCommand.animateIconWhenInProgress('spin');
+        new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
     }
+
+    private requestMainMenu() { this.awaitable.resolve(Result.mainMenuRequested()); }
 
     refresh() { return this.refreshCommand.execute(); }
 

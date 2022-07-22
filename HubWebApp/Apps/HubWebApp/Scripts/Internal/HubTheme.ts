@@ -68,13 +68,22 @@ export class HubTheme {
                     t.setPadding(PaddingCss.xs(3));
                 });
         },
+        menuButton(button: ButtonCommandView) {
+            return button
+                .configure(b => {
+                    b.icon.solidStyle('bars');
+                    b.setText('');
+                    b.setTitle('Menu');
+                    b.setContext(ContextualClass.secondary);
+                });
+        },
         backButton(button: ButtonCommandView) {
             return button
                 .configure(b => {
                     b.icon.solidStyle('caret-left');
                     b.setText('Back');
                     b.setTitle('Back');
-                    b.useOutlineStyle(ContextualClass.light);
+                    b.setContext(ContextualClass.secondary);
                 });
         },
         cancelButton(button: ButtonCommandView) {
@@ -102,7 +111,7 @@ export class HubTheme {
                     b.icon.solidStyle('plus');
                     b.setText('Add');
                     b.setTitle('Add');
-                    b.setContext(ContextualClass.light);
+                    b.setContext(ContextualClass.secondary);
                 });
         },
         refreshButton(button: ButtonCommandView) {
@@ -111,7 +120,7 @@ export class HubTheme {
                     b.icon.solidStyle('rotate');
                     b.setText('');
                     b.setTitle('Refresh');
-                    b.setContext(ContextualClass.light);
+                    b.setContext(ContextualClass.secondary);
                 });
         }
     };
