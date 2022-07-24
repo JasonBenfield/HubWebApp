@@ -16,14 +16,26 @@ public sealed partial class UsersController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppUserGroupModel>> GetUserGroup(CancellationToken ct)
+    {
+        return api.Group("Users").Action<EmptyRequest, AppUserGroupModel>("GetUserGroup").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppUserModel[]>> GetUsers(CancellationToken ct)
     {
         return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddUserModel model, CancellationToken ct)
+    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddOrUpdateUserModel model, CancellationToken ct)
     {
-        return api.Group("Users").Action<AddUserModel, int>("AddOrUpdateUser").Execute(model, ct);
+        return api.Group("Users").Action<AddOrUpdateUserModel, int>("AddOrUpdateUser").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserModel>> AddUser([FromBody] AddUserForm model, CancellationToken ct)
+    {
+        return api.Group("Users").Action<AddUserForm, AppUserModel>("AddUser").Execute(model, ct);
     }
 }

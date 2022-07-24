@@ -7,8 +7,10 @@ internal static class UserListExtensions
     public static void AddUserListGroupServices(this IServiceCollection services)
     {
         services.AddScoped<IndexAction>();
+        services.AddScoped<GetUserGroupAction>();
         services.AddScoped<AddOrUpdateUserAction>();
-        services.AddScoped<AddUserValidation>();
+        services.AddScoped<AddOrUpdateUserValidation>();
         services.AddScoped<GetUsersAction>();
+        services.AddScoped<AddUserAction>();
     }
 }

@@ -2,9 +2,9 @@
 
 namespace XTI_HubWebAppApi.UserList;
 
-public sealed class AddUserValidation : AppActionValidation<AddUserModel>
+public sealed class AddOrUpdateUserValidation : AppActionValidation<AddOrUpdateUserModel>
 {
-    public Task Validate(ErrorList errors, AddUserModel model, CancellationToken stoppingToken)
+    public Task Validate(ErrorList errors, AddOrUpdateUserModel model, CancellationToken stoppingToken)
     {
         if (string.IsNullOrWhiteSpace(model.UserName))
         {

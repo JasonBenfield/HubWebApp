@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { WebPage } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Api/WebPage";
+import { WebPage } from "@jasonbenfield/sharedwebapp/Api/WebPage";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppListCard } from "../Apps/AppListCard";
 import { UserComponent } from "./UserComponent";

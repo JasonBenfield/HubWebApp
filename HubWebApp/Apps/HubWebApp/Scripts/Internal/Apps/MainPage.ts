@@ -5,7 +5,7 @@ import { Apis } from '../Apis';
 import { AppListPanel } from './AppListPanel';
 import { MainPageView } from './MainPageView';
 import { MainMenuPanel } from '../MainMenuPanel';
-import { SingleActivePanel } from '../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Panel/SingleActivePanel';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 
 class MainPage extends BasicPage {
     protected readonly view: MainPageView;

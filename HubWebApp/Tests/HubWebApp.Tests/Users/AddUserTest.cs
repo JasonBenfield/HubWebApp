@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_Core;
-using XTI_HubDB.EF;
+﻿using XTI_Forms;
+using XTI_HubWebAppApi.Auth;
 using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
 internal sealed class AddUserTest
 {
+    private static int userSuffix;
+
     [Test]
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(createModel());
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenModifierIsBlank(createForm());
     }
 
     [Test]
@@ -22,7 +24,12 @@ internal sealed class AddUserTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                createModel(),
+                () =>
+                {
+                    var form = createForm(userSuffix);
+                    userSuffix++;
+                    return form;
+                },
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.AddUser
@@ -30,43 +37,66 @@ internal sealed class AddUserTest
     }
 
     [Test]
-    public async Task ShouldRequireUserName()
+    public async Task ShouldThrowError_WhenUserNameIsBlank()
     {
         var tester = await setup();
-        await tester.LoginAsAdmin();
-        var model = createModel();
-        model.UserName = "";
         var modifier = await tester.GeneralUserGroupModifier();
-        var ex = Assert.ThrowsAsync<ValidationFailedException>
-        (
-            () => tester.Execute(model, modifier)
-        );
+        var form = createForm();
+        form.UserName.SetValue("");
+        var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
         Assert.That
         (
-            ex?.Errors,
-            Has.One.EqualTo(new ErrorModel(UserErrors.UserNameIsRequired, "User Name", "UserName")),
-            "Should require user name"
+            ex?.Errors.Select(err => err.Message),
+            Is.EquivalentTo(new[] { FormErrors.MustNotBeNullOrWhitespace }),
+            "Should throw error when user name is blank"
         );
     }
 
     [Test]
-    public async Task ShouldRequirePassword()
+    public async Task ShouldThrowError_WhenPasswordIsBlank()
     {
         var tester = await setup();
-        await tester.LoginAsAdmin();
-        var model = createModel();
-        model.Password = "";
         var modifier = await tester.GeneralUserGroupModifier();
-        var ex = Assert.ThrowsAsync<ValidationFailedException>
-        (
-            () => tester.Execute(model, modifier)
-        );
+        var form = createForm();
+        form.Password.SetValue("");
+        form.Confirm.SetValue("");
+        var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
         Assert.That
         (
-            ex?.Errors,
-            Has.One.EqualTo(new ErrorModel(UserErrors.PasswordIsRequired, "Password", "Password")),
-            "Should require password"
+            ex?.Errors.Select(err => err.Message),
+            Is.EquivalentTo(new[] { FormErrors.MustNotBeNullOrWhitespace }),
+            "Should throw error when password is blank"
         );
+    }
+
+    [Test]
+    public async Task ShouldThrowError_WhenConfirmDoesNotEqualPassword()
+    {
+        var tester = await setup();
+        var modifier = await tester.GeneralUserGroupModifier();
+        var form = createForm();
+        form.Confirm.SetValue(form.Password.Value() + "Different");
+        var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
+        Assert.That
+        (
+            ex?.Errors.Select(err => err.Message),
+            Is.EquivalentTo(new[] { string.Format(FormErrors.FieldsMustBeEqual, "Password") }),
+            "Should throw error when password is blank"
+        );
+    }
+
+    [Test]
+    public async Task ShouldSetPassword()
+    {
+        var tester = await setup();
+        var modifier = await tester.GeneralUserGroupModifier();
+        var form = createForm();
+        await tester.Execute(form, modifier);
+        var loginTester = tester.Create(api => api.Auth.VerifyLogin);
+        var loginForm = new VerifyLoginForm();
+        loginForm.UserName.SetValue("new.user");
+        loginForm.Password.SetValue("Password1234");
+        Assert.DoesNotThrowAsync(() => loginTester.Execute(loginForm));
     }
 
     [Test]
@@ -74,40 +104,47 @@ internal sealed class AddUserTest
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
         var modifier = await tester.GeneralUserGroupModifier();
-        await tester.Execute(model, modifier);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(model.UserName));
-        Assert.That(user.ToModel().UserName, Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
+        var addedUser = await tester.Execute(createForm(), modifier);
+        var getUserTester = tester.Create(api => api.UserInquiry.GetUser);
+        var user = await getUserTester.Execute(addedUser.ID, modifier);
+        Assert.That(user.UserName, Is.EqualTo("new.user"), "Should add user");
+        Assert.That(user.Name, Is.EqualTo("New User"), "Should add user");
+        Assert.That(user.Email, Is.EqualTo("new.user@example.com"), "Should add user");
     }
 
     [Test]
-    public async Task ShouldHashPassword()
+    public async Task ShouldThrowError_WhenUserAlreadyExists()
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
         var modifier = await tester.GeneralUserGroupModifier();
-        var userID = await tester.Execute(model, modifier);
-        var hubDbContext = tester.Services.GetRequiredService<HubDbContext>();
-        var user = await hubDbContext.Users.Retrieve().FirstOrDefaultAsync(u => u.ID == userID);
-        Assert.That(user?.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");
+        await tester.Execute(createForm(), modifier);
+        var ex = Assert.ThrowsAsync<AppException>(() => tester.Execute(createForm(), modifier));
+        Assert.That
+        (
+            ex?.Message,
+            Is.EqualTo(string.Format(AppErrors.UserAlreadyExists, "new.user")),
+            "Should throw error when user already exists."
+        );
     }
 
-    private async Task<HubActionTester<AddUserModel, int>> setup()
+    private AddUserForm createForm(int userSuffix = 0)
+    {
+        var form = new AddUserForm();
+        form.UserName.SetValue("new.user" + (userSuffix > 0 ? userSuffix.ToString() : ""));
+        form.Password.SetValue("Password1234");
+        form.Confirm.SetValue("Password1234");
+        form.PersonName.SetValue("New User");
+        form.Email.SetValue("new.user@example.com");
+        return form;
+    }
+
+    private async Task<HubActionTester<AddUserForm, AppUserModel>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Users.AddOrUpdateUser);
+        return HubActionTester.Create(services, hubApi => hubApi.Users.AddUser);
     }
 
-    private AddUserModel createModel()
-    {
-        return new AddUserModel
-        {
-            UserName = "test.user",
-            Password = "Password12345;"
-        };
-    }
 }

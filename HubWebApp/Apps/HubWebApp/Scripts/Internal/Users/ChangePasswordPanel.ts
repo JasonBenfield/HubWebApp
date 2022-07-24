@@ -1,10 +1,10 @@
-﻿import { Awaitable } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Awaitable";
-import { AsyncCommand, Command } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/Command";
-import { MessageAlert } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/MessageAlert";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { ChangePasswordPanelView } from "./ChangePasswordPanelView";
 import { ChangePasswordForm } from '../../Lib/Api/ChangePasswordForm';
-import { DelayedAction } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/DelayedAction";
+import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 
 interface IResult {
     done?: {};

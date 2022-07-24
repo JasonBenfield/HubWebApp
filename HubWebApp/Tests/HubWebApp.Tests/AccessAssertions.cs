@@ -39,17 +39,27 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         );
     }
 
-    public async Task ShouldThrowError_WhenAccessIsDenied(TModel model, params AppRoleName[] allowedRoles)
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(() => model, allowedRoles);
+
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, params AppRoleName[] allowedRoles)
     {
         var modifier = await tester.DefaultModifier();
-        await ShouldThrowError_WhenAccessIsDenied(model, modifier, allowedRoles);
+        await ShouldThrowError_WhenAccessIsDenied(createModel, modifier, allowedRoles);
     }
 
     public Task ShouldThrowError_WhenAccessIsDenied(TModel model, Modifier modifier, params AppRoleName[] allowedRoles) =>
-        ShouldThrowError_WhenAccessIsDenied(model, new AppRoleName[0], modifier, allowedRoles);
+        ShouldThrowError_WhenAccessIsDenied(() => model, modifier, allowedRoles);
 
-    public async Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(() => model, rolesToKeep, modifier, allowedRoles);
+
+    public Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, Modifier modifier, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(createModel, new AppRoleName[0], modifier, allowedRoles);
+
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
     {
+        var modKey = modifier.ToModel().ModKey;
         var loggedInUser = await tester.Login();
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
@@ -58,7 +68,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
             await SetUserRoles(loggedInUser, rolesToKeep, modifier, roleName);
             Assert.DoesNotThrowAsync
             (
-                () => tester.Execute(model, modifier.ToModel().ModKey),
+                () => tester.Execute(createModel(), modKey),
                 $"Should have access with role '{roleName.DisplayText}'"
             );
         }
@@ -73,14 +83,14 @@ internal sealed class AppModifierAssertions<TModel, TResult>
             await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, roleName);
             Assert.ThrowsAsync<AccessDeniedException>
             (
-                () => tester.Execute(model, modifier.ToModel().ModKey),
+                () => tester.Execute(createModel(), modKey),
                 $"Should not have access with role '{roleName.DisplayText}'"
             );
         }
         await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, AppRoleName.DenyAccess);
         Assert.ThrowsAsync<AccessDeniedException>
         (
-            () => tester.Execute(model, modifier.ToModel().ModKey),
+            () => tester.Execute(createModel(), modKey),
             $"Should not have access with role '{AppRoleName.DenyAccess.DisplayText}'"
         );
     }
@@ -102,7 +112,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         if (rolesToKeep.Any())
         {
             var defaultModifier = await app.DefaultModifier();
-            foreach(var roleName in rolesToKeep)
+            foreach (var roleName in rolesToKeep)
             {
                 var role = await app.Role(roleName);
                 await loggedInUser.Modifier(defaultModifier).AssignRole(role);

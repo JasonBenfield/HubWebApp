@@ -1,5 +1,5 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { Command } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/Command";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppListCard } from "./AppListCard";
 import { AppListPanelView } from "./AppListPanelView";

@@ -314,7 +314,16 @@ interface IGetResourceLogRequest {
 interface IGetUserRequest {
 	UserID: number;
 }
-interface IAddUserModel {
+interface IAppUserGroupModel {
+	ID: number;
+	GroupName: IAppUserGroupName;
+	PublicKey: IModifierKey;
+}
+interface IAppUserGroupName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAddOrUpdateUserModel {
 	UserName: string;
 	Password: string;
 	PersonName: string;
@@ -388,15 +397,6 @@ interface IUserGroupKey {
 }
 interface IAddUserGroupIfNotExistsRequest {
 	GroupName: string;
-}
-interface IAppUserGroupModel {
-	ID: number;
-	GroupName: IAppUserGroupName;
-	PublicKey: IModifierKey;
-}
-interface IAppUserGroupName {
-	Value: string;
-	DisplayText: string;
 }
 interface IExpandedUser {
 	UserID: number;

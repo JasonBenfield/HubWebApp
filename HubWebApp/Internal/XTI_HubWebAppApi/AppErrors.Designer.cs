@@ -88,6 +88,15 @@ namespace XTI_HubWebAppApi {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User &apos;{0}&apos; already exists..
+        /// </summary>
+        public static string UserAlreadyExists {
+            get {
+                return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version Name is required..
         /// </summary>
         public static string VersionNameIsRequired {

@@ -5,7 +5,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { NavView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/NavView";
+import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { HubTheme } from "../HubTheme";
 
 export class UserComponentView extends CardView {

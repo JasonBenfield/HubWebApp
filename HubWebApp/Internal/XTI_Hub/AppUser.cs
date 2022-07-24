@@ -9,6 +9,11 @@ public sealed class AppUser
     private readonly HubFactory factory;
     private readonly AppUserEntity record;
 
+    private static readonly AppRoleName[] viewAppRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
+    private static readonly AppRoleName[] editAppRoles = new[] { AppRoleName.Admin };
+    private static readonly AppRoleName[] viewUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewUser };
+    private static readonly AppRoleName[] editUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.EditUser };
+
     internal AppUser(HubFactory factory, AppUserEntity record)
     {
         this.factory = factory;
@@ -17,6 +22,8 @@ public sealed class AppUser
     }
 
     internal int ID { get; }
+
+    public bool IsUserName(AppUserName userName) => new AppUserName(record.UserName).Equals(userName);
 
     public bool IsPasswordCorrect(IHashedPassword hashedPassword) =>
         hashedPassword.Equals(record.Password);
@@ -92,9 +99,6 @@ public sealed class AppUser
         }
     }
 
-    private static readonly AppRoleName[] viewAppRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
-    private static readonly AppRoleName[] editAppRoles = new[] { AppRoleName.Admin };
-
     public async Task<AppPermission[]> GetAppPermissions()
     {
         var apps = await factory.Apps.All();
@@ -151,9 +155,6 @@ public sealed class AppUser
     }
 
     public Task<AppUserGroup> UserGroup() => factory.UserGroups.UserGroup(record.GroupID);
-
-    private static readonly AppRoleName[] viewUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewUser };
-    private static readonly AppRoleName[] editUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.EditUser };
 
     public async Task<AppUserGroupPermission[]> GetUserGroupPermissions()
     {

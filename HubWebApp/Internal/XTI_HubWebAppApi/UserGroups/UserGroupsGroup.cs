@@ -21,6 +21,7 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
         (
             nameof(AddUserGroupIfNotExists),
             () => sp.GetRequiredService<AddUserGroupIfNotExistsAction>(),
+            () => sp.GetRequiredService<AddUserGroupIfNotExistsValidation>(),
             access: Access.WithAllowed(HubInfo.Roles.AddUserGroup)
         );
         GetUserGroups = source.AddAction

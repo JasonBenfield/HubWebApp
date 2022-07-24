@@ -29,6 +29,7 @@ export class UserGroupsPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly userGroups: ListGroup;
     private readonly refreshCommand: AsyncCommand;
+    private readonly addCommand: Command;
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: UserGroupsPanelView) {
         this.alert = new MessageAlert(view.alert);
@@ -37,9 +38,24 @@ export class UserGroupsPanel implements IPanel {
         this.refreshCommand.add(view.refreshButton);
         this.refreshCommand.animateIconWhenInProgress('spin');
         new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
+        this.addCommand = new Command(this.requestAdd.bind(this));
+        this.addCommand.add(view.addButton);
+        this.addCommand.hide();
+        this.getPermissions();
+    }
+
+    private async getPermissions() {
+        const permissions = await this.hubApi.getUserAccess({
+            canAdd: this.hubApi.getAccessRequest(api => api.UserGroups.AddUserGroupIfNotExistsAction)
+        });
+        if (permissions.canAdd) {
+            this.addCommand.show();
+        }
     }
 
     private requestMainMenu() { this.awaitable.resolve(Result.mainMenuRequested()); }
+
+    private requestAdd() { this.awaitable.resolve(Result.addRequested()); }
 
     refresh() { return this.refreshCommand.execute(); }
 

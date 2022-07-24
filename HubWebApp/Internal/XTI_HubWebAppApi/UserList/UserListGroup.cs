@@ -7,13 +7,19 @@ public sealed class UserListGroup : AppApiGroupWrapper
     {
         Index = source.AddAction
         (
-            nameof(Index), 
+            nameof(Index),
             () => sp.GetRequiredService<IndexAction>(),
+            access: Access.WithAllowed(HubInfo.Roles.ViewUser)
+        );
+        GetUserGroup = source.AddAction
+        (
+            nameof(GetUserGroup),
+            () => sp.GetRequiredService<GetUserGroupAction>(),
             access: Access.WithAllowed(HubInfo.Roles.ViewUser)
         );
         GetUsers = source.AddAction
         (
-            nameof(GetUsers), 
+            nameof(GetUsers),
             () => sp.GetRequiredService<GetUsersAction>(),
             access: Access.WithAllowed(HubInfo.Roles.ViewUser)
         );
@@ -21,11 +27,19 @@ public sealed class UserListGroup : AppApiGroupWrapper
         (
             nameof(AddOrUpdateUser),
             () => sp.GetRequiredService<AddOrUpdateUserAction>(),
-            () => sp.GetRequiredService<AddUserValidation>(),
+            () => sp.GetRequiredService<AddOrUpdateUserValidation>(),
             Access.WithAllowed(HubInfo.Roles.AddUser)
+        );
+        AddUser = source.AddAction
+        (
+            nameof(AddUser),
+            () => sp.GetRequiredService<AddUserAction>(),
+            access: Access.WithAllowed(HubInfo.Roles.AddUser)
         );
     }
     public AppApiAction<GetUserRequest, WebViewResult> Index { get; }
+    public AppApiAction<EmptyRequest, AppUserGroupModel> GetUserGroup { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
-    public AppApiAction<AddUserModel, int> AddOrUpdateUser { get; }
+    public AppApiAction<AddOrUpdateUserModel, int> AddOrUpdateUser { get; }
+    public AppApiAction<AddUserForm, AppUserModel> AddUser { get; }
 }
