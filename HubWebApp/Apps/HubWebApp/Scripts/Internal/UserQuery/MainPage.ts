@@ -28,6 +28,7 @@ class MainPage extends BasicPage {
             new AddUserPanel(hubApi, this.view.addUserPanel)
         );
         const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
+        hubApi.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();
         this.activateUserQueryPanel();

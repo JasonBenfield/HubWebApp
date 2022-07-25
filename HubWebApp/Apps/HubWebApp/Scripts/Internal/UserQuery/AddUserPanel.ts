@@ -27,21 +27,29 @@ export class AddUserPanel implements IPanel {
         new Command(this.cancel.bind(this)).add(view.cancelButton);
         this.saveCommand = new AsyncCommand(this.save.bind(this));
         this.saveCommand.add(view.saveButton);
-        view.addUserForm.handleSubmit(() => this.saveCommand.execute());
+        view.addUserForm.handleSubmit(this.onFormSubmit.bind(this));
+    }
+
+    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+        evt.preventDefault();
+        this.saveCommand.execute();
     }
 
     private cancel() { this.awaitable.resolve(Result.done(false)); }
 
     private async save() {
         const result = await this.addUserForm.save(this.hubApi.Users.AddUserAction);
-        if (result.succeeded) {
+        if (result.succeeded()) {
             this.awaitable.resolve(Result.done(true));
         }
     }
 
     start() { return this.awaitable.start(); }
 
-    activate() { this.view.show(); }
+    activate() {
+        this.view.show();
+        this.view.setFocus();
+    }
 
     deactivate() { this.view.hide(); }
 

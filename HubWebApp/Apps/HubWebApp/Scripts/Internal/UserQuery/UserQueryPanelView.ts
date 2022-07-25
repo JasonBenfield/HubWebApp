@@ -7,6 +7,7 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { BlockView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BlockView";
 import { ODataExpandedUserColumnViewsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
 import { HubTheme } from "../HubTheme";
 
@@ -23,19 +24,38 @@ export class UserQueryPanelView extends GridView {
         this.layout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
-        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        const mainContent = this.addCell()
+            .configure(c => c.positionRelative())
+            .addView(BlockView)
+            .configure(b => {
+                b.positionAbsoluteFill();
+            })
+            .addView(BlockView)
+            .configure(b => {
+                b.addCssName('container');
+                b.height100();
+                b.setPadding(PaddingCss.top(3));
+            })
         const layoutGrid = mainContent.addView(GridView);
         layoutGrid.layout();
         layoutGrid.height100();
-        layoutGrid.setTemplateColumns(CssLengthUnit.auto(), CssLengthUnit.flex(1));
-        const cell1 = layoutGrid.addCell();
-        cell1.setPadding(PaddingCss.xs(3));
+        layoutGrid.setTemplateColumns(CssLengthUnit.percentage(25), CssLengthUnit.flex(1));
+        const cell1 = layoutGrid.addCell()
+            .configure(c => {
+                c.positionRelative();
+            })
+            .addView(BlockView)
+            .configure(b => {
+                b.positionAbsoluteFill();
+                b.scrollable();
+                b.setPadding(PaddingCss.end(3));
+            });
         this.alert = cell1.addView(MessageAlertView);
         this.userGroups = cell1
             .addView(LinkListGroupView);
         this.userGroups.setItemViewType(TextLinkListGroupItemView);
         this.odataComponent = layoutGrid.addCell()
-            .configure(c => c.setPadding(PaddingCss.xs(3)))
+            .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);
         this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedUserColumnViewsBuilder();

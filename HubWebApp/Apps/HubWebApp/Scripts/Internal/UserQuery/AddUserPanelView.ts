@@ -5,6 +5,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { MarginCss } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
 import { AddUserFormView } from "../../Lib/Api/AddUserFormView";
 import { HubTheme } from "../HubTheme";
 
@@ -23,15 +24,22 @@ export class AddUserPanelView extends GridView {
         this.addUserForm = mainContent.addView(AddUserFormView);
         this.addUserForm.addOffscreenSubmit();
         this.addUserForm.addContent();
+        this.addUserForm.UserName.input.setAutocompleteOff();
+        this.addUserForm.Password.input.setAutocompleteNewPassword();
         this.alert = mainContent.addView(MessageAlertView);
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
         );
         this.cancelButton = HubTheme.instance.commandToolbar.cancelButton(
-            toolbar.columnStart.addView(ButtonCommandView)
+            toolbar.columnEnd.addView(ButtonCommandView)
         );
+        this.cancelButton.setMargin(MarginCss.end(1));
         this.saveButton = HubTheme.instance.commandToolbar.saveButton(
             toolbar.columnEnd.addView(ButtonCommandView)
         );
+    }
+
+    setFocus() {
+        this.addUserForm.UserName.input.setFocus();
     }
 }
