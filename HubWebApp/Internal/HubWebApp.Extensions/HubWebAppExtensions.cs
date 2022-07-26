@@ -10,6 +10,9 @@ using XTI_HubWebAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Extensions;
+using XTI_App.Hosting;
+using XTI_Schedule;
+using XTI_Core;
 
 namespace HubWebApp.Extensions;
 
@@ -57,6 +60,24 @@ public static class HubWebAppExtensions
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
                 appClients.AddAppVersion(appKey.Name.DisplayText, versionKey.DisplayText);
                 return appClients;
+            }
+        );
+        services.AddAppAgenda
+        (
+            (sp, agenda) =>
+            {
+                agenda.AddScheduled<HubAppApi>
+                (
+                    (api, agendaItem) =>
+                    {
+                        agendaItem.Action(api.Periodic.PurgeLogs.Path)
+                            .Interval(TimeSpan.FromHours(7))
+                            .AddSchedule
+                            (
+                                Schedule.EveryDay().At(TimeRange.AllDay())
+                            );
+                    }
+                );
             }
         );
         services.AddThrottledLog<HubAppApi>

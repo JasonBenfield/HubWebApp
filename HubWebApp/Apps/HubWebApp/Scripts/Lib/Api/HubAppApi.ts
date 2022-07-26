@@ -26,6 +26,8 @@ import { UserMaintenanceGroup } from "./UserMaintenanceGroup";
 import { StorageGroup } from "./StorageGroup";
 import { SystemGroup } from "./SystemGroup";
 import { UserGroupsGroup } from "./UserGroupsGroup";
+import { PeriodicGroup } from "./PeriodicGroup";
+import { LogsGroup } from "./LogsGroup";
 
 
 export class HubAppApi extends AppApi {
@@ -55,6 +57,10 @@ export class HubAppApi extends AppApi {
 		this.System = this.addGroup((evts, resourceUrl) => new SystemGroup(evts, resourceUrl));
 		this.UserGroups = this.addGroup((evts, resourceUrl) => new UserGroupsGroup(evts, resourceUrl));
 		this.UserQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IUserGroupKey, IExpandedUser>(evts, resourceUrl.odata('UserQuery'), 'UserQuery'));
+		this.Periodic = this.addGroup((evts, resourceUrl) => new PeriodicGroup(evts, resourceUrl));
+		this.Logs = this.addGroup((evts, resourceUrl) => new LogsGroup(evts, resourceUrl));
+		this.SessionQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IEmptyRequest, IExpandedSession>(evts, resourceUrl.odata('SessionQuery'), 'SessionQuery'));
+		this.RequestQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IEmptyRequest, IExpandedRequest>(evts, resourceUrl.odata('RequestQuery'), 'RequestQuery'));
 	}
 	
 	readonly UserCache: UserCacheGroup;
@@ -81,4 +87,8 @@ export class HubAppApi extends AppApi {
 	readonly System: SystemGroup;
 	readonly UserGroups: UserGroupsGroup;
 	readonly UserQuery: AppApiQuery<IUserGroupKey, IExpandedUser>;
+	readonly Periodic: PeriodicGroup;
+	readonly Logs: LogsGroup;
+	readonly SessionQuery: AppApiQuery<IEmptyRequest, IExpandedSession>;
+	readonly RequestQuery: AppApiQuery<IEmptyRequest, IExpandedRequest>;
 }

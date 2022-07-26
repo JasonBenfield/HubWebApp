@@ -422,6 +422,42 @@ interface IStream {
 	ReadTimeout: number;
 	WriteTimeout: number;
 }
+interface IExpandedSession {
+	SessionID: number;
+	UserName: string;
+	UserGroupName: string;
+	RemoteAddress: string;
+	UserAgent: string;
+	TimeStarted: Date;
+	TimeEnded: Date;
+	LastRequestTime: Date;
+	RequestCount: number;
+}
+interface IExpandedRequest {
+	RequestID: number;
+	Path: string;
+	AppName: string;
+	AppType: string;
+	ResourceGroupName: string;
+	ResourceName: string;
+	ModCategoryName: string;
+	ModKey: string;
+	ModTargetKey: string;
+	ModDisplayText: string;
+	ActualCount: number;
+	UserName: string;
+	UserGroupName: string;
+	TimeStarted: Date;
+	TimeEnded: Date;
+	TimeElapsed: string;
+	Succeeded: boolean;
+	CriticalErrorCount: number;
+	VersionName: string;
+	VersionKey: string;
+	VersionType: string;
+	InstallLocation: string;
+	IsCurrentInstallation: boolean;
+}
 interface IAppType {
 	Value: number;
 	DisplayText: string;

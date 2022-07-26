@@ -16,7 +16,7 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
 		<PackageReference Include="XTI_Core.Extensions" Version="1.10.12" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.6" />
-		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.22-dev220721160444421" />
+		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.22-dev220725143044771" />
 	</ItemGroup>
 
 	<ItemGroup>

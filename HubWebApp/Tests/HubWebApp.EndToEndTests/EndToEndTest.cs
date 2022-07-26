@@ -21,7 +21,7 @@ internal sealed class EndToEndTest
     public async Task ShouldLogin()
     {
         var sp = setup();
-        var addUserModel = new AddUserModel
+        var addUserModel = new AddOrUpdateUserModel
         {
             UserName = NewUserCredentials.UserName,
             Password = NewUserCredentials.Password
@@ -31,7 +31,7 @@ internal sealed class EndToEndTest
         hubClient.UseToken<NewUserXtiToken>();
         var ex = Assert.ThrowsAsync<AppClientException>(async () =>
         {
-            await hubClient.Users.AddOrUpdateUser("", new AddUserModel
+            await hubClient.Users.AddOrUpdateUser("", new AddOrUpdateUserModel
             {
                 UserName = "TestUser2",
                 Password = "Password12345"

@@ -131,4 +131,38 @@ public sealed class AppSessionRepository
                 }
             );
 
+    public Task PurgeLogs(DateTimeOffset since) => factory.Transaction(() => _PurgeLogs(since));
+    
+    private async Task _PurgeLogs(DateTimeOffset since)
+    {
+        var sessionIDs = factory.DB
+            .Sessions.Retrieve()
+            .Where(s => s.TimeStarted < since)
+            .Select(s => s.ID);
+        var requestIDs = factory.DB
+            .Requests.Retrieve()
+            .Where(r => sessionIDs.Contains(r.SessionID))
+            .Select(r => r.ID);
+        var entriesToDelete = await factory.DB.LogEntries.Retrieve()
+            .Where(e => requestIDs.Contains(e.RequestID))
+            .ToArrayAsync();
+        foreach(var entry in entriesToDelete)
+        {
+            await factory.DB.LogEntries.Delete(entry);
+        }
+        var requests = await factory.DB.Requests.Retrieve()
+            .Where(r => requestIDs.Contains(r.ID))
+            .ToArrayAsync();
+        foreach(var request in requests)
+        {
+            await factory.DB.Requests.Delete(request);
+        }
+        var sessions = await factory.DB.Sessions.Retrieve()
+            .Where(s => sessionIDs.Contains(s.ID))
+            .ToArrayAsync();
+        foreach (var session in sessions)
+        {
+            await factory.DB.Sessions.Delete(session);
+        }
+    }
 }

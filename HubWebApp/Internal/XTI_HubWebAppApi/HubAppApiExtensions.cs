@@ -27,5 +27,7 @@ public static class HubAppApiExtensions
         services.AddStorageGroupServices();
         services.AddSystemGroupServices();
         services.AddUserGroupsGroupServices();
+        services.AddPeriodicGroupServices();
+        services.AddLogsGroupServices();
     }
 }

@@ -10,7 +10,10 @@ const entry = {
     userGroups: './Scripts/Internal/UserGroups/MainPage.ts',
     userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',
-    appUser: './Scripts/Internal/AppUser/MainPage.ts'
+    appUser: './Scripts/Internal/AppUser/MainPage.ts',
+    sessions: './Scripts/Internal/Logs/Sessions/MainPage.ts',
+    requests: './Scripts/Internal/Logs/Requests/MainPage.ts',
+    logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts'
 };
 const exportModule = {
     rules: [
