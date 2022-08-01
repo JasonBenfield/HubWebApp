@@ -3,8 +3,11 @@ import { Command } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/
 import { ApiODataClient } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ApiODataClient";
 import { ODataComponent } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponentOptionsBuilder";
+import { Queryable } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/Types";
+import { Url } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
+import { RequestDataRow } from "./RequestDataRow";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
 
 interface IResult {
@@ -26,9 +29,14 @@ export class RequestQueryPanel implements IPanel {
     constructor(hubApi: HubAppApi, private readonly view: RequestQueryPanelView) {
         const columns = new ODataExpandedRequestColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
+        columns.Succeeded.require();
+        options.setCreateDataRow(
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
+                new RequestDataRow(rowIndex, columns, record, view)
+        );
         options.query.select.addFields(
-            columns.TimeStarted,
-            columns.TimeElapsed,
+            columns.RequestTimeStarted,
+            columns.RequestTimeElapsed,
             columns.UserName,
             columns.Path,
             columns.AppName,
@@ -40,10 +48,17 @@ export class RequestQueryPanel implements IPanel {
             columns.ModDisplayText,
             columns.VersionKey
         );
-        options.query.orderBy.addDescending(columns.TimeStarted);
-        options.saveChanges();
+        options.query.orderBy.addDescending(columns.RequestTimeStarted);
+        const url = Url.current();
+        const sessionIDText = url.getQueryValue('SessionID');
+        const sessionID = sessionIDText ? Number(sessionIDText) : null;
+        options.saveChanges({
+            select: true,
+            filter: Boolean(sessionID),
+            orderby: true
+        });
         options.setODataClient(
-            new ApiODataClient(hubApi.RequestQuery, {})
+            new ApiODataClient(hubApi.RequestQuery, { SessionID: sessionID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         new Command(this.menu.bind(this)).add(view.menuButton);

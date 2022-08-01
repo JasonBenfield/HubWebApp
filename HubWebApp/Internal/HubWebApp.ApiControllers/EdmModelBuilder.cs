@@ -11,6 +11,7 @@ public sealed partial class EdmModelBuilder
         UserQuery = odataBuilder.EntitySet<ExpandedUser>("UserQuery");
         SessionQuery = odataBuilder.EntitySet<ExpandedSession>("SessionQuery");
         RequestQuery = odataBuilder.EntitySet<ExpandedRequest>("RequestQuery");
+        LogEntryQuery = odataBuilder.EntitySet<ExpandedLogEntry>("LogEntryQuery");
         init();
     }
 
@@ -20,6 +21,8 @@ public sealed partial class EdmModelBuilder
     public EntitySetConfiguration<ExpandedSession> SessionQuery { get; }
 
     public EntitySetConfiguration<ExpandedRequest> RequestQuery { get; }
+
+    public EntitySetConfiguration<ExpandedLogEntry> LogEntryQuery { get; }
 
     public IEdmModel GetEdmModel() => odataBuilder.GetEdmModel();
 }

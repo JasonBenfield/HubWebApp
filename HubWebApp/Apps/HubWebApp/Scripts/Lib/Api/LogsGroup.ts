@@ -10,12 +10,12 @@ export class LogsGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Logs');
 		this.Sessions = this.createView<IEmptyRequest>('Sessions');
-		this.Requests = this.createView<IEmptyRequest>('Requests');
+		this.Requests = this.createView<IRequestQueryRequest>('Requests');
 		this.LogEntries = this.createView<IEmptyRequest>('LogEntries');
 	}
 	
 	readonly Sessions: AppApiView<IEmptyRequest>;
-	readonly Requests: AppApiView<IEmptyRequest>;
+	readonly Requests: AppApiView<IRequestQueryRequest>;
 	readonly LogEntries: AppApiView<IEmptyRequest>;
 	
 }

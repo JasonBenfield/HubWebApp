@@ -16,11 +16,12 @@ class MainPage extends BasicPage {
         const hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.logEntryQueryPanel = this.panels.add(
-            new LogEntryQueryPanel(this.view.logEntryQueryPanel)
+            new LogEntryQueryPanel(hubApi, this.view.logEntryQueryPanel)
         );
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(hubApi, this.view.mainMenuPanel)
         );
+        this.logEntryQueryPanel.refresh();
         this.activateLogEntryQueryPanel();
     }
 

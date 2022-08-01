@@ -1,4 +1,5 @@
-﻿using XTI_HubWebAppApi.Logs;
+﻿using XTI_HubDB.Entities;
+using XTI_HubWebAppApi.Logs;
 using XTI_ODataQuery.Api;
 
 namespace XTI_HubWebAppApi;
@@ -16,11 +17,18 @@ partial class HubAppApi
         get => _SessionQuery ?? throw new ArgumentNullException(nameof(_SessionQuery));
     }
 
-    private ODataGroup<EmptyRequest, ExpandedRequest>? _RequestQuery;
+    private ODataGroup<RequestQueryRequest, ExpandedRequest>? _RequestQuery;
 
-    public ODataGroup<EmptyRequest, ExpandedRequest> RequestQuery
+    public ODataGroup<RequestQueryRequest, ExpandedRequest> RequestQuery
     {
         get => _RequestQuery ?? throw new ArgumentNullException(nameof(_RequestQuery));
+    }
+
+    private ODataGroup<EmptyRequest, ExpandedLogEntry>? _LogEntryQuery;
+
+    public ODataGroup<EmptyRequest, ExpandedLogEntry> LogEntryQuery
+    {
+        get => _LogEntryQuery ?? throw new ArgumentNullException(nameof(_LogEntryQuery));
     }
 
     partial void createLogsGroup(IServiceProvider sp)
@@ -35,10 +43,15 @@ partial class HubAppApi
             source.AddGroup(nameof(SessionQuery)),
             () => sp.GetRequiredService<SessionQueryAction>()
         );
-        _RequestQuery = new ODataGroup<EmptyRequest, ExpandedRequest>
+        _RequestQuery = new ODataGroup<RequestQueryRequest, ExpandedRequest>
         (
             source.AddGroup(nameof(RequestQuery)),
             () => sp.GetRequiredService<RequestQueryAction>()
+        );
+        _LogEntryQuery = new ODataGroup<EmptyRequest, ExpandedLogEntry>
+        (
+            source.AddGroup(nameof(LogEntryQuery)),
+            () => sp.GetRequiredService<LogEntryQueryAction>()
         );
     }
 }

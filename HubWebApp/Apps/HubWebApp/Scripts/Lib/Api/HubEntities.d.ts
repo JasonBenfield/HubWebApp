@@ -422,22 +422,30 @@ interface IStream {
 	ReadTimeout: number;
 	WriteTimeout: number;
 }
+interface IRequestQueryRequest {
+	SessionID: number;
+}
 interface IExpandedSession {
 	SessionID: number;
+	UserID: number;
 	UserName: string;
+	UserGroupID: number;
 	UserGroupName: string;
+	UserGroupDisplayText: string;
 	RemoteAddress: string;
 	UserAgent: string;
 	TimeStarted: Date;
 	TimeEnded: Date;
+	TimeElapsed: string;
 	LastRequestTime: Date;
 	RequestCount: number;
 }
 interface IExpandedRequest {
 	RequestID: number;
 	Path: string;
+	AppID: number;
 	AppName: string;
-	AppType: string;
+	AppTypeText: string;
 	ResourceGroupName: string;
 	ResourceName: string;
 	ModCategoryName: string;
@@ -445,16 +453,56 @@ interface IExpandedRequest {
 	ModTargetKey: string;
 	ModDisplayText: string;
 	ActualCount: number;
+	SessionID: number;
 	UserName: string;
+	UserGroupID: number;
 	UserGroupName: string;
-	TimeStarted: Date;
-	TimeEnded: Date;
-	TimeElapsed: string;
+	UserGroupDisplayText: string;
+	RequestTimeStarted: Date;
+	RequestTimeEnded: Date;
+	RequestTimeElapsed: string;
 	Succeeded: boolean;
 	CriticalErrorCount: number;
+	ValidationFailedCount: number;
+	AppErrorCount: number;
+	TotalErrorCount: number;
+	InformationMessageCount: number;
 	VersionName: string;
 	VersionKey: string;
-	VersionType: string;
+	VersionStatusText: string;
+	VersionTypeText: string;
+	InstallLocation: string;
+	IsCurrentInstallation: boolean;
+}
+interface IExpandedLogEntry {
+	EventID: number;
+	TimeOccurred: Date;
+	SeverityText: string;
+	Caption: string;
+	Message: string;
+	Detail: string;
+	Path: string;
+	ActualCount: number;
+	AppID: number;
+	AppName: string;
+	AppTypeText: string;
+	ResourceGroupName: string;
+	ResourceName: string;
+	ModCategoryName: string;
+	ModKey: string;
+	ModTargetKey: string;
+	ModDisplayText: string;
+	UserName: string;
+	UserGroupID: number;
+	UserGroupName: string;
+	UserGroupDisplayText: string;
+	RequestTimeStarted: Date;
+	RequestTimeEnded: Date;
+	RequestTimeElapsed: string;
+	VersionName: string;
+	VersionKey: string;
+	VersionStatusText: string;
+	VersionTypeText: string;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 }

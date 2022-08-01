@@ -5,6 +5,8 @@ import { ODataComponent } from "../../../../../../../../SharedWebApp/Apps/Shared
 import { ODataComponentOptionsBuilder } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponentOptionsBuilder";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedSessionColumnsBuilder } from "../../../Lib/Api/ODataExpandedSessionColumnsBuilder";
+import { SessionDropdown } from "./SessionDropdown";
+import { SessionDropdownView } from "./SessionDropdownView";
 import { SessionQueryPanelView } from "./SessionQueryPanelView";
 
 interface IResult {
@@ -26,6 +28,8 @@ export class SessionQueryPanel implements IPanel {
     constructor(hubApi: HubAppApi, private readonly view: SessionQueryPanelView) {
         const columns = new ODataExpandedSessionColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedSession>('hub_sessions', columns);
+        columns.SessionID.require();
+        columns.UserID.require();
         options.query.select.addFields(
             columns.TimeStarted,
             columns.UserName,
@@ -36,6 +40,11 @@ export class SessionQueryPanel implements IPanel {
         options.saveChanges();
         options.setODataClient(
             new ApiODataClient(hubApi.SessionQuery, {})
+        );
+        const dropdownColumn = options.startColumns.add('Dropdown', this.view.dropdownColumn);
+        dropdownColumn.setDisplayText('');
+        dropdownColumn.setCreateDataCell(
+            (rowIndex, column, record, formatter, view: SessionDropdownView) => new SessionDropdown(hubApi, rowIndex, column, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         new Command(this.menu.bind(this)).add(view.menuButton);

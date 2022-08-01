@@ -93,14 +93,44 @@ END;
 "
 			);
 
+			migrationBuilder.Sql
+			(
+				@"
+CREATE or alter FUNCTION [TimeElapsedDisplayText](
+    @timestarted datetimeoffset,
+	@timeended datetimeoffset
+)
+RETURNS varchar(50)
+AS 
+BEGIN
+    RETURN 
+	case 
+	when @timeended < '1-1-2' or @timeended >= '9999-12-31' or @timestarted < '1-1-2' or @timestarted >= '9999-12-31' then ''
+	when datediff(year,@timestarted,@timeended) > 1 then cast(datediff(month, @TimeStarted, @TimeEnded) as varchar) + ' month'
+	when datediff(day,@timestarted,@timeended) > 7 then format((datediff(hour, @TimeStarted, @TimeEnded) / 24.0), 'F2') + ' day'
+	when datediff(hour,@timestarted,@timeended) > 1 then format((datediff(minute, @TimeStarted, @TimeEnded) / 60.0), 'F2') + ' hr'
+	when datediff(minute,@timestarted,@timeended) > 1 then format((datediff(second, @TimeStarted, @TimeEnded) / 60.0), 'F2') + ' min'
+	when datediff(second,@timestarted,@timeended) > 1 then format((datediff(millisecond, @TimeStarted, @TimeEnded) / 1000.0), 'F3') + ' s'
+	else cast(datediff(millisecond, @TimeStarted, @TimeEnded) as varchar)  + ' ms'
+	end
+END
+"
+			);
+
             migrationBuilder.Sql
             (
-                @"
+				@"
 CREATE OR ALTER view [ExpandedSessions] as
 with
 RequestCounts as
 (
 	select SessionID, count(sessionID) RequestCount
+	from Requests
+	group by sessionid
+),
+MostRecentRequests as
+(
+	select SessionID, max(TimeStarted) LastRequestTime
 	from Requests
 	group by sessionid
 )
@@ -114,7 +144,8 @@ select
 	RemoteAddress, UserAgent,
 	users.GroupID UserGroupID, userGroups.GroupName UserGroupName, userGroups.DisplayText UserGroupDisplayText,
 	users.UserName, users.TimeAdded TimeUserAdded, users.Email, users.Name, 
-	isnull(RequestCounts.RequestCount, 0) requestCount
+	isnull(RequestCounts.RequestCount, 0) requestCount,
+	MostRecentRequests.LastRequestTime
 from sessions
 inner join users users
 on sessions.userid = users.id
@@ -122,8 +153,10 @@ inner join userGroups
 on users.groupid = userGroups.id
 left outer join RequestCounts
 on sessions.id = RequestCounts.sessionid
+left outer join MostRecentRequests
+on sessions.id = MostRecentRequests.sessionid
 "
-            );
+			);
 
             migrationBuilder.Sql
             (
@@ -167,7 +200,7 @@ select
 	sessions.RemoteAddress, sessions.UserAgent,
 	sessions.UserID, users.UserName, users.Name UserPersonalName, users.Email, users.TimeAdded TimeUserAdded,
 	UserGroups.ID UserGroupID, UserGroups.GroupName UserGroupName, UserGroups.DisplayText UserGroupDisplayText,
-	inst.ID InstallationID, inst.Domain, inst.IsCurrent, inst.Status InstallationStatus, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatusDisplayText, inst.TimeAdded,
+	inst.ID InstallationID, inst.Domain, inst.IsCurrent IsCurrentInstallation, inst.Status InstallationStatus, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatusDisplayText, inst.TimeAdded,
 	loc.ID InstallLocationID, loc.QualifiedMachineName InstallLocation,
 	ResourceID, Resources.Name ResourceName, 
 	Resources.ResultType, dbo.ResourceResultTypeDisplayText(Resources.ResultType) ResultTypeText,
@@ -175,12 +208,12 @@ select
 	Resources.GroupID, ResourceGroups.Name ResourceGroupName, 
 	ResourceGroups.ModCategoryID ResourceGroupModCategoryID, 
 	ResourceGroups.IsAnonymousAllowed IsAnonymousAllowedToResourceGroup, AppXtiVersions.VersionID,
-	ModifierID, Modifiers.ModKey, Modifiers.TargetKey, Modifiers.DisplayText,
+	ModifierID, Modifiers.ModKey, Modifiers.TargetKey ModTargetKey, Modifiers.DisplayText ModDisplayText,
 	Modifiers.CategoryID ModCategoryID, ModifierCategories.Name ModCategoryName, 
 	ModifierCategories.AppID, Apps.Name AppName, Apps.TimeAdded TimeAppAdded, Apps.Title AppTitle, 
 	Apps.Type AppType,
 	dbo.AppTypeDisplayText(Apps.Type) AppTypeText,
-	XtiVersions.Type VersionType, 
+	XtiVersions.VersionName, XtiVersions.VersionKey, XtiVersions.Type VersionType, 
 	dbo.VersionTypeDisplayText(XtiVersions.Type) VersionTypeText,
 	XtiVersions.Status VersionStatus, 
 	dbo.VersionStatusDisplayText(XtiVersions.Status) VersionStatusText,
@@ -251,14 +284,14 @@ select
 	sessions.RemoteAddress, sessions.UserAgent,
 	sessions.UserID, users.UserName, users.Name UserPersonalName, users.Email, users.TimeAdded TimeUserAdded,
 	UserGroups.ID UserGroupID, UserGroups.GroupName UserGroupName, UserGroups.DisplayText UserGroupDisplayText,
-	inst.ID InstallationID, inst.Domain, inst.IsCurrent, inst.Status InstallationStatus, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatusDisplayText, inst.TimeAdded,
+	inst.ID InstallationID, inst.Domain, inst.IsCurrent IsCurrentInstallation, inst.Status InstallationStatus, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatusDisplayText, inst.TimeAdded,
 	loc.ID InstallLocationID, loc.QualifiedMachineName InstallLocation,
 	ResourceID, Resources.Name ResourceName, 
 	Resources.ResultType, 
 	dbo.ResourceResultTypeDisplayText(Resources.ResultType) ResultTypeText,
 	Resources.IsAnonymousAllowed IsAnonymousAllowedToResource,
 	Resources.GroupID, ResourceGroups.Name ResourceGroupName, ResourceGroups.ModCategoryID ResourceGroupModCategoryID, ResourceGroups.IsAnonymousAllowed IsAnonymousAllowedToResourceGroup,
-	ModifierID, Modifiers.ModKey, Modifiers.TargetKey, Modifiers.DisplayText,
+	ModifierID, Modifiers.ModKey, Modifiers.TargetKey ModTargetKey, Modifiers.DisplayText ModDisplayText,
 	Modifiers.CategoryID ModCategoryID, ModifierCategories.Name ModCategoryName, 
 	ModifierCategories.AppID, Apps.Name AppName, Apps.TimeAdded TimeAppAdded, Apps.Title AppTitle, 
 	Apps.Type AppType,

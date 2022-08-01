@@ -4,9 +4,15 @@ import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataC
 import { SourceType } from "@jasonbenfield/sharedwebapp/OData/SourceType";
 import { ODataColumns } from "@jasonbenfield/sharedwebapp/OData/Types";
 
-export class ODataExpandedRequestColumnViewsBuilder {
-	readonly RequestID = new ODataColumnViewBuilder();
+export class ODataExpandedLogEntryColumnViewsBuilder {
+	readonly EventID = new ODataColumnViewBuilder();
+	readonly TimeOccurred = new ODataColumnViewBuilder();
+	readonly SeverityText = new ODataColumnViewBuilder();
+	readonly Caption = new ODataColumnViewBuilder();
+	readonly Message = new ODataColumnViewBuilder();
+	readonly Detail = new ODataColumnViewBuilder();
 	readonly Path = new ODataColumnViewBuilder();
+	readonly ActualCount = new ODataColumnViewBuilder();
 	readonly AppID = new ODataColumnViewBuilder();
 	readonly AppName = new ODataColumnViewBuilder();
 	readonly AppTypeText = new ODataColumnViewBuilder();
@@ -16,8 +22,6 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly ModKey = new ODataColumnViewBuilder();
 	readonly ModTargetKey = new ODataColumnViewBuilder();
 	readonly ModDisplayText = new ODataColumnViewBuilder();
-	readonly ActualCount = new ODataColumnViewBuilder();
-	readonly SessionID = new ODataColumnViewBuilder();
 	readonly UserName = new ODataColumnViewBuilder();
 	readonly UserGroupID = new ODataColumnViewBuilder();
 	readonly UserGroupName = new ODataColumnViewBuilder();
@@ -25,12 +29,6 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly RequestTimeStarted = new ODataColumnViewBuilder();
 	readonly RequestTimeEnded = new ODataColumnViewBuilder();
 	readonly RequestTimeElapsed = new ODataColumnViewBuilder();
-	readonly Succeeded = new ODataColumnViewBuilder();
-	readonly CriticalErrorCount = new ODataColumnViewBuilder();
-	readonly ValidationFailedCount = new ODataColumnViewBuilder();
-	readonly AppErrorCount = new ODataColumnViewBuilder();
-	readonly TotalErrorCount = new ODataColumnViewBuilder();
-	readonly InformationMessageCount = new ODataColumnViewBuilder();
 	readonly VersionName = new ODataColumnViewBuilder();
 	readonly VersionKey = new ODataColumnViewBuilder();
 	readonly VersionStatusText = new ODataColumnViewBuilder();
@@ -39,11 +37,20 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
 }
 
-export class ODataExpandedRequestColumnsBuilder {
-	constructor(views: ODataExpandedRequestColumnViewsBuilder) {
-		this.RequestID = new ODataColumnBuilder('RequestID', new SourceType('Int32'), views.RequestID);
-		this.RequestID.setDisplayText('Request ID');
+export class ODataExpandedLogEntryColumnsBuilder {
+	constructor(views: ODataExpandedLogEntryColumnViewsBuilder) {
+		this.EventID = new ODataColumnBuilder('EventID', new SourceType('Int32'), views.EventID);
+		this.EventID.setDisplayText('Event ID');
+		this.TimeOccurred = new ODataColumnBuilder('TimeOccurred', new SourceType('DateTimeOffset'), views.TimeOccurred);
+		this.TimeOccurred.setDisplayText('Time Occurred');
+		this.SeverityText = new ODataColumnBuilder('SeverityText', new SourceType('String'), views.SeverityText);
+		this.SeverityText.setDisplayText('Severity Text');
+		this.Caption = new ODataColumnBuilder('Caption', new SourceType('String'), views.Caption);
+		this.Message = new ODataColumnBuilder('Message', new SourceType('String'), views.Message);
+		this.Detail = new ODataColumnBuilder('Detail', new SourceType('String'), views.Detail);
 		this.Path = new ODataColumnBuilder('Path', new SourceType('String'), views.Path);
+		this.ActualCount = new ODataColumnBuilder('ActualCount', new SourceType('Int32'), views.ActualCount);
+		this.ActualCount.setDisplayText('Actual Count');
 		this.AppID = new ODataColumnBuilder('AppID', new SourceType('Int32'), views.AppID);
 		this.AppID.setDisplayText('App ID');
 		this.AppName = new ODataColumnBuilder('AppName', new SourceType('String'), views.AppName);
@@ -62,10 +69,6 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.ModTargetKey.setDisplayText('Mod Target Key');
 		this.ModDisplayText = new ODataColumnBuilder('ModDisplayText', new SourceType('String'), views.ModDisplayText);
 		this.ModDisplayText.setDisplayText('Mod Display Text');
-		this.ActualCount = new ODataColumnBuilder('ActualCount', new SourceType('Int32'), views.ActualCount);
-		this.ActualCount.setDisplayText('Actual Count');
-		this.SessionID = new ODataColumnBuilder('SessionID', new SourceType('Int32'), views.SessionID);
-		this.SessionID.setDisplayText('Session ID');
 		this.UserName = new ODataColumnBuilder('UserName', new SourceType('String'), views.UserName);
 		this.UserName.setDisplayText('User Name');
 		this.UserGroupID = new ODataColumnBuilder('UserGroupID', new SourceType('Int32'), views.UserGroupID);
@@ -80,17 +83,6 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.RequestTimeEnded.setDisplayText('Request Time Ended');
 		this.RequestTimeElapsed = new ODataColumnBuilder('RequestTimeElapsed', new SourceType('String'), views.RequestTimeElapsed);
 		this.RequestTimeElapsed.setDisplayText('Request Time Elapsed');
-		this.Succeeded = new ODataColumnBuilder('Succeeded', new SourceType('Boolean'), views.Succeeded);
-		this.CriticalErrorCount = new ODataColumnBuilder('CriticalErrorCount', new SourceType('Int32'), views.CriticalErrorCount);
-		this.CriticalErrorCount.setDisplayText('Critical Error Count');
-		this.ValidationFailedCount = new ODataColumnBuilder('ValidationFailedCount', new SourceType('Int32'), views.ValidationFailedCount);
-		this.ValidationFailedCount.setDisplayText('Validation Failed Count');
-		this.AppErrorCount = new ODataColumnBuilder('AppErrorCount', new SourceType('Int32'), views.AppErrorCount);
-		this.AppErrorCount.setDisplayText('App Error Count');
-		this.TotalErrorCount = new ODataColumnBuilder('TotalErrorCount', new SourceType('Int32'), views.TotalErrorCount);
-		this.TotalErrorCount.setDisplayText('Total Error Count');
-		this.InformationMessageCount = new ODataColumnBuilder('InformationMessageCount', new SourceType('Int32'), views.InformationMessageCount);
-		this.InformationMessageCount.setDisplayText('Information Message Count');
 		this.VersionName = new ODataColumnBuilder('VersionName', new SourceType('String'), views.VersionName);
 		this.VersionName.setDisplayText('Version Name');
 		this.VersionKey = new ODataColumnBuilder('VersionKey', new SourceType('String'), views.VersionKey);
@@ -104,8 +96,14 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.IsCurrentInstallation = new ODataColumnBuilder('IsCurrentInstallation', new SourceType('Boolean'), views.IsCurrentInstallation);
 		this.IsCurrentInstallation.setDisplayText('Is Current Installation');
 	}
-	readonly RequestID: ODataColumnBuilder;
+	readonly EventID: ODataColumnBuilder;
+	readonly TimeOccurred: ODataColumnBuilder;
+	readonly SeverityText: ODataColumnBuilder;
+	readonly Caption: ODataColumnBuilder;
+	readonly Message: ODataColumnBuilder;
+	readonly Detail: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
+	readonly ActualCount: ODataColumnBuilder;
 	readonly AppID: ODataColumnBuilder;
 	readonly AppName: ODataColumnBuilder;
 	readonly AppTypeText: ODataColumnBuilder;
@@ -115,8 +113,6 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly ModKey: ODataColumnBuilder;
 	readonly ModTargetKey: ODataColumnBuilder;
 	readonly ModDisplayText: ODataColumnBuilder;
-	readonly ActualCount: ODataColumnBuilder;
-	readonly SessionID: ODataColumnBuilder;
 	readonly UserName: ODataColumnBuilder;
 	readonly UserGroupID: ODataColumnBuilder;
 	readonly UserGroupName: ODataColumnBuilder;
@@ -124,12 +120,6 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly RequestTimeStarted: ODataColumnBuilder;
 	readonly RequestTimeEnded: ODataColumnBuilder;
 	readonly RequestTimeElapsed: ODataColumnBuilder;
-	readonly Succeeded: ODataColumnBuilder;
-	readonly CriticalErrorCount: ODataColumnBuilder;
-	readonly ValidationFailedCount: ODataColumnBuilder;
-	readonly AppErrorCount: ODataColumnBuilder;
-	readonly TotalErrorCount: ODataColumnBuilder;
-	readonly InformationMessageCount: ODataColumnBuilder;
 	readonly VersionName: ODataColumnBuilder;
 	readonly VersionKey: ODataColumnBuilder;
 	readonly VersionStatusText: ODataColumnBuilder;
@@ -139,8 +129,14 @@ export class ODataExpandedRequestColumnsBuilder {
 	
 	build() {
 		return {
-			RequestID: this.RequestID.build(),
+			EventID: this.EventID.build(),
+			TimeOccurred: this.TimeOccurred.build(),
+			SeverityText: this.SeverityText.build(),
+			Caption: this.Caption.build(),
+			Message: this.Message.build(),
+			Detail: this.Detail.build(),
 			Path: this.Path.build(),
+			ActualCount: this.ActualCount.build(),
 			AppID: this.AppID.build(),
 			AppName: this.AppName.build(),
 			AppTypeText: this.AppTypeText.build(),
@@ -150,8 +146,6 @@ export class ODataExpandedRequestColumnsBuilder {
 			ModKey: this.ModKey.build(),
 			ModTargetKey: this.ModTargetKey.build(),
 			ModDisplayText: this.ModDisplayText.build(),
-			ActualCount: this.ActualCount.build(),
-			SessionID: this.SessionID.build(),
 			UserName: this.UserName.build(),
 			UserGroupID: this.UserGroupID.build(),
 			UserGroupName: this.UserGroupName.build(),
@@ -159,18 +153,12 @@ export class ODataExpandedRequestColumnsBuilder {
 			RequestTimeStarted: this.RequestTimeStarted.build(),
 			RequestTimeEnded: this.RequestTimeEnded.build(),
 			RequestTimeElapsed: this.RequestTimeElapsed.build(),
-			Succeeded: this.Succeeded.build(),
-			CriticalErrorCount: this.CriticalErrorCount.build(),
-			ValidationFailedCount: this.ValidationFailedCount.build(),
-			AppErrorCount: this.AppErrorCount.build(),
-			TotalErrorCount: this.TotalErrorCount.build(),
-			InformationMessageCount: this.InformationMessageCount.build(),
 			VersionName: this.VersionName.build(),
 			VersionKey: this.VersionKey.build(),
 			VersionStatusText: this.VersionStatusText.build(),
 			VersionTypeText: this.VersionTypeText.build(),
 			InstallLocation: this.InstallLocation.build(),
 			IsCurrentInstallation: this.IsCurrentInstallation.build()
-		} as ODataColumns<IExpandedRequest>;
+		} as ODataColumns<IExpandedLogEntry>;
 	}
 }

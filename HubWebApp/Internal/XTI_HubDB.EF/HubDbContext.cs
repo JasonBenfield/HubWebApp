@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_Core.EF;
-using XTI_HubDB.Entities;
 
 namespace XTI_HubDB.EF;
 
@@ -33,6 +31,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
         StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
+        ExpandedSessions = new EfDataRepository<ExpandedSession>(this);
+        ExpandedRequests = new EfDataRepository<ExpandedRequest>(this);
+        ExpandedLogEntries = new EfDataRepository<ExpandedLogEntry>(this);
         unitOfWork = new UnitOfWork(this);
     }
 
@@ -59,6 +60,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedSessionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedRequestEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedLogEntryEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 
@@ -83,6 +87,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
     public DataRepository<StoredObjectEntity> StoredObjects { get; }
+    public DataRepository<ExpandedSession> ExpandedSessions { get; }
+    public DataRepository<ExpandedRequest> ExpandedRequests { get; }
+    public DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 

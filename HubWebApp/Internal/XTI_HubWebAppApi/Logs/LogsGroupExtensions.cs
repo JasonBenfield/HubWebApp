@@ -11,5 +11,6 @@ internal static class LogsGroupExtensions
         services.AddScoped<LogEntryViewAction>();
         services.AddScoped<SessionQueryAction>();
         services.AddScoped<RequestQueryAction>();
+        services.AddScoped<LogEntryQueryAction>();
     }
 }

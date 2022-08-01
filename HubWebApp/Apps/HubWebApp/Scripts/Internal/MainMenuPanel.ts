@@ -32,7 +32,7 @@ export class MainMenuPanel implements IPanel {
         this.sessionsLink = new LinkComponent(view.sessionsLink);
         this.sessionsLink.setHref(hubApi.Logs.Sessions.getUrl({}));
         this.requestsLink = new LinkComponent(view.requestsLink);
-        this.requestsLink.setHref(hubApi.Logs.Requests.getUrl({}));
+        this.requestsLink.setHref(hubApi.Logs.Requests.getUrl({ SessionID: null }));
         this.logEntriesLink = new LinkComponent(view.logEntriesLink);
         this.logEntriesLink.setHref(hubApi.Logs.LogEntries.getUrl({}));
         new Command(this.back.bind(this)).add(view.backButton);

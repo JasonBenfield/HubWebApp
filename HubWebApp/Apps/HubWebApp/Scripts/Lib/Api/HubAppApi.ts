@@ -60,7 +60,8 @@ export class HubAppApi extends AppApi {
 		this.Periodic = this.addGroup((evts, resourceUrl) => new PeriodicGroup(evts, resourceUrl));
 		this.Logs = this.addGroup((evts, resourceUrl) => new LogsGroup(evts, resourceUrl));
 		this.SessionQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IEmptyRequest, IExpandedSession>(evts, resourceUrl.odata('SessionQuery'), 'SessionQuery'));
-		this.RequestQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IEmptyRequest, IExpandedRequest>(evts, resourceUrl.odata('RequestQuery'), 'RequestQuery'));
+		this.RequestQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IRequestQueryRequest, IExpandedRequest>(evts, resourceUrl.odata('RequestQuery'), 'RequestQuery'));
+		this.LogEntryQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IEmptyRequest, IExpandedLogEntry>(evts, resourceUrl.odata('LogEntryQuery'), 'LogEntryQuery'));
 	}
 	
 	readonly UserCache: UserCacheGroup;
@@ -90,5 +91,6 @@ export class HubAppApi extends AppApi {
 	readonly Periodic: PeriodicGroup;
 	readonly Logs: LogsGroup;
 	readonly SessionQuery: AppApiQuery<IEmptyRequest, IExpandedSession>;
-	readonly RequestQuery: AppApiQuery<IEmptyRequest, IExpandedRequest>;
+	readonly RequestQuery: AppApiQuery<IRequestQueryRequest, IExpandedRequest>;
+	readonly LogEntryQuery: AppApiQuery<IEmptyRequest, IExpandedLogEntry>;
 }

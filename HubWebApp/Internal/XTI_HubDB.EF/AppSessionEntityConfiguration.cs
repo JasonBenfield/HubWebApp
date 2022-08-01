@@ -1,10 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XTI_HubDB.Entities;
+﻿namespace XTI_HubDB.EF;
 
-namespace XTI_HubDB.EF;
-
-public sealed class AppSessionEntityConfiguration : IEntityTypeConfiguration<AppSessionEntity>
+internal sealed class AppSessionEntityConfiguration : IEntityTypeConfiguration<AppSessionEntity>
 {
     public void Configure(EntityTypeBuilder<AppSessionEntity> builder)
     {
