@@ -4,7 +4,7 @@ using XTI_ODataQuery.Api;
 
 namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class LogEntryQueryAction : QueryAction<EmptyRequest, ExpandedLogEntry>
+internal sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, ExpandedLogEntry>
 {
     private readonly CurrentUser currentUser;
     private readonly IHubDbContext db;
@@ -15,7 +15,7 @@ internal sealed class LogEntryQueryAction : QueryAction<EmptyRequest, ExpandedLo
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedLogEntry>> Execute(ODataQueryOptions<ExpandedLogEntry> options, EmptyRequest model)
+    public async Task<IQueryable<ExpandedLogEntry>> Execute(ODataQueryOptions<ExpandedLogEntry> options, LogEntryQueryRequest model)
     {
         var userGroupPermissions = await currentUser.GetUserGroupPermissions();
         var userGroupIDs = userGroupPermissions
@@ -27,7 +27,12 @@ internal sealed class LogEntryQueryAction : QueryAction<EmptyRequest, ExpandedLo
             .Where(p => p.CanView)
             .Select(p => p.App.ToModel().ID)
             .ToArray();
-        return db.ExpandedLogEntries.Retrieve()
-            .Where(r => userGroupIDs.Contains(r.UserGroupID) && appIDs.Contains(r.AppID));
+        var query = db.ExpandedLogEntries.Retrieve()
+            .Where(e => userGroupIDs.Contains(e.UserGroupID) && appIDs.Contains(e.AppID));
+        if (model.RequestID.HasValue)
+        {
+            query = query.Where(e => e.RequestID == model.RequestID.Value);
+        }
+        return query;
     }
 }

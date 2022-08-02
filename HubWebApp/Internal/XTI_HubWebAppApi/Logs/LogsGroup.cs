@@ -24,5 +24,5 @@ public sealed class LogsGroup : AppApiGroupWrapper
 
     public AppApiAction<EmptyRequest, WebViewResult> Sessions { get; }
     public AppApiAction<RequestQueryRequest, WebViewResult> Requests { get; }
-    public AppApiAction<EmptyRequest, WebViewResult> LogEntries { get; }
+    public AppApiAction<LogEntryQueryRequest, WebViewResult> LogEntries { get; }
 }

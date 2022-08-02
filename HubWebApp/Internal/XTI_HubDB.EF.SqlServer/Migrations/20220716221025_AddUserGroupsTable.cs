@@ -296,7 +296,7 @@ select
 	ModifierCategories.AppID, Apps.Name AppName, Apps.TimeAdded TimeAppAdded, Apps.Title AppTitle, 
 	Apps.Type AppType,
 	dbo.AppTypeDisplayText(Apps.Type) AppTypeText,
-	XtiVersions.ID VersionID,
+	XtiVersions.ID VersionID, XtiVersions.VersionName, XtiVersions.VersionKey,
 	XtiVersions.Type VersionType, 
 	dbo.VersionTypeDisplayText(XtiVersions.Type) VersionTypeText,
 	XtiVersions.Status VersionStatus, 

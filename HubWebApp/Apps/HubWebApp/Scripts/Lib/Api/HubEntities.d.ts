@@ -425,6 +425,9 @@ interface IStream {
 interface IRequestQueryRequest {
 	SessionID: number;
 }
+interface ILogEntryQueryRequest {
+	RequestID: number;
+}
 interface IExpandedSession {
 	SessionID: number;
 	UserID: number;

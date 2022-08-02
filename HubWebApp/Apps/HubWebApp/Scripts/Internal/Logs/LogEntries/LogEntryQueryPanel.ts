@@ -4,6 +4,7 @@ import { ApiODataClient } from "../../../../../../../../SharedWebApp/Apps/Shared
 import { ODataComponent } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/Types";
+import { Url } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Api/ODataExpandedLogEntryColumnsBuilder";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
@@ -27,6 +28,7 @@ export class LogEntryQueryPanel implements IPanel {
     constructor(hubApi: HubAppApi, private readonly view: LogEntryQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         const columns = new ODataExpandedLogEntryColumnsBuilder(this.view.columns);
+        columns.SeverityText.setDisplayText('Severity');
         const options = new ODataComponentOptionsBuilder<IExpandedLogEntry>('hub_logEntries', columns);
         options.query.select.addFields(
             columns.TimeOccurred,
@@ -46,9 +48,16 @@ export class LogEntryQueryPanel implements IPanel {
             columns.VersionKey
         );
         options.query.orderBy.addDescending(columns.TimeOccurred);
-        options.saveChanges();
+        const url = Url.current();
+        const requestIDText = url.getQueryValue('RequestID');
+        const requestID = requestIDText ? Number(requestIDText) : null;
+        options.saveChanges({
+            select: true,
+            filter: !requestID,
+            orderby: true
+        });
         options.setODataClient(
-            new ApiODataClient(hubApi.LogEntryQuery, {})
+            new ApiODataClient(hubApi.LogEntryQuery, { RequestID: requestID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         new Command(this.menu.bind(this)).add(view.menuButton);

@@ -33,7 +33,7 @@ public sealed partial class HubAppClient : AppClient
         Logs = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new LogsGroup(_clientFactory, _tokenAccessor, _url, _options));
         SessionQuery = CreateODataGroup<EmptyRequest, ExpandedSession>("SessionQuery");
         RequestQuery = CreateODataGroup<RequestQueryRequest, ExpandedRequest>("RequestQuery");
-        LogEntryQuery = CreateODataGroup<EmptyRequest, ExpandedLogEntry>("LogEntryQuery");
+        LogEntryQuery = CreateODataGroup<LogEntryQueryRequest, ExpandedLogEntry>("LogEntryQuery");
     }
 
     public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
@@ -96,5 +96,5 @@ public sealed partial class HubAppClient : AppClient
 
     public AppClientODataGroup<RequestQueryRequest, ExpandedRequest> RequestQuery { get; }
 
-    public AppClientODataGroup<EmptyRequest, ExpandedLogEntry> LogEntryQuery { get; }
+    public AppClientODataGroup<LogEntryQueryRequest, ExpandedLogEntry> LogEntryQuery { get; }
 }

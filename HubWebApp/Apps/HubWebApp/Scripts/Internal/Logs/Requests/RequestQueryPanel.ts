@@ -8,6 +8,8 @@ import { Url } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scri
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
+import { RequestDropdown } from "./RequestDropdown";
+import { RequestDropdownView } from "./RequestDropdownView";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
 
 interface IResult {
@@ -29,6 +31,7 @@ export class RequestQueryPanel implements IPanel {
     constructor(hubApi: HubAppApi, private readonly view: RequestQueryPanelView) {
         const columns = new ODataExpandedRequestColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
+        columns.RequestID.require();
         columns.Succeeded.require();
         options.setCreateDataRow(
             (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
@@ -49,12 +52,17 @@ export class RequestQueryPanel implements IPanel {
             columns.VersionKey
         );
         options.query.orderBy.addDescending(columns.RequestTimeStarted);
+        const dropdownColumn = options.startColumns.add('Dropdown', this.view.dropdownColumn);
+        dropdownColumn.setDisplayText('');
+        dropdownColumn.setCreateDataCell(
+            (rowIndex, column, record, formatter, view: RequestDropdownView) => new RequestDropdown(hubApi, rowIndex, column, record, view)
+        );
         const url = Url.current();
         const sessionIDText = url.getQueryValue('SessionID');
         const sessionID = sessionIDText ? Number(sessionIDText) : null;
         options.saveChanges({
             select: true,
-            filter: Boolean(sessionID),
+            filter: !sessionID,
             orderby: true
         });
         options.setODataClient(

@@ -21,9 +21,9 @@ public sealed partial class LogsController : Controller
         return View(result.Data.ViewName);
     }
 
-    public async Task<IActionResult> LogEntries(CancellationToken ct)
+    public async Task<IActionResult> LogEntries(LogEntryQueryRequest model, CancellationToken ct)
     {
-        var result = await api.Group("Logs").Action<EmptyRequest, WebViewResult>("LogEntries").Execute(new EmptyRequest(), ct);
+        var result = await api.Group("Logs").Action<LogEntryQueryRequest, WebViewResult>("LogEntries").Execute(model, ct);
         return View(result.Data.ViewName);
     }
 }

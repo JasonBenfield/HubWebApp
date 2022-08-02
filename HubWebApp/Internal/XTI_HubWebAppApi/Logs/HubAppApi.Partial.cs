@@ -24,9 +24,9 @@ partial class HubAppApi
         get => _RequestQuery ?? throw new ArgumentNullException(nameof(_RequestQuery));
     }
 
-    private ODataGroup<EmptyRequest, ExpandedLogEntry>? _LogEntryQuery;
+    private ODataGroup<LogEntryQueryRequest, ExpandedLogEntry>? _LogEntryQuery;
 
-    public ODataGroup<EmptyRequest, ExpandedLogEntry> LogEntryQuery
+    public ODataGroup<LogEntryQueryRequest, ExpandedLogEntry> LogEntryQuery
     {
         get => _LogEntryQuery ?? throw new ArgumentNullException(nameof(_LogEntryQuery));
     }
@@ -48,7 +48,7 @@ partial class HubAppApi
             source.AddGroup(nameof(RequestQuery)),
             () => sp.GetRequiredService<RequestQueryAction>()
         );
-        _LogEntryQuery = new ODataGroup<EmptyRequest, ExpandedLogEntry>
+        _LogEntryQuery = new ODataGroup<LogEntryQueryRequest, ExpandedLogEntry>
         (
             source.AddGroup(nameof(LogEntryQuery)),
             () => sp.GetRequiredService<LogEntryQueryAction>()

@@ -23,6 +23,7 @@ public sealed class ExpandedLogEntry
     public int UserGroupID { get; set; }
     public string UserGroupName { get; set; } = "";
     public string UserGroupDisplayText { get; set; } = "";
+    public int RequestID { get; set; }
     public DateTimeOffset RequestTimeStarted { get; set; }
     public DateTimeOffset RequestTimeEnded { get; set; }
     public string RequestTimeElapsed { get; set; } = "";
