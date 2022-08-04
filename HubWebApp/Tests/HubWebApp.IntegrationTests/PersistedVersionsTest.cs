@@ -15,22 +15,9 @@ internal sealed class PersistedVersionsTest
         var sp = setup("Production");
         var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "versions.json");
         var persistedVersions = new XTI_Hub.PersistedVersions(path);
-        await persistedVersions.Store
-        (
-            new[]
-            {
-                new XtiVersionModel
-                {
-                   ID = 1,
-                   VersionName = new AppVersionName("Test"),
-                   TimeAdded = DateTime.Now,
-                   Status = AppVersionStatus.Values.Current,
-                   VersionType = AppVersionType.Values.Major,
-                   VersionKey = new AppVersionKey(1),
-                   VersionNumber = new AppVersionNumber(1,0,0)
-                }
-            }
-        );
+        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        var versions = await hubAdmin.Versions(new AppVersionName("HubWebApp"));
+        await persistedVersions.Store(versions);
     }
 
     [Test]
