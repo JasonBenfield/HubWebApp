@@ -499,6 +499,7 @@ interface IExpandedLogEntry {
 	UserGroupID: number;
 	UserGroupName: string;
 	UserGroupDisplayText: string;
+	RequestID: number;
 	RequestTimeStarted: Date;
 	RequestTimeEnded: Date;
 	RequestTimeElapsed: string;

@@ -1,11 +1,11 @@
-﻿import { CssLengthUnit } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
-import { MarginCss } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
-import { BasicComponentView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
-import { ButtonCommandView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Command";
-import { GridView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
-import { NavView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/NavView";
-import { TextLinkView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/TextLinkView";
-import { ToolbarView } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
+import { TextLinkView } from "@jasonbenfield/sharedwebapp/Views/TextLinkView";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "./HubTheme";
 
 export class MainMenuPanelView extends GridView {

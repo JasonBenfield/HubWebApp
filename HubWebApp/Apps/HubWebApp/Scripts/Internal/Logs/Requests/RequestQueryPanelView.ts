@@ -1,14 +1,14 @@
-﻿import { CssLengthUnit } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/CssLengthUnit";
-import { ODataComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponentView";
-import { PaddingCss } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/PaddingCss";
-import { BasicComponentView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BasicComponentView";
-import { BlockView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BlockView";
-import { ButtonCommandView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Command";
-import { GridView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/Grid";
-import { ToolbarView } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/ToolbarView";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { ODataComponentView } from "@jasonbenfield/sharedwebapp/OData/ODataComponentView";
+import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../../HubTheme";
 import { ODataExpandedRequestColumnViewsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
-import { ODataColumnViewBuilder } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataColumnViewBuilder";
+import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
 import { RequestDropdownView } from "./RequestDropdownView";
 
 export class RequestQueryPanelView extends GridView {

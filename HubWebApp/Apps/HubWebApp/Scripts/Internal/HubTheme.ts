@@ -5,7 +5,7 @@ import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { GridCellView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
-import { MarginCss } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 
 export class HubTheme {
     public static readonly instance = new HubTheme();

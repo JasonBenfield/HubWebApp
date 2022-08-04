@@ -26,6 +26,7 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly UserGroupID = new ODataColumnViewBuilder();
 	readonly UserGroupName = new ODataColumnViewBuilder();
 	readonly UserGroupDisplayText = new ODataColumnViewBuilder();
+	readonly RequestID = new ODataColumnViewBuilder();
 	readonly RequestTimeStarted = new ODataColumnViewBuilder();
 	readonly RequestTimeEnded = new ODataColumnViewBuilder();
 	readonly RequestTimeElapsed = new ODataColumnViewBuilder();
@@ -77,6 +78,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.UserGroupName.setDisplayText('User Group Name');
 		this.UserGroupDisplayText = new ODataColumnBuilder('UserGroupDisplayText', new SourceType('String'), views.UserGroupDisplayText);
 		this.UserGroupDisplayText.setDisplayText('User Group Display Text');
+		this.RequestID = new ODataColumnBuilder('RequestID', new SourceType('Int32'), views.RequestID);
+		this.RequestID.setDisplayText('Request ID');
 		this.RequestTimeStarted = new ODataColumnBuilder('RequestTimeStarted', new SourceType('DateTimeOffset'), views.RequestTimeStarted);
 		this.RequestTimeStarted.setDisplayText('Request Time Started');
 		this.RequestTimeEnded = new ODataColumnBuilder('RequestTimeEnded', new SourceType('DateTimeOffset'), views.RequestTimeEnded);
@@ -117,6 +120,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly UserGroupID: ODataColumnBuilder;
 	readonly UserGroupName: ODataColumnBuilder;
 	readonly UserGroupDisplayText: ODataColumnBuilder;
+	readonly RequestID: ODataColumnBuilder;
 	readonly RequestTimeStarted: ODataColumnBuilder;
 	readonly RequestTimeEnded: ODataColumnBuilder;
 	readonly RequestTimeElapsed: ODataColumnBuilder;
@@ -150,6 +154,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			UserGroupID: this.UserGroupID.build(),
 			UserGroupName: this.UserGroupName.build(),
 			UserGroupDisplayText: this.UserGroupDisplayText.build(),
+			RequestID: this.RequestID.build(),
 			RequestTimeStarted: this.RequestTimeStarted.build(),
 			RequestTimeEnded: this.RequestTimeEnded.build(),
 			RequestTimeElapsed: this.RequestTimeElapsed.build(),

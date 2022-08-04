@@ -16,15 +16,12 @@
       "../../node_modules/@types"
     ],
     "paths": {
-      "@jasonbenfield/sharedwebapp/*": [
-        "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/*"
-      ]
     }
   },
   "include": [
     "./**/*.ts",
-    //"../../node_modules/@jasonbenfield/**/*.d.ts",
-    "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/**/*.d.ts"
+    "../Lib/**/*.d.ts",
+    "../../node_modules/@jasonbenfield/**/*.d.ts"
   ],
   "exclude": [
     "Imports",

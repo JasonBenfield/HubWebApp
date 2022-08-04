@@ -1,6 +1,6 @@
-﻿import { Awaitable } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Awaitable";
-import { Command } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/Command";
-import { LinkComponent } from "../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/LinkComponent";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { HubAppApi } from "../Lib/Api/HubAppApi";
 import { MainMenuPanelView } from "./MainMenuPanelView";
 

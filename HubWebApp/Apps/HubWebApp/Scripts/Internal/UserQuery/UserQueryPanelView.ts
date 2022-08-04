@@ -7,7 +7,7 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { BlockView } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Views/BlockView";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ODataExpandedUserColumnViewsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
 import { HubTheme } from "../HubTheme";
 

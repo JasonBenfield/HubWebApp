@@ -1,11 +1,10 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
-import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { MarginCss } from "../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/MarginCss";
 import { AddUserFormView } from "../../Lib/Api/AddUserFormView";
 import { HubTheme } from "../HubTheme";
 

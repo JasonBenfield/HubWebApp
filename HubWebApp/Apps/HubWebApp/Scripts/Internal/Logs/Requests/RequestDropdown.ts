@@ -1,6 +1,6 @@
-﻿import { LinkComponent } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/LinkComponent";
-import { ODataCell } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataCell";
-import { ODataColumn } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataColumn";
+﻿import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
+import { ODataCell } from "@jasonbenfield/sharedwebapp/OData/ODataCell";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { RequestDropdownView } from "./RequestDropdownView";
 

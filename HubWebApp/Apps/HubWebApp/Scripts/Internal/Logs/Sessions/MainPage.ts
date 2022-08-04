@@ -1,5 +1,5 @@
 ﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { SingleActivePanel } from '../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Panel/SingleActivePanel';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Apis } from '../../Apis';
 import { MainMenuPanel } from '../../MainMenuPanel';
 import { MainPageView } from './MainPageView';

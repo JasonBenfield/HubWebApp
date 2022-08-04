@@ -1,12 +1,11 @@
-﻿import { Awaitable } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Awaitable";
-import { Command } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Components/Command";
-import { ApiODataClient } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ApiODataClient";
-import { ODataComponent } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponent";
-import { ODataComponentOptionsBuilder } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/ODataComponentOptionsBuilder";
-import { Queryable } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/OData/Types";
-import { Url } from "../../../../../../../../SharedWebApp/Apps/SharedWebApp/Scripts/Lib/Url";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
+import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
+import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Api/ODataExpandedLogEntryColumnsBuilder";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
 
 interface IResult {
