@@ -1,16 +1,31 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_App.Api;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.UserList;
+﻿using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
 internal sealed class GetUsersTest
 {
+    [Test]
+    public async Task ShouldThrowError_WhenModifierIsBlank()
+    {
+        var tester = await setup();
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
+    }
+
+    [Test]
+    public async Task ShouldThrowError_WhenAccessIsDenied()
+    {
+        var tester = await setup();
+        var modifier = await tester.GeneralUserGroupModifier();
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenAccessIsDenied
+            (
+                new EmptyRequest(),
+                modifier,
+                HubInfo.Roles.Admin,
+                HubInfo.Roles.ViewUser
+            );
+    }
+
     [Test]
     public async Task ShouldGetUsers()
     {
@@ -18,19 +33,24 @@ internal sealed class GetUsersTest
         var userName = new AppUserName("Test.User");
         await addUser(tester, userName);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var users = (await factory.Users.Users()).ToArray();
-        Assert.That(users.Select(u => u.UserName()), Has.One.EqualTo(userName), "Should get all users");
+        var userGroup = await factory.UserGroups.GetGeneral();
+        var users = (await userGroup.Users()).ToArray();
+        Assert.That(users.Select(u => u.ToModel().UserName), Has.One.EqualTo(userName), "Should get all users");
     }
 
     private async Task addUser(IHubActionTester tester, AppUserName userName)
     {
-        var hubApiFactory = tester.Services.GetRequiredService<HubAppApiFactory>();
-        var hubApi = hubApiFactory.CreateForSuperUser();
-        await hubApi.Users.AddOrUpdateUser.Execute(new AddUserModel
-        {
-            UserName = userName.Value,
-            Password = "Password123456"
-        });
+        var modifier = await tester.GeneralUserGroupModifier();
+        var addUserTester = tester.Create(api => api.Users.AddOrUpdateUser);
+        await addUserTester.Execute
+        (
+            new AddOrUpdateUserModel
+            {
+                UserName = userName.Value,
+                Password = "Password123456"
+            },
+            modifier
+        );
     }
 
     private async Task<HubActionTester<EmptyRequest, AppUserModel[]>> setup()

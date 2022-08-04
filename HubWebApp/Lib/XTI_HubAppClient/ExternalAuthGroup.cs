@@ -2,9 +2,13 @@
 namespace XTI_HubAppClient;
 public sealed partial class ExternalAuthGroup : AppClientGroup
 {
-    public ExternalAuthGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "ExternalAuth")
+    public ExternalAuthGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "ExternalAuth")
     {
+        Actions = new ExternalAuthGroupActions(ExternalAuthKey: CreatePostAction<ExternalAuthKeyModel, string>("ExternalAuthKey"));
     }
 
-    public Task<string> ExternalAuthKey(string modifier, ExternalAuthKeyModel model) => Post<string, ExternalAuthKeyModel>("ExternalAuthKey", modifier, model);
+    public ExternalAuthGroupActions Actions { get; }
+
+    public Task<string> ExternalAuthKey(string modifier, ExternalAuthKeyModel model) => Actions.ExternalAuthKey.Post(modifier, model);
+    public sealed record ExternalAuthGroupActions(AppClientPostAction<ExternalAuthKeyModel, string> ExternalAuthKey);
 }

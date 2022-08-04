@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class AppUserController : Controller
+public sealed partial class AppUserController : Controller
 {
     private readonly HubAppApi api;
     public AppUserController(HubAppApi api)
@@ -9,9 +9,9 @@ public class AppUserController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(int model, CancellationToken ct)
+    public async Task<IActionResult> Index(GetAppUserRequest model, CancellationToken ct)
     {
-        var result = await api.Group("AppUser").Action<int, WebViewResult>("Index").Execute(model, ct);
+        var result = await api.Group("AppUser").Action<GetAppUserRequest, WebViewResult>("Index").Execute(model, ct);
         return View(result.Data.ViewName);
     }
 
@@ -25,11 +25,5 @@ public class AppUserController : Controller
     public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] UserModifierKey model, CancellationToken ct)
     {
         return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<UserModifierCategoryModel[]>> GetUserModCategories([FromBody] int model, CancellationToken ct)
-    {
-        return api.Group("AppUser").Action<int, UserModifierCategoryModel[]>("GetUserModCategories").Execute(model, ct);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using XTI_Core;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
-using XTI_HubAppApi.AppPublish;
+using XTI_HubWebAppApi.AppInstall;
+using XTI_HubWebAppApi.AppPublish;
 using XTI_TempLog.Abstractions;
 
 namespace HubWebApp.Tests;
@@ -12,7 +12,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldStartSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
@@ -25,7 +25,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldStartRequestOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -40,7 +40,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldEndRequestOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -56,7 +56,7 @@ internal sealed class PermanentLogTest
     public async Task ShouldEndSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -72,21 +72,21 @@ internal sealed class PermanentLogTest
     public async Task ShouldAuthenticateSessionOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         await authenticateSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
         var user = await factory.Users.User(session.UserID);
-        Assert.That(user.UserName(), Is.EqualTo("someone"), "Should authenticate session on permanent log");
+        Assert.That(user.ToModel().UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
     }
 
     [Test]
     public async Task ShouldLogEventOnPermanentLog()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
@@ -217,7 +217,7 @@ internal sealed class PermanentLogTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var appFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<HubFactory>();
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();
@@ -255,8 +255,9 @@ internal sealed class PermanentLogTest
         });
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
         installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
-        await appFactory.Users.Add(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
-        await appFactory.Users.Add(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        var userGroup = await hubFactory.UserGroups.GetGeneral();
+        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
 
         return HubActionTester.Create(sp, hubApi => hubApi.PermanentLog.LogBatch);
     }

@@ -1,5 +1,5 @@
 ﻿using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
+using XTI_HubWebAppApi.AppInstall;
 
 namespace HubWebApp.Tests;
 
@@ -9,12 +9,13 @@ public sealed class RegisterAppTest
     public async Task ShouldAddWebApp()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
-        Assert.That(app.Key(), Is.EqualTo(FakeInfo.AppKey), "Should add app");
-        Assert.That(app.Title, Is.EqualTo(FakeInfo.AppKey.Name.DisplayText), "Should set app title");
+        var appModel = app.ToModel();
+        Assert.That(appModel.AppKey, Is.EqualTo(FakeInfo.AppKey), "Should add app");
+        Assert.That(appModel.Title, Is.EqualTo($"{FakeInfo.AppKey.Name.DisplayText} {FakeInfo.AppKey.Type.DisplayText}"), "Should set app title");
     }
 
     private static async Task<App> getApp(IHubActionTester tester)
@@ -40,7 +41,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddCurrentVersion()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -51,7 +52,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddRoles()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -64,26 +65,26 @@ public sealed class RegisterAppTest
             FakeInfo.Roles.Viewer
         };
         var appRoles = await app.Roles();
-        Assert.That(appRoles.Select(r => r.Name()), Is.EquivalentTo(roleNames), "Should add role names from app role names");
+        Assert.That(appRoles.Select(r => r.ToModel().Name), Is.EquivalentTo(roleNames), "Should add role names from app role names");
     }
 
     [Test]
     public async Task ShouldAddUnknownApp()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
-        Assert.That(app.ID, Is.GreaterThan(0), "Should add unknown app");
+        Assert.That(app.ToModel().ID, Is.GreaterThan(0), "Should add unknown app");
     }
 
     [Test]
     public async Task ShouldAddUnknownResourceGroup()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
@@ -97,7 +98,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddUnknownResource()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
@@ -112,7 +113,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddResourceGroupsFromAppTemplateGroups()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -125,11 +126,11 @@ public sealed class RegisterAppTest
             (
                 new[]
                 {
-                        new ResourceGroupName("employee"),
-                        new ResourceGroupName("product"),
-                        new ResourceGroupName("login"),
-                        new ResourceGroupName("home") ,
-                        new ResourceGroupName("agenda")
+                    new ResourceGroupName("employee"),
+                    new ResourceGroupName("product"),
+                    new ResourceGroupName("login"),
+                    new ResourceGroupName("home") ,
+                    new ResourceGroupName("agenda")
                 }
             ),
             "Should add resource groups from template groups"
@@ -140,7 +141,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddAllowedGroupRoleFromAppGroupTemplate()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -150,7 +151,7 @@ public sealed class RegisterAppTest
         var allowedRoles = await employeeGroup.AllowedRoles();
         Assert.That
         (
-            allowedRoles.Select(r => r.Name()),
+            allowedRoles.Select(r => r.ToModel().Name),
             Is.EquivalentTo(new[] { AppRoleName.Admin }),
             "Should add allowed group roles from group template"
         );
@@ -160,7 +161,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddResourcesFromAppTemplateActions()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -179,7 +180,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddAllowedResourceRoleFromActionTemplate()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -189,7 +190,7 @@ public sealed class RegisterAppTest
         var allowedRoles = await addEmployeeAction.AllowedRoles();
         Assert.That
         (
-            allowedRoles.Select(r => r.Name()),
+            allowedRoles.Select(r => r.ToModel().Name),
             Is.EquivalentTo(new[] { AppRoleName.Admin, FakeAppRoles.Instance.Manager }),
             "Should add allowed resource roles from action template"
         );
@@ -199,7 +200,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddDefaultModifierCategory()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -216,7 +217,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAddDefaultModifierCategoryToApp()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -228,7 +229,7 @@ public sealed class RegisterAppTest
     public async Task ShouldSetModifierCategoryForGroup()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -242,7 +243,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAllowAnonymousForResourceGroup()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -256,7 +257,7 @@ public sealed class RegisterAppTest
     public async Task ShouldDenyAnonymousForResourceGroup()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -270,7 +271,7 @@ public sealed class RegisterAppTest
     public async Task ShouldAllowAnonymousForResource()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -285,7 +286,7 @@ public sealed class RegisterAppTest
     public async Task ShouldDenyAnonymousForResource()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = createRequest(tester);
         await tester.Execute(request);
         var app = await getApp(tester);
@@ -296,7 +297,7 @@ public sealed class RegisterAppTest
         Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }
 
-    private async Task<HubActionTester<RegisterAppRequest, AppWithModKeyModel>> setup()
+    private async Task<HubActionTester<RegisterAppRequest, AppModel>> setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

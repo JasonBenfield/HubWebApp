@@ -19,7 +19,9 @@ internal sealed class InstallProcess
     {
         var options = scopes.GetRequiredService<AdminOptions>();
         var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package)).ToArray();
+        var appKeys = selectedAppKeys.Values
+            .Where(a => !a.Type.Equals(AppType.Values.Package) && !a.Type.Equals(AppType.Values.WebPackage))
+            .ToArray();
         if (appKeys.Any())
         {
             Console.WriteLine("Beginning Install");
@@ -86,7 +88,7 @@ internal sealed class InstallProcess
                         var remoteInstallKey = await storedObjFactory.CreateStoredObject(storageName)
                             .Store
                             (
-                                GeneratedStorageKeyType.Values.SixDigit,
+                                GenerateKeyModel.SixDigit(),
                                 adminInstallOptions,
                                 TimeSpan.FromMinutes(30)
                             );
@@ -114,7 +116,7 @@ internal sealed class InstallProcess
             var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password);
             installerCreds = new CredentialValue
             (
-                installationUser.UserName,
+                installationUser.UserName.Value,
                 password
             );
             machineCredentials.Add(key, installerCreds);

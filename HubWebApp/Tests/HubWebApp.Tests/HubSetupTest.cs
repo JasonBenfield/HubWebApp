@@ -14,7 +14,7 @@ internal sealed class HubSetupTest
         await hubSetup.Run(AppVersionKey.Current);
         var factory = sp.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        Assert.That(hubApp.Key(), Is.EqualTo(HubInfo.AppKey), "Should add hub app");
+        Assert.That(hubApp.ToModel().AppKey, Is.EqualTo(HubInfo.AppKey), "Should add hub app");
     }
 
     [Test]
@@ -27,7 +27,7 @@ internal sealed class HubSetupTest
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName);
-        Assert.That(modCategory.Name(), Is.EqualTo(modCategoryName), "Should add mod category for apps");
+        Assert.That(modCategory.ToModel().Name, Is.EqualTo(modCategoryName), "Should add mod category for apps");
     }
 
     [Test]
@@ -41,9 +41,9 @@ internal sealed class HubSetupTest
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName);
         var modifiers = await modCategory.Modifiers();
-        var apps = (await factory.Apps.All()).Where(a => !a.Key().Equals(AppKey.Unknown));
+        var apps = await factory.Apps.All();
         var modIDs = modifiers.Select(m => m.TargetKey);
-        var appIDs = apps.Select(a => a.ID.ToString());
+        var appIDs = apps.Select(a => a.ToModel().ID.ToString());
         Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");
     }
 

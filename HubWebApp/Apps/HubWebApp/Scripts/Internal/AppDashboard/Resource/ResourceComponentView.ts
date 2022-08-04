@@ -1,34 +1,33 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
+﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 
 export class ResourceComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
     readonly resourceName: TextSpanView;
     readonly resultType: TextSpanView;
-    private readonly anonListItem: IListItemView;
+    private readonly anonListItem: ListGroupItemView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        let listGroup = this.addUnorderedListGroup();
-        let listItem = listGroup.addListGroupItem();
-        let row = listItem.addContent(new Row());
+        const listGroup = this.addUnorderedListGroup();
+        const listItem = listGroup.addListGroupItem();
+        const row = listItem.addView(RowView);
         this.resourceName = row.addColumn()
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.resultType = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.anonListItem = listGroup.addListGroupItem();
-        this.anonListItem.addContent(new Row())
+        this.anonListItem.addView(RowView)
             .addColumn()
-            .addContent(new TextSpanView())
+            .addView(TextSpanView)
             .configure(ts => ts.setText('Anonymous is Allowed'));
         this.anonListItem.hide();
     }

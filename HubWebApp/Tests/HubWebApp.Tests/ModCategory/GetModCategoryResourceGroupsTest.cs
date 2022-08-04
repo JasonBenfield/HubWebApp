@@ -1,8 +1,4 @@
-﻿using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 sealed class GetModCategoryResourceGroupsTest
 {
@@ -10,7 +6,7 @@ sealed class GetModCategoryResourceGroupsTest
     public async Task ShouldGetResourceGroups()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var app = await tester.HubApp();
         var appsModCategory = await app.ModCategory(HubInfo.ModCategories.Apps);
         var hubAppModifier = await tester.HubAppModifier();

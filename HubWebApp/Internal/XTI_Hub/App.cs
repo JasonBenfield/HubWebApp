@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class App : IApp
+public sealed class App
 {
     private readonly HubFactory factory;
     private readonly AppEntity record;
@@ -17,9 +16,9 @@ public sealed class App : IApp
         ID = this.record.ID;
     }
 
-    public int ID { get; }
-    public AppKey Key() => new AppKey(record.Name, AppType.Values.Value(record.Type));
-    public string Title { get => record.Title; }
+    internal int ID { get; }
+
+    public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
     public async Task RegisterAsAuthenticator()
     {
@@ -37,16 +36,10 @@ public sealed class App : IApp
         }
     }
 
-    public async Task<ModifierKey> ModKeyInHubApps()
-    {
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.ModifierByTargetID(ID);
-        return modifier.ModKey();
-    }
-
     internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
+
+    internal Task<Modifier[]> Modifiers() => factory.Modifiers.ModifiersForApp(this);
 
     public Task<Modifier> Modifier(int modifierID)
         => factory.Modifiers.ModifierForApp(this, modifierID);
@@ -64,16 +57,11 @@ public sealed class App : IApp
     public Task<ModifierCategory> ModCategory(int modCategoryID)
         => factory.ModCategories.Category(this, modCategoryID);
 
-    async Task<IModifierCategory> IApp.ModCategory(ModifierCategoryName name)
-        => await ModCategory(name);
-
     public Task<ModifierCategory> ModCategory(ModifierCategoryName name)
         => factory.ModCategories.Category(this, name);
 
     public Task<AppRole> AddRoleIfNotFound(AppRoleName name) =>
         factory.Roles.AddIfNotFound(this, name);
-
-    async Task<IAppRole[]> IApp.Roles() => await Roles();
 
     public async Task<AppRole[]> Roles()
     {
@@ -100,7 +88,7 @@ public sealed class App : IApp
         {
             await addRoles(roleNames, existingRoles);
             var rolesToDelete = existingRoles
-                .Where(r => !r.IsDeactivated() && !roleNames.Any(rn => r.Name().Equals(rn)))
+                .Where(r => !r.IsDeactivated() && !roleNames.Any(rn => r.NameEquals(rn)))
                 .ToArray();
             await deleteRoles(rolesToDelete);
         });
@@ -110,7 +98,7 @@ public sealed class App : IApp
     {
         foreach (var roleName in roleNames)
         {
-            var existingRole = existingRoles.FirstOrDefault(r => r.Name().Equals(roleName));
+            var existingRole = existingRoles.FirstOrDefault(r => r.NameEquals(roleName));
             if (existingRole == null)
             {
                 await AddRoleIfNotFound(roleName);
@@ -129,8 +117,6 @@ public sealed class App : IApp
             await role.Deactivate(DateTimeOffset.Now);
         }
     }
-
-    async Task<IAppVersion> IApp.Version(AppVersionKey versionKey) => await Version(versionKey);
 
     public Task<AppVersion> Version(AppVersionKey versionKey) => factory.Versions.VersionByApp(this, versionKey);
 
@@ -153,18 +139,22 @@ public sealed class App : IApp
         return requests;
     }
 
-    public AppModel ToAppModel()
+    public AppModel ToModel()
     {
-        var key = Key();
+        var key = ToAppKey();
         return new AppModel
-        {
-            ID = ID,
-            AppKey = key,
-            VersionName = new AppVersionName(record.VersionName),
-            Title = record.Title
-        };
+        (
+            ID: ID,
+            AppKey: key,
+            VersionName: new AppVersionName(record.VersionName),
+            Title: record.Title,
+            PublicKey: key.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
+                ? ModifierKey.Default
+                : new ModifierKey(key.Format())
+        );
     }
 
-    public override string ToString() => $"{nameof(App)} {ID}: {record.Name}";
+    public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
 
+    private AppKey ToAppKey() => new AppKey(record.Name, AppType.Values.Value(record.Type));
 }

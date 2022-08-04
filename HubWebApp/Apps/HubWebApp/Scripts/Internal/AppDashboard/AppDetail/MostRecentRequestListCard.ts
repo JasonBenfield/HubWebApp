@@ -1,8 +1,8 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
 import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
@@ -13,15 +13,15 @@ export class MostRecentRequestListCard {
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: MostRecentRequestListCardView
+        view: MostRecentRequestListCardView
     ) {
-        new TextBlock('Most Recent Requests', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.requests = new ListGroup(this.view.requests);
+        new TextComponent(view.titleHeader).setText('Most Recent Requests');
+        this.alert = new CardAlert(view.alert).alert;
+        this.requests = new ListGroup(view.requests);
     }
 
     async refresh() {
-        let requests = await this.getRequests();
+        const requests = await this.getRequests();
         this.requests.setItems(
             requests,
             (sourceItem: IAppRequestExpandedModel, listItem: RequestExpandedListItemView) =>

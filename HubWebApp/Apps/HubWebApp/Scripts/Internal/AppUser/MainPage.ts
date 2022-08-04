@@ -1,10 +1,9 @@
-﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
-import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
-import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { Url } from '@jasonbenfield/sharedwebapp/Url';
+import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AddRolePanel } from './AddRolePanel';
 import { AppUserDataPanel } from './AppUserDataPanel';
@@ -13,8 +12,8 @@ import { SelectModCategoryPanel } from './SelectModCategoryPanel';
 import { SelectModifierPanel } from './SelectModifierPanel';
 import { UserRolesPanel } from './UserRolesPanel';
 
-class MainPage {
-    private readonly view: MainPageView;
+class MainPage extends BasicPage {
+    protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
 
     private readonly panels: SingleActivePanel;
@@ -24,9 +23,9 @@ class MainPage {
     private readonly userRolesPanel: UserRolesPanel;
     private readonly addRolePanel: AddRolePanel;
 
-    constructor(page: PageFrameView) {
-        this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).Hub();
+    constructor() {
+        super(new MainPageView());
+        this.hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
             new AppUserDataPanel(this.hubApi, this.view.appUserDataPanel)
@@ -43,19 +42,24 @@ class MainPage {
         this.addRolePanel = this.panels.add(
             new AddRolePanel(this.hubApi, this.view.addRolePanel)
         );
-        let userIDValue = Url.current().getQueryValue('userID');
-        if (XtiUrl.current.path.modifier && userIDValue) {
-            let userID = Number(userIDValue);
-            this.activateStartPanel(userID);
+        const url = Url.current();
+        const appModKey = url.getQueryValue('App');
+        const userIDValue = url.getQueryValue('UserID');
+        if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
+            const userID = Number(userIDValue);
+            this.hubApi.App.withModifier(appModKey);
+            this.hubApi.ModCategory.withModifier(appModKey);
+            this.appUserDataPanel.setUserID(userID);
+            this.activateAppUserDataPanel();
         }
         else {
-            new WebPage(this.hubApi.Users.Index.getUrl({})).open();
+            new WebPage(this.hubApi.UserGroups.Index.getUrl({})).open();
         }
     }
 
-    private async activateStartPanel(userID: number) {
+    private async activateAppUserDataPanel() {
         this.panels.activate(this.appUserDataPanel);
-        let result = await this.appUserDataPanel.start(userID);
+        const result = await this.appUserDataPanel.start();
         if (result.done) {
             this.userRolesPanel.setAppUserOptions(result.done.appUserOptions);
             this.userRolesPanel.setDefaultModifier();
@@ -67,7 +71,7 @@ class MainPage {
 
     private async activateSelectModCategoryPanel() {
         this.panels.activate(this.selectModCategoryPanel);
-        let result = await this.selectModCategoryPanel.start();
+        const result = await this.selectModCategoryPanel.start();
         if (result.defaultModSelected) {
             this.userRolesPanel.setDefaultModifier();
             this.addRolePanel.setDefaultModifier();
@@ -85,7 +89,7 @@ class MainPage {
 
     private async activateSelectModifierPanel() {
         this.panels.activate(this.selectModifierPanel);
-        let result = await this.selectModifierPanel.start();
+        const result = await this.selectModifierPanel.start();
         if (result.modifierSelected) {
             this.userRolesPanel.setModifier(result.modifierSelected.modifier);
             this.addRolePanel.setModifier(result.modifierSelected.modifier);
@@ -98,7 +102,7 @@ class MainPage {
 
     private async activateUserRolesPanel() {
         this.panels.activate(this.userRolesPanel);
-        let result = await this.userRolesPanel.start();
+        const result = await this.userRolesPanel.start();
         if (result.addRequested) {
             this.activateAddRolePanel();
         }
@@ -109,7 +113,7 @@ class MainPage {
 
     private async activateAddRolePanel() {
         this.panels.activate(this.addRolePanel);
-        let result = await this.addRolePanel.start();
+        const result = await this.addRolePanel.start();
         if (result.back) {
             this.activateUserRolesPanel();
         }
@@ -118,4 +122,4 @@ class MainPage {
         }
     }
 }
-new MainPage(new Startup().build());
+new MainPage();

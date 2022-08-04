@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class PublishController : Controller
+public sealed partial class PublishController : Controller
 {
     private readonly HubAppApi api;
     public PublishController(HubAppApi api)

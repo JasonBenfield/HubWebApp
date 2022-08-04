@@ -69,4 +69,6 @@ public sealed class AppUserModifier
     public Task<AppRole[]> ExplicitlyAssignedRoles()
         => factory.Roles.RolesAssignedToUser(user, modifier);
 
+    public ModifierModel ToModifierModel() => modifier.ToModel();
+
 }

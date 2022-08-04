@@ -8,6 +8,7 @@ public sealed class HubRoles
 
     public AppRoleName Admin { get; } = AppRoleName.Admin;
     public AppRoleName ViewApp { get; } = new AppRoleName(nameof(ViewApp));
+    public AppRoleName AddUserGroup { get; } = new AppRoleName(nameof(AddUserGroup));
     public AppRoleName AddUser { get; } = new AppRoleName(nameof(AddUser));
     public AppRoleName EditUser { get; } = new AppRoleName(nameof(EditUser));
     public AppRoleName ViewUser { get; } = new AppRoleName(nameof(ViewUser));

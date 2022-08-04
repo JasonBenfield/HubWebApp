@@ -30,7 +30,7 @@ internal sealed class AddSystemUserCommand : ICommand
             var password = Guid.NewGuid().ToString();
             var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password);
             var systemUserCredentials = new SystemUserCredentials(secretCredentialsFactory, appKey);
-            await systemUserCredentials.Update(new CredentialValue(systemUser.UserName, password));
+            await systemUserCredentials.Update(new CredentialValue(systemUser.UserName.Value, password));
         }
     }
 }

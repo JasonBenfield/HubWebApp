@@ -1,26 +1,28 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
-import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
+import { TextBlockView } from "@jasonbenfield/sharedwebapp/Views/TextBlockView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { HubTheme } from "../HubTheme";
 
 export class UserRoleListItemView extends ListGroupItemView {
-    readonly roleName: ITextComponentView;
-    readonly deleteButton: ButtonCommandItem;
+    readonly roleName: BasicTextComponentView;
+    readonly deleteButton: ButtonCommandView;
 
-    constructor() {
-        super();
-        let row = this.addContent(new Row());
-        let col1 = row.addColumn();
-        let roleName = col1.addContent(new TextBlockView());
+    constructor(container: BasicComponentView) {
+        super(container);
+        const row = this.addView(RowView);
+        const col1 = row.addColumn();
+        const roleName = col1.addView(TextBlockView);
         roleName.setPadding(PaddingCss.top(1));
         this.roleName = roleName;
-        let col2 = row.addColumn();
+        const col2 = row.addColumn();
         col2.setColumnCss(ColumnCss.xs('auto'));
-        this.deleteButton = col2.addContent(
-            HubTheme.instance.listItem.deleteButton()
-        );
+        this.deleteButton = col2.addView(ButtonCommandView);
+        this.deleteButton.addCssName('deleteButton');
+        HubTheme.instance.listItem.deleteButton(this.deleteButton);
     }
 }

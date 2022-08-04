@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from '@jasonbenfield/sharedwebapp/Awaitable';
-import { Command } from '@jasonbenfield/sharedwebapp/Command/Command';
-import { HubAppApi } from '../../../Hub/Api/HubAppApi';
+import { Command } from '@jasonbenfield/sharedwebapp/Components/Command';
+import { HubAppApi } from '../../../Lib/Api/HubAppApi';
 import { ResourceGroupListItem } from '../ResourceGroupListItem';
 import { AppComponent } from './AppComponent';
 import { AppDetailPanelView } from './AppDetailPanelView';
@@ -10,30 +10,30 @@ import { MostRecentErrorEventListCard } from './MostRecentErrorEventListCard';
 import { MostRecentRequestListCard } from './MostRecentRequestListCard';
 import { ResourceGroupListCard } from './ResourceGroupListCard';
 
-interface Results {
+interface IResult {
     backRequested?: {};
     resourceGroupSelected?: { resourceGroup: IResourceGroupModel; };
     modCategorySelected?: { modCategory: IModifierCategoryModel; };
 }
 
-export class AppDetailPanelResult {
-    static get backRequested() {
-        return new AppDetailPanelResult({ backRequested: {} });
+class Result {
+    static backRequested() {
+        return new Result({ backRequested: {} });
     }
 
     static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
-        return new AppDetailPanelResult({
+        return new Result({
             resourceGroupSelected: { resourceGroup: resourceGroup }
         });
     }
 
     static modCategorySelected(modCategory: IModifierCategoryModel) {
-        return new AppDetailPanelResult({
+        return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
     }
 
-    private constructor(private readonly results: Results) {
+    private constructor(private readonly results: IResult) {
     }
 
     get backRequested() { return this.results.backRequested; }
@@ -51,7 +51,7 @@ export class AppDetailPanel implements IPanel {
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
 
-    private readonly awaitable = new Awaitable<AppDetailPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
 
     private readonly backCommand = new Command(this.back.bind(this));
 
@@ -77,13 +77,13 @@ export class AppDetailPanel implements IPanel {
 
     private onResourceGroupSelected(listItem: ResourceGroupListItem) {
         this.awaitable.resolve(
-            AppDetailPanelResult.resourceGroupSelected(listItem.group)
+            Result.resourceGroupSelected(listItem.group)
         );
     }
 
     private onModCategorySelected(modCategory: IModifierCategoryModel) {
         this.awaitable.resolve(
-            AppDetailPanelResult.modCategorySelected(modCategory)
+            Result.modCategorySelected(modCategory)
         );
     }
 
@@ -100,7 +100,7 @@ export class AppDetailPanel implements IPanel {
     }
 
     private back() {
-        this.awaitable.resolve(AppDetailPanelResult.backRequested);
+        this.awaitable.resolve(Result.backRequested());
     }
 
     start() {

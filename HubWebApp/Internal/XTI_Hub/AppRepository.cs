@@ -38,7 +38,7 @@ public sealed class AppRepository
     public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded)
     {
         App app;
-        var title = appKey.Name.DisplayText;
+        var title = appKey.Format();
         var record = await GetAppByKey(appKey);
         if (record == null)
         {
@@ -65,8 +65,11 @@ public sealed class AppRepository
         {
             var entity = await AddEntity(versionName, appKey, title, timeAdded);
             app = factory.CreateApp(entity);
-            var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
-            await defaultModCategory.AddDefaultModifierIfNotFound();
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+            {
+                var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
+                await defaultModCategory.AddDefaultModifierIfNotFound();
+            }
         });
         return app ?? throw new ArgumentNullException(nameof(app));
     }
@@ -123,7 +126,7 @@ public sealed class AppRepository
         );
     }
 
-    public Task<App[]> WebAppsWithOpenSessions(IAppUser user)
+    public Task<App[]> WebAppsWithOpenSessions(AppUser user)
     {
         var sessionIDs = factory.DB
             .Sessions

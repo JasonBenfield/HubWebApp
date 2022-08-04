@@ -8,15 +8,15 @@ internal sealed class GetAppTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
     }
 
     [Test]
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        var modifier = tester.FakeHubAppModifier();
-        AccessAssertions.Create(tester)
+        var modifier = await tester.HubAppModifier();
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 new EmptyRequest(),
@@ -30,10 +30,10 @@ internal sealed class GetAppTest
     public async Task ShouldGetApp()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var app = await tester.Execute(new EmptyRequest(), hubAppModifier.ModKey());
-        Assert.That(app?.Title, Is.EqualTo("Hub"), "Should get app");
+        Assert.That(app?.Title, Is.EqualTo("Hub Web App"), "Should get app");
     }
 
     private async Task<HubActionTester<EmptyRequest, AppModel>> setup()

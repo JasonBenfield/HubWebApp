@@ -2,14 +2,13 @@
 namespace XTI_HubAppClient;
 public sealed partial class UserInquiryGroup : AppClientGroup
 {
-    public UserInquiryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "UserInquiry")
+    public UserInquiryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "UserInquiry")
     {
-        Actions = new UserInquiryActions(clientUrl);
+        Actions = new UserInquiryGroupActions(GetUser: CreatePostAction<int, AppUserModel>("GetUser"));
     }
 
-    public UserInquiryActions Actions { get; }
+    public UserInquiryGroupActions Actions { get; }
 
-    public Task<AppUserModel> GetUser(int model) => Post<AppUserModel, int>("GetUser", "", model);
-    public Task<AppUserModel> GetUserByUserName(string model) => Post<AppUserModel, string>("GetUserByUserName", "", model);
-    public Task<AppUserModel> GetCurrentUser() => Post<AppUserModel, EmptyRequest>("GetCurrentUser", "", new EmptyRequest());
+    public Task<AppUserModel> GetUser(string modifier, int model) => Actions.GetUser.Post(modifier, model);
+    public sealed record UserInquiryGroupActions(AppClientPostAction<int, AppUserModel> GetUser);
 }

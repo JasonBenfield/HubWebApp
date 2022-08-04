@@ -1,7 +1,6 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { RequestExpandedListItemView } from "./RequestExpandedListItemView";
 
 export class MostRecentRequestListCardView extends CardView {
@@ -9,10 +8,11 @@ export class MostRecentRequestListCardView extends CardView {
     readonly alert: CardAlertView;
     readonly requests: ListGroupView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.requests = this.addBlockListGroup(() => new RequestExpandedListItemView());
+        this.requests = this.addView(ListGroupView);
+        this.requests.setItemViewType(RequestExpandedListItemView);
     }
 }

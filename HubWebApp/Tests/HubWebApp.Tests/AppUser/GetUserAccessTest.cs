@@ -1,5 +1,5 @@
-﻿using XTI_HubAppApi.AppUserInquiry;
-using XTI_HubAppApi.UserList;
+﻿using XTI_HubWebAppApi.AppUserInquiry;
+using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -9,15 +9,15 @@ internal sealed class GetUserAccessTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
     }
 
@@ -25,21 +25,22 @@ internal sealed class GetUserAccessTest
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        AccessAssertions.Create(tester)
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                tester.FakeHubAppModifier(),
+                new[] { HubInfo.Roles.ViewApp },
+                generalUserGroupModifier,
                 HubInfo.Roles.Admin,
-                HubInfo.Roles.ViewApp,
                 HubInfo.Roles.ViewUser
             );
     }
@@ -48,7 +49,7 @@ internal sealed class GetUserAccessTest
     public async Task ShouldGetUserRolesForModifier()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -56,13 +57,14 @@ internal sealed class GetUserAccessTest
         await user.Modifier(hubAppModifier).AssignRole(viewUserRole);
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var userAccess = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userAccess = await tester.Execute(request, generalUserGroupModifier);
         Assert.That
         (
-            userAccess.AssignedRoles.Select(r => new AppRoleName(r.Name)),
+            userAccess.AssignedRoles.Select(r => r.Name),
             Has.One.EqualTo(HubInfo.Roles.ViewUser),
             "Should get user roles for modifier"
         );
@@ -72,16 +74,17 @@ internal sealed class GetUserAccessTest
     public async Task ShouldReturnAccessDenied_WhenAccessIsDenied()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         await denyAccess(tester, user, hubAppModifier);
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var userAccess = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userAccess = await tester.Execute(request, generalUserGroupModifier);
         Assert.That
         (
             userAccess.HasAccess,
@@ -94,16 +97,17 @@ internal sealed class GetUserAccessTest
     public async Task ShouldNotReturnDenyAccessRole()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         await denyAccess(tester, user, hubAppModifier);
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var userAccess = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userAccess = await tester.Execute(request, generalUserGroupModifier);
         Assert.That
         (
             userAccess.AssignedRoles.Any(r => AppRoleName.DenyAccess.Equals(r.Name)),
@@ -116,7 +120,7 @@ internal sealed class GetUserAccessTest
     public async Task ShouldOnlyGetExplicitlyAssignedRoles()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
         var hubApp = await tester.HubApp();
@@ -125,13 +129,14 @@ internal sealed class GetUserAccessTest
         await user.Modifier(defaultModifier).AssignRole(role);
         var request = new UserModifierKey
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ModifierID = hubAppModifier.ID
         };
-        var userAccess = await tester.Execute(request, hubAppModifier.ModKey());
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userAccess = await tester.Execute(request, generalUserGroupModifier);
         Assert.That
         (
-            userAccess.AssignedRoles.Select(r => new AppRoleName(r.Name)),
+            userAccess.AssignedRoles.Select(r => r.Name),
             Has.None.EqualTo(HubInfo.Roles.EditUser),
             "Should only include explicitly assigned roles"
         );
@@ -140,12 +145,17 @@ internal sealed class GetUserAccessTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        await addUserTester.LoginAsAdmin();
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddOrUpdateUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
@@ -154,16 +164,16 @@ internal sealed class GetUserAccessTest
     private async Task denyAccess(IHubActionTester tester, AppUser user, Modifier modifier)
     {
         var denyAccessTester = tester.Create(hubApi => hubApi.AppUserMaintenance.DenyAccess);
-        denyAccessTester.LoginAsAdmin();
-        var hubAppModifier = denyAccessTester.FakeHubAppModifier();
+        await denyAccessTester.LoginAsAdmin();
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await denyAccessTester.Execute
         (
             new UserModifierKey
             {
-                UserID = user.ID,
+                UserID = user.ToModel().ID,
                 ModifierID = modifier.ID
             },
-            hubAppModifier.ModKey()
+            generalUserGroupModifier
         );
     }
 

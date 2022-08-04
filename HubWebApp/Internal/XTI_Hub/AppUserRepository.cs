@@ -13,13 +13,23 @@ public sealed class AppUserRepository
         this.factory = factory;
     }
 
-    public Task<AppUser[]> Users()
+    internal Task<AppUser[]> Users(AppUserGroup userGroup)
         => factory.DB
             .Users
             .Retrieve()
+            .Where(u=>u.GroupID == userGroup.ID)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
             .ToArrayAsync();
+
+    internal async Task<AppUser> User(AppUserGroup userGroup, int id)
+    {
+        var userRecord = await factory.DB
+            .Users
+            .Retrieve()
+            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.ID == id);
+        return factory.User(userRecord ?? throw new Exception($"User {id} not found"));
+    }
 
     public async Task<AppUser> User(int id)
     {
@@ -51,7 +61,11 @@ public sealed class AppUserRepository
     public async Task<AppUser> UserByUserName(AppUserName userName)
     {
         var record = await GetUser(userName);
-        return factory.User(record ?? throw new ArgumentNullException(nameof(record)));
+        return factory.User
+        (
+            record 
+            ?? throw new ArgumentNullException(nameof(record), $"User not found with user name '{userName.Value}'")
+        );
     }
 
     public async Task<AppUser> UserByExternalKey(App authenticatorApp, string externalUserKey)
@@ -76,7 +90,7 @@ public sealed class AppUserRepository
         return factory.User
         (
             userEntity
-            ?? throw new ExternalUserNotFoundException(authenticatorApp.Key(), externalUserKey)
+            ?? throw new ExternalUserNotFoundException(authenticatorApp.ToModel().AppKey, externalUserKey)
         );
     }
 
@@ -86,7 +100,7 @@ public sealed class AppUserRepository
             .Retrieve()
             .FirstOrDefaultAsync(u => u.UserName == userName.Value);
 
-    internal async Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded)
+    internal async Task<AppUser> AddAnonIfNotExists(AppUserGroup userGroup, DateTimeOffset timeAdded)
     {
         var userName = AppUserName.Anon;
         var record = await GetUser(userName);
@@ -94,6 +108,7 @@ public sealed class AppUserRepository
         {
             record = await AddUserEntity
             (
+                userGroup.ID,
                 userName,
                 new SystemHashedPassword(),
                 new PersonName(""),
@@ -111,15 +126,9 @@ public sealed class AppUserRepository
         public string Value() => new GeneratedKey().Value();
     }
 
-    public Task<AppUser> Add
+    internal async Task<AppUser> AddOrUpdate
     (
-        AppUserName userName,
-        IHashedPassword password,
-        DateTimeOffset timeAdded
-    ) => AddOrUpdate(userName, password, new PersonName(""), new EmailAddress(""), timeAdded);
-
-    public async Task<AppUser> AddOrUpdate
-    (
+        AppUserGroup userGroup,
         AppUserName userName,
         IHashedPassword password,
         PersonName name,
@@ -130,7 +139,7 @@ public sealed class AppUserRepository
         var record = await GetUser(userName);
         if (record == null)
         {
-            record = await AddUserEntity(userName, password, name, email, timeAdded);
+            record = await AddUserEntity(userGroup.ID, userName, password, name, email, timeAdded);
         }
         else
         {
@@ -148,10 +157,11 @@ public sealed class AppUserRepository
         return factory.User(record);
     }
 
-    private async Task<AppUserEntity> AddUserEntity(AppUserName userName, IHashedPassword password, PersonName name, EmailAddress email, DateTimeOffset timeAdded)
+    private async Task<AppUserEntity> AddUserEntity(int userGroupID, AppUserName userName, IHashedPassword password, PersonName name, EmailAddress email, DateTimeOffset timeAdded)
     {
         var newUser = new AppUserEntity
         {
+            GroupID = userGroupID,
             UserName = userName.Value,
             Password = password.Value(),
             Name = name.Value,

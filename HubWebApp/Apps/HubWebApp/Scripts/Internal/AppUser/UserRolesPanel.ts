@@ -1,28 +1,29 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Command/AsyncCommand";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { EventCollection } from "@jasonbenfield/sharedwebapp/Events";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 import { UserRolesPanelView } from "./UserRolesPanelView";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { RoleListItem } from "./RoleListItem";
 
 interface Results {
     addRequested?: {};
     modifierRequested?: {};
 }
 
-export class UserRolesPanelResult {
-    static addRequested() { return new UserRolesPanelResult({ addRequested: {} }); }
+class Result {
+    static addRequested() { return new Result({ addRequested: {} }); }
 
     static modifierRequested() {
-        return new UserRolesPanelResult({ modifierRequested: {} });
+        return new Result({ modifierRequested: {} });
     }
 
     private constructor(private readonly results: Results) { }
@@ -33,20 +34,19 @@ export class UserRolesPanelResult {
 }
 
 export class UserRolesPanel implements IPanel {
-    private readonly appName: TextBlock;
-    private readonly appType: TextBlock;
-    private readonly userName: TextBlock;
-    private readonly personName: TextBlock;
-    private readonly categoryName: TextBlock;
-    private readonly modifierDisplayText: TextBlock;
+    private readonly appName: TextComponent;
+    private readonly appType: TextComponent;
+    private readonly userName: TextComponent;
+    private readonly personName: TextComponent;
+    private readonly categoryName: TextComponent;
+    private readonly modifierDisplayText: TextComponent;
     private readonly alert: MessageAlert;
     private readonly userRoles: ListGroup;
     private readonly userRoleListItems: UserRoleListItem[] = [];
-    private readonly awaitable: Awaitable<UserRolesPanelResult>;
+    private readonly awaitable: Awaitable<Result>;
     private user: IAppUserModel;
     private defaultModifier: IModifierModel;
     private modifier: IModifierModel;
-    private readonly deleteEvents = new EventCollection();
     private readonly addCommand: Command;
     private readonly allowAccessCommand: AsyncCommand;
     private readonly denyAccessCommand: AsyncCommand;
@@ -56,14 +56,15 @@ export class UserRolesPanel implements IPanel {
         private readonly hubApi: HubAppApi,
         private readonly view: UserRolesPanelView
     ) {
-        this.appName = new TextBlock('', view.appName);
-        this.appType = new TextBlock('', view.appType);
-        this.userName = new TextBlock('', view.userName);
-        this.personName = new TextBlock('', view.personName);
-        this.categoryName = new TextBlock('', view.categoryName);
-        this.modifierDisplayText = new TextBlock('', view.modifierDisplayText);
+        this.appName = new TextComponent(view.appName);
+        this.appType = new TextComponent(view.appType);
+        this.userName = new TextComponent(view.userName);
+        this.personName = new TextComponent(view.personName);
+        this.categoryName = new TextComponent(view.categoryName);
+        this.modifierDisplayText = new TextComponent(view.modifierDisplayText);
         this.alert = new CardAlert(view.alert).alert;
         this.userRoles = new ListGroup(view.userRoles);
+        view.handleUserRoleDeleteClicked(this.onDeleteRoleClicked.bind(this));
         this.awaitable = new Awaitable();
         this.addCommand = new Command(this.requestAdd.bind(this));
         this.addCommand.add(view.addButton);
@@ -72,16 +73,16 @@ export class UserRolesPanel implements IPanel {
         this.allowAccessCommand.add(view.allowAccessButton);
         this.denyAccessCommand = new AsyncCommand(this.denyAccess.bind(this));
         this.denyAccessCommand.add(view.denyAccessButton);
-        new TextBlock('Default Roles', view.defaultUserRolesTitle);
+        new TextComponent(view.defaultUserRolesTitle).setText('Default Roles');
         this.defaultUserRoles = new ListGroup(view.defaultUserRoles);
     }
 
     private requestAdd() {
-        this.awaitable.resolve(UserRolesPanelResult.addRequested());
+        this.awaitable.resolve(Result.addRequested());
     }
 
     private requestModifier() {
-        this.awaitable.resolve(UserRolesPanelResult.modifierRequested());
+        this.awaitable.resolve(Result.modifierRequested());
     }
 
     private async allowAccess() {
@@ -109,8 +110,8 @@ export class UserRolesPanel implements IPanel {
     setAppUserOptions(appUserOptions: AppUserOptions) {
         this.appName.setText(appUserOptions.app.AppKey.Name.DisplayText);
         this.appType.setText(appUserOptions.app.AppKey.Type.DisplayText);
-        this.userName.setText(appUserOptions.user.UserName);
-        this.personName.setText(appUserOptions.user.Name);
+        this.userName.setText(appUserOptions.user.UserName.DisplayText);
+        this.personName.setText(appUserOptions.user.Name.DisplayText);
         this.user = appUserOptions.user;
         this.defaultModifier = appUserOptions.defaultModifier;
     }
@@ -122,7 +123,7 @@ export class UserRolesPanel implements IPanel {
     }
 
     setModCategory(modCategory: IModifierCategoryModel) {
-        this.categoryName.setText(modCategory.Name);
+        this.categoryName.setText(modCategory.Name.DisplayText);
     }
 
     setModifier(modifier: IModifierModel) {
@@ -168,27 +169,22 @@ export class UserRolesPanel implements IPanel {
         else {
             this.allowAccessCommand.show();
         }
-        this.deleteEvents.unregisterAll();
-        for (let listItem of this.userRoleListItems) {
-            listItem.dispose();
-        }
-        let userRoleListItems = this.userRoles.setItems(
+        const userRoleListItems = this.userRoles.setItems(
             userAccess.AssignedRoles,
             (role: IAppRoleModel, itemView: UserRoleListItemView) =>
                 new UserRoleListItem(role, itemView)
         );
-        for (let listItem of userRoleListItems) {
-            this.deleteEvents.register(
-                listItem.deleteButtonClicked,
-                this.onDeleteRoleClicked.bind(this)
-            );
-        }
         this.userRoleListItems.splice(0, this.userRoleListItems.length, ...userRoleListItems);
         if (isDefaultModifier) {
             this.view.hideDefaultUserRoles();
         }
         else {
-            this.view.showDefaultUserRoles();
+            if (defaultUserAccess.AssignedRoles.length > 0) {
+                this.view.showDefaultUserRoles();
+            }
+            else {
+                this.view.hideDefaultUserRoles();
+            }
             this.defaultUserRoles.setItems(
                 defaultUserAccess.AssignedRoles,
                 (role: IAppRoleModel, itemView: UserRoleListItemView) => {
@@ -206,13 +202,14 @@ export class UserRolesPanel implements IPanel {
         }
     }
 
-    private onDeleteRoleClicked(role: IAppRoleModel) {
+    private onDeleteRoleClicked(el: HTMLElement) {
+        const roleListItem = this.userRoles.getItemByElement(el) as RoleListItem;
         return this.alert.infoAction(
             'Removing role...',
             () => this.hubApi.AppUserMaintenance.UnassignRole({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID,
-                RoleID: role.ID
+                RoleID: roleListItem.role.ID
             })
         );
     }

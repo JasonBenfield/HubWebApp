@@ -1,6 +1,6 @@
 ﻿using XTI_Core.Fakes;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Storage;
+using XTI_HubWebAppApi.Storage;
 
 namespace HubWebApp.Tests;
 
@@ -10,7 +10,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldAllowAnonymousUserToGetStoredObject()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -19,14 +19,14 @@ internal sealed class StoreObjectTest
         var storageKey = await tester.Execute(request);
         tester.Logout();
         var getStoredObj = tester.Create((hubApi) => hubApi.Storage.GetStoredObject);
+        var modifier = await tester.DefaultModifier();
         AccessAssertions.Create(getStoredObj).ShouldAllowAnonymous
         (
             new GetStoredObjectRequest
             {
                 StorageName = request.StorageName,
                 StorageKey = storageKey
-            },
-            tester.FakeHubApp().DefaultModifier()
+            }
         );
     }
 
@@ -39,11 +39,10 @@ internal sealed class StoreObjectTest
             StorageName = "something",
             Data = "Whatever"
         };
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                tester.FakeHubApp().DefaultModifier(),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.AddStoredObject
             );
@@ -53,7 +52,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireStorageName()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "",
@@ -67,7 +66,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireData()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -81,7 +80,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireStorageName_WhenGettingStoredObject()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -96,7 +95,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireStorageKey_WhenGettingStoredObject()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -111,7 +110,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldGetStoredObject()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -126,7 +125,7 @@ internal sealed class StoreObjectTest
     public async Task StorageNameShouldNotBeCaseSensitive()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
@@ -141,7 +140,7 @@ internal sealed class StoreObjectTest
     public async Task StorageNameShouldIgnoreSpaces()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "Something 1",
@@ -156,7 +155,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldStoreMultipleObjects()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request1 = new StoreObjectRequest
         {
             StorageName = "something",
@@ -179,7 +178,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldReturnTheSameKey_WhenStorageNameAndDataAreTheSame()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -194,7 +193,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldReturnDifferentKeys_WhenStorageNameIsTheSameButNotTheData()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -210,7 +209,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldThrowError_WhenStoredObjectIsNotFound()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -224,7 +223,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldThrowError_WhenStoredObjectHasExpired()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var clock = tester.Services.GetRequiredService<FakeClock>();
         var request = new StoreObjectRequest
         {
@@ -241,34 +240,49 @@ internal sealed class StoreObjectTest
     public async Task ShouldGenerateSixDigitKey()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
             Data = "Whatever",
-            GeneratedStorageKeyType = GeneratedStorageKeyType.Values.SixDigit
+            GenerateKey = GenerateKeyModel.SixDigit()
         };
         var storageKey = await tester.Execute(request);
         var parsed = int.TryParse(storageKey, out var _);
         Assert.That(parsed, Is.True, $"Storage key '{storageKey}' should be all digits");
-        Assert.That(storageKey.Length, Is.EqualTo(6));
+        Assert.That(storageKey.Length, Is.EqualTo(6), "Should generate 6 digit key");
     }
 
     [Test]
     public async Task ShouldGenerateTenDigitKey()
     {
         var tester = await Setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
             Data = "Whatever",
-            GeneratedStorageKeyType = GeneratedStorageKeyType.Values.TenDigit
+            GenerateKey = GenerateKeyModel.TenDigit()
         };
         var storageKey = await tester.Execute(request);
         var parsed = long.TryParse(storageKey, out var _);
         Assert.That(parsed, Is.True, $"Storage key '{storageKey}' should be all digits");
-        Assert.That(storageKey.Length, Is.EqualTo(10));
+        Assert.That(storageKey.Length, Is.EqualTo(10), "Should generate 10 digit key");
+    }
+
+    [Test]
+    public async Task ShouldGenerateFixedKey()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        {
+            StorageName = "Something",
+            Data = "Whatever",
+            GenerateKey = GenerateKeyModel.Fixed("SomeKey")
+        };
+        var storageKey = await tester.Execute(request);
+        Assert.That(storageKey, Is.EqualTo("SomeKey"), "Should generate fixed key");
     }
 
     private Task<string> GetStoredObject(IHubActionTester tester, string storageName, string storageKey)

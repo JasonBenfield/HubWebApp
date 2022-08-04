@@ -1,17 +1,13 @@
 ﻿import { AppApiFactory } from "@jasonbenfield/sharedwebapp/Api/AppApiFactory";
-import { ModalErrorComponent } from "@jasonbenfield/sharedwebapp/Error/ModalErrorComponent";
-import { ModalErrorComponentView } from "@jasonbenfield/sharedwebapp/Error/ModalErrorComponentView";
-import { HubAppApi } from "../Hub/Api/HubAppApi";
+import { ModalErrorView } from "@jasonbenfield/sharedwebapp/Views/ModalError";
+import { HubAppApi } from "../Lib/Api/HubAppApi";
 
 export class Apis {
-    private readonly modalError: ModalErrorComponent;
-
-    constructor(modalError: ModalErrorComponentView) {
-        this.modalError = new ModalErrorComponent(modalError);
+    constructor(private readonly modalError: ModalErrorView) {
     }
 
     Hub() {
-        let apiFactory = new AppApiFactory(this.modalError)
+        const apiFactory = new AppApiFactory(this.modalError);
         return apiFactory.api(HubAppApi);
     }
 }

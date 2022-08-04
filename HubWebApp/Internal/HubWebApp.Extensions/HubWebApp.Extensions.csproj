@@ -7,11 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.21" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.22" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.22" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\XTI_HubAppApi\XTI_HubAppApi.csproj" />
+		<ProjectReference Include="..\XTI_HubWebAppApi\XTI_HubWebAppApi.csproj" />
 		<ProjectReference Include="..\XTI_HubDB.EF.SqlServer\XTI_HubDB.EF.SqlServer.csproj" />
 		<ProjectReference Include="..\HubWebApp.ApiControllers\HubWebApp.ApiControllers.csproj" />
 	</ItemGroup>

@@ -17,9 +17,9 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         this.tester = tester;
     }
 
-    public void ShouldThrowError_WhenModifierIsBlank(TModel model)
+    public async Task ShouldThrowError_WhenModifierIsBlank(TModel model)
     {
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var ex = Assert.ThrowsAsync<Exception>
         (
             () => tester.Execute(model),
@@ -28,59 +28,95 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
-    public void ShouldAllowAnonymous(TModel model, FakeModifier modifier)
+    public void ShouldAllowAnonymous(TModel model) => ShouldAllowAnonymous(model, ModifierKey.Default);
+
+    public void ShouldAllowAnonymous(TModel model, ModifierKey modKey)
     {
         Assert.DoesNotThrowAsync
         (
-            () => tester.Execute(model, modifier.ModKey()),
+            () => tester.Execute(model, modKey),
             "Should allow access to anonymous user"
         );
     }
 
-    public void ShouldThrowError_WhenAccessIsDenied(TModel model, FakeModifier modifier, params AppRoleName[] allowedRoles)
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(() => model, allowedRoles);
+
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, params AppRoleName[] allowedRoles)
     {
-        var loggedInUser = tester.Login();
-        var appContext = tester.Services.GetRequiredService<FakeAppContext>();
+        var modifier = await tester.DefaultModifier();
+        await ShouldThrowError_WhenAccessIsDenied(createModel, modifier, allowedRoles);
+    }
+
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, Modifier modifier, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(() => model, modifier, allowedRoles);
+
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(() => model, rolesToKeep, modifier, allowedRoles);
+
+    public Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, Modifier modifier, params AppRoleName[] allowedRoles) =>
+        ShouldThrowError_WhenAccessIsDenied(createModel, new AppRoleName[0], modifier, allowedRoles);
+
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
+    {
+        var modKey = modifier.ToModel().ModKey;
+        var loggedInUser = await tester.Login();
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         foreach (var roleName in allowedRoles)
         {
-            clearUserRoles(loggedInUser, modifier);
-            loggedInUser.AddRole(roleName);
+            await SetUserRoles(loggedInUser, rolesToKeep, modifier, roleName);
             Assert.DoesNotThrowAsync
             (
-                () => tester.Execute(model, modifier.ModKey()),
+                () => tester.Execute(createModel(), modKey),
                 $"Should have access with role '{roleName.DisplayText}'"
             );
         }
-        var roles = tester.FakeHubApp()
-            .Roles()
-            .Select(r => r.Name())
+        var hubApp = await tester.HubApp();
+        var hubAppRoles = await hubApp.Roles();
+        var roles = hubAppRoles
+            .Select(r => r.ToModel().Name)
             .Where(r => !r.Equals(AppRoleName.DenyAccess));
         var deniedRoles = roles.Except(allowedRoles).ToArray();
         foreach (var roleName in deniedRoles)
         {
-            clearUserRoles(loggedInUser, modifier);
-            loggedInUser.AddRole(roleName);
+            await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, roleName);
             Assert.ThrowsAsync<AccessDeniedException>
             (
-                () => tester.Execute(model, modifier.ModKey()),
+                () => tester.Execute(createModel(), modKey),
                 $"Should not have access with role '{roleName.DisplayText}'"
             );
         }
-        clearUserRoles(loggedInUser, modifier);
-        loggedInUser.AddRole(AppRoleName.DenyAccess);
+        await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, AppRoleName.DenyAccess);
         Assert.ThrowsAsync<AccessDeniedException>
         (
-            () => tester.Execute(model, modifier.ModKey()),
+            () => tester.Execute(createModel(), modKey),
             $"Should not have access with role '{AppRoleName.DenyAccess.DisplayText}'"
         );
     }
 
-    private static void clearUserRoles(FakeAppUser loggedInUser, IModifier modifier)
+    private async Task SetUserRoles(AppUser loggedInUser, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] roleNames)
     {
-        var existingRoles = loggedInUser.Roles(modifier);
-        foreach (var existingRole in existingRoles)
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
+        var userRoles = await loggedInUser.Modifier(modifier).AssignedRoles();
+        foreach (var userRole in userRoles)
         {
-            loggedInUser.RemoveRole(existingRole);
+            await loggedInUser.Modifier(modifier).UnassignRole(userRole);
+        }
+        foreach (var roleName in roleNames)
+        {
+            var role = await app.Role(roleName);
+            await loggedInUser.Modifier(modifier).AssignRole(role);
+        }
+        if (rolesToKeep.Any())
+        {
+            var defaultModifier = await app.DefaultModifier();
+            foreach (var roleName in rolesToKeep)
+            {
+                var role = await app.Role(roleName);
+                await loggedInUser.Modifier(defaultModifier).AssignRole(role);
+            }
         }
     }
 }

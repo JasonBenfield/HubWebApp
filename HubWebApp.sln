@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		readme.md = readme.md
 		sample.appsettings.json = sample.appsettings.json
-		xti.private.ps1 = xti.private.ps1
 		xti.ps1 = xti.ps1
 	EndProjectSection
 EndProject
@@ -40,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient", "HubWebA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubSetupApp", "HubWebApp\Apps\HubSetupApp\HubSetupApp.csproj", "{F51E0FAB-B3E0-4BD3-A5F4-CDEBE47CE706}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppApi", "HubWebApp\Internal\XTI_HubAppApi\XTI_HubAppApi.csproj", "{65D5008A-0A79-4B9B-9F5B-57B1551BCC70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubWebAppApi", "HubWebApp\Internal\XTI_HubWebAppApi\XTI_HubWebAppApi.csproj", "{65D5008A-0A79-4B9B-9F5B-57B1551BCC70}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient.Extensions", "HubWebApp\Lib\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj", "{17CBEE10-5EE6-4A1A-AD95-D695C3CD0A74}"
 EndProject
@@ -71,12 +70,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_Hub.Abstractions", "HubWebApp\Lib\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj", "{F785EB7E-E845-4ABA-90D4-685345340AD3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HubWebApp", "HubWebApp", "{CFDC37D7-E77E-430E-9943-5B9268042C50}"
-	ProjectSection(SolutionItems) = preProject
-		HubWebApp\install.Development.private.json = HubWebApp\install.Development.private.json
-		HubWebApp\install.Production.private.json = HubWebApp\install.Production.private.json
-		HubWebApp\install.Staging.private.json = HubWebApp\install.Staging.private.json
-		HubWebApp\install.Test.private.json = HubWebApp\install.Test.private.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportServiceApp", "SupportServiceApp", "{C5292EEC-32E7-4850-BAB7-B777F69D9445}"
 	ProjectSection(SolutionItems) = preProject
@@ -101,12 +94,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_PermanentLog", "Internal\XTI_PermanentLog\XTI_PermanentLog.csproj", "{544529AB-4544-45C1-8F9B-764BAFE89947}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthenticatorWebApp", "AuthenticatorWebApp", "{1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}"
-	ProjectSection(SolutionItems) = preProject
-		AuthenticatorWebApp\install.Development.private.json = AuthenticatorWebApp\install.Development.private.json
-		AuthenticatorWebApp\install.Production.private.json = AuthenticatorWebApp\install.Production.private.json
-		AuthenticatorWebApp\install.Staging.private.json = AuthenticatorWebApp\install.Staging.private.json
-		AuthenticatorWebApp\install.Test.private.json = AuthenticatorWebApp\install.Test.private.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{835E93D7-8AFC-4667-9839-6A2E401A85A7}"
 EndProject
@@ -128,9 +115,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorSetupApp", "Au
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0EC7B552-1958-47D8-8730-FC9601B23AE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_AdminTool", "HubWebApp\Tools\XTI_AdminTool\XTI_AdminTool.csproj", "{5BF9532D-3013-4C81-B90C-00CA7A31B563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AdminTool", "HubWebApp\Tools\XTI_AdminTool\XTI_AdminTool.csproj", "{5BF9532D-3013-4C81-B90C-00CA7A31B563}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_InstallService", "HubWebApp\Tools\XTI_InstallService\XTI_InstallService.csproj", "{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_InstallService", "HubWebApp\Tools\XTI_InstallService\XTI_InstallService.csproj", "{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell", "Powershell", "{23386590-35E2-4038-BE9A-BF9EC3E93D3B}"
 EndProject
@@ -139,8 +126,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowershellForXti", "Powersh
 		HubWebApp\Powershell\PowershellForXti\PowershellForXti.psd1 = HubWebApp\Powershell\PowershellForXti\PowershellForXti.psd1
 		HubWebApp\Powershell\PowershellForXti\PowershellForXti.psm1 = HubWebApp\Powershell\PowershellForXti\PowershellForXti.psm1
 		HubWebApp\Powershell\PowershellForXti\Xti-Dotnet.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Dotnet.ps1
+		HubWebApp\Powershell\PowershellForXti\Xti-Helpers.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Helpers.ps1
 		HubWebApp\Powershell\PowershellForXti\Xti-Publish.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Publish.ps1
 		HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{1B2999CB-2AE6-496A-BA68-822D5F516CE9}"
+	ProjectSection(SolutionItems) = preProject
+		AuthenticatorWebApp\install.Development.private.json = AuthenticatorWebApp\install.Development.private.json
+		AuthenticatorWebApp\install.Production.private.json = AuthenticatorWebApp\install.Production.private.json
+		AuthenticatorWebApp\install.Staging.private.json = AuthenticatorWebApp\install.Staging.private.json
+		AuthenticatorWebApp\install.Test.private.json = AuthenticatorWebApp\install.Test.private.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{C3F16C45-2CEA-41BF-9E50-8C848BB7D428}"
+	ProjectSection(SolutionItems) = preProject
+		HubWebApp\install.Development.private.json = HubWebApp\install.Development.private.json
+		HubWebApp\install.Production.private.json = HubWebApp\install.Production.private.json
+		HubWebApp\install.Staging.private.json = HubWebApp\install.Staging.private.json
+		HubWebApp\install.Test.private.json = HubWebApp\install.Test.private.json
 	EndProjectSection
 EndProject
 Global
@@ -346,6 +350,8 @@ Global
 		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
 		{23386590-35E2-4038-BE9A-BF9EC3E93D3B} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
 		{7F983166-B9FC-4852-A179-1BE159F4E46F} = {23386590-35E2-4038-BE9A-BF9EC3E93D3B}
+		{1B2999CB-2AE6-496A-BA68-822D5F516CE9} = {1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}
+		{C3F16C45-2CEA-41BF-9E50-8C848BB7D428} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

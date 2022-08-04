@@ -1,7 +1,6 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ModifierListItemView } from "./ModifierListItemView";
 
 export class ModifierListCardView extends CardView {
@@ -9,10 +8,11 @@ export class ModifierListCardView extends CardView {
     readonly alert: CardAlertView;
     readonly modifiers: ListGroupView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.modifiers = this.addBlockListGroup(() => new ModifierListItemView());
+        this.modifiers = this.addView(ListGroupView);
+        this.modifiers.setItemViewType(ModifierListItemView);
     }
 }

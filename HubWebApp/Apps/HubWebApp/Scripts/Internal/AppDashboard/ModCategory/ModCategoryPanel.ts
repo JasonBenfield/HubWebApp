@@ -1,29 +1,28 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { Command } from "@jasonbenfield/sharedwebapp/Command/Command";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ModCategoryComponent } from "./ModCategoryComponent";
 import { ModCategoryPanelView } from "./ModCategoryPanelView";
 import { ModifierListCard } from "./ModifierListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
 
-interface Results {
+interface IResult {
     backRequested?: {};
     resourceGroupSelected?: { resourceGroup: IResourceGroupModel };
 }
 
-export class ModCategoryPanelResult {
-    static get backRequested() {
-        return new ModCategoryPanelResult({ backRequested: {} });
+class Result {
+    static backRequested() {
+        return new Result({ backRequested: {} });
     }
 
     static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
-        return new ModCategoryPanelResult({
+        return new Result({
             resourceGroupSelected: { resourceGroup: resourceGroup }
         });
     }
 
-    private constructor(private readonly results: Results) {
-    }
+    private constructor(private readonly results: IResult) { }
 
     get backRequested() { return this.results.backRequested; }
 
@@ -35,7 +34,7 @@ export class ModCategoryPanel implements IPanel {
     private readonly modifierListCard: ModifierListCard;
     private readonly resourceGroupListCard: ResourceGroupListCard;
 
-    private readonly awaitable = new Awaitable<ModCategoryPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
 
     readonly backCommand = new Command(this.back.bind(this));
 
@@ -54,7 +53,7 @@ export class ModCategoryPanel implements IPanel {
 
     private onResourceGroupSelected(resourceGroup: IResourceGroupModel) {
         this.awaitable.resolve(
-            ModCategoryPanelResult.resourceGroupSelected(resourceGroup)
+            Result.resourceGroupSelected(resourceGroup)
         );
     }
 
@@ -78,7 +77,7 @@ export class ModCategoryPanel implements IPanel {
     }
 
     private back() {
-        this.awaitable.resolve(ModCategoryPanelResult.backRequested);
+        this.awaitable.resolve(Result.backRequested());
     }
 
     activate() { this.view.show(); }

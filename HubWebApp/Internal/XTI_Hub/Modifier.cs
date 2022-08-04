@@ -4,7 +4,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class Modifier : IModifier
+public sealed class Modifier
 {
     private readonly HubFactory factory;
     private readonly ModifierEntity record;
@@ -22,6 +22,13 @@ public sealed class Modifier : IModifier
     public int TargetID() => int.Parse(TargetKey);
 
     public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID == record.CategoryID;
+
+    public async Task<App> App()
+    {
+        var category = await factory.ModCategories.Category(record.CategoryID);
+        var app = await category.App();
+        return app;
+    }
 
     public Task SetDisplayText(string displayText)
     {
@@ -56,7 +63,7 @@ public sealed class Modifier : IModifier
     {
         ID = ID,
         CategoryID = record.CategoryID,
-        ModKey = ModKey().DisplayText,
+        ModKey = ModKey(),
         TargetKey = TargetKey,
         DisplayText = record.DisplayText
     };

@@ -1,33 +1,33 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { ButtonListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { RoleButtonListItemView } from "./RoleButtonListItemView";
 
-export class AddRolePanelView extends Block {
+export class AddRolePanelView extends GridView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly roles: ListGroupView;
-    readonly backButton: ButtonCommandItem;
+    readonly roles: ButtonListGroupView;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-
-        let card = flexFill.addContent(new CardView());
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.roles = card.addBlockListGroup(() => new RoleButtonListItemView());
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(
-            HubTheme.instance.commandToolbar.backButton()
-        );
+        this.roles = card.addView(ButtonListGroupView);
+        this.roles.setItemViewType(RoleButtonListItemView);
+        const toolbar = this.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
     }
 }

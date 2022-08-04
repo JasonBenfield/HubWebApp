@@ -85,7 +85,7 @@ public sealed class AppSessionRepository
             .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
-    public async Task<AppSession> AddOrUpdate(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = await GetSession(sessionKey);
         if (record == null)
@@ -99,7 +99,7 @@ public sealed class AppSessionRepository
         return factory.CreateSession(record);
     }
 
-    private async Task<AppSessionEntity> Add(string sessionKey, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = new AppSessionEntity
         {
@@ -115,7 +115,7 @@ public sealed class AppSessionRepository
         return record;
     }
 
-    public Task Update(AppSessionEntity record, IAppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
         => factory.DB
             .Sessions
             .Update
@@ -131,4 +131,38 @@ public sealed class AppSessionRepository
                 }
             );
 
+    public Task PurgeLogs(DateTimeOffset since) => factory.Transaction(() => _PurgeLogs(since));
+    
+    private async Task _PurgeLogs(DateTimeOffset since)
+    {
+        var sessionIDs = factory.DB
+            .Sessions.Retrieve()
+            .Where(s => s.TimeStarted < since)
+            .Select(s => s.ID);
+        var requestIDs = factory.DB
+            .Requests.Retrieve()
+            .Where(r => sessionIDs.Contains(r.SessionID))
+            .Select(r => r.ID);
+        var entriesToDelete = await factory.DB.LogEntries.Retrieve()
+            .Where(e => requestIDs.Contains(e.RequestID))
+            .ToArrayAsync();
+        foreach(var entry in entriesToDelete)
+        {
+            await factory.DB.LogEntries.Delete(entry);
+        }
+        var requests = await factory.DB.Requests.Retrieve()
+            .Where(r => requestIDs.Contains(r.ID))
+            .ToArrayAsync();
+        foreach(var request in requests)
+        {
+            await factory.DB.Requests.Delete(request);
+        }
+        var sessions = await factory.DB.Sessions.Retrieve()
+            .Where(s => sessionIDs.Contains(s.ID))
+            .ToArrayAsync();
+        foreach (var session in sessions)
+        {
+            await factory.DB.Sessions.Delete(session);
+        }
+    }
 }

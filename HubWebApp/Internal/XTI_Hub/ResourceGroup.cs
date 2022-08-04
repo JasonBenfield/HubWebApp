@@ -4,7 +4,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class ResourceGroup : IResourceGroup
+public sealed class ResourceGroup
 {
     private readonly HubFactory factory;
     private readonly ResourceGroupEntity record;
@@ -23,8 +23,6 @@ public sealed class ResourceGroup : IResourceGroup
     public Task<Resource> AddOrUpdateResource(ResourceName name, ResourceResultType resultType) =>
         factory.Resources.AddOrUpdate(this, name, resultType);
 
-    async Task<IResource> IResourceGroup.Resource(ResourceName name) => await ResourceByName(name);
-
     public Task<Resource> ResourceByName(ResourceName name) =>
         factory.Resources.ResourceByName(this, name);
 
@@ -39,8 +37,6 @@ public sealed class ResourceGroup : IResourceGroup
         var modifiers = await modCategory.Modifiers();
         return modifiers;
     }
-
-    async Task<IModifierCategory> IResourceGroup.ModCategory() => await ModCategory();
 
     public Task<ModifierCategory> ModCategory() => 
         factory.ModCategories.Category(record.ModCategoryID);
@@ -122,7 +118,7 @@ public sealed class ResourceGroup : IResourceGroup
         => new ResourceGroupModel
         {
             ID = ID,
-            Name = Name().DisplayText,
+            Name = Name(),
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ModCategoryID = record.ModCategoryID
         };

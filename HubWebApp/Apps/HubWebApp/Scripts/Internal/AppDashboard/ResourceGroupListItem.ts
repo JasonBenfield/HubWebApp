@@ -1,8 +1,10 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ResourceGroupListItemView } from "./ResourceGroupListItemView";
 
-export class ResourceGroupListItem {
+export class ResourceGroupListItem extends BasicComponent {
     constructor(readonly group: IResourceGroupModel, view: ResourceGroupListItemView) {
-        new TextBlock(group.Name, view.groupName);
+        super(view);
+        new TextComponent(view.groupName).setText(group.Name.DisplayText);
     }
 }

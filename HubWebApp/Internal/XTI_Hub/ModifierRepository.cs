@@ -26,12 +26,24 @@ public sealed class ModifierRepository
         return factory.CreateModifier(record);
     }
 
-    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, string targetKey, string displayText)
+    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, ModifierKey modKey, string targetKey, string displayText)
     {
         var record = await GetModifierByTargetKey(category, targetKey);
         if (record == null)
         {
-            record = await Add(category, ModifierKey.Generate(), targetKey, displayText);
+            record = await Add(category, modKey, targetKey, displayText);
+        }
+        else
+        {
+            await factory.DB.Modifiers.Update
+            (
+                record,
+                m =>
+                {
+                    m.ModKey = modKey.Value;
+                    m.DisplayText = displayText;
+                }
+            );
         }
         return factory.CreateModifier(record);
     }
@@ -54,7 +66,7 @@ public sealed class ModifierRepository
             .Select(m => factory.CreateModifier(m))
             .ToArrayAsync();
 
-    internal async Task<Modifier> Modifier(int id)
+    public async Task<Modifier> Modifier(int id)
     {
         var entity = await factory.DB
             .Modifiers.Retrieve()
@@ -121,12 +133,31 @@ public sealed class ModifierRepository
         var record = await factory.DB
             .Modifiers
             .Retrieve()
-            .Where(m => categoryIDs.Any(id => id == m.CategoryID) && m.ID == modifierID)
+            .Where(m => categoryIDs.Contains(m.CategoryID) && m.ID == modifierID)
             .FirstOrDefaultAsync();
         return factory.CreateModifier
         (
             record ?? throw new ModifierNotFoundException(modifierID, app)
         );
+    }
+
+    internal async Task<Modifier[]> ModifiersForApp(App app)
+    {
+        var categoryIDs = factory.DB
+            .ModifierCategories
+            .Retrieve()
+            .Where(modCat => modCat.AppID == app.ID)
+            .Select(modCat => modCat.ID);
+        var modifierIDs = factory.DB
+            .Modifiers.Retrieve()
+            .Where(m => categoryIDs.Contains(m.CategoryID))
+            .Select(m => m.ID);
+        var records = await factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => modifierIDs.Contains(m.ID))
+            .ToArrayAsync();
+        return records.Select(m => factory.CreateModifier(m)).ToArray();
     }
 
     internal async Task<Modifier> ModifierByTargetKey(ModifierCategory category, string targetKey)

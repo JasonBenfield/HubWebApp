@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using XTI_App.Abstractions;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal sealed class GetCurrentVersionTest
 {
@@ -12,14 +6,15 @@ internal sealed class GetCurrentVersionTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(AppVersionKey.Current.Value);
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenModifierIsBlank(AppVersionKey.Current.Value);
     }
 
     [Test]
     public async Task ShouldGetCurrentVersion()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);

@@ -14,18 +14,9 @@ public sealed class EfStoredObjectDB : IStoredObjectDB
         this.clock = clock;
     }
 
-    public Task<string> Store(StorageName storageName, GeneratedStorageKeyType generatedStorageKeyType, string data, TimeSpan expiresAfter)
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generatedKey, string data, TimeSpan expiresAfter)
     {
-        IGeneratedStorageKey generatedStorageKey;
-        if (generatedStorageKeyType.Equals(GeneratedStorageKeyType.Values.Guid))
-        {
-            generatedStorageKey = new GuidGeneratedStorageKey();
-        }
-        else
-        {
-            var numberOfDigits = generatedStorageKeyType.Value;
-            generatedStorageKey = new RandomGeneratedStorageKey(numberOfDigits);
-        }
+        var generatedStorageKey = new GeneratedKeyFactory().Create(generatedKey);
         return hubFactory.StoredObjects.AddOrUpdate
         (
             storageName,

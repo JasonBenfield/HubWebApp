@@ -1,20 +1,33 @@
 ﻿const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const entry = {
-    user: './Scripts/Internal/User/Start/MainPage.ts',
     accessDenied: './Scripts/Internal/User/AccessDenied/MainPage.ts',
     error: './Scripts/Internal/User/Error/MainPage.ts',
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
+    userGroups: './Scripts/Internal/UserGroups/MainPage.ts',
+    userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',
-    appUser: './Scripts/Internal/AppUser/MainPage.ts'
+    appUser: './Scripts/Internal/AppUser/MainPage.ts',
+    sessions: './Scripts/Internal/Logs/Sessions/MainPage.ts',
+    requests: './Scripts/Internal/Logs/Requests/MainPage.ts',
+    logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts'
 };
 const exportModule = {
     rules: [
         {
             test: /\.tsx?$/,
-            use: 'ts-loader',
+            use: [
+                {
+                    loader: 'ts-loader',
+                    // add transpileOnly option if you use ts-loader < 9.3.0
+                    options: {
+                        transpileOnly: true
+                    }
+                }
+            ],
             exclude: /node_modules/
         },
         {
@@ -72,20 +85,22 @@ const exportModule = {
 const outputFilename = '[name].js';
 
 const resolve = {
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
+        '@jasonbenfield/sharedwebapp': 'C:/XTI/src/JasonBenfield/SharedWebApp/Apps/SharedWebApp/Scripts/Lib'
     }
 };
 const plugins = [
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css',
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin()
 ];
 module.exports = [
     {
         mode: 'production',
         context: __dirname,
-        devtool: false,
         entry: entry,
         module: exportModule,
         plugins: plugins,
@@ -98,7 +113,6 @@ module.exports = [
     {
         mode: 'development',
         context: __dirname,
-        devtool: 'eval-source-map',
         entry: entry,
         module: exportModule,
         plugins: plugins,

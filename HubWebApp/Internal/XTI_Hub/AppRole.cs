@@ -3,7 +3,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppRole : IAppRole
+public sealed class AppRole
 {
     private readonly HubFactory factory;
     private readonly AppRoleEntity record;
@@ -15,7 +15,7 @@ public sealed class AppRole : IAppRole
         ID = this.record.ID;
     }
 
-    public int ID { get; }
+    internal int ID { get; }
     public AppRoleName Name() => new AppRoleName(record.Name);
 
     public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
@@ -30,10 +30,14 @@ public sealed class AppRole : IAppRole
 
     internal Task<App> App() => factory.Apps.App(record.AppID);
 
+    public bool IsDenyAccess() => NameEquals(AppRoleName.DenyAccess);
+
+    public bool NameEquals(AppRoleName roleName) => new AppRoleName(record.Name).Equals(roleName);
+
     public AppRoleModel ToModel() => new AppRoleModel
     {
         ID = ID,
-        Name = Name().DisplayText
+        Name = new AppRoleName(record.Name)
     };
 
     public override string ToString() => $"{nameof(AppRole)} {ID}";

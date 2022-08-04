@@ -1,22 +1,22 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
 
 export class CurrentVersionComponent {
     private readonly alert: MessageAlert;
-    private readonly versionKey: TextBlock;
-    private readonly version: TextBlock;
+    private readonly versionKey: TextComponent;
+    private readonly version: TextComponent;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: CurrentVersionComponentView) {
-        new TextBlock('Version', this.view.titleHeader);
-        this.alert = new MessageAlert(this.view.alert);
-        this.versionKey = new TextBlock('', this.view.versionKey);
-        this.version = new TextBlock('', this.view.version);
+    constructor(private readonly hubApi: HubAppApi, view: CurrentVersionComponentView) {
+        new TextComponent(view.titleHeader).setText('Version');
+        this.alert = new MessageAlert(view.alert);
+        this.versionKey = new TextComponent(view.versionKey);
+        this.version = new TextComponent(view.version);
     }
 
     async refresh() {
-        let currentVersion = await this.getCurrentVersion();
+        const currentVersion = await this.getCurrentVersion();
         this.versionKey.setText(currentVersion.VersionKey.DisplayText);
         this.version.setText(
             `${currentVersion.VersionNumber.Major}.${currentVersion.VersionNumber.Minor}.${currentVersion.VersionNumber.Patch}`

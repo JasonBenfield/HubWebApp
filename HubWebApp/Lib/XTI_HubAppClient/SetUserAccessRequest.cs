@@ -2,7 +2,6 @@
 namespace XTI_HubAppClient;
 public sealed partial class SetUserAccessRequest
 {
-    public int UserID { get; set; }
-
+    public AppUserName UserName { get; set; } = new AppUserName();
     public SetUserAccessRoleRequest[] RoleAssignments { get; set; } = new SetUserAccessRoleRequest[0];
 }

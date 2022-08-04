@@ -1,6 +1,7 @@
-﻿import { Row } from "@jasonbenfield/sharedwebapp/Grid/Row";
-import { TextSpanView } from "@jasonbenfield/sharedwebapp/Html/TextSpanView";
-import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupItemView";
+﻿import { ListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
+import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 
 export class RequestExpandedListItemView extends ListGroupItemView {
     readonly timeStarted: TextSpanView;
@@ -8,16 +9,16 @@ export class RequestExpandedListItemView extends ListGroupItemView {
     readonly actionName: TextSpanView;
     readonly userName: TextSpanView;
 
-    constructor() {
-        super();
-        let row = this.addContent(new Row());
+    constructor(container: BasicComponentView) {
+        super(container);
+        const row = this.addView(RowView);
         this.timeStarted = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.groupName = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.actionName = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
         this.userName = row.addColumn()
-            .addContent(new TextSpanView());
+            .addView(TextSpanView);
     }
 }

@@ -1,35 +1,32 @@
-﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { ListBlockViewModel } from "@jasonbenfield/sharedwebapp/Html/ListBlockViewModel";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
-import { MessageAlertView } from "@jasonbenfield/sharedwebapp/MessageAlertView";
+﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { ButtonListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { ModifierButtonListItemView } from "./ModifierButtonListItemView";
 
-export class SelectModifierPanelView extends Block {
+export class SelectModifierPanelView extends GridView {
     readonly alert: MessageAlertView;
-    readonly modifiers: ListGroupView;
-    readonly backButton: ButtonCommandItem;
+    readonly modifiers: ButtonListGroupView;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.alert = flexFill.addContent(new MessageAlertView());
-        this.modifiers = flexFill.addContent(
-            new ListGroupView(
-                () => new ModifierButtonListItemView(),
-                new ListBlockViewModel()
-            )
-        );
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.alert = mainContent.addView(MessageAlertView);
+        this.modifiers = mainContent.addView(ButtonListGroupView);
+        this.modifiers.setItemViewType(ModifierButtonListItemView);
         this.modifiers.setMargin(MarginCss.bottom(3));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(
-            HubTheme.instance.commandToolbar.backButton()
-        );
+        const toolbar = this.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
     }
 }

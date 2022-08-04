@@ -4,7 +4,7 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
-public sealed class AppVersion : IAppVersion
+public sealed class AppVersion
 {
     private readonly HubFactory factory;
     private readonly App app;
@@ -32,9 +32,6 @@ public sealed class AppVersion : IAppVersion
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName name) =>
         factory.Groups.GroupOrDefault(app, version, name);
 
-    async Task<IResourceGroup> IAppVersion.ResourceGroup(ResourceGroupName name) =>
-        await ResourceGroupByName(name);
-
     public Task<ResourceGroup> ResourceGroupByName(ResourceGroupName name) =>
         factory.Groups.GroupByName(app, version, name);
 
@@ -51,7 +48,7 @@ public sealed class AppVersion : IAppVersion
 
     internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(app, version);
 
-    public AppModel ToAppModel() => app.ToAppModel();
+    public AppModel ToAppModel() => app.ToModel();
 
     public XtiVersionModel ToVersionModel() => version.ToModel();
 }

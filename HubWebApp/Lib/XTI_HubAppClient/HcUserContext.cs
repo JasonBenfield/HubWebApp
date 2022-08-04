@@ -5,40 +5,22 @@ namespace XTI_HubAppClient
     public sealed class HcUserContext : ISourceUserContext
     {
         private readonly HubAppClient hubClient;
-        private readonly HcAppContext appContext;
+        private readonly ICurrentUserName currentUserName;
 
-        public HcUserContext(HubAppClient hubClient, HcAppContext appContext)
+        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName)
         {
             this.hubClient = hubClient;
-            this.appContext = appContext;
+            this.currentUserName = currentUserName; 
         }
 
-        public async Task<AppUserName> CurrentUserName()
-        {
-            var userName = await hubClient.UserName();
-            return new AppUserName(userName);
-        }
+        public Task<UserContextModel> User(AppUserName userName) =>
+            hubClient.System.GetUserContext(new GetUserContextRequest { UserName = userName.Value });
 
-        public async Task<IAppUser> User(AppUserName userName)
+        public async Task<UserContextModel> User()
         {
-            IAppUser user;
-            var currentUserName = await CurrentUserName();
-            if (userName.Equals(currentUserName))
-            {
-                user = await User();
-            }
-            else
-            {
-                var _user = await hubClient.UserInquiry.GetUserByUserName(userName.Value);
-                user = new HcUser(hubClient, appContext, _user);
-            }
+            var userName = await currentUserName.Value();
+            var user = await User(userName);
             return user;
-        }
-
-        public async Task<IAppUser> User()
-        {
-            var user = await hubClient.UserInquiry.GetCurrentUser();
-            return new HcUser(hubClient, appContext, user);
         }
     }
 }

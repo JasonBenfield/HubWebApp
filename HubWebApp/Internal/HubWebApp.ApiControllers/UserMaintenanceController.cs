@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class UserMaintenanceController : Controller
+public sealed partial class UserMaintenanceController : Controller
 {
     private readonly HubAppApi api;
     public UserMaintenanceController(HubAppApi api)
@@ -13,6 +13,12 @@ public class UserMaintenanceController : Controller
     public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm model, CancellationToken ct)
     {
         return api.Group("UserMaintenance").Action<EditUserForm, EmptyActionResult>("EditUser").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangePasswordForm model, CancellationToken ct)
+    {
+        return api.Group("UserMaintenance").Action<ChangePasswordForm, EmptyActionResult>("ChangePassword").Execute(model, ct);
     }
 
     [HttpPost]

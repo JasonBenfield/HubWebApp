@@ -19,8 +19,9 @@ public sealed class HubAppClientContext
         var hubClient = new HubAppClient(httpClientFactory, xtiTokenAccessor, clientUrl, clientVersion);
         var appKey = sp.GetRequiredService<AppKey>();
         var versionKey = sp.GetRequiredService<AppVersionKey>();
-        AppContext = new HcAppContext(hubClient, appKey, versionKey);
-        UserContext = new HcUserContext(hubClient, AppContext);
+        AppContext = new HcAppContext(hubClient);
+        var currentUserName = sp.GetRequiredService<ICurrentUserName>();
+        UserContext = new HcUserContext(hubClient, currentUserName);
     }
 
     public HcAppContext AppContext { get; }

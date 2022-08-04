@@ -1,11 +1,13 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { ResourceResultType } from "../../../Hub/Api/ResourceResultType";
+﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { ResourceResultType } from "../../../Lib/Api/ResourceResultType";
 import { ResourceListItemView } from "./ResourceListItemView";
 
-export class ResourceListItem {
+export class ResourceListItem extends BasicComponent {
     constructor(readonly resource: IResourceModel, view: ResourceListItemView) {
-        new TextBlock(resource.Name, view.resourceName);
-        let resultType = ResourceResultType.values.value(resource.ResultType.Value);
+        super(view);
+        new TextComponent(view.resourceName).setText(resource.Name.DisplayText);
+        const resultType = ResourceResultType.values.value(resource.ResultType.Value);
         let resultTypeText: string;
         if (
             resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
@@ -15,6 +17,6 @@ export class ResourceListItem {
         else {
             resultTypeText = resultType.DisplayText;
         }
-        new TextBlock(resultTypeText, view.resultType);
+        new TextComponent(view.resultType).setText(resultTypeText);
     }
 }

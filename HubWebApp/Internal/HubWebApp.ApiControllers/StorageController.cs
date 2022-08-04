@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class StorageController : Controller
+public sealed partial class StorageController : Controller
 {
     private readonly HubAppApi api;
     public StorageController(HubAppApi api)

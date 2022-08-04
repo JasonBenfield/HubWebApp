@@ -16,6 +16,7 @@ function Xti-NewSln {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
+    ThrowIfNotSolutionDir
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -SrcDir "`"$($SrcDir)`""
 }
 
@@ -32,7 +33,42 @@ function Xti-NewWebApp {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
+    ThrowIfNotSolutionDir
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType WebApp -Domain "`"$($Domain)`"" -SrcDir "`"$($SrcDir)`""
+}
+
+function Xti-NewWebService {
+    param (
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $Domain = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoOwner = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoName = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $SrcDir = ""
+    )
+    ThrowIfNotSolutionDir
+    Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType WebService -Domain "`"$($Domain)`"" -SrcDir "`"$($SrcDir)`""
+}
+
+function Xti-NewWebPackage {
+    param (
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $Domain = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoOwner = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoName = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $SrcDir = ""
+    )
+    ThrowIfNotSolutionDir
+    Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType WebPackage -Domain "`"$($Domain)`"" -SrcDir "`"$($SrcDir)`""
 }
 
 function Xti-NewServiceApp {
@@ -46,6 +82,7 @@ function Xti-NewServiceApp {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
+    ThrowIfNotSolutionDir
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType ServiceApp -SrcDir "`"$($SrcDir)`""
 }
 
@@ -60,6 +97,7 @@ function Xti-NewConsoleApp {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
+    ThrowIfNotSolutionDir
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType ConsoleApp -SrcDir "`"$($SrcDir)`""
 }
 
@@ -79,6 +117,7 @@ function Xti-NewApiGroup {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
+    ThrowIfNotSolutionDir
     Xti-Dotnet -Command ApiGroup -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`"" -GroupName "`"$($GroupName)`""  -AppType $AppType -SrcDir "`"$($SrcDir)`""
 }
 
@@ -88,7 +127,7 @@ function Xti-Dotnet {
         $Command,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName,
-        [ValidateSet("", "WebApp", “ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType,
         [Parameter(ValueFromPipelineByPropertyName = $true)]

@@ -1,6 +1,5 @@
-﻿using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
-using XTI_HubAppApi.AppPublish;
+﻿using XTI_HubWebAppApi.AppInstall;
+using XTI_HubWebAppApi.AppPublish;
 
 namespace HubWebApp.Tests;
 
@@ -23,7 +22,7 @@ internal sealed class BeginPublishTest
             AppTemplate = apiFactory.CreateTemplate().ToModel(),
             VersionKey = version.VersionKey
         });
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new PublishVersionRequest
         {
             VersionName = version.VersionName,

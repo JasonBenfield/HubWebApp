@@ -1,21 +1,21 @@
-﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Card/CardAlert";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../../Hub/Api/HubAppApi";
+﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
 export class ModCategoryComponent {
     private modCategoryID: number;
     private readonly alert: MessageAlert;
-    private readonly modCategoryName: TextBlock;
+    private readonly modCategoryName: TextComponent;
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: ModCategoryComponentView
+        view: ModCategoryComponentView
     ) {
-        new TextBlock('Modifier Category', this.view.titleHeader);
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.modCategoryName = new TextBlock('', this.view.modCategoryName);
+        new TextComponent(view.titleHeader).setText('Modifier Category');
+        this.alert = new CardAlert(view.alert).alert;
+        this.modCategoryName = new TextComponent(view.modCategoryName);
     }
 
     setModCategoryID(modCategoryID: number) {
@@ -23,8 +23,8 @@ export class ModCategoryComponent {
     }
 
     async refresh() {
-        let modCategory = await this.getModCategory(this.modCategoryID);
-        this.modCategoryName.setText(modCategory.Name);
+        const modCategory = await this.getModCategory(this.modCategoryID);
+        this.modCategoryName.setText(modCategory.Name.DisplayText);
     }
 
     private async getModCategory(modCategoryID: number) {

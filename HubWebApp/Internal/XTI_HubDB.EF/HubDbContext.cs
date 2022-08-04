@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_Core.EF;
-using XTI_HubDB.Entities;
 
 namespace XTI_HubDB.EF;
 
@@ -13,6 +11,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         : base(options)
     {
         Authenticators = new EfDataRepository<AuthenticatorEntity>(this);
+        UserGroups = new EfDataRepository<UserGroupEntity>(this);
         Users = new EfDataRepository<AppUserEntity>(this);
         UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
@@ -32,12 +31,16 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
         StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
+        ExpandedSessions = new EfDataRepository<ExpandedSession>(this);
+        ExpandedRequests = new EfDataRepository<ExpandedRequest>(this);
+        ExpandedLogEntries = new EfDataRepository<ExpandedLogEntry>(this);
         unitOfWork = new UnitOfWork(this);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserAuthenticatorEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new UserGroupEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AuthenticatorEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
@@ -57,10 +60,14 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedSessionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedRequestEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedLogEntryEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 
     public DataRepository<AuthenticatorEntity> Authenticators { get; }
+    public DataRepository<UserGroupEntity> UserGroups { get; }
     public DataRepository<AppUserEntity> Users { get; }
     public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }
@@ -80,6 +87,9 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
     public DataRepository<StoredObjectEntity> StoredObjects { get; }
+    public DataRepository<ExpandedSession> ExpandedSessions { get; }
+    public DataRepository<ExpandedRequest> ExpandedRequests { get; }
+    public DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 

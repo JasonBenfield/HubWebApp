@@ -17,7 +17,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -205,6 +205,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("GroupID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -224,6 +227,8 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("GroupID");
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -651,6 +656,32 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("UserAuthenticators", (string)null);
                 });
 
+            modelBuilder.Entity("XTI_HubDB.Entities.UserGroupEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GroupName")
+                        .IsUnique();
+
+                    b.ToTable("UserGroups", (string)null);
+                });
+
             modelBuilder.Entity("XTI_HubDB.Entities.XtiVersionEntity", b =>
                 {
                     b.Property<int>("ID")
@@ -740,6 +771,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.AppUserEntity", null)
                         .WithMany()
                         .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.AppUserEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.UserGroupEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GroupID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -1,11 +1,12 @@
-﻿import { TextBlockView } from "@jasonbenfield/sharedwebapp/Html/TextBlockView";
-import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/ListGroup/ButtonListGroupItemView";
+﻿import { TextBlockView } from "@jasonbenfield/sharedwebapp/Views/TextBlockView";
+import { ButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 
 export class ModifierButtonListItemView extends ButtonListGroupItemView {
     readonly displayText: TextBlockView;
 
-    constructor() {
-        super();
-        this.displayText = this.addContent(new TextBlockView);
+    constructor(container: BasicComponentView) {
+        super(container);
+        this.displayText = this.addView(TextBlockView);
     }
 }

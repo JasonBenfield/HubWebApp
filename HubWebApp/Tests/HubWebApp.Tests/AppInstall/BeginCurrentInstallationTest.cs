@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
-using XTI_HubAppApi.AppPublish;
+using XTI_HubWebAppApi.AppInstall;
+using XTI_HubWebAppApi.AppPublish;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
@@ -15,7 +15,7 @@ sealed class BeginCurrentInstallationTest
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {
@@ -41,7 +41,7 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationVersion()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         await newInstallation(tester, new NewInstallationRequest
         {

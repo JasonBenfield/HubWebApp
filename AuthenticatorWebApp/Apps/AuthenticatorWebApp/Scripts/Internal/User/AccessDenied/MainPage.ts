@@ -1,17 +1,16 @@
-﻿import { TextBlock } from '@jasonbenfield/sharedwebapp/Html/TextBlock';
-import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
-import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
+﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
 import { MainPageView } from './MainPageView';
 
 declare let serverError: IErrorModel;
 
-class MainPage {
-    private readonly view: MainPageView;
+class MainPage extends BasicPage {
+    protected readonly view: MainPageView;
 
-    constructor(page: PageFrameView) {
-        this.view = new MainPageView(page);
-        new TextBlock(serverError.Caption, this.view.caption);
-        new TextBlock(serverError.Message, this.view.message);
+    constructor() {
+        super(new MainPageView());
+        new TextComponent(this.view.caption).setText(serverError.Caption);
+        new TextComponent(this.view.message).setText(serverError.Message);
     }
 }
-new MainPage(new Startup().build());
+new MainPage();

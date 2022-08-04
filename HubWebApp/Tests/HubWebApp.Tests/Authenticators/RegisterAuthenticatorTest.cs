@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
@@ -12,7 +11,7 @@ internal sealed class RegisterAuthenticatorTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(new EmptyRequest());
     }
 
@@ -20,11 +19,12 @@ internal sealed class RegisterAuthenticatorTest
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
         var tester = await setup();
-        AccessAssertions.Create(tester)
+        var modifier = await getFakeAuthModifier(tester);
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 new EmptyRequest(),
-                getFakeAuthModifier(tester),
+                modifier,
                 HubInfo.Roles.Admin
             );
     }
@@ -33,9 +33,10 @@ internal sealed class RegisterAuthenticatorTest
     public async Task ShouldAddAuthenticator()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var authApp = await getAuthApp(tester);
-        await tester.Execute(new EmptyRequest(), getFakeAuthModifier(tester).ModKey());
+        var modifier = await getFakeAuthModifier(tester);
+        await tester.Execute(new EmptyRequest(), modifier);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var authenticators = await db.Authenticators
             .Retrieve()
@@ -60,10 +61,10 @@ internal sealed class RegisterAuthenticatorTest
     public async Task ShouldAddAuthenticatorOnlyOnce()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
-        var modKey = getFakeAuthModifier(tester).ModKey();
-        await tester.Execute(new EmptyRequest(), modKey);
-        await tester.Execute(new EmptyRequest(), modKey);
+        await tester.LoginAsAdmin();
+        var modifier = await getFakeAuthModifier(tester);
+        await tester.Execute(new EmptyRequest(), modifier);
+        await tester.Execute(new EmptyRequest(), modifier);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var authenticators = await db.Authenticators
             .Retrieve()
@@ -93,21 +94,27 @@ internal sealed class RegisterAuthenticatorTest
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), authAppKey, DateTimeOffset.Now);
-        var appKey = AppKey.WebApp("Auth");
-        var hubApp = await tester.HubApp();
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
-        var fakeHubApp = tester.FakeHubApp();
-        fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
-            .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
+        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
+        await appRegistration.Run
+        (
+            new AppApiTemplateModel
+            {
+                AppKey = authAppKey,
+                GroupTemplates = new AppApiGroupTemplateModel[0]
+            },
+            AppVersionKey.Current
+        );
         return tester;
     }
 
-    private FakeModifier getFakeAuthModifier(HubActionTester<EmptyRequest, EmptyActionResult> tester)
+    private async Task<Modifier> getFakeAuthModifier(IHubActionTester tester)
     {
-        return tester.FakeHubApp()
-            .ModCategory(HubInfo.ModCategories.Apps)
-            .ModifierByTargetID("Auth");
+        var hubApp = await tester.HubApp();
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var authApp = await factory.Apps.App(authAppKey);
+        var modifier = await appsModCategory.ModifierByModKey(authApp.ToModel().PublicKey);
+        return modifier;
     }
 
 }

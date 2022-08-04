@@ -5,11 +5,14 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
-using XTI_HubAppApi.PermanentLog;
+using XTI_HubWebAppApi;
+using XTI_HubWebAppApi.PermanentLog;
 using XTI_HubDB.Extensions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Extensions;
+using XTI_App.Hosting;
+using XTI_Schedule;
+using XTI_Core;
 
 namespace HubWebApp.Extensions;
 
@@ -23,7 +26,8 @@ public static class HubWebAppExtensions
         services.AddScoped<HubFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
-        services.AddScoped<ISourceAppContext, DefaultAppContext>();
+        services.AddScoped<EfAppContext>();
+        services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<EfAppContext>());
         services.AddScoped<AppFromPath>();
         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
         services.AddScoped<AccessForAuthenticate, JwtAccess>();
@@ -56,6 +60,24 @@ public static class HubWebAppExtensions
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
                 appClients.AddAppVersion(appKey.Name.DisplayText, versionKey.DisplayText);
                 return appClients;
+            }
+        );
+        services.AddAppAgenda
+        (
+            (sp, agenda) =>
+            {
+                agenda.AddScheduled<HubAppApi>
+                (
+                    (api, agendaItem) =>
+                    {
+                        agendaItem.Action(api.Periodic.PurgeLogs.Path)
+                            .Interval(TimeSpan.FromHours(7))
+                            .AddSchedule
+                            (
+                                Schedule.EveryDay().At(TimeRange.AllDay())
+                            );
+                    }
+                );
             }
         );
         services.AddThrottledLog<HubAppApi>

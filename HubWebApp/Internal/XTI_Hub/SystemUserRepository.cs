@@ -24,14 +24,14 @@ public sealed class SystemUserRepository
         factory.DB
             .Users
             .Retrieve()
-            .Where(u => u.UserName.StartsWith(AppUserName.SystemUser(appKey, "").Value))
+            .Where(u => u.UserName.StartsWith($"xti_sys[{appKey.Serialize()}]"))
             .Select(u => factory.User(u))
             .ToArrayAsync();
 
-    public async Task<AppUser> AddOrUpdateSystemUser(AppKey appKey, string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
+    public async Task<AppUser> AddOrUpdateSystemUser(SystemUserName systemUserName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
-        var systemUser = await SystemUserOrAnon(appKey, machineName);
-        if (systemUser.UserName().Equals(AppUserName.SystemUser(appKey, machineName)))
+        var systemUser = await SystemUserOrAnon(systemUserName);
+        if (systemUser.ToModel().UserName.Equals(systemUserName.Value))
         {
             await systemUser.ChangePassword(hashedPassword);
         }
@@ -39,24 +39,24 @@ public sealed class SystemUserRepository
         {
             systemUser = await AddSystemUser
             (
-                appKey,
-                machineName,
+                systemUserName,
                 hashedPassword,
                 now
             );
         }
-        var app = await factory.Apps.App(appKey);
+        var app = await factory.Apps.App(systemUserName.AppKey);
+        var appModel = app.ToModel();
         var selfAdminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
         await systemUser.AssignRole(selfAdminRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
-        if (hubApp.Key().Equals(HubInfo.AppKey))
+        if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
             var hubSystemRole = await hubApp.AddRoleIfNotFound(AppRoleName.System);
             await systemUser.AssignRole(hubSystemRole);
             var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
             var appModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.Apps);
-            var appModifier = await appModCategory.AddOrUpdateModifier(app.ID, app.Title);
+            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.Title);
             var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);
             var addStoredObject = await hubApp.AddRoleIfNotFound(HubInfo.Roles.AddStoredObject);
@@ -65,22 +65,25 @@ public sealed class SystemUserRepository
         return systemUser;
     }
 
-    public Task<AppUser> SystemUserOrAnon(AppKey appKey, string machineName) =>
-        factory.Users.UserOrAnon(AppUserName.SystemUser(appKey, machineName));
+    public Task<AppUser> SystemUserOrAnon(SystemUserName systemUserName) =>
+        factory.Users.UserOrAnon(systemUserName.Value);
 
-    private Task<AppUser> AddSystemUser
+    private async Task<AppUser> AddSystemUser
     (
-        AppKey appKey,
-        string machineName,
+        SystemUserName systemUserName,
         IHashedPassword password,
         DateTimeOffset timeAdded
-    ) =>
-        factory.Users.AddOrUpdate
+    )
+    {
+        var xtiUserGroup = await factory.UserGroups.GetXti();
+        var user = await xtiUserGroup.AddOrUpdate
         (
-            AppUserName.SystemUser(appKey, machineName),
+            systemUserName.Value,
             password,
-            new PersonName($"{appKey.Name.DisplayText.Replace(" ", "")} {appKey.Type.DisplayText.Replace(" ", "")} {machineName}"),
+            new PersonName(systemUserName.Value.DisplayText),
             new EmailAddress(""),
             timeAdded
         );
+        return user;
+    }
 }

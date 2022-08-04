@@ -1,15 +1,17 @@
-﻿import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
-import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
-import { UserPanelView } from './User/UserPanelView';
-import { UserEditPanelView } from './UserEdit/UserEditPanelView';
-import { UserListPanelView } from './UserList/UserListPanelView';
+﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+import { UserPanelView } from './UserPanelView';
+import { UserEditPanelView } from './UserEditPanelView';
+import { ChangePasswordPanelView } from './ChangePasswordPanelView';
 
-export class MainPageView {
-    readonly userListPanel = this.page.addContent(new UserListPanelView());
-    readonly userPanel = this.page.addContent(new UserPanelView());
-    readonly userEditPanel = this.page.addContent(new UserEditPanelView());
+export class MainPageView extends BasicPageView {
+    readonly userPanel: UserPanelView;
+    readonly userEditPanel: UserEditPanelView;
+    readonly changePasswordPanel: ChangePasswordPanelView;
 
-    constructor(private readonly page: PageFrameView) {
-        this.page.content.setPadding(PaddingCss.top(3));
+    constructor() {
+        super();
+        this.userPanel = this.addView(UserPanelView);
+        this.userEditPanel = this.addView(UserEditPanelView);
+        this.changePasswordPanel = this.addView(ChangePasswordPanelView);
     }
 }

@@ -1,14 +1,18 @@
 ﻿import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { EventListItemView } from "./EventListItemView";
 
-export class EventListItem {
+export class EventListItem extends BasicComponent {
     constructor(evt: IAppLogEntryModel, view: EventListItemView) {
-        new TextBlock(new FormattedDate(evt.TimeOccurred).formatDateTime(), view.timeOccurred);
-        new TextBlock(evt.Severity.DisplayText, view.severity);
-        let caption = new TextBlock(evt.Caption, view.caption);
+        super(view);
+        new TextComponent(view.timeOccurred).setText(new FormattedDate(evt.TimeOccurred).formatDateTime());
+        new TextComponent(view.severity).setText(evt.Severity.DisplayText);
+        const caption = new TextComponent(view.caption);
+        caption.setText(evt.Caption);
         caption.syncTitleWithText();
-        let message = new TextBlock(evt.Message, view.message);
+        const message = new TextComponent(view.message)
+        message.setText(evt.Message);
         message.syncTitleWithText();
     }
 }

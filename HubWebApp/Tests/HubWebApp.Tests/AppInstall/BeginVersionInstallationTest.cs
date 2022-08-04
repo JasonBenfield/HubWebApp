@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
+using XTI_HubWebAppApi.AppInstall;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
@@ -13,7 +13,7 @@ sealed class BeginVersionInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await newInstallation(tester, new NewInstallationRequest
         {

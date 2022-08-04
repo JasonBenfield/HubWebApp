@@ -23,7 +23,7 @@ internal sealed class AddInstallationUserCommand : ICommand
         (
             new CredentialValue
             (
-                user.UserName,
+                user.UserName.Value,
                 password
             )
         );

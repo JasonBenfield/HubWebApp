@@ -1,18 +1,18 @@
-﻿import { CardAlertView } from "@jasonbenfield/sharedwebapp/Card/CardAlertView";
-import { CardTitleHeaderView } from "@jasonbenfield/sharedwebapp/Card/CardTitleHeaderView";
-import { CardView } from "@jasonbenfield/sharedwebapp/Card/CardView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/ListGroup/ListGroupView";
+﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 
 export class ResourceGroupListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly resourceGroups: ListGroupView;
+    readonly resourceGroups: ButtonListGroupView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.resourceGroups = this.addBlockListGroup(() => new ResourceGroupListItemView());
+        this.resourceGroups = this.addView(ButtonListGroupView);
+        this.resourceGroups.setItemViewType(ResourceGroupListItemView);
     }
 }

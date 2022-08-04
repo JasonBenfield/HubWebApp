@@ -1,28 +1,28 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/MessageAlert";
-import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppUserOptions } from "./AppUserOptions";
 import { AppUserDataPanelView } from "./AppUserDataPanelView";
 
-interface Results {
+interface IResult {
     done?: { appUserOptions: AppUserOptions; };
 }
 
-export class AppUserDataPanelResult {
+class Result {
     static done(appUserData: AppUserOptions) {
-        return new AppUserDataPanelResult(
+        return new Result(
             { done: { appUserOptions: appUserData } }
         );
     }
 
-    private constructor(private readonly results: Results) { }
+    private constructor(private readonly results: IResult) { }
 
     get done() { return this.results.done; }
 }
 
 export class AppUserDataPanel implements IPanel {
-    private readonly awaitable = new Awaitable<AppUserDataPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private userID: number;
 
@@ -33,8 +33,11 @@ export class AppUserDataPanel implements IPanel {
         this.alert = new MessageAlert(this.view.alert);
     }
 
-    start(userID: number) {
+    setUserID(userID: number) {
         this.userID = userID;
+    }
+
+    start() {
         new DelayedAction(this.delayedStart.bind(this), 1).execute();
         return this.awaitable.start();
     }
@@ -44,13 +47,13 @@ export class AppUserDataPanel implements IPanel {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                let app = await this.hubApi.App.GetApp();
-                let user = await this.hubApi.UserInquiry.GetUser(this.userID);
-                let defaultModifier = await this.hubApi.App.GetDefaultModifier();
+                const app = await this.hubApi.App.GetApp();
+                const user = await this.hubApi.UserInquiry.GetUser(this.userID);
+                const defaultModifier = await this.hubApi.App.GetDefaultModifier();
                 appUserData = new AppUserOptions(app, user, defaultModifier);
             }
         );
-        return this.awaitable.resolve(AppUserDataPanelResult.done(appUserData));
+        return this.awaitable.resolve(Result.done(appUserData));
     }
 
     activate() { this.view.show(); }

@@ -1,26 +1,36 @@
-﻿import { Block } from '@jasonbenfield/sharedwebapp/Html/Block';
-import { Container } from '@jasonbenfield/sharedwebapp/Html/Container';
-import { FlexColumn } from '@jasonbenfield/sharedwebapp/Html/FlexColumn';
-import { FlexColumnFill } from '@jasonbenfield/sharedwebapp/Html/FlexColumnFill';
-import { TextHeading1View } from '@jasonbenfield/sharedwebapp/Html/TextHeading1View';
-import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
-import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+﻿import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
+import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+import { GridView } from '@jasonbenfield/sharedwebapp/Views/Grid';
+import { TextHeading1View } from '@jasonbenfield/sharedwebapp/Views/TextHeadings';
+import { CssLengthUnit } from '@jasonbenfield/sharedwebapp/CssLengthUnit';
+import { BlockView } from '@jasonbenfield/sharedwebapp/Views/BlockView';
 import { LoginComponentView } from './LoginComponentView';
 
-export class MainPageView {
+export class MainPageView extends BasicPageView {
     readonly loginComponent: LoginComponentView;
 
-    constructor(private readonly page: PageFrameView) {
-        let flexColumn = this.page.addContent(new FlexColumn());
-        flexColumn
-            .addContent(new Block())
-            .addContent(new Container())
-            .addContent(new TextHeading1View())
+    constructor() {
+        super();
+        const grid = this.addView(GridView);
+        grid.layout();
+        grid.height100();
+        grid.setTemplateRows(CssLengthUnit.auto(), CssLengthUnit.flex(1));
+        grid.addCell()
+            .configure(c => c.addCssName('container'))
+            .addView(TextHeading1View)
             .configure(th => th.setText('Login'));
-        this.loginComponent = flexColumn
-            .addContent(new FlexColumnFill())
-            .container
-            .configure(c => c.setPadding(PaddingCss.top(3)))
-            .addContent(new LoginComponentView());
+        this.loginComponent = grid.addCell()
+            .configure(c => c.positionRelative())
+            .addView(BlockView)
+            .configure(b => {
+                b.positionAbsoluteFill();
+                b.scrollable();
+            })
+            .addView(BlockView)
+            .configure(b => {
+                b.addCssName('container');
+                b.setPadding(PaddingCss.top(3));
+            })
+            .addView(LoginComponentView);
     }
 }

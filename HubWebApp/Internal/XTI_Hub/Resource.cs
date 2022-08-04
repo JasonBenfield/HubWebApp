@@ -4,7 +4,7 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class Resource : IResource
+public sealed class Resource
 {
     private readonly HubFactory factory;
     private readonly ResourceEntity record;
@@ -98,7 +98,7 @@ public sealed class Resource : IResource
         => new ResourceModel
         {
             ID = ID,
-            Name = Name().DisplayText,
+            Name = Name(),
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ResultType = ResourceResultType.Values.Value(record.ResultType)
         };

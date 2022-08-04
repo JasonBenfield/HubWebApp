@@ -1,68 +1,79 @@
-﻿import { PageFrameView } from '@jasonbenfield/sharedwebapp/PageFrameView';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Startup } from '@jasonbenfield/sharedwebapp/Startup';
-import { HubAppApi } from '../../Hub/Api/HubAppApi';
+import { Url } from '@jasonbenfield/sharedwebapp/Url';
+import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { MainPageView } from './MainPageView';
-import { UserPanel } from './User/UserPanel';
-import { UserEditPanel } from './UserEdit/UserEditPanel';
-import { UserListPanel } from './UserList/UserListPanel';
+import { UserPanel } from './UserPanel';
+import { UserEditPanel } from './UserEditPanel';
+import { ChangePasswordPanel } from './ChangePasswordPanel';
 
-class MainPage {
-    private readonly view: MainPageView;
+class MainPage extends BasicPage {
+    protected readonly view: MainPageView;
     private readonly hubApi: HubAppApi;
     private readonly panels: SingleActivePanel;
-    private readonly userListPanel: UserListPanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
+    private readonly changePasswordPanel: ChangePasswordPanel;
 
-    constructor(page: PageFrameView) {
-        this.view = new MainPageView(page);
-        this.hubApi = new Apis(page.modalError).Hub();
+    constructor() {
+        super(new MainPageView());
+        this.hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
-        this.userListPanel = this.panels.add(new UserListPanel(this.hubApi, this.view.userListPanel));
         this.userPanel = this.panels.add(new UserPanel(this.hubApi, this.view.userPanel));
         this.userEditPanel = this.panels.add(new UserEditPanel(this.hubApi, this.view.userEditPanel));
-        this.activateUserListPanel();
-    }
-
-
-    private async activateUserListPanel() {
-        this.panels.activate(this.userListPanel);
-        this.userListPanel.refresh();
-        let result = await this.userListPanel.start();
-        if (result.userSelected) {
-            this.activateUserPanel(result.userSelected.user.ID);
+        this.changePasswordPanel = this.panels.add(
+            new ChangePasswordPanel(this.hubApi, this.view.changePasswordPanel)
+        );
+        const userIDValue = Url.current().getQueryValue('UserID');
+        const userID = userIDValue ? Number(userIDValue) : 0;
+        if (userID) {
+            this.userPanel.setUserID(userID);
+            this.userEditPanel.setUserID(userID);
+            this.changePasswordPanel.setUserID(userID);
+            this.userPanel.refresh();
+            this.activateUserPanel();
+        }
+        else {
+            this.hubApi.UserGroups.Index.open({}, '');
         }
     }
 
-    private async activateUserPanel(userID: number) {
+    private async activateUserPanel() {
         this.panels.activate(this.userPanel);
-        this.userPanel.setUserID(userID);
-        this.userPanel.refresh();
-        let result = await this.userPanel.start();
+        const result = await this.userPanel.start();
         if (result.backRequested) {
-            this.activateUserListPanel();
+            const url = this.hubApi.UserGroups.Index.getModifierUrl('', {});
+            new WebPage(url).open();
         }
         else if (result.editRequested) {
-            this.activateUserEditPanel(userID);
+            this.activateUserEditPanel();
         }
-        else if (result.appSelected) {
-            this.hubApi.UserInquiry.RedirectToAppUser.open({
-                UserID: userID,
-                AppID: result.appSelected.app.ID
-            });
+        else if (result.changePasswordRequested) {
+            this.activateChangePasswordPanel();
         }
     }
 
-    private async activateUserEditPanel(userID: number) {
+    private async activateUserEditPanel() {
         this.panels.activate(this.userEditPanel);
-        this.userEditPanel.setUserID(userID);
         this.userEditPanel.refresh();
-        let result = await this.userEditPanel.start();
+        const result = await this.userEditPanel.start();
         if (result.canceled || result.saved) {
-            this.activateUserPanel(userID);
+            this.activateUserPanel();
+        }
+        else if (result.saved) {
+            this.userPanel.refresh();
+            this.activateUserPanel();
+        }
+    }
+
+    private async activateChangePasswordPanel() {
+        this.panels.activate(this.changePasswordPanel);
+        const result = await this.changePasswordPanel.start();
+        if (result.done) {
+            this.activateUserPanel();
         }
     }
 }
-new MainPage(new Startup().build());
+new MainPage();

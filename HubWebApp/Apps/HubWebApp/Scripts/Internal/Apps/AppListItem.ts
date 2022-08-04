@@ -1,11 +1,17 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { AppListItemView } from "./AppListItemView";
 
-export class AppListItem {
-    constructor(readonly appWithModKey: IAppWithModKeyModel, appRedirectUrl: (modKey: string) => string, view: AppListItemView) {
-        new TextBlock(appWithModKey.App.AppKey.Name.DisplayText, view.appName);
-        new TextBlock(appWithModKey.App.Title, view.appTitle);
-        new TextBlock(appWithModKey.App.AppKey.Type.DisplayText, view.appType);
-        view.setHref(appRedirectUrl(appWithModKey.ModKey));
+export class AppListItem extends BasicComponent {
+    constructor(
+        readonly app: IAppModel,
+        appRedirectUrl: (app: IAppModel) => string, view: AppListItemView
+    ) {
+        super(view);
+        new TextComponent(view.appName).setText(app.AppKey.Name.DisplayText);
+        new TextComponent(view.appTitle).setText(app.Title);
+        new TextComponent(view.appType).setText(app.AppKey.Type.DisplayText);
+        new LinkComponent(view).setHref(appRedirectUrl(app));
     }
 }

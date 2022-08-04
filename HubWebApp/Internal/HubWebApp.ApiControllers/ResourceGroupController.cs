@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class ResourceGroupController : Controller
+public sealed partial class ResourceGroupController : Controller
 {
     private readonly HubAppApi api;
     public ResourceGroupController(HubAppApi api)
@@ -19,12 +19,6 @@ public class ResourceGroupController : Controller
     public Task<ResultContainer<ResourceModel[]>> GetResources([FromBody] GetResourcesRequest model, CancellationToken ct)
     {
         return api.Group("ResourceGroup").Action<GetResourcesRequest, ResourceModel[]>("GetResources").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<ResourceModel>> GetResource([FromBody] GetResourceGroupResourceRequest model, CancellationToken ct)
-    {
-        return api.Group("ResourceGroup").Action<GetResourceGroupResourceRequest, ResourceModel>("GetResource").Execute(model, ct);
     }
 
     [HttpPost]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 
 namespace HubWebApp.Extensions;
 

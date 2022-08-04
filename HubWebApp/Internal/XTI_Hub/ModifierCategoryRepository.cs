@@ -13,7 +13,7 @@ public sealed class ModifierCategoryRepository
         this.factory = factory;
     }
 
-    internal async Task<ModifierCategory> AddIfNotFound(IApp app, ModifierCategoryName name)
+    internal async Task<ModifierCategory> AddIfNotFound(App app, ModifierCategoryName name)
     {
         var record = await factory.DB
             .ModifierCategories
@@ -26,7 +26,7 @@ public sealed class ModifierCategoryRepository
         return factory.ModCategory(record);
     }
 
-    private async Task<ModifierCategoryEntity> AddModCategory(IApp app, ModifierCategoryName name)
+    private async Task<ModifierCategoryEntity> AddModCategory(App app, ModifierCategoryName name)
     {
         var record = new ModifierCategoryEntity
         {
@@ -46,7 +46,7 @@ public sealed class ModifierCategoryRepository
         return factory.ModCategory(record ?? throw new Exception($"Category {id} not found"));
     }
 
-    internal Task<ModifierCategory[]> Categories(IApp app) =>
+    internal Task<ModifierCategory[]> Categories(App app) =>
         factory.DB
             .ModifierCategories
             .Retrieve()
@@ -61,10 +61,10 @@ public sealed class ModifierCategoryRepository
             .ModifierCategories
             .Retrieve()
             .FirstOrDefaultAsync(c => c.AppID == app.ID && c.ID == id);
-        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.Key().Serialize()}"));
+        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.ToModel().AppKey.Format()}"));
     }
 
-    internal async Task<ModifierCategory> CategoryOrDefault(IApp app, ModifierCategoryName name)
+    internal async Task<ModifierCategory> CategoryOrDefault(App app, ModifierCategoryName name)
     {
         var record = await GetCategory(app, name);
         if (record == null)
@@ -77,7 +77,7 @@ public sealed class ModifierCategoryRepository
         );
     }
 
-    internal async Task<ModifierCategory> Category(IApp app, ModifierCategoryName name)
+    internal async Task<ModifierCategory> Category(App app, ModifierCategoryName name)
     {
         var record = await GetCategory(app, name);
         return factory.ModCategory
@@ -86,7 +86,7 @@ public sealed class ModifierCategoryRepository
         );
     }
 
-    private Task<ModifierCategoryEntity?> GetCategory(IApp app, ModifierCategoryName name) =>
+    private Task<ModifierCategoryEntity?> GetCategory(App app, ModifierCategoryName name) =>
         factory.DB
             .ModifierCategories
             .Retrieve()

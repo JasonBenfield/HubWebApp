@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Api;
 
 namespace XTI_Hub
@@ -15,7 +10,7 @@ namespace XTI_Hub
         public ModifierNotFoundException(int modifierID, App app)
             :base
             (
-                $"Modifier {modifierID} not found for app '{app.Key().Serialize()}'", 
+                $"Modifier {modifierID} not found for app '{app.ToModel().AppKey.Format()}'", 
                 displayMessage
             )
         {

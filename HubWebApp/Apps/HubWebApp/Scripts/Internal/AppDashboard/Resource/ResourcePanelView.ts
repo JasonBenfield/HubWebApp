@@ -1,42 +1,40 @@
-﻿import { ButtonCommandItem } from "@jasonbenfield/sharedwebapp/Command/ButtonCommandItem";
-import { Block } from "@jasonbenfield/sharedwebapp/Html/Block";
-import { FlexColumn } from "@jasonbenfield/sharedwebapp/Html/FlexColumn";
-import { FlexColumnFill } from "@jasonbenfield/sharedwebapp/Html/FlexColumnFill";
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../../HubTheme";
 import { MostRecentErrorEventListCardView } from "../MostRecentErrorEventListCardView";
 import { MostRecentRequestListCardView } from "../MostRecentRequestListCardView";
 import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { ResourceComponentView } from "./ResourceComponentView";
 
-export class ResourcePanelView extends Block {
+export class ResourcePanelView extends GridView {
     readonly resourceComponent: ResourceComponentView;
     readonly resourceAccessCard: ResourceAccessCardView;
     readonly mostRecentRequestListCard: MostRecentRequestListCardView;
     readonly mostRecentErrorEventListCard: MostRecentErrorEventListCardView;
-    readonly backButton: ButtonCommandItem;
+    readonly backButton: ButtonCommandView;
 
-    constructor() {
-        super();
+    constructor(container: BasicComponentView) {
+        super(container);
         this.height100();
-        let flexColumn = this.addContent(new FlexColumn());
-        let flexFill = flexColumn.addContent(new FlexColumnFill());
-        this.resourceComponent = flexFill
-            .addContent(new ResourceComponentView())
+        this.layout();
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
+        const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.resourceComponent = mainContent.addView(ResourceComponentView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.resourceAccessCard = flexFill
-            .addContent(new ResourceAccessCardView())
+        this.resourceAccessCard = mainContent.addView(ResourceAccessCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.mostRecentRequestListCard = flexFill
-            .addContent(new MostRecentRequestListCardView())
+        this.mostRecentRequestListCard = mainContent.addView(MostRecentRequestListCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        this.mostRecentErrorEventListCard = flexFill
-            .addContent(new MostRecentErrorEventListCardView())
+        this.mostRecentErrorEventListCard = mainContent.addView(MostRecentErrorEventListCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        let toolbar = flexColumn.addContent(HubTheme.instance.commandToolbar.toolbar());
-        this.backButton = toolbar.columnStart.addContent(
-            HubTheme.instance.commandToolbar.backButton()
-        );
+        const toolbar = this.addView(ToolbarView);
+        HubTheme.instance.commandToolbar.toolbar(toolbar);
+        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
+        HubTheme.instance.commandToolbar.backButton(this.backButton);
         this.backButton.setText('Resource Group');
     }
 }

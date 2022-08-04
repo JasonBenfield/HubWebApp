@@ -1,7 +1,7 @@
 // Generated Code
 namespace HubWebApp.ApiControllers;
 [Authorize]
-public class ModCategoryController : Controller
+public sealed partial class ModCategoryController : Controller
 {
     private readonly HubAppApi api;
     public ModCategoryController(HubAppApi api)
@@ -19,12 +19,6 @@ public class ModCategoryController : Controller
     public Task<ResultContainer<ModifierModel[]>> GetModifiers([FromBody] int model, CancellationToken ct)
     {
         return api.Group("ModCategory").Action<int, ModifierModel[]>("GetModifiers").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModCategoryModifierRequest model, CancellationToken ct)
-    {
-        return api.Group("ModCategory").Action<GetModCategoryModifierRequest, ModifierModel>("GetModifier").Execute(model, ct);
     }
 
     [HttpPost]

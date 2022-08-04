@@ -194,7 +194,7 @@ public sealed class XtiVersionRepository
     internal async Task<AppVersion> VersionByApp(App app, AppVersionKey versionKey)
     {
         var record = await GetVersionByApp(app, versionKey);
-        var version = factory.CreateVersion(record ?? throw new Exception($"Version '{app.Key().Name.DisplayText} {app.Key().Type.DisplayText} {versionKey.DisplayText}' was not found"));
+        var version = factory.CreateVersion(record ?? throw new Exception($"Version '{app.ToModel().AppKey.Format()} {versionKey.DisplayText}' was not found"));
         return version.App(app);
     }
 
@@ -224,7 +224,7 @@ public sealed class XtiVersionRepository
     private async Task<XtiVersionEntity?> GetVersionByApp(App app, AppVersionKey versionKey)
     {
         XtiVersionEntity? record;
-        var versionName = app.ToAppModel().VersionName.Value;
+        var versionName = app.ToModel().VersionName.Value;
         var versionIDs = factory.DB
             .AppVersions.Retrieve()
             .Where(av => av.AppID == app.ID)

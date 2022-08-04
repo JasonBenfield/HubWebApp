@@ -7,7 +7,7 @@ using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi;
+using XTI_HubWebAppApi;
 using XTI_HubDB.EF;
 
 namespace HubSetupApp;
@@ -62,8 +62,7 @@ public sealed class SetupHostedService : IHostedService
         var password = Guid.NewGuid().ToString();
         var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
         (
-            HubInfo.AppKey,
-            Environment.MachineName,
+            new SystemUserName(HubInfo.AppKey, Environment.MachineName),
             hashedPasswordFactory.Create(password),
             clock.Now()
         );
@@ -72,7 +71,7 @@ public sealed class SetupHostedService : IHostedService
         (
             new CredentialValue
             (
-                systemUser.UserName().Value,
+                systemUser.ToModel().UserName.Value,
                 password
             )
         );

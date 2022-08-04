@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Hub.Abstractions;
-using XTI_HubAppApi.AppInstall;
+using XTI_HubWebAppApi.AppInstall;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 
@@ -12,7 +12,7 @@ sealed class NewInstallationTest
     public async Task ShouldRequireVersionName()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             AppKey = HubInfo.AppKey,
@@ -26,7 +26,7 @@ sealed class NewInstallationTest
     public async Task ShouldRequireMachineName()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -41,7 +41,7 @@ sealed class NewInstallationTest
     public async Task ShouldAddInstallLocation()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -58,7 +58,7 @@ sealed class NewInstallationTest
     public async Task ShouldNotAddInstallLocationWithDuplicateQualifiedMachineName()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -76,8 +76,8 @@ sealed class NewInstallationTest
     {
         var tester = await setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await hubApp.CurrentVersion();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -96,7 +96,7 @@ sealed class NewInstallationTest
     public async Task ShouldAddCurrentInstallationWithInstallPendingStatus()
     {
         var tester = await setup();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -114,7 +114,7 @@ sealed class NewInstallationTest
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -133,10 +133,11 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldAddVersionInstallation()
     {
+        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
@@ -156,10 +157,11 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldAddDuplicateVersionInstallations()
     {
+        Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await setup();
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion();
-        tester.LoginAsAdmin();
+        await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),

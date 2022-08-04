@@ -17,4 +17,5 @@ public sealed partial class HubRoleNames
     public string AddUser { get; } = "Add User";
     public string EditUser { get; } = "Edit User";
     public string AddStoredObject { get; } = "Add Stored Object";
+    public string AddUserGroup { get; } = "Add User Group";
 }

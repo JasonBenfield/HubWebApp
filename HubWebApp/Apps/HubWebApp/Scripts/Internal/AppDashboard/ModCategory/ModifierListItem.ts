@@ -1,11 +1,15 @@
-﻿import { TextBlock } from "@jasonbenfield/sharedwebapp/Html/TextBlock";
+﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ModifierListItemView } from "./ModifierListItemView";
 
-export class ModifierListItem {
+export class ModifierListItem extends BasicComponent {
     constructor(modifier: IModifierModel, view: ModifierListItemView) {
-        let modKey = new TextBlock(modifier.ModKey, view.modKey);
+        super(view);
+        const modKey = new TextComponent(view.modKey);
+        modKey.setText(modifier.ModKey.DisplayText);
         modKey.syncTitleWithText();
-        let displayText = new TextBlock(modifier.DisplayText, view.displayText);
+        const displayText = new TextComponent(view.displayText);
+        displayText.setText(modifier.DisplayText);
         displayText.syncTitleWithText();
     }
 }

@@ -1,29 +1,34 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { HubAppApi } from "../../Hub/Api/HubAppApi";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppListCard } from "./AppListCard";
 import { AppListPanelView } from "./AppListPanelView";
 
-interface Results {
+interface IResult {
     appSelected?: { app: IAppModel; };
+    mainMenuRequested?: {};
 }
 
-export class AppListPanelResult {
+class Result {
     static appSelected(app: IAppModel) {
-        return new AppListPanelResult({ appSelected: { app: app } });
+        return new Result({ appSelected: { app: app } });
     }
 
-    private constructor(private readonly results: Results) {
+    static mainMenuRequested() {
+        return new Result({ mainMenuRequested: {} });
+    }
+
+    private constructor(private readonly results: IResult) {
     }
 
     get appSelected() { return this.results.appSelected; }
+
+    get mainMenuRequested() { return this.results.mainMenuRequested; }
 }
 
-export class AppListPanel {
-    public static readonly ResultKeys = {
-    }
-
+export class AppListPanel implements IPanel {
     private readonly appListCard: AppListCard;
-    private readonly awaitable = new Awaitable<AppListPanelResult>();
+    private readonly awaitable = new Awaitable<Result>();
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -31,17 +36,20 @@ export class AppListPanel {
     ) {
         this.appListCard = new AppListCard(
             this.hubApi,
-            modKey => this.hubApi.App.Index.getModifierUrl(modKey, {}).toString(),
+            app => this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
             this.view.appListCard
         );
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
     }
 
     private onAppSelected(app: IAppModel) {
         this.awaitable.resolve(
-            AppListPanelResult.appSelected(app)
+            Result.appSelected(app)
         );
     }
+
+    private requestMainMenu() { this.awaitable.resolve(Result.mainMenuRequested()); }
 
     refresh() {
         return this.appListCard.refresh();
@@ -51,5 +59,7 @@ export class AppListPanel {
         return this.awaitable.start();
     }
 
+    activate() { this.view.show(); }
 
+    deactivate() { this.view.hide(); }
 }

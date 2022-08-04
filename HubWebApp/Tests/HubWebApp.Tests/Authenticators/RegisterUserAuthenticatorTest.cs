@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_Hub.Abstractions;
-using XTI_HubAppApi.Authenticators;
-using XTI_HubAppApi.UserList;
 using XTI_HubDB.Entities;
+using XTI_HubWebAppApi.Authenticators;
+using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -17,10 +16,10 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await addUser(tester, "someone");
         var request = new RegisterUserAuthenticatorRequest
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ExternalUserKey = "external.id"
         };
-        AccessAssertions.Create(tester)
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenModifierIsBlank(request);
     }
 
@@ -31,14 +30,15 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await addUser(tester, "someone");
         var request = new RegisterUserAuthenticatorRequest
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ExternalUserKey = "external.id"
         };
-        AccessAssertions.Create(tester)
+        var modifier = await tester.AppModifier(authAppKey);
+        await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 request,
-                getFakeAuthModifier(tester),
+                modifier,
                 HubInfo.Roles.Admin
             );
     }
@@ -50,19 +50,20 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await addUser(tester, "someone");
         var request = new RegisterUserAuthenticatorRequest
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ExternalUserKey = "external.id"
         };
-        await tester.Execute(request, getFakeAuthModifier(tester).ModKey());
+        var modKey = new ModifierKey(authAppKey.Format());
+        await tester.Execute(request, modKey);
         var app = await getAuthApp(tester);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve()
             .ToArrayAsync();
         Assert.That(userAuthenticators.Length, Is.EqualTo(1), "Should add authenticator to user");
         var authenticator = await db.Authenticators.Retrieve()
-            .FirstAsync(a => a.AppID == app.ID);
+            .FirstAsync(a => a.AppID == app.ToModel().ID);
         Assert.That(userAuthenticators[0].AuthenticatorID, Is.EqualTo(authenticator.ID));
-        Assert.That(userAuthenticators[0].UserID, Is.EqualTo(user.ID));
+        Assert.That(userAuthenticators[0].UserID, Is.EqualTo(user.ToModel().ID));
         Assert.That(userAuthenticators[0].ExternalUserKey, Is.EqualTo("external.id"));
     }
 
@@ -73,10 +74,10 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await addUser(tester, "someone");
         var request = new RegisterUserAuthenticatorRequest
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ExternalUserKey = "external.id"
         };
-        var modKey = getFakeAuthModifier(tester).ModKey();
+        var modKey = new ModifierKey(authAppKey.Format());
         await tester.Execute(request, modKey);
         await tester.Execute(request, modKey);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
@@ -91,13 +92,13 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await addUser(tester, "someone");
         var request = new RegisterUserAuthenticatorRequest
         {
-            UserID = user.ID,
+            UserID = user.ToModel().ID,
             ExternalUserKey = "external.id"
         };
-        var modKey = getFakeAuthModifier(tester).ModKey();
-        await tester.Execute(request, modKey);
+        var modifier = await getFakeAuthModifier(tester);
+        await tester.Execute(request, modifier);
         request.ExternalUserKey = "external.id2";
-        await tester.Execute(request, modKey);
+        await tester.Execute(request, modifier);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve().ToArrayAsync();
         Assert.That
@@ -121,20 +122,28 @@ internal sealed class RegisterUserAuthenticatorTest
         var appKey = AppKey.WebApp("Auth");
         var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
         await authApp.RegisterAsAuthenticator();
+        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
+        await appRegistration.Run
+        (
+            new AppApiTemplateModel
+            {
+                AppKey = appKey,
+                GroupTemplates = new AppApiGroupTemplateModel[0]
+            },
+            AppVersionKey.Current
+        );
         var hubApp = await tester.HubApp();
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.AddOrUpdateModifier(authApp.ID, authApp.Key().Name.DisplayText);
-        var fakeHubApp = tester.FakeHubApp();
-        fakeHubApp.ModCategory(HubInfo.ModCategories.Apps)
-            .AddModifier(modifier.ID, modifier.ModKey(), "Auth");
         return tester;
     }
 
-    private FakeModifier getFakeAuthModifier(HubActionTester<RegisterUserAuthenticatorRequest, EmptyActionResult> tester)
+    private async Task<Modifier> getFakeAuthModifier(IHubActionTester tester)
     {
-        return tester.FakeHubApp()
-            .ModCategory(HubInfo.ModCategories.Apps)
-            .ModifierByTargetID("Auth");
+        var hubApp = await tester.HubApp();
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var authApp = await factory.Apps.App(authAppKey);
+        var modifier = await appsModCategory.ModifierByModKey(authApp.ToModel().PublicKey);
+        return modifier;
     }
 
     private Task<App> getAuthApp(IHubActionTester tester)
@@ -146,12 +155,17 @@ internal sealed class RegisterUserAuthenticatorTest
     private async Task<AppUser> addUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
-        addUserTester.LoginAsAdmin();
-        var userID = await addUserTester.Execute(new AddUserModel
-        {
-            UserName = userName,
-            Password = "Password12345"
-        });
+        await addUserTester.LoginAsAdmin();
+        var modifier = await tester.GeneralUserGroupModifier();
+        var userID = await addUserTester.Execute
+        (
+            new AddOrUpdateUserModel
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            modifier
+        );
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
