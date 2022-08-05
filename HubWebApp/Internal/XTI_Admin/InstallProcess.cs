@@ -2,6 +2,7 @@
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_GitHub;
 using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
@@ -27,8 +28,18 @@ internal sealed class InstallProcess
             Console.WriteLine("Beginning Install");
             var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
             using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
-            var appVersion = await new CurrentVersion(scopes, versionName).Value();
-            var release = $"v{appVersion.VersionNumber.Format()}";
+            string release;
+            var versionNumber = options.VersionNumber;
+            if (string.IsNullOrWhiteSpace(versionNumber))
+            {
+                var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+                var latestRelease = await gitHubRepo.LatestRelease();
+                release = latestRelease.TagName;
+            }
+            else
+            {
+                release = $"v{versionNumber}";
+            }
             var versionsPath = await publishedAssets.LoadVersions(release);
             var versionReader = new VersionReader(versionsPath);
             var versions = await versionReader.Versions();
