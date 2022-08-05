@@ -24,9 +24,11 @@ public static class XtiSetupAppHost
             (
                 (hostContext, services) =>
                 {
+                    var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
+                    services.AddSingleton(_ => xtiEnv);
                     services.AddSingleton(_ => appKey);
                     services.AddMemoryCache();
-                    services.AddFileSecretCredentials(XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
+                    services.AddFileSecretCredentials(xtiEnv);
                     services.AddHubClientServices();
                     services.AddScoped<SystemUserCredentials>();
                     services.AddScoped<InstallationUserCredentials>();
