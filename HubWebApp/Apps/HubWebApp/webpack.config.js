@@ -85,10 +85,7 @@ const exportModule = {
 const outputFilename = '[name].js';
 
 const resolve = {
-    extensions: [".ts", ".tsx", ".js"],
-    alias: {
-        '@jasonbenfield/sharedwebapp': 'C:/XTI/src/JasonBenfield/SharedWebApp/Apps/SharedWebApp/Scripts/Lib'
-    }
+    extensions: [".ts", ".tsx", ".js"]
 };
 const plugins = [
     new MiniCssExtractPlugin({

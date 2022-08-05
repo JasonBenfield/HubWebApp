@@ -71,8 +71,7 @@ const outputFilename = '[name].js';
 const resolve = {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-        '@hub': path.resolve(__dirname, '../../../hubwebapp/apps/hubwebapp/scripts/lib'),
-        '@jasonbenfield/sharedwebapp': 'C:/XTI/src/JasonBenfield/SharedWebApp/Apps/SharedWebApp/Scripts/Lib'
+        '@hub': path.resolve(__dirname, '../../../hubwebapp/apps/hubwebapp/scripts/lib')
     }
 };
 const plugins = [

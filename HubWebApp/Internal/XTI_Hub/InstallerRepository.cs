@@ -36,6 +36,12 @@ public sealed class InstallerRepository
                 now
             );
         }
+        var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
+        if (hubApp.AppKeyEquals(HubInfo.AppKey))
+        {
+            var role = await hubApp.AddRoleIfNotFound(HubInfo.Roles.Admin);
+            await installer.AssignRole(role);
+        }
         return installer;
     }
 
@@ -58,9 +64,6 @@ public sealed class InstallerRepository
             new EmailAddress(""),
             timeAdded
         );
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var role = await hubApp.AddRoleIfNotFound(HubInfo.Roles.Admin);
-        await user.AssignRole(role);
         return user;
     }
 }

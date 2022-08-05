@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Admin;
+using XTI_DB;
+using XTI_HubDB.EF;
 
 namespace XTI_AdminTool;
 
@@ -18,6 +20,12 @@ internal sealed class HostedService : IHostedService
         try
         {
             using var scope = sp.CreateScope();
+            var hubDbTypeAccessor = scope.ServiceProvider.GetRequiredService<HubDbTypeAccessor>();
+            if(hubDbTypeAccessor.Value == HubAdministrationTypes.DB)
+            {
+                var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
+                await dbAdmin.Update();
+            }
             var commandFactory = scope.ServiceProvider.GetRequiredService<CommandFactory>();
             var options = scope.ServiceProvider.GetRequiredService<AdminOptions>();
             var command = commandFactory.CreateCommand(options);

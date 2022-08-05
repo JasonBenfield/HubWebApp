@@ -20,6 +20,7 @@ using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
+using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
 using XTI_PermanentLog;
 using XTI_Secrets;
@@ -81,6 +82,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddSingleton<Scopes>();
             services.AddSingleton<IClock, UtcClock>();
             services.AddHubDbContextForSqlServer();
+            services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();
@@ -202,20 +204,20 @@ await Host.CreateDefaultBuilder(args)
                 sp =>
                 {
                     var options = sp.GetRequiredService<AdminOptions>();
-                    var hubDbType = options.HubAdministrationType;
-                    if (hubDbType == HubAdministrationTypes.Default)
+                    var hubAdministrationType = options.HubAdministrationType;
+                    if (hubAdministrationType == HubAdministrationTypes.Default)
                     {
                         var appKeys = sp.GetRequiredService<SelectedAppKeys>();
                         if (appKeys.Values.Any(appKey => appKey.Equals(HubInfo.AppKey)))
                         {
-                            hubDbType = HubAdministrationTypes.DB;
+                            hubAdministrationType = HubAdministrationTypes.DB;
                         }
                         else
                         {
-                            hubDbType = HubAdministrationTypes.HubClient;
+                            hubAdministrationType = HubAdministrationTypes.HubClient;
                         }
                     }
-                    return new HubDbTypeAccessor(hubDbType);
+                    return new HubDbTypeAccessor(hubAdministrationType);
                 }
             );
             services.AddScoped
