@@ -9,6 +9,7 @@ import { AddRolePanelView } from "./AddRolePanelView";
 import { AppUserOptions } from "./AppUserOptions";
 import { RoleButtonListItemView } from "./RoleButtonListItemView";
 import { RoleListItem } from "./RoleListItem";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 
 interface IResult {
     back?: {};
@@ -45,7 +46,10 @@ export class AddRolePanel implements IPanel {
         this.alert = new CardAlert(view.alert).alert;
         this.roles = new ListGroup(view.roles);
         this.roles.registerItemClicked(this.onRoleClicked.bind(this));
+        new Command(this.back.bind(this)).add(view.backButton);
     }
+
+    private back() { this.awaitable.resolve(Result.back()); }
 
     private async onRoleClicked(roleListItem: RoleListItem) {
         await this.addRole(roleListItem.role);
