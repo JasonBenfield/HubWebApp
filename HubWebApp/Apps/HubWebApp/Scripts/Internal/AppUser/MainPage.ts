@@ -1,8 +1,8 @@
 ﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
 import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
+import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
 import { HubAppApi } from '../../Lib/Api/HubAppApi';
 import { Apis } from '../Apis';
 import { AddRolePanel } from './AddRolePanel';

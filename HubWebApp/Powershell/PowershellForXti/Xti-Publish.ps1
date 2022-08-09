@@ -20,14 +20,16 @@
         [Parameter(ValueFromPipelineByPropertyName = $true)]
 		$SiteName = "",
         [ValidateSet("Default", "DB")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        [ValidateSet("Default", "GitHub")]
+        $InstallationSource = "Default"
     )
     ThrowIfNotSolutionDir
     $Command = "PublishAndInstall"
     if($NoInstall){
         $Command = "Publish"
     }
-    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource
 }
 
 function Xti-Build {

@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
 using XTI_GitHub;
@@ -28,17 +27,25 @@ internal sealed class InstallProcess
             Console.WriteLine("Beginning Install");
             var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
             using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
+            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
             string release;
-            var versionNumber = options.VersionNumber;
-            if (string.IsNullOrWhiteSpace(versionNumber))
+            if(publishedAssets is GitHubPublishedAssets)
             {
-                var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
-                var latestRelease = await gitHubRepo.LatestRelease();
-                release = latestRelease.TagName;
+                var versionNumber = options.VersionNumber;
+                if (string.IsNullOrWhiteSpace(versionNumber))
+                {
+                    var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+                    var latestRelease = await gitHubRepo.LatestRelease();
+                    release = latestRelease.TagName;
+                }
+                else
+                {
+                    release = $"v{versionNumber}";
+                }
             }
             else
             {
-                release = $"v{versionNumber}";
+                release = "";
             }
             var versionsPath = await publishedAssets.LoadVersions(release);
             var versionReader = new VersionReader(versionsPath);
@@ -51,7 +58,6 @@ internal sealed class InstallProcess
             await hubAdministration.AddOrUpdateApps(versionName, appDefs);
             Console.WriteLine("Adding or updating versions");
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             if (xtiEnv.IsProduction() && versionKey.Equals(AppVersionKey.Current))
             {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -33,6 +32,21 @@ public sealed class XtiVersionRepository
         var entity = await GetVersionByName(versionName, key);
         if (entity == null)
         {
+            if(status == AppVersionStatus.Values.Current)
+            {
+                var previousVersions = await factory.DB
+                    .Versions.Retrieve()
+                    .Where(v => v.VersionName == versionName.Value && v.Status == AppVersionStatus.Values.Current.Value)
+                    .ToArrayAsync();
+                foreach (var previousVersion in previousVersions)
+                {
+                    await factory.DB.Versions.Update
+                    (
+                        previousVersion,
+                        v => v.Status = AppVersionStatus.Values.Old
+                    );
+                }
+            }
             entity = await AddVersion
             (
                 versionName,
@@ -340,14 +354,7 @@ public sealed class XtiVersionRepository
         (
             async () =>
             {
-                var previousVersions = await factory.DB
-                    .Versions.Retrieve()
-                    .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status != AppVersionStatus.Values.Old)
-                    .ToArrayAsync();
-                foreach (var previousVersion in previousVersions)
-                {
-                    await factory.DB.Versions.Update(previousVersion, v => v.Status = AppVersionStatus.Values.Old);
-                }
+                await ArchivePreviousVersions(version);
                 await factory.DB.Versions.Update
                 (
                     version,
@@ -357,4 +364,19 @@ public sealed class XtiVersionRepository
         );
     }
 
+    private async Task ArchivePreviousVersions(XtiVersionEntity version)
+    {
+        var previousVersions = await factory.DB
+            .Versions.Retrieve()
+            .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status != AppVersionStatus.Values.Old.Value)
+            .ToArrayAsync();
+        foreach (var previousVersion in previousVersions)
+        {
+            await factory.DB.Versions.Update
+            (
+                previousVersion, 
+                v => v.Status = AppVersionStatus.Values.Old.Value
+            );
+        }
+    }
 }
