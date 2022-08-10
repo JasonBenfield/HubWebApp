@@ -360,6 +360,9 @@ interface IGetStoredObjectRequest {
 	StorageName: string;
 	StorageKey: string;
 }
+interface IGetAppContextRequest {
+	VersionKey: string;
+}
 interface IAppContextModel {
 	App: IAppModel;
 	Version: IXtiVersionModel;
@@ -381,6 +384,7 @@ interface IAppContextResourceModel {
 	AllowedRoles: IAppRoleModel[];
 }
 interface IGetUserContextRequest {
+	VersionKey: string;
 	UserName: string;
 }
 interface IUserContextModel {

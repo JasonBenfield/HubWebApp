@@ -21,7 +21,7 @@ internal sealed class AddAdminUserCommand : ICommand
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
-        foreach(var appKey in appKeys)
+        foreach(var appKey in appKeys.Where(a => !a.Type.Equals(AppType.Values.Package)))
         {
             await hubAdmin.AddOrUpdateAdminUser
             (

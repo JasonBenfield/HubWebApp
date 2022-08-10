@@ -6,15 +6,14 @@ namespace XTI_HubAppClient
     {
         private readonly HubAppClient hubClient;
         private readonly ICurrentUserName currentUserName;
+        private readonly AppVersionKey versionKey;
 
-        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName)
+        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName, AppVersionKey versionKey)
         {
             this.hubClient = hubClient;
-            this.currentUserName = currentUserName; 
+            this.currentUserName = currentUserName;
+            this.versionKey = versionKey;
         }
-
-        public Task<UserContextModel> User(AppUserName userName) =>
-            hubClient.System.GetUserContext(new GetUserContextRequest { UserName = userName.Value });
 
         public async Task<UserContextModel> User()
         {
@@ -22,5 +21,15 @@ namespace XTI_HubAppClient
             var user = await User(userName);
             return user;
         }
+
+        public Task<UserContextModel> User(AppUserName userName) =>
+            hubClient.System.GetUserContext
+            (
+                new GetUserContextRequest
+                {
+                    UserName = userName.Value,
+                    VersionKey = versionKey.Value
+                }
+            );
     }
 }

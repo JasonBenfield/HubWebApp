@@ -9,6 +9,6 @@ public sealed class SystemGroup : AppApiGroupWrapper
         GetUserContext = source.AddAction(nameof(GetUserContext), () => sp.GetRequiredService<GetUserContextAction>());
     }
 
-    public AppApiAction<EmptyRequest, AppContextModel> GetAppContext { get; }
+    public AppApiAction<GetAppContextRequest, AppContextModel> GetAppContext { get; }
     public AppApiAction<GetUserContextRequest, UserContextModel> GetUserContext { get; }
 }

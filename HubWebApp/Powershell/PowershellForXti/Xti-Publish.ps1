@@ -19,9 +19,9 @@
 		$Domain = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
 		$SiteName = "",
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub")]
+        [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default"
     )
     ThrowIfNotSolutionDir
@@ -42,7 +42,7 @@ function Xti-Build {
         [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default"
     )
     ThrowIfNotSolutionDir
@@ -59,9 +59,9 @@ function Xti-Setup {
         [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub")]
+        [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default"
     )
     ThrowIfNotSolutionDir
@@ -92,7 +92,7 @@ function Xti-Install {
 		$SiteName = "",
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub")]
+        [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default"
     )
     ThrowIfNotSolutionDir
@@ -112,7 +112,7 @@ function Xti-PublishLib {
         $RepoOwner,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoName,
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default"
     )
     ThrowIfNotSolutionDir
@@ -124,7 +124,7 @@ function Xti-AddInstallationUser {
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HUbClient")]
         $HubAdministrationType = "Default"
     )
     Xti-Admin -EnvName $EnvName -Command AddInstallationUser -HubAdministrationType $HubAdministrationType
@@ -142,7 +142,7 @@ function Xti-AddSystemUser {
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $Domain = "",
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default"
     )
     ThrowIfNotSolutionDir
@@ -165,7 +165,7 @@ function Xti-AddAdminUser {
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $CredentialKey = "",
-        [ValidateSet("Default", "DB")]
+        [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default"
     )
     ThrowIfNotSolutionDir
@@ -248,7 +248,7 @@ function Xti-Admin {
         [switch] $StartIssue,
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub")]
+        [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default",
 		$CredentialKey = "",
 		$UserName = "",

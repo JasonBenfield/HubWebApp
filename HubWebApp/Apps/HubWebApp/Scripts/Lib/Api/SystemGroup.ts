@@ -9,15 +9,15 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class SystemGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'System');
-		this.GetAppContextAction = this.createAction<IEmptyRequest,IAppContextModel>('GetAppContext', 'Get App Context');
+		this.GetAppContextAction = this.createAction<IGetAppContextRequest,IAppContextModel>('GetAppContext', 'Get App Context');
 		this.GetUserContextAction = this.createAction<IGetUserContextRequest,IUserContextModel>('GetUserContext', 'Get User Context');
 	}
 	
-	readonly GetAppContextAction: AppApiAction<IEmptyRequest,IAppContextModel>;
+	readonly GetAppContextAction: AppApiAction<IGetAppContextRequest,IAppContextModel>;
 	readonly GetUserContextAction: AppApiAction<IGetUserContextRequest,IUserContextModel>;
 	
-	GetAppContext(errorOptions?: IActionErrorOptions) {
-		return this.GetAppContextAction.execute({}, errorOptions || {});
+	GetAppContext(model: IGetAppContextRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetAppContextAction.execute(model, errorOptions || {});
 	}
 	GetUserContext(model: IGetUserContextRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserContextAction.execute(model, errorOptions || {});
