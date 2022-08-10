@@ -2,20 +2,21 @@
 
 public sealed class AppFromSystemUser
 {
+    private readonly HubFactory hubFactory;
     private readonly ICurrentUserName currentUserName;
-    private readonly EfAppContext appContext;
 
-    public AppFromSystemUser(ICurrentUserName currentUserName, EfAppContext appContext)
+    public AppFromSystemUser(HubFactory hubFactory, ICurrentUserName currentUserName)
     {
+        this.hubFactory = hubFactory;
         this.currentUserName = currentUserName;
-        this.appContext = appContext;
     }
 
-    public async Task<AppContextModel> App()
+    public async Task<AppContextModel> App(AppVersionKey versionKey)
     {
         var userName = await currentUserName.Value();
         var systemUserName = SystemUserName.Parse(userName);
-        var app = await appContext.App(systemUserName.AppKey);
+        var appContext = new EfAppContext(hubFactory, systemUserName.AppKey, versionKey);
+        var app = await appContext.App();
         return app;
     }
 }

@@ -5,22 +5,20 @@ namespace XTI_Hub;
 
 public sealed class EfAppContext : ISourceAppContext
 {
-    private readonly HubFactory appFactory;
-    private readonly AppKey currentAppKey;
+    private readonly HubFactory hubFactory;
+    private readonly AppKey appKey;
     private readonly AppVersionKey versionKey;
 
-    public EfAppContext(HubFactory appFactory, AppKey currentAppKey, AppVersionKey versionKey)
+    public EfAppContext(HubFactory hubFactory, AppKey appKey, AppVersionKey versionKey)
     {
-        this.appFactory = appFactory;
-        this.currentAppKey = currentAppKey;
+        this.hubFactory = hubFactory;
+        this.appKey = appKey;
         this.versionKey = versionKey;
     }
 
-    public Task<AppContextModel> App() => App(currentAppKey);
-
-    public async Task<AppContextModel> App(AppKey appKey)
+    public async Task<AppContextModel> App()
     {
-        var app = await appFactory.Apps.AppOrUnknown(appKey);
+        var app = await hubFactory.Apps.AppOrUnknown(appKey);
         var appVersion = await app.Version(versionKey);
         var roles = await app.Roles();
         var roleModels = roles.Select(r => r.ToModel()).ToArray();

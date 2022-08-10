@@ -10,9 +10,9 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppContextModel>> GetAppContext(CancellationToken ct)
+    public Task<ResultContainer<AppContextModel>> GetAppContext([FromBody] GetAppContextRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<EmptyRequest, AppContextModel>("GetAppContext").Execute(new EmptyRequest(), ct);
+        return api.Group("System").Action<GetAppContextRequest, AppContextModel>("GetAppContext").Execute(model, ct);
     }
 
     [HttpPost]

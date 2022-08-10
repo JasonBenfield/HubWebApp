@@ -1,7 +1,6 @@
 // Generated Code
 namespace XTI_HubAppClient;
-public sealed partial class GetUserContextRequest
+public sealed partial class GetAppContextRequest
 {
     public string VersionKey { get; set; } = "";
-    public string UserName { get; set; } = "";
 }

@@ -17,11 +17,10 @@ public sealed class HubAppClientContext
         xtiTokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
         xtiTokenAccessor.UseToken<SystemUserXtiToken>();
         var hubClient = new HubAppClient(httpClientFactory, xtiTokenAccessor, clientUrl, clientVersion);
-        var appKey = sp.GetRequiredService<AppKey>();
         var versionKey = sp.GetRequiredService<AppVersionKey>();
-        AppContext = new HcAppContext(hubClient);
+        AppContext = new HcAppContext(hubClient, versionKey);
         var currentUserName = sp.GetRequiredService<ICurrentUserName>();
-        UserContext = new HcUserContext(hubClient, currentUserName);
+        UserContext = new HcUserContext(hubClient, currentUserName, versionKey);
     }
 
     public HcAppContext AppContext { get; }
