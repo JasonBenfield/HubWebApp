@@ -98,7 +98,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Any(id => id == r.AppID) && !roleIDs.Any(id => id == r.ID))
+            .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID))
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -111,7 +111,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Any(id => id == r.AppID) && roleIDs.Any(id => id == r.ID))
+            .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID))
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -127,7 +127,7 @@ public sealed class AppRoleRepository
         var appID = factory.DB
             .ModifierCategories
             .Retrieve()
-            .Where(mc => modCategoryID.Any(id => mc.ID == id))
+            .Where(mc => modCategoryID.Contains(mc.ID))
             .Select(mc => mc.AppID);
         return appID;
     }

@@ -24,10 +24,10 @@ export class UserPanelView extends GridView {
         this.userComponent.setMargin(MarginCss.bottom(3));
         this.appListCard = mainContent.addView(AppListCardView);
         this.appListCard.setMargin(MarginCss.bottom(3));
-        let toolbar = this.addView(ToolbarView)
-            .configure(t => HubTheme.instance.commandToolbar.toolbar(t));
-        this.backButton = toolbar.columnStart.addView(ButtonCommandView);
-        HubTheme.instance.commandToolbar.backButton(this.backButton);
+        const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addView(ToolbarView));
+        this.backButton = HubTheme.instance.commandToolbar.backButton(
+            toolbar.columnStart.addView(ButtonCommandView)
+        );
         this.backButton.setText('Users');
     }
 }

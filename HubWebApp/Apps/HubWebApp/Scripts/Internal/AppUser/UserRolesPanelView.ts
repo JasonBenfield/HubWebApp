@@ -15,6 +15,7 @@ import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSmallView } from "@jasonbenfield/sharedwebapp/Views/TextSmallView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 
@@ -34,12 +35,13 @@ export class UserRolesPanelView extends GridView {
     private readonly defaultUserRolesCard: CardView;
     readonly defaultUserRolesTitle: CardTitleHeaderView;
     readonly defaultUserRoles: ListGroupView;
+    readonly backButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
         this.height100();
         this.layout();
-        this.setTemplateRows(CssLengthUnit.flex(1));
+        this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         const userHeading = mainContent.addView(Heading1View);
         this.personName = userHeading.addView(TextSpanView);
@@ -95,6 +97,11 @@ export class UserRolesPanelView extends GridView {
         this.defaultUserRolesTitle = this.defaultUserRolesCard.addCardTitleHeader();
         this.defaultUserRoles = this.defaultUserRolesCard.addUnorderedListGroup();
         this.defaultUserRoles.setItemViewType(UserRoleListItemView);
+
+        const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addCell().addView(ToolbarView));
+        this.backButton = HubTheme.instance.commandToolbar.backButton(
+            toolbar.columnStart.addView(ButtonCommandView)
+        );
     }
 
     handleUserRoleDeleteClicked(action: (el: HTMLElement) => void) {

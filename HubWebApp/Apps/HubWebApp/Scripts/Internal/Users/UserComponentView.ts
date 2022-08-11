@@ -1,11 +1,11 @@
 ﻿import { ColumnCss } from "@jasonbenfield/sharedwebapp/ColumnCss";
+import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { CardAlertView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { HubTheme } from "../HubTheme";
 
 export class UserComponentView extends CardView {
@@ -33,8 +33,9 @@ export class UserComponentView extends CardView {
         this.userName = formGroupGrid.addFormGroup(FormGroupTextView);
         this.fullName = formGroupGrid.addFormGroup(FormGroupTextView);
         this.email = formGroupGrid.addFormGroup(FormGroupTextView);
-        const nav = body.addView(NavView);
-        this.changePasswordButton = nav.addButtonCommand();
+        this.changePasswordButton = body.addView(ButtonCommandView);
+        this.changePasswordButton.icon.solidStyle('lock');
+        this.changePasswordButton.setContext(ContextualClass.primary);
         this.changePasswordButton.setText('Change Password');
     }
 }

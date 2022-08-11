@@ -75,6 +75,11 @@ export class UserRolesPanel implements IPanel {
         this.denyAccessCommand.add(view.denyAccessButton);
         new TextComponent(view.defaultUserRolesTitle).setText('Default Roles');
         this.defaultUserRoles = new ListGroup(view.defaultUserRoles);
+        new Command(this.back.bind(this)).add(view.backButton);
+    }
+
+    private back() {
+        this.hubApi.Users.Index.open({ UserID: this.user.ID });
     }
 
     private requestAdd() {

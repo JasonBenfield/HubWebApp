@@ -78,6 +78,8 @@ internal sealed class PublishProcess
             Console.WriteLine($"Finalizing release {release.TagName}");
             var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
             await gitHubRepo.FinalizeRelease(release);
+            var options = scopes.GetRequiredService<AdminOptions>();
+            options.VersionNumber = semanticVersion;
         }
     }
 
