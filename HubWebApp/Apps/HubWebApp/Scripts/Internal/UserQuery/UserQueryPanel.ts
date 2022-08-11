@@ -86,8 +86,9 @@ export class UserQueryPanel implements IPanel {
     }
 
     private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const userID = eventArgs.record['UserID'];
-        const userGroupName = eventArgs.record['UserGroupName'];
+        const userID: number = eventArgs.record['UserID'];
+        let userGroupName: string = eventArgs.record['UserGroupName'];
+        userGroupName = userGroupName.replace(/\s+/g, '');
         this.hubApi.Users.Index.open({ UserID: userID }, userGroupName);
     }
 

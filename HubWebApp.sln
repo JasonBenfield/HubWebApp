@@ -147,6 +147,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOp
 		HubWebApp\install.Test.private.json = HubWebApp\install.Test.private.json
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{13AF31FF-4BA9-4A56-9050-55669E456DBF}"
+	ProjectSection(SolutionItems) = preProject
+		SupportServiceApp\install.Development.private.json = SupportServiceApp\install.Development.private.json
+		SupportServiceApp\install.Production.private.json = SupportServiceApp\install.Production.private.json
+		SupportServiceApp\install.Staging.private.json = SupportServiceApp\install.Staging.private.json
+		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -352,6 +360,7 @@ Global
 		{7F983166-B9FC-4852-A179-1BE159F4E46F} = {23386590-35E2-4038-BE9A-BF9EC3E93D3B}
 		{1B2999CB-2AE6-496A-BA68-822D5F516CE9} = {1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}
 		{C3F16C45-2CEA-41BF-9E50-8C848BB7D428} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
+		{13AF31FF-4BA9-4A56-9050-55669E456DBF} = {C5292EEC-32E7-4850-BAB7-B777F69D9445}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

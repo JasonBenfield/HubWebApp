@@ -12,7 +12,7 @@ export class AppListCardView extends CardView {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.apps = this.addView(LinkListGroupView);
+        this.apps = this.addLinkListGroup();
         this.apps.setItemViewType(AppListItemView);
     }
 }
