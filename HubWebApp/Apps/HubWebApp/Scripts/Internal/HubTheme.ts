@@ -64,7 +64,7 @@ export class HubTheme {
             return toolbar
                 .configure(t => {
                     t.setBackgroundContext(ContextualClass.secondary);
-                    t.addCssName('bg-opacity-50');
+                    t.addCssName('bg-opacity-25');
                     t.setPadding(PaddingCss.xs(3));
                 });
         },

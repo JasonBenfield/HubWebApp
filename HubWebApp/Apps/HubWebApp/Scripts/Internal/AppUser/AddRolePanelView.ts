@@ -23,7 +23,7 @@ export class AddRolePanelView extends GridView {
         const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.roles = card.addView(ButtonListGroupView);
+        this.roles = card.addButtonListGroup();
         this.roles.setItemViewType(RoleButtonListItemView);
         const toolbar = this.addView(ToolbarView);
         HubTheme.instance.commandToolbar.toolbar(toolbar);

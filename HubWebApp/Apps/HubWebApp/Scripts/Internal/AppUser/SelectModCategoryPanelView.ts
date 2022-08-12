@@ -9,9 +9,12 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
+import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
+import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
+import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 
 export class SelectModCategoryPanelView extends GridView {
-    readonly defaultModList: ListGroupView;
+    readonly defaultModButton: ButtonCommandView;
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
     readonly modCategories: ButtonListGroupView;
@@ -24,16 +27,16 @@ export class SelectModCategoryPanelView extends GridView {
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.setViewName(SelectModCategoryPanelView.name);
-        this.defaultModList = mainContent.addView(ListGroupView);
-        this.defaultModList.setMargin(MarginCss.bottom(3));
-        const defaultModListItem = this.defaultModList.addListGroupItem();
-        defaultModListItem
-            .addView(TextBlockView)
-            .configure(tb => tb.setText('Default Modifier'));
+        const defaultModList = mainContent.addView(NavView);
+        defaultModList.pills();
+        defaultModList.setMargin(MarginCss.bottom(3));
+        this.defaultModButton = defaultModList.addButtonCommand();
+        this.defaultModButton.setTextCss(new TextCss().start());
+        this.defaultModButton.setText('Default Modifier');
         const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.modCategories = card.addView(ButtonListGroupView);
+        this.modCategories = card.addButtonListGroup();
         this.modCategories.setItemViewType(ModCategoryButtonListItemView);
         card.setMargin(MarginCss.bottom(3));
         const toolbar = this.addView(ToolbarView);
