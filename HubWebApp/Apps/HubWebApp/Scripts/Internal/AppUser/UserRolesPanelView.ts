@@ -75,7 +75,7 @@ export class UserRolesPanelView extends GridView {
         const body = card.addCardBody();
         const navPills = body.addView(NavView);
         navPills.pills();
-        navPills.setFlexCss(new FlexCss().column().fill());
+        navPills.setFlexCss(new FlexCss().column());
         this.selectModifierButton = this.addNavLinkButton(navPills);
         this.selectModifierButton.icon.solidStyle('pencil-alt');
         this.selectModifierButton.setText('Select Different Modifier');
@@ -89,7 +89,7 @@ export class UserRolesPanelView extends GridView {
         this.denyAccessButton.setText('Deny Access');
 
         this.alert = card.addCardAlert();
-        this.userRoles = card.addView(ListGroupView);
+        this.userRoles = card.addUnorderedListGroup();
         this.userRoles.setItemViewType(UserRoleListItemView);
         card.setMargin(MarginCss.bottom(3));
 

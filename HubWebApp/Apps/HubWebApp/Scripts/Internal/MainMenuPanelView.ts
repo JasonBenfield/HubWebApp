@@ -1,4 +1,5 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
@@ -25,6 +26,8 @@ export class MainMenuPanelView extends GridView {
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         const nav = mainContent.addView(NavView);
+        nav.pills();
+        nav.setFlexCss(new FlexCss().column());
         this.appsLink = nav.addTextLink();
         this.appsLink.setText('Apps');
         this.appsLink.setMargin(MarginCss.bottom(3));
