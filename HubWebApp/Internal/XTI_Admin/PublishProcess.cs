@@ -215,10 +215,10 @@ internal sealed class PublishProcess
             .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
-        var privateAppSettings = Path.Combine(publishDir, "appsettings.private.json");
-        if (File.Exists(privateAppSettings))
+        var privateFiles = Directory.GetFiles(publishAppDir, "*.private.*");
+        foreach (var privateFile in privateFiles)
         {
-            File.Delete(privateAppSettings);
+            File.Delete(privateFile);
         }
     }
 

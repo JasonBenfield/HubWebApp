@@ -58,6 +58,11 @@ internal sealed class PublishToolsProcess
                     .AddArgument("p:TypeScriptCompileBlocked", "true");
                 var result = await publishProcess.Run();
                 result.EnsureExitCodeIsZero();
+                var privateFiles = Directory.GetFiles(publishToolsDir, "*.private.*");
+                foreach (var privateFile in privateFiles)
+                {
+                    File.Delete(privateFile);
+                }
             }
         }
     }
