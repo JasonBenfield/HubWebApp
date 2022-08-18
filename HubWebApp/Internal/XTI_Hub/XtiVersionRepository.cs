@@ -93,12 +93,11 @@ public sealed class XtiVersionRepository
         return new AppVersionKey(maxKey + 1);
     }
 
-    public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type, AppKey[] appKeys)
+    public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type)
     {
         XtiVersion? version = null;
         await factory.DB.Transaction(async () =>
         {
-            await AddCurrentVersionToAppsIfNotFound(versionName, timeAdded, appKeys);
             var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
             if (!validVersionTypes.Contains(type))
             {
@@ -108,11 +107,6 @@ public sealed class XtiVersionRepository
             var key = await NextKey(versionName);
             var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
             version = factory.CreateVersion(entity);
-            foreach (var appKey in appKeys)
-            {
-                var app = await factory.Apps.App(appKey);
-                await app.AddVersionIfNotFound(version);
-            }
         });
         return version ?? throw new ArgumentNullException(nameof(version));
     }
@@ -223,7 +217,9 @@ public sealed class XtiVersionRepository
             {
                 var unknownVersion = await AddCurrentVersionToAppsIfNotFound
                 (
-                    AppVersionName.Unknown, DateTimeOffset.Now, new[] { AppKey.Unknown }
+                    AppVersionName.Unknown, 
+                    DateTimeOffset.Now, 
+                    new[] { AppKey.Unknown }
                 );
                 return unknownVersion.App(unknownApp);
             }

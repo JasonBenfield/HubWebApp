@@ -97,11 +97,14 @@ internal sealed class ExternalLoginTest
     {
         var externalAuthKeyTester = tester.Create(hubApi => hubApi.ExternalAuth.ExternalAuthKey);
         await externalAuthKeyTester.LoginAsAdmin();
-        var authKey = await externalAuthKeyTester.Execute(new ExternalAuthKeyModel
-        {
-            AppKey = appKey,
-            ExternalUserKey = externalUserKey
-        });
+        var authKey = await externalAuthKeyTester.Execute
+        (
+            new ExternalAuthKeyModel
+            {
+                ExternalUserKey = externalUserKey
+            },
+            new ModifierKey(appKey.Format())
+        );
         return authKey;
     }
 

@@ -14,8 +14,7 @@ internal sealed class EndPublishTest
         var newVersion = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Patch,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Patch
         });
         var request = new PublishVersionRequest
         {
@@ -37,8 +36,7 @@ internal sealed class EndPublishTest
         var version1 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Patch,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Patch
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {
@@ -53,8 +51,7 @@ internal sealed class EndPublishTest
         var version2 = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Patch,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Patch
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {

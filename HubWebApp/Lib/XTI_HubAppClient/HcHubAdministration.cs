@@ -91,13 +91,12 @@ public sealed class HcHubAdministration : IHubAdministration
         return hubClient.Install.NewInstallation(request);
     }
 
-    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
+    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType)
     {
         var request = new NewVersionRequest
         {
             VersionName = versionName,
-            VersionType = versionType,
-            AppKeys = appKeys
+            VersionType = versionType
         };
         return hubClient.Publish.NewVersion(request);
     }

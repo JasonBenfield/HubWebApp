@@ -29,9 +29,11 @@ public sealed class CompleteVersionProcess
         await gitRepo.CommitChanges($"Version {versionBranchName.Version.Key}");
         await gitHubRepo.CompleteVersion(versionBranchName);
         var repoInfo = await gitHubRepo.RepositoryInformation();
+        var isDefaultCheckedOut = false;
         try
         {
             await gitRepo.CheckoutBranch(repoInfo.DefaultBranch);
+            isDefaultCheckedOut = true;
         }
         catch (Exception ex)
         {
@@ -44,6 +46,9 @@ public sealed class CompleteVersionProcess
             scopes.GetRequiredService<AppVersionNameAccessor>().Value, 
             versionKey
         );
-        gitRepo.DeleteBranch(versionBranchName.Value);
+        if (isDefaultCheckedOut)
+        {
+            gitRepo.DeleteBranch(versionBranchName.Value);
+        }
     }
 }

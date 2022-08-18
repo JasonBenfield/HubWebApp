@@ -12,8 +12,7 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Patch,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Patch
         };
         var newVersion = await tester.Execute(model);
         Assert.That(newVersion.Status, Is.EqualTo(AppVersionStatus.Values.New));
@@ -27,8 +26,7 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Minor,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Minor
         };
         await tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);
@@ -42,8 +40,7 @@ sealed class NewVersionTest
         var model = new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Major,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Major
         };
         await tester.LoginAsAdmin();
         var newVersion = await tester.Execute(model);

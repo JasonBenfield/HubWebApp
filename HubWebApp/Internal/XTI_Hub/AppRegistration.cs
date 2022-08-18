@@ -21,7 +21,7 @@ public sealed class AppRegistration
             .Union(new[] { AppRoleName.DenyAccess })
             .Distinct();
         await app.SetRoles(roleNames);
-        var version = await app.Version(versionKey);
+        var version = await app.AddVersionIfNotFound(versionKey);
         foreach (var groupTemplate in template.GroupTemplates)
         {
             await UpdateResourceGroupFromTemplate(app, version, groupTemplate);

@@ -20,16 +20,7 @@ interface ILoginResult {
 	Token: string;
 }
 interface IExternalAuthKeyModel {
-	AppKey: IAppKey;
 	ExternalUserKey: string;
-}
-interface IAppKey {
-	Name: IAppName;
-	Type: IAppType;
-}
-interface IAppName {
-	Value: string;
-	DisplayText: string;
 }
 interface IRegisterUserAuthenticatorRequest {
 	UserID: number;
@@ -87,6 +78,14 @@ interface IAppModel {
 	VersionName: IAppVersionName;
 	Title: string;
 	PublicKey: IModifierKey;
+}
+interface IAppKey {
+	Name: IAppName;
+	Type: IAppType;
+}
+interface IAppName {
+	Value: string;
+	DisplayText: string;
 }
 interface IAppVersionName {
 	Value: string;
@@ -257,7 +256,6 @@ interface IAppRoleName {
 interface INewVersionRequest {
 	VersionName: IAppVersionName;
 	VersionType: IAppVersionType;
-	AppKeys: IAppKey[];
 }
 interface IPublishVersionRequest {
 	VersionName: IAppVersionName;
@@ -395,6 +393,12 @@ interface IUserContextRoleModel {
 	ModifierCategoryID: number;
 	ModifierKey: IModifierKey;
 	Roles: IAppRoleModel[];
+}
+interface IAddOrUpdateModifierByTargetKeyRequest {
+	ModCategoryName: string;
+	GenerateModKey: IGenerateKeyModel;
+	TargetKey: string;
+	TargetDisplayText: string;
 }
 interface IUserGroupKey {
 	UserGroupName: string;

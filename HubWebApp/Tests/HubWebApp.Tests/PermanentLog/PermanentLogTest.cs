@@ -229,8 +229,7 @@ internal sealed class PermanentLogTest
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("FakeWebApp"),
-            VersionType = AppVersionType.Values.Major,
-            AppKeys = new[] { AppKey.WebApp("Fake") }
+            VersionType = AppVersionType.Values.Major
         });
         await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
         {

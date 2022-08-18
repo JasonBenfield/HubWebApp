@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.14" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.16" />
 	</ItemGroup>
 
 	<ItemGroup>

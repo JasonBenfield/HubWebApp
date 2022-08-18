@@ -6,7 +6,7 @@ public interface IHubAdministration
 {
     Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs);
 
-    Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys);
+    Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType);
 
     Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey);
 

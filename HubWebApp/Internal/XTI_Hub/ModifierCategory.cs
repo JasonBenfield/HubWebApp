@@ -21,6 +21,9 @@ public sealed class ModifierCategory
     public Task<Modifier> AddDefaultModifierIfNotFound()
         => factory.Modifiers.AddDefaultModifierIfNotFound(this);
 
+    public Task<Modifier> AddOrUpdateModifier(IGeneratedKey generatedModKey, string targetKey, string displayText)
+        => AddOrUpdateModifier(generatedModKey, targetKey, displayText);
+
     public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, int targetID, string displayText)
         => AddOrUpdateModifier(modKey, targetID.ToString(), displayText);
 
