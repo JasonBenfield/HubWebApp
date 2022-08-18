@@ -56,8 +56,7 @@ sealed class BeginCurrentInstallationTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         await hubApi.Publish.BeginPublish.Invoke

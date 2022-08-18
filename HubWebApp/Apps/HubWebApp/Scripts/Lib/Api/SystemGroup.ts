@@ -11,15 +11,20 @@ export class SystemGroup extends AppApiGroup {
 		super(events, resourceUrl, 'System');
 		this.GetAppContextAction = this.createAction<IGetAppContextRequest,IAppContextModel>('GetAppContext', 'Get App Context');
 		this.GetUserContextAction = this.createAction<IGetUserContextRequest,IUserContextModel>('GetUserContext', 'Get User Context');
+		this.AddOrUpdateModifierByTargetKeyAction = this.createAction<IAddOrUpdateModifierByTargetKeyRequest,IModifierModel>('AddOrUpdateModifierByTargetKey', 'Add Or Update Modifier By Target Key');
 	}
 	
 	readonly GetAppContextAction: AppApiAction<IGetAppContextRequest,IAppContextModel>;
 	readonly GetUserContextAction: AppApiAction<IGetUserContextRequest,IUserContextModel>;
+	readonly AddOrUpdateModifierByTargetKeyAction: AppApiAction<IAddOrUpdateModifierByTargetKeyRequest,IModifierModel>;
 	
 	GetAppContext(model: IGetAppContextRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetAppContextAction.execute(model, errorOptions || {});
 	}
 	GetUserContext(model: IGetUserContextRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserContextAction.execute(model, errorOptions || {});
+	}
+	AddOrUpdateModifierByTargetKey(model: IAddOrUpdateModifierByTargetKeyRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateModifierByTargetKeyAction.execute(model, errorOptions || {});
 	}
 }

@@ -20,4 +20,10 @@ public sealed partial class SystemController : Controller
     {
         return api.Group("System").Action<GetUserContextRequest, UserContextModel>("GetUserContext").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByTargetKey([FromBody] AddOrUpdateModifierByTargetKeyRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<AddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").Execute(model, ct);
+    }
 }

@@ -77,6 +77,13 @@ public sealed class App
     public Task<AppRole> Role(AppRoleName roleName) =>
         factory.Roles.Role(this, roleName);
 
+    internal async Task<AppVersion> AddVersionIfNotFound(AppVersionKey versionKey)
+    {
+        var version = await factory.Versions.VersionByName(new AppVersionName(record.VersionName), versionKey);
+        await AddVersionIfNotFound(version);
+        return new AppVersion(factory, this, version);
+    }
+
     internal Task AddVersionIfNotFound(XtiVersion version) => factory.Versions.AddVersionToAppIfNotFound(this, version);
 
     public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);

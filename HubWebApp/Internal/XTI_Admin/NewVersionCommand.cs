@@ -34,13 +34,10 @@ public sealed class NewVersionCommand : ICommand
         }
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
-        await hubAdministration.AddOrUpdateApps(versionName, appDefs);
         var newVersion = await hubAdministration.StartNewVersion
         (
             versionName,
-            versionType,
-            appKeys
+            versionType
         );
         var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey.DisplayText);
         await gitHubRepo.CreateNewVersion(gitVersion);

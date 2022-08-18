@@ -26,6 +26,50 @@ public sealed class ModifierRepository
         return factory.CreateModifier(record);
     }
 
+    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, IGeneratedKey generatedModKey, string targetKey, string displayText)
+    {
+        var record = await GetModifierByTargetKey(category, targetKey);
+        if (record == null)
+        {
+            var modKey = await GenerateModKey(category, generatedModKey);
+            record = await Add(category, modKey, targetKey, displayText);
+        }
+        else
+        {
+            await factory.DB.Modifiers.Update
+            (
+                record,
+                m =>
+                {
+                    m.DisplayText = displayText;
+                }
+            );
+        }
+        return factory.CreateModifier(record);
+    }
+
+    private async Task<ModifierKey> GenerateModKey(ModifierCategory category, IGeneratedKey generatedModKey)
+    {
+        var modKey = new ModifierKey(generatedModKey.Value());
+        var existingModifier = await GetModifierByModKey(category, modKey);
+        if (existingModifier != null && generatedModKey is FixedGeneratedKey)
+        {
+            throw new Exception("Unable to generate a unique key");
+        }
+        int keyAttempts = 0;
+        while (existingModifier != null)
+        {
+            modKey = new ModifierKey(generatedModKey.Value());
+            keyAttempts++;
+            if (keyAttempts > 100)
+            {
+                throw new Exception("Unable to generate a unique key");
+            }
+            existingModifier = await GetModifierByModKey(category, modKey);
+        }
+        return modKey;
+    }
+
     internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, ModifierKey modKey, string targetKey, string displayText)
     {
         var record = await GetModifierByTargetKey(category, targetKey);

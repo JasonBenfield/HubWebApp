@@ -14,8 +14,7 @@ internal sealed class BeginPublishTest
         var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
-            VersionType = AppVersionType.Values.Patch,
-            AppKeys = new[] { HubInfo.AppKey }
+            VersionType = AppVersionType.Values.Patch
         });
         await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
         {
@@ -48,8 +47,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
@@ -72,8 +70,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -96,8 +93,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -120,8 +116,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -137,8 +132,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
@@ -161,8 +155,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -178,8 +171,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -202,8 +194,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -219,8 +210,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -243,8 +233,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -260,8 +249,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -284,8 +272,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -301,8 +288,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -318,8 +304,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         patch = await hubApi.Publish.BeginPublish.Invoke
@@ -342,8 +327,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -359,8 +343,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         minorVersion = await hubApi.Publish.BeginPublish.Invoke
@@ -383,8 +366,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Patch,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Patch
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -400,8 +382,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Minor,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Minor
             }
         );
         await hubApi.Publish.BeginPublish.Invoke
@@ -417,8 +398,7 @@ internal sealed class BeginPublishTest
             new NewVersionRequest
             {
                 VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major,
-                AppKeys = new[] { HubInfo.AppKey }
+                VersionType = AppVersionType.Values.Major
             }
         );
         majorVersion = await hubApi.Publish.BeginPublish.Invoke

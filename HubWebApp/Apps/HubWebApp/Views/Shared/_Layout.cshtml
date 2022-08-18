@@ -4,4 +4,12 @@
 @section scripts{
     @RenderSection("scripts", false)
 }
+@section styles{
+    <style>
+        .vh-100 {
+            height: -webkit-fill-available;
+        }
+    </style>
+    @RenderSection("styles", false)
+}
 @RenderBody()

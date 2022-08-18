@@ -164,9 +164,9 @@ public sealed class EfHubAdministration : IHubAdministration
         return user.ToModel();
     }
 
-    public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, AppKey[] appKeys)
+    public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType)
     {
-        var version = await hubFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, appKeys);
+        var version = await hubFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType);
         return version.ToModel();
     }
 }

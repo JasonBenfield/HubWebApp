@@ -9,5 +9,6 @@ internal static class SystemGroupExtensions
         services.AddScoped<AppFromSystemUser>();
         services.AddScoped<GetAppContextAction>();
         services.AddScoped<GetUserContextAction>();
+        services.AddScoped<AddOrUpdateModifierByTargetKeyAction>();
     }
 }
