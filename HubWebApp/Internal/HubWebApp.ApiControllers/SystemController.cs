@@ -26,4 +26,16 @@ public sealed partial class SystemController : Controller
     {
         return api.Group("System").Action<AddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<StoreObjectRequest, string>("StoreObject").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<GetStoredObjectRequest, string>("GetStoredObject").Execute(model, ct);
+    }
 }
