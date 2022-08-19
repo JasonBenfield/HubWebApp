@@ -9,7 +9,7 @@ public sealed partial class AppsGroup : AppClientGroup
 
     public AppsGroupActions Actions { get; }
 
-    public Task<AppModel[]> GetApps() => Actions.GetApps.Post("", new EmptyRequest());
-    public Task<AppDomainModel[]> GetAppDomains() => Actions.GetAppDomains.Post("", new EmptyRequest());
+    public Task<AppModel[]> GetApps(CancellationToken ct = default) => Actions.GetApps.Post("", new EmptyRequest(), ct);
+    public Task<AppDomainModel[]> GetAppDomains(CancellationToken ct = default) => Actions.GetAppDomains.Post("", new EmptyRequest(), ct);
     public sealed record AppsGroupActions(AppClientGetAction<EmptyRequest> Index, AppClientPostAction<EmptyRequest, AppModel[]> GetApps, AppClientPostAction<EmptyRequest, AppDomainModel[]> GetAppDomains);
 }

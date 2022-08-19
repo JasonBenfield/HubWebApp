@@ -9,11 +9,11 @@ public sealed partial class AppGroup : AppClientGroup
 
     public AppGroupActions Actions { get; }
 
-    public Task<AppModel> GetApp(string modifier) => Actions.GetApp.Post(modifier, new EmptyRequest());
-    public Task<ResourceGroupModel[]> GetResourceGroups(string modifier) => Actions.GetResourceGroups.Post(modifier, new EmptyRequest());
-    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, int model) => Actions.GetMostRecentRequests.Post(modifier, model);
-    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, int model) => Actions.GetMostRecentErrorEvents.Post(modifier, model);
-    public Task<ModifierCategoryModel[]> GetModifierCategories(string modifier) => Actions.GetModifierCategories.Post(modifier, new EmptyRequest());
-    public Task<ModifierModel> GetDefaultModifier(string modifier) => Actions.GetDefaultModifier.Post(modifier, new EmptyRequest());
+    public Task<AppModel> GetApp(string modifier, CancellationToken ct = default) => Actions.GetApp.Post(modifier, new EmptyRequest(), ct);
+    public Task<ResourceGroupModel[]> GetResourceGroups(string modifier, CancellationToken ct = default) => Actions.GetResourceGroups.Post(modifier, new EmptyRequest(), ct);
+    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, int model, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, model, ct);
+    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, int model, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, model, ct);
+    public Task<ModifierCategoryModel[]> GetModifierCategories(string modifier, CancellationToken ct = default) => Actions.GetModifierCategories.Post(modifier, new EmptyRequest(), ct);
+    public Task<ModifierModel> GetDefaultModifier(string modifier, CancellationToken ct = default) => Actions.GetDefaultModifier.Post(modifier, new EmptyRequest(), ct);
     public sealed record AppGroupActions(AppClientGetAction<EmptyRequest> Index, AppClientPostAction<EmptyRequest, AppModel> GetApp, AppClientPostAction<EmptyRequest, ResourceGroupModel[]> GetResourceGroups, AppClientPostAction<int, AppRequestExpandedModel[]> GetMostRecentRequests, AppClientPostAction<int, AppLogEntryModel[]> GetMostRecentErrorEvents, AppClientPostAction<EmptyRequest, ModifierCategoryModel[]> GetModifierCategories, AppClientPostAction<EmptyRequest, ModifierModel> GetDefaultModifier);
 }

@@ -9,7 +9,7 @@ public sealed partial class UserGroupsGroup : AppClientGroup
 
     public UserGroupsGroupActions Actions { get; }
 
-    public Task<AppUserGroupModel> AddUserGroupIfNotExists(AddUserGroupIfNotExistsRequest model) => Actions.AddUserGroupIfNotExists.Post("", model);
-    public Task<AppUserGroupModel[]> GetUserGroups() => Actions.GetUserGroups.Post("", new EmptyRequest());
+    public Task<AppUserGroupModel> AddUserGroupIfNotExists(AddUserGroupIfNotExistsRequest model, CancellationToken ct = default) => Actions.AddUserGroupIfNotExists.Post("", model, ct);
+    public Task<AppUserGroupModel[]> GetUserGroups(CancellationToken ct = default) => Actions.GetUserGroups.Post("", new EmptyRequest(), ct);
     public sealed record UserGroupsGroupActions(AppClientGetAction<EmptyRequest> Index, AppClientGetAction<UserGroupKey> UserQuery, AppClientPostAction<AddUserGroupIfNotExistsRequest, AppUserGroupModel> AddUserGroupIfNotExists, AppClientPostAction<EmptyRequest, AppUserGroupModel[]> GetUserGroups);
 }

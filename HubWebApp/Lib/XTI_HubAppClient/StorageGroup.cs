@@ -9,7 +9,7 @@ public sealed partial class StorageGroup : AppClientGroup
 
     public StorageGroupActions Actions { get; }
 
-    public Task<string> StoreObject(StoreObjectRequest model) => Actions.StoreObject.Post("", model);
-    public Task<string> GetStoredObject(GetStoredObjectRequest model) => Actions.GetStoredObject.Post("", model);
+    public Task<string> StoreObject(StoreObjectRequest model, CancellationToken ct = default) => Actions.StoreObject.Post("", model, ct);
+    public Task<string> GetStoredObject(GetStoredObjectRequest model, CancellationToken ct = default) => Actions.GetStoredObject.Post("", model, ct);
     public sealed record StorageGroupActions(AppClientPostAction<StoreObjectRequest, string> StoreObject, AppClientPostAction<GetStoredObjectRequest, string> GetStoredObject);
 }

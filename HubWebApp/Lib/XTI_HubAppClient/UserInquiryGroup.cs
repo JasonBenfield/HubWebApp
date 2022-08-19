@@ -9,6 +9,6 @@ public sealed partial class UserInquiryGroup : AppClientGroup
 
     public UserInquiryGroupActions Actions { get; }
 
-    public Task<AppUserModel> GetUser(string modifier, int model) => Actions.GetUser.Post(modifier, model);
+    public Task<AppUserModel> GetUser(string modifier, int model, CancellationToken ct = default) => Actions.GetUser.Post(modifier, model, ct);
     public sealed record UserInquiryGroupActions(AppClientPostAction<int, AppUserModel> GetUser);
 }

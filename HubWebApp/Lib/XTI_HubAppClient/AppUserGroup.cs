@@ -9,7 +9,7 @@ public sealed partial class AppUserGroup : AppClientGroup
 
     public AppUserGroupActions Actions { get; }
 
-    public Task<UserAccessModel> GetUserAccess(string modifier, UserModifierKey model) => Actions.GetUserAccess.Post(modifier, model);
-    public Task<AppRoleModel[]> GetUnassignedRoles(string modifier, UserModifierKey model) => Actions.GetUnassignedRoles.Post(modifier, model);
+    public Task<UserAccessModel> GetUserAccess(string modifier, UserModifierKey model, CancellationToken ct = default) => Actions.GetUserAccess.Post(modifier, model, ct);
+    public Task<AppRoleModel[]> GetUnassignedRoles(string modifier, UserModifierKey model, CancellationToken ct = default) => Actions.GetUnassignedRoles.Post(modifier, model, ct);
     public sealed record AppUserGroupActions(AppClientGetAction<GetAppUserRequest> Index, AppClientPostAction<UserModifierKey, UserAccessModel> GetUserAccess, AppClientPostAction<UserModifierKey, AppRoleModel[]> GetUnassignedRoles);
 }

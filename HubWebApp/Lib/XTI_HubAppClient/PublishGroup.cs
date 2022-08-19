@@ -9,9 +9,9 @@ public sealed partial class PublishGroup : AppClientGroup
 
     public PublishGroupActions Actions { get; }
 
-    public Task<XtiVersionModel> NewVersion(NewVersionRequest model) => Actions.NewVersion.Post("", model);
-    public Task<XtiVersionModel> BeginPublish(PublishVersionRequest model) => Actions.BeginPublish.Post("", model);
-    public Task<XtiVersionModel> EndPublish(PublishVersionRequest model) => Actions.EndPublish.Post("", model);
-    public Task<XtiVersionModel[]> GetVersions(AppKey model) => Actions.GetVersions.Post("", model);
+    public Task<XtiVersionModel> NewVersion(NewVersionRequest model, CancellationToken ct = default) => Actions.NewVersion.Post("", model, ct);
+    public Task<XtiVersionModel> BeginPublish(PublishVersionRequest model, CancellationToken ct = default) => Actions.BeginPublish.Post("", model, ct);
+    public Task<XtiVersionModel> EndPublish(PublishVersionRequest model, CancellationToken ct = default) => Actions.EndPublish.Post("", model, ct);
+    public Task<XtiVersionModel[]> GetVersions(AppKey model, CancellationToken ct = default) => Actions.GetVersions.Post("", model, ct);
     public sealed record PublishGroupActions(AppClientPostAction<NewVersionRequest, XtiVersionModel> NewVersion, AppClientPostAction<PublishVersionRequest, XtiVersionModel> BeginPublish, AppClientPostAction<PublishVersionRequest, XtiVersionModel> EndPublish, AppClientPostAction<AppKey, XtiVersionModel[]> GetVersions);
 }
