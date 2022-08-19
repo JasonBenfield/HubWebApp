@@ -9,7 +9,7 @@ public sealed partial class AuthenticatorsGroup : AppClientGroup
 
     public AuthenticatorsGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> RegisterAuthenticator(string modifier) => Actions.RegisterAuthenticator.Post(modifier, new EmptyRequest());
-    public Task<EmptyActionResult> RegisterUserAuthenticator(string modifier, RegisterUserAuthenticatorRequest model) => Actions.RegisterUserAuthenticator.Post(modifier, model);
+    public Task<EmptyActionResult> RegisterAuthenticator(string modifier, CancellationToken ct = default) => Actions.RegisterAuthenticator.Post(modifier, new EmptyRequest(), ct);
+    public Task<EmptyActionResult> RegisterUserAuthenticator(string modifier, RegisterUserAuthenticatorRequest model, CancellationToken ct = default) => Actions.RegisterUserAuthenticator.Post(modifier, model, ct);
     public sealed record AuthenticatorsGroupActions(AppClientPostAction<EmptyRequest, EmptyActionResult> RegisterAuthenticator, AppClientPostAction<RegisterUserAuthenticatorRequest, EmptyActionResult> RegisterUserAuthenticator);
 }

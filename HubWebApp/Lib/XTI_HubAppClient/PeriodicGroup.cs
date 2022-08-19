@@ -9,6 +9,6 @@ public sealed partial class PeriodicGroup : AppClientGroup
 
     public PeriodicGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> PurgeLogs() => Actions.PurgeLogs.Post("", new EmptyRequest());
+    public Task<EmptyActionResult> PurgeLogs(CancellationToken ct = default) => Actions.PurgeLogs.Post("", new EmptyRequest(), ct);
     public sealed record PeriodicGroupActions(AppClientPostAction<EmptyRequest, EmptyActionResult> PurgeLogs);
 }

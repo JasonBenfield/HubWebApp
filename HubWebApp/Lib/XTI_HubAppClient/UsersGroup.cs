@@ -9,9 +9,9 @@ public sealed partial class UsersGroup : AppClientGroup
 
     public UsersGroupActions Actions { get; }
 
-    public Task<AppUserGroupModel> GetUserGroup(string modifier) => Actions.GetUserGroup.Post(modifier, new EmptyRequest());
-    public Task<AppUserModel[]> GetUsers(string modifier) => Actions.GetUsers.Post(modifier, new EmptyRequest());
-    public Task<int> AddOrUpdateUser(string modifier, AddOrUpdateUserModel model) => Actions.AddOrUpdateUser.Post(modifier, model);
-    public Task<AppUserModel> AddUser(string modifier, AddUserForm model) => Actions.AddUser.Post(modifier, model);
+    public Task<AppUserGroupModel> GetUserGroup(string modifier, CancellationToken ct = default) => Actions.GetUserGroup.Post(modifier, new EmptyRequest(), ct);
+    public Task<AppUserModel[]> GetUsers(string modifier, CancellationToken ct = default) => Actions.GetUsers.Post(modifier, new EmptyRequest(), ct);
+    public Task<int> AddOrUpdateUser(string modifier, AddOrUpdateUserModel model, CancellationToken ct = default) => Actions.AddOrUpdateUser.Post(modifier, model, ct);
+    public Task<AppUserModel> AddUser(string modifier, AddUserForm model, CancellationToken ct = default) => Actions.AddUser.Post(modifier, model, ct);
     public sealed record UsersGroupActions(AppClientGetAction<GetUserRequest> Index, AppClientPostAction<EmptyRequest, AppUserGroupModel> GetUserGroup, AppClientPostAction<EmptyRequest, AppUserModel[]> GetUsers, AppClientPostAction<AddOrUpdateUserModel, int> AddOrUpdateUser, AppClientPostAction<AddUserForm, AppUserModel> AddUser);
 }

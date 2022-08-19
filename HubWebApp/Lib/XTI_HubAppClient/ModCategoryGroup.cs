@@ -9,8 +9,8 @@ public sealed partial class ModCategoryGroup : AppClientGroup
 
     public ModCategoryGroupActions Actions { get; }
 
-    public Task<ModifierCategoryModel> GetModCategory(string modifier, int model) => Actions.GetModCategory.Post(modifier, model);
-    public Task<ModifierModel[]> GetModifiers(string modifier, int model) => Actions.GetModifiers.Post(modifier, model);
-    public Task<ResourceGroupModel[]> GetResourceGroups(string modifier, int model) => Actions.GetResourceGroups.Post(modifier, model);
+    public Task<ModifierCategoryModel> GetModCategory(string modifier, int model, CancellationToken ct = default) => Actions.GetModCategory.Post(modifier, model, ct);
+    public Task<ModifierModel[]> GetModifiers(string modifier, int model, CancellationToken ct = default) => Actions.GetModifiers.Post(modifier, model, ct);
+    public Task<ResourceGroupModel[]> GetResourceGroups(string modifier, int model, CancellationToken ct = default) => Actions.GetResourceGroups.Post(modifier, model, ct);
     public sealed record ModCategoryGroupActions(AppClientPostAction<int, ModifierCategoryModel> GetModCategory, AppClientPostAction<int, ModifierModel[]> GetModifiers, AppClientPostAction<int, ResourceGroupModel[]> GetResourceGroups);
 }

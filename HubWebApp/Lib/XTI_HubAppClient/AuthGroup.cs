@@ -9,7 +9,7 @@ public sealed partial class AuthGroup : AppClientGroup
 
     public AuthGroupActions Actions { get; }
 
-    public Task<string> VerifyLogin(VerifyLoginForm model) => Actions.VerifyLogin.Post("", model);
-    public Task<string> LoginReturnKey(LoginReturnModel model) => Actions.LoginReturnKey.Post("", model);
+    public Task<string> VerifyLogin(VerifyLoginForm model, CancellationToken ct = default) => Actions.VerifyLogin.Post("", model, ct);
+    public Task<string> LoginReturnKey(LoginReturnModel model, CancellationToken ct = default) => Actions.LoginReturnKey.Post("", model, ct);
     public sealed record AuthGroupActions(AppClientPostAction<VerifyLoginForm, string> VerifyLogin, AppClientGetAction<EmptyRequest> VerifyLoginForm, AppClientGetAction<LoginModel> Login, AppClientPostAction<LoginReturnModel, string> LoginReturnKey);
 }

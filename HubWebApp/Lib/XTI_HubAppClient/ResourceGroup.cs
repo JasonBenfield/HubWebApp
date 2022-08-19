@@ -9,9 +9,9 @@ public sealed partial class ResourceGroup : AppClientGroup
 
     public ResourceGroupActions Actions { get; }
 
-    public Task<ResourceModel> GetResource(string modifier, GetResourceRequest model) => Actions.GetResource.Post(modifier, model);
-    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceRoleAccessRequest model) => Actions.GetRoleAccess.Post(modifier, model);
-    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceLogRequest model) => Actions.GetMostRecentRequests.Post(modifier, model);
-    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest model) => Actions.GetMostRecentErrorEvents.Post(modifier, model);
+    public Task<ResourceModel> GetResource(string modifier, GetResourceRequest model, CancellationToken ct = default) => Actions.GetResource.Post(modifier, model, ct);
+    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceRoleAccessRequest model, CancellationToken ct = default) => Actions.GetRoleAccess.Post(modifier, model, ct);
+    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, model, ct);
+    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, model, ct);
     public sealed record ResourceGroupActions(AppClientPostAction<GetResourceRequest, ResourceModel> GetResource, AppClientPostAction<GetResourceRoleAccessRequest, AppRoleModel[]> GetRoleAccess, AppClientPostAction<GetResourceLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests, AppClientPostAction<GetResourceLogRequest, AppLogEntryModel[]> GetMostRecentErrorEvents);
 }
