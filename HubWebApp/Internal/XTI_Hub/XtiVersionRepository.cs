@@ -96,18 +96,22 @@ public sealed class XtiVersionRepository
     public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type)
     {
         XtiVersion? version = null;
-        await factory.DB.Transaction(async () =>
-        {
-            var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
-            if (!validVersionTypes.Contains(type))
+        await factory.DB.Transaction
+        (
+            async () =>
             {
-                throw new ArgumentException($"Version type {type} is not valid");
+                var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
+                if (!validVersionTypes.Contains(type))
+                {
+                    throw new ArgumentException($"Version type {type} is not valid");
+                }
+                await AddCurrentVersionIfNotFound(versionName, timeAdded);
+                var versionNumber = new AppVersionNumber(0, 0, 0);
+                var key = await NextKey(versionName);
+                var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
+                version = factory.CreateVersion(entity);
             }
-            var versionNumber = new AppVersionNumber(0, 0, 0);
-            var key = await NextKey(versionName);
-            var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
-            version = factory.CreateVersion(entity);
-        });
+        );
         return version ?? throw new ArgumentNullException(nameof(version));
     }
 
