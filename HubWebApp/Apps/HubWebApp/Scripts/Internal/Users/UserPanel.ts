@@ -2,7 +2,7 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { WebPage } from "@jasonbenfield/sharedwebapp/Api/WebPage";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
-import { AppListCard } from "../Apps/AppListCard";
+import { AppListCard } from "./AppListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
 
@@ -46,9 +46,6 @@ export class UserPanel implements IPanel {
         this.userComponent = new UserComponent(this.hubApi, this.view.userComponent);
         this.appListCard = new AppListCard(
             this.hubApi,
-            app => this.hubApi.AppUser.Index.getUrl(
-                { App: app.PublicKey.DisplayText, UserID: this.userID }
-            ).toString(),
             this.view.appListCard
         );
         this.backCommand.add(this.view.backButton);
@@ -79,6 +76,7 @@ export class UserPanel implements IPanel {
 
     setUserID(userID: number) {
         this.userID = userID;
+        this.appListCard.setUserID(userID);
         this.userComponent.setUserID(userID);
     }
 

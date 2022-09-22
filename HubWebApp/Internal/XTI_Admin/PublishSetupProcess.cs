@@ -39,7 +39,8 @@ internal sealed class PublishSetupProcess
                 .AddArgument("p:PublishDir", publishSetupDir);
             var result = await publishProcess.Run();
             result.EnsureExitCodeIsZero();
-            var privateFiles = Directory.GetFiles(publishSetupDir, "*.private.*");
+            var privateFiles = Directory.GetFiles(publishSetupDir, "*.private.*")
+                .Where(f => !f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
             foreach (var privateFile in privateFiles)
             {
                 File.Delete(privateFile);

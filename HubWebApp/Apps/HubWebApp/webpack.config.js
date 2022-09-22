@@ -85,7 +85,9 @@ const exportModule = {
 const outputFilename = '[name].js';
 
 const resolve = {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
+    alias: {
+    }
 };
 const plugins = [
     new MiniCssExtractPlugin({

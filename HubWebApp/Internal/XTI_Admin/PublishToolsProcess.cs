@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Core;
 using XTI_Processes;
 
 namespace XTI_Admin;
@@ -58,7 +57,8 @@ internal sealed class PublishToolsProcess
                     .AddArgument("p:TypeScriptCompileBlocked", "true");
                 var result = await publishProcess.Run();
                 result.EnsureExitCodeIsZero();
-                var privateFiles = Directory.GetFiles(publishToolsDir, "*.private.*");
+                var privateFiles = Directory.GetFiles(publishToolsDir, "*.private.*")
+                    .Where(f => !f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
                 foreach (var privateFile in privateFiles)
                 {
                     File.Delete(privateFile);

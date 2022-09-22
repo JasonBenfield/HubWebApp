@@ -1,10 +1,5 @@
 // Generated code
 
-interface ILogoutRequest {
-	ReturnUrl: string;
-}
-interface IEmptyActionResult {
-}
 interface ILoginModel {
 	AuthKey: string;
 	ReturnKey: string;

@@ -36,7 +36,6 @@ export class AppListPanel implements IPanel {
     ) {
         this.appListCard = new AppListCard(
             this.hubApi,
-            app => this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
             this.view.appListCard
         );
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));

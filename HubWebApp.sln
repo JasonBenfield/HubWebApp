@@ -155,6 +155,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOp
 		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubAppClientTest", "HubWebApp\Tests\HubAppClientTest\HubAppClientTest.csproj", "{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -305,6 +307,10 @@ Global
 		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73D9BAB7-B5C7-4070-A507-BC47CAB0B77C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -361,6 +367,7 @@ Global
 		{1B2999CB-2AE6-496A-BA68-822D5F516CE9} = {1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}
 		{C3F16C45-2CEA-41BF-9E50-8C848BB7D428} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
 		{13AF31FF-4BA9-4A56-9050-55669E456DBF} = {C5292EEC-32E7-4850-BAB7-B777F69D9445}
+		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

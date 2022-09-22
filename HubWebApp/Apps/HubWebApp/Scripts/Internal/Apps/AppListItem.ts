@@ -6,12 +6,13 @@ import { AppListItemView } from "./AppListItemView";
 export class AppListItem extends BasicComponent {
     constructor(
         readonly app: IAppModel,
-        appRedirectUrl: (app: IAppModel) => string, view: AppListItemView
+        appRedirectUrl: string,
+        view: AppListItemView
     ) {
         super(view);
         new TextComponent(view.appName).setText(app.AppKey.Name.DisplayText);
         new TextComponent(view.appTitle).setText(app.Title);
         new TextComponent(view.appType).setText(app.AppKey.Type.DisplayText);
-        new LinkComponent(view).setHref(appRedirectUrl(app));
+        new LinkComponent(view).setHref(appRedirectUrl);
     }
 }
