@@ -215,7 +215,8 @@ internal sealed class PublishProcess
             .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
-        var privateFiles = Directory.GetFiles(publishAppDir, "*.private.*");
+        var privateFiles = Directory.GetFiles(publishAppDir, "*.private.*")
+            .Where(f => !f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase));
         foreach (var privateFile in privateFiles)
         {
             File.Delete(privateFile);

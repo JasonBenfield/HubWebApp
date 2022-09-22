@@ -4,13 +4,15 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
-import { AppListCardView } from "./AppListCardView";
-import { AppListItem } from "./AppListItem";
-import { AppListItemView } from "./AppListItemView";
+import { AppListCardView } from "../Apps/AppListCardView";
+import { AppListItem } from "../Apps/AppListItem";
+import { AppListItemView } from "../Apps/AppListItemView";
+import { AppType } from '../../Lib/Api/AppType';
 
 export class AppListCard {
     private readonly alert: MessageAlert;
     private readonly apps: ListGroup;
+    private userID: number;
 
     private readonly _appSelected = new DefaultEvent<IAppModel>(this);
     readonly appSelected = this._appSelected.handler();
@@ -25,18 +27,25 @@ export class AppListCard {
         this.apps.registerItemClicked(this.onAppSelected.bind(this))
     }
 
+    setUserID(userID: number) {
+        this.userID = userID;
+    }
+
     private onAppSelected(listItem: AppListItem) {
         this._appSelected.invoke(listItem.app);
     }
 
     async refresh() {
-        const apps = await this.getApps();
+        let apps = await this.getApps();
+        apps = apps.filter(app => AppType.values.value(app.AppKey.Type.Value).equalsAny(AppType.values.WebApp, AppType.values.WebService));
         this.apps.setItems(
             apps,
-            (app, listItem: AppListItemView) =>
+            (app: IAppModel, listItem: AppListItemView) =>
                 new AppListItem(
                     app,
-                    this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
+                    this.hubApi.AppUser.Index.getUrl(
+                        { App: app.PublicKey.DisplayText, UserID: this.userID }
+                    ).toString(),
                     listItem
                 )
         );
