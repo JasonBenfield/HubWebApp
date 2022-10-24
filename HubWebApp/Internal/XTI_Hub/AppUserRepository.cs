@@ -31,6 +31,19 @@ public sealed class AppUserRepository
         return factory.User(userRecord ?? throw new Exception($"User {id} not found"));
     }
 
+    internal async Task<AppUser> UserOrAnon(AppUserGroup userGroup, AppUserName userName)
+    {
+        var userRecord = await factory.DB
+            .Users
+            .Retrieve()
+            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.UserName == userName.Value);
+        if(userRecord == null)
+        {
+            userRecord = await GetUser(AppUserName.Anon);
+        }
+        return factory.User(userRecord ?? throw new Exception("User not found"));
+    }
+
     public async Task<AppUser> User(int id)
     {
         var userRecord = await factory.DB

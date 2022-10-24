@@ -1,6 +1,6 @@
 ﻿using XTI_Forms;
 
-namespace XTI_HubWebAppApi.UserMaintenance;
+namespace XTI_Hub.Abstractions;
 
 public sealed class EditUserForm : Form
 {

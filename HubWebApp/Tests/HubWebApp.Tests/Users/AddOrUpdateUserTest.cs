@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core;
 using XTI_HubDB.EF;
-using XTI_HubWebAppApi.UserList;
 
 namespace HubWebApp.Tests;
 
@@ -95,16 +94,16 @@ internal sealed class AddOrUpdateUserTest
         Assert.That(user?.Password, Is.EqualTo(new FakeHashedPassword(model.Password).Value()), "Should add user with the hashed password");
     }
 
-    private async Task<HubActionTester<AddOrUpdateUserModel, int>> setup()
+    private async Task<HubActionTester<AddOrUpdateUserRequest, int>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
         return HubActionTester.Create(services, hubApi => hubApi.Users.AddOrUpdateUser);
     }
 
-    private AddOrUpdateUserModel createModel()
+    private AddOrUpdateUserRequest createModel()
     {
-        return new AddOrUpdateUserModel
+        return new AddOrUpdateUserRequest
         {
             UserName = "test.user",
             Password = "Password12345;"

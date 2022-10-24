@@ -1,6 +1,6 @@
 ﻿using XTI_Forms;
 
-namespace XTI_HubWebAppApi.UserList;
+namespace XTI_Hub.Abstractions;
 
 public sealed class AddUserForm : Form
 {

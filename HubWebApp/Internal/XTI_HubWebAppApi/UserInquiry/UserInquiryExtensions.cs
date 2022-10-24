@@ -7,5 +7,6 @@ internal static class UserInquiryExtensions
     public static void AddUserInquiryGroupServices(this IServiceCollection services)
     {
         services.AddScoped<GetUserAction>();
+        services.AddScoped<GetUserOrAnonAction>();
     }
 }
