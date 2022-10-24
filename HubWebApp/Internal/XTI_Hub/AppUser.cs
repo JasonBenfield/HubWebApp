@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -99,6 +100,41 @@ public sealed class AppUser
         }
     }
 
+    public async Task<UserAuthenticatorModel[]> Authenticators()
+    {
+        var joinedEntities = await factory.DB
+            .UserAuthenticators.Retrieve()
+            .Where
+            (
+                ua => ua.UserID == ID
+            )
+            .Join
+            (
+                factory.DB.Authenticators.Retrieve(),
+                ua => ua.AuthenticatorID,
+                a => a.ID,
+                (ua, a) => new { a.AppID, ua.ExternalUserKey }
+            )
+            .Join
+            (
+                factory.DB.Apps.Retrieve(),
+                joined => joined.AppID,
+                a => a.ID,
+                (joined, a) => new { a.Name, a.Type, joined.ExternalUserKey }
+            )
+            .ToArrayAsync();
+        return joinedEntities
+            .Select
+            (
+                j => new UserAuthenticatorModel
+                (
+                    new AppKey(new AppName(j.Name), AppType.Values.Value(j.Type)),
+                    j.ExternalUserKey
+                )
+            )
+            .ToArray();
+    }
+
     public async Task<AppPermission[]> GetAppPermissions()
     {
         var apps = await factory.Apps.All();
@@ -125,7 +161,7 @@ public sealed class AppUser
     {
         var appModel = app.ToModel();
         Modifier modifier;
-        if(appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+        if (appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
         {
             modifier = await hubApp.DefaultModifier();
         }

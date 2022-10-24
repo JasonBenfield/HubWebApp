@@ -13,14 +13,14 @@ export class UsersGroup extends AppApiGroup {
 		this.Index = this.createView<IGetUserRequest>('Index');
 		this.GetUserGroupAction = this.createAction<IEmptyRequest,IAppUserGroupModel>('GetUserGroup', 'Get User Group');
 		this.GetUsersAction = this.createAction<IEmptyRequest,IAppUserModel[]>('GetUsers', 'Get Users');
-		this.AddOrUpdateUserAction = this.createAction<IAddOrUpdateUserRequest,number>('AddOrUpdateUser', 'Add Or Update User');
+		this.AddOrUpdateUserAction = this.createAction<IAddOrUpdateUserRequest,IAppUserModel>('AddOrUpdateUser', 'Add Or Update User');
 		this.AddUserAction = this.createAction<AddUserForm,IAppUserModel>('AddUser', 'Add User');
 	}
 	
 	readonly Index: AppApiView<IGetUserRequest>;
 	readonly GetUserGroupAction: AppApiAction<IEmptyRequest,IAppUserGroupModel>;
 	readonly GetUsersAction: AppApiAction<IEmptyRequest,IAppUserModel[]>;
-	readonly AddOrUpdateUserAction: AppApiAction<IAddOrUpdateUserRequest,number>;
+	readonly AddOrUpdateUserAction: AppApiAction<IAddOrUpdateUserRequest,IAppUserModel>;
 	readonly AddUserAction: AppApiAction<AddUserForm,IAppUserModel>;
 	
 	GetUserGroup(errorOptions?: IActionErrorOptions) {

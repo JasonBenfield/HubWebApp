@@ -1,4 +1,4 @@
-﻿namespace XTI_HubWebAppApi.ExternalAuth;
+﻿namespace XTI_Hub.Abstractions;
 
 public sealed class ExternalAuthKeyModel
 {
