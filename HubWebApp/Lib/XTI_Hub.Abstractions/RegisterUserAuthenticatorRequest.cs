@@ -1,4 +1,4 @@
-﻿namespace XTI_HubWebAppApi.Authenticators;
+﻿namespace XTI_Hub.Abstractions;
 
 public sealed class RegisterUserAuthenticatorRequest
 {

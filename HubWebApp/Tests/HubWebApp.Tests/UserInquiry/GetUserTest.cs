@@ -34,7 +34,8 @@ internal sealed class GetUserTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         var addedUser = await AddUser(tester, "User1");
-        var user = await tester.Execute(addedUser.ID, new ModifierKey("General"));
+        var modifier = await tester.GeneralUserGroupModifier();
+        var user = await tester.Execute(addedUser.ID, modifier);
         Assert.That(user, Is.EqualTo(addedUser), "Should get user by ID");
     }
 

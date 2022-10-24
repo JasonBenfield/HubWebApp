@@ -237,16 +237,14 @@ interface IInstallationRequest {
 	InstallationID: number;
 }
 interface ISetUserAccessRequest {
-	UserName: IAppUserName;
+	UserName: string;
 	RoleAssignments: ISetUserAccessRoleRequest[];
 }
 interface ISetUserAccessRoleRequest {
 	AppKey: IAppKey;
-	RoleNames: IAppRoleName[];
-}
-interface IAppRoleName {
-	Value: string;
-	DisplayText: string;
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
 }
 interface INewVersionRequest {
 	VersionName: IAppVersionName;
@@ -281,6 +279,10 @@ interface IGetResourceGroupRoleAccessRequest {
 interface IAppRoleModel {
 	ID: number;
 	Name: IAppRoleName;
+}
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
 }
 interface IGetResourceGroupModCategoryRequest {
 	VersionKey: string;

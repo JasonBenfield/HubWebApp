@@ -11,7 +11,6 @@ global using XTI_HubWebAppApi.AppPublish;
 global using XTI_HubWebAppApi.AppUserInquiry;
 global using XTI_HubWebAppApi.AppUserMaintenance;
 global using XTI_HubWebAppApi.Auth;
-global using XTI_HubWebAppApi.Authenticators;
 global using XTI_HubWebAppApi.ExternalAuth;
 global using XTI_HubWebAppApi.Logs;
 global using XTI_HubWebAppApi.ResourceGroupInquiry;
