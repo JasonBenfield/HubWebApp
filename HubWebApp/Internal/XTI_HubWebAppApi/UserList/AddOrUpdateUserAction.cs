@@ -2,7 +2,7 @@
 
 namespace XTI_HubWebAppApi.UserList;
 
-public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, int>
+public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, AppUserModel>
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
@@ -15,7 +15,7 @@ public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, in
         this.clock = clock;
     }
 
-    public async Task<int> Execute(AddOrUpdateUserRequest model, CancellationToken stoppingToken)
+    public async Task<AppUserModel> Execute(AddOrUpdateUserRequest model, CancellationToken stoppingToken)
     {
         var userGroup = await userGroupFromPath.Value();
         var userName = new AppUserName(model.UserName);
@@ -29,6 +29,6 @@ public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, in
             new EmailAddress(model.Email),
             timeAdded
         );
-        return user.ToModel().ID;
+        return user.ToModel();
     }
 }
