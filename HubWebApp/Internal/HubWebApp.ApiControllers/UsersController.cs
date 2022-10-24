@@ -28,9 +28,9 @@ public sealed partial class UsersController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddOrUpdateUserModel model, CancellationToken ct)
+    public Task<ResultContainer<int>> AddOrUpdateUser([FromBody] AddOrUpdateUserRequest model, CancellationToken ct)
     {
-        return api.Group("Users").Action<AddOrUpdateUserModel, int>("AddOrUpdateUser").Execute(model, ct);
+        return api.Group("Users").Action<AddOrUpdateUserRequest, int>("AddOrUpdateUser").Execute(model, ct);
     }
 
     [HttpPost]

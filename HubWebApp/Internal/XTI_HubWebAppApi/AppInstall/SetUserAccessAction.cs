@@ -1,17 +1,5 @@
 ﻿namespace XTI_HubWebAppApi.AppInstall;
 
-public sealed class SetUserAccessRequest
-{
-    public AppUserName UserName { get; set; } = AppUserName.Anon;
-    public SetUserAccessRoleRequest[] RoleAssignments { get; set; } = new SetUserAccessRoleRequest[0];
-}
-
-public sealed class SetUserAccessRoleRequest
-{
-    public AppKey AppKey { get; set; } = AppKey.Unknown;
-    public AppRoleName[] RoleNames { get; set; } = new AppRoleName[0];
-}
-
 internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyActionResult>
 {
     private readonly HubFactory hubFactory;

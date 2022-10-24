@@ -316,7 +316,7 @@ interface IAppUserGroupName {
 	Value: string;
 	DisplayText: string;
 }
-interface IAddOrUpdateUserModel {
+interface IAddOrUpdateUserRequest {
 	UserName: string;
 	Password: string;
 	PersonName: string;

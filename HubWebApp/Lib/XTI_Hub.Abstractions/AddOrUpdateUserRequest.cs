@@ -1,6 +1,6 @@
-﻿namespace XTI_HubWebAppApi.UserList;
+﻿namespace XTI_Hub.Abstractions;
 
-public sealed class AddOrUpdateUserModel
+public sealed class AddOrUpdateUserRequest
 {
     public string UserName { get; set; } = "";
     public string Password { get; set; } = "";

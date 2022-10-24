@@ -211,7 +211,7 @@ internal sealed class LoginTest
         var modifier = await tester.GeneralUserGroupModifier();
         var userID = await addUserTester.Execute
         (
-            new AddOrUpdateUserModel
+            new AddOrUpdateUserRequest
             {
                 UserName = userName,
                 Password = password
