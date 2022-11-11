@@ -368,7 +368,7 @@ public sealed class XtiVersionRepository
     {
         var previousVersions = await factory.DB
             .Versions.Retrieve()
-            .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status != AppVersionStatus.Values.Old.Value)
+            .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status == AppVersionStatus.Values.Current.Value)
             .ToArrayAsync();
         foreach (var previousVersion in previousVersions)
         {
