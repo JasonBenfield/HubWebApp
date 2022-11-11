@@ -43,6 +43,7 @@ internal sealed class NewIssueCommand : ICommand
         var issue = await gitHubRepo.CreateIssue(xtiGitVersion, options.IssueTitle);
         if (options.StartIssue)
         {
+            await gitHubRepo.StartIssue(xtiGitVersion, issue.Number);
             await gitRepo.CheckoutBranch(issue.BranchName().Value);
         }
     }
