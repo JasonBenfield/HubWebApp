@@ -32,5 +32,6 @@ public sealed class CompleteIssueCommand : ICommand
         var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
         var branchName = milestoneName.Version.BranchName();
         await gitRepo.CheckoutBranch(branchName.Value);
+        gitRepo.DeleteBranch(issueBranchName.Value);
     }
 }
