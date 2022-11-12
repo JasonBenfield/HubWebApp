@@ -6,10 +6,10 @@ namespace XTI_HubWebAppApi.Logs;
 
 internal sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, ExpandedLogEntry>
 {
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly IHubDbContext db;
 
-    public LogEntryQueryAction(CurrentUser currentUser, IHubDbContext db)
+    public LogEntryQueryAction(CurrentAppUser currentUser, IHubDbContext db)
     {
         this.currentUser = currentUser;
         this.db = db;

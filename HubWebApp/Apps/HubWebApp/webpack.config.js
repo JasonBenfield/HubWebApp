@@ -7,6 +7,7 @@ const entry = {
     home: './Scripts/Internal/Home/MainPage.ts',
     apps: './Scripts/Internal/Apps/MainPage.ts',
     appDashboard: './Scripts/Internal/AppDashboard/MainPage.ts',
+    currentUser: './Scripts/Internal/CurrentUser/MainPage.ts',
     userGroups: './Scripts/Internal/UserGroups/MainPage.ts',
     userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',

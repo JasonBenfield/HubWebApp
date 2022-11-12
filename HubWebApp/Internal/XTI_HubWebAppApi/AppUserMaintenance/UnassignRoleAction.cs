@@ -4,10 +4,10 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory factory;
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly ICachedUserContext userContext;
 
-    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentUser currentUser, ICachedUserContext userContext)
+    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser, ICachedUserContext userContext)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;

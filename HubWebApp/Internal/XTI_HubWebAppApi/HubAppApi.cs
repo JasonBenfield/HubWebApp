@@ -21,6 +21,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
             sp
         )
     {
+        createCurrentUserGroup(sp);
         createHomeGroup(sp);
         createAuth(sp);
         createExternalAuth(sp);
@@ -46,6 +47,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         createPeriodicGroup(sp);
         createLogsGroup(sp);
     }
+
+    partial void createCurrentUserGroup(IServiceProvider sp);
 
     partial void createHomeGroup(IServiceProvider sp);
 

@@ -4,10 +4,10 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory hubFactory;
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly ICachedUserContext userContext;
 
-    public DenyAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentUser currentUser, ICachedUserContext userContext)
+    public DenyAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser, ICachedUserContext userContext)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;
