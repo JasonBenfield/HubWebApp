@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-		<PackageReference Include="XTI_App.Api" Version="1.8.31" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.32-dev221111084838995" />
 	</ItemGroup>
 
 	<ItemGroup>
