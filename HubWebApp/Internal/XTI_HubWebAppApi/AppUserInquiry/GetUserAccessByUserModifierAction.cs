@@ -4,9 +4,9 @@ public sealed class GetUserAccessByUserModifierAction : AppAction<UserModifierKe
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory factory;
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
 
-    public GetUserAccessByUserModifierAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentUser currentUser)
+    public GetUserAccessByUserModifierAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;

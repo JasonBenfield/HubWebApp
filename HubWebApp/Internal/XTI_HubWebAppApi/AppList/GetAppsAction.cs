@@ -2,9 +2,9 @@
 
 public sealed class GetAppsAction : AppAction<EmptyRequest, AppModel[]>
 {
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
 
-    public GetAppsAction(CurrentUser currentUser)
+    public GetAppsAction(CurrentAppUser currentUser)
     {
         this.currentUser = currentUser;
     }

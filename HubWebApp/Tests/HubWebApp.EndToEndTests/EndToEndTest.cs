@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
-using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Credentials;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets;
@@ -21,7 +21,7 @@ internal sealed class EndToEndTest
     public async Task ShouldLogin()
     {
         var sp = setup();
-        var addUserModel = new AddOrUpdateUserModel
+        var addUserModel = new AddOrUpdateUserRequest
         {
             UserName = NewUserCredentials.UserName,
             Password = NewUserCredentials.Password
@@ -31,7 +31,7 @@ internal sealed class EndToEndTest
         hubClient.UseToken<NewUserXtiToken>();
         var ex = Assert.ThrowsAsync<AppClientException>(async () =>
         {
-            await hubClient.Users.AddOrUpdateUser("", new AddOrUpdateUserModel
+            await hubClient.Users.AddOrUpdateUser("", new AddOrUpdateUserRequest
             {
                 UserName = "TestUser2",
                 Password = "Password12345"

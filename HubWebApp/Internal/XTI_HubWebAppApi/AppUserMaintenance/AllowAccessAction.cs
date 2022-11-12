@@ -4,11 +4,11 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory hubFactory;
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly ICachedUserContext userContext;
 
 
-    public AllowAccessAction(UserGroupFromPath userGroupFromPath, HubFactory appFactory, CurrentUser currentUser, ICachedUserContext userContext)
+    public AllowAccessAction(UserGroupFromPath userGroupFromPath, HubFactory appFactory, CurrentAppUser currentUser, ICachedUserContext userContext)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = appFactory;

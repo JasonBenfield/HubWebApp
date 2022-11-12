@@ -2,9 +2,9 @@
 
 internal sealed class GetUserGroupsAction : AppAction<EmptyRequest, AppUserGroupModel[]>
 {
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
 
-    public GetUserGroupsAction(CurrentUser currentUser)
+    public GetUserGroupsAction(CurrentAppUser currentUser)
     {
         this.currentUser = currentUser;
     }

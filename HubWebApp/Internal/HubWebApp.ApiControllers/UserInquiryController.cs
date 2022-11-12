@@ -20,4 +20,10 @@ public sealed partial class UserInquiryController : Controller
     {
         return api.Group("UserInquiry").Action<string, AppUserModel>("GetUserOrAnon").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] int model, CancellationToken ct)
+    {
+        return api.Group("UserInquiry").Action<int, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
+    }
 }

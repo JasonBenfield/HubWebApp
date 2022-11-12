@@ -6,10 +6,10 @@ namespace XTI_HubWebAppApi.Logs;
 
 internal sealed class RequestQueryAction : QueryAction<RequestQueryRequest, ExpandedRequest>
 {
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly IHubDbContext db;
 
-    public RequestQueryAction(CurrentUser currentUser, IHubDbContext db)
+    public RequestQueryAction(CurrentAppUser currentUser, IHubDbContext db)
     {
         this.currentUser = currentUser;
         this.db = db;

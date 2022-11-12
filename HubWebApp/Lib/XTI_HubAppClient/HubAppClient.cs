@@ -4,6 +4,7 @@ public sealed partial class HubAppClient : AppClient
 {
     public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessor, clientUrl, "Hub", version.Value)
     {
+        CurrentUser = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new CurrentUserGroup(_clientFactory, _tokenAccessor, _url, _options));
         Home = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new HomeGroup(_clientFactory, _tokenAccessor, _url, _options));
         Auth = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthGroup(_clientFactory, _tokenAccessor, _url, _options));
         AuthApi = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url, _options));
@@ -36,6 +37,8 @@ public sealed partial class HubAppClient : AppClient
 
     public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
     public string AppName { get; } = "Hub";
+    public CurrentUserGroup CurrentUser { get; }
+
     public HomeGroup Home { get; }
 
     public AuthGroup Auth { get; }

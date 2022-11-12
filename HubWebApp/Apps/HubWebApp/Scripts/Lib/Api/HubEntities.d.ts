@@ -324,6 +324,10 @@ interface IAddOrUpdateUserRequest {
 	PersonName: string;
 	Email: string;
 }
+interface IUserAuthenticatorModel {
+	AuthenticatorAppKey: IAppKey;
+	ExternalUserID: string;
+}
 interface IGetAppUserRequest {
 	App: string;
 	UserID: number;

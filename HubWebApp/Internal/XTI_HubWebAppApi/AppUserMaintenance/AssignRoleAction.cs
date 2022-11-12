@@ -4,10 +4,10 @@ internal sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory hubFactory;
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly ICachedUserContext userContext;
 
-    public AssignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentUser currentUser, ICachedUserContext userContext)
+    public AssignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser, ICachedUserContext userContext)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;

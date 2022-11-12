@@ -1,11 +1,11 @@
 ﻿namespace XTI_HubWebAppApi;
 
-public sealed class CurrentUser
+public sealed class CurrentAppUser
 {
     private readonly HubFactory hubFactory;
     private readonly ICurrentUserName currentUserName;
 
-    public CurrentUser(HubFactory hubFactory, ICurrentUserName currentUserName)
+    public CurrentAppUser(HubFactory hubFactory, ICurrentUserName currentUserName)
     {
         this.hubFactory = hubFactory;
         this.currentUserName = currentUserName;
