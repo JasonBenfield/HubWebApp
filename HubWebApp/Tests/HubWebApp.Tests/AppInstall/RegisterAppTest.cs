@@ -207,7 +207,7 @@ public sealed class RegisterAppTest
         var modCategory = await app.ModCategory(ModifierCategoryName.Default);
         Assert.That
         (
-            modCategory.Name().Equals(ModifierCategoryName.Default),
+            modCategory.IsDefault(),
             Is.True,
             "Should add default modifier category"
         );
@@ -236,7 +236,7 @@ public sealed class RegisterAppTest
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
         var modCategory = await employeeGroup.ModCategory();
-        Assert.That(modCategory.Name(), Is.EqualTo(FakeInfo.ModCategories.Department));
+        Assert.That(modCategory.ToModel().Name, Is.EqualTo(FakeInfo.ModCategories.Department));
     }
 
     [Test]

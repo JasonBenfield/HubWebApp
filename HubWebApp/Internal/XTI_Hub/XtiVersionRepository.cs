@@ -32,7 +32,7 @@ public sealed class XtiVersionRepository
         var entity = await GetVersionByName(versionName, key);
         if (entity == null)
         {
-            if(status == AppVersionStatus.Values.Current)
+            if(status.Equals(AppVersionStatus.Values.Current))
             {
                 var previousVersions = await factory.DB
                     .Versions.Retrieve()
@@ -153,7 +153,7 @@ public sealed class XtiVersionRepository
 
     private async Task<XtiVersionEntity> AddVersion(AppVersionName versionName, AppVersionKey key, DateTimeOffset timeAdded, AppVersionType type, AppVersionStatus status, AppVersionNumber versionNumber)
     {
-        if (key.Equals(AppVersionKey.None) || key.Equals(AppVersionKey.Current))
+        if (key.IsNone() || key.IsCurrent())
         {
             throw new ArgumentException($"Unable to add version with key '{key.DisplayText}'");
         }
@@ -243,7 +243,7 @@ public sealed class XtiVersionRepository
             .AppVersions.Retrieve()
             .Where(av => av.AppID == app.ID)
             .Select(av => av.VersionID);
-        if (versionKey.Equals(AppVersionKey.Current))
+        if (versionKey.IsCurrent())
         {
             record = await factory.DB
                 .Versions
@@ -277,7 +277,7 @@ public sealed class XtiVersionRepository
     private async Task<XtiVersionEntity?> GetVersionByName(AppVersionName versionName, AppVersionKey versionKey)
     {
         XtiVersionEntity? record;
-        if (versionKey.Equals(AppVersionKey.Current))
+        if (versionKey.IsCurrent())
         {
             record = await factory.DB
                 .Versions

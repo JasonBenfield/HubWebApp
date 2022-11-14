@@ -1,5 +1,19 @@
 // Generated code
 
+interface IAppUserModel {
+	ID: number;
+	UserName: IAppUserName;
+	Name: IPersonName;
+	Email: string;
+}
+interface IAppUserName {
+	Value: string;
+	DisplayText: string;
+}
+interface IPersonName {
+	Value: string;
+	DisplayText: string;
+}
 interface ILoginModel {
 	AuthKey: string;
 	ReturnKey: string;
@@ -199,20 +213,6 @@ interface IAddSystemUserRequest {
 	AppKey: IAppKey;
 	MachineName: string;
 	Password: string;
-}
-interface IAppUserModel {
-	ID: number;
-	UserName: IAppUserName;
-	Name: IPersonName;
-	Email: string;
-}
-interface IAppUserName {
-	Value: string;
-	DisplayText: string;
-}
-interface IPersonName {
-	Value: string;
-	DisplayText: string;
 }
 interface IAddAdminUserRequest {
 	AppKey: IAppKey;

@@ -16,7 +16,8 @@ public sealed class ModifierCategory
     }
 
     public int ID { get; }
-    public ModifierCategoryName Name() => new ModifierCategoryName(record.Name);
+
+    public bool IsDefault() => ModifierCategoryName.Default.Equals(record.Name);
 
     public Task<Modifier> AddDefaultModifierIfNotFound()
         => factory.Modifiers.AddDefaultModifierIfNotFound(this);
@@ -47,7 +48,7 @@ public sealed class ModifierCategory
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {
         ID = ID,
-        Name = Name()
+        Name = new ModifierCategoryName(record.Name)
     };
 
     public override string ToString() => $"{nameof(ModifierCategory)} {ID}";

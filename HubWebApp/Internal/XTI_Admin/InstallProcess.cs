@@ -59,9 +59,9 @@ internal sealed class InstallProcess
             Console.WriteLine("Adding or updating versions");
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
-            if (xtiEnv.IsProduction() && versionKey.Equals(AppVersionKey.Current))
+            if (xtiEnv.IsProduction() && versionKey.IsCurrent())
             {
-                versionKey = versions.First(v => v.Status.Equals(AppVersionStatus.Values.Current)).VersionKey;
+                versionKey = versions.First(v => v.IsCurrent()).VersionKey;
             }
             foreach (var appKey in appKeys)
             {
