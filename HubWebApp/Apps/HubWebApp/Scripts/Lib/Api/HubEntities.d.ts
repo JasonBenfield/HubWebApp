@@ -29,9 +29,22 @@ interface ILoginResult {
 	Token: string;
 }
 interface IExternalAuthKeyModel {
+	AuthenticatorKey: string;
 	ExternalUserKey: string;
 }
+interface IRegisterAuthenticatorRequest {
+	AuthenticatorName: string;
+}
+interface IAuthenticatorModel {
+	ID: number;
+	AuthenticatorKey: IAuthenticatorKey;
+}
+interface IAuthenticatorKey {
+	Value: string;
+	DisplayText: string;
+}
 interface IRegisterUserAuthenticatorRequest {
+	AuthenticatorKey: string;
 	UserID: number;
 	ExternalUserKey: string;
 }
@@ -325,7 +338,7 @@ interface IAddOrUpdateUserRequest {
 	Email: string;
 }
 interface IUserAuthenticatorModel {
-	AuthenticatorAppKey: IAppKey;
+	Authenticator: IAuthenticatorModel;
 	ExternalUserID: string;
 }
 interface IGetAppUserRequest {

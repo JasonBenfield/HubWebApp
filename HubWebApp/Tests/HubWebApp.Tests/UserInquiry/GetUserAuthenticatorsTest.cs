@@ -2,7 +2,7 @@
 
 internal sealed class GetUserAuthenticatorsTest
 {
-    private static readonly AppKey authAppKey = AppKey.WebApp("Auth");
+    private static readonly AuthenticatorKey authenticatorKey = new AuthenticatorKey("Auth");
 
     [Test]
     public async Task ShouldThrowError_WhenModifierIsBlank()
@@ -42,8 +42,15 @@ internal sealed class GetUserAuthenticatorsTest
         var userAuthenticators = await tester.Execute(user.ID, modifier);
         Assert.That
         (
-            userAuthenticators,
-            Is.EquivalentTo(new[] { new UserAuthenticatorModel(authAppKey, externalUserKey) })
+            userAuthenticators.Select(ua => ua.ExternalUserID).ToArray(),
+            Is.EquivalentTo(new[] { externalUserKey }),
+            "Should get user authenticators"
+        );
+        Assert.That
+        (
+            userAuthenticators.Select(ua => ua.Authenticator.AuthenticatorKey).ToArray(),
+            Is.EquivalentTo(new[] { authenticatorKey }),
+            "Should get user authenticators"
         );
     }
 
@@ -51,22 +58,8 @@ internal sealed class GetUserAuthenticatorsTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var tester =  HubActionTester.Create(sp, hubApi => hubApi.UserInquiry.GetUserAuthenticators);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var appKey = AppKey.WebApp("Auth");
-        var authApp = await factory.Apps.AddOrUpdate(new AppVersionName("auth"), appKey, DateTimeOffset.Now);
-        await authApp.RegisterAsAuthenticator();
-        var appRegistration = tester.Services.GetRequiredService<AppRegistration>();
-        await appRegistration.Run
-        (
-            new AppApiTemplateModel
-            {
-                AppKey = appKey,
-                GroupTemplates = new AppApiGroupTemplateModel[0]
-            },
-            AppVersionKey.Current
-        );
-        var hubApp = await tester.HubApp();
+        var tester = HubActionTester.Create(sp, hubApi => hubApi.UserInquiry.GetUserAuthenticators);
+        await AddAuthenticator(tester);
         return tester;
     }
 
@@ -84,23 +77,20 @@ internal sealed class GetUserAuthenticatorsTest
         return user;
     }
 
+    private async Task<AuthenticatorModel> AddAuthenticator(IHubActionTester tester)
+    {
+        var addAuthTester = tester.Create(hubApi => hubApi.Authenticators.RegisterAuthenticator);
+        await addAuthTester.LoginAsAdmin();
+        var authenticator = await addAuthTester.Execute(new RegisterAuthenticatorRequest(authenticatorKey));
+        return authenticator;
+    }
+
     private Task RegisterUserAuthenticator(IHubActionTester tester, int userID, string externalUserKey)
     {
         var registerTester = tester.Create(api => api.Authenticators.RegisterUserAuthenticator);
         return registerTester.Execute
         (
-            new RegisterUserAuthenticatorRequest
-            {
-                UserID = userID,
-                ExternalUserKey = externalUserKey
-            },
-            new ModifierKey(authAppKey.Format())
+            new RegisterUserAuthenticatorRequest(authenticatorKey, userID, externalUserKey)
         );
-    }
-
-    private Task<App> GetAuthApp(IHubActionTester tester)
-    {
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        return factory.Apps.App(authAppKey);
     }
 }

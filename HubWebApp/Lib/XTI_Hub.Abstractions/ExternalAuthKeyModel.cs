@@ -2,5 +2,17 @@
 
 public sealed class ExternalAuthKeyModel
 {
-    public string ExternalUserKey { get; set; } = "";
+    public ExternalAuthKeyModel()
+        :this(new AuthenticatorKey(), "")
+    {
+    }
+
+    public ExternalAuthKeyModel(AuthenticatorKey authenticatorKey, string externalUserKey)
+    {
+        AuthenticatorKey = authenticatorKey.DisplayText;
+        ExternalUserKey = externalUserKey;
+    }
+
+    public string AuthenticatorKey { get; set; }
+    public string ExternalUserKey { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -81,11 +82,11 @@ public sealed class AppUserRepository
         );
     }
 
-    public async Task<AppUser> UserByExternalKey(App authenticatorApp, string externalUserKey)
+    public async Task<AppUser> UserByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID)
+            .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
         var userIDs = factory.DB
             .UserAuthenticators.Retrieve()
@@ -103,7 +104,7 @@ public sealed class AppUserRepository
         return factory.User
         (
             userEntity
-            ?? throw new ExternalUserNotFoundException(authenticatorApp.ToModel().AppKey, externalUserKey)
+            ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey)
         );
     }
 
