@@ -9,15 +9,15 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Api/AppResourceUrl";
 export class AuthenticatorsGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Authenticators');
-		this.RegisterAuthenticatorAction = this.createAction<IEmptyRequest,IEmptyActionResult>('RegisterAuthenticator', 'Register Authenticator');
-		this.RegisterUserAuthenticatorAction = this.createAction<IRegisterUserAuthenticatorRequest,IEmptyActionResult>('RegisterUserAuthenticator', 'Register User Authenticator');
+		this.RegisterAuthenticatorAction = this.createAction<IRegisterAuthenticatorRequest,IAuthenticatorModel>('RegisterAuthenticator', 'Register Authenticator');
+		this.RegisterUserAuthenticatorAction = this.createAction<IRegisterUserAuthenticatorRequest,IAuthenticatorModel>('RegisterUserAuthenticator', 'Register User Authenticator');
 	}
 	
-	readonly RegisterAuthenticatorAction: AppApiAction<IEmptyRequest,IEmptyActionResult>;
-	readonly RegisterUserAuthenticatorAction: AppApiAction<IRegisterUserAuthenticatorRequest,IEmptyActionResult>;
+	readonly RegisterAuthenticatorAction: AppApiAction<IRegisterAuthenticatorRequest,IAuthenticatorModel>;
+	readonly RegisterUserAuthenticatorAction: AppApiAction<IRegisterUserAuthenticatorRequest,IAuthenticatorModel>;
 	
-	RegisterAuthenticator(errorOptions?: IActionErrorOptions) {
-		return this.RegisterAuthenticatorAction.execute({}, errorOptions || {});
+	RegisterAuthenticator(model: IRegisterAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
+		return this.RegisterAuthenticatorAction.execute(model, errorOptions || {});
 	}
 	RegisterUserAuthenticator(model: IRegisterUserAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
 		return this.RegisterUserAuthenticatorAction.execute(model, errorOptions || {});

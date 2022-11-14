@@ -20,22 +20,6 @@ public sealed class App
 
     public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
-    public async Task RegisterAsAuthenticator()
-    {
-        var authenticator = await factory.DB
-            .Authenticators.Retrieve()
-            .Where(auth => auth.AppID == ID)
-            .FirstOrDefaultAsync();
-        if (authenticator == null)
-        {
-            authenticator = new AuthenticatorEntity
-            {
-                AppID = ID
-            };
-            await factory.DB.Authenticators.Create(authenticator);
-        }
-    }
-
     internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
 

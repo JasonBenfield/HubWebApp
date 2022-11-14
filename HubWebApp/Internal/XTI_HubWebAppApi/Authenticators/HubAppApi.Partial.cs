@@ -15,11 +15,7 @@ partial class HubAppApi
     {
         authenticators = new AuthenticatorsGroup
         (
-            source.AddGroup
-            (
-                nameof(Authenticators),
-                HubInfo.ModCategories.Apps
-            ),
+            source.AddGroup(nameof(Authenticators)),
             sp
         );
     }

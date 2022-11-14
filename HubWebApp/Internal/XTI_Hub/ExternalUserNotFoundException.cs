@@ -1,15 +1,15 @@
-﻿using XTI_App.Abstractions;
-using XTI_App.Api;
+﻿using XTI_App.Api;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
 public sealed class ExternalUserNotFoundException : AppException
 {
-    public ExternalUserNotFoundException(AppKey appKey, string externalUserKey) :
+    public ExternalUserNotFoundException(AuthenticatorKey authenticatorKey, string externalUserKey) :
         base
         (
             "External User not found", 
-            $"User not found for authenticator '{appKey.Name.DisplayText}' with user key '{externalUserKey}'"
+            $"User not found for authenticator '{authenticatorKey.DisplayText}' with user key '{externalUserKey}'"
         )
     {
     }

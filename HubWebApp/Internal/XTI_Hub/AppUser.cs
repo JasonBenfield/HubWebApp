@@ -70,11 +70,11 @@ public sealed class AppUser
         );
     }
 
-    public async Task AddAuthenticator(App authenticatorApp, string externalUserKey)
+    public async Task<AuthenticatorModel> AddAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID)
+            .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
         var entity = await factory.DB
             .UserAuthenticators.Retrieve()
@@ -85,9 +85,10 @@ public sealed class AppUser
                     && ua.UserID == ID
             )
             .FirstOrDefaultAsync();
+        int authenticatorID;
         if (entity == null)
         {
-            var authenticatorID = await authenticatorIDs.FirstAsync();
+            authenticatorID = await authenticatorIDs.FirstAsync();
             entity = new UserAuthenticatorEntity
             {
                 AuthenticatorID = authenticatorID,
@@ -98,12 +99,14 @@ public sealed class AppUser
         }
         else
         {
+            authenticatorID = entity.AuthenticatorID;
             await factory.DB.UserAuthenticators.Update
             (
                 entity,
                 ua => ua.ExternalUserKey = externalUserKey
             );
         }
+        return new AuthenticatorModel(authenticatorID, authenticatorKey);
     }
 
     public async Task<UserAuthenticatorModel[]> Authenticators()
@@ -119,14 +122,13 @@ public sealed class AppUser
                 factory.DB.Authenticators.Retrieve(),
                 ua => ua.AuthenticatorID,
                 a => a.ID,
-                (ua, a) => new { a.AppID, ua.ExternalUserKey }
-            )
-            .Join
-            (
-                factory.DB.Apps.Retrieve(),
-                joined => joined.AppID,
-                a => a.ID,
-                (joined, a) => new { a.Name, a.Type, joined.ExternalUserKey }
+                (ua, a) => new
+                {
+                    AuthenticatorID = a.ID,
+                    a.AuthenticatorKey,
+                    a.AuthenticatorName,
+                    ua.ExternalUserKey
+                }
             )
             .ToArrayAsync();
         return joinedEntities
@@ -134,7 +136,11 @@ public sealed class AppUser
             (
                 j => new UserAuthenticatorModel
                 (
-                    new AppKey(new AppName(j.Name), AppType.Values.Value(j.Type)),
+                    new AuthenticatorModel
+                    (
+                        j.AuthenticatorID,
+                        new AuthenticatorKey(j.AuthenticatorName)
+                    ),
                     j.ExternalUserKey
                 )
             )

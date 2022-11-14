@@ -17,6 +17,6 @@ public sealed class AuthenticatorsGroup : AppApiGroupWrapper
         );
     }
 
-    public AppApiAction<EmptyRequest, EmptyActionResult> RegisterAuthenticator { get; }
-    public AppApiAction<RegisterUserAuthenticatorRequest, EmptyActionResult> RegisterUserAuthenticator { get; }
+    public AppApiAction<RegisterAuthenticatorRequest, AuthenticatorModel> RegisterAuthenticator { get; }
+    public AppApiAction<RegisterUserAuthenticatorRequest, AuthenticatorModel> RegisterUserAuthenticator { get; }
 }

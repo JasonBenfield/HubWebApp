@@ -83,9 +83,14 @@ public sealed class HubFactory
 
     internal AppRequest CreateRequest(AppRequestEntity record) => new(this, record);
 
-    private AppLogEntryRepository? events;
 
-    public AppLogEntryRepository LogEntries { get => events ??= new(this); }
+    private AuthenticatorRepository? authenticators;
+
+    public AuthenticatorRepository Authenticators { get => authenticators ??= new(this); }
+
+    private AppLogEntryRepository? logEntries;
+
+    public AppLogEntryRepository LogEntries { get => logEntries ??= new(this); }
 
     internal LogEntry CreateEvent(LogEntryEntity record) => new(record);
 

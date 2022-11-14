@@ -1,11 +1,9 @@
-﻿using XTI_App.Abstractions;
+﻿namespace XTI_Hub.Abstractions;
 
-namespace XTI_Hub.Abstractions;
-
-public sealed record UserAuthenticatorModel(AppKey AuthenticatorAppKey, string ExternalUserID)
+public sealed record UserAuthenticatorModel(AuthenticatorModel Authenticator, string ExternalUserID)
 {
-	public UserAuthenticatorModel()
-		:this(AppKey.Unknown, "")
-	{
-	}
+    public UserAuthenticatorModel()
+        : this(new AuthenticatorModel(), "")
+    {
+    }
 }
