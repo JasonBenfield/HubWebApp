@@ -6,6 +6,7 @@ internal static class CurrentUserGroupExtensions
 {
     public static void AddCurrentUserGroupServices(this IServiceCollection services)
     {
+        services.AddScoped<GetUserAction>();
         services.AddScoped<IndexAction>();
     }
 }

@@ -21,6 +21,7 @@ class MainPage extends BasicPage {
         this.userPanel = this.panels.add(
             new UserPanel(hubApi, this.view.userPanel)
         );
+        this.userPanel.refresh();
         this.activateUserPanel();
     }
 
