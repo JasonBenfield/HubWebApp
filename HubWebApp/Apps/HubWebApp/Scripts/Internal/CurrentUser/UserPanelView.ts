@@ -1,11 +1,14 @@
 ﻿import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
+import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
+import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { TextHeading1View } from "@jasonbenfield/sharedwebapp/Views/TextHeadings";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
@@ -17,6 +20,7 @@ export class UserPanelView extends GridView {
     readonly personName: BasicTextComponentView;
     readonly email: BasicTextComponentView;
     readonly editButton: ButtonCommandView;
+    readonly changePasswordButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -36,10 +40,19 @@ export class UserPanelView extends GridView {
         emailFormGroup.caption.setText('Email');
         this.email = emailFormGroup.textValue;
         this.alert = mainContent.addView(MessageAlertView);
-        this.editButton = mainContent.addView(ButtonCommandView);
+        const nav = mainContent.addView(NavView);
+        nav.pills();
+        nav.setFlexCss(new FlexCss().column());
+        this.editButton = nav.addButtonCommand();
+        this.editButton.setTextCss(new TextCss().start());
         this.editButton.icon.solidStyle('edit');
         this.editButton.useOutlineStyle(ContextualClass.primary);
         this.editButton.setText('Edit');
+        this.changePasswordButton = nav.addButtonCommand();
+        this.changePasswordButton.setTextCss(new TextCss().start());
+        this.changePasswordButton.icon.solidStyle('lock');
+        this.changePasswordButton.useOutlineStyle(ContextualClass.primary);
+        this.changePasswordButton.setText('Change Password');
         const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addCell().addView(ToolbarView));
         this.menuButton = HubTheme.instance.commandToolbar.menuButton(
             toolbar.columnStart.addView(ButtonCommandView)

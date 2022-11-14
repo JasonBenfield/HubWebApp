@@ -2,6 +2,7 @@
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Apis } from '../Apis';
 import { MainMenuPanel } from '../MainMenuPanel';
+import { ChangePasswordPanel } from './ChangePasswordPanel';
 import { MainPageView } from './MainPageView';
 import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
@@ -12,6 +13,7 @@ class MainPage extends BasicPage {
     private readonly mainMenuPanel: MainMenuPanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
+    private readonly changePasswordPanel: ChangePasswordPanel;
 
     constructor() {
         super(new MainPageView());
@@ -24,6 +26,7 @@ class MainPage extends BasicPage {
             new UserPanel(hubApi, this.view.userPanel)
         );
         this.userEditPanel = this.panels.add(new UserEditPanel(hubApi, this.view.userEditPanel));
+        this.changePasswordPanel = this.panels.add(new ChangePasswordPanel(hubApi, this.view.changePasswordPanel));
         this.userPanel.refresh();
         this.activateUserPanel();
     }
@@ -38,6 +41,9 @@ class MainPage extends BasicPage {
             this.userEditPanel.setUser(result.editRequested.user);
             this.activateUserEditPanel();
         }
+        else if (result.changePasswordRequested) {
+            this.activateChangePasswordPanel();
+        }
     }
 
     private async activateUserEditPanel() {
@@ -48,6 +54,14 @@ class MainPage extends BasicPage {
             this.activateUserPanel();
         }
         else if (result.canceled) {
+            this.activateUserPanel();
+        }
+    }
+
+    private async activateChangePasswordPanel() {
+        this.panels.activate(this.changePasswordPanel);
+        const result = await this.changePasswordPanel.start();
+        if (result.done) {
             this.activateUserPanel();
         }
     }

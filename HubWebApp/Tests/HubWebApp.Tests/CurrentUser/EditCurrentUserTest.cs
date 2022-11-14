@@ -3,6 +3,14 @@
 internal sealed class EditCurrentUserTest
 {
     [Test]
+    public async Task ShouldNotAllowAnonymous()
+    {
+        var tester = await Setup();
+        var form = CreateEditUserForm();
+        AccessAssertions.Create(tester).ShouldNotAllowAnonymous(form);
+    }
+
+    [Test]
     public async Task ShouldUpdateName()
     {
         var tester = await Setup();

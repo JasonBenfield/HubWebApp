@@ -10,6 +10,12 @@ public sealed partial class CurrentUserController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangeCurrentUserPasswordForm model, CancellationToken ct)
+    {
+        return api.Group("CurrentUser").Action<ChangeCurrentUserPasswordForm, EmptyActionResult>("ChangePassword").Execute(model, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppUserModel>> EditUser([FromBody] EditCurrentUserForm model, CancellationToken ct)
     {
         return api.Group("CurrentUser").Action<EditCurrentUserForm, AppUserModel>("EditUser").Execute(model, ct);
