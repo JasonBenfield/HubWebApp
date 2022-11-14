@@ -1,4 +1,5 @@
-﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+﻿import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
+import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
@@ -15,6 +16,7 @@ export class UserPanelView extends GridView {
     readonly userName: BasicTextComponentView;
     readonly personName: BasicTextComponentView;
     readonly email: BasicTextComponentView;
+    readonly editButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -34,6 +36,10 @@ export class UserPanelView extends GridView {
         emailFormGroup.caption.setText('Email');
         this.email = emailFormGroup.textValue;
         this.alert = mainContent.addView(MessageAlertView);
+        this.editButton = mainContent.addView(ButtonCommandView);
+        this.editButton.icon.solidStyle('edit');
+        this.editButton.useOutlineStyle(ContextualClass.primary);
+        this.editButton.setText('Edit');
         const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addCell().addView(ToolbarView));
         this.menuButton = HubTheme.instance.commandToolbar.menuButton(
             toolbar.columnStart.addView(ButtonCommandView)
