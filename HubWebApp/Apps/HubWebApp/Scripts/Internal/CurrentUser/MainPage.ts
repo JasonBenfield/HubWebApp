@@ -3,6 +3,7 @@ import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActiv
 import { Apis } from '../Apis';
 import { MainMenuPanel } from '../MainMenuPanel';
 import { MainPageView } from './MainPageView';
+import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
 
 class MainPage extends BasicPage {
@@ -10,6 +11,7 @@ class MainPage extends BasicPage {
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
     private readonly userPanel: UserPanel;
+    private readonly userEditPanel: UserEditPanel;
 
     constructor() {
         super(new MainPageView());
@@ -21,6 +23,7 @@ class MainPage extends BasicPage {
         this.userPanel = this.panels.add(
             new UserPanel(hubApi, this.view.userPanel)
         );
+        this.userEditPanel = this.panels.add(new UserEditPanel(hubApi, this.view.userEditPanel));
         this.userPanel.refresh();
         this.activateUserPanel();
     }
@@ -30,6 +33,22 @@ class MainPage extends BasicPage {
         const result = await this.userPanel.start();
         if (result.menuRequested) {
             this.activateMainMenuPanel();
+        }
+        else if (result.editRequested) {
+            this.userEditPanel.setUser(result.editRequested.user);
+            this.activateUserEditPanel();
+        }
+    }
+
+    private async activateUserEditPanel() {
+        this.panels.activate(this.userEditPanel);
+        const result = await this.userEditPanel.start();
+        if (result.saved) {
+            this.userPanel.setUser(result.saved.user);
+            this.activateUserPanel();
+        }
+        else if (result.canceled) {
+            this.activateUserPanel();
         }
     }
 

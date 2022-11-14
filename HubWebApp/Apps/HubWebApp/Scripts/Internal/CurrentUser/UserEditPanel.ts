@@ -3,22 +3,23 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { EditUserForm } from '../../Lib/Api/EditUserForm';
+import { EditCurrentUserForm } from "../../Lib/Api/EditCurrentUserForm";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { UserEditPanelView } from "./UserEditPanelView";
 
 interface IResult {
-    canceled?: {};
-    saved?: {};
+    canceled?: boolean;
+    saved?: { user: IAppUserModel };
 }
 
 class Result {
-    static canceled() { return new Result({ canceled: {} }); }
+    static canceled() { return new Result({ canceled: true }); }
 
-    static saved() { return new Result({ saved: {} }); }
-
-    private constructor(private readonly results: IResult) {
+    static saved(user: IAppUserModel) {
+        return new Result({ saved: { user: user } });
     }
+
+    private constructor(private readonly results: IResult) {}
 
     get canceled() { return this.results.canceled; }
 
@@ -27,8 +28,7 @@ class Result {
 
 export class UserEditPanel implements IPanel {
     private readonly alert: MessageAlert;
-    private readonly editUserForm: EditUserForm;
-    private userID: number;
+    private readonly editUserForm: EditCurrentUserForm;
     private readonly awaitable = new Awaitable<Result>();
     private readonly cancelCommand = new Command(this.cancel.bind(this));
     private readonly saveCommand = new AsyncCommand(this.save.bind(this));
@@ -41,7 +41,7 @@ export class UserEditPanel implements IPanel {
         this.cancelCommand.add(this.view.cancelButton);
         this.saveCommand.add(this.view.saveButton);
         new TextComponent(this.view.titleHeader).setText('Edit User');
-        this.editUserForm = new EditUserForm(this.view.editUserForm);
+        this.editUserForm = new EditCurrentUserForm(this.view.editUserForm);
         this.editUserForm.handleSubmit(this.onFormSubmit.bind(this));
     }
 
@@ -50,28 +50,9 @@ export class UserEditPanel implements IPanel {
         this.saveCommand.execute();
     }
 
-    setUserID(userID: number) {
-        this.userID = userID;
-    }
-
-    async refresh() {
-        const userForm = await this.getUserForEdit(this.userID);
-        this.editUserForm.import(userForm);
-        await new DelayedAction(
-            () => this.editUserForm.PersonName.setFocus(),
-            1000
-        ).execute();
-    }
-
-    private async getUserForEdit(userID: number) {
-        let userForm: Record<string, object>;
-        await this.alert.infoAction(
-            'Loading...',
-            async () => {
-                userForm = await this.hubApi.UserMaintenance.GetUserForEdit(userID);
-            }
-        );
-        return userForm;
+    setUser(user: IAppUserModel) {
+        this.editUserForm.PersonName.setValue(user.Name.DisplayText);
+        this.editUserForm.Email.setValue(user.Email);
     }
 
     start() {
@@ -85,14 +66,20 @@ export class UserEditPanel implements IPanel {
     private async save() {
         const result = await this.alert.infoAction(
             'Saving...',
-            () => this.editUserForm.save(this.hubApi.UserMaintenance.EditUserAction),
+            () => this.editUserForm.save(this.hubApi.CurrentUser.EditUserAction),
         );
         if (result.succeeded()) {
-            this.awaitable.resolve(Result.saved());
+            this.awaitable.resolve(Result.saved(result.value));
         }
     }
 
-    activate() { this.view.show(); }
+    activate() {
+        this.view.show();
+        new DelayedAction(
+            () => this.editUserForm.PersonName.setFocus(),
+            1000
+        ).execute();
+    }
 
     deactivate() { this.view.hide(); }
 }

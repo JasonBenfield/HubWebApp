@@ -1,7 +1,4 @@
-﻿using XTI_HubWebAppApi.UserList;
-using XTI_HubWebAppApi.UserMaintenance;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal sealed class EditUserTest
 {

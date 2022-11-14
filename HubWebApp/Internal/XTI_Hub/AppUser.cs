@@ -54,7 +54,12 @@ public sealed class AppUser
         => factory.DB.Users.Update(record, u => u.Password = password.Value());
 
     public Task Edit(PersonName name, EmailAddress email)
-        => factory.DB.Users.Update
+    {
+        if (name.IsBlank())
+        {
+            name = new PersonName(record.UserName);
+        }
+        return factory.DB.Users.Update
         (
             record,
             u =>
@@ -63,6 +68,7 @@ public sealed class AppUser
                 u.Email = email.Value;
             }
         );
+    }
 
     public async Task AddAuthenticator(App authenticatorApp, string externalUserKey)
     {

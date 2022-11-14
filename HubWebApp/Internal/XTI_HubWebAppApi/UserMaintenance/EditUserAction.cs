@@ -15,10 +15,6 @@ public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
         var userGroup = await userGroupFromPath.Value();
         var user = await userGroup.User(userID);
         var name = new PersonName(model.PersonName.Value() ?? "");
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            name = new PersonName(user.ToModel().UserName.Value);
-        }
         var email = new EmailAddress(model.Email.Value() ?? "");
         await user.Edit(name, email);
         return new EmptyActionResult();
