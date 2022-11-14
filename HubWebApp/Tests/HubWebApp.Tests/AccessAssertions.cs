@@ -1,4 +1,6 @@
-﻿namespace HubWebApp.Tests;
+﻿using XTI_WebApp.Api;
+
+namespace HubWebApp.Tests;
 
 internal static class AccessAssertions
 {
@@ -28,10 +30,23 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         Assert.That(ex?.Message, Is.EqualTo(AppErrors.ModifierIsRequired));
     }
 
+    public void ShouldNotAllowAnonymous(TModel model) => ShouldNotAllowAnonymous(model, ModifierKey.Default);
+
+    public void ShouldNotAllowAnonymous(TModel model, ModifierKey modKey)
+    {
+        tester.Logout();
+        Assert.ThrowsAsync<AccessDeniedException>
+        (
+            () => tester.Execute(model, modKey),
+            "Should not allow access to anonymous user"
+        );
+    }
+
     public void ShouldAllowAnonymous(TModel model) => ShouldAllowAnonymous(model, ModifierKey.Default);
 
     public void ShouldAllowAnonymous(TModel model, ModifierKey modKey)
     {
+        tester.Logout();
         Assert.DoesNotThrowAsync
         (
             () => tester.Execute(model, modKey),

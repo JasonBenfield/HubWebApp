@@ -8,14 +8,14 @@ import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { UserEditPanelView } from "./UserEditPanelView";
 
 interface IResult {
-    canceled?: {};
-    saved?: {};
+    canceled?: boolean;
+    saved?: boolean;
 }
 
 class Result {
-    static canceled() { return new Result({ canceled: {} }); }
+    static canceled() { return new Result({ canceled: true }); }
 
-    static saved() { return new Result({ saved: {} }); }
+    static saved() { return new Result({ saved: true }); }
 
     private constructor(private readonly results: IResult) {
     }

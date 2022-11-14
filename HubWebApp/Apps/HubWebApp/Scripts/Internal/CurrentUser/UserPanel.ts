@@ -8,6 +8,7 @@ import { UserPanelView } from "./UserPanelView";
 interface IResult {
     readonly menuRequested?: boolean;
     readonly editRequested?: { user: IAppUserModel };
+    readonly changePasswordRequested?: boolean;
 }
 
 class Result {
@@ -15,11 +16,15 @@ class Result {
 
     static editRequested(user: IAppUserModel) { return new Result({ editRequested: { user: user } }); }
 
+    static changePasswordRequested() { return new Result({ changePasswordRequested: true }); }
+
     private constructor(private readonly result: IResult) { }
 
     get menuRequested() { return this.result.menuRequested; }
 
     get editRequested() { return this.result.editRequested; }
+
+    get changePasswordRequested() { return this.result.changePasswordRequested; }
 }
 
 
@@ -30,6 +35,7 @@ export class UserPanel implements IPanel {
     private readonly email: TextComponent;
     private readonly alert: MessageAlert;
     private readonly editCommand: Command;
+    private readonly changePasswordCommand: Command;
     private user: IAppUserModel;
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: UserPanelView) {
@@ -41,9 +47,18 @@ export class UserPanel implements IPanel {
         this.editCommand = new Command(this.edit.bind(this));
         this.editCommand.add(view.editButton);
         this.editCommand.hide();
+        this.changePasswordCommand = new Command(this.changePassword.bind(this));
+        this.changePasswordCommand.add(view.changePasswordButton);
+        this.changePasswordCommand.hide();
     }
 
-    private edit() { this.awaitable.resolve(Result.editRequested(this.user)); }
+    private edit() {
+        this.awaitable.resolve(Result.editRequested(this.user));
+    }
+
+    private changePassword() {
+        this.awaitable.resolve(Result.changePasswordRequested());
+    }
 
     async refresh() {
         const user = await this.alert.infoAction(
@@ -52,6 +67,7 @@ export class UserPanel implements IPanel {
         );
         this.setUser(user);
         this.editCommand.show();
+        this.changePasswordCommand.show();
     }
 
     setUser(user: IAppUserModel) {
