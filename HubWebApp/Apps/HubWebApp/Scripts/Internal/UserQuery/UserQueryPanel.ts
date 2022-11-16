@@ -14,14 +14,14 @@ import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserQueryPanelView } from "./UserQueryPanelView";
 
 interface IResult {
-    menuRequested?: {};
-    addRequested?: {};
+    menuRequested?: boolean;
+    addRequested?: boolean;
 }
 
 class Result {
-    static menuRequested() { return new Result({ menuRequested: {} }); }
+    static menuRequested() { return new Result({ menuRequested: true }); }
 
-    static addRequested() { return new Result({ addRequested: {} }); }
+    static addRequested() { return new Result({ addRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 

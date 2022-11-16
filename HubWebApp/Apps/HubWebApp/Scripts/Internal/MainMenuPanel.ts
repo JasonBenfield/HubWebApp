@@ -23,7 +23,8 @@ export class MainMenuPanel implements IPanel {
     private readonly sessionsLink: LinkComponent;
     private readonly requestsLink: LinkComponent;
     private readonly logEntriesLink: LinkComponent;
-
+    private readonly installationsLink: LinkComponent;
+            
     constructor(hubApi: HubAppApi, private readonly view: MainMenuPanelView) {
         this.appsLink = new LinkComponent(view.appsLink);
         this.appsLink.setHref(hubApi.Apps.Index.getUrl({}));
@@ -35,6 +36,8 @@ export class MainMenuPanel implements IPanel {
         this.requestsLink.setHref(hubApi.Logs.Requests.getUrl({ SessionID: null }));
         this.logEntriesLink = new LinkComponent(view.logEntriesLink);
         this.logEntriesLink.setHref(hubApi.Logs.LogEntries.getUrl({ RequestID: null }));
+        this.installationsLink = new LinkComponent(view.installationsLink);
+        this.installationsLink.setHref(hubApi.Installations.Index.getUrl({ QueryType: 0 }));
         new Command(this.back.bind(this)).add(view.backButton);
     }
 

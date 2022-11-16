@@ -14,6 +14,44 @@ interface IPersonName {
 	Value: string;
 	DisplayText: string;
 }
+interface IInstallationQueryRequest {
+	QueryType: number;
+}
+interface IExpandedInstallation {
+	InstallationID: number;
+	IsCurrent: boolean;
+	InstallationStatusDisplayText: string;
+	TimeInstallationAdded: Date;
+	QualifiedMachineName: string;
+	Domain: string;
+	AppID: number;
+	AppKey: string;
+	AppName: string;
+	AppTypeText: string;
+	VersionName: string;
+	VersionRelease: string;
+	VersionKey: string;
+	VersionStatusText: string;
+	VersionTypeText: string;
+	LastRequestTime: Date;
+	LastRequestDaysAgo: number;
+	RequestCount: number;
+}
+interface IWebFileResult {
+	FileStream: IStream;
+	ContentType: string;
+	DownloadName: string;
+}
+interface IStream {
+	CanRead: boolean;
+	CanWrite: boolean;
+	CanSeek: boolean;
+	CanTimeout: boolean;
+	Length: number;
+	Position: number;
+	ReadTimeout: number;
+	WriteTimeout: number;
+}
 interface ILoginModel {
 	AuthKey: string;
 	ReturnKey: string;
@@ -429,21 +467,6 @@ interface IExpandedUser {
 	UserGroupID: number;
 	UserGroupName: string;
 }
-interface IWebFileResult {
-	FileStream: IStream;
-	ContentType: string;
-	DownloadName: string;
-}
-interface IStream {
-	CanRead: boolean;
-	CanWrite: boolean;
-	CanSeek: boolean;
-	CanTimeout: boolean;
-	Length: number;
-	Position: number;
-	ReadTimeout: number;
-	WriteTimeout: number;
-}
 interface IRequestQueryRequest {
 	SessionID: number;
 }
@@ -469,6 +492,7 @@ interface IExpandedRequest {
 	RequestID: number;
 	Path: string;
 	AppID: number;
+	AppKey: string;
 	AppName: string;
 	AppTypeText: string;
 	ResourceGroupName: string;
@@ -494,6 +518,7 @@ interface IExpandedRequest {
 	InformationMessageCount: number;
 	VersionName: string;
 	VersionKey: string;
+	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
 	InstallLocation: string;
@@ -509,6 +534,7 @@ interface IExpandedLogEntry {
 	Path: string;
 	ActualCount: number;
 	AppID: number;
+	AppKey: string;
 	AppName: string;
 	AppTypeText: string;
 	ResourceGroupName: string;
@@ -527,10 +553,15 @@ interface IExpandedLogEntry {
 	RequestTimeElapsed: string;
 	VersionName: string;
 	VersionKey: string;
+	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
+}
+interface IInstallationQueryType {
+	Value: number;
+	DisplayText: string;
 }
 interface IAppType {
 	Value: number;

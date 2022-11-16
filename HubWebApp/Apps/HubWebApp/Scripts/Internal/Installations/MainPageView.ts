@@ -1,14 +1,14 @@
 ﻿import { HubPageView } from '../HubPageView';
 import { MainMenuPanelView } from '../MainMenuPanelView';
-import { AppListPanelView } from './AppListPanelView';
+import { InstallationQueryPanelView } from './InstallationQueryPanelView';
 
 export class MainPageView extends HubPageView {
-    readonly appListPanel: AppListPanelView;
     readonly mainMenuPanel: MainMenuPanelView;
+    readonly installationQueryPanel: InstallationQueryPanelView;
 
     constructor() {
         super();
-        this.appListPanel = this.addView(AppListPanelView);
         this.mainMenuPanel = this.addView(MainMenuPanelView);
+        this.installationQueryPanel = this.addView(InstallationQueryPanelView);
     }
 }

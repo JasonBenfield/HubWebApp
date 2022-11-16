@@ -8,6 +8,7 @@ public static class HubAppApiExtensions
         services.AddScoped<UserGroupFromPath>();
         services.AddCurrentUserGroupServices();
         services.AddHomeGroupServices();
+        services.AddInstallationsGroupServices();
         services.AddAuthenticatorsGroupServices();
         services.AddAppInquiryGroupServices();
         services.AddAppInstallGroupServices();
