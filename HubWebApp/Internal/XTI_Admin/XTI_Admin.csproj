@@ -16,7 +16,7 @@
 		<PackageReference Include="XTI_Processes" Version="1.10.16" />
 		<PackageReference Include="XTI_GitHub" Version="1.2.11" />
 		<PackageReference Include="XTI_Git" Version="1.2.11" />
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.32-dev221113082414842" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.32-dev221116150635356" />
 		<PackageReference Include="XTI_Core.Extensions" Version="1.10.16" />
 	</ItemGroup>
 

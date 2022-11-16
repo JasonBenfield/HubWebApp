@@ -12,14 +12,12 @@ internal static class AuthExtensions
         services.AddScoped<UnverifiedUser>();
         services.AddScoped(sp =>
         {
-            var access = sp.GetRequiredService<AccessForAuthenticate>();
-            var auth = createAuthentication(sp, access);
+            var auth = sp.GetRequiredService<AuthenticationFactory>().CreateForAuthenticate();
             return new AuthenticateAction(auth);
         });
         services.AddScoped(sp =>
         {
-            var access = sp.GetRequiredService<AccessForLogin>();
-            var auth = createAuthentication(sp, access);
+            var auth = sp.GetRequiredService<AuthenticationFactory>().CreateForLogin();
             var anonClient = sp.GetRequiredService<IAnonClient>();
             var hubFactory = sp.GetRequiredService<HubFactory>();
             var clock = sp.GetRequiredService<IClock>();
@@ -28,21 +26,5 @@ internal static class AuthExtensions
         services.AddScoped<VerifyLoginAction>();
         services.AddScoped<VerifyLoginFormAction>();
         services.AddScoped<LoginReturnKeyAction>();
-    }
-
-    private static Authentication createAuthentication(IServiceProvider sp, IAccess access)
-    {
-        var tempLogSession = sp.GetRequiredService<TempLogSession>();
-        var unverifiedUser = new UnverifiedUser(sp.GetRequiredService<HubFactory>());
-        var hashedPasswordFactory = sp.GetRequiredService<IHashedPasswordFactory>();
-        var userContext = sp.GetRequiredService<CachedUserContext>();
-        return new Authentication
-        (
-            tempLogSession,
-            unverifiedUser,
-            access,
-            hashedPasswordFactory,
-            userContext
-        );
     }
 }

@@ -42,7 +42,6 @@ export class UserRolesPanel implements IPanel {
     private readonly modifierDisplayText: TextComponent;
     private readonly alert: MessageAlert;
     private readonly userRoles: ListGroup;
-    private readonly userRoleListItems: UserRoleListItem[] = [];
     private readonly awaitable: Awaitable<Result>;
     private user: IAppUserModel;
     private defaultModifier: IModifierModel;
@@ -174,12 +173,11 @@ export class UserRolesPanel implements IPanel {
         else {
             this.allowAccessCommand.show();
         }
-        const userRoleListItems = this.userRoles.setItems(
+        this.userRoles.setItems(
             userAccess.AssignedRoles,
             (role: IAppRoleModel, itemView: UserRoleListItemView) =>
                 new UserRoleListItem(role, itemView)
         );
-        this.userRoleListItems.splice(0, this.userRoleListItems.length, ...userRoleListItems);
         if (isDefaultModifier) {
             this.view.hideDefaultUserRoles();
         }
@@ -193,7 +191,7 @@ export class UserRolesPanel implements IPanel {
             this.defaultUserRoles.setItems(
                 defaultUserAccess.AssignedRoles,
                 (role: IAppRoleModel, itemView: UserRoleListItemView) => {
-                    let listItem = new UserRoleListItem(role, itemView);
+                    const listItem = new UserRoleListItem(role, itemView);
                     listItem.hideDeleteButton();
                     return listItem;
                 }
@@ -207,9 +205,9 @@ export class UserRolesPanel implements IPanel {
         }
     }
 
-    private onDeleteRoleClicked(el: HTMLElement) {
-        const roleListItem = this.userRoles.getItemByElement(el) as RoleListItem;
-        return this.alert.infoAction(
+    private async onDeleteRoleClicked(el: HTMLElement) {
+        const roleListItem = this.userRoles.getItemByElement(el) as UserRoleListItem;
+        await this.alert.infoAction(
             'Removing role...',
             () => this.hubApi.AppUserMaintenance.UnassignRole({
                 UserID: this.user.ID,
@@ -217,6 +215,7 @@ export class UserRolesPanel implements IPanel {
                 RoleID: roleListItem.role.ID
             })
         );
+        await this.refresh();
     }
 
     activate() { this.view.show(); }

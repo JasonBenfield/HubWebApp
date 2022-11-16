@@ -251,6 +251,58 @@ public sealed class AppUser
         return userGroupPermission;
     }
 
+    public async Task<LoggedInAppModel[]> GetLoggedInApps()
+    {
+        var userIDs = factory.DB.Users.Retrieve()
+            .Where(u => u.UserName == new AppUserName(record.UserName).Value)
+            .Select(u => u.ID);
+        var sessionIDs = factory.DB.Sessions.Retrieve()
+            .Where(s => userIDs.Contains(s.UserID) && s.TimeEnded.Year == 9999)
+            .Select(s => s.ID);
+        var installationIDs = factory.DB.Requests.Retrieve()
+            .Where(r => sessionIDs.Contains(r.SessionID))
+            .Select(r => r.InstallationID)
+            .Distinct();
+        var loggedInApps = await factory.DB.Installations.Retrieve()
+            .Where(inst => installationIDs.Contains(inst.ID))
+            .Join
+            (
+                factory.DB.AppVersions.Retrieve(),
+                inst => inst.AppVersionID,
+                av => av.ID,
+                (inst, av) => new { inst.IsCurrent, inst.Domain, av.AppID, av.VersionID }
+            )
+            .Join
+            (
+                factory.DB.Apps.Retrieve()
+                    .Where(a => a.Type == AppType.Values.WebApp),
+                joined => joined.AppID,
+                a => a.ID,
+                (joined, a) => new { joined.IsCurrent, joined.Domain, AppName = a.Name, joined.VersionID }
+            )
+            .Join
+            (
+                factory.DB.Versions.Retrieve(),
+                joined => joined.VersionID,
+                v => v.ID,
+                (joined, v) => new { joined.IsCurrent, joined.Domain, joined.AppName, v.VersionKey }
+            )
+            .Distinct()
+            .ToArrayAsync();
+        return loggedInApps
+            .Select
+            (
+                joined => new LoggedInAppModel
+                (
+                    new AppName(joined.AppName),
+                    joined.IsCurrent ? AppVersionKey.Current : AppVersionKey.Parse(joined.VersionKey),
+                    joined.Domain
+                )
+            )
+            .Distinct()
+            .ToArray();
+    }
+
     public AppUserModel ToModel() => new AppUserModel
     {
         ID = ID,

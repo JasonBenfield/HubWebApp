@@ -5,14 +5,14 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory factory;
     private readonly CurrentAppUser currentUser;
-    private readonly ICachedUserContext userContext;
+    private readonly IUserCacheManagement userCacheManagement;
 
-    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser, ICachedUserContext userContext)
+    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;
         this.currentUser = currentUser;
-        this.userContext = userContext;
+        this.userCacheManagement = userCacheManagement;
     }
 
     public async Task<EmptyActionResult> Execute(UserRoleRequest model, CancellationToken stoppingToken)
@@ -28,7 +28,7 @@ internal sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActio
         var user = await userGroup.User(model.UserID);
         var role = await app.Role(model.RoleID);
         await user.Modifier(modifier).UnassignRole(role);
-        userContext.ClearCache(user.ToModel().UserName);
+        await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }
 }

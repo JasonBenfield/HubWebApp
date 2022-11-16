@@ -23,6 +23,7 @@ internal sealed class InstallServiceAppProcess :  InstallAppProcess
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         ServiceController? sc = null;
+        bool startService = false;
         if (installVersionKey.IsCurrent())
         {
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
@@ -54,16 +55,18 @@ internal sealed class InstallServiceAppProcess :  InstallAppProcess
                     .Run();
                 createServiceResult.EnsureExitCodeIsZero();
                 sc = getService(serviceName);
+                startService = true;
             }
             else if (sc.Status == ServiceControllerStatus.Running)
             {
                 Console.WriteLine($"Stopping services '{sc.DisplayName}'");
                 sc.Stop();
                 sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                startService = true;
             }
         }
         await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, true);
-        if (sc != null)
+        if (sc != null && startService)
         {
             Console.WriteLine($"Starting services '{sc.DisplayName}'");
             sc.Start();

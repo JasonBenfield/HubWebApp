@@ -1,8 +1,9 @@
 ﻿namespace XTI_Hub;
 
-public sealed class InstallationModel
+public sealed record InstallationModel(int ID, InstallStatus Status, bool IsCurrent, string Domain)
 {
-    public int ID { get; set; }
-
-    public InstallStatus Status { get; set; } = InstallStatus.Values.NotSet;
+    public InstallationModel()
+        :this(0,InstallStatus.Values.GetDefault(), false, "")
+    {
+    }
 }
