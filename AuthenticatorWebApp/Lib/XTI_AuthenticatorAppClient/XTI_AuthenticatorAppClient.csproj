@@ -7,8 +7,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Api" Version="1.8.32-dev221113082414842" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.32-dev221113082414842" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.32-dev221116150635356" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.32-dev221116150635356" />
 		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.29-dev221111081347141" />
 	</ItemGroup>
 

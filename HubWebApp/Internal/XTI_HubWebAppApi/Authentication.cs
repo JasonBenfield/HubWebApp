@@ -11,7 +11,7 @@ public sealed class Authentication
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly CachedUserContext userContext;
 
-    public Authentication
+    internal Authentication
     (
         TempLogSession tempLog,
         UnverifiedUser unverifiedUser,
