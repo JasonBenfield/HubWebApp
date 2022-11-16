@@ -34,6 +34,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         ExpandedSessions = new EfDataRepository<ExpandedSession>(this);
         ExpandedRequests = new EfDataRepository<ExpandedRequest>(this);
         ExpandedLogEntries = new EfDataRepository<ExpandedLogEntry>(this);
+        ExpandedInstallations = new EfDataRepository<ExpandedInstallation>(this);
         unitOfWork = new UnitOfWork(this);
     }
 
@@ -63,6 +64,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new ExpandedSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedLogEntryEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedInstallationEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 
@@ -90,6 +92,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ExpandedSession> ExpandedSessions { get; }
     public DataRepository<ExpandedRequest> ExpandedRequests { get; }
     public DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
+    public DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 

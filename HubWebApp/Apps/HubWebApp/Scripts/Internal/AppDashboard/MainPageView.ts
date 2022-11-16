@@ -1,10 +1,10 @@
-﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+﻿import { HubPageView } from '../HubPageView';
 import { AppDetailPanelView } from './AppDetail/AppDetailPanelView';
 import { ModCategoryPanelView } from './ModCategory/ModCategoryPanelView';
 import { ResourcePanelView } from './Resource/ResourcePanelView';
 import { ResourceGroupPanelView } from './ResourceGroup/ResourceGroupPanelView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends HubPageView {
     readonly appDetailPanel: AppDetailPanelView;
     readonly resourceGroupPanel: ResourceGroupPanelView;
     readonly resourcePanel: ResourcePanelView;

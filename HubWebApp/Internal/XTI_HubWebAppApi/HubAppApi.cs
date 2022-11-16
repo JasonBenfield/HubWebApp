@@ -23,6 +23,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     {
         createCurrentUserGroup(sp);
         createHomeGroup(sp);
+        createInstallationsGroup(sp);
         createAuth(sp);
         createExternalAuth(sp);
         createAuthenticators(sp);
@@ -51,6 +52,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     partial void createCurrentUserGroup(IServiceProvider sp);
 
     partial void createHomeGroup(IServiceProvider sp);
+
+    partial void createInstallationsGroup(IServiceProvider sp);
 
     partial void createAuth(IServiceProvider sp);
 

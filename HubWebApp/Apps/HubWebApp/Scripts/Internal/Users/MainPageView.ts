@@ -1,9 +1,9 @@
-﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
-import { UserPanelView } from './UserPanelView';
-import { UserEditPanelView } from './UserEditPanelView';
+﻿import { HubPageView } from '../HubPageView';
 import { ChangePasswordPanelView } from './ChangePasswordPanelView';
+import { UserEditPanelView } from './UserEditPanelView';
+import { UserPanelView } from './UserPanelView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends HubPageView {
     readonly userPanel: UserPanelView;
     readonly userEditPanel: UserEditPanelView;
     readonly changePasswordPanel: ChangePasswordPanelView;

@@ -14,7 +14,8 @@ const entry = {
     appUser: './Scripts/Internal/AppUser/MainPage.ts',
     sessions: './Scripts/Internal/Logs/Sessions/MainPage.ts',
     requests: './Scripts/Internal/Logs/Requests/MainPage.ts',
-    logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts'
+    logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts',
+    installations: './Scripts/Internal/Installations/MainPage.ts'
 };
 const exportModule = {
     rules: [

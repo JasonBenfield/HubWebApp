@@ -15,6 +15,7 @@ export class MainMenuPanelView extends GridView {
     readonly sessionsLink: TextLinkView;
     readonly requestsLink: TextLinkView;
     readonly logEntriesLink: TextLinkView;
+    readonly installationsLink: TextLinkView;
     private readonly toolbar: ToolbarView;
     readonly backButton: ButtonCommandView;
 
@@ -43,6 +44,9 @@ export class MainMenuPanelView extends GridView {
         this.logEntriesLink = nav.addTextLink();
         this.logEntriesLink.setText('Event Log');
         this.logEntriesLink.setMargin(MarginCss.bottom(3));
+        this.installationsLink = nav.addTextLink();
+        this.installationsLink.setText('Installations');
+        this.installationsLink.setMargin(MarginCss.bottom(3));
         this.toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
         );

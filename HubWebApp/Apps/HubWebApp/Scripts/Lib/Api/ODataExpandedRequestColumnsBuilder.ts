@@ -8,6 +8,7 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly RequestID = new ODataColumnViewBuilder();
 	readonly Path = new ODataColumnViewBuilder();
 	readonly AppID = new ODataColumnViewBuilder();
+	readonly AppKey = new ODataColumnViewBuilder();
 	readonly AppName = new ODataColumnViewBuilder();
 	readonly AppTypeText = new ODataColumnViewBuilder();
 	readonly ResourceGroupName = new ODataColumnViewBuilder();
@@ -33,6 +34,7 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly InformationMessageCount = new ODataColumnViewBuilder();
 	readonly VersionName = new ODataColumnViewBuilder();
 	readonly VersionKey = new ODataColumnViewBuilder();
+	readonly VersionRelease = new ODataColumnViewBuilder();
 	readonly VersionStatusText = new ODataColumnViewBuilder();
 	readonly VersionTypeText = new ODataColumnViewBuilder();
 	readonly InstallLocation = new ODataColumnViewBuilder();
@@ -46,6 +48,8 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.Path = new ODataColumnBuilder('Path', new SourceType('String'), views.Path);
 		this.AppID = new ODataColumnBuilder('AppID', new SourceType('Int32'), views.AppID);
 		this.AppID.setDisplayText('App ID');
+		this.AppKey = new ODataColumnBuilder('AppKey', new SourceType('String'), views.AppKey);
+		this.AppKey.setDisplayText('App Key');
 		this.AppName = new ODataColumnBuilder('AppName', new SourceType('String'), views.AppName);
 		this.AppName.setDisplayText('App Name');
 		this.AppTypeText = new ODataColumnBuilder('AppTypeText', new SourceType('String'), views.AppTypeText);
@@ -95,6 +99,8 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.VersionName.setDisplayText('Version Name');
 		this.VersionKey = new ODataColumnBuilder('VersionKey', new SourceType('String'), views.VersionKey);
 		this.VersionKey.setDisplayText('Version Key');
+		this.VersionRelease = new ODataColumnBuilder('VersionRelease', new SourceType('String'), views.VersionRelease);
+		this.VersionRelease.setDisplayText('Version Release');
 		this.VersionStatusText = new ODataColumnBuilder('VersionStatusText', new SourceType('String'), views.VersionStatusText);
 		this.VersionStatusText.setDisplayText('Version Status Text');
 		this.VersionTypeText = new ODataColumnBuilder('VersionTypeText', new SourceType('String'), views.VersionTypeText);
@@ -107,6 +113,7 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly RequestID: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
 	readonly AppID: ODataColumnBuilder;
+	readonly AppKey: ODataColumnBuilder;
 	readonly AppName: ODataColumnBuilder;
 	readonly AppTypeText: ODataColumnBuilder;
 	readonly ResourceGroupName: ODataColumnBuilder;
@@ -132,6 +139,7 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly InformationMessageCount: ODataColumnBuilder;
 	readonly VersionName: ODataColumnBuilder;
 	readonly VersionKey: ODataColumnBuilder;
+	readonly VersionRelease: ODataColumnBuilder;
 	readonly VersionStatusText: ODataColumnBuilder;
 	readonly VersionTypeText: ODataColumnBuilder;
 	readonly InstallLocation: ODataColumnBuilder;
@@ -142,6 +150,7 @@ export class ODataExpandedRequestColumnsBuilder {
 			RequestID: this.RequestID.build(),
 			Path: this.Path.build(),
 			AppID: this.AppID.build(),
+			AppKey: this.AppKey.build(),
 			AppName: this.AppName.build(),
 			AppTypeText: this.AppTypeText.build(),
 			ResourceGroupName: this.ResourceGroupName.build(),
@@ -167,6 +176,7 @@ export class ODataExpandedRequestColumnsBuilder {
 			InformationMessageCount: this.InformationMessageCount.build(),
 			VersionName: this.VersionName.build(),
 			VersionKey: this.VersionKey.build(),
+			VersionRelease: this.VersionRelease.build(),
 			VersionStatusText: this.VersionStatusText.build(),
 			VersionTypeText: this.VersionTypeText.build(),
 			InstallLocation: this.InstallLocation.build(),

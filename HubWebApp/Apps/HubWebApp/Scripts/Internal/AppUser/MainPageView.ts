@@ -1,11 +1,11 @@
-﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+﻿import { HubPageView } from '../HubPageView';
 import { AddRolePanelView } from './AddRolePanelView';
 import { AppUserDataPanelView } from './AppUserDataPanelView';
 import { SelectModCategoryPanelView } from './SelectModCategoryPanelView';
 import { SelectModifierPanelView } from './SelectModifierPanelView';
 import { UserRolesPanelView } from './UserRolesPanelView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends HubPageView {
     readonly appUserDataPanel: AppUserDataPanelView;
     readonly selectModCategoryPanel: SelectModCategoryPanelView;
     readonly selectModifierPanel: SelectModifierPanelView;
