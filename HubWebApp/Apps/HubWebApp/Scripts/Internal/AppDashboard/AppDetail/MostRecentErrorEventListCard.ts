@@ -9,7 +9,7 @@ import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCard
 
 export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
-    private readonly errorEvents: ListGroup;
+    private readonly errorEvents: ListGroup<EventListItem, EventListItemView>;
 
     constructor(private readonly hubApi: HubAppApi, view: MostRecentErrorEventListCardView) {
         new TextComponent(view.titleHeader).setText('Most Recent Errors');
@@ -21,7 +21,7 @@ export class MostRecentErrorEventListCard {
         const errorEvents = await this.getErrorEvents();
         this.errorEvents.setItems(
             errorEvents,
-            (errorEvent: IAppLogEntryModel, itemView: EventListItemView) =>
+            (errorEvent, itemView) =>
                 new EventListItem(errorEvent, itemView)
         );
         if (errorEvents.length === 0) {
@@ -29,14 +29,10 @@ export class MostRecentErrorEventListCard {
         }
     }
 
-    private async getErrorEvents() {
-        let errorEvents: IAppLogEntryModel[];
-        await this.alert.infoAction(
+    private getErrorEvents() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                errorEvents = await this.hubApi.App.GetMostRecentErrorEvents(10);
-            }
+            () => this.hubApi.App.GetMostRecentErrorEvents(10)
         );
-        return errorEvents;
     }
 }

@@ -6,13 +6,12 @@ import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 export class ResourceGroupListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly resourceGroups: ButtonListGroupView;
+    readonly resourceGroups: ButtonListGroupView<ResourceGroupListItemView>;
 
     constructor(container: BasicComponentView) {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.resourceGroups = this.addView(ButtonListGroupView);
-        this.resourceGroups.setItemViewType(ResourceGroupListItemView);
+        this.resourceGroups = ButtonListGroupView.addTo(this, ResourceGroupListItemView);
     }
 }

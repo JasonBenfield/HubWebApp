@@ -10,7 +10,7 @@ public sealed class InstallationQueryType : NumericValue, IEquatable<Installatio
         {
             Installed = DefaultValue;
             Current = Add(new(5, nameof(Current)));
-            UpdateAvailable = Add(new(10, nameof(UpdateAvailable)));
+            UpdateAvailable = Add(new(10, "Update Available"));
             All = Add(new(100, nameof(All)));
         }
 

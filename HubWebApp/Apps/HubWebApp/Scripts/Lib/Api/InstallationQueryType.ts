@@ -17,7 +17,7 @@ export class InstallationQueryType extends NumericValue implements IInstallation
 	public static readonly values = new InstallationQueryTypes(
 		new InstallationQueryType(0, 'Installed'),
 		new InstallationQueryType(5, 'Current'),
-		new InstallationQueryType(10, 'UpdateAvailable'),
+		new InstallationQueryType(10, 'Update Available'),
 		new InstallationQueryType(100, 'All')
 	);
 	

@@ -12,14 +12,14 @@ import { RoleListItem } from "./RoleListItem";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 
 interface IResult {
-    back?: {};
-    roleSelected?: {};
+    back?: boolean;
+    roleSelected?: boolean;
 }
 
 class Result {
-    static back() { return new Result({ back: {} }); }
+    static back() { return new Result({ back: true }); }
 
-    static roleSelected() { return new Result({ roleSelected: {} }); }
+    static roleSelected() { return new Result({ roleSelected: true }); }
 
     private constructor(private readonly results: IResult) {
     }
@@ -32,7 +32,7 @@ class Result {
 export class AddRolePanel implements IPanel {
     private readonly awaitable: Awaitable<Result>;
     private readonly alert: MessageAlert;
-    private readonly roles: ListGroup;
+    private readonly roles: ListGroup<RoleListItem, RoleButtonListItemView>;
     private user: IAppUserModel;
     private modifier: IModifierModel;
     private defaultModifier: IModifierModel;
@@ -96,7 +96,7 @@ export class AddRolePanel implements IPanel {
         );
         this.roles.setItems(
             roles,
-            (role, view: RoleButtonListItemView) => new RoleListItem(role, view)
+            (role, view) => new RoleListItem(role, view)
         );
     }
 

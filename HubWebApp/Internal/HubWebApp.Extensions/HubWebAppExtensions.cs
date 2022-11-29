@@ -14,6 +14,7 @@ using XTI_App.Hosting;
 using XTI_Schedule;
 using XTI_Core;
 using XTI_WebAppClient;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;
 
@@ -28,6 +29,7 @@ public static class HubWebAppExtensions
         services.AddScoped<HubFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
+        services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();
         services.AddScoped<EfAppContext>();
         services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<EfAppContext>());
         services.AddScoped<AppFromPath>();
@@ -41,6 +43,7 @@ public static class HubWebAppExtensions
         services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
         services.AddScoped<StoredObjectFactory>();
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
+        services.AddScoped<IMenuDefinitionBuilder, HubMenuDefinitionBuilder>();
         services.AddScoped<AuthenticationFactory>();
         services.AddScoped<IAuthClient, DefaultAuthClient>();
         services.AddScoped<SystemUserXtiToken>();

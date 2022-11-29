@@ -1,4 +1,4 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+﻿import { HubPage } from '../HubPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Url } from '@jasonbenfield/sharedwebapp/Url';
 import { Apis } from '../Apis';
@@ -7,7 +7,7 @@ import { AddUserPanel } from './AddUserPanel';
 import { MainPageView } from './MainPageView';
 import { UserQueryPanel } from './UserQueryPanel';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
@@ -16,19 +16,18 @@ class MainPage extends BasicPage {
 
     constructor() {
         super(new MainPageView());
-        const hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(hubApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
         );
         this.userQueryPanel = this.panels.add(
-            new UserQueryPanel(hubApi, this.view.userQueryPanel)
+            new UserQueryPanel(this.defaultApi, this.view.userQueryPanel)
         );
         this.addUserPanel = this.panels.add(
-            new AddUserPanel(hubApi, this.view.addUserPanel)
+            new AddUserPanel(this.defaultApi, this.view.addUserPanel)
         );
         const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
-        hubApi.Users.withModifier(userGroupName);
+        this.defaultApi.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();
         this.activateUserQueryPanel();

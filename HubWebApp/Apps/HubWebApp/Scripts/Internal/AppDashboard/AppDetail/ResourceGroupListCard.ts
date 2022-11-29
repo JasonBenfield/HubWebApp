@@ -1,8 +1,8 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
@@ -10,7 +10,7 @@ import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
 export class ResourceGroupListCard {
     private readonly alert: MessageAlert;
-    private readonly resourceGroups: ListGroup;
+    private readonly resourceGroups: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
     private readonly _resourceGroupClicked = new DefaultEvent<ResourceGroupListItem>(this);
     readonly resourceGroupClicked = this._resourceGroupClicked;
 
@@ -32,7 +32,7 @@ export class ResourceGroupListCard {
         const resourceGroups = await this.getResourceGroups();
         this.resourceGroups.setItems(
             resourceGroups,
-            (sourceItem: IResourceGroupModel, listItem: ResourceGroupListItemView) =>
+            (sourceItem, listItem) =>
                 new ResourceGroupListItem(sourceItem, listItem)
         );
         if (resourceGroups.length === 0) {

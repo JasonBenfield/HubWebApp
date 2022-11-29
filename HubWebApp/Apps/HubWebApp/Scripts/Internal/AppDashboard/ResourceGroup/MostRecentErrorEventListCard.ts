@@ -9,7 +9,7 @@ import { MostRecentErrorEventListCardView } from "../MostRecentErrorEventListCar
 
 export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
-    private readonly errorEvents: ListGroup;
+    private readonly errorEvents: ListGroup<EventListItem, EventListItemView>;
 
     private groupID: number;
 
@@ -30,7 +30,7 @@ export class MostRecentErrorEventListCard {
         const errorEvents = await this.getErrorEvents();
         this.errorEvents.setItems(
             errorEvents,
-            (sourceItem: IAppLogEntryModel, listItem: EventListItemView) =>
+            (sourceItem, listItem) =>
                 new EventListItem(sourceItem, listItem)
         );
         if (errorEvents.length === 0) {
@@ -38,18 +38,14 @@ export class MostRecentErrorEventListCard {
         }
     }
 
-    private async getErrorEvents() {
-        let errorEvents: IAppLogEntryModel[];
-        await this.alert.infoAction(
+    private getErrorEvents() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                errorEvents = await this.hubApi.ResourceGroup.GetMostRecentErrorEvents({
-                    VersionKey: 'Current',
-                    GroupID: this.groupID,
-                    HowMany: 10
-                });
-            }
+            () => this.hubApi.ResourceGroup.GetMostRecentErrorEvents({
+                VersionKey: 'Current',
+                GroupID: this.groupID,
+                HowMany: 10
+            })
         );
-        return errorEvents;
     }
 }

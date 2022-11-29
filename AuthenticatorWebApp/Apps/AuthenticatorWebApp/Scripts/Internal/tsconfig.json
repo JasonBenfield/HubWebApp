@@ -16,7 +16,8 @@
       "../../node_modules/@types"
     ],
     "paths": {
-      "@hub/*": [ "../../../../../hubwebapp/apps/hubwebapp/scripts/lib/*" ]
+      "@hub/*": [ "../../../../../hubwebapp/apps/hubwebapp/scripts/lib/*" ],
+      "@jasonbenfield/sharedwebapp/*": [ "C:\\XTI\\Published\\Development\\SharedWebApp\\SharedPackage\\Current\\npm\\*" ]
     }
   },
   "include": [

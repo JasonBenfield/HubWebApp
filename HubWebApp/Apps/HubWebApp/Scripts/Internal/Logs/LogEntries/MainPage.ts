@@ -1,11 +1,10 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Apis } from '../../Apis';
+﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { HubPage } from '../../HubPage';
 import { MainMenuPanel } from '../../MainMenuPanel';
-import { MainPageView } from './MainPageView';
 import { LogEntryQueryPanel } from './LogEntryQueryPanel';
+import { MainPageView } from './MainPageView';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly logEntryQueryPanel: LogEntryQueryPanel;
@@ -13,13 +12,12 @@ class MainPage extends BasicPage {
 
     constructor() {
         super(new MainPageView());
-        const hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.logEntryQueryPanel = this.panels.add(
-            new LogEntryQueryPanel(hubApi, this.view.logEntryQueryPanel)
+            new LogEntryQueryPanel(this.defaultApi, this.view.logEntryQueryPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(hubApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
         );
         this.logEntryQueryPanel.refresh();
         this.activateLogEntryQueryPanel();

@@ -5,14 +5,14 @@ import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicCompo
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
-import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { HubTheme } from "../HubTheme";
-import { ODataExpandedInstallationColumnViewsBuilder } from '../../Lib/Api/ODataExpandedInstallationColumnsBuilder';
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { ODataExpandedInstallationColumnViewsBuilder } from '../../Lib/Api/ODataExpandedInstallationColumnsBuilder';
+import { HubTheme } from "../HubTheme";
 
 export class InstallationQueryPanelView extends GridView {
     readonly menuButton: ButtonCommandView;
-    readonly queryTypes: LinkListGroupView;
+    readonly queryTypes: LinkListGroupView<TextLinkListGroupItemView>;
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedInstallationColumnViewsBuilder;
 
@@ -47,9 +47,7 @@ export class InstallationQueryPanelView extends GridView {
                 b.scrollable();
                 b.setPadding(PaddingCss.end(3));
             });
-        this.queryTypes = cell1
-            .addView(LinkListGroupView);
-        this.queryTypes.setItemViewType(TextLinkListGroupItemView);
+        this.queryTypes = LinkListGroupView.addTo(cell1, TextLinkListGroupItemView);
         this.odataComponent = layoutGrid.addCell()
             .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);

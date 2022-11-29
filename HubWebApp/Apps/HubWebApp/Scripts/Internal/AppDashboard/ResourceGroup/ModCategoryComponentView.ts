@@ -1,12 +1,12 @@
 ﻿import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
-import { ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { ListGroupItemView, ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 
 export class ModCategoryComponentView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly listGroup: ListGroupView;
+    readonly listGroup: ListGroupView<ListGroupItemView>;
     readonly modCategoryName: TextSpanView;
     readonly clicked: IEventHandler<any>;
 

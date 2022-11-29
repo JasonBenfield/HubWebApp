@@ -27,7 +27,7 @@ export class ModCategoryPanelView extends GridView {
             .configure(b => b.setMargin(MarginCss.bottom(3)));
         this.resourceGroupListCard = mainContent.addView(ResourceGroupListCardView)
             .configure(b => b.setMargin(MarginCss.bottom(3)));
-        let toolbar = mainContent.addView(ToolbarView);
+        const toolbar = this.addCell().addView(ToolbarView);
         HubTheme.instance.commandToolbar.toolbar(toolbar);
         this.backButton = toolbar.columnStart.addView(ButtonCommandView);
         HubTheme.instance.commandToolbar.backButton(this.backButton);

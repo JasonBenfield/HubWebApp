@@ -6,13 +6,12 @@ import { EventListItemView } from "./EventListItemView";
 export class MostRecentErrorEventListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly errorEvents: ListGroupView;
+    readonly errorEvents: ListGroupView<EventListItemView>;
 
     constructor(container: BasicComponentView) {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.errorEvents = this.addView(ListGroupView);
-        this.errorEvents.setItemViewType(EventListItemView);
+        this.errorEvents = ListGroupView.addTo(this, EventListItemView);
     }
 }

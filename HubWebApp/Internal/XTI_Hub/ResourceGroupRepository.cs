@@ -128,7 +128,7 @@ public sealed class ResourceGroupRepository
         return factory.DB
             .ResourceGroups
             .Retrieve()
-            .Where(g => g.ModCategoryID == modCategory.ID)
+            .Where(g => appVersionIDs.Contains(g.AppVersionID) && g.ModCategoryID == modCategory.ID)
             .OrderBy(g => g.Name)
             .Select(g => factory.CreateGroup(g))
             .ToArrayAsync();

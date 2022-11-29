@@ -1,13 +1,13 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Apis } from '../Apis';
+import { HubPage } from '../HubPage';
 import { MainMenuPanel } from '../MainMenuPanel';
 import { ChangePasswordPanel } from './ChangePasswordPanel';
 import { MainPageView } from './MainPageView';
 import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
