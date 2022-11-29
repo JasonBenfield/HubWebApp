@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jasonbenfield/sharedwebapp": "^1.9.17",
+    "@jasonbenfield/sharedwebapp": "file:../../../../../../Published/Development/SharedWebApp/SharedPackage/Current/npm",
     "@popperjs/core": "^2.6.0",
     "@types/lodash": "^4.14.175",
     "bootstrap": "^5.1.3",

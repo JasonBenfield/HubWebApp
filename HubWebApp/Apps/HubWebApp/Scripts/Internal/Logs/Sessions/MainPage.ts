@@ -1,11 +1,10 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Apis } from '../../Apis';
+﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { HubPage } from '../../HubPage';
 import { MainMenuPanel } from '../../MainMenuPanel';
 import { MainPageView } from './MainPageView';
 import { SessionQueryPanel } from './SessionQueryPanel';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly sessionQueryPanel: SessionQueryPanel;
@@ -13,13 +12,12 @@ class MainPage extends BasicPage {
 
     constructor() {
         super(new MainPageView());
-        const hubApi = new Apis(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.sessionQueryPanel = this.panels.add(
-            new SessionQueryPanel(hubApi, this.view.sessionQueryPanel)
+            new SessionQueryPanel(this.defaultApi, this.view.sessionQueryPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(hubApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
         );
         this.sessionQueryPanel.refresh();
         this.activateSessionQueryPanel();

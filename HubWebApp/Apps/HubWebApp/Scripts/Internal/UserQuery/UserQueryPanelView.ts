@@ -2,18 +2,18 @@
 import { ODataComponentView } from "@jasonbenfield/sharedwebapp/OData/ODataComponentView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ODataExpandedUserColumnViewsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
 import { HubTheme } from "../HubTheme";
 
 export class UserQueryPanelView extends GridView {
     readonly alert: MessageAlertView;
-    readonly userGroups: LinkListGroupView;
+    readonly userGroups: LinkListGroupView<TextLinkListGroupItemView>;
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedUserColumnViewsBuilder;
     readonly menuButton: ButtonCommandView;
@@ -51,9 +51,7 @@ export class UserQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.end(3));
             });
         this.alert = cell1.addView(MessageAlertView);
-        this.userGroups = cell1
-            .addView(LinkListGroupView);
-        this.userGroups.setItemViewType(TextLinkListGroupItemView);
+        this.userGroups = LinkListGroupView.addTo(cell1, TextLinkListGroupItemView);
         this.odataComponent = layoutGrid.addCell()
             .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);

@@ -8,14 +8,14 @@ import { UserGroupListItem } from "./UserGroupListItem";
 import { UserGroupsPanelView } from "./UserGroupsPanelView";
 
 interface IResult {
-    addRequested?: {};
-    mainMenuRequested?: {};
+    addRequested?: boolean;
+    mainMenuRequested?: boolean;
 }
 
 class Result {
-    static addRequested() { return new Result({ addRequested: {} }); }
+    static addRequested() { return new Result({ addRequested: true }); }
 
-    static mainMenuRequested() { return new Result({ mainMenuRequested: {} }); }
+    static mainMenuRequested() { return new Result({ mainMenuRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -27,7 +27,7 @@ class Result {
 export class UserGroupsPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly userGroups: ListGroup;
+    private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly refreshCommand: AsyncCommand;
     private readonly addCommand: Command;
 
@@ -64,7 +64,7 @@ export class UserGroupsPanel implements IPanel {
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,
-            (ug, itemView: TextLinkListGroupItemView) => new UserGroupListItem(this.hubApi, ug, itemView)
+            (ug, itemView) => new UserGroupListItem(this.hubApi, ug, itemView)
         );
     }
 

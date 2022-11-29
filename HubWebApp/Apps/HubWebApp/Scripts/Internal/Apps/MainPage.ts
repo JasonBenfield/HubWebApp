@@ -1,27 +1,23 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
-import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
-import { HubAppApi } from '../../Lib/Api/HubAppApi';
-import { Apis } from '../Apis';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { HubPage } from '../HubPage';
+import { MainMenuPanel } from '../MainMenuPanel';
 import { AppListPanel } from './AppListPanel';
 import { MainPageView } from './MainPageView';
-import { MainMenuPanel } from '../MainMenuPanel';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
-    private readonly hubApi: HubAppApi;
     private readonly panels = new SingleActivePanel();
     private readonly appListPanel: AppListPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
     constructor() {
         super(new MainPageView());
-        this.hubApi = new Apis(this.view.modalError).Hub();
         this.appListPanel = this.panels.add(
-            new AppListPanel(this.hubApi, this.view.appListPanel)
+            new AppListPanel(this.defaultApi, this.view.appListPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.hubApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
         );
         this.appListPanel.refresh();
         this.activateAppListPanel();
@@ -31,7 +27,7 @@ class MainPage extends BasicPage {
         this.panels.activate(this.appListPanel);
         const result = await this.appListPanel.start();
         if (result.appSelected) {
-            const url = this.hubApi.Apps.Index.getModifierUrl(
+            const url = this.defaultApi.Apps.Index.getModifierUrl(
                 result.appSelected.app.PublicKey.DisplayText,
                 {}
             );

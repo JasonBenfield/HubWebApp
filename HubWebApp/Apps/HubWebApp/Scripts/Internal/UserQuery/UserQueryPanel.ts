@@ -1,5 +1,4 @@
-﻿import { WebPage } from "@jasonbenfield/sharedwebapp/Api/WebPage";
-import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
@@ -34,7 +33,7 @@ export class UserQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly addCommand: Command;
     private readonly alert: MessageAlert;
-    private readonly userGroups: ListGroup;
+    private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedUser>;
     private readonly userQueryModel: IUserGroupKey = { UserGroupName: '' };
 
@@ -97,7 +96,7 @@ export class UserQueryPanel implements IPanel {
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,
-            (ug, itemView: TextLinkListGroupItemView) => {
+            (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubApi, ug, itemView);
                 const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
                 if (this.userQueryModel.UserGroupName === listItemGroupName) {

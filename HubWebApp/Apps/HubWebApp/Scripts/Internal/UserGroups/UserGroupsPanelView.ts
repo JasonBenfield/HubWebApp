@@ -12,7 +12,7 @@ import { HubTheme } from "../HubTheme";
 
 export class UserGroupsPanelView extends GridView {
     readonly alert: MessageAlertView;
-    readonly userGroups: LinkListGroupView;
+    readonly userGroups: LinkListGroupView<TextLinkListGroupItemView>;
     readonly menuButton: ButtonCommandView;
     readonly refreshButton: ButtonCommandView;
     readonly addButton: ButtonCommandView;
@@ -24,9 +24,7 @@ export class UserGroupsPanelView extends GridView {
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
-        this.userGroups = mainContent
-            .addView(LinkListGroupView);
-        this.userGroups.setItemViewType(TextLinkListGroupItemView);
+        this.userGroups = LinkListGroupView.addTo(mainContent, TextLinkListGroupItemView);
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
         );

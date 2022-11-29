@@ -1,29 +1,26 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { EventCollection } from "@jasonbenfield/sharedwebapp/Events";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 import { UserRolesPanelView } from "./UserRolesPanelView";
-import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { RoleListItem } from "./RoleListItem";
 
 interface Results {
-    addRequested?: {};
-    modifierRequested?: {};
+    addRequested?: boolean;
+    modifierRequested?: boolean;
 }
 
 class Result {
-    static addRequested() { return new Result({ addRequested: {} }); }
+    static addRequested() { return new Result({ addRequested: true }); }
 
     static modifierRequested() {
-        return new Result({ modifierRequested: {} });
+        return new Result({ modifierRequested: true });
     }
 
     private constructor(private readonly results: Results) { }
@@ -41,7 +38,7 @@ export class UserRolesPanel implements IPanel {
     private readonly categoryName: TextComponent;
     private readonly modifierDisplayText: TextComponent;
     private readonly alert: MessageAlert;
-    private readonly userRoles: ListGroup;
+    private readonly userRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
     private readonly awaitable: Awaitable<Result>;
     private user: IAppUserModel;
     private defaultModifier: IModifierModel;
@@ -49,7 +46,7 @@ export class UserRolesPanel implements IPanel {
     private readonly addCommand: Command;
     private readonly allowAccessCommand: AsyncCommand;
     private readonly denyAccessCommand: AsyncCommand;
-    private readonly defaultUserRoles: ListGroup;
+    private readonly defaultUserRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -175,7 +172,7 @@ export class UserRolesPanel implements IPanel {
         }
         this.userRoles.setItems(
             userAccess.AssignedRoles,
-            (role: IAppRoleModel, itemView: UserRoleListItemView) =>
+            (role, itemView) =>
                 new UserRoleListItem(role, itemView)
         );
         if (isDefaultModifier) {
@@ -190,7 +187,7 @@ export class UserRolesPanel implements IPanel {
             }
             this.defaultUserRoles.setItems(
                 defaultUserAccess.AssignedRoles,
-                (role: IAppRoleModel, itemView: UserRoleListItemView) => {
+                (role, itemView) => {
                     const listItem = new UserRoleListItem(role, itemView);
                     listItem.hideDeleteButton();
                     return listItem;
@@ -206,7 +203,7 @@ export class UserRolesPanel implements IPanel {
     }
 
     private async onDeleteRoleClicked(el: HTMLElement) {
-        const roleListItem = this.userRoles.getItemByElement(el) as UserRoleListItem;
+        const roleListItem = this.userRoles.getItemByElement(el);
         await this.alert.infoAction(
             'Removing role...',
             () => this.hubApi.AppUserMaintenance.UnassignRole({

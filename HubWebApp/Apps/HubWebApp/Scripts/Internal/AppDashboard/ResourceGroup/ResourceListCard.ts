@@ -1,8 +1,8 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ResourceListCardView } from "./ResourceListCardView";
 import { ResourceListItem } from "./ResourceListItem";
@@ -10,7 +10,7 @@ import { ResourceListItemView } from "./ResourceListItemView";
 
 export class ResourceListCard {
     private readonly alert: MessageAlert;
-    private readonly resources: ListGroup;
+    private readonly resources: ListGroup<ResourceListItem, ResourceListItemView>;
 
     private groupID: number;
 
@@ -36,28 +36,23 @@ export class ResourceListCard {
     }
 
     async refresh() {
-        let resources = await this.getResources();
+        const resources = await this.getResources();
         this.resources.setItems(
             resources,
-            (sourceItem: IResourceModel, listItem: ResourceListItemView) =>
-                new ResourceListItem(sourceItem, listItem)
+            (sourceItem, listItem) => new ResourceListItem(sourceItem, listItem)
         );
         if (resources.length === 0) {
             this.alert.danger('No Resources were Found');
         }
     }
 
-    private async getResources() {
-        let resources: IResourceModel[];
-        await this.alert.infoAction(
+    private getResources() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                resources = await this.hubApi.ResourceGroup.GetResources({
-                    VersionKey: 'Current',
-                    GroupID: this.groupID
-                });
-            }
+            () => this.hubApi.ResourceGroup.GetResources({
+                VersionKey: 'Current',
+                GroupID: this.groupID
+            })
         );
-        return resources;
     }
 }

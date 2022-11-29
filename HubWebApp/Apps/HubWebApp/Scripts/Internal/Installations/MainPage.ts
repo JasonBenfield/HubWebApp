@@ -1,11 +1,11 @@
-﻿import { BasicPage } from '@jasonbenfield/sharedwebapp/Components/BasicPage';
+﻿import { HubPage } from '../HubPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Apis } from '../Apis';
 import { MainMenuPanel } from '../MainMenuPanel';
 import { InstallationQueryPanel } from './InstallationQueryPanel';
 import { MainPageView } from './MainPageView';
 
-class MainPage extends BasicPage {
+class MainPage extends HubPage {
     protected readonly view: MainPageView;
     private readonly panels = new SingleActivePanel();
     private readonly mainMenuPanel: MainMenuPanel;
@@ -13,9 +13,8 @@ class MainPage extends BasicPage {
 
     constructor() {
         super(new MainPageView());
-        const hubApi = new Apis(this.view.modalError).Hub();
-        this.mainMenuPanel = this.panels.add(new MainMenuPanel(hubApi, this.view.mainMenuPanel));
-        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(hubApi, this.view.installationQueryPanel));
+        this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel));
+        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.defaultApi, this.view.installationQueryPanel));
         this.installationQueryPanel.refresh();
         this.activateInstallationQueryPanel();
     }
@@ -32,7 +31,7 @@ class MainPage extends BasicPage {
         this.panels.activate(this.mainMenuPanel);
         const result = await this.mainMenuPanel.start();
         if (result.back) {
-
+            this.activateInstallationQueryPanel();
         }
     }
 }

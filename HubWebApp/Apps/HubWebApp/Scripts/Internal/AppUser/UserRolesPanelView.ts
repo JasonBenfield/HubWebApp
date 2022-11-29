@@ -31,10 +31,10 @@ export class UserRolesPanelView extends GridView {
     readonly selectModifierButton: ButtonCommandView;
     readonly allowAccessButton: ButtonCommandView;
     readonly denyAccessButton: ButtonCommandView;
-    readonly userRoles: ListGroupView;
+    readonly userRoles: ListGroupView<UserRoleListItemView>;
     private readonly defaultUserRolesCard: CardView;
     readonly defaultUserRolesTitle: CardTitleHeaderView;
-    readonly defaultUserRoles: ListGroupView;
+    readonly defaultUserRoles: ListGroupView<UserRoleListItemView>;
     readonly backButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
@@ -89,14 +89,12 @@ export class UserRolesPanelView extends GridView {
         this.denyAccessButton.setText('Deny Access');
 
         this.alert = card.addCardAlert();
-        this.userRoles = card.addUnorderedListGroup();
-        this.userRoles.setItemViewType(UserRoleListItemView);
+        this.userRoles = card.addUnorderedListGroup(UserRoleListItemView);
         card.setMargin(MarginCss.bottom(3));
 
         this.defaultUserRolesCard = mainContent.addView(CardView);
         this.defaultUserRolesTitle = this.defaultUserRolesCard.addCardTitleHeader();
-        this.defaultUserRoles = this.defaultUserRolesCard.addUnorderedListGroup();
-        this.defaultUserRoles.setItemViewType(UserRoleListItemView);
+        this.defaultUserRoles = this.defaultUserRolesCard.addUnorderedListGroup(UserRoleListItemView);
 
         const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addCell().addView(ToolbarView));
         this.backButton = HubTheme.instance.commandToolbar.backButton(

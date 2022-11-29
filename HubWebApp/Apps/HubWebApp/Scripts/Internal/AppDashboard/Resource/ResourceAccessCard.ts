@@ -9,7 +9,7 @@ import { RoleAccessListItemView } from "../RoleAccessListItemView";
 
 export class ResourceAccessCard {
     private readonly alert: MessageAlert;
-    private readonly accessItems: ListGroup;
+    private readonly accessItems: ListGroup<RoleAccessListItem, RoleAccessListItemView>;
 
     private resourceID: number;
 
@@ -30,7 +30,7 @@ export class ResourceAccessCard {
         const accessItems = await this.getRoleAccessItems();
         this.accessItems.setItems(
             accessItems,
-            (sourceItem: IRoleAccessItem, listItem: RoleAccessListItemView) =>
+            (sourceItem, listItem) =>
                 new RoleAccessListItem(sourceItem, listItem)
         );
         if (accessItems.length === 0) {
@@ -50,7 +50,7 @@ export class ResourceAccessCard {
             }
         );
         const accessItems: IRoleAccessItem[] = [];
-        for (let allowedRole of roles) {
+        for (const allowedRole of roles) {
             accessItems.push({
                 isAllowed: true,
                 role: allowedRole

@@ -6,13 +6,12 @@ import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
 export class ModifierCategoryListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly modCategories: ButtonListGroupView;
+    readonly modCategories: ButtonListGroupView<ModifierCategoryListItemView>;
 
     constructor(container: BasicComponentView) {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.modCategories = this.addView(ButtonListGroupView);
-        this.modCategories.setItemViewType(ModifierCategoryListItemView);
+        this.modCategories = ButtonListGroupView.addTo(this, ModifierCategoryListItemView);
     }
 }

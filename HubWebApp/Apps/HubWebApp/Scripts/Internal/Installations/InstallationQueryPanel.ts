@@ -12,13 +12,14 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 
 interface IResult {
-    menuRequested?: {};
+    menuRequested?: boolean;
 }
 
 class Result {
-    static menuRequested() { return new Result({ menuRequested: {} }); }
+    static menuRequested() { return new Result({ menuRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -27,7 +28,7 @@ class Result {
 
 export class InstallationQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
-    private readonly queryTypes: ListGroup;
+    private readonly queryTypes: ListGroup<TextComponent, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedInstallation>;
 
     constructor(hubApi: HubAppApi, private readonly view: InstallationQueryPanelView) {
@@ -39,7 +40,7 @@ export class InstallationQueryPanel implements IPanel {
         );
         this.queryTypes.setItems(
             InstallationQueryType.values.all,
-            (queryType, itemView: TextLinkListGroupItemView) => {
+            (queryType, itemView) => {
                 const listItem = new TextLinkComponent(itemView);
                 listItem.setText(queryType.DisplayText);
                 listItem.setHref(hubApi.Installations.Index.getUrl({ QueryType: queryType.Value }))

@@ -1,23 +1,21 @@
-﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
-import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
-import { ButtonListGroupView, ListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { TextBlockView } from "@jasonbenfield/sharedwebapp/Views/TextBlockView";
-import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { CardAlertView, CardTitleHeaderView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { ButtonListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
-import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
-import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
-import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 
 export class SelectModCategoryPanelView extends GridView {
     readonly defaultModButton: ButtonCommandView;
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly modCategories: ButtonListGroupView;
+    readonly modCategories: ButtonListGroupView<ModCategoryButtonListItemView>;
     readonly backButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
@@ -36,8 +34,7 @@ export class SelectModCategoryPanelView extends GridView {
         const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.modCategories = card.addButtonListGroup();
-        this.modCategories.setItemViewType(ModCategoryButtonListItemView);
+        this.modCategories = card.addButtonListGroup(ModCategoryButtonListItemView);
         card.setMargin(MarginCss.bottom(3));
         const toolbar = this.addView(ToolbarView);
         HubTheme.instance.commandToolbar.toolbar(toolbar);

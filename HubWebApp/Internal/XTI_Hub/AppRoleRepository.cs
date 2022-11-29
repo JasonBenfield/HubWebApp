@@ -98,7 +98,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID))
+            .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -111,7 +111,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID))
+            .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
