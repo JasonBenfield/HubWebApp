@@ -314,6 +314,80 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("Authenticators", (string)null);
                 });
 
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedInstallation", b =>
+                {
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InstallationID"), 1L, 1);
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstallationStatusDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastRequestDaysAgo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastRequestTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("QualifiedMachineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TimeInstallationAdded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("VersionKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionRelease")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionStatusText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InstallationID");
+
+                    b.ToView("ExpandedInstallations");
+                });
+
             modelBuilder.Entity("XTI_HubDB.Entities.ExpandedLogEntry", b =>
                 {
                     b.Property<int>("EventID")
@@ -326,6 +400,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AppName")
                         .IsRequired()
@@ -346,6 +424,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<string>("InstallLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsCurrentInstallation")
                         .HasColumnType("bit");
@@ -425,6 +506,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("VersionRelease")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VersionStatusText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -454,6 +539,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("AppName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -471,6 +560,9 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.Property<string>("InstallLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsCurrentInstallation")
                         .HasColumnType("bit");
@@ -545,6 +637,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VersionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionRelease")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -636,6 +732,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
+
+                    b.Property<string>("SiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

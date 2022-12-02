@@ -8,7 +8,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -24,7 +24,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -48,7 +48,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldGetUserRolesForModifier()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
@@ -73,7 +73,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldReturnAccessDenied_WhenAccessIsDenied()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -96,7 +96,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldNotReturnDenyAccessRole()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -119,7 +119,7 @@ internal sealed class GetUserAccessTest
     [Test]
     public async Task ShouldOnlyGetExplicitlyAssignedRoles()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await addUser(tester, "someone");
@@ -177,7 +177,7 @@ internal sealed class GetUserAccessTest
         );
     }
 
-    private async Task<HubActionTester<UserModifierKey, UserAccessModel>> setup()
+    private async Task<HubActionTester<UserModifierKey, UserAccessModel>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

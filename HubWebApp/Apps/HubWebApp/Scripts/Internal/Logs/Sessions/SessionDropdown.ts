@@ -15,6 +15,6 @@ export class SessionDropdown extends ODataCell {
         super(rowIndex, column, record, view);
         const requestLink = new LinkComponent(view.requestLink);
         const sessionID = record['SessionID'];
-        requestLink.setHref(hubApi.Logs.Requests.getUrl({ SessionID: sessionID }));
+        requestLink.setHref(hubApi.Logs.Requests.getUrl({ SessionID: sessionID, InstallationID: null }));
     }
 }

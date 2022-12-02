@@ -33,6 +33,10 @@ internal sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, Ex
         {
             query = query.Where(e => e.RequestID == model.RequestID.Value);
         }
+        if (model.InstallationID.HasValue)
+        {
+            query = query.Where(e => e.InstallationID == model.InstallationID.Value);
+        }
         return query;
     }
 }

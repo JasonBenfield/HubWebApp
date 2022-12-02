@@ -47,6 +47,8 @@ public sealed partial class ExpandedRequest
     public string VersionRelease { get; set; } = "";
     public string VersionStatusText { get; set; } = "";
     public string VersionTypeText { get; set; } = "";
+    public int InstallationID { get; set; }
+
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }
 }

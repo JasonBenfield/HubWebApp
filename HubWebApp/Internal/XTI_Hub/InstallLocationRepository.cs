@@ -22,8 +22,8 @@ public sealed class InstallLocationRepository
         var hasCurrent = await loc.HasCurrentInstallation(appVersion);
         if (!hasCurrent)
         {
-            installation = await loc.NewCurrentInstallation(appVersion, "", DateTimeOffset.Now);
-            await installation.Start();
+            installation = await loc.NewCurrentInstallation(appVersion, "", "", DateTimeOffset.Now);
+            await installation.BeginInstallation();
             await installation.Installed();
         }
         else

@@ -64,15 +64,15 @@ public sealed partial class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> BeginInstallation([FromBody] InstallationRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> BeginInstallation([FromBody] GetInstallationRequest model, CancellationToken ct)
     {
-        return api.Group("Install").Action<InstallationRequest, EmptyActionResult>("BeginInstallation").Execute(model, ct);
+        return api.Group("Install").Action<GetInstallationRequest, EmptyActionResult>("BeginInstallation").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] InstallationRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] GetInstallationRequest model, CancellationToken ct)
     {
-        return api.Group("Install").Action<InstallationRequest, EmptyActionResult>("Installed").Execute(model, ct);
+        return api.Group("Install").Action<GetInstallationRequest, EmptyActionResult>("Installed").Execute(model, ct);
     }
 
     [HttpPost]

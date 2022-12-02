@@ -115,7 +115,7 @@ public sealed class AppRegistration
             .Where
             (
                 a => !a.AppKey.Equals(HubInfo.AppKey) &&
-                    !a.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
+                    !a.AppKey.IsAnyAppType(AppType.Values.NotFound, AppType.Values.Package, AppType.Values.WebPackage)
             );
         foreach (var appModel in appModels)
         {

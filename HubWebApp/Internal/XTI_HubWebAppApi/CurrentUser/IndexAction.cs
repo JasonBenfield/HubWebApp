@@ -9,6 +9,6 @@ internal sealed class IndexAction : AppAction<EmptyRequest, WebViewResult>
         this.viewFactory = viewFactory;
     }
 
-    public async Task<WebViewResult> Execute(EmptyRequest model, CancellationToken ct) =>
-        viewFactory.Default("currentUser", "Current User");
+    public Task<WebViewResult> Execute(EmptyRequest model, CancellationToken ct) =>
+        Task.FromResult(viewFactory.Default("currentUser", "Current User"));
 }

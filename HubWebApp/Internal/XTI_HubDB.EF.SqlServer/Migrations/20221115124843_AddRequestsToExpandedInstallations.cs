@@ -55,13 +55,13 @@ select a.id InstallationID, a.IsCurrent, dbo.ToEst(a.TimeAdded) TimeInstallation
 	d.VersionName, d.VersionKey, dbo.VersionTypeDisplayText(d.Type) VersionTypeText, 
 	dbo.VersionStatusDisplayText(d.Status) VersionStatusText,
 	dbo.VersionReleaseDisplayText(d.Major, d.Minor, d.Patch) VersionRelease,
-	d.Major, d.Minor, d.Patch, dbo.ToEst(d.TimeAdded) TimeVersionAddedEst,
+	dbo.ToEst(d.TimeAdded) TimeVersionAddedEst,
 	a.status InstallationStatus, a.TimeAdded TimeInstallationAdded, 
 	e.ID LocationID,
 	c.ID AppID, c.Name AppName, c.Type AppType,
 	d.TimeAdded TimeVersionAdded, d.Type VersionType, d.Status VersionStatus,
 	LatestRequests.MaxTimeStarted LastRequestTime, 
-	datediff(day, LatestRequests.MaxTimeStarted, getDate()) LastRequestDaysAgo,
+	datediff(day, LatestRequests.MaxTimeStarted, SysDateTimeOffset()) LastRequestDaysAgo,
 	isnull(LatestRequests.RequestCount, 0) RequestCount
 from installations a
 inner join AppXtiVersions b
