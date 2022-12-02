@@ -92,18 +92,18 @@ public sealed class EfHubAdministration : IHubAdministration
         return version.ToModel();
     }
 
-    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain)
+    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName)
     {
         var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
         var app = await hubFactory.Apps.App(appKey);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
         var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName);
-        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, clock.Now());
+        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, siteName, clock.Now());
         Installation? versionInstallation = null;
         if (xtiEnv.IsProduction())
         {
-            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, clock.Now());
+            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, siteName, clock.Now());
         }
         return new NewInstallationResult(currentInstallation.ID, versionInstallation?.ID ?? 0);
     }

@@ -25,19 +25,19 @@ public sealed class InstallationRepository
             .ToArrayAsync();
     }
 
-    internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded)
+    internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
     {
-        var entity = await NewInstallation(location, appVersion, domain, timeAdded, true);
+        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, true);
         return hubFactory.CreateInstallation(entity);
     }
 
-    internal async Task<Installation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded)
+    internal async Task<Installation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
     {
-        var entity = await NewInstallation(location, appVersion, domain, timeAdded, false);
+        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, false);
         return hubFactory.CreateInstallation(entity);
     }
 
-    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded, bool isCurrent)
+    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, bool isCurrent)
     {
         var appVersionID = await appVersion.AppVersionID();
         var entity = new InstallationEntity
@@ -47,7 +47,8 @@ public sealed class InstallationRepository
             Status = InstallStatus.Values.InstallPending.Value,
             IsCurrent = isCurrent,
             TimeAdded = timeAdded,
-            Domain = domain
+            Domain = domain,
+            SiteName = siteName
         };
         await hubFactory.DB.Installations.Create(entity);
         return entity;

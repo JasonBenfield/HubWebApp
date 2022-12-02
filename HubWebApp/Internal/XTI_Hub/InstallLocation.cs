@@ -35,11 +35,11 @@ public sealed class InstallLocation
     public Task<Installation> CurrentInstallation(AppVersion appVersion)
         => hubFactory.Installations.CurrentInstallation(this, appVersion);
 
-    public Task<Installation> NewCurrentInstallation(AppVersion appVersion, string domain, DateTimeOffset timeAdded)
-        => hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, timeAdded);
+    public Task<Installation> NewCurrentInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
+        => hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded);
 
-    public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, DateTimeOffset timeAdded)
-        => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, timeAdded);
+    public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
+        => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded);
 
     public override string ToString() => $"{nameof(InstallLocation)} {entity.ID}";
 }

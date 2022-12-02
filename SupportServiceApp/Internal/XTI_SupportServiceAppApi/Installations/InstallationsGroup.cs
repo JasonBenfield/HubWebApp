@@ -5,8 +5,8 @@ public sealed class InstallationsGroup : AppApiGroupWrapper
     public InstallationsGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
-        DoSomething = source.AddAction(nameof(DoSomething), () => sp.GetRequiredService<DeleteAction>());
+        Delete = source.AddAction(nameof(Delete), () => sp.GetRequiredService<DeleteAction>());
     }
 
-    public AppApiAction<EmptyRequest, EmptyActionResult> DoSomething { get; }
+    public AppApiAction<EmptyRequest, EmptyActionResult> Delete { get; }
 }

@@ -10,14 +10,14 @@ export class InstallationsGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Installations');
 		this.Index = this.createView<IInstallationQueryRequest>('Index');
-		this.GetPendingDeletesAction = this.createAction<IGetPendingDeletesRequest,IInstallationModel[]>('GetPendingDeletes', 'Get Pending Deletes');
+		this.GetPendingDeletesAction = this.createAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>('GetPendingDeletes', 'Get Pending Deletes');
 		this.RequestDeleteAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('RequestDelete', 'Request Delete');
 		this.BeginDeleteAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('BeginDelete', 'Begin Delete');
 		this.DeletedAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('Deleted', 'Deleted');
 	}
 	
 	readonly Index: AppApiView<IInstallationQueryRequest>;
-	readonly GetPendingDeletesAction: AppApiAction<IGetPendingDeletesRequest,IInstallationModel[]>;
+	readonly GetPendingDeletesAction: AppApiAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>;
 	readonly RequestDeleteAction: AppApiAction<IGetInstallationRequest,IEmptyActionResult>;
 	readonly BeginDeleteAction: AppApiAction<IGetInstallationRequest,IEmptyActionResult>;
 	readonly DeletedAction: AppApiAction<IGetInstallationRequest,IEmptyActionResult>;

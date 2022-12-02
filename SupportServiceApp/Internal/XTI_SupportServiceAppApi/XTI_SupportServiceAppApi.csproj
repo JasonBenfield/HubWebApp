@@ -8,12 +8,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-		<PackageReference Include="XTI_App.Api" Version="1.8.32-dev221129080618422" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.32-dev221202075539651" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
 	  <ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
+	  <ProjectReference Include="..\..\..\Internal\XTI_ServiceAppInstallation\XTI_ServiceAppInstallation.csproj" />
+	  <ProjectReference Include="..\..\..\Internal\XTI_WebAppInstallation\XTI_WebAppInstallation.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ public sealed class InstallationsGroup : AppApiGroupWrapper
     }
 
     public AppApiAction<InstallationQueryRequest, WebViewResult> Index { get; }
-    public AppApiAction<GetPendingDeletesRequest, InstallationModel[]> GetPendingDeletes { get; }
+    public AppApiAction<GetPendingDeletesRequest, AppVersionInstallationModel[]> GetPendingDeletes { get; }
     public AppApiAction<GetInstallationRequest, EmptyActionResult> RequestDelete { get; }
     public AppApiAction<GetInstallationRequest, EmptyActionResult> BeginDelete { get; }
     public AppApiAction<GetInstallationRequest, EmptyActionResult> Deleted { get; }

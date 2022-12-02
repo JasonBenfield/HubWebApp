@@ -16,9 +16,9 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppVersionInstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest model, CancellationToken ct)
     {
-        return api.Group("Installations").Action<GetPendingDeletesRequest, InstallationModel[]>("GetPendingDeletes").Execute(model, ct);
+        return api.Group("Installations").Action<GetPendingDeletesRequest, AppVersionInstallationModel[]>("GetPendingDeletes").Execute(model, ct);
     }
 
     [HttpPost]

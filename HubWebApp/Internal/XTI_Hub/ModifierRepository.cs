@@ -70,28 +70,6 @@ public sealed class ModifierRepository
         return modKey;
     }
 
-    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, ModifierKey modKey, string targetKey, string displayText)
-    {
-        var record = await GetModifierByTargetKey(category, targetKey);
-        if (record == null)
-        {
-            record = await Add(category, modKey, targetKey, displayText);
-        }
-        else
-        {
-            await factory.DB.Modifiers.Update
-            (
-                record,
-                m =>
-                {
-                    m.ModKey = modKey.Value;
-                    m.DisplayText = displayText;
-                }
-            );
-        }
-        return factory.CreateModifier(record);
-    }
-
     private async Task<ModifierEntity> Add(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
     {
         var record = new ModifierEntity

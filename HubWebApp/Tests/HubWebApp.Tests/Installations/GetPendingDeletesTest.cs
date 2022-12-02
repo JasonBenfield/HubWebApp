@@ -27,7 +27,7 @@ internal sealed class GetPendingDeletesTest
         var installations = await tester.Execute(new GetPendingDeletesRequest(machineName));
         Assert.That
         (
-            installations.Select(inst => inst.ID),
+            installations.Select(inst => inst.Installation.ID),
             Is.EqualTo(new[] { installationID }),
             "Should get pending deletes"
         );
@@ -58,14 +58,14 @@ internal sealed class GetPendingDeletesTest
         );
     }
 
-    private async Task<HubActionTester<GetPendingDeletesRequest, InstallationModel[]>> Setup()
+    private async Task<HubActionTester<GetPendingDeletesRequest, AppVersionInstallationModel[]>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
         return HubActionTester.Create(services, hubApi => hubApi.Installations.GetPendingDeletes);
     }
 
-    private async Task<int> PrepareDeletePendingInstallation(HubActionTester<GetPendingDeletesRequest, InstallationModel[]> tester, string qualifiedMachineName)
+    private async Task<int> PrepareDeletePendingInstallation(HubActionTester<GetPendingDeletesRequest, AppVersionInstallationModel[]> tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();

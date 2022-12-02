@@ -76,7 +76,8 @@ internal sealed class InstallProcess
                         appKey,
                         installMachineName,
                         versionName,
-                        installationOptions.Domain
+                        installationOptions.Domain,
+                        installationOptions.SiteName
                     );
                     var installerCreds = await getInstallerCredentials(hubAdministration, installMachineName);
                     var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
@@ -141,10 +142,10 @@ internal sealed class InstallProcess
         return installerCreds;
     }
 
-    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain)
+    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain, string siteName)
     {
         Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain);
+        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain, siteName);
     }
 }

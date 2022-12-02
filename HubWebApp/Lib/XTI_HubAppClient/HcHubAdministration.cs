@@ -67,14 +67,15 @@ public sealed class HcHubAdministration : IHubAdministration
     public Task Installed(int installationID) =>
         hubClient.Install.Installed(new GetInstallationRequest(installationID));
 
-    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain)
+    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName)
     {
         var request = new NewInstallationRequest
         {
             VersionName = versionName,
             AppKey = appKey,
             QualifiedMachineName = machineName,
-            Domain = domain
+            Domain = domain,
+            SiteName = siteName
         };
         return hubClient.Install.NewInstallation(request);
     }

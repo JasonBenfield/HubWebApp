@@ -41,7 +41,7 @@ public sealed class Installation
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName groupName) =>
         hubFactory.Groups.GroupOrDefault(entity.AppVersionID, groupName);
 
-    public InstallationModel ToModel() => new InstallationModel(ID, Status(), entity.IsCurrent, entity.Domain);
+    public InstallationModel ToModel() => new InstallationModel(ID, Status(), entity.IsCurrent, entity.Domain, entity.SiteName);
 
     private InstallStatus Status() => InstallStatus.Values.Value(entity.Status);
 

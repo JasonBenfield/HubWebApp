@@ -5,21 +5,19 @@ import { NumericValues } from '@jasonbenfield/sharedwebapp/NumericValues';
 export class AppTypes extends NumericValues<AppType> {
 	constructor(
 		public readonly NotFound: AppType,
-		public readonly WebService: AppType,
 		public readonly WebApp: AppType,
 		public readonly ServiceApp: AppType,
 		public readonly Package: AppType,
 		public readonly ConsoleApp: AppType,
 		public readonly WebPackage: AppType
 	) {
-		super([NotFound,WebService,WebApp,ServiceApp,Package,ConsoleApp,WebPackage]);
+		super([NotFound,WebApp,ServiceApp,Package,ConsoleApp,WebPackage]);
 	}
 }
 
 export class AppType extends NumericValue implements IAppType {
 	public static readonly values = new AppTypes(
 		new AppType(0, 'Not Found'),
-		new AppType(5, 'Web Service'),
 		new AppType(10, 'Web App'),
 		new AppType(15, 'Service App'),
 		new AppType(20, 'Package'),

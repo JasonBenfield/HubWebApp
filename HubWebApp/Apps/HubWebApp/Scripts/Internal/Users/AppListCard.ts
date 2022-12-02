@@ -37,7 +37,7 @@ export class AppListCard {
 
     async refresh() {
         let apps = await this.getApps();
-        apps = apps.filter(app => AppType.values.value(app.AppKey.Type.Value).equalsAny(AppType.values.WebApp, AppType.values.WebService));
+        apps = apps.filter(app => AppType.values.value(app.AppKey.Type.Value).equals(AppType.values.WebApp));
         this.apps.setItems(
             apps,
             (app, listItem) =>
