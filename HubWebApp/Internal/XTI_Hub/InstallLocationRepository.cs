@@ -23,7 +23,7 @@ public sealed class InstallLocationRepository
         if (!hasCurrent)
         {
             installation = await loc.NewCurrentInstallation(appVersion, "", DateTimeOffset.Now);
-            await installation.Start();
+            await installation.BeginInstallation();
             await installation.Installed();
         }
         else

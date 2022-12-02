@@ -8,5 +8,9 @@ internal static class InstallationsGroupExtensions
     {
         services.AddScoped<IndexAction>();
         services.AddScoped<InstallationQueryAction>();
+        services.AddScoped<GetPendingDeletesAction>();
+        services.AddScoped<RequestDeleteAction>();
+        services.AddScoped<BeginDeleteAction>();
+        services.AddScoped<DeletedAction>();
     }
 }

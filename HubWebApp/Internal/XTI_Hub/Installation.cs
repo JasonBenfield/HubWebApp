@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -17,9 +18,15 @@ public sealed class Installation
 
     internal int ID { get => entity.ID; }
 
+    public Task BeginInstallation() => hubFactory.Installations.BeginInstallation(entity);
+
     public Task Installed() => hubFactory.Installations.Installed(entity);
 
-    public Task Start() => hubFactory.Installations.StartInstallation(entity);
+    public Task RequestDelete() => hubFactory.Installations.RequestDelete(entity);
+
+    public Task BeginDelete() => hubFactory.Installations.BeginDelete(entity);
+
+    public Task Deleted() => hubFactory.Installations.Deleted(entity);
 
     public async Task<AppVersion> AppVersion()
     {
@@ -39,4 +46,5 @@ public sealed class Installation
     private InstallStatus Status() => InstallStatus.Values.Value(entity.Status);
 
     public override string ToString() => $"{nameof(Installation)} {entity.ID}";
+
 }

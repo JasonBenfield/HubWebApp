@@ -36,6 +36,7 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly VersionRelease = new ODataColumnViewBuilder();
 	readonly VersionStatusText = new ODataColumnViewBuilder();
 	readonly VersionTypeText = new ODataColumnViewBuilder();
+	readonly InstallationID = new ODataColumnViewBuilder();
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
 }
@@ -100,6 +101,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.VersionStatusText.setDisplayText('Version Status Text');
 		this.VersionTypeText = new ODataColumnBuilder('VersionTypeText', new SourceType('String'), views.VersionTypeText);
 		this.VersionTypeText.setDisplayText('Version Type Text');
+		this.InstallationID = new ODataColumnBuilder('InstallationID', new SourceType('Int32'), views.InstallationID);
+		this.InstallationID.setDisplayText('Installation ID');
 		this.InstallLocation = new ODataColumnBuilder('InstallLocation', new SourceType('String'), views.InstallLocation);
 		this.InstallLocation.setDisplayText('Install Location');
 		this.IsCurrentInstallation = new ODataColumnBuilder('IsCurrentInstallation', new SourceType('Boolean'), views.IsCurrentInstallation);
@@ -136,6 +139,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly VersionRelease: ODataColumnBuilder;
 	readonly VersionStatusText: ODataColumnBuilder;
 	readonly VersionTypeText: ODataColumnBuilder;
+	readonly InstallationID: ODataColumnBuilder;
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
 	
@@ -172,6 +176,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			VersionRelease: this.VersionRelease.build(),
 			VersionStatusText: this.VersionStatusText.build(),
 			VersionTypeText: this.VersionTypeText.build(),
+			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
 			IsCurrentInstallation: this.IsCurrentInstallation.build()
 		} as ODataColumns<IExpandedLogEntry>;

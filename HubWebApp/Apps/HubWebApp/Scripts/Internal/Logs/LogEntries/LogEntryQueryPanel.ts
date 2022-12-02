@@ -50,13 +50,15 @@ export class LogEntryQueryPanel implements IPanel {
         const url = Url.current();
         const requestIDText = url.getQueryValue('RequestID');
         const requestID = requestIDText ? Number(requestIDText) : null;
+        const installationIDText = url.getQueryValue('InstallationID');
+        const installationID = installationIDText ? Number(installationIDText) : null;
         options.saveChanges({
             select: true,
             filter: !requestID,
             orderby: true
         });
         options.setODataClient(
-            new ApiODataClient(hubApi.LogEntryQuery, { RequestID: requestID })
+            new ApiODataClient(hubApi.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         new Command(this.menu.bind(this)).add(view.menuButton);

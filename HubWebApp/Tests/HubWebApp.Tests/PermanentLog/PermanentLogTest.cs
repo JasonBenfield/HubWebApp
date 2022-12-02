@@ -248,10 +248,7 @@ internal sealed class PermanentLogTest
             QualifiedMachineName = "destination.xartogg.com",
             Domain = "test.xartogg.com"
         });
-        await hubApi.Install.BeginInstallation.Invoke(new InstallationRequest
-        {
-            InstallationID = newInstResult.CurrentInstallationID
-        });
+        await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.CurrentInstallationID));
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
         installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
         var userGroup = await hubFactory.UserGroups.GetGeneral();

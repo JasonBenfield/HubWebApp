@@ -111,7 +111,7 @@ public sealed class EfHubAdministration : IHubAdministration
     public async Task BeginInstall(int installationID)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
-        await installation.Start();
+        await installation.BeginInstallation();
     }
 
     public async Task Installed(int installationID)

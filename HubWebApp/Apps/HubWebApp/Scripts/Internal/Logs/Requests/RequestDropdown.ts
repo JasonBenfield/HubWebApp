@@ -15,6 +15,6 @@ export class RequestDropdown extends ODataCell {
         super(rowIndex, column, record, view);
         const logEntryLink = new LinkComponent(view.logEntryLink);
         const requestID = record['RequestID'];
-        logEntryLink.setHref(hubApi.Logs.LogEntries.getUrl({ RequestID: requestID }));
+        logEntryLink.setHref(hubApi.Logs.LogEntries.getUrl({ RequestID: requestID, InstallationID: null }));
     }
 }

@@ -33,6 +33,10 @@ internal sealed class RequestQueryAction : QueryAction<RequestQueryRequest, Expa
         {
             query = query.Where(r => r.SessionID == model.SessionID.Value);
         }
+        if (model.InstallationID.HasValue)
+        {
+            query = query.Where(r => r.InstallationID == model.InstallationID.Value);
+        }
         return query;
     }
 }

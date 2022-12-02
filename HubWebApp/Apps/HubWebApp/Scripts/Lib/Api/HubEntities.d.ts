@@ -22,6 +22,18 @@ interface IPersonName {
 interface IInstallationQueryRequest {
 	QueryType: number;
 }
+interface IGetPendingDeletesRequest {
+	MachineName: string;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+}
+interface IGetInstallationRequest {
+	InstallationID: number;
+}
 interface IExpandedInstallation {
 	InstallationID: number;
 	IsCurrent: boolean;
@@ -289,9 +301,6 @@ interface INewInstallationResult {
 	CurrentInstallationID: number;
 	VersionInstallationID: number;
 }
-interface IInstallationRequest {
-	InstallationID: number;
-}
 interface ISetUserAccessRequest {
 	UserName: string;
 	RoleAssignments: ISetUserAccessRoleRequest[];
@@ -474,9 +483,11 @@ interface IExpandedUser {
 }
 interface IRequestQueryRequest {
 	SessionID: number;
+	InstallationID: number;
 }
 interface ILogEntryQueryRequest {
 	RequestID: number;
+	InstallationID: number;
 }
 interface IExpandedSession {
 	SessionID: number;
@@ -526,6 +537,7 @@ interface IExpandedRequest {
 	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
+	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 }
@@ -561,10 +573,15 @@ interface IExpandedLogEntry {
 	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
+	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 }
 interface IInstallationQueryType {
+	Value: number;
+	DisplayText: string;
+}
+interface IInstallStatus {
 	Value: number;
 	DisplayText: string;
 }

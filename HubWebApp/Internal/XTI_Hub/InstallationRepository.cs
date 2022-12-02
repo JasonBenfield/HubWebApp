@@ -14,6 +14,17 @@ public sealed class InstallationRepository
         this.hubFactory = hubFactory;
     }
 
+    public Task<Installation[]> GetPendingDeletes(string machineName)
+    {
+        var locationIDs = hubFactory.DB.InstallLocations.Retrieve()
+            .Where(l => l.QualifiedMachineName == machineName.ToLower())
+            .Select(l => l.ID);
+        return hubFactory.DB.Installations.Retrieve()
+            .Where(inst => locationIDs.Contains(inst.LocationID) && inst.Status == InstallStatus.Values.DeletePending)
+            .Select(inst => new Installation(hubFactory, inst))
+            .ToArrayAsync();
+    }
+
     internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, DateTimeOffset timeAdded)
     {
         var entity = await NewInstallation(location, appVersion, domain, timeAdded, true);
@@ -42,17 +53,14 @@ public sealed class InstallationRepository
         return entity;
     }
 
-    internal Task StartInstallation(InstallationEntity entity) =>
-        hubFactory.DB
-            .Installations
-            .Update
-            (
-                entity,
-                inst =>
-                {
-                    inst.Status = InstallStatus.Values.InstallStarted.Value;
-                }
-            );
+    internal Task BeginInstallation(InstallationEntity entity) =>
+        SetInstallationStatus(entity, InstallStatus.Values.InstallStarted);
+
+    internal Task BeginDelete(InstallationEntity entity) =>
+        SetInstallationStatus(entity, InstallStatus.Values.DeleteStarted);
+
+    internal Task Deleted(InstallationEntity entity) =>
+        SetInstallationStatus(entity, InstallStatus.Values.Deleted);
 
     internal Task Installed(InstallationEntity entity) =>
         hubFactory.DB.Transaction
@@ -100,6 +108,9 @@ public sealed class InstallationRepository
             }
         );
 
+    internal Task RequestDelete(InstallationEntity entity) =>
+        SetInstallationStatus(entity, InstallStatus.Values.DeletePending);
+
     private Task SetInstallationStatus(InstallationEntity entity, InstallStatus status) =>
         hubFactory.DB
             .Installations
@@ -124,12 +135,12 @@ public sealed class InstallationRepository
     }
 
     internal Task<bool> HasCurrentInstallation(InstallLocation location, AppVersion appVersion)
-        => currentInstallation(location, appVersion).AnyAsync();
+        => GetCurrentInstallation(location, appVersion).AnyAsync();
 
     internal Task<Installation> CurrentInstallation(InstallLocation location, AppVersion appVersion)
-        => currentInstallation(location, appVersion).FirstAsync();
+        => GetCurrentInstallation(location, appVersion).FirstAsync();
 
-    private IQueryable<Installation> currentInstallation(InstallLocation location, AppVersion appVersion)
+    private IQueryable<Installation> GetCurrentInstallation(InstallLocation location, AppVersion appVersion)
     {
         var appVersionIDs = appVersion.QueryAppVersionID();
         return hubFactory.DB

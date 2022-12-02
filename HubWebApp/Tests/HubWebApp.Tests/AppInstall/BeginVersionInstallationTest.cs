@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppInstall;
 using XTI_HubDB.Entities;
+using XTI_HubWebAppApi.AppInstall;
 
 namespace HubWebApp.Tests;
 
@@ -10,23 +9,19 @@ sealed class BeginVersionInstallationTest
     [Test]
     public async Task ShouldSetVersionInstallationStatusToInstallStarted()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await newInstallation(tester, new NewInstallationRequest
+        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
             VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new InstallationRequest
-        {
-            InstallationID = newInstResult.VersionInstallationID
-        };
-        await tester.Execute(request);
-        var versionInstallation = await getInstallation(tester, newInstResult.VersionInstallationID);
+        await tester.Execute(new GetInstallationRequest(newInstResult.VersionInstallationID));
+        var versionInstallation = await GetInstallation(tester, newInstResult.VersionInstallationID);
         Assert.That
         (
             InstallStatus.Values.Value(versionInstallation.Status),
@@ -35,25 +30,25 @@ sealed class BeginVersionInstallationTest
         );
     }
 
-    private static Task<InstallationEntity> getInstallation(IHubActionTester tester, int installationID)
+    private async Task<HubActionTester<GetInstallationRequest, EmptyActionResult>> Setup()
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
-        return db.Installations.Retrieve()
-            .Where(inst => inst.ID == installationID)
-            .FirstAsync();
+        var host = new HubTestHost();
+        var sp = await host.Setup();
+        return HubActionTester.Create(sp, hubApi => hubApi.Install.BeginInstallation);
     }
 
-    private async Task<NewInstallationResult> newInstallation(IHubActionTester tester, NewInstallationRequest model)
+    private async Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
         var result = await hubApi.Install.NewInstallation.Execute(model);
         return result.Data;
     }
 
-    private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
+    private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
     {
-        var host = new HubTestHost();
-        var sp = await host.Setup();
-        return HubActionTester.Create(sp, hubApi => hubApi.Install.BeginInstallation);
+        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        return db.Installations.Retrieve()
+            .Where(inst => inst.ID == installationID)
+            .FirstAsync();
     }
 }

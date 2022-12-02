@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
 	  <ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
 	</ItemGroup>
 
