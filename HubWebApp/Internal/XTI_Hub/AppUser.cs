@@ -278,14 +278,14 @@ public sealed class AppUser
                     .Where(a => a.Type == AppType.Values.WebApp),
                 joined => joined.AppID,
                 a => a.ID,
-                (joined, a) => new { joined.IsCurrent, joined.Domain, AppName = a.Name, joined.VersionID }
+                (joined, a) => new { joined.IsCurrent, joined.Domain, AppDisplayText = a.DisplayText, joined.VersionID }
             )
             .Join
             (
                 factory.DB.Versions.Retrieve(),
                 joined => joined.VersionID,
                 v => v.ID,
-                (joined, v) => new { joined.IsCurrent, joined.Domain, joined.AppName, v.VersionKey }
+                (joined, v) => new { joined.IsCurrent, joined.Domain, joined.AppDisplayText, v.VersionKey }
             )
             .Distinct()
             .ToArrayAsync();
@@ -294,7 +294,7 @@ public sealed class AppUser
             (
                 joined => new LoggedInAppModel
                 (
-                    new AppName(joined.AppName),
+                    new AppName(joined.AppDisplayText),
                     joined.IsCurrent ? AppVersionKey.Current : AppVersionKey.Parse(joined.VersionKey),
                     joined.Domain
                 )

@@ -147,5 +147,6 @@ public sealed class App
 
     public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
 
-    private AppKey ToAppKey() => new AppKey(record.Name, AppType.Values.Value(record.Type));
+    private AppKey ToAppKey() => 
+        new AppKey(new AppName(record.DisplayText), AppType.Values.Value(record.Type));
 }

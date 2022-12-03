@@ -208,7 +208,7 @@ public sealed class InstallationRepository
                 (
                     new AppKey
                     (
-                        new AppName(ad.App.Name),
+                        new AppName(ad.App.DisplayText),
                         AppType.Values.Value(ad.App.Type)
                     ),
                     AppVersionKey.Parse(ad.Version.VersionKey),

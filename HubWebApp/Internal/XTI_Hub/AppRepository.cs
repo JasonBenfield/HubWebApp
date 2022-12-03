@@ -45,11 +45,16 @@ public sealed class AppRepository
         }
         else
         {
-            await factory.DB.Apps.Update(record, r =>
-            {
-                r.VersionName = versionName.Value;
-                r.Title = title.Trim();
-            });
+            await factory.DB.Apps.Update
+            (
+                record, 
+                r =>
+                {
+                    r.DisplayText = appKey.Name.DisplayText;
+                    r.VersionName = versionName.Value;
+                    r.Title = title.Trim();
+                }
+            );
             app = factory.CreateApp(record);
         }
         var version = await factory.Versions.AddCurrentVersionIfNotFound(versionName, timeAdded);
@@ -78,6 +83,7 @@ public sealed class AppRepository
         var record = new AppEntity
         {
             Name = appKey.Name.Value,
+            DisplayText = appKey.Name.DisplayText,
             Type = appKey.Type.Value,
             Title = title.Trim(),
             VersionName = versionName.Value,
