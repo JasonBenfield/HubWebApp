@@ -16,8 +16,8 @@ export class GeneratedKeyTypes extends NumericValues<GeneratedKeyType> {
 export class GeneratedKeyType extends NumericValue implements IGeneratedKeyType {
 	public static readonly values = new GeneratedKeyTypes(
 		new GeneratedKeyType(0, 'Guid'),
-		new GeneratedKeyType(6, 'SixDigit'),
-		new GeneratedKeyType(10, 'TenDigit'),
+		new GeneratedKeyType(6, 'Six Digit'),
+		new GeneratedKeyType(10, 'Ten Digit'),
 		new GeneratedKeyType(999, 'Fixed')
 	);
 	
