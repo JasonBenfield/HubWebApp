@@ -16,8 +16,12 @@ public static class Extensions
         services.AddDbContext<HubDbContext>((sp, options) =>
         {
             var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-            var hubDbOptions = sp.GetRequiredService<DbOptions>();
-            var connectionString = new HubConnectionString(hubDbOptions, xtiEnv.EnvironmentName);
+            var dbOptions = sp.GetRequiredService<DbOptions>();
+            var connectionString = new XtiConnectionString
+            (
+                dbOptions, 
+                new XtiDbName(xtiEnv.EnvironmentName, "Hub")
+            );
             options.UseSqlServer
             (
                 connectionString.Value(),

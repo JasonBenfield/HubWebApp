@@ -24,7 +24,7 @@ internal sealed class HubClientAppClientDomain : IAppClientDomain
             cache.Set("appDomains", appDomains, TimeSpan.FromHours(1));
         }
         var appKey = AppKey.WebApp(appName);
-        var appDomainsForApp = appDomains.Where(ad => ad.AppKey.Equals(appKey));
+        var appDomainsForApp = (appDomains ?? new AppDomainModel[0]).Where(ad => ad.AppKey.Equals(appKey));
         var appDomain = 
             appDomainsForApp.FirstOrDefault(ad => ad.VersionKey.Equals(version)) ??
             appDomainsForApp.FirstOrDefault();

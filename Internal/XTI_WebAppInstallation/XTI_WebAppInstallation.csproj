@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.32-dev221202075539651" />
-		<PackageReference Include="XTI_Core" Version="1.10.16" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.33" />
+		<PackageReference Include="XTI_Core" Version="1.10.18" />
 	</ItemGroup>
 
 </Project>

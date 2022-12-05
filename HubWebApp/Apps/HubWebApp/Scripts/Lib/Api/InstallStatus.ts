@@ -18,12 +18,12 @@ export class InstallStatuss extends NumericValues<InstallStatus> {
 
 export class InstallStatus extends NumericValue implements IInstallStatus {
 	public static readonly values = new InstallStatuss(
-		new InstallStatus(0, 'NotSet'),
-		new InstallStatus(10, 'InstallPending'),
-		new InstallStatus(20, 'InstallStarted'),
+		new InstallStatus(0, 'Not Set'),
+		new InstallStatus(10, 'Install Pending'),
+		new InstallStatus(20, 'Install Started'),
 		new InstallStatus(30, 'Installed'),
-		new InstallStatus(40, 'DeletePending'),
-		new InstallStatus(50, 'DeleteStarted'),
+		new InstallStatus(40, 'Delete Pending'),
+		new InstallStatus(50, 'Delete Started'),
 		new InstallStatus(60, 'Deleted')
 	);
 	

@@ -86,14 +86,14 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(DbOptions.DB).Get<DbOptions>();
+                return config.Source.GetSection(DbOptions.DB).Get<DbOptions>() ?? new DbOptions();
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.Get<AdminOptions>();
+                return config.Source.Get<AdminOptions>() ?? new AdminOptions();
             });
             var slnDir = Environment.CurrentDirectory;
             services.AddScoped(sp => new GitRepoInfo(sp.GetRequiredService<AdminOptions>(), slnDir));
@@ -192,7 +192,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(HubClientOptions.HubClient).Get<HubClientOptions>();
+                return config.Source.GetSection(HubClientOptions.HubClient).Get<HubClientOptions>() ?? new HubClientOptions();
             });
             services.AddScoped<InstallationUserCredentials>();
             services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
