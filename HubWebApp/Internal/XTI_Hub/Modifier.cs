@@ -17,9 +17,9 @@ public sealed class Modifier
     }
 
     public int ID { get; }
-    public ModifierKey ModKey() => new ModifierKey(record.ModKey);
-    public string TargetKey { get => record.TargetKey; }
-    public int TargetID() => int.Parse(TargetKey);
+    public int TargetID() => int.Parse(record.TargetKey);
+
+    public bool IsDefault() => ModKey().Equals(ModifierKey.Default);
 
     public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID == record.CategoryID;
 
@@ -41,7 +41,7 @@ public sealed class Modifier
     public async Task<Modifier> DefaultModifier()
     {
         Modifier? defaultModifier;
-        if (ModKey().Equals(ModifierKey.Default))
+        if (IsDefault())
         {
             defaultModifier = this;
         }
@@ -64,9 +64,11 @@ public sealed class Modifier
         ID = ID,
         CategoryID = record.CategoryID,
         ModKey = ModKey(),
-        TargetKey = TargetKey,
+        TargetKey = record.TargetKey,
         DisplayText = record.DisplayText
     };
+
+    private ModifierKey ModKey() => new ModifierKey(record.ModKey);
 
     public override string ToString() => $"{nameof(Modifier)} {ID}";
 }

@@ -55,6 +55,14 @@ public sealed class App
             .ToArray();
     }
 
+    public async Task<AppRole[]> Roles(AppRoleName[] roleNames)
+    {
+        var roles = await factory.Roles.RolesForApp(this, roleNames);
+        return roles
+            .Where(r => !r.IsDeactivated())
+            .ToArray();
+    }
+
     public Task<AppRole> Role(int roleID) =>
         factory.Roles.Role(this, roleID);
 

@@ -9,5 +9,6 @@ internal static class UserInquiryExtensions
         services.AddScoped<GetUserAction>();
         services.AddScoped<GetUserAuthenticatorsAction>();
         services.AddScoped<GetUserOrAnonAction>();
+        services.AddScoped<GetUsersAction>();
     }
 }

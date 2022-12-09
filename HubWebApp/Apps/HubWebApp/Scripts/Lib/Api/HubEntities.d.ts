@@ -473,6 +473,17 @@ interface IAddOrUpdateModifierByTargetKeyRequest {
 	TargetKey: string;
 	TargetDisplayText: string;
 }
+interface IAddOrUpdateModifierByModKeyRequest {
+	ModCategoryName: string;
+	ModKey: string;
+	TargetKey: string;
+	TargetDisplayText: string;
+}
+interface IGetUsersWithAnyRoleRequest {
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
+}
 interface IUserGroupKey {
 	UserGroupName: string;
 }

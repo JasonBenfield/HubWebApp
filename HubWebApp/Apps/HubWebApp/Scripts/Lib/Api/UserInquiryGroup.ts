@@ -12,11 +12,13 @@ export class UserInquiryGroup extends AppApiGroup {
 		this.GetUserAction = this.createAction<number,IAppUserModel>('GetUser', 'Get User');
 		this.GetUserOrAnonAction = this.createAction<string,IAppUserModel>('GetUserOrAnon', 'Get User Or Anon');
 		this.GetUserAuthenticatorsAction = this.createAction<number,IUserAuthenticatorModel[]>('GetUserAuthenticators', 'Get User Authenticators');
+		this.GetUsersAction = this.createAction<IEmptyRequest,IAppUserModel[]>('GetUsers', 'Get Users');
 	}
 	
 	readonly GetUserAction: AppApiAction<number,IAppUserModel>;
 	readonly GetUserOrAnonAction: AppApiAction<string,IAppUserModel>;
 	readonly GetUserAuthenticatorsAction: AppApiAction<number,IUserAuthenticatorModel[]>;
+	readonly GetUsersAction: AppApiAction<IEmptyRequest,IAppUserModel[]>;
 	
 	GetUser(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAction.execute(model, errorOptions || {});
@@ -26,5 +28,8 @@ export class UserInquiryGroup extends AppApiGroup {
 	}
 	GetUserAuthenticators(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAuthenticatorsAction.execute(model, errorOptions || {});
+	}
+	GetUsers(errorOptions?: IActionErrorOptions) {
+		return this.GetUsersAction.execute({}, errorOptions || {});
 	}
 }

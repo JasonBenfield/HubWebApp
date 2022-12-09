@@ -26,4 +26,10 @@ public sealed partial class UserInquiryController : Controller
     {
         return api.Group("UserInquiry").Action<int, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserModel[]>> GetUsers(CancellationToken ct)
+    {
+        return api.Group("UserInquiry").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest(), ct);
+    }
 }

@@ -18,10 +18,56 @@ public sealed class AppUserRepository
         => factory.DB
             .Users
             .Retrieve()
-            .Where(u=>u.GroupID == userGroup.ID)
+            .Where(u => u.GroupID == userGroup.ID)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
             .ToArrayAsync();
+
+    public async Task<AppUser[]> UsersWithAnyRole(Modifier modifier, AppRole[] roles)
+    {
+        AppUser[] users;
+        var roleIDs = roles.Select(r => r.ID).ToArray();
+        IQueryable<int> userIDs;
+        if (modifier.IsDefault())
+        {
+            userIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID && roleIDs.Contains(ur.RoleID))
+                .Select(ur => ur.UserID);
+        }
+        else
+        {
+            var modifierUserIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID && roleIDs.Contains(ur.RoleID))
+                .Select(ur => ur.UserID);
+            var anyModifiedUserIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID)
+                .Select(ur => ur.UserID);
+            var defaultModifier = await modifier.DefaultModifier();
+            userIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where
+                (
+                    ur => modifierUserIDs.Contains(ur.UserID) ||
+                    (
+                        defaultModifier.ID == ur.ModifierID &&
+                        roleIDs.Contains(ur.RoleID) &&
+                        !anyModifiedUserIDs.Contains(ur.UserID)
+                    )
+                )
+                .Select(ur => ur.UserID);
+        }
+        users = await factory.DB
+            .Users
+            .Retrieve()
+            .Where(u => userIDs.Contains(u.ID))
+            .OrderBy(u => u.UserName)
+            .Select(u => factory.User(u))
+            .ToArrayAsync();
+        return users;
+    }
 
     internal async Task<AppUser> User(AppUserGroup userGroup, int id)
     {
@@ -38,7 +84,7 @@ public sealed class AppUserRepository
             .Users
             .Retrieve()
             .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.UserName == userName.Value);
-        if(userRecord == null)
+        if (userRecord == null)
         {
             userRecord = await GetUser(AppUserName.Anon);
         }
@@ -77,7 +123,7 @@ public sealed class AppUserRepository
         var record = await GetUser(userName);
         return factory.User
         (
-            record 
+            record
             ?? throw new ArgumentNullException(nameof(record), $"User not found with user name '{userName.Value}'")
         );
     }

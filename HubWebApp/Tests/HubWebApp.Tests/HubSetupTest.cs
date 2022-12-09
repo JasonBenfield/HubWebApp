@@ -42,7 +42,7 @@ internal sealed class HubSetupTest
         var modCategory = await hubApp.ModCategory(modCategoryName);
         var modifiers = await modCategory.Modifiers();
         var apps = await factory.Apps.All();
-        var modIDs = modifiers.Select(m => m.TargetKey);
+        var modIDs = modifiers.Select(m => m.ToModel().TargetKey);
         var appIDs = apps.Select(a => a.ToModel().ID.ToString());
         Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");
     }

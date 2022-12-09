@@ -49,10 +49,12 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         currentUserName.SetUserName(AppUserName.Anon);
     }
 
-    public async Task<AppUser> LoginAsAdmin()
+    public Task<AppUser> LoginAsAdmin() => LoginAs(new AppUserName("hubadmin"));
+
+    public async Task<AppUser> LoginAs(AppUserName userName)
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName("hubadmin"));
+        var user = await factory.Users.UserByUserName(userName);
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
         return user;
