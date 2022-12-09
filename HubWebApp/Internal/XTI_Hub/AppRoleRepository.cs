@@ -29,14 +29,22 @@ public sealed class AppRoleRepository
         return factory.CreateRole(record);
     }
 
-    internal Task<AppRole[]> RolesForApp(App app)
+    internal Task<AppRole[]> RolesForApp(App app, AppRoleName[] roleNames)
     {
+        var roleNameValues = roleNames.Select(rn => rn.Value).ToArray();
         return factory.DB.Roles.Retrieve()
-            .Where(r => r.AppID == app.ID)
+            .Where(r => r.AppID == app.ID && roleNameValues.Contains(r.Name))
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
     }
+
+    internal Task<AppRole[]> RolesForApp(App app) =>
+        factory.DB.Roles.Retrieve()
+            .Where(r => r.AppID == app.ID)
+            .OrderBy(r => r.Name)
+            .Select(r => factory.CreateRole(r))
+            .ToArrayAsync();
 
     internal async Task<AppRole> Role(App app, int roleID)
     {
@@ -62,12 +70,10 @@ public sealed class AppRoleRepository
         );
     }
 
-    private IQueryable<AppRoleEntity> rolesForApp(App app)
-    {
-        return factory.DB.Roles
+    private IQueryable<AppRoleEntity> rolesForApp(App app) =>
+        factory.DB.Roles
             .Retrieve()
             .Where(r => r.AppID == app.ID);
-    }
 
     internal Task<AppRole[]> AllowedRolesForResourceGroup(ResourceGroup group)
         => rolesForResourceGroup(group, true);
@@ -98,7 +104,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID))
+            .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -111,7 +117,7 @@ public sealed class AppRoleRepository
         return factory.DB
             .Roles
             .Retrieve()
-            .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID))
+            .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
@@ -132,14 +138,12 @@ public sealed class AppRoleRepository
         return appID;
     }
 
-    private IQueryable<int> userRoleIDs(AppUser user, Modifier modifier)
-    {
-        return factory.DB
+    private IQueryable<int> userRoleIDs(AppUser user, Modifier modifier) =>
+        factory.DB
             .UserRoles
             .Retrieve()
             .Where(ur => ur.UserID == user.ID && ur.ModifierID == modifier.ID)
             .Select(ur => ur.RoleID);
-    }
 
     internal Task<AppRole[]> AllowedRolesForResource(Resource resource)
         => rolesForResource(resource, true);

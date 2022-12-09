@@ -22,13 +22,13 @@ export class ResourceResultType extends NumericValue implements IResourceResultT
 	public static readonly values = new ResourceResultTypes(
 		new ResourceResultType(0, 'None'),
 		new ResourceResultType(1, 'View'),
-		new ResourceResultType(2, 'PartialView'),
+		new ResourceResultType(2, 'Partial View'),
 		new ResourceResultType(3, 'Redirect'),
 		new ResourceResultType(4, 'Json'),
 		new ResourceResultType(5, 'File'),
 		new ResourceResultType(6, 'Content'),
 		new ResourceResultType(7, 'Query'),
-		new ResourceResultType(8, 'QueryToExcel')
+		new ResourceResultType(8, 'Query To Excel')
 	);
 	
 	private constructor(Value: number, DisplayText: string) {

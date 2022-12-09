@@ -11,24 +11,20 @@ sealed class BeginCurrentInstallationTest
     [Test]
     public async Task ShouldSetCurrentInstallationStatusToInstallStarted()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var version = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await newInstallation(tester, new NewInstallationRequest
+        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
             VersionName = version.ToVersionModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new InstallationRequest
-        {
-            InstallationID = newInstResult.CurrentInstallationID
-        };
-        await tester.Execute(request);
-        var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
+        await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
+        var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
         Assert.That
         (
             InstallStatus.Values.Value(currentInstallation.Status),
@@ -40,10 +36,10 @@ sealed class BeginCurrentInstallationTest
     [Test]
     public async Task ShouldSetCurrentInstallationVersion()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        await newInstallation(tester, new NewInstallationRequest
+        await NewInstallation(tester, new NewInstallationRequest
         {
             VersionName = new AppVersionName("HubWebApp"),
             QualifiedMachineName = qualifiedMachineName,
@@ -80,19 +76,15 @@ sealed class BeginCurrentInstallationTest
                 VersionKey = nextVersion.VersionKey
             }
         );
-        var newInstResult = await newInstallation(tester, new NewInstallationRequest
+        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
             VersionName = nextVersion.VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
-        var request = new InstallationRequest
-        {
-            InstallationID = newInstResult.CurrentInstallationID
-        };
-        await tester.Execute(request);
-        var currentInstallation = await getInstallation(tester, newInstResult.CurrentInstallationID);
-        var installationVersion = await getVersion(tester, currentInstallation);
+        await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
+        var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
+        var installationVersion = await GetVersion(tester, currentInstallation);
         Assert.That
         (
             installationVersion.VersionID,
@@ -101,7 +93,7 @@ sealed class BeginCurrentInstallationTest
         );
     }
 
-    private static Task<InstallationEntity> getInstallation(IHubActionTester tester, int installationID)
+    private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
     {
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         return db.Installations.Retrieve()
@@ -109,7 +101,7 @@ sealed class BeginCurrentInstallationTest
             .FirstAsync();
     }
 
-    private static Task<AppXtiVersionEntity> getVersion(IHubActionTester tester, InstallationEntity installation)
+    private static Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationEntity installation)
     {
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         return db.AppVersions.Retrieve()
@@ -117,13 +109,13 @@ sealed class BeginCurrentInstallationTest
             .FirstAsync();
     }
 
-    private Task<NewInstallationResult> newInstallation(IHubActionTester tester, NewInstallationRequest model)
+    private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
         return hubApi.Install.NewInstallation.Invoke(model);
     }
 
-    private async Task<HubActionTester<InstallationRequest, EmptyActionResult>> setup()
+    private async Task<HubActionTester<GetInstallationRequest, EmptyActionResult>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

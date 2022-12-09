@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XTI_HubDB.Entities;
-
-namespace XTI_HubDB.EF;
+﻿namespace XTI_HubDB.EF;
 
 internal class AuthenticatorEntityConfiguration : IEntityTypeConfiguration<AuthenticatorEntity>
 {
@@ -10,12 +6,9 @@ internal class AuthenticatorEntityConfiguration : IEntityTypeConfiguration<Authe
     {
         builder.HasKey(a => a.ID);
         builder.Property(a => a.ID).ValueGeneratedOnAdd();
-        builder.HasIndex(a => a.AppID).IsUnique();
-        builder
-            .HasOne<AppEntity>()
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasForeignKey(r => r.AppID);
+        builder.HasIndex(a => a.AuthenticatorKey).IsUnique();
+        builder.Property(a => a.AuthenticatorKey).HasMaxLength(100);
+        builder.Property(a => a.AuthenticatorName).HasMaxLength(100);
         builder.ToTable("Authenticators");
     }
 }

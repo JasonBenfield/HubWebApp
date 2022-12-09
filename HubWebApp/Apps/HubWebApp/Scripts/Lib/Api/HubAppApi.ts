@@ -3,7 +3,9 @@
 import { AppApi } from "@jasonbenfield/sharedwebapp/Api/AppApi";
 import { AppApiEvents } from "@jasonbenfield/sharedwebapp/Api/AppApiEvents";
 import { AppApiQuery } from "@jasonbenfield/sharedwebapp/Api/AppApiQuery";
+import { CurrentUserGroup } from "./CurrentUserGroup";
 import { HomeGroup } from "./HomeGroup";
+import { InstallationsGroup } from "./InstallationsGroup";
 import { AuthGroup } from "./AuthGroup";
 import { AuthApiGroup } from "./AuthApiGroup";
 import { ExternalAuthGroup } from "./ExternalAuthGroup";
@@ -32,7 +34,10 @@ import { LogsGroup } from "./LogsGroup";
 export class HubAppApi extends AppApi {
 	constructor(events: AppApiEvents) {
 		super(events, 'Hub');
+		this.CurrentUser = this.addGroup((evts, resourceUrl) => new CurrentUserGroup(evts, resourceUrl));
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
+		this.Installations = this.addGroup((evts, resourceUrl) => new InstallationsGroup(evts, resourceUrl));
+		this.InstallationQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<IInstallationQueryRequest, IExpandedInstallation>(evts, resourceUrl.odata('InstallationQuery'), 'InstallationQuery'));
 		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
 		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
 		this.ExternalAuth = this.addGroup((evts, resourceUrl) => new ExternalAuthGroup(evts, resourceUrl));
@@ -62,7 +67,10 @@ export class HubAppApi extends AppApi {
 		this.LogEntryQuery = this.addODataGroup((evts, resourceUrl) => new AppApiQuery<ILogEntryQueryRequest, IExpandedLogEntry>(evts, resourceUrl.odata('LogEntryQuery'), 'LogEntryQuery'));
 	}
 	
+	readonly CurrentUser: CurrentUserGroup;
 	readonly Home: HomeGroup;
+	readonly Installations: InstallationsGroup;
+	readonly InstallationQuery: AppApiQuery<IInstallationQueryRequest, IExpandedInstallation>;
 	readonly Auth: AuthGroup;
 	readonly AuthApi: AuthApiGroup;
 	readonly ExternalAuth: ExternalAuthGroup;

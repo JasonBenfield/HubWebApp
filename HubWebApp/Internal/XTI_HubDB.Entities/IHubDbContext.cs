@@ -28,6 +28,7 @@ public interface IHubDbContext
     DataRepository<ExpandedSession> ExpandedSessions { get; }
     DataRepository<ExpandedRequest> ExpandedRequests { get; }
     DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
+    DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
     Task Transaction(Func<Task> action);
     void ClearCache();
 }

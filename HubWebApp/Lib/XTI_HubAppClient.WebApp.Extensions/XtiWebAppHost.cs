@@ -33,6 +33,7 @@ public static class XtiWebAppHost
             tokenAccessor.AddToken(() => sp.GetRequiredService<AuthCookieXtiToken>());
         });
         XTI_WebApp.Extensions.WebAppExtensions.AddWebAppServices(builder.Services);
+        builder.Services.AddScoped<IUserProfileUrl, HcUserProfileUrl>();
         builder.Services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         builder.Services.AddScoped<LoginUrl>();
         builder.Services.AddAppClients((sp, domains) => { });

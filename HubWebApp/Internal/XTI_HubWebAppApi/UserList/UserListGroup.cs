@@ -40,6 +40,6 @@ public sealed class UserListGroup : AppApiGroupWrapper
     public AppApiAction<GetUserRequest, WebViewResult> Index { get; }
     public AppApiAction<EmptyRequest, AppUserGroupModel> GetUserGroup { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
-    public AppApiAction<AddOrUpdateUserModel, int> AddOrUpdateUser { get; }
+    public AppApiAction<AddOrUpdateUserRequest, AppUserModel> AddOrUpdateUser { get; }
     public AppApiAction<AddUserForm, AppUserModel> AddUser { get; }
 }

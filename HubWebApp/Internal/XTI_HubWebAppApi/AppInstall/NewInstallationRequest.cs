@@ -6,4 +6,5 @@ public sealed class NewInstallationRequest
     public AppKey AppKey { get; set; } = AppKey.Unknown;
     public string QualifiedMachineName { get; set; } = "";
     public string Domain { get; set; } = "";
+    public string SiteName { get; set; } = "";
 }

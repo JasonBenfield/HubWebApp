@@ -10,7 +10,7 @@ import { AppListItemView } from "./AppListItemView";
 
 export class AppListCard {
     private readonly alert: MessageAlert;
-    private readonly apps: ListGroup;
+    private readonly apps: ListGroup<AppListItem, AppListItemView>;
 
     private readonly _appSelected = new DefaultEvent<IAppModel>(this);
     readonly appSelected = this._appSelected.handler();
@@ -33,7 +33,7 @@ export class AppListCard {
         const apps = await this.getApps();
         this.apps.setItems(
             apps,
-            (app, listItem: AppListItemView) =>
+            (app, listItem) =>
                 new AppListItem(
                     app,
                     this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),

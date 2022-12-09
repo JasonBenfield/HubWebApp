@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.UserMaintenance;
 
-public sealed class ChangePasswordAction : AppAction<ChangePasswordForm, EmptyActionResult>
+internal sealed class ChangePasswordAction : AppAction<ChangePasswordForm, EmptyActionResult>
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly IHashedPasswordFactory hashedPasswordFactory;

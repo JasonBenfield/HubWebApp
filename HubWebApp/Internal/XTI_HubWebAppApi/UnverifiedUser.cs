@@ -13,7 +13,7 @@ public sealed class UnverifiedUser
     {
         AppUser user;
         var userExists = await factory.Users.UserNameExists(userName);
-        if (userExists && !userName.Equals(AppUserName.Anon))
+        if (userExists && !userName.IsAnon())
         {
             user = await factory.Users.UserByUserName(userName);
             if (!user.IsPasswordCorrect(hashedPassword))

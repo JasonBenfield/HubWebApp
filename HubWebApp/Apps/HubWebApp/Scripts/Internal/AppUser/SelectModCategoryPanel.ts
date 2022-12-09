@@ -12,16 +12,16 @@ import { ModCategoryListItem } from "./ModCategoryListItem";
 import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
 
 interface IResult {
-    back?: {};
-    defaultModSelected?: {};
+    back?: boolean;
+    defaultModSelected?: boolean;
     modCategorySelected?: { modCategory: IModifierCategoryModel; };
 }
 
 class Result {
-    static back() { return new Result({ back: {} }); }
+    static back() { return new Result({ back: true }); }
 
     static defaultModSelected() {
-        return new Result({ defaultModSelected: {} });
+        return new Result({ defaultModSelected: true });
     }
 
     static modCategorySelected(modCategory: IModifierCategoryModel) {
@@ -46,7 +46,7 @@ class Result {
 export class SelectModCategoryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly modCategories: ListGroup;
+    private readonly modCategories: ListGroup<ModCategoryListItem, ModCategoryButtonListItemView>;
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -94,8 +94,7 @@ export class SelectModCategoryPanel implements IPanel {
         else {
             this.modCategories.setItems(
                 modCategories,
-                (mc: IModifierCategoryModel, itemView: ModCategoryButtonListItemView) =>
-                    new ModCategoryListItem(mc, itemView)
+                (mc, itemView) => new ModCategoryListItem(mc, itemView)
             );
         }
     }

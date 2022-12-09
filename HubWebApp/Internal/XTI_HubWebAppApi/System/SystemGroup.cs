@@ -22,6 +22,26 @@ public sealed class SystemGroup : AppApiGroupWrapper
             nameof(AddOrUpdateModifierByTargetKey), 
             () => sp.GetRequiredService<AddOrUpdateModifierByTargetKeyAction>()
         );
+        AddOrUpdateModifierByModKey = source.AddAction
+        (
+            nameof(AddOrUpdateModifierByModKey),
+            () => sp.GetRequiredService<AddOrUpdateModifierByModKeyAction>()
+        );
+        GetUserOrAnon = source.AddAction
+        (
+            nameof(GetUserOrAnon),
+            () => sp.GetRequiredService<GetUserOrAnonAction>()
+        );
+        GetUserAuthenticators = source.AddAction
+        (
+            nameof(GetUserAuthenticators),
+            () => sp.GetRequiredService<GetUserAuthenticatorsAction>()
+        );
+        GetUsersWithAnyRole = source.AddAction
+        (
+            nameof(GetUsersWithAnyRole),
+            () => sp.GetRequiredService<GetUsersWithAnyRoleAction>()
+        );
         StoreObject = source.AddAction
         (
             nameof(StoreObject),
@@ -38,7 +58,11 @@ public sealed class SystemGroup : AppApiGroupWrapper
 
     public AppApiAction<GetAppContextRequest, AppContextModel> GetAppContext { get; }
     public AppApiAction<GetUserContextRequest, UserContextModel> GetUserContext { get; }
+    public AppApiAction<string, AppUserModel> GetUserOrAnon { get; }
+    public AppApiAction<int, UserAuthenticatorModel[]> GetUserAuthenticators { get; }
+    public AppApiAction<GetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
     public AppApiAction<AddOrUpdateModifierByTargetKeyRequest, ModifierModel> AddOrUpdateModifierByTargetKey { get; }
+    public AppApiAction<AddOrUpdateModifierByModKeyRequest, ModifierModel> AddOrUpdateModifierByModKey { get; }
     public AppApiAction<StoreObjectRequest, string> StoreObject { get; }
     public AppApiAction<GetStoredObjectRequest, string> GetStoredObject { get; }
 }

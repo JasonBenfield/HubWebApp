@@ -59,9 +59,9 @@ internal sealed class InstallProcess
             Console.WriteLine("Adding or updating versions");
             await hubAdministration.AddOrUpdateVersions(appKeys, versions);
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
-            if (xtiEnv.IsProduction() && versionKey.Equals(AppVersionKey.Current))
+            if (xtiEnv.IsProduction() && versionKey.IsCurrent())
             {
-                versionKey = versions.First(v => v.Status.Equals(AppVersionStatus.Values.Current)).VersionKey;
+                versionKey = versions.First(v => v.IsCurrent()).VersionKey;
             }
             foreach (var appKey in appKeys)
             {
@@ -76,7 +76,8 @@ internal sealed class InstallProcess
                         appKey,
                         installMachineName,
                         versionName,
-                        installationOptions.Domain
+                        installationOptions.Domain,
+                        installationOptions.SiteName
                     );
                     var installerCreds = await getInstallerCredentials(hubAdministration, installMachineName);
                     var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
@@ -141,10 +142,10 @@ internal sealed class InstallProcess
         return installerCreds;
     }
 
-    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain)
+    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain, string siteName)
     {
         Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
         var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain);
+        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain, siteName);
     }
 }

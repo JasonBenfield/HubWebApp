@@ -1,15 +1,18 @@
-﻿import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { AppListCardView } from "../Apps/AppListCardView";
 import { HubTheme } from "../HubTheme";
+import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
+import { UserAuthenticatorListCardView } from "./UserAuthenticatorListCardView";
 import { UserComponentView } from "./UserComponentView";
 
 export class UserPanelView extends GridView {
     readonly userComponent: UserComponentView;
+    readonly userAuthenticatorListCard: UserAuthenticatorListCardView;
     readonly appListCard: AppListCardView;
     readonly backButton: ButtonCommandView;
 
@@ -22,6 +25,8 @@ export class UserPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.userComponent = mainContent.addView(UserComponentView)
         this.userComponent.setMargin(MarginCss.bottom(3));
+        this.userAuthenticatorListCard = mainContent.addView(UserAuthenticatorListCardView);
+        this.userAuthenticatorListCard.setMargin(MarginCss.bottom(3));
         this.appListCard = mainContent.addView(AppListCardView);
         this.appListCard.setMargin(MarginCss.bottom(3));
         const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addView(ToolbarView));

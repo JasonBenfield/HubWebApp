@@ -44,7 +44,7 @@ internal sealed class GetUsersTest
         var addUserTester = tester.Create(api => api.Users.AddOrUpdateUser);
         await addUserTester.Execute
         (
-            new AddOrUpdateUserModel
+            new AddOrUpdateUserRequest
             {
                 UserName = userName.Value,
                 Password = "Password123456"

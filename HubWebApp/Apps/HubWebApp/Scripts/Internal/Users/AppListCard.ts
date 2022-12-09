@@ -11,7 +11,7 @@ import { AppType } from '../../Lib/Api/AppType';
 
 export class AppListCard {
     private readonly alert: MessageAlert;
-    private readonly apps: ListGroup;
+    private readonly apps: ListGroup<AppListItem, AppListItemView>;
     private userID: number;
 
     private readonly _appSelected = new DefaultEvent<IAppModel>(this);
@@ -37,10 +37,10 @@ export class AppListCard {
 
     async refresh() {
         let apps = await this.getApps();
-        apps = apps.filter(app => AppType.values.value(app.AppKey.Type.Value).equalsAny(AppType.values.WebApp, AppType.values.WebService));
+        apps = apps.filter(app => AppType.values.value(app.AppKey.Type.Value).equals(AppType.values.WebApp));
         this.apps.setItems(
             apps,
-            (app: IAppModel, listItem: AppListItemView) =>
+            (app, listItem) =>
                 new AppListItem(
                     app,
                     this.hubApi.AppUser.Index.getUrl(

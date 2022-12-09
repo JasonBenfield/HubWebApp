@@ -15,7 +15,9 @@ export class UserGroupListItem extends BasicComponent {
         }
         else {
             new LinkComponent(view).setHref(
-                hubApi.UserGroups.UserQuery.getUrl({ UserGroupName: userGroup.GroupName.DisplayText })
+                hubApi.UserGroups.UserQuery.getUrl({
+                    UserGroupName: userGroup.GroupName.DisplayText.replace(/\s+/, '')
+                })
             );
             new TextComponent(view).setText(userGroup.GroupName.DisplayText);
         }

@@ -2,5 +2,15 @@
 
 public sealed class AuthenticatedModel
 {
-    public string UserName { get; set; } = "";
+    public AuthenticatedModel()
+        : this(AppUserName.Anon)
+    {
+    }
+
+    public AuthenticatedModel(AppUserName userName)
+    {
+        UserName = userName.Value;
+    }
+
+    public string UserName { get; set; }
 }

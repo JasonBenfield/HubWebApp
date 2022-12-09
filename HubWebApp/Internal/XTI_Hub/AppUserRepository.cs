@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -17,10 +18,56 @@ public sealed class AppUserRepository
         => factory.DB
             .Users
             .Retrieve()
-            .Where(u=>u.GroupID == userGroup.ID)
+            .Where(u => u.GroupID == userGroup.ID)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
             .ToArrayAsync();
+
+    public async Task<AppUser[]> UsersWithAnyRole(Modifier modifier, AppRole[] roles)
+    {
+        AppUser[] users;
+        var roleIDs = roles.Select(r => r.ID).ToArray();
+        IQueryable<int> userIDs;
+        if (modifier.IsDefault())
+        {
+            userIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID && roleIDs.Contains(ur.RoleID))
+                .Select(ur => ur.UserID);
+        }
+        else
+        {
+            var modifierUserIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID && roleIDs.Contains(ur.RoleID))
+                .Select(ur => ur.UserID);
+            var anyModifiedUserIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where(ur => modifier.ID == ur.ModifierID)
+                .Select(ur => ur.UserID);
+            var defaultModifier = await modifier.DefaultModifier();
+            userIDs = factory.DB
+                .UserRoles.Retrieve()
+                .Where
+                (
+                    ur => modifierUserIDs.Contains(ur.UserID) ||
+                    (
+                        defaultModifier.ID == ur.ModifierID &&
+                        roleIDs.Contains(ur.RoleID) &&
+                        !anyModifiedUserIDs.Contains(ur.UserID)
+                    )
+                )
+                .Select(ur => ur.UserID);
+        }
+        users = await factory.DB
+            .Users
+            .Retrieve()
+            .Where(u => userIDs.Contains(u.ID))
+            .OrderBy(u => u.UserName)
+            .Select(u => factory.User(u))
+            .ToArrayAsync();
+        return users;
+    }
 
     internal async Task<AppUser> User(AppUserGroup userGroup, int id)
     {
@@ -29,6 +76,19 @@ public sealed class AppUserRepository
             .Retrieve()
             .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.ID == id);
         return factory.User(userRecord ?? throw new Exception($"User {id} not found"));
+    }
+
+    internal async Task<AppUser> UserOrAnon(AppUserGroup userGroup, AppUserName userName)
+    {
+        var userRecord = await factory.DB
+            .Users
+            .Retrieve()
+            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.UserName == userName.Value);
+        if (userRecord == null)
+        {
+            userRecord = await GetUser(AppUserName.Anon);
+        }
+        return factory.User(userRecord ?? throw new Exception("User not found"));
     }
 
     public async Task<AppUser> User(int id)
@@ -43,7 +103,7 @@ public sealed class AppUserRepository
     public async Task<AppUser> UserOrAnon(AppUserName userName)
     {
         var record = await GetUser(userName);
-        if (record == null && !userName.Equals(AppUserName.Anon))
+        if (record == null && !userName.IsAnon())
         {
             record = await GetUser(AppUserName.Anon);
         }
@@ -63,16 +123,16 @@ public sealed class AppUserRepository
         var record = await GetUser(userName);
         return factory.User
         (
-            record 
+            record
             ?? throw new ArgumentNullException(nameof(record), $"User not found with user name '{userName.Value}'")
         );
     }
 
-    public async Task<AppUser> UserByExternalKey(App authenticatorApp, string externalUserKey)
+    public async Task<AppUser> UserByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID)
+            .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
         var userIDs = factory.DB
             .UserAuthenticators.Retrieve()
@@ -90,7 +150,7 @@ public sealed class AppUserRepository
         return factory.User
         (
             userEntity
-            ?? throw new ExternalUserNotFoundException(authenticatorApp.ToModel().AppKey, externalUserKey)
+            ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey)
         );
     }
 

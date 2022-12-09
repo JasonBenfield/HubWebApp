@@ -1,5 +1,121 @@
 // Generated code
 
+interface ILinkModel {
+	LinkName: string;
+	DisplayText: string;
+	Url: string;
+}
+interface IAppUserModel {
+	ID: number;
+	UserName: IAppUserName;
+	Name: IPersonName;
+	Email: string;
+}
+interface IAppUserName {
+	Value: string;
+	DisplayText: string;
+}
+interface IPersonName {
+	Value: string;
+	DisplayText: string;
+}
+interface IInstallationQueryRequest {
+	QueryType: number;
+}
+interface IGetPendingDeletesRequest {
+	MachineName: string;
+}
+interface IAppVersionInstallationModel {
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	Installation: IInstallationModel;
+}
+interface IAppModel {
+	ID: number;
+	AppKey: IAppKey;
+	VersionName: IAppVersionName;
+	Title: string;
+	PublicKey: IModifierKey;
+}
+interface IAppKey {
+	Name: IAppName;
+	Type: IAppType;
+}
+interface IAppName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
+interface IModifierKey {
+	Value: string;
+	DisplayText: string;
+}
+interface IXtiVersionModel {
+	ID: number;
+	VersionName: IAppVersionName;
+	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: Date;
+}
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+	SiteName: string;
+}
+interface IGetInstallationRequest {
+	InstallationID: number;
+}
+interface IExpandedInstallation {
+	InstallationID: number;
+	IsCurrent: boolean;
+	InstallationStatusDisplayText: string;
+	TimeInstallationAdded: Date;
+	QualifiedMachineName: string;
+	Domain: string;
+	AppID: number;
+	AppKey: string;
+	AppName: string;
+	AppTypeText: string;
+	VersionName: string;
+	VersionRelease: string;
+	VersionKey: string;
+	VersionStatusText: string;
+	VersionTypeText: string;
+	LastRequestTime: Date;
+	LastRequestDaysAgo: number;
+	RequestCount: number;
+}
+interface IWebFileResult {
+	FileStream: IStream;
+	ContentType: string;
+	DownloadName: string;
+}
+interface IStream {
+	CanRead: boolean;
+	CanWrite: boolean;
+	CanSeek: boolean;
+	CanTimeout: boolean;
+	Length: number;
+	Position: number;
+	ReadTimeout: number;
+	WriteTimeout: number;
+}
 interface ILoginModel {
 	AuthKey: string;
 	ReturnKey: string;
@@ -15,9 +131,22 @@ interface ILoginResult {
 	Token: string;
 }
 interface IExternalAuthKeyModel {
+	AuthenticatorKey: string;
 	ExternalUserKey: string;
 }
+interface IRegisterAuthenticatorRequest {
+	AuthenticatorName: string;
+}
+interface IAuthenticatorModel {
+	ID: number;
+	AuthenticatorKey: IAuthenticatorKey;
+}
+interface IAuthenticatorKey {
+	Value: string;
+	DisplayText: string;
+}
 interface IRegisterUserAuthenticatorRequest {
+	AuthenticatorKey: string;
 	UserID: number;
 	ExternalUserKey: string;
 }
@@ -67,37 +196,10 @@ interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: Date;
 }
-interface IAppModel {
-	ID: number;
-	AppKey: IAppKey;
-	VersionName: IAppVersionName;
-	Title: string;
-	PublicKey: IModifierKey;
-}
-interface IAppKey {
-	Name: IAppName;
-	Type: IAppType;
-}
-interface IAppName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppVersionName {
-	Value: string;
-	DisplayText: string;
-}
-interface IModifierKey {
-	Value: string;
-	DisplayText: string;
-}
 interface IAppDomainModel {
 	AppKey: IAppKey;
 	VersionKey: IAppVersionKey;
 	Domain: string;
-}
-interface IAppVersionKey {
-	Value: string;
-	DisplayText: string;
 }
 interface IResourceGroupModel {
 	ID: number;
@@ -174,20 +276,6 @@ interface IAddOrUpdateVersionsRequest {
 	Apps: IAppKey[];
 	Versions: IXtiVersionModel[];
 }
-interface IXtiVersionModel {
-	ID: number;
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
-	VersionNumber: IAppVersionNumber;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: Date;
-}
-interface IAppVersionNumber {
-	Major: number;
-	Minor: number;
-	Patch: number;
-}
 interface IGetVersionRequest {
 	VersionName: IAppVersionName;
 	VersionKey: IAppVersionKey;
@@ -199,20 +287,6 @@ interface IAddSystemUserRequest {
 	AppKey: IAppKey;
 	MachineName: string;
 	Password: string;
-}
-interface IAppUserModel {
-	ID: number;
-	UserName: IAppUserName;
-	Name: IPersonName;
-	Email: string;
-}
-interface IAppUserName {
-	Value: string;
-	DisplayText: string;
-}
-interface IPersonName {
-	Value: string;
-	DisplayText: string;
 }
 interface IAddAdminUserRequest {
 	AppKey: IAppKey;
@@ -228,25 +302,21 @@ interface INewInstallationRequest {
 	AppKey: IAppKey;
 	QualifiedMachineName: string;
 	Domain: string;
+	SiteName: string;
 }
 interface INewInstallationResult {
 	CurrentInstallationID: number;
 	VersionInstallationID: number;
 }
-interface IInstallationRequest {
-	InstallationID: number;
-}
 interface ISetUserAccessRequest {
-	UserName: IAppUserName;
+	UserName: string;
 	RoleAssignments: ISetUserAccessRoleRequest[];
 }
 interface ISetUserAccessRoleRequest {
 	AppKey: IAppKey;
-	RoleNames: IAppRoleName[];
-}
-interface IAppRoleName {
-	Value: string;
-	DisplayText: string;
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
 }
 interface INewVersionRequest {
 	VersionName: IAppVersionName;
@@ -282,6 +352,10 @@ interface IAppRoleModel {
 	ID: number;
 	Name: IAppRoleName;
 }
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
+}
 interface IGetResourceGroupModCategoryRequest {
 	VersionKey: string;
 	GroupID: number;
@@ -316,11 +390,15 @@ interface IAppUserGroupName {
 	Value: string;
 	DisplayText: string;
 }
-interface IAddOrUpdateUserModel {
+interface IAddOrUpdateUserRequest {
 	UserName: string;
 	Password: string;
 	PersonName: string;
 	Email: string;
+}
+interface IUserAuthenticatorModel {
+	Authenticator: IAuthenticatorModel;
+	ExternalUserID: string;
 }
 interface IGetAppUserRequest {
 	App: string;
@@ -395,6 +473,17 @@ interface IAddOrUpdateModifierByTargetKeyRequest {
 	TargetKey: string;
 	TargetDisplayText: string;
 }
+interface IAddOrUpdateModifierByModKeyRequest {
+	ModCategoryName: string;
+	ModKey: string;
+	TargetKey: string;
+	TargetDisplayText: string;
+}
+interface IGetUsersWithAnyRoleRequest {
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
+}
 interface IUserGroupKey {
 	UserGroupName: string;
 }
@@ -410,26 +499,13 @@ interface IExpandedUser {
 	UserGroupID: number;
 	UserGroupName: string;
 }
-interface IWebFileResult {
-	FileStream: IStream;
-	ContentType: string;
-	DownloadName: string;
-}
-interface IStream {
-	CanRead: boolean;
-	CanWrite: boolean;
-	CanSeek: boolean;
-	CanTimeout: boolean;
-	Length: number;
-	Position: number;
-	ReadTimeout: number;
-	WriteTimeout: number;
-}
 interface IRequestQueryRequest {
 	SessionID: number;
+	InstallationID: number;
 }
 interface ILogEntryQueryRequest {
 	RequestID: number;
+	InstallationID: number;
 }
 interface IExpandedSession {
 	SessionID: number;
@@ -450,6 +526,7 @@ interface IExpandedRequest {
 	RequestID: number;
 	Path: string;
 	AppID: number;
+	AppKey: string;
 	AppName: string;
 	AppTypeText: string;
 	ResourceGroupName: string;
@@ -475,8 +552,10 @@ interface IExpandedRequest {
 	InformationMessageCount: number;
 	VersionName: string;
 	VersionKey: string;
+	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
+	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 }
@@ -490,6 +569,7 @@ interface IExpandedLogEntry {
 	Path: string;
 	ActualCount: number;
 	AppID: number;
+	AppKey: string;
 	AppName: string;
 	AppTypeText: string;
 	ResourceGroupName: string;
@@ -508,20 +588,18 @@ interface IExpandedLogEntry {
 	RequestTimeElapsed: string;
 	VersionName: string;
 	VersionKey: string;
+	VersionRelease: string;
 	VersionStatusText: string;
 	VersionTypeText: string;
+	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 }
+interface IInstallationQueryType {
+	Value: number;
+	DisplayText: string;
+}
 interface IAppType {
-	Value: number;
-	DisplayText: string;
-}
-interface IResourceResultType {
-	Value: number;
-	DisplayText: string;
-}
-interface IAppEventSeverity {
 	Value: number;
 	DisplayText: string;
 }
@@ -530,6 +608,18 @@ interface IAppVersionType {
 	DisplayText: string;
 }
 interface IAppVersionStatus {
+	Value: number;
+	DisplayText: string;
+}
+interface IInstallStatus {
+	Value: number;
+	DisplayText: string;
+}
+interface IResourceResultType {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppEventSeverity {
 	Value: number;
 	DisplayText: string;
 }

@@ -212,6 +212,10 @@ internal sealed class PublishProcess
             .UseArgumentValueDelimiter("=")
             .AddArgument("p:PublishProfile", "Default")
             .AddArgument("p:PublishDir", publishAppDir)
+            .AddArgument("p:XtiAppName", appKey.Name.DisplayText)
+            .AddArgument("p:XtiAppType", appKey.Type.DisplayText)
+            .AddArgument("p:XtiAppKey", appKey.Format())
+            .AddArgument("p:XtiVersion", versionKey.DisplayText)
             .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();

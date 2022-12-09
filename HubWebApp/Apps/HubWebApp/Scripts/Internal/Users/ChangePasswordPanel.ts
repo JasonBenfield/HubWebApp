@@ -7,11 +7,11 @@ import { ChangePasswordForm } from '../../Lib/Api/ChangePasswordForm';
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 
 interface IResult {
-    done?: {};
+    done?: boolean;
 }
 
 class Result {
-    static done() { return new Result({ done: {} }); }
+    static done() { return new Result({ done: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -34,7 +34,10 @@ export class ChangePasswordPanel implements IPanel {
         this.saveCommand.add(view.saveButton);
     }
 
-    private onFormSubmit() { this.saveCommand.execute(); }
+    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+        evt.preventDefault();
+        this.saveCommand.execute();
+    }
 
     private cancel() {
         this.awaitable.resolve(Result.done());

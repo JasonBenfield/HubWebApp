@@ -72,7 +72,7 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
     public AppApiAction<AddAdminUserRequest, AppUserModel> AddAdminUser { get; }
     public AppApiAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser { get; }
     public AppApiAction<NewInstallationRequest, NewInstallationResult> NewInstallation { get; }
-    public AppApiAction<InstallationRequest, EmptyActionResult> BeginInstallation { get; }
-    public AppApiAction<InstallationRequest, EmptyActionResult> Installed { get; }
+    public AppApiAction<GetInstallationRequest, EmptyActionResult> BeginInstallation { get; }
+    public AppApiAction<GetInstallationRequest, EmptyActionResult> Installed { get; }
     public AppApiAction<SetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
 }

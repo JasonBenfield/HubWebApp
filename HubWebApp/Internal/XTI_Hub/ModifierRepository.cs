@@ -70,28 +70,6 @@ public sealed class ModifierRepository
         return modKey;
     }
 
-    internal async Task<Modifier> AddOrUpdateByTargetKey(ModifierCategory category, ModifierKey modKey, string targetKey, string displayText)
-    {
-        var record = await GetModifierByTargetKey(category, targetKey);
-        if (record == null)
-        {
-            record = await Add(category, modKey, targetKey, displayText);
-        }
-        else
-        {
-            await factory.DB.Modifiers.Update
-            (
-                record,
-                m =>
-                {
-                    m.ModKey = modKey.Value;
-                    m.DisplayText = displayText;
-                }
-            );
-        }
-        return factory.CreateModifier(record);
-    }
-
     private async Task<ModifierEntity> Add(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
     {
         var record = new ModifierEntity
@@ -120,11 +98,7 @@ public sealed class ModifierRepository
 
     internal async Task<Modifier> ModifierByModKey(ModifierCategory modCategory, ModifierKey modKey)
     {
-        if
-        (
-            !modCategory.Name().Equals(ModifierCategoryName.Default)
-            && modKey.Equals(ModifierKey.Default)
-        )
+        if (!modCategory.IsDefault() && modKey.Equals(ModifierKey.Default))
         {
             var app = await modCategory.App();
             modCategory = await app.ModCategory(ModifierCategoryName.Default);
@@ -146,11 +120,7 @@ public sealed class ModifierRepository
     internal async Task<Modifier> ModifierOrDefault(ModifierCategory modCategory, ModifierKey modKey)
     {
         var app = await modCategory.App();
-        if
-        (
-            !modCategory.Name().Equals(ModifierCategoryName.Default)
-            && modKey.Equals(ModifierKey.Default)
-        )
+        if (!modCategory.IsDefault() && modKey.Equals(ModifierKey.Default))
         {
             modCategory = await app.ModCategory(ModifierCategoryName.Default);
         }

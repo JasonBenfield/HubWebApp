@@ -11,7 +11,7 @@ import { RoleButtonListItemView } from "./RoleButtonListItemView";
 export class AddRolePanelView extends GridView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly roles: ButtonListGroupView;
+    readonly roles: ButtonListGroupView<RoleButtonListItemView>;
     readonly backButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
@@ -23,8 +23,7 @@ export class AddRolePanelView extends GridView {
         const card = mainContent.addView(CardView);
         this.titleHeader = card.addCardTitleHeader();
         this.alert = card.addCardAlert();
-        this.roles = card.addButtonListGroup();
-        this.roles.setItemViewType(RoleButtonListItemView);
+        this.roles = card.addButtonListGroup(RoleButtonListItemView);
         const toolbar = this.addView(ToolbarView);
         HubTheme.instance.commandToolbar.toolbar(toolbar);
         this.backButton = toolbar.columnStart.addView(ButtonCommandView);

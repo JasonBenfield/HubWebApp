@@ -20,12 +20,15 @@ public sealed class StartIssueCommand : ICommand
         var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
-        if (xtiBranchName is not XtiVersionBranchName)
+        if(xtiBranchName is XtiVersionBranchName xtiVersionBranchName)
+        {
+            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+            var issue = await gitHubRepo.StartIssue(xtiVersionBranchName.Version, options.IssueNumber);
+            await gitRepo.CheckoutBranch(issue.BranchName().Value);
+        }
+        else
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not a version branch");
         }
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
-        var issue = await gitHubRepo.Issue(options.IssueNumber);
-        await gitRepo.CheckoutBranch(issue.BranchName().Value);
     }
 }

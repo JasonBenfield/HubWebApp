@@ -14,7 +14,7 @@ export class ResourceGroupComponentView extends CardView {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        const listGroup = this.addUnorderedListGroup();
+        const listGroup = this.addUnorderedListGroup(ListGroupItemView);
         const listItem = listGroup.addListGroupItem();
         const row = listItem.addView(RowView);
         this.groupName = row.addColumn()

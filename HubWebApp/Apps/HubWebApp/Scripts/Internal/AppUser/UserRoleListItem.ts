@@ -3,7 +3,7 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { UserRoleListItemView } from "./UserRoleListItemView";
 
 export class UserRoleListItem extends BasicComponent {
-    constructor(role: IAppRoleModel, protected readonly view: UserRoleListItemView) {
+    constructor(readonly role: IAppRoleModel, protected readonly view: UserRoleListItemView) {
         super(view);
         new TextComponent(view.roleName).setText(role.Name.DisplayText);
     }

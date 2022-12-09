@@ -5,15 +5,16 @@ import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { AppListCard } from "./AppListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
+import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
 
 interface IResults {
-    backRequested?: {};
+    backRequested?: boolean;
     editRequested?: { userID: number; };
     changePasswordRequested?: { userID: number };
 }
 
 class Result {
-    static backRequested() { return new Result({ backRequested: {} }); }
+    static backRequested() { return new Result({ backRequested: true }); }
 
     static editRequested(userID: number) {
         return new Result({ editRequested: { userID: userID } });
@@ -34,6 +35,7 @@ class Result {
 
 export class UserPanel implements IPanel {
     private readonly userComponent: UserComponent;
+    private readonly userAuthenticatorListCard: UserAuthenticatorListCard;
     private readonly appListCard: AppListCard;
     private userID: number;
     private readonly awaitable = new Awaitable<Result>();
@@ -43,13 +45,14 @@ export class UserPanel implements IPanel {
         private readonly hubApi: HubAppApi,
         private readonly view: UserPanelView
     ) {
-        this.userComponent = new UserComponent(this.hubApi, this.view.userComponent);
+        this.userComponent = new UserComponent(hubApi, view.userComponent);
         this.appListCard = new AppListCard(
             this.hubApi,
             this.view.appListCard
         );
-        this.backCommand.add(this.view.backButton);
+        this.backCommand.add(view.backButton);
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubApi, view.userAuthenticatorListCard);
         this.userComponent.when.editRequested.then(this.onEditRequested.bind(this));
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));
     }
@@ -76,13 +79,15 @@ export class UserPanel implements IPanel {
 
     setUserID(userID: number) {
         this.userID = userID;
-        this.appListCard.setUserID(userID);
         this.userComponent.setUserID(userID);
+        this.userAuthenticatorListCard.setUserID(userID);
+        this.appListCard.setUserID(userID);
     }
 
     refresh() {
         const promises: Promise<any>[] = [
             this.userComponent.refresh(),
+            this.userAuthenticatorListCard.refresh(),
             this.appListCard.refresh()
         ];
         return Promise.all(promises);

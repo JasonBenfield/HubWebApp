@@ -1,18 +1,18 @@
 ﻿namespace XTI_HubWebAppApi.Authenticators;
 
-internal sealed class RegisterAuthenticatorAction : AppAction<EmptyRequest, EmptyActionResult>
+internal sealed class RegisterAuthenticatorAction : AppAction<RegisterAuthenticatorRequest, AuthenticatorModel>
 {
-    private readonly AppFromPath appFromPath;
+    private readonly HubFactory hubFactory;
 
-    public RegisterAuthenticatorAction(AppFromPath appFromPath)
+    public RegisterAuthenticatorAction(HubFactory hubFactory)
     {
-        this.appFromPath = appFromPath;
+        this.hubFactory = hubFactory;
     }
 
-    public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
+    public async Task<AuthenticatorModel> Execute(RegisterAuthenticatorRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        await app.RegisterAsAuthenticator();
-        return new EmptyActionResult();
+        var authenticatorKey = new AuthenticatorKey(model.AuthenticatorName);
+        var authenticator = await hubFactory.Authenticators.AddOrUpdate(authenticatorKey);
+        return authenticator;
     }
 }

@@ -13,7 +13,7 @@ export class ResourceGroupListCard {
     readonly resourceGroupSelected = this._resourceSelected.handler();
 
     private readonly alert: MessageAlert;
-    private readonly requests: ListGroup;
+    private readonly requests: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
 
     private modCategoryID: number;
 
@@ -39,7 +39,7 @@ export class ResourceGroupListCard {
         let resourceGroups = await this.getResourceGroups();
         this.requests.setItems(
             resourceGroups,
-            (sourceItem: IResourceGroupModel, listItem: ResourceGroupListItemView) =>
+            (sourceItem, listItem) =>
                 new ResourceGroupListItem(sourceItem, listItem)
         );
         if (resourceGroups.length === 0) {
@@ -47,14 +47,10 @@ export class ResourceGroupListCard {
         }
     }
 
-    private async getResourceGroups() {
-        let resourceGroup: IResourceGroupModel[];
-        await this.alert.infoAction(
+    private getResourceGroups() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                resourceGroup = await this.hubApi.ModCategory.GetResourceGroups(this.modCategoryID);
-            }
+            () => this.hubApi.ModCategory.GetResourceGroups(this.modCategoryID)
         );
-        return resourceGroup;
     }
 }

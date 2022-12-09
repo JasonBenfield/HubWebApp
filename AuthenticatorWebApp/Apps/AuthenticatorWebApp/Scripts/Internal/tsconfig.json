@@ -21,8 +21,8 @@
   },
   "include": [
     "./**/*.ts",
-    "../../../../../hubwebapp/apps/hubwebapp/scripts/lib/**/*.ts",
     "../Lib/**/*.d.ts",
+    "../../../../../hubwebapp/apps/hubwebapp/scripts/lib/**/*.ts",
     "../../node_modules/@jasonbenfield/**/*.d.ts"
   ],
   "exclude": [

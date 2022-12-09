@@ -109,7 +109,7 @@ internal sealed class UnassignRoleTest
         var modifier = await tester.GeneralUserGroupModifier();
         var userID = await addUserTester.Execute
         (
-            new AddOrUpdateUserModel
+            new AddOrUpdateUserRequest
             {
                 UserName = userName,
                 Password = "Password12345"

@@ -9,7 +9,7 @@ import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 
 export class MostRecentRequestListCard {
     private readonly alert: MessageAlert;
-    private readonly requests: ListGroup;
+    private readonly requests: ListGroup<RequestExpandedListItem, RequestExpandedListItemView>;
 
     private resourceID: number;
 
@@ -30,26 +30,21 @@ export class MostRecentRequestListCard {
         const requests = await this.getRequests();
         this.requests.setItems(
             requests,
-            (sourceItem: IAppRequestExpandedModel, listItem: RequestExpandedListItemView) =>
-                new RequestExpandedListItem(sourceItem, listItem)
+            (sourceItem, listItem) => new RequestExpandedListItem(sourceItem, listItem)
         );
         if (requests.length === 0) {
             this.alert.danger('No Requests were Found');
         }
     }
 
-    private async getRequests() {
-        let requests: IAppRequestExpandedModel[];
-        await this.alert.infoAction(
+    private getRequests() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                requests = await this.hubApi.Resource.GetMostRecentRequests({
-                    VersionKey: 'Current',
-                    ResourceID: this.resourceID,
-                    HowMany: 10
-                });
-            }
+            () => this.hubApi.Resource.GetMostRecentRequests({
+                VersionKey: 'Current',
+                ResourceID: this.resourceID,
+                HowMany: 10
+            })
         );
-        return requests;
     }
 }

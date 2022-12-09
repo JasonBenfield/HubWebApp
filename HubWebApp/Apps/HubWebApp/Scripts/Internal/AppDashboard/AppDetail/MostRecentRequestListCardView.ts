@@ -6,13 +6,12 @@ import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 export class MostRecentRequestListCardView extends CardView {
     readonly titleHeader: CardTitleHeaderView;
     readonly alert: CardAlertView;
-    readonly requests: ListGroupView;
+    readonly requests: ListGroupView<RequestExpandedListItemView>;
 
     constructor(container: BasicComponentView) {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        this.requests = this.addView(ListGroupView);
-        this.requests.setItemViewType(RequestExpandedListItemView);
+        this.requests = ListGroupView.addTo(this, RequestExpandedListItemView);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -53,7 +54,12 @@ public sealed class AppUser
         => factory.DB.Users.Update(record, u => u.Password = password.Value());
 
     public Task Edit(PersonName name, EmailAddress email)
-        => factory.DB.Users.Update
+    {
+        if (name.IsBlank())
+        {
+            name = new PersonName(record.UserName);
+        }
+        return factory.DB.Users.Update
         (
             record,
             u =>
@@ -62,12 +68,13 @@ public sealed class AppUser
                 u.Email = email.Value;
             }
         );
+    }
 
-    public async Task AddAuthenticator(App authenticatorApp, string externalUserKey)
+    public async Task<AuthenticatorModel> AddAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
-            .Where(a => a.AppID == authenticatorApp.ID)
+            .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
         var entity = await factory.DB
             .UserAuthenticators.Retrieve()
@@ -78,9 +85,10 @@ public sealed class AppUser
                     && ua.UserID == ID
             )
             .FirstOrDefaultAsync();
+        int authenticatorID;
         if (entity == null)
         {
-            var authenticatorID = await authenticatorIDs.FirstAsync();
+            authenticatorID = await authenticatorIDs.FirstAsync();
             entity = new UserAuthenticatorEntity
             {
                 AuthenticatorID = authenticatorID,
@@ -91,12 +99,52 @@ public sealed class AppUser
         }
         else
         {
+            authenticatorID = entity.AuthenticatorID;
             await factory.DB.UserAuthenticators.Update
             (
                 entity,
                 ua => ua.ExternalUserKey = externalUserKey
             );
         }
+        return new AuthenticatorModel(authenticatorID, authenticatorKey);
+    }
+
+    public async Task<UserAuthenticatorModel[]> Authenticators()
+    {
+        var joinedEntities = await factory.DB
+            .UserAuthenticators.Retrieve()
+            .Where
+            (
+                ua => ua.UserID == ID
+            )
+            .Join
+            (
+                factory.DB.Authenticators.Retrieve(),
+                ua => ua.AuthenticatorID,
+                a => a.ID,
+                (ua, a) => new
+                {
+                    AuthenticatorID = a.ID,
+                    a.AuthenticatorKey,
+                    a.AuthenticatorName,
+                    ua.ExternalUserKey
+                }
+            )
+            .ToArrayAsync();
+        return joinedEntities
+            .Select
+            (
+                j => new UserAuthenticatorModel
+                (
+                    new AuthenticatorModel
+                    (
+                        j.AuthenticatorID,
+                        new AuthenticatorKey(j.AuthenticatorName)
+                    ),
+                    j.ExternalUserKey
+                )
+            )
+            .ToArray();
     }
 
     public async Task<AppPermission[]> GetAppPermissions()
@@ -125,7 +173,7 @@ public sealed class AppUser
     {
         var appModel = app.ToModel();
         Modifier modifier;
-        if(appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+        if (appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
         {
             modifier = await hubApp.DefaultModifier();
         }
@@ -201,6 +249,58 @@ public sealed class AppUser
             );
         }
         return userGroupPermission;
+    }
+
+    public async Task<LoggedInAppModel[]> GetLoggedInApps()
+    {
+        var userIDs = factory.DB.Users.Retrieve()
+            .Where(u => u.UserName == new AppUserName(record.UserName).Value)
+            .Select(u => u.ID);
+        var sessionIDs = factory.DB.Sessions.Retrieve()
+            .Where(s => userIDs.Contains(s.UserID) && s.TimeEnded.Year == 9999)
+            .Select(s => s.ID);
+        var installationIDs = factory.DB.Requests.Retrieve()
+            .Where(r => sessionIDs.Contains(r.SessionID))
+            .Select(r => r.InstallationID)
+            .Distinct();
+        var loggedInApps = await factory.DB.Installations.Retrieve()
+            .Where(inst => installationIDs.Contains(inst.ID))
+            .Join
+            (
+                factory.DB.AppVersions.Retrieve(),
+                inst => inst.AppVersionID,
+                av => av.ID,
+                (inst, av) => new { inst.IsCurrent, inst.Domain, av.AppID, av.VersionID }
+            )
+            .Join
+            (
+                factory.DB.Apps.Retrieve()
+                    .Where(a => a.Type == AppType.Values.WebApp),
+                joined => joined.AppID,
+                a => a.ID,
+                (joined, a) => new { joined.IsCurrent, joined.Domain, AppDisplayText = a.DisplayText, joined.VersionID }
+            )
+            .Join
+            (
+                factory.DB.Versions.Retrieve(),
+                joined => joined.VersionID,
+                v => v.ID,
+                (joined, v) => new { joined.IsCurrent, joined.Domain, joined.AppDisplayText, v.VersionKey }
+            )
+            .Distinct()
+            .ToArrayAsync();
+        return loggedInApps
+            .Select
+            (
+                joined => new LoggedInAppModel
+                (
+                    new AppName(joined.AppDisplayText),
+                    joined.IsCurrent ? AppVersionKey.Current : AppVersionKey.Parse(joined.VersionKey),
+                    joined.Domain
+                )
+            )
+            .Distinct()
+            .ToArray();
     }
 
     public AppUserModel ToModel() => new AppUserModel

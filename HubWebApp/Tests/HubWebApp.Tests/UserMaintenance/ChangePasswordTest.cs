@@ -1,7 +1,4 @@
 ﻿using XTI_Forms;
-using XTI_HubWebAppApi.Auth;
-using XTI_HubWebAppApi.UserList;
-using XTI_HubWebAppApi.UserMaintenance;
 
 namespace HubWebApp.Tests;
 
@@ -90,7 +87,7 @@ internal sealed class ChangePasswordTest
         var modifier = await tester.GeneralUserGroupModifier();
         var userID = await addUserTester.Execute
         (
-            new AddOrUpdateUserModel
+            new AddOrUpdateUserRequest
             {
                 UserName = userName,
                 Password = "Password12345"

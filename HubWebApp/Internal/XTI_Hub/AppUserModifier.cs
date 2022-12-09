@@ -58,7 +58,7 @@ public sealed class AppUserModifier
     public async Task<AppRole[]> AssignedRoles()
     {
         var roles = await ExplicitlyAssignedRoles();
-        if (!roles.Any() && !modifier.ModKey().Equals(ModifierKey.Default))
+        if (!roles.Any() && !modifier.IsDefault())
         {
             var defaultModifier = await modifier.DefaultModifier();
             roles = await new AppUserModifier(factory, user, defaultModifier).AssignedRoles();

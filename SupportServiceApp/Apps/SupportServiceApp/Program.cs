@@ -37,7 +37,7 @@ await XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
                 (
                     (api, agendaItem) =>
                     {
-                        agendaItem.Action(api.PermanentLog.MoveToPermanent.Path)
+                        agendaItem.Action(api.PermanentLog.MoveToPermanent)
                             .Interval(TimeSpan.FromMinutes(5))
                             .AddSchedule
                             (
@@ -49,8 +49,20 @@ await XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
                 (
                     (api, agendaItem) =>
                     {
-                        agendaItem.Action(api.PermanentLog.Retry.Path)
+                        agendaItem.Action(api.PermanentLog.Retry)
                             .DelayAfterStart(TimeSpan.FromMinutes(1))
+                            .Interval(TimeSpan.FromHours(1))
+                            .AddSchedule
+                            (
+                                Schedule.EveryDay().At(TimeRange.AllDay())
+                            );
+                    }
+                );
+                agenda.AddScheduled<SupportAppApi>
+                (
+                    (api, agendaItem) =>
+                    {
+                        agendaItem.Action(api.Installations.Delete)
                             .Interval(TimeSpan.FromHours(1))
                             .AddSchedule
                             (

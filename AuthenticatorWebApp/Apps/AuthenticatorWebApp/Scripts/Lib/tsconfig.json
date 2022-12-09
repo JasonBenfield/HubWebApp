@@ -16,6 +16,7 @@
       "../../node_modules/@types"
     ],
     "paths": {
+      //"@jasonbenfield/sharedwebapp/*": [ "C:\\XTI\\Published\\Development\\SharedWebApp\\SharedPackage\\Current\\npm\\*" ]
     }
   },
   "include": [

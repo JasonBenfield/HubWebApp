@@ -1,12 +1,12 @@
-﻿import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
-import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+﻿import { CssLengthUnit } from '@jasonbenfield/sharedwebapp/CssLengthUnit';
+import { PaddingCss } from '@jasonbenfield/sharedwebapp/PaddingCss';
+import { BlockView } from '@jasonbenfield/sharedwebapp/Views/BlockView';
 import { GridView } from '@jasonbenfield/sharedwebapp/Views/Grid';
 import { TextHeading1View } from '@jasonbenfield/sharedwebapp/Views/TextHeadings';
-import { CssLengthUnit } from '@jasonbenfield/sharedwebapp/CssLengthUnit';
-import { BlockView } from '@jasonbenfield/sharedwebapp/Views/BlockView';
+import { AuthenticatorPageView } from '../AuthenticatorPageView';
 import { LoginComponentView } from './LoginComponentView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends AuthenticatorPageView {
     readonly loginComponent: LoginComponentView;
 
     constructor() {

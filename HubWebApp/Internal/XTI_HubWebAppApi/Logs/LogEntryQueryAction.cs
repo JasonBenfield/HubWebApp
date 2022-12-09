@@ -6,10 +6,10 @@ namespace XTI_HubWebAppApi.Logs;
 
 internal sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, ExpandedLogEntry>
 {
-    private readonly CurrentUser currentUser;
+    private readonly CurrentAppUser currentUser;
     private readonly IHubDbContext db;
 
-    public LogEntryQueryAction(CurrentUser currentUser, IHubDbContext db)
+    public LogEntryQueryAction(CurrentAppUser currentUser, IHubDbContext db)
     {
         this.currentUser = currentUser;
         this.db = db;
@@ -32,6 +32,10 @@ internal sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, Ex
         if (model.RequestID.HasValue)
         {
             query = query.Where(e => e.RequestID == model.RequestID.Value);
+        }
+        if (model.InstallationID.HasValue)
+        {
+            query = query.Where(e => e.InstallationID == model.InstallationID.Value);
         }
         return query;
     }

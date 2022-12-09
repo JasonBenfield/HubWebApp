@@ -4,15 +4,15 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory hubFactory;
-    private readonly CurrentUser currentUser;
-    private readonly ICachedUserContext userContext;
+    private readonly CurrentAppUser currentUser;
+    private readonly IUserCacheManagement userCacheManagement;
 
-    public DenyAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentUser currentUser, ICachedUserContext userContext)
+    public DenyAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;
         this.currentUser = currentUser;
-        this.userContext = userContext;
+        this.userCacheManagement = userCacheManagement;
     }
 
     public async Task<EmptyActionResult> Execute(UserModifierKey model, CancellationToken stoppingToken)
@@ -33,7 +33,7 @@ internal sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionR
             await user.Modifier(modifier).UnassignRole(role);
         }
         await user.Modifier(modifier).AssignRole(denyAccessRole);
-        userContext.ClearCache(user.ToModel().UserName);
+        await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }
 }

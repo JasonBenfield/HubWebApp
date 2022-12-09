@@ -13,6 +13,8 @@ using XTI_WebApp.Extensions;
 using XTI_App.Hosting;
 using XTI_Schedule;
 using XTI_Core;
+using XTI_WebAppClient;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;
 
@@ -20,12 +22,14 @@ public static class HubWebAppExtensions
 {
     public static void AddServicesForHub(this IServiceCollection services)
     {
+        services.AddHttpClient();
         services.AddAppServices();
         services.AddWebAppServices();
         services.AddHubDbContextForSqlServer();
         services.AddScoped<HubFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
+        services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();
         services.AddScoped<EfAppContext>();
         services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<EfAppContext>());
         services.AddScoped<AppFromPath>();
@@ -39,6 +43,24 @@ public static class HubWebAppExtensions
         services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
         services.AddScoped<StoredObjectFactory>();
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
+        services.AddScoped<IMenuDefinitionBuilder, HubMenuDefinitionBuilder>();
+        services.AddScoped<AuthenticationFactory>();
+        services.AddScoped<IAuthClient, DefaultAuthClient>();
+        services.AddScoped<SystemUserXtiToken>();
+        services.AddScoped
+        (
+            sp =>
+            {
+                var tokenAccessor = new XtiTokenAccessor(sp.GetRequiredService<IMemoryCache>());
+                tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                tokenAccessor.UseToken<SystemUserXtiToken>();
+                return tokenAccessor;
+            }
+        );
+        services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
+        services.AddScoped<AppClientUrl>();
+        services.AddScoped<GenericAppClientFactory>();
+        services.AddScoped<IUserCacheManagement, DefaultUserCacheManagement>();
         services.AddHubAppApiServices();
         services.AddScoped
         (

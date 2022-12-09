@@ -31,11 +31,14 @@ public static class XtiSetupAppHost
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddHubClientServices();
                     services.AddScoped<SystemUserCredentials>();
+                    services.AddScoped<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
+                    services.AddScoped<SystemUserXtiToken>();
                     services.AddScoped<InstallationUserCredentials>();
                     services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
                     services.AddScoped<InstallationUserXtiToken>();
                     services.AddXtiTokenAccessor((sp, tokenAccessor) =>
                     {
+                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
                         tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
                         tokenAccessor.UseToken<InstallationUserXtiToken>();
                     });

@@ -18,6 +18,8 @@ public sealed class AppUserGroup
 
     public Task<AppUser> User(int id) => factory.Users.User(this, id);
 
+    public Task<AppUser> UserOrAnon(AppUserName userName) => factory.Users.UserOrAnon(this, userName);
+
     public Task<AppUser[]> Users() => factory.Users.Users(this);
 
     internal Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded) =>

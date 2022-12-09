@@ -19,7 +19,10 @@ public sealed partial class SupportAppApi : AppApiWrapper
         )
     {
         createPermanentLogGroup(sp);
+        createInstallationsGroup(sp);
     }
 
     partial void createPermanentLogGroup(IServiceProvider sp);
+
+    partial void createInstallationsGroup(IServiceProvider sp);
 }

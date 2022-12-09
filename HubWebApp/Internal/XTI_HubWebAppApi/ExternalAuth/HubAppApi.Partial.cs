@@ -18,7 +18,6 @@ partial class HubAppApi
             source.AddGroup
             (
                 nameof(ExternalAuth),
-                HubInfo.ModCategories.Apps,
                 Access.WithAllowed(HubInfo.Roles.Authenticator)
             ),
             sp

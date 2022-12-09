@@ -9,13 +9,13 @@ import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 
 export class MostRecentRequestListCard {
     private readonly alert: MessageAlert;
-    private readonly requests: ListGroup;
+    private readonly requests: ListGroup<RequestExpandedListItem, RequestExpandedListItemView>;
 
     private groupID: number;
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: MostRecentRequestListCardView
+        view: MostRecentRequestListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Most Recent Requests');
         this.alert = new CardAlert(view.alert).alert;
@@ -30,7 +30,7 @@ export class MostRecentRequestListCard {
         const requests = await this.getRequests();
         this.requests.setItems(
             requests,
-            (sourceItem: IAppRequestExpandedModel, listItem: RequestExpandedListItemView) =>
+            (sourceItem, listItem) =>
                 new RequestExpandedListItem(sourceItem, listItem)
         );
         if (requests.length === 0) {
@@ -38,18 +38,14 @@ export class MostRecentRequestListCard {
         }
     }
 
-    private async getRequests() {
-        let requests: IAppRequestExpandedModel[];
-        await this.alert.infoAction(
+    private getRequests() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                requests = await this.hubApi.ResourceGroup.GetMostRecentRequests({
-                    VersionKey: 'Current',
-                    GroupID: this.groupID,
-                    HowMany: 10
-                });
-            }
+            () => this.hubApi.ResourceGroup.GetMostRecentRequests({
+                VersionKey: 'Current',
+                GroupID: this.groupID,
+                HowMany: 10
+            })
         );
-        return requests;
     }
 }

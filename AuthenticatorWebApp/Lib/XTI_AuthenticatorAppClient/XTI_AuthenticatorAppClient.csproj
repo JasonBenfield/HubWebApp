@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Api" Version="1.8.31" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.31" />
-		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.28" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.33" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.33" />
+		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.30" />
 	</ItemGroup>
 
 </Project>

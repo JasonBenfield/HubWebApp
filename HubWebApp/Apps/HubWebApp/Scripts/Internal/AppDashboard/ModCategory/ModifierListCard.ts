@@ -10,7 +10,7 @@ import { ModifierListItemView } from "./ModifierListItemView";
 export class ModifierListCard {
     private modCategoryID: number;
     private readonly alert: MessageAlert;
-    private readonly modifiers: ListGroup;
+    private readonly modifiers: ListGroup<ModifierListItem, ModifierListItemView>;
 
     constructor(
         private readonly hubApi: HubAppApi,
@@ -29,7 +29,7 @@ export class ModifierListCard {
         const modifiers = await this.getModifiers();
         this.modifiers.setItems(
             modifiers,
-            (sourceItem: IModifierModel, listItem: ModifierListItemView) =>
+            (sourceItem, listItem) =>
                 new ModifierListItem(sourceItem, listItem)
         );
         if (modifiers.length === 0) {
@@ -37,14 +37,10 @@ export class ModifierListCard {
         }
     }
 
-    private async getModifiers() {
-        let modifiers: IModifierModel[];
-        await this.alert.infoAction(
+    private getModifiers() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                modifiers = await this.hubApi.ModCategory.GetModifiers(this.modCategoryID);
-            }
+            () => this.hubApi.ModCategory.GetModifiers(this.modCategoryID)
         );
-        return modifiers;
     }
 }

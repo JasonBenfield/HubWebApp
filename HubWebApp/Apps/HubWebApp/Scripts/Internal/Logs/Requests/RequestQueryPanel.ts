@@ -13,11 +13,11 @@ import { RequestDropdownView } from "./RequestDropdownView";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
 
 interface IResult {
-    menuRequested?: {};
+    menuRequested?: boolean;
 }
 
 class Result {
-    static menuRequested() { return new Result({ menuRequested: {} }); }
+    static menuRequested() { return new Result({ menuRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -60,13 +60,15 @@ export class RequestQueryPanel implements IPanel {
         const url = Url.current();
         const sessionIDText = url.getQueryValue('SessionID');
         const sessionID = sessionIDText ? Number(sessionIDText) : null;
+        const installationIDText = url.getQueryValue('InstallationID');
+        const installationID = installationIDText ? Number(installationIDText) : null;
         options.saveChanges({
             select: true,
             filter: !sessionID,
             orderby: true
         });
         options.setODataClient(
-            new ApiODataClient(hubApi.RequestQuery, { SessionID: sessionID })
+            new ApiODataClient(hubApi.RequestQuery, { SessionID: sessionID, InstallationID: installationID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         new Command(this.menu.bind(this)).add(view.menuButton);

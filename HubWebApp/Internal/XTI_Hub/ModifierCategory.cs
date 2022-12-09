@@ -16,19 +16,20 @@ public sealed class ModifierCategory
     }
 
     public int ID { get; }
-    public ModifierCategoryName Name() => new ModifierCategoryName(record.Name);
+
+    public bool IsDefault() => ModifierCategoryName.Default.Equals(record.Name);
 
     public Task<Modifier> AddDefaultModifierIfNotFound()
         => factory.Modifiers.AddDefaultModifierIfNotFound(this);
 
     public Task<Modifier> AddOrUpdateModifier(IGeneratedKey generatedModKey, string targetKey, string displayText)
-        => AddOrUpdateModifier(generatedModKey, targetKey, displayText);
+        => factory.Modifiers.AddOrUpdateByTargetKey(this, generatedModKey, targetKey, displayText);
 
     public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, int targetID, string displayText)
         => AddOrUpdateModifier(modKey, targetID.ToString(), displayText);
 
     public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, string targetKey, string displayText)
-        => factory.Modifiers.AddOrUpdateByTargetKey(this, modKey, targetKey, displayText);
+        => factory.Modifiers.AddOrUpdateByModKey(this, modKey, targetKey, displayText);
 
     public Task<Modifier> ModifierByModKey(ModifierKey modKey) => factory.Modifiers.ModifierByModKey(this, modKey);
 
@@ -47,7 +48,7 @@ public sealed class ModifierCategory
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {
         ID = ID,
-        Name = Name()
+        Name = new ModifierCategoryName(record.Name)
     };
 
     public override string ToString() => $"{nameof(ModifierCategory)} {ID}";

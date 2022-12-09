@@ -1,7 +1,7 @@
-﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+﻿import { HubPageView } from '../HubPageView';
 import { MainMenuPanelView } from '../MainMenuPanelView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends HubPageView {
     readonly mainMenuPanel: MainMenuPanelView;
 
     constructor() {

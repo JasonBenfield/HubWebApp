@@ -4,16 +4,16 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
 {
     private readonly UserGroupFromPath userGroupFromPath;
     private readonly HubFactory hubFactory;
-    private readonly CurrentUser currentUser;
-    private readonly ICachedUserContext userContext;
+    private readonly CurrentAppUser currentUser;
+    private readonly IUserCacheManagement userCacheManagement;
 
 
-    public AllowAccessAction(UserGroupFromPath userGroupFromPath, HubFactory appFactory, CurrentUser currentUser, ICachedUserContext userContext)
+    public AllowAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
     {
         this.userGroupFromPath = userGroupFromPath;
-        this.hubFactory = appFactory;
+        this.hubFactory = hubFactory;
         this.currentUser = currentUser;
-        this.userContext = userContext;
+        this.userCacheManagement = userCacheManagement;
     }
 
     public async Task<EmptyActionResult> Execute(UserModifierKey model, CancellationToken stoppingToken)
@@ -29,7 +29,7 @@ internal sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyAction
         var userGroup = await userGroupFromPath.Value();
         var user = await userGroup.User(model.UserID);
         await user.Modifier(modifier).UnassignRole(denyAccessRole);
-        userContext.ClearCache(user.ToModel().UserName);
+        await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }
 }

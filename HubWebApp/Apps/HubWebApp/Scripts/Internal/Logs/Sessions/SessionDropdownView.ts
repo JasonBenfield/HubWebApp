@@ -4,6 +4,7 @@ import { DropdownComponentView } from "@jasonbenfield/sharedwebapp/Views/Dropdow
 import { GridCellView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
 import { TextLinkView } from "@jasonbenfield/sharedwebapp/Views/TextLinkView";
+import { DropdownMenuView } from "@jasonbenfield/sharedwebapp/Views/Dropdown";
 
 export class SessionDropdownView extends GridCellView {
     readonly requestLink: TextLinkView;
@@ -13,7 +14,8 @@ export class SessionDropdownView extends GridCellView {
         const dropdown = this.addView(DropdownComponentView);
         dropdown.button.addView(TextSpanView).setText('View');
         dropdown.button.useOutlineStyle(ContextualClass.secondary);
-        const requestDropdownLink = dropdown.menu.addTextLinkItem();
+        const menu = dropdown.menuContainer.addView(DropdownMenuView);
+        const requestDropdownLink = menu.addTextLinkItem();
         requestDropdownLink.link.setText('Requests');
         this.requestLink = requestDropdownLink.link;
     }

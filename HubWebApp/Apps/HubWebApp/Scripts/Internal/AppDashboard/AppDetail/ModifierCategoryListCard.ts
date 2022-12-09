@@ -10,7 +10,7 @@ import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
 
 export class ModifierCategoryListCard {
     private readonly alert: MessageAlert;
-    private readonly modCategories: ListGroup;
+    private readonly modCategories: ListGroup<ModifierCategoryListItem, ModifierCategoryListItemView>;
 
     private readonly _modCategorySelected = new DefaultEvent<IModifierCategoryModel>(this);
     readonly modCategorySelected = this._modCategorySelected.handler();
@@ -33,7 +33,7 @@ export class ModifierCategoryListCard {
         const modCategories = await this.getModCategories();
         this.modCategories.setItems(
             modCategories,
-            (modCategory, itemView: ModifierCategoryListItemView) =>
+            (modCategory, itemView) =>
                 new ModifierCategoryListItem(modCategory, itemView)
         );
         if (modCategories.length === 0) {
@@ -42,14 +42,10 @@ export class ModifierCategoryListCard {
     }
 
     private async getModCategories() {
-        let modCategories: IModifierCategoryModel[];
-        await this.alert.infoAction(
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                modCategories = await this.hubApi.App.GetModifierCategories();
-            }
+            () => this.hubApi.App.GetModifierCategories()
         );
-        return modCategories;
     }
 
 }

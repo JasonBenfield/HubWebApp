@@ -8,14 +8,14 @@ import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { UserEditPanelView } from "./UserEditPanelView";
 
 interface IResult {
-    canceled?: {};
-    saved?: {};
+    canceled?: boolean;
+    saved?: boolean;
 }
 
 class Result {
-    static canceled() { return new Result({ canceled: {} }); }
+    static canceled() { return new Result({ canceled: true }); }
 
-    static saved() { return new Result({ saved: {} }); }
+    static saved() { return new Result({ saved: true }); }
 
     private constructor(private readonly results: IResult) {
     }
@@ -42,6 +42,12 @@ export class UserEditPanel implements IPanel {
         this.saveCommand.add(this.view.saveButton);
         new TextComponent(this.view.titleHeader).setText('Edit User');
         this.editUserForm = new EditUserForm(this.view.editUserForm);
+        this.editUserForm.handleSubmit(this.onFormSubmit.bind(this));
+    }
+
+    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+        evt.preventDefault();
+        this.saveCommand.execute();
     }
 
     setUserID(userID: number) {

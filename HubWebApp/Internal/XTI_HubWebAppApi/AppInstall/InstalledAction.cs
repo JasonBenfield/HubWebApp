@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.AppInstall;
 
-public sealed class InstalledAction : AppAction<InstallationRequest, EmptyActionResult>
+public sealed class InstalledAction : AppAction<GetInstallationRequest, EmptyActionResult>
 {
     private readonly IHubAdministration hubAdministration;
 
@@ -9,7 +9,7 @@ public sealed class InstalledAction : AppAction<InstallationRequest, EmptyAction
         this.hubAdministration = hubAdministration;
     }
 
-    public async Task<EmptyActionResult> Execute(InstallationRequest model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(GetInstallationRequest model, CancellationToken stoppingToken)
     {
         await hubAdministration.Installed(model.InstallationID);
         return new EmptyActionResult();

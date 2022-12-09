@@ -17,7 +17,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -29,6 +29,11 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -296,15 +301,419 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int>("AppID")
-                        .HasColumnType("int");
+                    b.Property<string>("AuthenticatorKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("AuthenticatorName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AppID")
+                    b.HasIndex("AuthenticatorKey")
                         .IsUnique();
 
                     b.ToTable("Authenticators", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedInstallation", b =>
+                {
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InstallationID"), 1L, 1);
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstallationStatusDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastRequestDaysAgo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastRequestTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("QualifiedMachineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TimeInstallationAdded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("VersionKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionRelease")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionStatusText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InstallationID");
+
+                    b.ToView("ExpandedInstallations");
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedLogEntry", b =>
+                {
+                    b.Property<int>("EventID")
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventID"), 1L, 1);
+
+                    b.Property<int>("ActualCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstallLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCurrentInstallation")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModCategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModTargetKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequestTimeElapsed")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("RequestTimeEnded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("RequestTimeStarted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ResourceGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResourceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeverityText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TimeOccurred")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserGroupDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionRelease")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionStatusText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EventID");
+
+                    b.ToView("ExpandedLogEntries");
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedRequest", b =>
+                {
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"), 1L, 1);
+
+                    b.Property<int>("ActualCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AppErrorCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CriticalErrorCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InformationMessageCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InstallLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstallationID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCurrentInstallation")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModCategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModTargetKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestTimeElapsed")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("RequestTimeEnded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("RequestTimeStarted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ResourceGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResourceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SessionID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Succeeded")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TotalErrorCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserGroupDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ValidationFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VersionKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionRelease")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionStatusText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionTypeText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RequestID");
+
+                    b.ToView("ExpandedRequests");
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedSession", b =>
+                {
+                    b.Property<int>("SessionID")
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SessionID"), 1L, 1);
+
+                    b.Property<DateTimeOffset?>("LastRequestTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RemoteAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TimeElapsed")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TimeEnded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TimeStarted")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserGroupDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SessionID");
+
+                    b.ToView("ExpandedSessions");
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.InstallationEntity", b =>
@@ -328,6 +737,10 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
+
+                    b.Property<string>("SiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -816,15 +1229,6 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.XtiVersionEntity", null)
                         .WithMany()
                         .HasForeignKey("VersionID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("XTI_HubDB.Entities.AuthenticatorEntity", b =>
-                {
-                    b.HasOne("XTI_HubDB.Entities.AppEntity", null)
-                        .WithMany()
-                        .HasForeignKey("AppID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

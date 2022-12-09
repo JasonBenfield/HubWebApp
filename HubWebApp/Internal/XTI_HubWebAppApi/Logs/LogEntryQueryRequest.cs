@@ -3,4 +3,5 @@
 public sealed class LogEntryQueryRequest
 {
     public int? RequestID { get; set; }
+    public int? InstallationID { get; set; }
 }

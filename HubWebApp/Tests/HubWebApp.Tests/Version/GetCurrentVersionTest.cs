@@ -19,7 +19,7 @@ internal sealed class GetCurrentVersionTest
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
         var currentVersion = await hubApp.CurrentVersion();
-        var currentVersionModel = await tester.Execute(AppVersionKey.Current.Value, hubAppModifier.ModKey());
+        var currentVersionModel = await tester.Execute(AppVersionKey.Current.Value, hubAppModifier.ToModel().ModKey);
         Assert.That(currentVersionModel?.ID, Is.EqualTo(currentVersion.ID), "Should get current version");
         Assert.That(currentVersionModel?.VersionNumber, Is.EqualTo(currentVersion.ToVersionModel().VersionNumber), "Should get current version");
         Assert.That(currentVersionModel?.VersionType, Is.EqualTo(currentVersion.ToVersionModel().VersionType), "Should get current version");

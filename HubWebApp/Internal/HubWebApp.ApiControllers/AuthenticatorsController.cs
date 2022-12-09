@@ -10,14 +10,14 @@ public sealed partial class AuthenticatorsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RegisterAuthenticator(CancellationToken ct)
+    public Task<ResultContainer<AuthenticatorModel>> RegisterAuthenticator([FromBody] RegisterAuthenticatorRequest model, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<EmptyRequest, EmptyActionResult>("RegisterAuthenticator").Execute(new EmptyRequest(), ct);
+        return api.Group("Authenticators").Action<RegisterAuthenticatorRequest, AuthenticatorModel>("RegisterAuthenticator").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest model, CancellationToken ct)
+    public Task<ResultContainer<AuthenticatorModel>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest model, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<RegisterUserAuthenticatorRequest, EmptyActionResult>("RegisterUserAuthenticator").Execute(model, ct);
+        return api.Group("Authenticators").Action<RegisterUserAuthenticatorRequest, AuthenticatorModel>("RegisterUserAuthenticator").Execute(model, ct);
     }
 }

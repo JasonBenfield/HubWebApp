@@ -59,5 +59,7 @@ public static class FakeExtensions
         services.AddScoped<StoredObjectFactory>();
         services.AddScoped<PermanentLog>();
         services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
+        services.AddScoped<IUserCacheManagement, FakeUserCacheManagement>();
+        services.AddScoped<AuthenticationFactory>();
     }
 }

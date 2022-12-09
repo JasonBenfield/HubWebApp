@@ -3,7 +3,7 @@
 function Add-HubDBMigrations {
     param ([Parameter(Mandatory)]$Name)
     $env:DOTNET_ENVIRONMENT="Development"
-    dotnet ef --startup-project ./Tools/HubDbTool migrations add $Name --project ./HubWebApp/Internal/XTI_HubDB.EF.SqlServer
+    dotnet ef --startup-project ./HubWebApp/Internal/HubDbTool migrations add $Name --project ./HubWebApp/Internal/XTI_HubDB.EF.SqlServer
 }
 
 function Xti-ResetHubDb {
@@ -13,7 +13,7 @@ function Xti-ResetHubDb {
         [string] $EnvName='Test',
         [switch] $Force
     )
-    dotnet run --environment $EnvName --project ./Tools/HubDbTool --Command reset --Force $Force
+    dotnet run --environment $EnvName --project ./HubWebApp/Internal/HubDbTool --Command reset --Force $Force
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Reset failed"
     }
@@ -33,7 +33,7 @@ function Xti-BackupHubDb {
             New-Item -ItemType Directory -Force -Path $dirPath
         }
     }
-    dotnet run --environment $EnvName --project ./Tools/HubDbTool --Command backup --BackupFilePath=$BackupFilePath
+    dotnet run --environment $EnvName --project ./HubWebApp/Internal/HubDbTool --Command backup --BackupFilePath=$BackupFilePath
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Backup failed"
     }
@@ -47,7 +47,7 @@ function Xti-RestoreHubDb {
         [Parameter(Mandatory)]
         [string] $BackupFilePath
     )
-    dotnet run --environment $EnvName --project ./Tools/HubDbTool --Command restore --BackupFilePath $BackupFilePath
+    dotnet run --environment $EnvName --project ./HubWebApp/Internal/HubDbTool --Command restore --BackupFilePath $BackupFilePath
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Restore failed"
     }
@@ -59,7 +59,7 @@ function Xti-UpdateHubDb {
         [ValidateSet(“Development", "Production", "Staging", "Test")]
         $EnvName='Test'
     )
-    dotnet run --environment $EnvName --project ./Tools/HubDbTool --Command update
+    dotnet run --environment $EnvName --project ./HubWebApp/Internal/HubDbTool --Command update
     if( $LASTEXITCODE -ne 0 ) {
         Throw "Update failed"
     }

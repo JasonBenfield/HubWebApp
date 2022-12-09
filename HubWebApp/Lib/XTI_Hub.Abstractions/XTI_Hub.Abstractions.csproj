@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Abstractions" Version="1.8.31" />
+		<PackageReference Include="XTI_App.Abstractions" Version="1.8.33" />
+		<PackageReference Include="XTI_Forms" Version="1.8.33" />
 	</ItemGroup>
 
 </Project>

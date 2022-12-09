@@ -1,8 +1,8 @@
-﻿import { BasicPageView } from '@jasonbenfield/sharedwebapp/Views/BasicPageView';
+﻿import { HubPageView } from '../../HubPageView';
 import { MainMenuPanelView } from '../../MainMenuPanelView';
 import { SessionQueryPanelView } from './SessionQueryPanelView';
 
-export class MainPageView extends BasicPageView {
+export class MainPageView extends HubPageView {
     readonly sessionQueryPanel: SessionQueryPanelView;
     readonly mainMenuPanel: MainMenuPanelView;
 

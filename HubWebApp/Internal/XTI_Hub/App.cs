@@ -20,22 +20,6 @@ public sealed class App
 
     public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
-    public async Task RegisterAsAuthenticator()
-    {
-        var authenticator = await factory.DB
-            .Authenticators.Retrieve()
-            .Where(auth => auth.AppID == ID)
-            .FirstOrDefaultAsync();
-        if (authenticator == null)
-        {
-            authenticator = new AuthenticatorEntity
-            {
-                AppID = ID
-            };
-            await factory.DB.Authenticators.Create(authenticator);
-        }
-    }
-
     internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
         factory.ModCategories.AddIfNotFound(this, name);
 
@@ -66,6 +50,14 @@ public sealed class App
     public async Task<AppRole[]> Roles()
     {
         var roles = await factory.Roles.RolesForApp(this);
+        return roles
+            .Where(r => !r.IsDeactivated())
+            .ToArray();
+    }
+
+    public async Task<AppRole[]> Roles(AppRoleName[] roleNames)
+    {
+        var roles = await factory.Roles.RolesForApp(this, roleNames);
         return roles
             .Where(r => !r.IsDeactivated())
             .ToArray();
@@ -163,5 +155,6 @@ public sealed class App
 
     public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
 
-    private AppKey ToAppKey() => new AppKey(record.Name, AppType.Values.Value(record.Type));
+    private AppKey ToAppKey() => 
+        new AppKey(new AppName(record.DisplayText), AppType.Values.Value(record.Type));
 }

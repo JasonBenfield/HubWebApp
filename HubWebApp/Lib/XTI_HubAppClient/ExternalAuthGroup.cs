@@ -9,6 +9,6 @@ public sealed partial class ExternalAuthGroup : AppClientGroup
 
     public ExternalAuthGroupActions Actions { get; }
 
-    public Task<string> ExternalAuthKey(string modifier, ExternalAuthKeyModel model, CancellationToken ct = default) => Actions.ExternalAuthKey.Post(modifier, model, ct);
+    public Task<string> ExternalAuthKey(ExternalAuthKeyModel model, CancellationToken ct = default) => Actions.ExternalAuthKey.Post("", model, ct);
     public sealed record ExternalAuthGroupActions(AppClientPostAction<ExternalAuthKeyModel, string> ExternalAuthKey);
 }

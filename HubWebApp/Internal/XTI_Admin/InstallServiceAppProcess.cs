@@ -6,6 +6,7 @@ using XTI_Core;
 using XTI_Credentials;
 using XTI_Processes;
 using XTI_Secrets;
+using XTI_ServiceAppInstallation;
 
 namespace XTI_Admin;
 
@@ -22,51 +23,30 @@ internal sealed class InstallServiceAppProcess :  InstallAppProcess
     public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        ServiceController? sc = null;
-        if (installVersionKey.Equals(AppVersionKey.Current))
+        WinServiceInstallation? winService = null;
+        var startService = false;
+        if (installVersionKey.IsCurrent())
         {
             var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            var appName = adminInstOptions.AppKey.Name.DisplayText.Replace(" ", "");
-            var serviceName = $"Xti_{xtiEnv.EnvironmentName}_{appName}";
-            sc = getService(serviceName);
-            if (sc == null)
+            winService = new WinServiceInstallation(xtiFolder, xtiEnv, adminInstOptions.AppKey);
+            if (!winService.Exists())
             {
-                var binPath = Path.Combine
-                (
-                    xtiFolder.InstallPath(adminInstOptions.AppKey, AppVersionKey.Current),
-                    $"{appName}ServiceApp.exe"
-                );
-                binPath = $"{binPath} --Environment {xtiEnv.EnvironmentName}";
-                Console.WriteLine($"Creating service '{binPath}'");
+                Console.WriteLine($"Creating service '{adminInstOptions.AppKey.Name.DisplayText}'");
                 var secretCredentialsValue = await retrieveCredentials("ServiceApp");
-                var createServiceProcess = new WinProcess("sc")
-                    .WriteOutputToConsole()
-                    .UseArgumentNameDelimiter("")
-                    .AddArgument("create")
-                    .AddArgument(serviceName)
-                    .UseArgumentValueDelimiter("= ")
-                    .AddArgument("start", "auto")
-                    .AddArgument("binpath", new Quoted(binPath))
-                    .AddArgument("obj", new Quoted(secretCredentialsValue.UserName))
-                    .AddArgument("password", new Quoted(secretCredentialsValue.Password));
-                Console.WriteLine(createServiceProcess.CommandText());
-                var createServiceResult = await createServiceProcess
-                    .Run();
-                createServiceResult.EnsureExitCodeIsZero();
-                sc = getService(serviceName);
+                await winService.Create(secretCredentialsValue.UserName, secretCredentialsValue.Password);
+                startService = true;
             }
-            else if (sc.Status == ServiceControllerStatus.Running)
+            else if (winService.IsRunning())
             {
-                Console.WriteLine($"Stopping services '{sc.DisplayName}'");
-                sc.Stop();
-                sc.WaitForStatus(ServiceControllerStatus.Stopped);
+                winService.StopService();
+                startService = true;
             }
         }
         await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, true);
-        if (sc != null)
+        if (winService != null && startService)
         {
-            Console.WriteLine($"Starting services '{sc.DisplayName}'");
-            sc.Start();
+            Console.WriteLine($"Starting service '{adminInstOptions.AppKey.Name.DisplayText}'");
+            winService.StartService();
         }
     }
 

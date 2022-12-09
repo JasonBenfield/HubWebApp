@@ -9,13 +9,13 @@ import { RoleAccessListItemView } from "../RoleAccessListItemView";
 
 export class ResourceGroupAccessCard {
     private readonly alert: MessageAlert;
-    private readonly accessItems: ListGroup;
+    private readonly accessItems: ListGroup<RoleAccessListItem, RoleAccessListItemView>;
 
     private groupID: number;
 
     constructor(
         private readonly hubApi: HubAppApi,
-        private readonly view: ResourceAccessCardView
+        view: ResourceAccessCardView
     ) {
         new TextComponent(view.titleHeader).setText('Allowed Roles');
         this.alert = new CardAlert(view.alert).alert;
@@ -30,7 +30,7 @@ export class ResourceGroupAccessCard {
         const accessItems = await this.getRoleAccessItems();
         this.accessItems.setItems(
             accessItems,
-            (sourceItem: IRoleAccessItem, listItem: RoleAccessListItemView) =>
+            (sourceItem, listItem) =>
                 new RoleAccessListItem(sourceItem, listItem)
         );
         if (accessItems.length === 0) {
@@ -50,7 +50,7 @@ export class ResourceGroupAccessCard {
             }
         );
         const accessItems: IRoleAccessItem[] = [];
-        for (let allowedRole of allowedRoles) {
+        for (const allowedRole of allowedRoles) {
             accessItems.push({
                 isAllowed: true,
                 role: allowedRole
