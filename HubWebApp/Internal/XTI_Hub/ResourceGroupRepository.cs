@@ -61,6 +61,14 @@ public sealed class ResourceGroupRepository
             .ToArrayAsync();
     }
 
+    internal async Task<ResourceGroup> Group(int id)
+    {
+        var entity = await factory.DB.ResourceGroups.Retrieve()
+            .Where(rg=>rg.ID == id)
+            .FirstOrDefaultAsync();
+        return factory.CreateGroup(entity ?? throw new Exception($"Group not found with ID {id}"));
+    }
+
     internal async Task<ResourceGroup> GroupOrDefault(App app, XtiVersion version, ResourceGroupName name)
     {
         var groupEntity = await GetGroup(app, version, name);

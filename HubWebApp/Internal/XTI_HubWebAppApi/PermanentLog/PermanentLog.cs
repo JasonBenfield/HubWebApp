@@ -8,9 +8,9 @@ public sealed class PermanentLog
     private readonly HubFactory hubFactory;
     private readonly IClock clock;
 
-    public PermanentLog(HubFactory appFactory, IClock clock)
+    public PermanentLog(HubFactory hubFactory, IClock clock)
     {
-        this.hubFactory = appFactory;
+        this.hubFactory = hubFactory;
         this.clock = clock;
     }
 
@@ -59,7 +59,7 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
@@ -73,7 +73,7 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
@@ -94,7 +94,7 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
@@ -106,7 +106,7 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
@@ -119,7 +119,7 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
@@ -132,21 +132,22 @@ public sealed class PermanentLog
         }
         catch (Exception ex)
         {
-            await handleError(ex);
+            await HandleError(ex);
         }
     }
 
-    private Task handleError(Exception ex)
-    {
-        return logEvent(new LogEntryModel
-        {
-            Caption = "Error Updating Permanent Log",
-            Message = ex.Message,
-            Detail = ex.StackTrace ?? "",
-            Severity = AppEventSeverity.Values.AppError,
-            TimeOccurred = clock.Now()
-        });
-    }
+    private Task HandleError(Exception ex)=>
+        logEvent
+        (
+            new LogEntryModel
+            {
+                Caption = "Error Updating Permanent Log",
+                Message = ex.Message,
+                Detail = ex.StackTrace ?? "",
+                Severity = AppEventSeverity.Values.AppError,
+                TimeOccurred = clock.Now()
+            }
+        );
 
     private async Task logEvent(LogEntryModel model)
     {
@@ -160,7 +161,8 @@ public sealed class PermanentLog
             model.Caption,
             model.Message,
             model.Detail,
-            model.ActualCount
+            model.ActualCount,
+            model.ParentEventKey
         );
     }
 }

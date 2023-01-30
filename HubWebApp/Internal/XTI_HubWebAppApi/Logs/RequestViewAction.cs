@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class RequestViewAction : AppAction<RequestQueryRequest, WebViewResult>
+internal sealed class RequestViewAction : AppAction<RequestRequest, WebViewResult>
 {
     private readonly WebViewResultFactory viewFactory;
 
@@ -9,6 +9,6 @@ internal sealed class RequestViewAction : AppAction<RequestQueryRequest, WebView
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(RequestQueryRequest model, CancellationToken stoppingToken) =>
-        Task.FromResult(viewFactory.Default("requests", "Access Log"));
+    public Task<WebViewResult> Execute(RequestRequest model, CancellationToken stoppingToken) =>
+        Task.FromResult(viewFactory.Default("request", "Request"));
 }

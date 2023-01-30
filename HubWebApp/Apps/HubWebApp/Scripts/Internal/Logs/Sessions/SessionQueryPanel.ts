@@ -1,20 +1,19 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
+import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedSessionColumnsBuilder } from "../../../Lib/Api/ODataExpandedSessionColumnsBuilder";
-import { SessionDropdown } from "./SessionDropdown";
-import { SessionDropdownView } from "./SessionDropdownView";
 import { SessionQueryPanelView } from "./SessionQueryPanelView";
 
 interface IResult {
-    menuRequested?: {};
+    menuRequested?: boolean;
 }
 
 class Result {
-    static menuRequested() { return new Result({ menuRequested: {} }); }
+    static menuRequested() { return new Result({ menuRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -25,7 +24,7 @@ export class SessionQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly odataComponent: ODataComponent<IExpandedSession>;
 
-    constructor(hubApi: HubAppApi, private readonly view: SessionQueryPanelView) {
+    constructor(private readonly hubApi: HubAppApi, private readonly view: SessionQueryPanelView) {
         const columns = new ODataExpandedSessionColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedSession>('hub_sessions', columns);
         columns.SessionID.require();
@@ -41,13 +40,14 @@ export class SessionQueryPanel implements IPanel {
         options.setODataClient(
             new ApiODataClient(hubApi.SessionQuery, {})
         );
-        const dropdownColumn = options.startColumns.add('Dropdown', this.view.dropdownColumn);
-        dropdownColumn.setDisplayText('');
-        dropdownColumn.setCreateDataCell(
-            (rowIndex, column, record, formatter, view: SessionDropdownView) => new SessionDropdown(hubApi, rowIndex, column, record, view)
-        );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
+        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
+    }
+
+    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
+        const sessionID: number = eventArgs.record['SessionID'];
+        this.hubApi.Logs.Session.open({ SessionID: sessionID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

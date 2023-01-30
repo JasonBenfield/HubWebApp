@@ -13,6 +13,14 @@ public sealed class AppRequestRepository
         this.factory = factory;
     }
 
+    public async Task<AppRequest> Request(int id)
+    {
+        var entity = await factory.DB.Requests.Retrieve()
+            .Where(r => r.ID == id)
+            .FirstOrDefaultAsync();
+        return factory.CreateRequest(entity ?? throw new Exception($"Request not found with ID {id}"));
+    }
+
     internal async Task<AppRequest> AddOrUpdate
     (
         AppSession session, 

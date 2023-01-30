@@ -22,13 +22,47 @@ interface IPersonName {
 interface IInstallationQueryRequest {
 	QueryType: number;
 }
-interface IGetPendingDeletesRequest {
-	MachineName: string;
+interface IInstallationViewRequest {
+	InstallationID: number;
 }
-interface IAppVersionInstallationModel {
-	App: IAppModel;
-	Version: IXtiVersionModel;
+interface IInstallationDetailModel {
+	InstallLocation: IInstallLocationModel;
 	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+}
+interface IInstallLocationModel {
+	ID: number;
+	QualifiedMachineName: string;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+	SiteName: string;
+}
+interface IXtiVersionModel {
+	ID: number;
+	VersionName: IAppVersionName;
+	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: Date;
+}
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
 }
 interface IAppModel {
 	ID: number;
@@ -45,38 +79,17 @@ interface IAppName {
 	Value: string;
 	DisplayText: string;
 }
-interface IAppVersionName {
-	Value: string;
-	DisplayText: string;
-}
 interface IModifierKey {
 	Value: string;
 	DisplayText: string;
 }
-interface IXtiVersionModel {
-	ID: number;
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
-	VersionNumber: IAppVersionNumber;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: Date;
+interface IGetPendingDeletesRequest {
+	MachineName: string;
 }
-interface IAppVersionKey {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppVersionNumber {
-	Major: number;
-	Minor: number;
-	Patch: number;
-}
-interface IInstallationModel {
-	ID: number;
-	Status: IInstallStatus;
-	IsCurrent: boolean;
-	Domain: string;
-	SiteName: string;
+interface IAppVersionInstallationModel {
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	Installation: IInstallationModel;
 }
 interface IGetInstallationRequest {
 	InstallationID: number;
@@ -183,6 +196,7 @@ interface ILogEntryModel {
 	Message: string;
 	Detail: string;
 	ActualCount: number;
+	ParentEventKey: string;
 }
 interface IEndRequestModel {
 	RequestKey: string;
@@ -499,9 +513,70 @@ interface IExpandedUser {
 	UserGroupID: number;
 	UserGroupName: string;
 }
+interface IAppLogEntryDetailModel {
+	LogEntry: IAppLogEntryModel;
+	Request: IAppRequestModel;
+	ResourceGroup: IResourceGroupModel;
+	Resource: IResourceModel;
+	ModCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
+	InstallLocation: IInstallLocationModel;
+	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+	SourceLogEntryID: number;
+	TargetLogEntryID: number;
+}
+interface IAppRequestModel {
+	ID: number;
+	SessionID: number;
+	Path: string;
+	ResourceID: number;
+	ModifierID: number;
+	TimeStarted: Date;
+	TimeEnded: Date;
+}
+interface IAppSessionModel {
+	ID: number;
+	TimeStarted: Date;
+	TimeEnded: Date;
+	RemoteAddress: string;
+	UserAgent: string;
+}
+interface IAppRequestDetailModel {
+	Request: IAppRequestModel;
+	ResourceGroup: IResourceGroupModel;
+	Resource: IResourceModel;
+	ModCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
+	InstallLocation: IInstallLocationModel;
+	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+}
+interface IAppSessionDetailModel {
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+}
+interface ISessionViewRequest {
+	SessionID: number;
+}
 interface IRequestQueryRequest {
 	SessionID: number;
 	InstallationID: number;
+}
+interface IRequestRequest {
+	RequestID: number;
+}
+interface ILogEntryRequest {
+	LogEntryID: number;
 }
 interface ILogEntryQueryRequest {
 	RequestID: number;
@@ -594,12 +669,13 @@ interface IExpandedLogEntry {
 	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
+	SourceID: number;
 }
 interface IInstallationQueryType {
 	Value: number;
 	DisplayText: string;
 }
-interface IAppType {
+interface IInstallStatus {
 	Value: number;
 	DisplayText: string;
 }
@@ -611,7 +687,7 @@ interface IAppVersionStatus {
 	Value: number;
 	DisplayText: string;
 }
-interface IInstallStatus {
+interface IAppType {
 	Value: number;
 	DisplayText: string;
 }

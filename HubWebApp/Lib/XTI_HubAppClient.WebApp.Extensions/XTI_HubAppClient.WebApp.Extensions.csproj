@@ -4,10 +4,12 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Description>Web App Extensions using $(XtiAppName) $(XtiVersion)</Description>
+		<PackageTags>Web App;$(XtiAppName);$(XtiVersion);</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.33" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.34-dev230128111005431" />
 	</ItemGroup>
 
 	<ItemGroup>

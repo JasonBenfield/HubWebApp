@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -40,6 +41,8 @@ public sealed class InstallLocation
 
     public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
         => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded);
+
+    public InstallLocationModel ToModel() => new InstallLocationModel(entity.ID, entity.QualifiedMachineName);
 
     public override string ToString() => $"{nameof(InstallLocation)} {entity.ID}";
 }

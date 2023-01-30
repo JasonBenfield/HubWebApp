@@ -36,4 +36,5 @@ public sealed class ExpandedLogEntry
     public int InstallationID { get; set; }
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }
+    public int SourceID { get; set; }
 }

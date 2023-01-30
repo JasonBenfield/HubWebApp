@@ -32,6 +32,7 @@ export class LogEntryQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         this.odataComponent = mainContent.addView(ODataComponentView);
+        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedLogEntryColumnViewsBuilder();
         this.columns.TimeOccurred.setWidth(CssLengthUnit.maxContent());
         this.columns.SeverityText.setWidth(CssLengthUnit.maxContent());

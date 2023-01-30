@@ -59,6 +59,9 @@ public sealed class Modifier
         return defaultModifier;
     }
 
+    public Task<ModifierCategory> Category() =>
+        factory.ModCategories.Category(record.CategoryID);
+
     public ModifierModel ToModel() => new ModifierModel
     {
         ID = ID,

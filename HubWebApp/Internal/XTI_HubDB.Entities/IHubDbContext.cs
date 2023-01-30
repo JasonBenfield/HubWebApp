@@ -6,6 +6,7 @@ public interface IHubDbContext
 {
     DataRepository<AppEntity> Apps { get; }
     DataRepository<LogEntryEntity> LogEntries { get; }
+    DataRepository<SourceLogEntryEntity> SourceLogEntries { get; }
     DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     DataRepository<ModifierEntity> Modifiers { get; }
     DataRepository<AppRequestEntity> Requests { get; }
@@ -30,5 +31,6 @@ public interface IHubDbContext
     DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
     DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
     Task Transaction(Func<Task> action);
+    Task<TResult> Transaction<TResult>(Func<Task<TResult>> action);
     void ClearCache();
 }

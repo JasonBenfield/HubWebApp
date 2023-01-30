@@ -4,11 +4,13 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Description>Hub Abstractions $(XtiVersion)</Description>
+		<PackageTags>Hub Abstractions;$(XtiAppName);$(XtiAppType);$(XtiVersion);</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Abstractions" Version="1.8.33" />
-		<PackageReference Include="XTI_Forms" Version="1.8.33" />
+		<PackageReference Include="XTI_App.Abstractions" Version="1.8.34-dev230128111005431" />
+		<PackageReference Include="XTI_Forms" Version="1.8.34-dev230128111005431" />
 	</ItemGroup>
 
 </Project>
