@@ -12,8 +12,9 @@ namespace XTI_HubAppClient.ConsoleApp.Extensions;
 public static class ConsoleAppExtensions
 {
     public static void AddAppAgenda(this IServiceCollection services, Action<IServiceProvider, AppAgendaBuilder> build) =>
-        services.AddAppAgenda
+        AppAgendaExtensions.AddAppAgenda
         (
+            services,
             (sp, b) =>
             {
                 build(sp, b);

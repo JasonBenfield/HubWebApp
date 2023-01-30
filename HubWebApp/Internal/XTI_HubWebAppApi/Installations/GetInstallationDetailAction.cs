@@ -15,6 +15,7 @@ internal sealed class GetInstallationDetailAction : AppAction<int, InstallationD
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
         var installLocation = await installation.Location();
+        var requests = await installation.MostRecentRequests(1);
         var appVersion = await installation.AppVersion();
         var appPermission = await currentUser.GetPermissionsToApp(appVersion.App);
         if (!appPermission.CanView)
@@ -26,7 +27,8 @@ internal sealed class GetInstallationDetailAction : AppAction<int, InstallationD
             InstallLocation: installLocation.ToModel(),
             Installation: installation.ToModel(),
             Version: appVersion.ToVersionModel(),
-            App: appVersion.ToAppModel()
+            App: appVersion.ToAppModel(),
+            MostRecentRequest: requests.FirstOrDefault()?.ToModel() ?? new AppRequestModel()
         );
         return detail;
     }

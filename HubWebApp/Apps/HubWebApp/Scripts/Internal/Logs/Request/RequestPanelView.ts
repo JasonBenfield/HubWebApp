@@ -22,6 +22,7 @@ export class RequestPanelView extends GridView {
     readonly versionKey: BasicTextComponentView;
     readonly versionStatus: BasicTextComponentView;
     readonly userName: FormGroupTextView;
+    readonly currentInstallation: FormGroupTextView;
     readonly timeRange: FormGroupTextView;
     readonly path: FormGroupTextView;
     readonly installationLink: TextLinkView;
@@ -47,6 +48,8 @@ export class RequestPanelView extends GridView {
         this.versionStatus = versionBlock.addView(TextSpanView);
         this.userName = gridContainer.addFormGroup(FormGroupTextView);
         this.userName.caption.setText('User Name');
+        this.currentInstallation = gridContainer.addFormGroup(FormGroupTextView);
+        this.currentInstallation.caption.setText('Installation');
         this.timeRange = gridContainer.addFormGroup(FormGroupTextView);
         this.timeRange.caption.setText('Time Range');
         this.path = gridContainer.addFormGroup(FormGroupTextView);
@@ -65,4 +68,8 @@ export class RequestPanelView extends GridView {
             toolbar.columnStart.addView(ButtonCommandView)
         );
     }
+
+    showCurrentInstallation() { this.currentInstallation.show(); }
+
+    hideCurrentInstallation() { this.currentInstallation.hide(); }
 }

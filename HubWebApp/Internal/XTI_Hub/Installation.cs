@@ -43,6 +43,9 @@ public sealed class Installation
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName groupName) =>
         hubFactory.Groups.GroupOrDefault(entity.AppVersionID, groupName);
 
+    public Task<AppRequest[]> MostRecentRequests(int howMany) =>
+        hubFactory.Requests.MostRecentForInstallation(this, howMany);
+
     public InstallationModel ToModel() => 
         new InstallationModel(ID, Status(), entity.IsCurrent, entity.Domain, entity.SiteName);
 

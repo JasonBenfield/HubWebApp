@@ -4,6 +4,7 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfirm";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
+import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { InstallationPanelView } from "./InstallationPanelView";
@@ -32,6 +33,8 @@ export class InstallationPanel implements IPanel {
     private readonly current: TextComponent;
     private readonly domain: TextValueFormGroup;
     private readonly siteName: TextValueFormGroup;
+    private readonly mostRecentRequest: TextValueFormGroup;
+    private readonly appLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
     private installationID: number;
@@ -47,6 +50,8 @@ export class InstallationPanel implements IPanel {
         this.current = new TextComponent(view.current);
         this.domain = new TextValueFormGroup(view.domain);
         this.siteName = new TextValueFormGroup(view.siteName);
+        this.mostRecentRequest = new TextValueFormGroup(view.mostRecentRequest);
+        this.appLink = new TextLinkComponent(view.appLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -101,6 +106,14 @@ export class InstallationPanel implements IPanel {
         else {
             this.view.hideSiteName();
         }
+        if (detail.MostRecentRequest.ID) {
+            this.mostRecentRequest.setValue(new FormattedDate(detail.MostRecentRequest.TimeStarted).formatDateTime());
+            this.view.showMostRecentRequest();
+        }
+        else {
+            this.view.hideMostRecentRequest();
+        }
+        this.appLink.setHref(this.hubApi.App.Index.getModifierUrl(detail.App.PublicKey.Value, {}));
     }
 
     start() { return this.awaitable.start(); }

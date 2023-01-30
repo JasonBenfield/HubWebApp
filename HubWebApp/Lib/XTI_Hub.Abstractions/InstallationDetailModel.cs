@@ -7,7 +7,8 @@ public sealed record InstallationDetailModel
     InstallLocationModel InstallLocation,
     InstallationModel Installation,
     XtiVersionModel Version,
-    AppModel App
+    AppModel App,
+    AppRequestModel MostRecentRequest
 )
 {
     public InstallationDetailModel()
@@ -16,7 +17,8 @@ public sealed record InstallationDetailModel
             new InstallLocationModel(),
             new InstallationModel(),
             new XtiVersionModel(),
-            new AppModel()
+            new AppModel(),
+            new AppRequestModel()
         )
     {
     }

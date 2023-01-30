@@ -30,6 +30,7 @@ interface IInstallationDetailModel {
 	Installation: IInstallationModel;
 	Version: IXtiVersionModel;
 	App: IAppModel;
+	MostRecentRequest: IAppRequestModel;
 }
 interface IInstallLocationModel {
 	ID: number;
@@ -82,6 +83,15 @@ interface IAppName {
 interface IModifierKey {
 	Value: string;
 	DisplayText: string;
+}
+interface IAppRequestModel {
+	ID: number;
+	SessionID: number;
+	Path: string;
+	ResourceID: number;
+	ModifierID: number;
+	TimeStarted: Date;
+	TimeEnded: Date;
 }
 interface IGetPendingDeletesRequest {
 	MachineName: string;
@@ -529,15 +539,6 @@ interface IAppLogEntryDetailModel {
 	User: IAppUserModel;
 	SourceLogEntryID: number;
 	TargetLogEntryID: number;
-}
-interface IAppRequestModel {
-	ID: number;
-	SessionID: number;
-	Path: string;
-	ResourceID: number;
-	ModifierID: number;
-	TimeStarted: Date;
-	TimeEnded: Date;
 }
 interface IAppSessionModel {
 	ID: number;

@@ -30,6 +30,7 @@ export class RequestPanel implements IPanel {
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
     private readonly userName: TextValueFormGroup;
+    private readonly currentInstallation: TextValueFormGroup;
     private readonly timeRange: TextValueFormGroup;
     private readonly path: TextValueFormGroup;
     private readonly installationLink: TextLinkComponent;
@@ -42,6 +43,7 @@ export class RequestPanel implements IPanel {
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
         this.userName = new TextValueFormGroup(view.userName);
+        this.currentInstallation = new TextValueFormGroup(view.currentInstallation);
         this.timeRange = new TextValueFormGroup(view.timeRange);
         this.path = new TextValueFormGroup(view.path);
         this.installationLink = new TextLinkComponent(view.installationLink);
@@ -66,6 +68,13 @@ export class RequestPanel implements IPanel {
         this.versionKey.setText(detail.Version.VersionKey.DisplayText);
         this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
         this.userName.setValue(detail.User.UserName.DisplayText);
+        if (detail.Installation.IsCurrent) {
+            this.currentInstallation.setValue('Current');
+            this.view.showCurrentInstallation();
+        }
+        else {
+            this.view.hideCurrentInstallation();
+        }
         let timeRange: string;
         const timeStarted = new FormattedDate(detail.Request.TimeStarted).formatDateTime();
         if (detail.Request.TimeEnded.getFullYear() === 9999) {

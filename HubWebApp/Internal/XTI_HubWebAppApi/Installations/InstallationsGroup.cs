@@ -8,7 +8,12 @@ public sealed class InstallationsGroup : AppApiGroupWrapper
         Index = source.AddAction(nameof(Index), () => sp.GetRequiredService<IndexAction>());
         Installation = source.AddAction(nameof(Installation), () => sp.GetRequiredService<InstallationViewAction>());
         GetInstallationDetail = source.AddAction(nameof(GetInstallationDetail), () => sp.GetRequiredService<GetInstallationDetailAction>());
-        GetPendingDeletes = source.AddAction(nameof(GetPendingDeletes), () => sp.GetRequiredService<GetPendingDeletesAction>());
+        GetPendingDeletes = source.AddAction
+        (
+            nameof(GetPendingDeletes),
+            () => sp.GetRequiredService<GetPendingDeletesAction>(),
+            access: Access.WithAllowed(HubInfo.Roles.InstallationManager)
+        );
         RequestDelete = source.AddAction(nameof(RequestDelete), () => sp.GetRequiredService<RequestDeleteAction>());
         BeginDelete = source.AddAction(nameof(BeginDelete), () => sp.GetRequiredService<BeginDeleteAction>());
         Deleted = source.AddAction(nameof(Deleted), () => sp.GetRequiredService<DeletedAction>());

@@ -2,7 +2,9 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
+import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
 import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { SessionPanelView } from "./SessionPanelView";
 
@@ -21,6 +23,7 @@ class Result {
 export class SessionPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
+    private readonly timeRange: TextValueFormGroup;
     private readonly userName: TextValueFormGroup;
     private readonly remoteAddress: TextValueFormGroup;
     private readonly userAgent: TextValueFormGroup;
@@ -30,6 +33,7 @@ export class SessionPanel implements IPanel {
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
+        this.timeRange = new TextValueFormGroup(view.timeRange);
         this.userName = new TextValueFormGroup(view.userName);
         this.remoteAddress = new TextValueFormGroup(view.remoteAddress);
         this.userAgent = new TextValueFormGroup(view.userAgent);
@@ -49,6 +53,25 @@ export class SessionPanel implements IPanel {
             'Loading...',
             () => this.hubApi.Logs.GetSessionDetail(this.sessionID)
         );
+        let timeRange: string;
+        const timeStarted = new FormattedDate(detail.Session.TimeStarted).formatDateTime();
+        if (detail.Session.TimeEnded.getFullYear() === 9999) {
+            timeRange = `${timeStarted} to ???`;
+        }
+        else {
+            let timeEnded: string;
+            const dateStarted = new Date(detail.Session.TimeStarted.getFullYear(), detail.Session.TimeStarted.getMonth(), detail.Session.TimeStarted.getDate());
+            const dateEnded = new Date(detail.Session.TimeEnded.getFullYear(), detail.Session.TimeEnded.getMonth(), detail.Session.TimeEnded.getDate());
+            if (dateStarted.getTime() === dateEnded.getTime()) {
+                timeEnded = new FormattedDate(detail.Session.TimeEnded).formatTime();
+            }
+            else {
+                timeEnded = new FormattedDate(detail.Session.TimeEnded).formatDateTime();
+            }
+            const ts = TimeSpan.dateDiff(detail.Session.TimeEnded, detail.Session.TimeStarted);
+            timeRange = `${timeStarted} to ${timeEnded} [ ${ts} ]`;
+        }
+        this.timeRange.setValue(timeRange);
         this.userName.setValue(detail.User.UserName.DisplayText);
         if (detail.Session.RemoteAddress) {
             this.remoteAddress.setValue(detail.Session.RemoteAddress);

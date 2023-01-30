@@ -13,6 +13,7 @@ import { HubTheme } from "../../HubTheme";
 export class SessionPanelView extends GridView {
 
     readonly alert: MessageAlertView;
+    readonly timeRange: FormGroupTextView;
     readonly userName: FormGroupTextView;
     readonly remoteAddress: FormGroupTextView;
     readonly userAgent: FormGroupTextView;
@@ -28,8 +29,14 @@ export class SessionPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
         const gridContainer = mainContent.addView(FormGroupGridView);
+        this.timeRange = gridContainer.addFormGroup(FormGroupTextView);
+        this.timeRange.caption.setText('Time Range');
         this.userName = gridContainer.addFormGroup(FormGroupTextView);
         this.userName.caption.setText('User Name');
+        this.remoteAddress = gridContainer.addFormGroup(FormGroupTextView);
+        this.remoteAddress.caption.setText('Remote Address');
+        this.userAgent = gridContainer.addFormGroup(FormGroupTextView);
+        this.userAgent.caption.setText('User Agent');
         const nav = mainContent.addView(NavView);
         nav.pills();
         nav.setFlexCss(new FlexCss().column());

@@ -11,7 +11,7 @@ export class ModCategoryComponentView extends CardView {
         super(container);
         this.titleHeader = this.addCardTitleHeader();
         this.alert = this.addCardAlert();
-        const list = this.addUnorderedListGroup(TextListGroupItemView);
+        const list = this.addListGroup(TextListGroupItemView);
         this.modCategoryName = list.addListGroupItem();
     }
 }
