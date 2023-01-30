@@ -11,9 +11,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.33" />
-		<PackageReference Include="XTI_Core" Version="1.10.18" />
-		<PackageReference Include="XTI_Processes" Version="1.10.18" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.34-dev230130113854328" />
+		<PackageReference Include="XTI_Core" Version="1.10.19-dev230130112517125" />
+		<PackageReference Include="XTI_Processes" Version="1.10.19-dev230130112517125" />
 	</ItemGroup>
 
 </Project>

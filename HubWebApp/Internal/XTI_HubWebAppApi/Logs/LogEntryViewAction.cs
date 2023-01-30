@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class LogEntryViewAction : AppAction<LogEntryQueryRequest, WebViewResult>
+internal sealed class LogEntryViewAction : AppAction<LogEntryRequest, WebViewResult>
 {
     private readonly WebViewResultFactory viewFactory;
 
@@ -9,6 +9,6 @@ internal sealed class LogEntryViewAction : AppAction<LogEntryQueryRequest, WebVi
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(LogEntryQueryRequest model, CancellationToken stoppingToken) =>
-        Task.FromResult(viewFactory.Default("logEntries", "Event Log"));
+    public Task<WebViewResult> Execute(LogEntryRequest model, CancellationToken stoppingToken) =>
+        Task.FromResult(viewFactory.Default("logEntry", "Log Entry"));
 }

@@ -1,5 +1,5 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
+﻿using XTI_Core;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -16,12 +16,22 @@ public sealed class AppRequest
     )
     {
         this.factory = factory;
-        this.record = record ?? new AppRequestEntity();
+        this.record = record;
         ID = this.record.ID;
     }
 
-    public int ID { get; }
+    internal int ID { get; }
+
     public bool HasEnded() => record.TimeEnded < DateTimeOffset.MaxValue;
+
+    public Task<Resource> Resource() => factory.Resources.Resource(record.ResourceID);
+
+    public Task<Modifier> Modifier() => factory.Modifiers.Modifier(record.ModifierID);
+
+    public Task<Installation> Installation() =>
+        factory.Installations.InstallationOrDefault(record.InstallationID);
+
+    public Task<AppSession> Session() => factory.Sessions.Session(record.SessionID);
 
     public bool HappendOnOrBefore(DateTimeOffset before)
     {
@@ -41,36 +51,50 @@ public sealed class AppRequest
 
     public Task<LogEntry> LogEvent
     (
-        string eventKey,
+        string logEntryKey,
         AppEventSeverity severity,
         DateTimeOffset timeOccurred,
         string caption,
         string message,
         string detail,
-        int actualCount
+        int actualCount,
+        string sourceLogEntryKey
     ) => factory.LogEntries.LogEvent
         (
-            this, eventKey, timeOccurred, severity, caption, message, detail, actualCount
+            this,
+            logEntryKey,
+            timeOccurred,
+            severity,
+            caption,
+            message,
+            detail,
+            actualCount,
+            sourceLogEntryKey
         );
 
     public Task End(DateTimeOffset timeEnded)
         => factory.DB
             .Requests
-            .Update(record, r =>
-            {
-                r.TimeEnded = timeEnded;
-            });
+            .Update
+            (
+                record,
+                r =>
+                {
+                    r.TimeEnded = timeEnded;
+                }
+            );
 
-    public AppRequestModel ToModel() => new AppRequestModel
-    {
-        ID = ID,
-        SessionID = record.SessionID,
-        Path = record.Path,
-        ResourceID = record.ResourceID,
-        ModifierID = record.ModifierID,
-        TimeStarted = record.TimeStarted,
-        TimeEnded = record.TimeEnded
-    };
+    public AppRequestModel ToModel() =>
+        new AppRequestModel
+        (
+            ID: ID,
+            SessionID: record.SessionID,
+            Path: record.Path,
+            ResourceID: record.ResourceID,
+            ModifierID: record.ModifierID,
+            TimeStarted: record.TimeStarted,
+            TimeEnded: record.TimeEnded
+        );
 
     public override string ToString() => $"{nameof(AppRequest)} {ID}";
 }

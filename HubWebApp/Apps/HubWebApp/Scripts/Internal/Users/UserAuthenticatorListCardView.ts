@@ -11,6 +11,6 @@ export class UserAuthenticatorListCardView extends CardView {
         const title = this.addCardTitleHeader();
         title.setText('Authenticators');
         this.alert = this.addCardAlert();
-        this.userAuthenticators = this.addUnorderedListGroup(TextListGroupItemView);
+        this.userAuthenticators = this.addListGroup(TextListGroupItemView);
     }
 }

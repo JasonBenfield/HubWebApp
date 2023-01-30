@@ -92,7 +92,7 @@ public sealed class HubFactory
 
     public AppLogEntryRepository LogEntries { get => logEntries ??= new(this); }
 
-    internal LogEntry CreateEvent(LogEntryEntity record) => new(record);
+    internal LogEntry CreateLogEntry(LogEntryEntity record) => new(this, record);
 
     private InstallLocationRepository? installLocations;
 

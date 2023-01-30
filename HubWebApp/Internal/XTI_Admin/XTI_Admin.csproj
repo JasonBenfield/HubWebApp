@@ -13,7 +13,7 @@
 	<ItemGroup>
 		<PackageReference Include="XTI_GitHub" Version="1.2.14" />
 		<PackageReference Include="XTI_Git" Version="1.2.14" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.18" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.19-dev230130112517125" />
 	</ItemGroup>
 
 	<ItemGroup>

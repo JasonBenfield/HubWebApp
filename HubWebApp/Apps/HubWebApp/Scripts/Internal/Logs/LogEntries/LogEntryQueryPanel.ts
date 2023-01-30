@@ -7,13 +7,14 @@ import { HubAppApi } from "../../../Lib/Api/HubAppApi";
 import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Api/ODataExpandedLogEntryColumnsBuilder";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
+import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 
 interface IResult {
-    menuRequested?: {};
+    menuRequested?: boolean;
 }
 
 class Result {
-    static menuRequested() { return new Result({ menuRequested: {} }); }
+    static menuRequested() { return new Result({ menuRequested: true }); }
 
     private constructor(private readonly result: IResult) { }
 
@@ -24,9 +25,10 @@ export class LogEntryQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly odataComponent: ODataComponent<IExpandedLogEntry>;
 
-    constructor(hubApi: HubAppApi, private readonly view: LogEntryQueryPanelView) {
+    constructor(private readonly hubApi: HubAppApi, private readonly view: LogEntryQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         const columns = new ODataExpandedLogEntryColumnsBuilder(this.view.columns);
+        columns.EventID.require();
         columns.SeverityText.setDisplayText('Severity');
         const options = new ODataComponentOptionsBuilder<IExpandedLogEntry>('hub_logEntries', columns);
         options.query.select.addFields(
@@ -61,7 +63,13 @@ export class LogEntryQueryPanel implements IPanel {
             new ApiODataClient(hubApi.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
+        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
+    }
+
+    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
+        const logEntryID: number = eventArgs.record['EventID'];
+        this.hubApi.Logs.LogEntry.open({ LogEntryID: logEntryID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

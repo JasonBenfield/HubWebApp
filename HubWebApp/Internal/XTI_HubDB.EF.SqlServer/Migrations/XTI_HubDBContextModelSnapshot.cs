@@ -8,19 +8,19 @@ using XTI_HubDB.EF;
 
 #nullable disable
 
-namespace XTI_HubDB.EF.SqlServer.Migrations
+namespace XTIHubDB.EF.SqlServer.Migrations
 {
     [DbContext(typeof(HubDbContext))]
-    partial class XTI_HubDBContextModelSnapshot : ModelSnapshot
+    partial class XTIHubDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("XTI_HubDB.Entities.AppEntity", b =>
                 {
@@ -28,7 +28,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("DisplayText")
                         .IsRequired()
@@ -72,7 +72,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("ActualCount")
                         .HasColumnType("int");
@@ -127,7 +127,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
@@ -156,7 +156,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("RemoteAddress")
                         .IsRequired()
@@ -203,7 +203,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -247,7 +247,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("ModifierID")
                         .HasColumnType("int");
@@ -275,7 +275,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
@@ -299,7 +299,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("AuthenticatorKey")
                         .IsRequired()
@@ -323,8 +323,6 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                 {
                     b.Property<int>("InstallationID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InstallationID"), 1L, 1);
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
@@ -390,15 +388,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("InstallationID");
 
-                    b.ToView("ExpandedInstallations");
+                    b.ToTable((string)null);
+
+                    b.ToView("ExpandedInstallations", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ExpandedLogEntry", b =>
                 {
                     b.Property<int>("EventID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventID"), 1L, 1);
 
                     b.Property<int>("ActualCount")
                         .HasColumnType("int");
@@ -525,15 +523,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("EventID");
 
-                    b.ToView("ExpandedLogEntries");
+                    b.ToTable((string)null);
+
+                    b.ToView("ExpandedLogEntries", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ExpandedRequest", b =>
                 {
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"), 1L, 1);
 
                     b.Property<int>("ActualCount")
                         .HasColumnType("int");
@@ -659,15 +657,15 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("RequestID");
 
-                    b.ToView("ExpandedRequests");
+                    b.ToTable((string)null);
+
+                    b.ToView("ExpandedRequests", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.ExpandedSession", b =>
                 {
                     b.Property<int>("SessionID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SessionID"), 1L, 1);
 
                     b.Property<DateTimeOffset?>("LastRequestTime")
                         .HasColumnType("datetimeoffset");
@@ -713,7 +711,30 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
 
                     b.HasKey("SessionID");
 
-                    b.ToView("ExpandedSessions");
+                    b.ToTable((string)null);
+
+                    b.ToView("ExpandedSessions", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.InstallLocationEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("QualifiedMachineName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("QualifiedMachineName")
+                        .IsUnique();
+
+                    b.ToTable("InstallLocations", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.InstallationEntity", b =>
@@ -722,7 +743,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AppVersionID")
                         .HasColumnType("int");
@@ -757,34 +778,13 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("Installations", (string)null);
                 });
 
-            modelBuilder.Entity("XTI_HubDB.Entities.InstallLocationEntity", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
-
-                    b.Property<string>("QualifiedMachineName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("QualifiedMachineName")
-                        .IsUnique();
-
-                    b.ToTable("InstallLocations", (string)null);
-                });
-
             modelBuilder.Entity("XTI_HubDB.Entities.LogEntryEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("ActualCount")
                         .HasColumnType("int");
@@ -834,7 +834,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AppID")
                         .HasColumnType("int");
@@ -858,7 +858,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -894,7 +894,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -924,7 +924,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AppVersionID")
                         .HasColumnType("int");
@@ -956,7 +956,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -983,7 +983,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<bool>("IsAllowed")
                         .HasColumnType("bit");
@@ -1004,13 +1004,36 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.ToTable("ResourceRoles", (string)null);
                 });
 
+            modelBuilder.Entity("XTI_HubDB.Entities.SourceLogEntryEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("SourceID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TargetID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SourceID");
+
+                    b.HasIndex("TargetID");
+
+                    b.ToTable("SourceLogEntries", (string)null);
+                });
+
             modelBuilder.Entity("XTI_HubDB.Entities.StoredObjectEntity", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -1043,7 +1066,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("AuthenticatorID")
                         .HasColumnType("int");
@@ -1075,7 +1098,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("DisplayText")
                         .IsRequired()
@@ -1101,7 +1124,7 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1325,6 +1348,21 @@ namespace XTI_HubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.AppRoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.SourceLogEntryEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.LogEntryEntity", null)
+                        .WithMany()
+                        .HasForeignKey("SourceID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("XTI_HubDB.Entities.LogEntryEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TargetID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

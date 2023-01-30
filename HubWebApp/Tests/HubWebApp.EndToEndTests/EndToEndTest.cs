@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NUnit.Framework;
+using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Credentials;

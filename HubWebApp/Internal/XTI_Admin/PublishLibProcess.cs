@@ -1,4 +1,5 @@
-﻿using XTI_Core;
+﻿using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Git.Abstractions;
 using XTI_Processes;
 
@@ -13,7 +14,7 @@ internal sealed class PublishLibProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string semanticVersion)
+    public async Task Run(AppKey appKey, AppVersionKey versionKey, string semanticVersion)
     {
         Console.WriteLine("Packing Lib Projects");
         var libDir = Path.Combine(Environment.CurrentDirectory, "Lib");
@@ -46,7 +47,11 @@ internal sealed class PublishLibProcess
                     .AddArgument("o", new Quoted(outputPath))
                     .UseArgumentValueDelimiter("=")
                     .AddArgument("p:PackageVersion", semanticVersion)
-                    .AddArgument("p:RepositoryUrl", repositoryUrl);
+                    .AddArgument("p:RepositoryUrl", repositoryUrl)
+                    .AddArgument("p:XtiAppName", new Quoted(appKey.Name.DisplayText))
+                    .AddArgument("p:XtiAppType", new Quoted(appKey.Type.DisplayText))
+                    .AddArgument("p:XtiAppKey", new Quoted(appKey.Format()))
+                    .AddArgument("p:XtiVersion", new Quoted(versionKey.DisplayText));
                 if (!xtiEnv.IsProduction())
                 {
                     packProcess

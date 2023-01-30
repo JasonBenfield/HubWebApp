@@ -20,6 +20,13 @@ public sealed class AppSessionRepository
         return factory.CreateSession(record ?? throw new Exception($"Session '{sessionKey}' not found"));
     }
 
+    public async Task<AppSession> Session(int id)
+    {
+        var record = await factory.DB.Sessions.Retrieve()
+            .FirstOrDefaultAsync(s => s.ID == id);
+        return factory.CreateSession(record ?? throw new Exception($"Session not found with ID {id}"));
+    }
+
     public async Task<AppSession> SessionOrPlaceHolder(string sessionKey, DateTimeOffset now)
     {
         var record = await GetSession(sessionKey);
@@ -132,7 +139,7 @@ public sealed class AppSessionRepository
             );
 
     public Task PurgeLogs(DateTimeOffset since) => factory.Transaction(() => _PurgeLogs(since));
-    
+
     private async Task _PurgeLogs(DateTimeOffset since)
     {
         var sessionIDs = factory.DB
@@ -143,26 +150,23 @@ public sealed class AppSessionRepository
             .Requests.Retrieve()
             .Where(r => sessionIDs.Contains(r.SessionID))
             .Select(r => r.ID);
-        var entriesToDelete = await factory.DB.LogEntries.Retrieve()
+        var entryIDs = factory.DB.LogEntries.Retrieve()
             .Where(e => requestIDs.Contains(e.RequestID))
-            .ToArrayAsync();
-        foreach(var entry in entriesToDelete)
-        {
-            await factory.DB.LogEntries.Delete(entry);
-        }
-        var requests = await factory.DB.Requests.Retrieve()
+            .Select(e => e.ID);
+        await factory.DB.SourceLogEntries.Retrieve()
+            .Where(src => entryIDs.Contains(src.SourceID))
+            .ExecuteDeleteAsync();
+        await factory.DB.SourceLogEntries.Retrieve()
+            .Where(src => entryIDs.Contains(src.TargetID))
+            .ExecuteDeleteAsync();
+        await factory.DB.LogEntries.Retrieve()
+            .Where(e => requestIDs.Contains(e.RequestID))
+            .ExecuteDeleteAsync();
+        await factory.DB.Requests.Retrieve()
             .Where(r => requestIDs.Contains(r.ID))
-            .ToArrayAsync();
-        foreach(var request in requests)
-        {
-            await factory.DB.Requests.Delete(request);
-        }
-        var sessions = await factory.DB.Sessions.Retrieve()
+            .ExecuteDeleteAsync();
+        await factory.DB.Sessions.Retrieve()
             .Where(s => sessionIDs.Contains(s.ID))
-            .ToArrayAsync();
-        foreach (var session in sessions)
-        {
-            await factory.DB.Sessions.Delete(session);
-        }
+            .ExecuteDeleteAsync();
     }
 }

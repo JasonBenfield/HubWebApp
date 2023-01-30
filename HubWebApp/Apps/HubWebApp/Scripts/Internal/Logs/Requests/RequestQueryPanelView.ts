@@ -1,4 +1,5 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
 import { ODataComponentView } from "@jasonbenfield/sharedwebapp/OData/ODataComponentView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
@@ -6,16 +7,13 @@ import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { HubTheme } from "../../HubTheme";
 import { ODataExpandedRequestColumnViewsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
-import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
-import { RequestDropdownView } from "./RequestDropdownView";
+import { HubTheme } from "../../HubTheme";
 
 export class RequestQueryPanelView extends GridView {
     readonly menuButton: ButtonCommandView;
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedRequestColumnViewsBuilder;
-    readonly dropdownColumn: ODataColumnViewBuilder;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -35,8 +33,7 @@ export class RequestQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         this.odataComponent = mainContent.addView(ODataComponentView);
-        this.dropdownColumn = new ODataColumnViewBuilder();
-        this.dropdownColumn.dataCell(RequestDropdownView);
+        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedRequestColumnViewsBuilder();
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)

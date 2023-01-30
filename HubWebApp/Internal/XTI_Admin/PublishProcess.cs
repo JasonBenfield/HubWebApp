@@ -65,7 +65,7 @@ internal sealed class PublishProcess
             {
                 await uploadReleaseAssets(appKey, versionKey, release);
             }
-            await new PublishLibProcess(scopes).Run(semanticVersion);
+            await new PublishLibProcess(scopes).Run(appKey, versionKey, semanticVersion);
             Environment.CurrentDirectory = slnDir;
         }
         if (xtiEnv.IsProduction())
@@ -212,10 +212,6 @@ internal sealed class PublishProcess
             .UseArgumentValueDelimiter("=")
             .AddArgument("p:PublishProfile", "Default")
             .AddArgument("p:PublishDir", publishAppDir)
-            .AddArgument("p:XtiAppName", appKey.Name.DisplayText)
-            .AddArgument("p:XtiAppType", appKey.Type.DisplayText)
-            .AddArgument("p:XtiAppKey", appKey.Format())
-            .AddArgument("p:XtiVersion", versionKey.DisplayText)
             .AddArgument("p:TypeScriptCompileBlocked", "true");
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();

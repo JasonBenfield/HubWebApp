@@ -1,25 +1,21 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { ModalMessageAlert } from "@jasonbenfield/sharedwebapp/Components/ModalMessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
+import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { InstallationQueryType } from "../../Lib/Api/InstallationQueryType";
 import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Api/ODataExpandedInstallationColumnsBuilder";
-import { Url } from "@jasonbenfield/sharedwebapp/Url";
-import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
-import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
-import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { InstallationDropdownView } from "./InstallationDropdownView";
-import { InstallationDropdown } from "./InstallationDropdown";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
-import { ModalMessageAlert } from "@jasonbenfield/sharedwebapp/Components/ModalMessageAlert";
-import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { InstallationDataRow } from "./InstallationDataRow";
-import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
 
 interface IResult {
     menuRequested?: boolean;
@@ -37,7 +33,6 @@ export class InstallationQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly queryTypes: ListGroup<TextComponent, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedInstallation>;
-    private readonly modalAlert: ModalMessageAlert;
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: InstallationQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -74,11 +69,6 @@ export class InstallationQueryPanel implements IPanel {
             columns.RequestCount
         );
         options.query.orderBy.addDescending(columns.TimeInstallationAdded);
-        const dropdownColumn = options.startColumns.add('Dropdown', this.view.dropdownColumn);
-        dropdownColumn.setDisplayText('');
-        dropdownColumn.setCreateDataCell(
-            (rowIndex, column, record, formatter, view: InstallationDropdownView) => new InstallationDropdown(hubApi, rowIndex, column, record, view)
-        );
         options.saveChanges({
             select: true,
             filter: true,
@@ -94,27 +84,11 @@ export class InstallationQueryPanel implements IPanel {
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
-        this.modalAlert = new ModalMessageAlert(view.modalAlert);
     }
 
     private onCellClicked(args: ODataCellClickedEventArgs) {
-        if (this.view.isDeleteButton(args.element)) {
-            const installationID = args.record['InstallationID'] as number;
-            this.modalAlert.alert(
-                async (a) => {
-                    a.info('Deleting...');
-                    await this.hubApi.Installations.RequestDelete({
-                        InstallationID: installationID
-                    });
-                    a.success('The installation has been scheduled for deletion.');
-                    new DelayedAction(
-                        () => a.clear(),
-                        2000
-                    ).execute();
-                    this.odataComponent.refresh();
-                }
-            );
-        }
+        const installationID: number = args.record['InstallationID'];
+        this.hubApi.Installations.Installation.open({ InstallationID: installationID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

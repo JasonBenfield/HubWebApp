@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -28,29 +29,56 @@ public sealed class AppSession
         string path,
         DateTimeOffset timeRequested,
         int actualCount
-    )
-        => factory.Requests.AddOrUpdate(this, requestKey, installation, path, timeRequested, actualCount);
+    ) => factory.Requests.AddOrUpdate
+        (
+            this,
+            requestKey,
+            installation,
+            path,
+            timeRequested,
+            actualCount
+        );
 
-    public Task Authenticate(AppUser user)
-        => factory.DB
+    public Task Authenticate(AppUser user) =>
+        factory.DB
             .Sessions
-            .Update(record, r =>
-            {
-                r.UserID = user.ID;
-            });
+            .Update
+            (
+                record,
+                r =>
+                {
+                    r.UserID = user.ID;
+                }
+            );
 
-    public Task End(DateTimeOffset timeEnded)
-        => factory.DB
+    public Task End(DateTimeOffset timeEnded) =>
+        factory.DB
             .Sessions
-            .Update(record, r =>
-            {
-                r.TimeEnded = timeEnded;
-            });
+            .Update
+            (
+                record,
+                r =>
+                {
+                    r.TimeEnded = timeEnded;
+                }
+            );
 
     public Task<AppRequest[]> Requests() => factory.Requests.RetrieveBySession(this);
 
-    public Task<AppRequest[]> MostRecentRequests(int howMany)
-        => factory.Requests.RetrieveMostRecent(this, howMany);
+    public Task<AppRequest[]> MostRecentRequests(int howMany) =>
+        factory.Requests.RetrieveMostRecent(this, howMany);
 
-    public override string ToString() => $"{nameof(AppSession)} {ID}";
+    public Task<AppUser> User() => factory.Users.User(record.UserID);
+
+    public AppSessionModel ToModel() =>
+        new AppSessionModel
+        (
+            ID: record.ID,
+            TimeStarted: record.TimeStarted,
+            TimeEnded: record.TimeEnded,
+            RemoteAddress: record.RemoteAddress,
+            UserAgent: record.UserAgent
+        );
+
+    public override string ToString() => $"{nameof(AppSession)} {record.ID}";
 }

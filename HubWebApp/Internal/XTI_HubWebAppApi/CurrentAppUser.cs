@@ -27,8 +27,14 @@ public sealed class CurrentAppUser
 
     public async Task<AppUserGroupPermission> GetPermissionsToUser(AppUser user)
     {
-        var currentUser = await Value();
         var userGroup = await user.UserGroup();
+        var permission = await GetPermissionsToUserGroup(userGroup);
+        return permission;
+    }
+
+    public async Task<AppUserGroupPermission> GetPermissionsToUserGroup(AppUserGroup userGroup)
+    {
+        var currentUser = await Value();
         var userGroupPermission = await currentUser.GetUserGroupPermission(userGroup);
         return userGroupPermission;
     }

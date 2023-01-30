@@ -1,4 +1,5 @@
-﻿using XTI_Core;
+﻿using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Git;
 using XTI_GitHub;
 
@@ -35,6 +36,9 @@ internal sealed class PublishLibCommand : ICommand
         {
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
+        var versionKey = xtiEnv.IsProduction()
+            ? new VersionKeyFromCurrentBranch(scopes).Value()
+            : AppVersionKey.Current;
         var slnDir = Environment.CurrentDirectory;
         var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
         foreach(var appKey in appKeys)
@@ -44,7 +48,7 @@ internal sealed class PublishLibCommand : ICommand
             {
                 Environment.CurrentDirectory = projectDir;
             }
-            await new PublishLibProcess(scopes).Run(semanticVersion);
+            await new PublishLibProcess(scopes).Run(appKey, versionKey, semanticVersion);
             Environment.CurrentDirectory = slnDir;
         }
     }

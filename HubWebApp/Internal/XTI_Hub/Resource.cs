@@ -17,6 +17,7 @@ public sealed class Resource
     }
 
     public int ID { get; }
+
     public ResourceName Name() => new ResourceName(record.Name);
 
     public Task AllowAnonymous() => setIsAnonymousAllowed(true);
@@ -35,11 +36,10 @@ public sealed class Resource
                 }
             );
 
-    public Task<AppRole[]> AllowedRoles()
-        => factory.Roles.AllowedRolesForResource(this);
+    public Task<AppRole[]> AllowedRoles() => factory.Roles.AllowedRolesForResource(this);
 
-    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles)
-        => factory.DB.Transaction(() => setRoleAccess(allowedRoles));
+    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles) =>
+        factory.DB.Transaction(() => setRoleAccess(allowedRoles));
 
     private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles)
     {
@@ -75,8 +75,8 @@ public sealed class Resource
         }
     }
 
-    private Task addResourceRole(AppRole role, bool isAllowed)
-        => factory.DB
+    private Task addResourceRole(AppRole role, bool isAllowed) =>
+        factory.DB
             .ResourceRoles
             .Create
             (
@@ -88,14 +88,16 @@ public sealed class Resource
                 }
             );
 
-    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
-        => factory.Requests.MostRecentForResource(this, howMany);
+    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>
+        factory.Requests.MostRecentForResource(this, howMany);
 
-    public Task<LogEntry[]> MostRecentErrorEvents(int howMany)
-        => factory.LogEntries.MostRecentErrorsForResource(this, howMany);
+    public Task<LogEntry[]> MostRecentErrorEvents(int howMany) =>
+        factory.LogEntries.MostRecentErrorsForResource(this, howMany);
 
-    public ResourceModel ToModel()
-        => new ResourceModel
+    public Task<ResourceGroup> Group() => factory.Groups.Group(record.GroupID);
+
+    public ResourceModel ToModel() =>
+        new ResourceModel
         {
             ID = ID,
             Name = Name(),

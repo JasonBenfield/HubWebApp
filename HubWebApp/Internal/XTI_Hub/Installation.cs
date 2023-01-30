@@ -18,6 +18,8 @@ public sealed class Installation
 
     internal int ID { get => entity.ID; }
 
+    public Task<InstallLocation> Location() => hubFactory.InstallLocations.Location(entity.LocationID);
+
     public Task BeginInstallation() => hubFactory.Installations.BeginInstallation(entity);
 
     public Task Installed() => hubFactory.Installations.Installed(entity);
@@ -41,7 +43,11 @@ public sealed class Installation
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName groupName) =>
         hubFactory.Groups.GroupOrDefault(entity.AppVersionID, groupName);
 
-    public InstallationModel ToModel() => new InstallationModel(ID, Status(), entity.IsCurrent, entity.Domain, entity.SiteName);
+    public Task<AppRequest[]> MostRecentRequests(int howMany) =>
+        hubFactory.Requests.MostRecentForInstallation(this, howMany);
+
+    public InstallationModel ToModel() => 
+        new InstallationModel(ID, Status(), entity.IsCurrent, entity.Domain, entity.SiteName);
 
     private InstallStatus Status() => InstallStatus.Values.Value(entity.Status);
 

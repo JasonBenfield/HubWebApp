@@ -32,7 +32,7 @@ public sealed class XtiVersionRepository
         var entity = await GetVersionByName(versionName, key);
         if (entity == null)
         {
-            if(status.Equals(AppVersionStatus.Values.Current))
+            if (status.Equals(AppVersionStatus.Values.Current))
             {
                 var previousVersions = await factory.DB
                     .Versions.Retrieve()
@@ -95,29 +95,38 @@ public sealed class XtiVersionRepository
 
     public async Task<XtiVersion> StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type)
     {
-        XtiVersion? version = null;
-        await factory.DB.Transaction
+        var version = await factory.DB.Transaction
         (
-            async () =>
-            {
-                var validVersionTypes = new List<AppVersionType>(new[] { AppVersionType.Values.Major, AppVersionType.Values.Minor, AppVersionType.Values.Patch });
-                if (!validVersionTypes.Contains(type))
-                {
-                    throw new ArgumentException($"Version type {type} is not valid");
-                }
-                await AddCurrentVersionIfNotFound(versionName, timeAdded);
-                var versionNumber = new AppVersionNumber(0, 0, 0);
-                var key = await NextKey(versionName);
-                var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
-                version = factory.CreateVersion(entity);
-            }
+            () => _StartNewVersion(versionName, timeAdded, type)
         );
         return version ?? throw new ArgumentNullException(nameof(version));
     }
 
+    private async Task<XtiVersion> _StartNewVersion(AppVersionName versionName, DateTimeOffset timeAdded, AppVersionType type)
+    {
+        var validVersionTypes = new List<AppVersionType>
+        (
+            new[]
+            {
+                AppVersionType.Values.Major,
+                AppVersionType.Values.Minor,
+                AppVersionType.Values.Patch
+            }
+        );
+        if (!validVersionTypes.Contains(type))
+        {
+            throw new ArgumentException($"Version type {type} is not valid");
+        }
+        await AddCurrentVersionIfNotFound(versionName, timeAdded);
+        var versionNumber = new AppVersionNumber(0, 0, 0);
+        var key = await NextKey(versionName);
+        var entity = await AddVersion(versionName, key, timeAdded, type, AppVersionStatus.Values.New, versionNumber);
+        return factory.CreateVersion(entity);
+    }
+
     private async Task<XtiVersion> AddCurrentVersionToAppsIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys)
     {
-        XtiVersion currentVersion = await AddCurrentVersionIfNotFound(versionName, timeAdded);
+        var currentVersion = await AddCurrentVersionIfNotFound(versionName, timeAdded);
         foreach (var appKey in appKeys)
         {
             var app = await factory.Apps.App(appKey);
@@ -157,24 +166,27 @@ public sealed class XtiVersionRepository
         {
             throw new ArgumentException($"Unable to add version with key '{key.DisplayText}'");
         }
-        XtiVersionEntity? record = null;
-        await factory.DB.Transaction(async () =>
-        {
-            record = new XtiVersionEntity
+        var record = await factory.DB.Transaction
+        (
+            async () =>
             {
-                VersionName = versionName.Value,
-                VersionKey = key.Value,
-                Major = versionNumber.Major,
-                Minor = versionNumber.Minor,
-                Patch = versionNumber.Patch,
-                TimeAdded = timeAdded,
-                Description = "",
-                Status = status.Value,
-                Type = type.Value
-            };
-            await factory.DB.Versions.Create(record);
-        });
-        return record ?? throw new ArgumentNullException(nameof(record));
+                var versionEntity = new XtiVersionEntity
+                {
+                    VersionName = versionName.Value,
+                    VersionKey = key.Value,
+                    Major = versionNumber.Major,
+                    Minor = versionNumber.Minor,
+                    Patch = versionNumber.Patch,
+                    TimeAdded = timeAdded,
+                    Description = "",
+                    Status = status.Value,
+                    Type = type.Value
+                };
+                await factory.DB.Versions.Create(versionEntity);
+                return versionEntity;
+            }
+        );
+        return record;
     }
 
     public async Task<XtiVersion> Version(int id)
@@ -221,8 +233,8 @@ public sealed class XtiVersionRepository
             {
                 var unknownVersion = await AddCurrentVersionToAppsIfNotFound
                 (
-                    AppVersionName.Unknown, 
-                    DateTimeOffset.Now, 
+                    AppVersionName.Unknown,
+                    DateTimeOffset.Now,
                     new[] { AppKey.Unknown }
                 );
                 return unknownVersion.App(unknownApp);
@@ -364,19 +376,15 @@ public sealed class XtiVersionRepository
         );
     }
 
-    private async Task ArchivePreviousVersions(XtiVersionEntity version)
-    {
-        var previousVersions = await factory.DB
+    private Task ArchivePreviousVersions(XtiVersionEntity version) =>
+        factory.DB
             .Versions.Retrieve()
-            .Where(v => v.ID != version.ID && v.VersionName == version.VersionName && v.Status == AppVersionStatus.Values.Current.Value)
-            .ToArrayAsync();
-        foreach (var previousVersion in previousVersions)
-        {
-            await factory.DB.Versions.Update
+            .Where
             (
-                previousVersion, 
-                v => v.Status = AppVersionStatus.Values.Old.Value
-            );
-        }
-    }
+                v => 
+                    v.ID != version.ID && 
+                    v.VersionName == version.VersionName && 
+                    v.Status == AppVersionStatus.Values.Current.Value
+            )
+            .ExecuteUpdateAsync(p => p.SetProperty(v => v.Status, AppVersionStatus.Values.Old.Value));
 }

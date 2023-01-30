@@ -9,6 +9,7 @@ public sealed partial class HubRoleNames
 
     public string Admin { get; } = "Admin";
     public string ManageUserCache { get; } = "Manage User Cache";
+    public string InstallationManager { get; } = "Installation Manager";
     public string System { get; } = "System";
     public string Authenticator { get; } = "Authenticator";
     public string PermanentLog { get; } = "Permanent Log";

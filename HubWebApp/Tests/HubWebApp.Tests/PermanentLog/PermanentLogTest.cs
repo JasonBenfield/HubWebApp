@@ -78,7 +78,7 @@ internal sealed class PermanentLogTest
         await authenticateSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey);
-        var user = await factory.Users.User(session.UserID);
+        var user = await session.User();
         Assert.That(user.ToModel().UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
     }
 
