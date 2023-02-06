@@ -8,18 +8,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="7.0.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
 		<PackageReference Include="nunit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.18" />
-		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.8" />
-		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.33" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.19" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.9" />
+		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.34" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\Internal\XTI_Hub\XTI_Hub.csproj" />
 		<ProjectReference Include="..\..\Lib\XTI_HubAppClient.Extensions\XTI_HubAppClient.Extensions.csproj" />
 	</ItemGroup>
 

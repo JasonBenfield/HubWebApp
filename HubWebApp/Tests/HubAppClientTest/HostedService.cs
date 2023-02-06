@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using XTI_Core;
 using XTI_HubAppClient;
 
 namespace HubAppClientTest;
@@ -15,6 +16,8 @@ internal sealed class HostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+        Console.WriteLine($"xtiEnv: {xtiEnv.EnvironmentName}");
         try
         {
             var hubClient = sp.GetRequiredService<HubAppClient>();
@@ -25,6 +28,17 @@ internal sealed class HostedService : IHostedService
             Console.WriteLine($"app: {app.AppKey.Format()}");
             var version = await hubClient.Version.GetVersion("HubWebApp", "Current");
             Console.WriteLine($"verson: {version.VersionKey}");
+            var logEntries = await hubClient.LogEntryQuery.Get
+            (
+                "",
+                "$select=AppKey,RequestID,SeverityText,Caption,Message&$top=10",
+                new LogEntryQueryRequest
+                {
+                    RequestID = 1588081
+                },
+                default
+            );
+            Console.WriteLine($"logEntries: {XtiSerializer.Serialize(logEntries)}");
             var userAccess = await hubClient.AppUser.GetUserAccess
             (
                 "XTI",
@@ -42,13 +56,23 @@ internal sealed class HostedService : IHostedService
                 new UserGroupKey { UserGroupName = "XTI" }, 
                 cancellationToken
             );
-            var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "userQuery.xlsx");
-            File.WriteAllBytes(fileName, fileResult.Content);
+            fileResult.WriteToFile(AppDomain.CurrentDomain.BaseDirectory, "users.xlsx", true);
+
+            var fileResult2 = await hubClient.LogEntryQuery.ToExcel
+            (
+                "",
+                "$select=AppKey,RequestID,SeverityText,Caption,Message&$top=10",
+                new LogEntryQueryRequest(),
+                default
+            );
+            fileResult2.WriteToFile(AppDomain.CurrentDomain.BaseDirectory, "log_entries.xlsx", true);
         }
         catch(Exception ex)
         {
             Console.WriteLine(ex);
         }
+        var lifetime = sp.GetRequiredService<IHostApplicationLifetime>();
+        lifetime.StopApplication();
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

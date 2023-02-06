@@ -1,54 +1,47 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
 public sealed class AppVersion
 {
     private readonly HubFactory factory;
-    private readonly App app;
-    private readonly XtiVersion version;
 
     internal AppVersion(HubFactory factory, App app, XtiVersion version)
     {
         this.factory = factory;
-        this.app = app;
-        this.version = version;
+        App = app;
+        Version = version;
     }
 
-    public int ID { get => version.ID; }
+    public App App { get; }
 
-    public AppVersionKey Key() => version.Key();
+    public XtiVersion Version { get; }
 
     public Task<ResourceGroup> AddOrUpdateResourceGroup(ResourceGroupName name, ModifierCategory modCategory) =>
-        factory.Groups.AddOrUpdateResourceGroup(app, version, name, modCategory);
+        factory.Groups.AddOrUpdateResourceGroup(App, Version, name, modCategory);
 
-    public Task<ResourceGroup[]> ResourceGroups() => factory.Groups.Groups(app, version);
+    public Task<ResourceGroup[]> ResourceGroups() => factory.Groups.Groups(App, Version);
 
     public Task<ResourceGroup> ResourceGroup(int id) =>
-        factory.Groups.GroupForVersion(app, version, id);
+        factory.Groups.GroupForVersion(App, Version, id);
 
     public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName name) =>
-        factory.Groups.GroupOrDefault(app, version, name);
+        factory.Groups.GroupOrDefault(App, Version, name);
 
     public Task<ResourceGroup> ResourceGroupByName(ResourceGroupName name) =>
-        factory.Groups.GroupByName(app, version, name);
+        factory.Groups.GroupByName(App, Version, name);
 
     public Task<Resource> Resource(int id) =>
-        factory.Resources.ResourceForVersion(app, version, id);
+        factory.Resources.ResourceForVersion(App, Version, id);
 
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>
-        factory.Requests.MostRecentForVersion(app, version, howMany);
+        factory.Requests.MostRecentForVersion(App, Version, howMany);
 
     public Task<LogEntry[]> MostRecentLoggedErrors(int howMany) =>
-        factory.LogEntries.MostRecentLoggedErrorsForVersion(app, version, howMany);
+        factory.LogEntries.MostRecentLoggedErrorsForVersion(App, Version, howMany);
 
     internal Task<int> AppVersionID() => QueryAppVersionID().FirstAsync();
 
-    internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(app, version);
-
-    public AppModel ToAppModel() => app.ToModel();
-
-    public XtiVersionModel ToVersionModel() => version.ToModel();
+    internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(App, Version);
 }

@@ -6,13 +6,13 @@ namespace XTI_HubAppClient
     {
         private readonly HubAppClient hubClient;
         private readonly ICurrentUserName currentUserName;
-        private readonly AppVersionKey versionKey;
+        private readonly InstallationIDAccessor installationIDAccessor;
 
-        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName, AppVersionKey versionKey)
+        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName, InstallationIDAccessor installationIDAccessor)
         {
             this.hubClient = hubClient;
             this.currentUserName = currentUserName;
-            this.versionKey = versionKey;
+            this.installationIDAccessor = installationIDAccessor;
         }
 
         public async Task<UserContextModel> User()
@@ -22,14 +22,18 @@ namespace XTI_HubAppClient
             return user;
         }
 
-        public Task<UserContextModel> User(AppUserName userName) =>
-            hubClient.System.GetUserContext
+        public async Task<UserContextModel> User(AppUserName userName)
+        {
+            var installationID = await installationIDAccessor.Value();
+            var userContextModel = await hubClient.System.GetUserContext
             (
                 new GetUserContextRequest
                 {
                     UserName = userName.Value,
-                    VersionKey = versionKey.Value
+                    InstallationID = installationID
                 }
             );
+            return userContextModel;
+        }
     }
 }

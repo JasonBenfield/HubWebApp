@@ -1,0 +1,19 @@
+﻿.form-control-link {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+    background-color: transparent;
+    border: solid transparent;
+    border-width: 1px 0;
+}
+
+.form-control-link:focus {
+    outline: 0;
+}
+
+.form-control-link.form-control-sm, .form-control-link.form-control-lg {
+    padding-right: 0;
+    padding-left: 0;
+}

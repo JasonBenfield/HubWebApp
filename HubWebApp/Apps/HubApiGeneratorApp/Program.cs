@@ -14,6 +14,7 @@ await Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
         services.AddApiGenerator();
+        services.AddHttpContextAccessor();
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddHostedService<ApiGeneratorHostedService>();
     })

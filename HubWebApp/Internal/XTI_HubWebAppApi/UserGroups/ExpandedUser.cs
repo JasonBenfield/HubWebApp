@@ -9,4 +9,6 @@ public sealed class ExpandedUser
     public DateTimeOffset TimeUserAdded { get; set; }
     public int UserGroupID { get; set; }
     public string UserGroupName { get; set; } = "";
+    public DateTimeOffset TimeUserDeactivated { get; set; }
+    public bool IsActive { get; set; }
 }

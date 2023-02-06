@@ -25,6 +25,16 @@ public static class HubWebAppExtensions
         services.AddHttpClient();
         services.AddAppServices();
         services.AddWebAppServices();
+        services.AddSingleton
+        (
+            _ => new AppPageModel
+            {
+                PostStyleSheets = new[]
+                {
+                    "~/styles/css/Hub.css"
+                }
+            }
+        );
         services.AddHubDbContextForSqlServer();
         services.AddScoped<HubFactory>();
         services.AddScoped<PermanentLog>();
@@ -92,7 +102,7 @@ public static class HubWebAppExtensions
                 (
                     (api, agendaItem) =>
                     {
-                        agendaItem.Action(api.Periodic.PurgeLogs.Path)
+                        agendaItem.Action(api.Periodic.PurgeLogs)
                             .Interval(TimeSpan.FromHours(7))
                             .AddSchedule
                             (

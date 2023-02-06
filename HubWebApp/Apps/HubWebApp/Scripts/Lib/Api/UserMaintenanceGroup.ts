@@ -11,15 +11,25 @@ import { ChangePasswordForm } from "./ChangePasswordForm";
 export class UserMaintenanceGroup extends AppApiGroup {
 	constructor(events: AppApiEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'UserMaintenance');
+		this.DeactivateUserAction = this.createAction<number,IAppUserModel>('DeactivateUser', 'Deactivate User');
+		this.ReactivateUserAction = this.createAction<number,IAppUserModel>('ReactivateUser', 'Reactivate User');
 		this.EditUserAction = this.createAction<EditUserForm,IEmptyActionResult>('EditUser', 'Edit User');
 		this.ChangePasswordAction = this.createAction<ChangePasswordForm,IEmptyActionResult>('ChangePassword', 'Change Password');
 		this.GetUserForEditAction = this.createAction<number,Record<string,object>>('GetUserForEdit', 'Get User For Edit');
 	}
 	
+	readonly DeactivateUserAction: AppApiAction<number,IAppUserModel>;
+	readonly ReactivateUserAction: AppApiAction<number,IAppUserModel>;
 	readonly EditUserAction: AppApiAction<EditUserForm,IEmptyActionResult>;
 	readonly ChangePasswordAction: AppApiAction<ChangePasswordForm,IEmptyActionResult>;
 	readonly GetUserForEditAction: AppApiAction<number,Record<string,object>>;
 	
+	DeactivateUser(model: number, errorOptions?: IActionErrorOptions) {
+		return this.DeactivateUserAction.execute(model, errorOptions || {});
+	}
+	ReactivateUser(model: number, errorOptions?: IActionErrorOptions) {
+		return this.ReactivateUserAction.execute(model, errorOptions || {});
+	}
 	EditUser(model: EditUserForm, errorOptions?: IActionErrorOptions) {
 		return this.EditUserAction.execute(model, errorOptions || {});
 	}

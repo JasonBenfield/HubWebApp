@@ -1,7 +1,5 @@
 ﻿namespace XTI_HubWebAppApi.System;
 
-public sealed record GetUserContextRequest(string VersionKey, string UserName);
-
 internal sealed class GetUserContextAction : AppAction<GetUserContextRequest, UserContextModel>
 {
     private readonly HubFactory hubFactory;
@@ -17,7 +15,7 @@ internal sealed class GetUserContextAction : AppAction<GetUserContextRequest, Us
 
     public async Task<UserContextModel> Execute(GetUserContextRequest model, CancellationToken stoppingToken)
     {
-        var appContextModel = await appFromSystemUser.App(AppVersionKey.Parse(model.VersionKey));
+        var appContextModel = await appFromSystemUser.App(model.InstallationID);
         var userContext = new EfUserContext(hubFactory, appContextModel.App.AppKey, currentUserName);
         var user = await userContext.User(new AppUserName(model.UserName));
         return user;

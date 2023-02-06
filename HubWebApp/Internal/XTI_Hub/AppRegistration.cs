@@ -28,18 +28,13 @@ public sealed class AppRegistration
         }
         var modifier = await AddAppModifier(appKey, app);
         await AddManageCacheRoleToHubSystemUsers(app);
-        if (appKey.Equals(HubInfo.AppKey))
-        {
-            await AddAppModifiers();
-            await AddUserGroupModifiers();
-        }
         return app.ToModel();
     }
 
     private static async Task UpdateResourceGroupFromTemplate(App app, AppVersion appVersion, AppApiGroupTemplateModel groupTemplate)
     {
         var modCategoryName = new ModifierCategoryName(groupTemplate.ModCategory);
-        var modCategory = await app.AddModCategoryIfNotFound(modCategoryName);
+        var modCategory = await app.AddOrUpdateModCategory(modCategoryName);
         var groupName = new ResourceGroupName(groupTemplate.Name);
         var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupName, modCategory);
         if (groupTemplate.IsAnonymousAllowed)
@@ -105,50 +100,10 @@ public sealed class AppRegistration
         return appModifier;
     }
 
-    private async Task AddAppModifiers()
-    {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
-        var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var apps = await hubFactory.Apps.All();
-        var appModels = apps
-            .Select(a => a.ToModel())
-            .Where
-            (
-                a => !a.AppKey.Equals(HubInfo.AppKey) &&
-                    !a.AppKey.IsAnyAppType(AppType.Values.NotFound, AppType.Values.Package, AppType.Values.WebPackage)
-            );
-        foreach (var appModel in appModels)
-        {
-            await appModCategory.AddOrUpdateModifier
-            (
-                appModel.PublicKey,
-                appModel.ID,
-                appModel.AppKey.Format()
-            );
-        }
-    }
-
-    private async Task AddUserGroupModifiers()
-    {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
-        var userGroups = await hubFactory.UserGroups.UserGroups();
-        foreach (var userGroup in userGroups)
-        {
-            var userGroupModel = userGroup.ToModel();
-            await userGroupsModCategory.AddOrUpdateModifier
-            (
-                userGroupModel.PublicKey,
-                userGroupModel.ID,
-                userGroupModel.GroupName.DisplayText
-            );
-        }
-    }
-
     private async Task AddManageCacheRoleToHubSystemUsers(App app)
     {
         var hubSystemUsers = await hubFactory.SystemUsers.SystemUsers(HubInfo.AppKey);
-        var manageCacheRole = await app.AddRoleIfNotFound(AppRoleName.ManageUserCache);
+        var manageCacheRole = await app.AddOrUpdateRole(AppRoleName.ManageUserCache);
         foreach (var hubSystemUser in hubSystemUsers)
         {
             await hubSystemUser.AssignRole(manageCacheRole);

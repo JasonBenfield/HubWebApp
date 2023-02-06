@@ -17,6 +17,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         Sessions = new EfDataRepository<AppSessionEntity>(this);
         Requests = new EfDataRepository<AppRequestEntity>(this);
         LogEntries = new EfDataRepository<LogEntryEntity>(this);
+        SourceLogEntries = new EfDataRepository<SourceLogEntryEntity>(this);
         Apps = new EfDataRepository<AppEntity>(this);
         Versions = new EfDataRepository<XtiVersionEntity>(this);
         AppVersions = new EfDataRepository<AppXtiVersionEntity>(this);
@@ -47,6 +48,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new LogEntryEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SourceLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEntityConfiguration());
         modelBuilder.ApplyConfiguration(new XtiVersionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppXtiVersionEntityConfiguration());
@@ -75,6 +77,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<AppSessionEntity> Sessions { get; }
     public DataRepository<AppRequestEntity> Requests { get; }
     public DataRepository<LogEntryEntity> LogEntries { get; }
+    public DataRepository<SourceLogEntryEntity> SourceLogEntries { get; }
     public DataRepository<AppEntity> Apps { get; }
     public DataRepository<XtiVersionEntity> Versions { get; }
     public DataRepository<AppXtiVersionEntity> AppVersions { get; }
@@ -95,6 +98,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
+
+    public Task<TResult> Transaction<TResult>(Func<Task<TResult>> action) => unitOfWork.Execute(action);
 
     public void ClearCache() => ChangeTracker.Clear();
 }

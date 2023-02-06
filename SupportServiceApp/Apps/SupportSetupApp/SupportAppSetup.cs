@@ -25,7 +25,8 @@ internal sealed class SupportAppSetup : IAppSetup
                 new SetUserAccessRoleRequest
                 (
                     AppKey.WebApp(hubClient.AppName),
-                    new AppRoleName(hubClient.RoleNames.PermanentLog)
+                    new AppRoleName(hubClient.RoleNames.PermanentLog),
+                    new AppRoleName(hubClient.RoleNames.InstallationManager)
                 )
             )
         );

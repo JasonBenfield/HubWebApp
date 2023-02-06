@@ -16,6 +16,7 @@ internal sealed class LocalInstallServiceProcess
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var hubDbTypeAccessor = scopes.GetRequiredService<HubDbTypeAccessor>();
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
+        var options = scopes.GetRequiredService<AdminOptions>();
         using var client = httpClientFactory.CreateClient();
         using var content = new FormUrlEncodedContent
         (
@@ -24,7 +25,9 @@ internal sealed class LocalInstallServiceProcess
                 KeyValuePair.Create("command", "localInstall"),
                 KeyValuePair.Create("envName", xtiEnv.EnvironmentName),
                 KeyValuePair.Create("RemoteInstallKey", remoteInstallKey),
-                KeyValuePair.Create("HubAdministrationType", hubDbTypeAccessor.Value.ToString())
+                KeyValuePair.Create("HubAdministrationType", hubDbTypeAccessor.Value.ToString()),
+                KeyValuePair.Create("HubAppVersionKey", options.HubAppVersionKey),
+                KeyValuePair.Create("InstallationSource", options.GetInstallationSource(xtiEnv).ToString())
             }
         );
         var installServiceUrl = $"http://{machineName}:61862";

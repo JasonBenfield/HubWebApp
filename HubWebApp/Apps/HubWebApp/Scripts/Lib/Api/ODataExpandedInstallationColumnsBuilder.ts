@@ -14,7 +14,7 @@ export class ODataExpandedInstallationColumnViewsBuilder {
 	readonly AppID = new ODataColumnViewBuilder();
 	readonly AppKey = new ODataColumnViewBuilder();
 	readonly AppName = new ODataColumnViewBuilder();
-	readonly AppTypeText = new ODataColumnViewBuilder();
+	readonly AppTypeDisplayText = new ODataColumnViewBuilder();
 	readonly VersionName = new ODataColumnViewBuilder();
 	readonly VersionRelease = new ODataColumnViewBuilder();
 	readonly VersionKey = new ODataColumnViewBuilder();
@@ -44,8 +44,8 @@ export class ODataExpandedInstallationColumnsBuilder {
 		this.AppKey.setDisplayText('App Key');
 		this.AppName = new ODataColumnBuilder('AppName', new SourceType('String'), views.AppName);
 		this.AppName.setDisplayText('App Name');
-		this.AppTypeText = new ODataColumnBuilder('AppTypeText', new SourceType('String'), views.AppTypeText);
-		this.AppTypeText.setDisplayText('App Type Text');
+		this.AppTypeDisplayText = new ODataColumnBuilder('AppTypeDisplayText', new SourceType('String'), views.AppTypeDisplayText);
+		this.AppTypeDisplayText.setDisplayText('App Type Display Text');
 		this.VersionName = new ODataColumnBuilder('VersionName', new SourceType('String'), views.VersionName);
 		this.VersionName.setDisplayText('Version Name');
 		this.VersionRelease = new ODataColumnBuilder('VersionRelease', new SourceType('String'), views.VersionRelease);
@@ -72,7 +72,7 @@ export class ODataExpandedInstallationColumnsBuilder {
 	readonly AppID: ODataColumnBuilder;
 	readonly AppKey: ODataColumnBuilder;
 	readonly AppName: ODataColumnBuilder;
-	readonly AppTypeText: ODataColumnBuilder;
+	readonly AppTypeDisplayText: ODataColumnBuilder;
 	readonly VersionName: ODataColumnBuilder;
 	readonly VersionRelease: ODataColumnBuilder;
 	readonly VersionKey: ODataColumnBuilder;
@@ -93,7 +93,7 @@ export class ODataExpandedInstallationColumnsBuilder {
 			AppID: this.AppID.build(),
 			AppKey: this.AppKey.build(),
 			AppName: this.AppName.build(),
-			AppTypeText: this.AppTypeText.build(),
+			AppTypeDisplayText: this.AppTypeDisplayText.build(),
 			VersionName: this.VersionName.build(),
 			VersionRelease: this.VersionRelease.build(),
 			VersionKey: this.VersionKey.build(),

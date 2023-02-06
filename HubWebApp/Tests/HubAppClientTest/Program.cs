@@ -7,12 +7,12 @@ using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
 
-await Host.CreateDefaultBuilder()
+await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
     (
         (hostContext, config) =>
         {
-            config.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", new string[0]);
+            config.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", args);
         }
     )
     .ConfigureServices
@@ -21,7 +21,9 @@ await Host.CreateDefaultBuilder()
         {
             services.AddHttpClient();
             services.AddMemoryCache();
-            services.AddFileSecretCredentials(XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
+            var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
+            services.AddSingleton(_ => xtiEnv);
+            services.AddFileSecretCredentials(xtiEnv);
             services.AddHubClientServices();
             services.AddScoped<IInstallationUserCredentials, InstallationUserCredentials>();
             services.AddScoped<InstallationUserXtiToken>();

@@ -21,7 +21,7 @@ export class AppComponent {
     async refresh() {
         const app = await this.getApp();
         this.appName.setText(app.AppKey.Name.DisplayText);
-        this.appTitle.setText(app.Title);
+        this.appTitle.setText(`${app.AppKey.Name.DisplayText} ${app.AppKey.Type.DisplayText}`);
         this.appType.setText(app.AppKey.Type.DisplayText);
     }
 

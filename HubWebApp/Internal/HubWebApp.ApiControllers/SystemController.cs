@@ -22,15 +22,15 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByTargetKey([FromBody] AddOrUpdateModifierByTargetKeyRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByTargetKey([FromBody] SystemAddOrUpdateModifierByTargetKeyRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<AddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").Execute(model, ct);
+        return api.Group("System").Action<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByModKey([FromBody] AddOrUpdateModifierByModKeyRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByModKey([FromBody] SystemAddOrUpdateModifierByModKeyRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<AddOrUpdateModifierByModKeyRequest, ModifierModel>("AddOrUpdateModifierByModKey").Execute(model, ct);
+        return api.Group("System").Action<SystemAddOrUpdateModifierByModKeyRequest, ModifierModel>("AddOrUpdateModifierByModKey").Execute(model, ct);
     }
 
     [HttpPost]
@@ -46,9 +46,9 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel[]>> GetUsersWithAnyRole([FromBody] GetUsersWithAnyRoleRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel[]>> GetUsersWithAnyRole([FromBody] SystemGetUsersWithAnyRoleRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<GetUsersWithAnyRoleRequest, AppUserModel[]>("GetUsersWithAnyRole").Execute(model, ct);
+        return api.Group("System").Action<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>("GetUsersWithAnyRole").Execute(model, ct);
     }
 
     [HttpPost]

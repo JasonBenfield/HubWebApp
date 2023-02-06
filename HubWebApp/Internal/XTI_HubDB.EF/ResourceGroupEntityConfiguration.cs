@@ -11,6 +11,7 @@ public sealed class ResourceGroupEntityConfiguration : IEntityTypeConfiguration<
         builder.HasKey(g => g.ID);
         builder.Property(g => g.ID).ValueGeneratedOnAdd();
         builder.Property(g => g.Name).HasMaxLength(100);
+        builder.Property(g => g.DisplayText).HasMaxLength(100);
         builder
             .HasIndex(g => new { g.AppVersionID, g.Name })
             .IsUnique();

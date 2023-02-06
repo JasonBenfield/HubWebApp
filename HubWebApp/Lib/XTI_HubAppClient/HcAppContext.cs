@@ -5,21 +5,25 @@ namespace XTI_HubAppClient
     public sealed class HcAppContext : ISourceAppContext
     {
         private readonly HubAppClient hubClient;
-        private readonly AppVersionKey versionKey;
+        private readonly InstallationIDAccessor installationIDAccessor;
 
-        public HcAppContext(HubAppClient hubClient, AppVersionKey versionKey)
+        public HcAppContext(HubAppClient hubClient, InstallationIDAccessor installationIDAccessor)
         {
             this.hubClient = hubClient;
-            this.versionKey = versionKey;
+            this.installationIDAccessor = installationIDAccessor;
         }
 
-        public Task<AppContextModel> App() => 
-            hubClient.System.GetAppContext
+        public async Task<AppContextModel> App()
+        {
+            var installationID = await installationIDAccessor.Value();
+            var appContextModel = await hubClient.System.GetAppContext
             (
                 new GetAppContextRequest
                 {
-                    VersionKey = versionKey.Value
+                    InstallationID = installationID
                 }
             );
+            return appContextModel;
+        }
     }
 }

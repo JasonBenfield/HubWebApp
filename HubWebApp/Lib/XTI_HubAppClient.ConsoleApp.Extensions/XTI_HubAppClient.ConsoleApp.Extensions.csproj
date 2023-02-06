@@ -4,12 +4,14 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Description>Console App Extensions using $(XtiAppName) $(XtiVersion)</Description>
+		<PackageTags>Console App;$(XtiAppName);$(XtiVersion);</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.33" />
-		<PackageReference Include="XTI_App.Hosting" Version="1.8.33" />
-		<PackageReference Include="XTI_ConsoleApp" Version="1.8.33" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.34" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.34" />
+		<PackageReference Include="XTI_ConsoleApp" Version="1.8.34" />
 	</ItemGroup>
 
 	<ItemGroup>

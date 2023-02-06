@@ -16,8 +16,8 @@ function Xti-NewSln {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = ""
     )
-    ThrowIfNotSolutionDir
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -SrcDir "`"$($SrcDir)`""
+    CD-Repo -RepoOwner $RepoOwner -RepoName $RepoName
 }
 
 function Xti-NewWebApp {

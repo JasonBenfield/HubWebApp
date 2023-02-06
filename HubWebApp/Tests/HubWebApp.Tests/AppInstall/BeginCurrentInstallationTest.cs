@@ -14,12 +14,12 @@ sealed class BeginCurrentInstallationTest
         var tester = await Setup();
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });

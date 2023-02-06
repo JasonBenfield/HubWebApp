@@ -7,11 +7,9 @@ import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { ModalMessageAlertView } from "@jasonbenfield/sharedwebapp/Views/Modal";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { ODataExpandedInstallationColumnViewsBuilder } from '../../Lib/Api/ODataExpandedInstallationColumnsBuilder';
 import { HubTheme } from "../HubTheme";
-import { InstallationDropdownView } from "./InstallationDropdownView";
 
 export class InstallationQueryPanelView extends GridView {
     readonly menuButton: ButtonCommandView;
@@ -19,7 +17,6 @@ export class InstallationQueryPanelView extends GridView {
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedInstallationColumnViewsBuilder;
     readonly dropdownColumn: ODataColumnViewBuilder;
-    readonly modalAlert: ModalMessageAlertView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -56,9 +53,7 @@ export class InstallationQueryPanelView extends GridView {
         this.odataComponent = layoutGrid.addCell()
             .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);
-        this.odataComponent.addToClickSelection('.deleteButton');
-        this.dropdownColumn = new ODataColumnViewBuilder();
-        this.dropdownColumn.dataCell(InstallationDropdownView);
+        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedInstallationColumnViewsBuilder();
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
@@ -66,11 +61,5 @@ export class InstallationQueryPanelView extends GridView {
         this.menuButton = HubTheme.instance.commandToolbar.menuButton(
             toolbar.columnStart.addView(ButtonCommandView)
         );
-        this.modalAlert = this.addView(ModalMessageAlertView);
     }
-
-    isDeleteButton(element: HTMLElement) {
-        return element.classList.contains('deleteButton')
-    }
-
 }

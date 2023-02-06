@@ -1,4 +1,5 @@
-﻿using XTI_HubDB.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApi.Installations;
 using XTI_ODataQuery.Api;
 

@@ -33,7 +33,7 @@ internal sealed class GetAppTest
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
         var app = await tester.Execute(new EmptyRequest(), hubAppModifier.ToModel().ModKey);
-        Assert.That(app?.Title, Is.EqualTo("Hub Web App"), "Should get app");
+        Assert.That(app?.AppKey, Is.EqualTo(HubInfo.AppKey), "Should get app");
     }
 
     private async Task<HubActionTester<EmptyRequest, AppModel>> setup()

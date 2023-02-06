@@ -13,13 +13,21 @@ public sealed class AppRequestRepository
         this.factory = factory;
     }
 
+    public async Task<AppRequest> Request(int id)
+    {
+        var entity = await factory.DB.Requests.Retrieve()
+            .Where(r => r.ID == id)
+            .FirstOrDefaultAsync();
+        return factory.CreateRequest(entity ?? throw new Exception($"Request not found with ID {id}"));
+    }
+
     internal async Task<AppRequest> AddOrUpdate
     (
-        AppSession session, 
-        string requestKey, 
-        Installation installation, 
-        string path, 
-        DateTimeOffset timeRequested, 
+        AppSession session,
+        string requestKey,
+        Installation installation,
+        string path,
+        DateTimeOffset timeRequested,
         int actualCount
     )
     {
@@ -147,6 +155,14 @@ public sealed class AppRequestRepository
             .Select(r => factory.CreateRequest(r))
             .ToArrayAsync();
     }
+
+    internal Task<AppRequest[]> MostRecentForInstallation(Installation installation, int howMany) =>
+        factory.DB.Requests.Retrieve()
+            .Where(r => r.InstallationID == installation.ID)
+            .OrderByDescending(r => r.TimeStarted)
+            .Take(howMany)
+            .Select(r => factory.CreateRequest(r))
+            .ToArrayAsync();
 
     internal async Task<AppRequestExpandedModel[]> MostRecentForVersion(App app, XtiVersion version, int howMany)
     {

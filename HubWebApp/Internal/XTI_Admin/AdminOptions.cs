@@ -8,6 +8,7 @@ public sealed class AdminOptions
     public CommandNames Command { get; set; }
     public string AppName { get; set; } = "";
     public string AppType { get; set; } = "";
+    public string HubAppVersionKey { get; set; } = "";
     public string VersionKey { get; set; } = "";
     public string VersionNumber { get; set; } = "";
     public string RepoOwner { get; set; } = "";

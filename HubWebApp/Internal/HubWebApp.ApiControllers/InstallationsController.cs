@@ -15,6 +15,18 @@ public sealed partial class InstallationsController : Controller
         return View(result.Data.ViewName);
     }
 
+    public async Task<IActionResult> Installation(InstallationViewRequest model, CancellationToken ct)
+    {
+        var result = await api.Group("Installations").Action<InstallationViewRequest, WebViewResult>("Installation").Execute(model, ct);
+        return View(result.Data.ViewName);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int model, CancellationToken ct)
+    {
+        return api.Group("Installations").Action<int, InstallationDetailModel>("GetInstallationDetail").Execute(model, ct);
+    }
+
     [HttpPost]
     public Task<ResultContainer<AppVersionInstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest model, CancellationToken ct)
     {

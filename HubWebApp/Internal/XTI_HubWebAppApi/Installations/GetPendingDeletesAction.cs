@@ -20,8 +20,8 @@ internal sealed class GetPendingDeletesAction : AppAction<GetPendingDeletesReque
             (
                 new AppVersionInstallationModel
                 (
-                    appVersion.ToAppModel(),
-                    appVersion.ToVersionModel(),
+                    appVersion.App.ToModel(),
+                    appVersion.Version.ToModel(),
                     installation.ToModel()
                 )
             );

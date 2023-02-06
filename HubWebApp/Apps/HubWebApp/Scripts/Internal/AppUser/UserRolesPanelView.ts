@@ -89,12 +89,12 @@ export class UserRolesPanelView extends GridView {
         this.denyAccessButton.setText('Deny Access');
 
         this.alert = card.addCardAlert();
-        this.userRoles = card.addUnorderedListGroup(UserRoleListItemView);
+        this.userRoles = card.addListGroup(UserRoleListItemView);
         card.setMargin(MarginCss.bottom(3));
 
         this.defaultUserRolesCard = mainContent.addView(CardView);
         this.defaultUserRolesTitle = this.defaultUserRolesCard.addCardTitleHeader();
-        this.defaultUserRoles = this.defaultUserRolesCard.addUnorderedListGroup(UserRoleListItemView);
+        this.defaultUserRoles = this.defaultUserRolesCard.addListGroup(UserRoleListItemView);
 
         const toolbar = HubTheme.instance.commandToolbar.toolbar(this.addCell().addView(ToolbarView));
         this.backButton = HubTheme.instance.commandToolbar.backButton(

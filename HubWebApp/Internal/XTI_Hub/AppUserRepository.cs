@@ -14,11 +14,11 @@ public sealed class AppUserRepository
         this.factory = factory;
     }
 
-    internal Task<AppUser[]> Users(AppUserGroup userGroup)
-        => factory.DB
+    internal Task<AppUser[]> Users(AppUserGroup userGroup) => 
+        factory.DB
             .Users
             .Retrieve()
-            .Where(u => u.GroupID == userGroup.ID)
+            .Where(u => u.GroupID == userGroup.ID && u.TimeDeactivated.Year == 9999)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
             .ToArrayAsync();
@@ -62,7 +62,7 @@ public sealed class AppUserRepository
         users = await factory.DB
             .Users
             .Retrieve()
-            .Where(u => userIDs.Contains(u.ID))
+            .Where(u => userIDs.Contains(u.ID) && u.TimeDeactivated.Year == 9999)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
             .ToArrayAsync();
@@ -211,6 +211,7 @@ public sealed class AppUserRepository
                     u.Name = name.Value;
                     u.Password = password.Value();
                     u.Email = email.Value;
+                    u.TimeDeactivated = DateTimeOffset.MaxValue;
                 }
             );
         }
@@ -226,7 +227,8 @@ public sealed class AppUserRepository
             Password = password.Value(),
             Name = name.Value,
             Email = email.Value,
-            TimeAdded = timeAdded
+            TimeAdded = timeAdded,
+            TimeDeactivated = DateTimeOffset.MaxValue
         };
         await factory.DB.Users.Create(newUser);
         return newUser;

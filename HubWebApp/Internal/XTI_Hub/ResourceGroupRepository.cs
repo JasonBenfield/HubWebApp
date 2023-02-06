@@ -29,6 +29,7 @@ public sealed class ResourceGroupRepository
                     record, r =>
                     {
                         r.ModCategoryID = modCategory.ID;
+                        r.DisplayText = name.DisplayText;
                     }
                 );
         }
@@ -43,6 +44,7 @@ public sealed class ResourceGroupRepository
         {
             AppVersionID = appVersionID,
             Name = name.Value,
+            DisplayText = name.DisplayText,
             ModCategoryID = modCategory.ID
         };
         await factory.DB.ResourceGroups.Create(record);
@@ -59,6 +61,14 @@ public sealed class ResourceGroupRepository
             .OrderBy(g => g.Name)
             .Select(g => factory.CreateGroup(g))
             .ToArrayAsync();
+    }
+
+    internal async Task<ResourceGroup> Group(int id)
+    {
+        var entity = await factory.DB.ResourceGroups.Retrieve()
+            .Where(rg=>rg.ID == id)
+            .FirstOrDefaultAsync();
+        return factory.CreateGroup(entity ?? throw new Exception($"Group not found with ID {id}"));
     }
 
     internal async Task<ResourceGroup> GroupOrDefault(App app, XtiVersion version, ResourceGroupName name)

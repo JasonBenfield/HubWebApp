@@ -60,9 +60,9 @@ public sealed class SystemGroup : AppApiGroupWrapper
     public AppApiAction<GetUserContextRequest, UserContextModel> GetUserContext { get; }
     public AppApiAction<string, AppUserModel> GetUserOrAnon { get; }
     public AppApiAction<int, UserAuthenticatorModel[]> GetUserAuthenticators { get; }
-    public AppApiAction<GetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
-    public AppApiAction<AddOrUpdateModifierByTargetKeyRequest, ModifierModel> AddOrUpdateModifierByTargetKey { get; }
-    public AppApiAction<AddOrUpdateModifierByModKeyRequest, ModifierModel> AddOrUpdateModifierByModKey { get; }
+    public AppApiAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
+    public AppApiAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel> AddOrUpdateModifierByTargetKey { get; }
+    public AppApiAction<SystemAddOrUpdateModifierByModKeyRequest, ModifierModel> AddOrUpdateModifierByModKey { get; }
     public AppApiAction<StoreObjectRequest, string> StoreObject { get; }
     public AppApiAction<GetStoredObjectRequest, string> GetStoredObject { get; }
 }

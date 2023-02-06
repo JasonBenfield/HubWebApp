@@ -17,11 +17,12 @@ public static class XtiWebAppHost
     public static WebApplicationBuilder CreateDefault(AppKey appKey, string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Configuration.UseXtiConfiguration(builder.Environment, appKey.Name.DisplayText, appKey.Type.DisplayText, args);
+        var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
+        builder.Configuration.UseXtiConfiguration(xtiEnv, appKey, args);
         builder.Services.AddSingleton(_ => appKey);
         builder.Services.AddResponseCaching();
         builder.Services.AddAppServices();
-        builder.Services.AddFileSecretCredentials(XtiEnvironment.Parse(builder.Environment.EnvironmentName));
+        builder.Services.AddFileSecretCredentials(xtiEnv);
         builder.Services.AddHubClientServices();
         builder.Services.AddScoped<HubAppClientContext>();
         builder.Services.AddScoped<SystemUserXtiToken>();

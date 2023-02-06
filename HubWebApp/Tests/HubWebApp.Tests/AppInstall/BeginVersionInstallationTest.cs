@@ -11,12 +11,12 @@ sealed class BeginVersionInstallationTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -41,7 +41,7 @@ sealed class BeginVersionInstallationTest
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
         var result = await hubApi.Install.NewInstallation.Execute(model);
-        return result.Data;
+        return result.Data!;
     }
 
     private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)

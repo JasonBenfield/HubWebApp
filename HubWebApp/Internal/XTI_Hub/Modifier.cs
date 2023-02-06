@@ -59,6 +59,9 @@ public sealed class Modifier
         return defaultModifier;
     }
 
+    public Task<ModifierCategory> Category() =>
+        factory.ModCategories.Category(record.CategoryID);
+
     public ModifierModel ToModel() => new ModifierModel
     {
         ID = ID,
@@ -68,7 +71,7 @@ public sealed class Modifier
         DisplayText = record.DisplayText
     };
 
-    private ModifierKey ModKey() => new ModifierKey(record.ModKey);
+    private ModifierKey ModKey() => new ModifierKey(record.ModKeyDisplayText);
 
     public override string ToString() => $"{nameof(Modifier)} {ID}";
 }

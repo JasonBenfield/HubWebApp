@@ -39,7 +39,7 @@ public sealed class InstallerRepository
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
-            var role = await hubApp.AddRoleIfNotFound(HubInfo.Roles.Admin);
+            var role = await hubApp.AddOrUpdateRole(HubInfo.Roles.Admin);
             await installer.AssignRole(role);
         }
         return installer;

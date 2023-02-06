@@ -16,12 +16,30 @@ public sealed class ModifierRepository
     internal Task<Modifier> AddDefaultModifierIfNotFound(ModifierCategory category) =>
         AddOrUpdateByModKey(category, ModifierKey.Default, "", "");
 
-    internal async Task<Modifier> AddOrUpdateByModKey(ModifierCategory category, ModifierKey modKey, string targetID, string displayText)
+    internal async Task<Modifier> AddOrUpdateByModKey(ModifierCategory category, ModifierKey modKey, string targetKey, string displayText)
     {
-        var record = await GetModifierByModKey(category, modKey);
+        var record = await factory.DB
+            .Modifiers
+            .Retrieve()
+            .Where(m => m.CategoryID == category.ID && (m.ModKey == modKey.Value || m.TargetKey == targetKey))
+            .FirstOrDefaultAsync();
         if (record == null)
         {
-            record = await Add(category, modKey, targetID, displayText);
+            record = await Add(category, modKey, targetKey, displayText);
+        }
+        else
+        {
+            await factory.DB.Modifiers.Update
+            (
+                record,
+                m =>
+                {
+                    m.ModKey = modKey.Value;
+                    m.ModKeyDisplayText = modKey.DisplayText;
+                    m.TargetKey = targetKey;
+                    m.DisplayText = displayText;
+                }
+            );
         }
         return factory.CreateModifier(record);
     }
@@ -76,6 +94,7 @@ public sealed class ModifierRepository
         {
             CategoryID = category.ID,
             ModKey = modKey.Value,
+            ModKeyDisplayText = modKey.DisplayText,
             TargetKey = targetID,
             DisplayText = displayText
         };

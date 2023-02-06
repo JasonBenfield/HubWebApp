@@ -46,20 +46,20 @@ public sealed class SystemUserRepository
         }
         var app = await factory.Apps.App(systemUserName.AppKey);
         var appModel = app.ToModel();
-        var selfAdminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
+        var selfAdminRole = await app.AddOrUpdateRole(AppRoleName.Admin);
         await systemUser.AssignRole(selfAdminRole);
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
-            var hubSystemRole = await hubApp.AddRoleIfNotFound(AppRoleName.System);
+            var hubSystemRole = await hubApp.AddOrUpdateRole(AppRoleName.System);
             await systemUser.AssignRole(hubSystemRole);
-            var viewUserRole = await hubApp.AddRoleIfNotFound(HubInfo.Roles.ViewUser);
+            var viewUserRole = await hubApp.AddOrUpdateRole(HubInfo.Roles.ViewUser);
             await systemUser.AssignRole(viewUserRole);
-            var appModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.Apps);
-            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.Title);
-            var hubAdmin = await hubApp.AddRoleIfNotFound(AppRoleName.Admin);
+            var appModCategory = await hubApp.AddOrUpdateModCategory(HubInfo.ModCategories.Apps);
+            var appModifier = await appModCategory.AddOrUpdateModifier(appModel.PublicKey, appModel.ID, appModel.AppKey.Format());
+            var hubAdmin = await hubApp.AddOrUpdateRole(AppRoleName.Admin);
             await systemUser.Modifier(appModifier).AssignRole(hubAdmin);
-            var addStoredObject = await hubApp.AddRoleIfNotFound(HubInfo.Roles.AddStoredObject);
+            var addStoredObject = await hubApp.AddOrUpdateRole(HubInfo.Roles.AddStoredObject);
             await systemUser.AssignRole(addStoredObject);
         }
         return systemUser;

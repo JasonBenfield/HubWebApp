@@ -1,6 +1,11 @@
 ﻿namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class SessionViewAction : AppAction<EmptyRequest, WebViewResult>
+public sealed class SessionViewRequest
+{
+    public int SessionID { get; set; }
+}
+
+internal sealed class SessionViewAction : AppAction<SessionViewRequest, WebViewResult>
 {
     private readonly WebViewResultFactory viewFactory;
 
@@ -9,6 +14,6 @@ internal sealed class SessionViewAction : AppAction<EmptyRequest, WebViewResult>
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(EmptyRequest model, CancellationToken stoppingToken) =>
-        Task.FromResult(viewFactory.Default("sessions", "Session Log"));
+    public Task<WebViewResult> Execute(SessionViewRequest model, CancellationToken stoppingToken) =>
+        Task.FromResult(viewFactory.Default("session", "Session"));
 }

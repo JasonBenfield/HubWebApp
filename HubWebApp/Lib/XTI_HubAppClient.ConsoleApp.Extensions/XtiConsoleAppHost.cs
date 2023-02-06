@@ -28,7 +28,8 @@ public sealed class XtiConsoleAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
-                    services.AddFileSecretCredentials(XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
+                    var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
+                    services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
                     {
                         var xtiFolder = sp.GetRequiredService<XtiFolder>();

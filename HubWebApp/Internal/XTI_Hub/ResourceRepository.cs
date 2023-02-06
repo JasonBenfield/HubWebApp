@@ -13,6 +13,14 @@ public sealed class ResourceRepository
         this.factory = factory;
     }
 
+    internal async Task<Resource> Resource(int id)
+    {
+        var entity = await factory.DB.Resources.Retrieve()
+            .Where(r => r.ID == id)
+            .FirstOrDefaultAsync();
+        return factory.CreateResource(entity ?? throw new Exception($"Resource not found with ID {id}"));
+    }
+
     public async Task<Resource> AddOrUpdate(ResourceGroup group, ResourceName name, ResourceResultType resultType)
     {
         var record = await factory.DB
@@ -24,6 +32,7 @@ public sealed class ResourceRepository
             {
                 GroupID = group.ID,
                 Name = name.Value,
+                DisplayText = name.DisplayText,
                 ResultType = resultType.Value
             };
             await factory.DB.Resources.Create(record);
@@ -37,6 +46,7 @@ public sealed class ResourceRepository
                     record,
                     r =>
                     {
+                        r.DisplayText = name.DisplayText;
                         r.ResultType = resultType.Value;
                     }
                 );
@@ -77,7 +87,7 @@ public sealed class ResourceRepository
         return factory.CreateResource
         (
             record ?? 
-            throw new Exception($"Resource '{name.DisplayText}' not found for group '{group.Name().DisplayText}'")
+            throw new Exception($"Resource '{name.DisplayText}' not found for group '{group.ToModel().Name.DisplayText}'")
         );
     }
 

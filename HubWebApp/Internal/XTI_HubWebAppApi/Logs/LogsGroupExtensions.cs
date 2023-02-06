@@ -6,11 +6,18 @@ internal static class LogsGroupExtensions
 {
     public static void AddLogsGroupServices(this IServiceCollection services)
     {
-        services.AddScoped<SessionViewAction>();
-        services.AddScoped<RequestViewAction>();
-        services.AddScoped<LogEntryViewAction>();
-        services.AddScoped<SessionQueryAction>();
-        services.AddScoped<RequestQueryAction>();
+        services.AddScoped<GetLogEntryByKeyAction>();
+        services.AddScoped<GetLogEntryDetailAction>();
+        services.AddScoped<GetRequestDetailAction>();
+        services.AddScoped<GetSessionDetailAction>();
         services.AddScoped<LogEntryQueryAction>();
+        services.AddScoped<LogEntriesViewAction>();
+        services.AddScoped<LogEntryViewAction>();
+        services.AddScoped<AppRequestQueryAction>();
+        services.AddScoped<AppRequestsViewAction>();
+        services.AddScoped<AppRequestViewAction>();
+        services.AddScoped<SessionQueryAction>();
+        services.AddScoped<SessionsViewAction>();
+        services.AddScoped<SessionViewAction>();
     }
 }

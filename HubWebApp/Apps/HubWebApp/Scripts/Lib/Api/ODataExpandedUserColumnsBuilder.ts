@@ -12,6 +12,8 @@ export class ODataExpandedUserColumnViewsBuilder {
 	readonly TimeUserAdded = new ODataColumnViewBuilder();
 	readonly UserGroupID = new ODataColumnViewBuilder();
 	readonly UserGroupName = new ODataColumnViewBuilder();
+	readonly TimeUserDeactivated = new ODataColumnViewBuilder();
+	readonly IsActive = new ODataColumnViewBuilder();
 }
 
 export class ODataExpandedUserColumnsBuilder {
@@ -29,6 +31,10 @@ export class ODataExpandedUserColumnsBuilder {
 		this.UserGroupID.setDisplayText('User Group ID');
 		this.UserGroupName = new ODataColumnBuilder('UserGroupName', new SourceType('String'), views.UserGroupName);
 		this.UserGroupName.setDisplayText('User Group Name');
+		this.TimeUserDeactivated = new ODataColumnBuilder('TimeUserDeactivated', new SourceType('DateTimeOffset'), views.TimeUserDeactivated);
+		this.TimeUserDeactivated.setDisplayText('Time User Deactivated');
+		this.IsActive = new ODataColumnBuilder('IsActive', new SourceType('Boolean'), views.IsActive);
+		this.IsActive.setDisplayText('Is Active');
 	}
 	readonly UserID: ODataColumnBuilder;
 	readonly UserName: ODataColumnBuilder;
@@ -37,6 +43,8 @@ export class ODataExpandedUserColumnsBuilder {
 	readonly TimeUserAdded: ODataColumnBuilder;
 	readonly UserGroupID: ODataColumnBuilder;
 	readonly UserGroupName: ODataColumnBuilder;
+	readonly TimeUserDeactivated: ODataColumnBuilder;
+	readonly IsActive: ODataColumnBuilder;
 	
 	build() {
 		return {
@@ -46,7 +54,9 @@ export class ODataExpandedUserColumnsBuilder {
 			Email: this.Email.build(),
 			TimeUserAdded: this.TimeUserAdded.build(),
 			UserGroupID: this.UserGroupID.build(),
-			UserGroupName: this.UserGroupName.build()
+			UserGroupName: this.UserGroupName.build(),
+			TimeUserDeactivated: this.TimeUserDeactivated.build(),
+			IsActive: this.IsActive.build()
 		} as ODataColumns<IExpandedUser>;
 	}
 }

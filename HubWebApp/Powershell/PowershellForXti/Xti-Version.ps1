@@ -4,13 +4,14 @@
         $VersionType = "minor",
         [ValidateSet("Default", "DB")]
         $HubAdministrationType = "Default",
+        $HubAppVersionKey = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoOwner,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoName
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName Production -Command NewVersion -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionType $VersionType -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName Production -Command NewVersion -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionType $VersionType -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-NewIssue {
@@ -44,11 +45,12 @@ function Xti-CompleteIssue {
     param(
         [ValidateSet("Default", "DB")]
         $HubAdministrationType = "Default",
+        $HubAppVersionKey = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoOwner,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoName
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName Production -Command CompleteIssue -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName Production -Command CompleteIssue -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }

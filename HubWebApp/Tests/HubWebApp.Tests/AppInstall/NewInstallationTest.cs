@@ -173,7 +173,7 @@ sealed class NewInstallationTest
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var installations = await db.Installations.Retrieve().ToArrayAsync();
         var appVersionID = db.AppVersions.Retrieve()
-            .Where(av => av.AppID == appVersion.ToAppModel().ID && av.VersionID == appVersion.ToVersionModel().ID)
+            .Where(av => av.AppID == appVersion.App.ToModel().ID && av.VersionID == appVersion.Version.ToModel().ID)
             .Select(av => av.ID);
         var versionInstallations = installations
             .Where(inst => !inst.IsCurrent && appVersionID.Contains(inst.AppVersionID))
@@ -208,7 +208,7 @@ sealed class NewInstallationTest
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var appVersionID = db.AppVersions.Retrieve()
-            .Where(av => av.AppID == appVersion.ToAppModel().ID && av.VersionID == appVersion.ToVersionModel().ID)
+            .Where(av => av.AppID == appVersion.App.ToModel().ID && av.VersionID == appVersion.Version.ToModel().ID)
             .Select(av => av.ID);
         var unknownLocation = await getUnknownInstallLocation(db);
         var installations = await db.Installations.Retrieve().Where(inst => inst.LocationID != unknownLocation.ID).ToArrayAsync();

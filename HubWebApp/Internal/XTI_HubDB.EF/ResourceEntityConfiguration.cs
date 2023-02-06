@@ -11,6 +11,7 @@ public sealed class ResourceEntityConfiguration : IEntityTypeConfiguration<Resou
         builder.HasKey(r => r.ID);
         builder.Property(r => r.ID).ValueGeneratedOnAdd();
         builder.Property(r => r.Name).HasMaxLength(100);
+        builder.Property(r => r.DisplayText).HasMaxLength(100);
         builder
             .HasIndex(r => new { r.GroupID, r.Name })
             .IsUnique();

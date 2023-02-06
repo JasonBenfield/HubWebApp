@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.System;
 
-internal sealed class GetUsersWithAnyRoleAction : AppAction<GetUsersWithAnyRoleRequest, AppUserModel[]>
+internal sealed class GetUsersWithAnyRoleAction : AppAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>
 {
     private readonly AppFromSystemUser appFromSystemUser;
     private readonly HubFactory hubFactory;
@@ -11,9 +11,9 @@ internal sealed class GetUsersWithAnyRoleAction : AppAction<GetUsersWithAnyRoleR
         this.hubFactory = hubFactory;
     }
 
-    public async Task<AppUserModel[]> Execute(GetUsersWithAnyRoleRequest model, CancellationToken stoppingToken)
+    public async Task<AppUserModel[]> Execute(SystemGetUsersWithAnyRoleRequest model, CancellationToken stoppingToken)
     {
-        var appContextModel = await appFromSystemUser.App(AppVersionKey.Current);
+        var appContextModel = await appFromSystemUser.App(model.InstallationID);
         var app = await hubFactory.Apps.App(appContextModel.App.ID);
         var modCategroy = await app.ModCategory(new ModifierCategoryName(model.ModCategoryName));
         var modifier = await modCategroy.ModifierByModKey(new ModifierKey(model.ModKey));

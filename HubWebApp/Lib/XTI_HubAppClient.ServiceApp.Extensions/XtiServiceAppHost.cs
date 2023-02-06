@@ -20,7 +20,7 @@ public static class XtiServiceAppHost
         var builder = Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration
             (
-                (hostContext, config) => config.UseXtiConfiguration(hostContext.HostingEnvironment, appKey.Name.DisplayText, appKey.Type.DisplayText, args)
+                (hostContext, config) => config.UseXtiConfiguration(hostContext.HostingEnvironment, appKey, args)
             )
             .ConfigureServices
             (
@@ -28,7 +28,8 @@ public static class XtiServiceAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
-                    services.AddFileSecretCredentials(XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
+                    var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
+                    services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
                     {
                         var xtiFolder = sp.GetRequiredService<XtiFolder>();

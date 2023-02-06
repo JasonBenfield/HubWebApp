@@ -6,10 +6,12 @@ import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient
 import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppApi } from "../../Lib/Api/HubAppApi";
 import { ODataExpandedUserColumnsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
+import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
 
 interface IResult {
@@ -43,7 +45,13 @@ export class UserQueryPanel implements IPanel {
         const columns = new ODataExpandedUserColumnsBuilder(this.view.columns);
         columns.UserID.require();
         columns.UserGroupName.require();
+        columns.IsActive.require();
+        columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? 'Yes' : 'No' });
         const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
+        options.setCreateDataRow(
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
+                new UserDataRow(rowIndex, columns, record, view)
+        );
         options.query.select.addFields(
             columns.UserName,
             columns.PersonName,

@@ -32,13 +32,13 @@ public sealed class EfUserContext : ISourceUserContext
         foreach (var userModifier in userModifiers)
         {
             var roles = await userModifier.AssignedRoles();
-            var modifierModel = userModifier.ToModifierModel();
+            var modCategory = await userModifier.Modifier.Category();
             roleModels.Add
             (
                 new UserContextRoleModel
                 (
-                    modifierModel.CategoryID,
-                    modifierModel.ModKey,
+                    modCategory.ToModel(),
+                    userModifier.Modifier.ToModel(),
                     roles.Select(r => r.ToModel()).ToArray()
                 )
             );

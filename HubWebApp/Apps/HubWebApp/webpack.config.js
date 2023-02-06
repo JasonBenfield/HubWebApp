@@ -12,9 +12,13 @@ const entry = {
     userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',
     appUser: './Scripts/Internal/AppUser/MainPage.ts',
+    session: './Scripts/Internal/Logs/Session/MainPage.ts',
     sessions: './Scripts/Internal/Logs/Sessions/MainPage.ts',
+    request: './Scripts/Internal/Logs/Request/MainPage.ts',
     requests: './Scripts/Internal/Logs/Requests/MainPage.ts',
+    logEntry: './Scripts/Internal/Logs/LogEntry/MainPage.ts',
     logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts',
+    installation: './Scripts/Internal/Installation/MainPage.ts',
     installations: './Scripts/Internal/Installations/MainPage.ts'
 };
 const exportModule = {

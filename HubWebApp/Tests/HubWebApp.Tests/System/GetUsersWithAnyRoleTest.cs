@@ -14,8 +14,9 @@ internal sealed class GetUsersWithAnyRoleTest
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
-            new GetUsersWithAnyRoleRequest
+            new SystemGetUsersWithAnyRoleRequest
             (
+                0,
                 HubInfo.ModCategories.Apps,
                 hubAppModifier.ToModel().ModKey,
                 HubInfo.Roles.ViewUser
@@ -41,8 +42,9 @@ internal sealed class GetUsersWithAnyRoleTest
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
-            new GetUsersWithAnyRoleRequest
+            new SystemGetUsersWithAnyRoleRequest
             (
+                0,
                 HubInfo.ModCategories.Apps,
                 hubAppModifier.ToModel().ModKey,
                 HubInfo.Roles.ViewUser
@@ -70,8 +72,9 @@ internal sealed class GetUsersWithAnyRoleTest
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
-            new GetUsersWithAnyRoleRequest
+            new SystemGetUsersWithAnyRoleRequest
             (
+                0,
                 HubInfo.ModCategories.Apps,
                 hubAppModifier.ToModel().ModKey,
                 HubInfo.Roles.ViewUser
@@ -85,7 +88,7 @@ internal sealed class GetUsersWithAnyRoleTest
         );
     }
 
-    private async Task<HubActionTester<GetUsersWithAnyRoleRequest, AppUserModel[]>> Setup()
+    private async Task<HubActionTester<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

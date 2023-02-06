@@ -13,7 +13,7 @@ public sealed class AppRoleRepository
         this.factory = factory;
     }
 
-    internal async Task<AppRole> AddIfNotFound(App app, AppRoleName name)
+    internal async Task<AppRole> AddOrUpdate(App app, AppRoleName name)
     {
         var record = await rolesForApp(app)
             .FirstOrDefaultAsync(r => r.Name == name.Value);
@@ -22,9 +22,14 @@ public sealed class AppRoleRepository
             record = new AppRoleEntity
             {
                 AppID = app.ID,
-                Name = name.Value
+                Name = name.Value,
+                DisplayText = name.DisplayText
             };
             await factory.DB.Roles.Create(record);
+        }
+        else
+        {
+            await factory.DB.Roles.Update(record, r => r.DisplayText = name.DisplayText);
         }
         return factory.CreateRole(record);
     }

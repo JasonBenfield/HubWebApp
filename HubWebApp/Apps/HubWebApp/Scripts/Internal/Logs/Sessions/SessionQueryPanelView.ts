@@ -9,13 +9,11 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { ODataExpandedSessionColumnViewsBuilder } from "../../../Lib/Api/ODataExpandedSessionColumnsBuilder";
 import { HubTheme } from "../../HubTheme";
-import { SessionDropdownView } from "./SessionDropdownView";
 
 export class SessionQueryPanelView extends GridView {
     readonly menuButton: ButtonCommandView;
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedSessionColumnViewsBuilder;
-    readonly dropdownColumn: ODataColumnViewBuilder;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -35,8 +33,7 @@ export class SessionQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         this.odataComponent = mainContent.addView(ODataComponentView);
-        this.dropdownColumn = new ODataColumnViewBuilder();
-        this.dropdownColumn.dataCell(SessionDropdownView);
+        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedSessionColumnViewsBuilder();
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)

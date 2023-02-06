@@ -50,8 +50,14 @@ public sealed class AppUser
     public AppUserModifier Modifier(Modifier modifier) =>
         new AppUserModifier(factory, this, modifier);
 
-    public Task ChangePassword(IHashedPassword password)
-        => factory.DB.Users.Update(record, u => u.Password = password.Value());
+    public Task ChangePassword(IHashedPassword password) =>
+        factory.DB.Users.Update(record, u => u.Password = password.Value());
+
+    public Task Deactivate(DateTimeOffset timeDeactivated) =>
+        factory.DB.Users.Update(record, u => u.TimeDeactivated = timeDeactivated);
+
+    public Task Reactivate() =>
+        factory.DB.Users.Update(record, u => u.TimeDeactivated = DateTimeOffset.MaxValue);
 
     public Task Edit(PersonName name, EmailAddress email)
     {
@@ -153,7 +159,17 @@ public sealed class AppUser
         var hubApp = apps.First(a => a.AppKeyEquals(HubInfo.AppKey));
         var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
         var appPermissions = new List<AppPermission>();
-        foreach (var app in apps)
+        var appsWithPermissions = apps
+            .Where
+            (
+                a => !a.ToModel().AppKey.IsAnyAppType
+                (
+                    AppType.Values.NotFound,
+                    AppType.Values.Package,
+                    AppType.Values.WebPackage
+                )
+            );
+        foreach (var app in appsWithPermissions)
         {
             var permission = await GetAppPermission(hubApp, appsModCategory, app);
             appPermissions.Add(permission);
@@ -303,13 +319,15 @@ public sealed class AppUser
             .ToArray();
     }
 
-    public AppUserModel ToModel() => new AppUserModel
-    {
-        ID = ID,
-        UserName = new AppUserName(record.UserName),
-        Name = new PersonName(record.Name),
-        Email = new EmailAddress(record.Email).DisplayText
-    };
+    public AppUserModel ToModel() => 
+        new AppUserModel
+        (
+            ID: ID,
+            UserName: new AppUserName(record.UserName),
+            Name: new PersonName(record.Name),
+            Email: new EmailAddress(record.Email).DisplayText,
+            TimeDeactivated: record.TimeDeactivated
+        );
 
     public override string ToString() => $"{nameof(AppUser)} {ID}";
 }
