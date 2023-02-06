@@ -121,9 +121,29 @@ function Xti-NewApiGroup {
     Xti-Dotnet -Command ApiGroup -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`"" -GroupName "`"$($GroupName)`""  -AppType $AppType -SrcDir "`"$($SrcDir)`""
 }
 
+function Xti-NewTests {
+    param (
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [ValidateSet("WebApp", "ServiceApp", "ConsoleApp")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppType,
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $TestType = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoOwner = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $RepoName = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $SrcDir = ""
+    )
+    ThrowIfNotSolutionDir
+    Xti-Dotnet -Command Tests -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`"" -GroupName "`"$($GroupName)`""  -AppType $AppType -SrcDir "`"$($SrcDir)`"" -TestType "`"$($TestType)`""
+}
+
 function Xti-Dotnet {
     param (
-        [ValidateSet("", "Install", "Uninstall", "ApiGroup")]
+        [ValidateSet("", "Install", "Uninstall", "ApiGroup", "Tests")]
         $Command,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName,
@@ -139,7 +159,9 @@ function Xti-Dotnet {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $SrcDir = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $Domain = ""
+        $Domain = "",
+        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $TestType = ""
     )
     $ErrorActionPreference = "Stop"
     if($Command -ne "Install" -and $Command -ne "Uninstall") {
@@ -179,6 +201,9 @@ function Xti-Dotnet {
     }
     if(-not [string]::IsNullOrWhiteSpace($Domain) -and $Domain -ne "`"`"") {
         $Args += "--Domain $Domain"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($TestType) -and $TestType -ne "`"`"") {
+        $Args += "--TestType $TestType"
     }
     $ArgsText = $Args -join " "
     Write-Host "ArgsText: $ArgsText"
