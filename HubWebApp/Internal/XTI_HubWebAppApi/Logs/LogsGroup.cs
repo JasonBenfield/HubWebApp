@@ -8,7 +8,8 @@ public sealed class LogsGroup : AppApiGroupWrapper
         GetLogEntryByKey = source.AddAction
         (
             nameof(GetLogEntryByKey),
-            () => sp.GetRequiredService<GetEventByKeyAction>()
+            () => sp.GetRequiredService<GetLogEntryByKeyAction>(),
+            access: Access.WithAllowed(HubInfo.Roles.ViewLog)
         );
         GetLogEntryDetail = source.AddAction
         (
@@ -35,15 +36,15 @@ public sealed class LogsGroup : AppApiGroupWrapper
             nameof(Session),
             () => sp.GetRequiredService<SessionViewAction>()
         );
-        Requests = source.AddAction
+        AppRequests = source.AddAction
         (
-            nameof(Requests),
-            () => sp.GetRequiredService<RequestsViewAction>()
+            nameof(AppRequests),
+            () => sp.GetRequiredService<AppRequestsViewAction>()
         );
-        Request = source.AddAction
+        AppRequest = source.AddAction
         (
-            nameof(Request),
-            () => sp.GetRequiredService<RequestViewAction>()
+            nameof(AppRequest),
+            () => sp.GetRequiredService<AppRequestViewAction>()
         );
         LogEntry = source.AddAction
         (
@@ -63,8 +64,8 @@ public sealed class LogsGroup : AppApiGroupWrapper
     public AppApiAction<int, AppSessionDetailModel> GetSessionDetail { get; }
     public AppApiAction<EmptyRequest, WebViewResult> Sessions { get; }
     public AppApiAction<SessionViewRequest, WebViewResult> Session { get; }
-    public AppApiAction<RequestQueryRequest, WebViewResult> Requests { get; }
-    public AppApiAction<RequestRequest, WebViewResult> Request { get; }
+    public AppApiAction<AppRequestQueryRequest, WebViewResult> AppRequests { get; }
+    public AppApiAction<AppRequestRequest, WebViewResult> AppRequest { get; }
     public AppApiAction<LogEntryRequest, WebViewResult> LogEntry { get; }
     public AppApiAction<LogEntryQueryRequest, WebViewResult> LogEntries { get; }
 }

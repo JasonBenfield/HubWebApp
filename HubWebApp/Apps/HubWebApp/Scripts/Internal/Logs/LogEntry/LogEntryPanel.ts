@@ -23,7 +23,7 @@ class Result {
 export class LogEntryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly appKey: TextValueFormGroup;
+    private readonly appKey: TextLinkComponent;
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
     private readonly userName: TextValueFormGroup;
@@ -41,7 +41,7 @@ export class LogEntryPanel implements IPanel {
 
     constructor(private readonly hubApi: HubAppApi, private readonly view: LogEntryPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.appKey = new TextValueFormGroup(view.appKey);
+        this.appKey = new TextLinkComponent(view.appKeyLink);
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
         this.userName = new TextValueFormGroup(view.userName);
@@ -69,8 +69,11 @@ export class LogEntryPanel implements IPanel {
             'Loading...',
             () => this.hubApi.Logs.GetLogEntryDetail(this.logEntryID)
         );
-        this.appKey.setValue(
+        this.appKey.setText(
             detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
+        );
+        this.appKey.setHref(
+            this.hubApi.App.Index.getModifierUrl(detail.App.PublicKey.DisplayText, {})
         );
         this.versionKey.setText(detail.Version.VersionKey.DisplayText);
         this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
@@ -115,7 +118,7 @@ export class LogEntryPanel implements IPanel {
         else {
             this.targetLogEntryLink.hide();
         }
-        this.requestLink.setHref(this.hubApi.Logs.Request.getUrl({ RequestID: detail.Request.ID }));
+        this.requestLink.setHref(this.hubApi.Logs.AppRequest.getUrl({ RequestID: detail.Request.ID }));
         this.installationLink.setHref(this.hubApi.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
     }
 

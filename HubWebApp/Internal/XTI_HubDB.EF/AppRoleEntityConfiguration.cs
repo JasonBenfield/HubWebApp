@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XTI_HubDB.Entities;
-
-namespace XTI_HubDB.EF;
+﻿namespace XTI_HubDB.EF;
 
 public sealed class AppRoleEntityConfiguration : IEntityTypeConfiguration<AppRoleEntity>
 {
@@ -11,6 +7,7 @@ public sealed class AppRoleEntityConfiguration : IEntityTypeConfiguration<AppRol
         builder.HasKey(r => r.ID);
         builder.Property(r => r.ID).ValueGeneratedOnAdd();
         builder.Property(r => r.Name).HasMaxLength(100);
+        builder.Property(r => r.DisplayText).HasMaxLength(100);
         builder.Property(r => r.TimeDeactivated).HasDefaultValue(DateTimeOffset.MaxValue);
         builder
             .HasIndex(r => new { r.AppID, r.Name })

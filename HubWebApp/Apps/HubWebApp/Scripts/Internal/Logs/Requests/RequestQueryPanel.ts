@@ -71,7 +71,7 @@ export class RequestQueryPanel implements IPanel {
 
     private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
         const requestID: number = eventArgs.record['RequestID'];
-        this.hubApi.Logs.Request.open({ RequestID: requestID });
+        this.hubApi.Logs.AppRequest.open({ RequestID: requestID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

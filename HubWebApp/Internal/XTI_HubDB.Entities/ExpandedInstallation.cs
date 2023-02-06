@@ -11,7 +11,7 @@ public sealed class ExpandedInstallation
     public int AppID { get; set; }
     public string AppKey { get; set; } = "";
     public string AppName { get; set; } = "";
-    public string AppTypeText { get; set; } = "";
+    public string AppTypeDisplayText { get; set; } = "";
     public string VersionName { get; set; } = "";
     public string VersionRelease { get; set; } = "";
     public string VersionKey { get; set; } = "";

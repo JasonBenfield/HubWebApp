@@ -43,7 +43,9 @@ internal sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
                    Email = u.Email,
                    TimeUserAdded = u.TimeAdded,
                    UserGroupID = u.GroupID,
-                   UserGroupName = ug.DisplayText
+                   UserGroupName = ug.DisplayText,
+                   TimeUserDeactivated = u.TimeDeactivated,
+                   IsActive = u.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year
                };
     }
 }

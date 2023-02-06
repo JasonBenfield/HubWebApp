@@ -43,8 +43,8 @@ internal sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMo
             Modifier: modifier.ToModel(),
             InstallLocation: installLocation.ToModel(),
             Installation: installation.ToModel(),
-            Version: appVersion.ToVersionModel(),
-            App: appVersion.ToAppModel(),
+            Version: appVersion.Version.ToModel(),
+            App: appVersion.App.ToModel(),
             Session: session.ToModel(),
             UserGroup: userGroup.ToModel(),
             User: user.ToModel()

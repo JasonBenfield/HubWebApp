@@ -1,6 +1,5 @@
 ﻿using HubWebApp.Fakes;
 using XTI_Core.Extensions;
-using XTI_Hub.Abstractions;
 
 namespace HubWebApp.Tests;
 
@@ -9,7 +8,7 @@ internal sealed class HubSetupTest
     [Test]
     public async Task ShouldAddHubApp()
     {
-        var sp = await setup();
+        var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
         var factory = sp.GetRequiredService<HubFactory>();
@@ -20,7 +19,7 @@ internal sealed class HubSetupTest
     [Test]
     public async Task ShouldAddModCategoryForApps()
     {
-        var sp = await setup();
+        var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
         var factory = sp.GetRequiredService<HubFactory>();
@@ -33,7 +32,7 @@ internal sealed class HubSetupTest
     [Test]
     public async Task ShouldAddModifierForEachApp()
     {
-        var sp = await setup();
+        var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current);
         var factory = sp.GetRequiredService<HubFactory>();
@@ -43,11 +42,15 @@ internal sealed class HubSetupTest
         var modifiers = await modCategory.Modifiers();
         var apps = await factory.Apps.All();
         var modIDs = modifiers.Select(m => m.ToModel().TargetKey);
-        var appIDs = apps.Select(a => a.ToModel().ID.ToString());
+        var appIDs = apps
+            .Select(a => a.ToModel())
+            .Where(a => !a.IsUnknown())
+            .Select(a => a.ID.ToString())
+            .ToArray();
         Assert.That(modIDs, Is.EquivalentTo(appIDs), "Should add modifier for each app");
     }
 
-    private async Task<IServiceProvider> setup()
+    private async Task<IServiceProvider> Setup()
     {
         var builder = new XtiHostBuilder();
         builder.Services.AddFakesForHubWebApp();

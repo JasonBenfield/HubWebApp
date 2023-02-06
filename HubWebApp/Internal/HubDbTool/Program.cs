@@ -15,7 +15,7 @@ await Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
-        services.AddSingleton(_ => new XtiEnvironment(hostContext.HostingEnvironment.EnvironmentName));
+        services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
         services.AddConfigurationOptions<HubDbToolOptions>();
         services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddHubDbContextForSqlServer();

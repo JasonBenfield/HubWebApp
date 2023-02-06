@@ -11,6 +11,7 @@ public sealed class ModifierEntityConfiguration : IEntityTypeConfiguration<Modif
         builder.HasKey(m => m.ID);
         builder.Property(m => m.ID).ValueGeneratedOnAdd();
         builder.Property(m => m.ModKey).HasMaxLength(100);
+        builder.Property(m => m.ModKeyDisplayText).HasMaxLength(100);
         builder.HasIndex(m => new { m.CategoryID, m.ModKey }).IsUnique();
         builder.Property(m => m.TargetKey).HasMaxLength(100);
         builder.HasIndex(m => new { m.CategoryID, m.TargetKey }).IsUnique();

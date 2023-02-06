@@ -11,12 +11,12 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -40,12 +40,12 @@ sealed class InstalledTest
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -68,18 +68,18 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult1 = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
         var newInstResult2 = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -98,20 +98,20 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var fakeApp = await registerFakeApp(tester);
         var fakeVersion = await fakeApp.CurrentVersion();
         var newInstResult1 = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = fakeVersion.ToVersionModel().VersionName,
+            VersionName = fakeVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = FakeInfo.AppKey
         });
         var newInstResult2 = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -138,11 +138,10 @@ sealed class InstalledTest
         return HubActionTester.Create(sp, hubApi => hubApi.Install.Installed);
     }
 
-    private async Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
+    private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.NewInstallation.Execute(model);
-        return result.Data;
+        return hubApi.Install.NewInstallation.Invoke(model);
     }
 
     private Task StartInstallation(IHubActionTester tester, GetInstallationRequest model)

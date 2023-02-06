@@ -6,14 +6,16 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TypeScriptToolsVersion>4.4</TypeScriptToolsVersion>
 		<UserSecretsId>06fc7bb1-bce8-444d-8883-ddda42ebf3f1</UserSecretsId>
+		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.34-dev230130113854328" />
+		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.34" />
 	</ItemGroup>
 
 	<ItemGroup>

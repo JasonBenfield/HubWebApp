@@ -2,27 +2,30 @@
 
 namespace XTI_Hub.Abstractions;
 
-public sealed class AddOrUpdateModifierByModKeyRequest
+public sealed class SystemAddOrUpdateModifierByModKeyRequest
 {
-    public AddOrUpdateModifierByModKeyRequest()
-        :this(ModifierCategoryName.Default, ModifierKey.Default, "", "")
+    public SystemAddOrUpdateModifierByModKeyRequest()
+        :this(0, ModifierCategoryName.Default, ModifierKey.Default, "", "")
     {
     }
 
-    public AddOrUpdateModifierByModKeyRequest
+    public SystemAddOrUpdateModifierByModKeyRequest
     (
+        int installationID,
         ModifierCategoryName modCategoryName, 
         ModifierKey modKey, 
         string targetKey, 
         string targetDisplayText
     )
     {
+        InstallationID = installationID;
         ModCategoryName = modCategoryName.DisplayText;
         ModKey = modKey.DisplayText;
         TargetKey = targetKey;
         TargetDisplayText = targetDisplayText;
     }
 
+    public int InstallationID { get; set; }
     public string ModCategoryName { get; set; }
     public string ModKey { get; set; }
     public string TargetKey { get; set; }

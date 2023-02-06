@@ -2,6 +2,7 @@
 import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
+import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
@@ -18,7 +19,7 @@ import { HubTheme } from "../../HubTheme";
 export class LogEntryPanelView extends GridView {
 
     readonly alert: MessageAlertView;
-    readonly appKey: FormGroupTextView;
+    readonly appKeyLink: TextLinkView;
     readonly versionKey: BasicTextComponentView;
     readonly versionStatus: BasicTextComponentView;
     readonly userName: FormGroupTextView;
@@ -42,8 +43,12 @@ export class LogEntryPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
         const gridContainer = mainContent.addView(FormGroupGridView);
-        this.appKey = gridContainer.addFormGroup(FormGroupTextView);
-        this.appKey.caption.setText('App');
+        const appKeyFormGroup = gridContainer.addFormGroup(FormGroupView);
+        appKeyFormGroup.caption.setText('App');
+        this.appKeyLink = appKeyFormGroup.valueCell.addView(TextLinkView);
+        this.appKeyLink.addCssName('form-control-link');
+        //this.appKeyLink.addCssName('btn btn-link');
+        this.appKeyLink.setTextCss(new TextCss().start());
         const versionFormGroup = gridContainer.addFormGroup(FormGroupView);
         versionFormGroup.caption.setText('Version');
         const versionBlock = versionFormGroup.valueCell.addView(BlockView);

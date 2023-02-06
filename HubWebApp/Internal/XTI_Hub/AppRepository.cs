@@ -28,7 +28,7 @@ public sealed class AppRepository
         await factory.Versions.AddVersionToAppIfNotFound(app, version);
         var currentVersion = await app.CurrentVersion();
         await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
-        var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
+        var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default);
         await defaultModCategory.AddDefaultModifierIfNotFound();
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
@@ -71,7 +71,7 @@ public sealed class AppRepository
             app = factory.CreateApp(entity);
             if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
             {
-                var defaultModCategory = await app.AddModCategoryIfNotFound(ModifierCategoryName.Default);
+                var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default);
                 await defaultModCategory.AddDefaultModifierIfNotFound();
             }
         });

@@ -71,7 +71,7 @@ public sealed class Modifier
         DisplayText = record.DisplayText
     };
 
-    private ModifierKey ModKey() => new ModifierKey(record.ModKey);
+    private ModifierKey ModKey() => new ModifierKey(record.ModKeyDisplayText);
 
     public override string ToString() => $"{nameof(Modifier)} {ID}";
 }

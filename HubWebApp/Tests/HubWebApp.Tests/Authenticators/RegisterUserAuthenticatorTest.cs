@@ -5,7 +5,7 @@ namespace HubWebApp.Tests;
 
 internal sealed class RegisterUserAuthenticatorTest
 {
-    private static readonly AuthenticatorKey authenticatorKey = new AuthenticatorKey("Auth");
+    private static readonly AuthenticatorKey authenticatorKey = new("Auth");
 
     [Test]
     public async Task ShouldThrowError_WhenAccessIsDenied()

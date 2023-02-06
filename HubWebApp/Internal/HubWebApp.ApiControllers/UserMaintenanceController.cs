@@ -10,6 +10,18 @@ public sealed partial class UserMaintenanceController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppUserModel>> DeactivateUser([FromBody] int model, CancellationToken ct)
+    {
+        return api.Group("UserMaintenance").Action<int, AppUserModel>("DeactivateUser").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserModel>> ReactivateUser([FromBody] int model, CancellationToken ct)
+    {
+        return api.Group("UserMaintenance").Action<int, AppUserModel>("ReactivateUser").Execute(model, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm model, CancellationToken ct)
     {
         return api.Group("UserMaintenance").Action<EditUserForm, EmptyActionResult>("EditUser").Execute(model, ct);

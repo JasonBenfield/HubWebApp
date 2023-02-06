@@ -20,7 +20,7 @@ internal sealed class HubDbContextFactory : IDesignTimeDbContextFactory<HubDbCon
             })
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddSingleton(_ => new XtiEnvironment(hostContext.HostingEnvironment.EnvironmentName));
+                services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
                 services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
                 services.Configure<HubDbToolOptions>(hostContext.Configuration);
                 services.AddHubDbContextForSqlServer();

@@ -10,6 +10,7 @@ interface IAppUserModel {
 	UserName: IAppUserName;
 	Name: IPersonName;
 	Email: string;
+	TimeDeactivated: Date;
 }
 interface IAppUserName {
 	Value: string;
@@ -69,7 +70,6 @@ interface IAppModel {
 	ID: number;
 	AppKey: IAppKey;
 	VersionName: IAppVersionName;
-	Title: string;
 	PublicKey: IModifierKey;
 }
 interface IAppKey {
@@ -114,7 +114,7 @@ interface IExpandedInstallation {
 	AppID: number;
 	AppKey: string;
 	AppName: string;
-	AppTypeText: string;
+	AppTypeDisplayText: string;
 	VersionName: string;
 	VersionRelease: string;
 	VersionKey: string;
@@ -456,7 +456,7 @@ interface IGetStoredObjectRequest {
 	StorageKey: string;
 }
 interface IGetAppContextRequest {
-	VersionKey: string;
+	InstallationID: number;
 }
 interface IAppContextModel {
 	App: IAppModel;
@@ -479,7 +479,7 @@ interface IAppContextResourceModel {
 	AllowedRoles: IAppRoleModel[];
 }
 interface IGetUserContextRequest {
-	VersionKey: string;
+	InstallationID: number;
 	UserName: string;
 }
 interface IUserContextModel {
@@ -487,23 +487,26 @@ interface IUserContextModel {
 	ModifiedRoles: IUserContextRoleModel[];
 }
 interface IUserContextRoleModel {
-	ModifierCategoryID: number;
-	ModifierKey: IModifierKey;
+	ModifierCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
 	Roles: IAppRoleModel[];
 }
-interface IAddOrUpdateModifierByTargetKeyRequest {
+interface ISystemAddOrUpdateModifierByTargetKeyRequest {
+	InstallationID: number;
 	ModCategoryName: string;
 	GenerateModKey: IGenerateKeyModel;
 	TargetKey: string;
 	TargetDisplayText: string;
 }
-interface IAddOrUpdateModifierByModKeyRequest {
+interface ISystemAddOrUpdateModifierByModKeyRequest {
+	InstallationID: number;
 	ModCategoryName: string;
 	ModKey: string;
 	TargetKey: string;
 	TargetDisplayText: string;
 }
-interface IGetUsersWithAnyRoleRequest {
+interface ISystemGetUsersWithAnyRoleRequest {
+	InstallationID: number;
 	ModCategoryName: string;
 	ModKey: string;
 	RoleNames: string[];
@@ -522,6 +525,8 @@ interface IExpandedUser {
 	TimeUserAdded: Date;
 	UserGroupID: number;
 	UserGroupName: string;
+	TimeUserDeactivated: Date;
+	IsActive: boolean;
 }
 interface IAppLogEntryDetailModel {
 	LogEntry: IAppLogEntryModel;
@@ -569,11 +574,11 @@ interface IAppSessionDetailModel {
 interface ISessionViewRequest {
 	SessionID: number;
 }
-interface IRequestQueryRequest {
+interface IAppRequestQueryRequest {
 	SessionID: number;
 	InstallationID: number;
 }
-interface IRequestRequest {
+interface IAppRequestRequest {
 	RequestID: number;
 }
 interface ILogEntryRequest {

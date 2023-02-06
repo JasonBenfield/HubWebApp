@@ -13,7 +13,7 @@ public sealed class ModifierCategoryRepository
         this.factory = factory;
     }
 
-    internal async Task<ModifierCategory> AddIfNotFound(App app, ModifierCategoryName name)
+    internal async Task<ModifierCategory> AddOrUpdate(App app, ModifierCategoryName name)
     {
         var record = await factory.DB
             .ModifierCategories
@@ -22,6 +22,10 @@ public sealed class ModifierCategoryRepository
         if (record == null)
         {
             record = await AddModCategory(app, name);
+        }
+        else
+        {
+            await factory.DB.ModifierCategories.Update(record, c => c.DisplayText = name.DisplayText);
         }
         return factory.ModCategory(record);
     }

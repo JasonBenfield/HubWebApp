@@ -28,7 +28,7 @@ class MainPage extends HubPage {
             this.activateRequestPanel();
         }
         else {
-            this.defaultApi.Logs.Requests.open({ SessionID: null, InstallationID: null });
+            this.defaultApi.Logs.AppRequests.open({ SessionID: null, InstallationID: null });
         }
     }
 

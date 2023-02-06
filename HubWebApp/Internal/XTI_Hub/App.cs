@@ -20,8 +20,8 @@ public sealed class App
 
     public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
-    internal Task<ModifierCategory> AddModCategoryIfNotFound(ModifierCategoryName name) =>
-        factory.ModCategories.AddIfNotFound(this, name);
+    internal Task<ModifierCategory> AddOrUpdateModCategory(ModifierCategoryName name) =>
+        factory.ModCategories.AddOrUpdate(this, name);
 
     internal Task<Modifier[]> Modifiers() => factory.Modifiers.ModifiersForApp(this);
 
@@ -44,8 +44,8 @@ public sealed class App
     public Task<ModifierCategory> ModCategory(ModifierCategoryName name)
         => factory.ModCategories.Category(this, name);
 
-    public Task<AppRole> AddRoleIfNotFound(AppRoleName name) =>
-        factory.Roles.AddIfNotFound(this, name);
+    public Task<AppRole> AddOrUpdateRole(AppRoleName name) =>
+        factory.Roles.AddOrUpdate(this, name);
 
     public async Task<AppRole[]> Roles()
     {
@@ -100,7 +100,7 @@ public sealed class App
             var existingRole = existingRoles.FirstOrDefault(r => r.NameEquals(roleName));
             if (existingRole == null)
             {
-                await AddRoleIfNotFound(roleName);
+                await AddOrUpdateRole(roleName);
             }
             else if (existingRole.IsDeactivated())
             {
@@ -146,7 +146,6 @@ public sealed class App
             ID: ID,
             AppKey: key,
             VersionName: new AppVersionName(record.VersionName),
-            Title: record.Title,
             PublicKey: key.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
                 ? ModifierKey.Default
                 : new ModifierKey(key.Format())

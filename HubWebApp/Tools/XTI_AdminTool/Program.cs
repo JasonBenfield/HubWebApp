@@ -159,6 +159,14 @@ await Host.CreateDefaultBuilder(args)
                 return publishedAssets;
             });
             services.AddHubClientServices();
+            services.AddSingleton(sp =>
+            {
+                var scopes = sp.GetRequiredService<Scopes>();
+                var options = scopes.GetRequiredService<AdminOptions>();
+                return string.IsNullOrWhiteSpace(options.HubAppVersionKey)
+                    ? HubAppClientVersion.Version(AppVersionKey.Current.DisplayText)
+                    : HubAppClientVersion.Version(options.HubAppVersionKey);
+            });
             var existingTokenAccessor = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
             if (existingTokenAccessor != null)
             {

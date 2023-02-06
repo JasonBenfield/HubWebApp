@@ -29,6 +29,7 @@ public sealed class ResourceGroupRepository
                     record, r =>
                     {
                         r.ModCategoryID = modCategory.ID;
+                        r.DisplayText = name.DisplayText;
                     }
                 );
         }
@@ -43,6 +44,7 @@ public sealed class ResourceGroupRepository
         {
             AppVersionID = appVersionID,
             Name = name.Value,
+            DisplayText = name.DisplayText,
             ModCategoryID = modCategory.ID
         };
         await factory.DB.ResourceGroups.Create(record);

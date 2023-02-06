@@ -21,6 +21,7 @@
 		$SiteName = "",
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
+        $HubAppVersionKey = "",
         [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default"
     )
@@ -29,7 +30,7 @@
     if($NoInstall){
         $Command = "Publish"
     }
-    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource
+    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-Build {
@@ -43,10 +44,11 @@ function Xti-Build {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        $HubAppVersionKey = ""
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Build -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName $EnvName -Command Build -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-Setup {
@@ -62,10 +64,11 @@ function Xti-Setup {
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         [ValidateSet("Default", "GitHub", "Folder")]
-        $InstallationSource = "Default"
+        $InstallationSource = "Default",
+        $HubAppVersionKey = ""
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Setup -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource
+    Xti-Admin -EnvName $EnvName -Command Setup -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-Install {
@@ -93,10 +96,11 @@ function Xti-Install {
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         [ValidateSet("Default", "GitHub", "Folder")]
-        $InstallationSource = "Default"
+        $InstallationSource = "Default",
+        $HubAppVersionKey = ""
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource
+    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-PublishLib {
@@ -113,7 +117,8 @@ function Xti-PublishLib {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoName,
         [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        $HubAppVersionKey = ""
     )
     ThrowIfNotSolutionDir
     Xti-Admin -EnvName $EnvName -Command PublishLib -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -HubAdministrationType $HubAdministrationType
@@ -125,9 +130,10 @@ function Xti-AddInstallationUser {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
         [ValidateSet("Default", "DB", "HUbClient")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        $HubAppVersionKey = ""
     )
-    Xti-Admin -EnvName $EnvName -Command AddInstallationUser -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName $EnvName -Command AddInstallationUser -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-AddSystemUser {
@@ -143,10 +149,10 @@ function Xti-AddSystemUser {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $Domain = "",
         [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        $HubAppVersionKey = ""
     )
-    ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command AddSystemUser -AppName "`"$($AppName)`"" -AppType $AppType -Domain "`"$($Domain)`"" -HubAdministrationType $HubAdministrationType
+    Xti-Admin -EnvName $EnvName -Command AddSystemUser -AppName "`"$($AppName)`"" -AppType $AppType -Domain "`"$($Domain)`"" -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-AddAdminUser {
@@ -166,10 +172,10 @@ function Xti-AddAdminUser {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $CredentialKey = "",
         [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default"
+        $HubAdministrationType = "Default",
+        $HubAppVersionKey = ""
     )
-    ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command AddAdminUser -UserName "`"$($UserName)`"" -Password "`"$($Password)`"" -CredentialKey "`"$($CredentialKey)`"" -HubAdministrationType $HubAdministrationType -AppName "`"$($AppName)`"" -AppType $AppType
+    Xti-Admin -EnvName $EnvName -Command AddAdminUser -UserName "`"$($UserName)`"" -Password "`"$($Password)`"" -CredentialKey "`"$($CredentialKey)`"" -HubAdministrationType $HubAdministrationType -AppName "`"$($AppName)`"" -AppType $AppType -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-DecryptTempLog {
@@ -235,6 +241,7 @@ function Xti-Admin {
         $RepoName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $VersionNumber,
+        $HubAppVersionKey = "",
         $DestinationMachine = "",
 		$Domain = "",
 		$SiteName = "",
@@ -272,6 +279,9 @@ function Xti-Admin {
     }
     if(-not [string]::IsNullOrWhiteSpace($VersionNumber) -and $VersionNumber -ne "`"`"") {
         $Args += "--VersionNumber $VersionNumber"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($HubAppVersionKey) -and $HubAppVersionKey -ne "`"`"") {
+        $Args += "--HubAppVersionKey $HubAppVersionKey"
     }
     if(-not [string]::IsNullOrWhiteSpace($HubAdministrationType) -and $HubAdministrationType -ne "Default") {
         $Args += "--HubAdministrationType $HubAdministrationType"

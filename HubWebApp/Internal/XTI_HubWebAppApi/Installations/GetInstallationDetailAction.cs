@@ -26,8 +26,8 @@ internal sealed class GetInstallationDetailAction : AppAction<int, InstallationD
         (
             InstallLocation: installLocation.ToModel(),
             Installation: installation.ToModel(),
-            Version: appVersion.ToVersionModel(),
-            App: appVersion.ToAppModel(),
+            Version: appVersion.Version.ToModel(),
+            App: appVersion.App.ToModel(),
             MostRecentRequest: requests.FirstOrDefault()?.ToModel() ?? new AppRequestModel()
         );
         return detail;

@@ -12,13 +12,11 @@ public sealed class Resource
     internal Resource(HubFactory factory, ResourceEntity record)
     {
         this.factory = factory;
-        this.record = record ?? new ResourceEntity();
+        this.record = record;
         ID = this.record.ID;
     }
 
     public int ID { get; }
-
-    public ResourceName Name() => new ResourceName(record.Name);
 
     public Task AllowAnonymous() => setIsAnonymousAllowed(true);
 
@@ -104,6 +102,8 @@ public sealed class Resource
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ResultType = ResourceResultType.Values.Value(record.ResultType)
         };
+
+    private ResourceName Name() => new ResourceName(record.DisplayText);
 
     public override string ToString() => $"{nameof(Resource)} {ID}";
 }

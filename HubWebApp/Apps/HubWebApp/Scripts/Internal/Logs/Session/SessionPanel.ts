@@ -93,7 +93,7 @@ export class SessionPanel implements IPanel {
                 { UserID: detail.User.ID }
             )
         );
-        this.requestsLink.setHref(this.hubApi.Logs.Requests.getUrl({ SessionID: this.sessionID, InstallationID: null }));
+        this.requestsLink.setHref(this.hubApi.Logs.AppRequests.getUrl({ SessionID: this.sessionID, InstallationID: null }));
     }
 
     start() { return this.awaitable.start(); }

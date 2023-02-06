@@ -159,7 +159,7 @@ public sealed class EfHubAdministration : IHubAdministration
             clock.Now()
         );
         var app = await hubFactory.Apps.App(appKey);
-        var adminRole = await app.AddRoleIfNotFound(AppRoleName.Admin);
+        var adminRole = await app.AddOrUpdateRole(AppRoleName.Admin);
         await user.AssignRole(adminRole);
         return user.ToModel();
     }

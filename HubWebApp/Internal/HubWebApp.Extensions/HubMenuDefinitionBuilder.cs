@@ -1,5 +1,5 @@
-﻿using XTI_HubWebAppApi;
-using XTI_WebApp.Abstractions;
+﻿using XTI_App.Abstractions;
+using XTI_HubWebAppApi;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;
@@ -25,7 +25,7 @@ internal sealed class HubMenuDefinitionBuilder : IMenuDefinitionBuilder
                 new LinkModel("apps", "Apps", api.Apps.Index.Path.RootPath()),
                 new LinkModel("userGroups", "User Groups", api.UserGroups.Index.Path.RootPath()),
                 new LinkModel("sessionLog", "Session Log", api.Logs.Sessions.Path.RootPath()),
-                new LinkModel("accessLog", "Access Log", api.Logs.Requests.Path.RootPath()),
+                new LinkModel("accessLog", "Access Log", api.Logs.AppRequests.Path.RootPath()),
                 new LinkModel("eventLog", "Event Log", api.Logs.LogEntries.Path.RootPath()),
                 new LinkModel("installations", "Installations", api.Installations.Index.Path.RootPath())
             )

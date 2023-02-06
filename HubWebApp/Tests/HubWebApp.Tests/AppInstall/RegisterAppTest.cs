@@ -15,7 +15,6 @@ public sealed class RegisterAppTest
         var app = await getApp(tester);
         var appModel = app.ToModel();
         Assert.That(appModel.AppKey, Is.EqualTo(FakeInfo.AppKey), "Should add app");
-        Assert.That(appModel.Title, Is.EqualTo($"{FakeInfo.AppKey.Name.DisplayText} {FakeInfo.AppKey.Type.DisplayText}"), "Should set app title");
     }
 
     private static async Task<App> getApp(IHubActionTester tester)
@@ -121,7 +120,7 @@ public sealed class RegisterAppTest
         var groups = (await version.ResourceGroups()).ToArray();
         Assert.That
         (
-            groups.Select(g => g.Name()),
+            groups.Select(g => g.ToModel().Name),
             Is.EquivalentTo
             (
                 new[]
@@ -147,7 +146,7 @@ public sealed class RegisterAppTest
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups())
-            .First(g => g.Name().Equals("Employee"));
+            .First(g => g.NameEquals(new ResourceGroupName("Employee")));
         var allowedRoles = await employeeGroup.AllowedRoles();
         Assert.That
         (
@@ -170,7 +169,7 @@ public sealed class RegisterAppTest
         var resources = (await group.Resources()).ToArray();
         Assert.That
         (
-            resources.Select(r => r.Name()),
+            resources.Select(r => r.ToModel().Name),
             Is.EquivalentTo(new[] { new ResourceName("AddEmployee"), new ResourceName("Employee"), new ResourceName("SubmitFakeForm") }),
             "Should add resources from template actions"
         );
@@ -185,7 +184,7 @@ public sealed class RegisterAppTest
         await tester.Execute(request);
         var app = await getApp(tester);
         var version = await app.CurrentVersion();
-        var employeeGroup = (await version.ResourceGroups()).First(g => g.Name().Equals("Employee"));
+        var employeeGroup = (await version.ResourceGroups()).First(g => g.NameEquals(new ResourceGroupName("Employee")));
         var addEmployeeAction = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
         var allowedRoles = await addEmployeeAction.AllowedRoles();
         Assert.That

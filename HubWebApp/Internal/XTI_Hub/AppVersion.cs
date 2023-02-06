@@ -44,8 +44,4 @@ public sealed class AppVersion
     internal Task<int> AppVersionID() => QueryAppVersionID().FirstAsync();
 
     internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(App, Version);
-
-    public AppModel ToAppModel() => App.ToModel();
-
-    public XtiVersionModel ToVersionModel() => Version.ToModel();
 }

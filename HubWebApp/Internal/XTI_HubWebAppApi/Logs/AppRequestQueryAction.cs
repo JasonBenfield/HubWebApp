@@ -4,18 +4,18 @@ using XTI_ODataQuery.Api;
 
 namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class RequestQueryAction : QueryAction<RequestQueryRequest, ExpandedRequest>
+internal sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest, ExpandedRequest>
 {
     private readonly CurrentAppUser currentUser;
     private readonly IHubDbContext db;
 
-    public RequestQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public AppRequestQueryAction(CurrentAppUser currentUser, IHubDbContext db)
     {
         this.currentUser = currentUser;
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, RequestQueryRequest model)
+    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest model)
     {
         var userGroupPermissions = await currentUser.GetUserGroupPermissions();
         var userGroupIDs = userGroupPermissions

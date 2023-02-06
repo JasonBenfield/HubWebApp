@@ -15,8 +15,8 @@ export class LogsGroup extends AppApiGroup {
 		this.GetSessionDetailAction = this.createAction<number,IAppSessionDetailModel>('GetSessionDetail', 'Get Session Detail');
 		this.Sessions = this.createView<IEmptyRequest>('Sessions');
 		this.Session = this.createView<ISessionViewRequest>('Session');
-		this.Requests = this.createView<IRequestQueryRequest>('Requests');
-		this.Request = this.createView<IRequestRequest>('Request');
+		this.AppRequests = this.createView<IAppRequestQueryRequest>('AppRequests');
+		this.AppRequest = this.createView<IAppRequestRequest>('AppRequest');
 		this.LogEntry = this.createView<ILogEntryRequest>('LogEntry');
 		this.LogEntries = this.createView<ILogEntryQueryRequest>('LogEntries');
 	}
@@ -27,8 +27,8 @@ export class LogsGroup extends AppApiGroup {
 	readonly GetSessionDetailAction: AppApiAction<number,IAppSessionDetailModel>;
 	readonly Sessions: AppApiView<IEmptyRequest>;
 	readonly Session: AppApiView<ISessionViewRequest>;
-	readonly Requests: AppApiView<IRequestQueryRequest>;
-	readonly Request: AppApiView<IRequestRequest>;
+	readonly AppRequests: AppApiView<IAppRequestQueryRequest>;
+	readonly AppRequest: AppApiView<IAppRequestRequest>;
 	readonly LogEntry: AppApiView<ILogEntryRequest>;
 	readonly LogEntries: AppApiView<ILogEntryQueryRequest>;
 	

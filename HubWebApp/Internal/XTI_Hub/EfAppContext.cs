@@ -6,23 +6,36 @@ namespace XTI_Hub;
 public sealed class EfAppContext : ISourceAppContext
 {
     private readonly HubFactory hubFactory;
-    private readonly AppKey appKey;
-    private readonly AppVersionKey versionKey;
+    private readonly AppKey defaultAppKey;
+    private readonly AppVersionKey defaultVersionKey;
 
-    public EfAppContext(HubFactory hubFactory, AppKey appKey, AppVersionKey versionKey)
+    public EfAppContext(HubFactory hubFactory)
+        : this(hubFactory, AppKey.Unknown, AppVersionKey.None)
     {
-        this.hubFactory = hubFactory;
-        this.appKey = appKey;
-        this.versionKey = versionKey;
     }
 
-    public async Task<AppContextModel> App()
+    public EfAppContext(HubFactory hubFactory, AppKey defaultAppKey, AppVersionKey defaultVersionKey)
     {
-        var app = await hubFactory.Apps.AppOrUnknown(appKey);
+        this.hubFactory = hubFactory;
+        this.defaultAppKey = defaultAppKey;
+        this.defaultVersionKey = defaultVersionKey;
+    }
+
+    public Task<AppContextModel> App() => App(defaultVersionKey);
+
+    public async Task<AppContextModel> App(AppVersionKey versionKey)
+    {
+        var app = await hubFactory.Apps.AppOrUnknown(defaultAppKey);
         var appVersion = await app.Version(versionKey);
-        var roles = await app.Roles();
+        var appContextModel = await App(appVersion);
+        return appContextModel;
+    }
+
+    public async Task<AppContextModel> App(AppVersion appVersion)
+    {
+        var roles = await appVersion.App.Roles();
         var roleModels = roles.Select(r => r.ToModel()).ToArray();
-        var modCategories = await app.ModCategories();
+        var modCategories = await appVersion.App.ModCategories();
         var modCategoryModels = new List<AppContextModifierCategoryModel>();
         foreach (var modCategory in modCategories)
         {
@@ -68,8 +81,8 @@ public sealed class EfAppContext : ISourceAppContext
         }
         return new AppContextModel
         (
-            app.ToModel(),
-            appVersion.ToVersionModel(),
+            appVersion.App.ToModel(),
+            appVersion.Version.ToModel(),
             roleModels,
             modCategoryModels.ToArray(),
             resourceGroupModels.ToArray()

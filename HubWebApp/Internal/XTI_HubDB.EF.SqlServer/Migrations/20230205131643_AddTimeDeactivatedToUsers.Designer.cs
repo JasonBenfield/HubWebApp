@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XTI_HubDB.EF;
 
 #nullable disable
 
-namespace XTIHubDB.EF.SqlServer.Migrations
+namespace XTIHubDB.EF.SqlServer
 {
     [DbContext(typeof(HubDbContext))]
-    partial class XTIHubDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230205131643_AddTimeDeactivatedToUsers")]
+    partial class AddTimeDeactivatedToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,6 +135,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -224,6 +232,9 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTimeOffset>("TimeAdded")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TimeDeactivated")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UserName")
@@ -335,7 +346,7 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AppTypeText")
+                    b.Property<string>("AppTypeDisplayText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -482,6 +493,9 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                     b.Property<string>("SeverityText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SourceID")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("TimeOccurred")
                         .HasColumnType("datetimeoffset");
@@ -839,6 +853,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                     b.Property<int>("AppID")
                         .HasColumnType("int");
 
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -872,6 +891,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("ModKeyDisplayText")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("TargetKey")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -895,6 +919,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("GroupID")
                         .HasColumnType("int");
@@ -928,6 +957,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("AppVersionID")
                         .HasColumnType("int");
+
+                    b.Property<string>("DisplayText")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsAnonymousAllowed")
                         .HasColumnType("bit");

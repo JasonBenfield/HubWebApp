@@ -1,4 +1,5 @@
-﻿using XTI_HubDB.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApi.Logs;
 using XTI_ODataQuery.Api;
 
@@ -17,9 +18,9 @@ partial class HubAppApi
         get => _SessionQuery ?? throw new ArgumentNullException(nameof(_SessionQuery));
     }
 
-    private ODataGroup<RequestQueryRequest, ExpandedRequest>? _RequestQuery;
+    private ODataGroup<AppRequestQueryRequest, ExpandedRequest>? _RequestQuery;
 
-    public ODataGroup<RequestQueryRequest, ExpandedRequest> RequestQuery
+    public ODataGroup<AppRequestQueryRequest, ExpandedRequest> RequestQuery
     {
         get => _RequestQuery ?? throw new ArgumentNullException(nameof(_RequestQuery));
     }
@@ -43,10 +44,10 @@ partial class HubAppApi
             source.AddGroup(nameof(SessionQuery)),
             () => sp.GetRequiredService<SessionQueryAction>()
         );
-        _RequestQuery = new ODataGroup<RequestQueryRequest, ExpandedRequest>
+        _RequestQuery = new ODataGroup<AppRequestQueryRequest, ExpandedRequest>
         (
             source.AddGroup(nameof(RequestQuery)),
-            () => sp.GetRequiredService<RequestQueryAction>()
+            () => sp.GetRequiredService<AppRequestQueryAction>()
         );
         _LogEntryQuery = new ODataGroup<LogEntryQueryRequest, ExpandedLogEntry>
         (

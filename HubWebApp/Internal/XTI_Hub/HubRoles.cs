@@ -4,7 +4,7 @@ namespace XTI_Hub;
 
 public sealed class HubRoles
 {
-    internal static HubRoles Instance = new HubRoles();
+    internal static HubRoles Instance = new();
 
     public AppRoleName Admin { get; } = AppRoleName.Admin;
     public AppRoleName ViewApp { get; } = new(nameof(ViewApp));
@@ -14,6 +14,7 @@ public sealed class HubRoles
     public AppRoleName ViewUser { get; } = new(nameof(ViewUser));
     public AppRoleName Authenticator { get; } = new(nameof(Authenticator));
     public AppRoleName PermanentLog { get; } = new(nameof(PermanentLog));
+    public AppRoleName ViewLog { get; } = new(nameof(ViewLog));
     public AppRoleName InstallationManager { get; } = new(nameof(InstallationManager));
     public AppRoleName AddStoredObject { get; } = new(nameof(AddStoredObject));
 }

@@ -6,7 +6,6 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { AppListCardView } from "../Apps/AppListCardView";
 import { HubTheme } from "../HubTheme";
-import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
 import { UserAuthenticatorListCardView } from "./UserAuthenticatorListCardView";
 import { UserComponentView } from "./UserComponentView";
 

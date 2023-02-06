@@ -50,10 +50,10 @@ internal sealed class RequestDeleteTest
     private async Task<int> PrepareInstallation(HubActionTester<GetInstallationRequest, EmptyActionResult> tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion();
         var newInstResult = await NewInstallation(tester, new NewInstallationRequest
         {
-            VersionName = version.ToVersionModel().VersionName,
+            VersionName = appVersion.Version.ToModel().VersionName,
             QualifiedMachineName = qualifiedMachineName,
             AppKey = HubInfo.AppKey
         });
@@ -62,11 +62,10 @@ internal sealed class RequestDeleteTest
         return newInstResult.CurrentInstallationID;
     }
 
-    private async Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
+    private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.NewInstallation.Execute(model);
-        return result.Data;
+        return hubApi.Install.NewInstallation.Invoke(model);
     }
 
     private Task StartInstallation(IHubActionTester tester, GetInstallationRequest model)

@@ -376,15 +376,25 @@ public sealed class XtiVersionRepository
         );
     }
 
-    private Task ArchivePreviousVersions(XtiVersionEntity version) =>
-        factory.DB
+    private async Task ArchivePreviousVersions(XtiVersionEntity version)
+    {
+        var versionsToAchive = await factory.DB
             .Versions.Retrieve()
             .Where
             (
-                v => 
-                    v.ID != version.ID && 
-                    v.VersionName == version.VersionName && 
+                v =>
+                    v.ID != version.ID &&
+                    v.VersionName == version.VersionName &&
                     v.Status == AppVersionStatus.Values.Current.Value
             )
-            .ExecuteUpdateAsync(p => p.SetProperty(v => v.Status, AppVersionStatus.Values.Old.Value));
+            .ToArrayAsync();
+        foreach (var versionToArchive in versionsToAchive)
+        {
+            await factory.DB.Versions.Update
+            (
+                versionToArchive, 
+                v => v.Status = AppVersionStatus.Values.Old.Value
+            );
+        }
+    }
 }

@@ -12,8 +12,9 @@ internal sealed class GetUsersWithAnyRoleTest
         currentUserName.SetUserName(new SystemUserName(HubInfo.AppKey, Environment.MachineName).Value);
         var users = await tester.Execute
         (
-            new GetUsersWithAnyRoleRequest
+            new SystemGetUsersWithAnyRoleRequest
             (
+                0,
                 HubInfo.ModCategories.Apps,
                 new ModifierKey("Scheduled Jobs Web App"),
                 HubInfo.Roles.PermanentLog
@@ -22,7 +23,7 @@ internal sealed class GetUsersWithAnyRoleTest
         users.WriteToConsole();
     }
 
-    private async Task<HubActionTester<GetUsersWithAnyRoleRequest, AppUserModel[]>> Setup(string envName = "Development")
+    private async Task<HubActionTester<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>> Setup(string envName = "Development")
     {
         var host = new HubTestHost();
         var sp = await host.Setup(envName);

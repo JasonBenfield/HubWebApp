@@ -33,7 +33,7 @@ public sealed partial class HubAppClient : AppClient
         Periodic = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new PeriodicGroup(_clientFactory, _tokenAccessor, _url, _options));
         Logs = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new LogsGroup(_clientFactory, _tokenAccessor, _url, _options));
         SessionQuery = CreateODataGroup<EmptyRequest, ExpandedSession>("SessionQuery");
-        RequestQuery = CreateODataGroup<RequestQueryRequest, ExpandedRequest>("RequestQuery");
+        RequestQuery = CreateODataGroup<AppRequestQueryRequest, ExpandedRequest>("RequestQuery");
         LogEntryQuery = CreateODataGroup<LogEntryQueryRequest, ExpandedLogEntry>("LogEntryQuery");
     }
 
@@ -97,7 +97,7 @@ public sealed partial class HubAppClient : AppClient
 
     public AppClientODataGroup<EmptyRequest, ExpandedSession> SessionQuery { get; }
 
-    public AppClientODataGroup<RequestQueryRequest, ExpandedRequest> RequestQuery { get; }
+    public AppClientODataGroup<AppRequestQueryRequest, ExpandedRequest> RequestQuery { get; }
 
     public AppClientODataGroup<LogEntryQueryRequest, ExpandedLogEntry> LogEntryQuery { get; }
 }

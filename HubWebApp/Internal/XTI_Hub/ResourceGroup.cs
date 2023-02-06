@@ -18,7 +18,7 @@ public sealed class ResourceGroup
 
     public int ID { get; }
 
-    public ResourceGroupName Name() => new ResourceGroupName(record.Name);
+    public bool NameEquals(ResourceGroupName name) => Name().Equals(name);
 
     public Task<Resource> AddOrUpdateResource(ResourceName name, ResourceResultType resultType) =>
         factory.Resources.AddOrUpdate(this, name, resultType);
@@ -122,6 +122,8 @@ public sealed class ResourceGroup
             IsAnonymousAllowed = record.IsAnonymousAllowed,
             ModCategoryID = record.ModCategoryID
         };
+
+    private ResourceGroupName Name() => new ResourceGroupName(record.DisplayText);
 
     public override string ToString() => $"{nameof(ResourceGroup)} {ID}";
 }

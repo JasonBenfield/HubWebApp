@@ -1,10 +1,10 @@
 ﻿namespace XTI_HubWebAppApi.Logs;
 
-internal sealed class GetEventByKeyAction : AppAction<string, AppLogEntryModel>
+internal sealed class GetLogEntryByKeyAction : AppAction<string, AppLogEntryModel>
 {
     private readonly HubFactory hubFactory;
 
-    public GetEventByKeyAction(HubFactory hubFactory)
+    public GetLogEntryByKeyAction(HubFactory hubFactory)
     {
         this.hubFactory = hubFactory;
     }

@@ -29,8 +29,10 @@ internal sealed class DefaultUserCacheManagement : IUserCacheManagement
         var thisInstallation = await hubFactory.Installations.InstallationOrDefault(installationID);
         var appVersion = await thisInstallation.AppVersion();
         var thisInstallationModel = thisInstallation.ToModel();
-        var thisAppName = appVersion.ToAppModel().AppKey.Name;
-        var thisVersionKey = thisInstallationModel.IsCurrent ? AppVersionKey.Current : appVersion.ToVersionModel().VersionKey;
+        var thisAppName = appVersion.App.ToModel().AppKey.Name;
+        var thisVersionKey = thisInstallationModel.IsCurrent 
+            ? AppVersionKey.Current 
+            : appVersion.Version.ToModel().VersionKey;
         var loggedInApps = await user.GetLoggedInApps();
         foreach(var loggedInApp in loggedInApps)
         {

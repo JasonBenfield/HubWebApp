@@ -32,6 +32,7 @@ public sealed class ResourceRepository
             {
                 GroupID = group.ID,
                 Name = name.Value,
+                DisplayText = name.DisplayText,
                 ResultType = resultType.Value
             };
             await factory.DB.Resources.Create(record);
@@ -45,6 +46,7 @@ public sealed class ResourceRepository
                     record,
                     r =>
                     {
+                        r.DisplayText = name.DisplayText;
                         r.ResultType = resultType.Value;
                     }
                 );
@@ -85,7 +87,7 @@ public sealed class ResourceRepository
         return factory.CreateResource
         (
             record ?? 
-            throw new Exception($"Resource '{name.DisplayText}' not found for group '{group.Name().DisplayText}'")
+            throw new Exception($"Resource '{name.DisplayText}' not found for group '{group.ToModel().Name.DisplayText}'")
         );
     }
 

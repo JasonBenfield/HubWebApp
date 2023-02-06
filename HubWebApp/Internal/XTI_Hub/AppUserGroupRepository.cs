@@ -65,7 +65,7 @@ public sealed class AppUserGroupRepository
         var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
-            var userGroupsModCategory = await hubApp.AddModCategoryIfNotFound(HubInfo.ModCategories.UserGroups);
+            var userGroupsModCategory = await hubApp.AddOrUpdateModCategory(HubInfo.ModCategories.UserGroups);
             await userGroupsModCategory.AddOrUpdateModifier
             (
                 userGroupModel.PublicKey,

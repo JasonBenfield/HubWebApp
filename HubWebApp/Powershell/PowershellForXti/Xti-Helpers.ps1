@@ -15,17 +15,25 @@ function CD-Repo {
         $RepoName = "",
         $RepoOwner = ""
     )
+    $xtiDir = $env:XTI_DIR
+    if([string]::IsNullOrWhiteSpace($xtiDir)) {
+        $xtiDir = "c:\xti"
+    }
+    $repoOwnerDir = ""
     if([string]::IsNullOrWhiteSpace($RepoOwner)) {
-        $slnDir = (get-item $pwd).Parent.FullName
+        $currentDir = (get-item $pwd).FullName
+        $xtiDirRegex = $xtiDir.replace('\', '\\');
+        if($currentDir.toLower() -match "^$($xtiDirRegex)\\src\\\w+$") {
+            $repoOwnerDir = $currentDir
+        }
+        else{
+            $repoOwnerDir = (get-item $pwd).Parent.FullName
+        }
     }
     else {
-        $slnDir = $env:XTI_DIR
-        if([string]::IsNullOrWhiteSpace($slnDir)) {
-            $slnDir = "c:\xti"
-        }
-        $slnDir = "$($slnDir)\src\$($RepoOwner)"
+        $repoOwnerDir = "$($xtiDir)\src\$($RepoOwner)"
     }
-    $slnDir = "$($slnDir)\$($RepoName)"
+    $slnDir = "$($repoOwnerDir)\$($RepoName)"
     cd $slnDir
     $env:SolutionDir = $slnDir
 }

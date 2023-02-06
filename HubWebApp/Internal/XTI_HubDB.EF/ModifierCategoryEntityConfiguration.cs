@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XTI_HubDB.Entities;
-
-namespace XTI_HubDB.EF;
+﻿namespace XTI_HubDB.EF;
 
 public sealed class ModifierCategoryEntityConfiguration : IEntityTypeConfiguration<ModifierCategoryEntity>
 {
@@ -11,6 +7,7 @@ public sealed class ModifierCategoryEntityConfiguration : IEntityTypeConfigurati
         builder.HasKey(c => c.ID);
         builder.Property(c => c.ID).ValueGeneratedOnAdd();
         builder.Property(c => c.Name).HasMaxLength(50);
+        builder.Property(c => c.DisplayText).HasMaxLength(50);
         builder.HasIndex(c => new { c.AppID, c.Name }).IsUnique();
         builder
             .HasOne<AppEntity>()
