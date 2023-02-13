@@ -14,9 +14,10 @@ function Xti-NewSln {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $RepoName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $SrcDir = ""
+        $SrcDir = "",
+        $IsOrganization = $false
     )
-    Xti-Dotnet -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -SrcDir "`"$($SrcDir)`""
+    Xti-Dotnet -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -SrcDir "`"$($SrcDir)`"" -IsOrganization $IsOrganization
     CD-Repo -RepoOwner $RepoOwner -RepoName $RepoName
 }
 
@@ -161,7 +162,8 @@ function Xti-Dotnet {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $Domain = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $TestType = ""
+        $TestType = "",
+        $IsOrganization = $false
     )
     $ErrorActionPreference = "Stop"
     if($Command -ne "Install" -and $Command -ne "Uninstall") {
@@ -204,6 +206,9 @@ function Xti-Dotnet {
     }
     if(-not [string]::IsNullOrWhiteSpace($TestType) -and $TestType -ne "`"`"") {
         $Args += "--TestType $TestType"
+    }
+    if($IsOrganization -or $IsOrganization -eq "True") {
+        $Args += "--IsOrganization $IsOrganization"
     }
     $ArgsText = $Args -join " "
     Write-Host "ArgsText: $ArgsText"

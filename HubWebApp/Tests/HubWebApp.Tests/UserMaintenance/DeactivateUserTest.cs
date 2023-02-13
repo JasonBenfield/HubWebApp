@@ -16,11 +16,16 @@ internal sealed class DeactivateUserTest
     {
         var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
-        var userToDeactivate = await AddUser(tester, "userToDeactivate");
+        var i = 1;
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                userToDeactivate.ToModel().ID,
+                async () =>
+                {
+                    var userToDeactivate = await AddUser(tester, $"userToDeactivate{i}");
+                    i++;
+                    return userToDeactivate.ToModel().ID;
+                },
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.EditUser

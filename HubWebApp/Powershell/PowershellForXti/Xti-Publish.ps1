@@ -97,10 +97,11 @@ function Xti-Install {
         $HubAdministrationType = "Default",
         [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default",
-        $HubAppVersionKey = ""
+        $HubAppVersionKey = "",
+        $Release = ""
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
+    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -Release "`"$($Release)`""
 }
 
 function Xti-PublishLib {
@@ -230,16 +231,11 @@ function Xti-Admin {
         [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials")]
         [Parameter(Mandatory)]
         $Command,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppName,
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppType,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        $AppType = "",
         $RepoOwner = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
         $RepoName = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
         $VersionNumber,
         $HubAppVersionKey = "",
         $DestinationMachine = "",
@@ -252,7 +248,7 @@ function Xti-Admin {
 		$VersionType = "",
 		$IssueTitle = "",
 		$IssueNumber = 0,
-        [switch] $StartIssue,
+        [switch] $StartIssue = $false,
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         [ValidateSet("Default", "GitHub", "Folder")]

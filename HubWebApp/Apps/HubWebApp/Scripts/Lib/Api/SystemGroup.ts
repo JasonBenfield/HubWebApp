@@ -18,6 +18,7 @@ export class SystemGroup extends AppApiGroup {
 		this.GetUsersWithAnyRoleAction = this.createAction<ISystemGetUsersWithAnyRoleRequest,IAppUserModel[]>('GetUsersWithAnyRole', 'Get Users With Any Role');
 		this.StoreObjectAction = this.createAction<IStoreObjectRequest,string>('StoreObject', 'Store Object');
 		this.GetStoredObjectAction = this.createAction<IGetStoredObjectRequest,string>('GetStoredObject', 'Get Stored Object');
+		this.SetUserAccessAction = this.createAction<ISystemSetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
 	
 	readonly GetAppContextAction: AppApiAction<IGetAppContextRequest,IAppContextModel>;
@@ -29,6 +30,7 @@ export class SystemGroup extends AppApiGroup {
 	readonly GetUsersWithAnyRoleAction: AppApiAction<ISystemGetUsersWithAnyRoleRequest,IAppUserModel[]>;
 	readonly StoreObjectAction: AppApiAction<IStoreObjectRequest,string>;
 	readonly GetStoredObjectAction: AppApiAction<IGetStoredObjectRequest,string>;
+	readonly SetUserAccessAction: AppApiAction<ISystemSetUserAccessRequest,IEmptyActionResult>;
 	
 	GetAppContext(model: IGetAppContextRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetAppContextAction.execute(model, errorOptions || {});
@@ -56,5 +58,8 @@ export class SystemGroup extends AppApiGroup {
 	}
 	GetStoredObject(model: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetStoredObjectAction.execute(model, errorOptions || {});
+	}
+	SetUserAccess(model: ISystemSetUserAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.SetUserAccessAction.execute(model, errorOptions || {});
 	}
 }

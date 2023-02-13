@@ -28,7 +28,7 @@ internal sealed class AddUserTest
                 {
                     var form = createForm(userSuffix);
                     userSuffix++;
-                    return form;
+                    return Task.FromResult(form);
                 },
                 modifier,
                 HubInfo.Roles.Admin,

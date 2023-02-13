@@ -1,4 +1,5 @@
-﻿using XTI_WebApp.Api;
+﻿using Microsoft.OData.UriParser;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.Tests;
 
@@ -55,35 +56,36 @@ internal sealed class AppModifierAssertions<TModel, TResult>
     }
 
     public Task ShouldThrowError_WhenAccessIsDenied(TModel model, params AppRoleName[] allowedRoles) =>
-        ShouldThrowError_WhenAccessIsDenied(() => model, allowedRoles);
+        ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), allowedRoles);
 
-    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, params AppRoleName[] allowedRoles)
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, params AppRoleName[] allowedRoles)
     {
         var modifier = await tester.DefaultModifier();
         await ShouldThrowError_WhenAccessIsDenied(createModel, modifier, allowedRoles);
     }
 
     public Task ShouldThrowError_WhenAccessIsDenied(TModel model, Modifier modifier, params AppRoleName[] allowedRoles) =>
-        ShouldThrowError_WhenAccessIsDenied(() => model, modifier, allowedRoles);
+        ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), modifier, allowedRoles);
 
     public Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles) =>
-        ShouldThrowError_WhenAccessIsDenied(() => model, rolesToKeep, modifier, allowedRoles);
+        ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), rolesToKeep, modifier, allowedRoles);
 
-    public Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, Modifier modifier, params AppRoleName[] allowedRoles) =>
+    public Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, Modifier modifier, params AppRoleName[] allowedRoles) =>
         ShouldThrowError_WhenAccessIsDenied(createModel, new AppRoleName[0], modifier, allowedRoles);
 
-    public async Task ShouldThrowError_WhenAccessIsDenied(Func<TModel> createModel, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
     {
         var modKey = modifier.ToModel().ModKey;
-        var loggedInUser = await tester.Login();
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         foreach (var roleName in allowedRoles)
         {
+            var model = await createModel();
+            var loggedInUser = await tester.Login();
             await SetUserRoles(loggedInUser, rolesToKeep, modifier, roleName);
             Assert.DoesNotThrowAsync
             (
-                () => tester.Execute(createModel(), modKey),
+                () => tester.Execute(model, modKey),
                 $"Should have access with role '{roleName.DisplayText}'"
             );
         }
@@ -95,17 +97,21 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         var deniedRoles = roles.Except(allowedRoles).ToArray();
         foreach (var roleName in deniedRoles)
         {
+            var model = await createModel();
+            var loggedInUser = await tester.Login();
             await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, roleName);
             Assert.ThrowsAsync<AccessDeniedException>
             (
-                () => tester.Execute(createModel(), modKey),
+                () => tester.Execute(model, modKey),
                 $"Should not have access with role '{roleName.DisplayText}'"
             );
         }
-        await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, AppRoleName.DenyAccess);
+        var denyAccessModel = await createModel();
+        var denyAccessLoggedInUser = await tester.Login();
+        await SetUserRoles(denyAccessLoggedInUser, new AppRoleName[0], modifier, AppRoleName.DenyAccess);
         Assert.ThrowsAsync<AccessDeniedException>
         (
-            () => tester.Execute(createModel(), modKey),
+            () => tester.Execute(denyAccessModel, modKey),
             $"Should not have access with role '{AppRoleName.DenyAccess.DisplayText}'"
         );
     }
