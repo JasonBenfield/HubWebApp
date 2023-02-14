@@ -21,7 +21,7 @@ internal sealed class SupportAppSetup : IAppSetup
         (
             new SetUserAccessRequest
             (
-                systemUserName.Value,
+                systemUserName.UserName,
                 new SetUserAccessRoleRequest
                 (
                     AppKey.WebApp(hubClient.AppName),

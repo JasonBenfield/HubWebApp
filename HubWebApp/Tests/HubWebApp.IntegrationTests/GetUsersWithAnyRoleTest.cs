@@ -9,7 +9,7 @@ internal sealed class GetUsersWithAnyRoleTest
     {
         var tester = await Setup();
         var currentUserName = tester.Services.GetRequiredService<FakeCurrentUserName>();
-        currentUserName.SetUserName(new SystemUserName(HubInfo.AppKey, Environment.MachineName).Value);
+        currentUserName.SetUserName(new SystemUserName(HubInfo.AppKey, Environment.MachineName).UserName);
         var users = await tester.Execute
         (
             new SystemGetUsersWithAnyRoleRequest
