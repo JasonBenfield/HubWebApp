@@ -62,4 +62,10 @@ public sealed partial class SystemController : Controller
     {
         return api.Group("System").Action<GetStoredObjectRequest, string>("GetStoredObject").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> SetUserAccess([FromBody] SystemSetUserAccessRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<SystemSetUserAccessRequest, EmptyActionResult>("SetUserAccess").Execute(model, ct);
+    }
 }

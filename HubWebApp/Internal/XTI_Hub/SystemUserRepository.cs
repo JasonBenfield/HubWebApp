@@ -31,7 +31,7 @@ public sealed class SystemUserRepository
     public async Task<AppUser> AddOrUpdateSystemUser(SystemUserName systemUserName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
         var systemUser = await SystemUserOrAnon(systemUserName);
-        if (systemUser.ToModel().UserName.Equals(systemUserName.Value))
+        if (systemUser.ToModel().UserName.Equals(systemUserName.UserName))
         {
             await systemUser.ChangePassword(hashedPassword);
         }
@@ -66,7 +66,7 @@ public sealed class SystemUserRepository
     }
 
     public Task<AppUser> SystemUserOrAnon(SystemUserName systemUserName) =>
-        factory.Users.UserOrAnon(systemUserName.Value);
+        factory.Users.UserOrAnon(systemUserName.UserName);
 
     private async Task<AppUser> AddSystemUser
     (
@@ -78,9 +78,9 @@ public sealed class SystemUserRepository
         var xtiUserGroup = await factory.UserGroups.GetXti();
         var user = await xtiUserGroup.AddOrUpdate
         (
-            systemUserName.Value,
+            systemUserName.UserName,
             password,
-            new PersonName(systemUserName.Value.DisplayText),
+            new PersonName(systemUserName.UserName.DisplayText),
             new EmailAddress(""),
             timeAdded
         );

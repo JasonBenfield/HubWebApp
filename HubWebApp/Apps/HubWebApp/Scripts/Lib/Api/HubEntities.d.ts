@@ -511,6 +511,16 @@ interface ISystemGetUsersWithAnyRoleRequest {
 	ModKey: string;
 	RoleNames: string[];
 }
+interface ISystemSetUserAccessRequest {
+	InstallationID: number;
+	UserName: string;
+	RoleAssignments: ISystemSetUserAccessRoleRequest[];
+}
+interface ISystemSetUserAccessRoleRequest {
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
+}
 interface IUserGroupKey {
 	UserGroupName: string;
 }

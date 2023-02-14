@@ -23,7 +23,7 @@ public sealed class InstallerRepository
     public async Task<AppUser> AddOrUpdateInstaller(string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
     {
         var installer = await InstallerOrAnon(machineName);
-        if (installer.ToModel().UserName.Equals(new InstallerUserName(machineName).Value))
+        if (installer.ToModel().UserName.Equals(new InstallerUserName(machineName).UserName))
         {
             await installer.ChangePassword(hashedPassword);
         }
@@ -46,7 +46,7 @@ public sealed class InstallerRepository
     }
 
     public Task<AppUser> InstallerOrAnon(string machineName)
-        => factory.Users.UserOrAnon(new InstallerUserName(machineName).Value);
+        => factory.Users.UserOrAnon(new InstallerUserName(machineName).UserName);
 
     private async Task<AppUser> AddInstaller
     (
@@ -58,7 +58,7 @@ public sealed class InstallerRepository
         var xtiUserGroup = await factory.UserGroups.GetXti();
         var user = await xtiUserGroup.AddOrUpdate
         (
-            new InstallerUserName(machineName).Value,
+            new InstallerUserName(machineName).UserName,
             password,
             new PersonName($"Installer {machineName}"),
             new EmailAddress(""),

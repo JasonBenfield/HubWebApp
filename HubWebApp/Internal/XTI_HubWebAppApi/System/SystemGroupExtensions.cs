@@ -14,6 +14,7 @@ internal static class SystemGroupExtensions
         services.AddScoped<GetUserAuthenticatorsAction>();
         services.AddScoped<AddOrUpdateModifierByTargetKeyAction>();
         services.AddScoped<AddOrUpdateModifierByModKeyAction>();
+        services.AddScoped<SystemSetUserAccessAction>();
         services.AddScoped<SystemGetStoredObjectAction>();
         services.AddScoped<SystemStoreObjectAction>();
     }

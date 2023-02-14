@@ -101,7 +101,7 @@ internal sealed class GetUsersWithAnyRoleTest
     }
 
     private static AppUserName GetSystemUserName()=>
-        new SystemUserName(HubInfo.AppKey, Environment.MachineName).Value;
+        new SystemUserName(HubInfo.AppKey, Environment.MachineName).UserName;
 
     private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
     {

@@ -46,9 +46,9 @@ internal sealed class Installer
     {
         var envName = context.Request.Form["envName"].FirstOrDefault() ?? "";
         var remoteInstallKey = context.Request.Form["RemoteInstallKey"].FirstOrDefault() ?? "";
-        var hubAdministrationType = context.Request.Form["HubAdministrationType"].FirstOrDefault() ?? "";
+        var hubAdministrationType = context.Request.Form["HubAdministrationType"].FirstOrDefault() ?? "Default";
         var hubAppVersionKey = context.Request.Form["HubAppVersionKey"].FirstOrDefault() ?? "";
-        var installationSource = context.Request.Form["InstallationSource"].FirstOrDefault() ?? "";
+        var installationSource = context.Request.Form["InstallationSource"].FirstOrDefault() ?? "Default";
         var adminToolPath = Path.Combine(xtiFolder.ToolsPath(), "XTI_AdminTool", "XTI_AdminTool.exe");
         var process = new XtiProcess(adminToolPath)
             .WriteOutputToConsole()

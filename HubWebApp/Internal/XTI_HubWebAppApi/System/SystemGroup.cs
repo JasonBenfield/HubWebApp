@@ -54,6 +54,11 @@ public sealed class SystemGroup : AppApiGroupWrapper
             () => sp.GetRequiredService<SystemGetStoredObjectAction>(),
             () => sp.GetRequiredService<GetStoredObjectValidation>()
         );
+        SetUserAccess = source.AddAction
+        (
+            nameof(SetUserAccess),
+            () => sp.GetRequiredService<SystemSetUserAccessAction>()
+        );
     }
 
     public AppApiAction<GetAppContextRequest, AppContextModel> GetAppContext { get; }
@@ -65,4 +70,5 @@ public sealed class SystemGroup : AppApiGroupWrapper
     public AppApiAction<SystemAddOrUpdateModifierByModKeyRequest, ModifierModel> AddOrUpdateModifierByModKey { get; }
     public AppApiAction<StoreObjectRequest, string> StoreObject { get; }
     public AppApiAction<GetStoredObjectRequest, string> GetStoredObject { get; }
+    public AppApiAction<SystemSetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
 }
