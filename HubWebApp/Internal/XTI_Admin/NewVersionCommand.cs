@@ -17,7 +17,6 @@ public sealed class NewVersionCommand : ICommand
 
     public async Task Execute()
     {
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
         var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();

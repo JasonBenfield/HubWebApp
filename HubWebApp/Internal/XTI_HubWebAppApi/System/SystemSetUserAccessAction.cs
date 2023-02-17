@@ -4,11 +4,13 @@ internal sealed class SystemSetUserAccessAction : AppAction<SystemSetUserAccessR
 {
     private readonly AppFromSystemUser appFromSystemUser;
     private readonly HubFactory hubFactory;
+    private readonly IUserCacheManagement userCacheManagement;
 
-    public SystemSetUserAccessAction(AppFromSystemUser appFromSystemUser, HubFactory hubFactory)
+    public SystemSetUserAccessAction(AppFromSystemUser appFromSystemUser, HubFactory hubFactory, IUserCacheManagement userCacheManagement)
     {
         this.appFromSystemUser = appFromSystemUser;
         this.hubFactory = hubFactory;
+        this.userCacheManagement = userCacheManagement;
     }
 
     public async Task<EmptyActionResult> Execute(SystemSetUserAccessRequest model, CancellationToken stoppingToken)
@@ -26,6 +28,7 @@ internal sealed class SystemSetUserAccessAction : AppAction<SystemSetUserAccessR
                 await user.Modifier(modifier).AssignRole(role);
             }
         }
+        await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }
 }
