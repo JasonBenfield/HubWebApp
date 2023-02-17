@@ -3,10 +3,12 @@
 internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyActionResult>
 {
     private readonly HubFactory hubFactory;
+    private readonly IUserCacheManagement userCacheManagement;
 
-    public SetUserAccessAction(HubFactory hubFactory)
+    public SetUserAccessAction(HubFactory hubFactory, IUserCacheManagement userCacheManagement)
     {
         this.hubFactory = hubFactory;
+        this.userCacheManagement = userCacheManagement;
     }
 
     public async Task<EmptyActionResult> Execute(SetUserAccessRequest model, CancellationToken stoppingToken)
@@ -23,6 +25,7 @@ internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, Empt
                 await user.Modifier(modifier).AssignRole(role);
             }
         }
+        await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }
 }
