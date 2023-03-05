@@ -30,6 +30,6 @@ public sealed partial class CurrentUserController : Controller
     public async Task<IActionResult> Index(CancellationToken ct)
     {
         var result = await api.Group("CurrentUser").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 }

@@ -12,7 +12,7 @@ public sealed partial class UsersController : Controller
     public async Task<IActionResult> Index(GetUserRequest model, CancellationToken ct)
     {
         var result = await api.Group("Users").Action<GetUserRequest, WebViewResult>("Index").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     [HttpPost]

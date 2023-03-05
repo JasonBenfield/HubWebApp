@@ -12,19 +12,11 @@ public sealed class SystemUserRepository
         this.factory = factory;
     }
 
-    public Task<AppUser[]> SystemUsers() =>
-        factory.DB
-            .Users
-            .Retrieve()
-            .Where(u => u.UserName.StartsWith("xti_sys_"))
-            .Select(u => factory.User(u))
-            .ToArrayAsync();
-
     public Task<AppUser[]> SystemUsers(AppKey appKey) =>
         factory.DB
             .Users
             .Retrieve()
-            .Where(u => u.UserName.StartsWith($"xti_sys[{appKey.Serialize()}]"))
+            .Where(u => u.UserName.StartsWith($"xti_sys[{appKey.Serialize()}]") || u.UserName.StartsWith($"xti_sys2[{appKey.Serialize()}]"))
             .Select(u => factory.User(u))
             .ToArrayAsync();
 

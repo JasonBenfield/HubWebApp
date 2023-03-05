@@ -36,36 +36,36 @@ public sealed partial class LogsController : Controller
     public async Task<IActionResult> Sessions(CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<EmptyRequest, WebViewResult>("Sessions").Execute(new EmptyRequest(), ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> Session(SessionViewRequest model, CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<SessionViewRequest, WebViewResult>("Session").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> AppRequests(AppRequestQueryRequest model, CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<AppRequestQueryRequest, WebViewResult>("AppRequests").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> AppRequest(AppRequestRequest model, CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<AppRequestRequest, WebViewResult>("AppRequest").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> LogEntry(LogEntryRequest model, CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<LogEntryRequest, WebViewResult>("LogEntry").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> LogEntries(LogEntryQueryRequest model, CancellationToken ct)
     {
         var result = await api.Group("Logs").Action<LogEntryQueryRequest, WebViewResult>("LogEntries").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 }
