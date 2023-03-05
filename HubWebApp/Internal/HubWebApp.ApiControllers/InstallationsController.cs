@@ -12,13 +12,13 @@ public sealed partial class InstallationsController : Controller
     public async Task<IActionResult> Index(InstallationQueryRequest model, CancellationToken ct)
     {
         var result = await api.Group("Installations").Action<InstallationQueryRequest, WebViewResult>("Index").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> Installation(InstallationViewRequest model, CancellationToken ct)
     {
         var result = await api.Group("Installations").Action<InstallationViewRequest, WebViewResult>("Installation").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     [HttpPost]

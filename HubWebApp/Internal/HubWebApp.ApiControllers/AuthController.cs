@@ -19,13 +19,13 @@ public sealed partial class AuthController : Controller
     public async Task<IActionResult> VerifyLoginForm(CancellationToken ct)
     {
         var result = await api.Group("Auth").Action<EmptyRequest, WebPartialViewResult>("VerifyLoginForm").Execute(new EmptyRequest(), ct);
-        return PartialView(result.Data.ViewName);
+        return PartialView(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> Login(LoginModel model, CancellationToken ct)
     {
         var result = await api.Group("Auth").Action<LoginModel, WebRedirectResult>("Login").Execute(model, ct);
-        return Redirect(result.Data.Url);
+        return Redirect(result.Data!.Url);
     }
 
     [HttpPost]

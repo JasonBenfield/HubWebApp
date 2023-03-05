@@ -12,13 +12,13 @@ public sealed partial class UserGroupsController : Controller
     public async Task<IActionResult> Index(CancellationToken ct)
     {
         var result = await api.Group("UserGroups").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     public async Task<IActionResult> UserQuery(UserGroupKey model, CancellationToken ct)
     {
         var result = await api.Group("UserGroups").Action<UserGroupKey, WebViewResult>("UserQuery").Execute(model, ct);
-        return View(result.Data.ViewName);
+        return View(result.Data!.ViewName);
     }
 
     [HttpPost]
