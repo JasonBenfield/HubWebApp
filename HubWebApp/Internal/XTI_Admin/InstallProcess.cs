@@ -69,7 +69,7 @@ internal sealed class InstallProcess
                 foreach (var installationOptions in installations)
                 {
                     var installMachineName = string.IsNullOrWhiteSpace(installationOptions.MachineName)
-                        ? Environment.MachineName
+                        ? GetLocalMachineName()
                         : installationOptions.MachineName;
                     var instResult = await newInstallation
                     (
@@ -116,6 +116,14 @@ internal sealed class InstallProcess
                 }
             }
         }
+    }
+
+    private static string GetLocalMachineName()
+    {
+        var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+        return string.IsNullOrWhiteSpace(domain) 
+            ? Environment.MachineName 
+            : $"{Environment.MachineName}.{domain}";
     }
 
     private readonly Dictionary<string, CredentialValue> machineCredentials = new ();

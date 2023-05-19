@@ -9,22 +9,25 @@ internal sealed class GetPendingDeletesAction : AppAction<GetPendingDeletesReque
         this.hubFactory = hubFactory;
     }
 
-    public async Task<AppVersionInstallationModel[]> Execute(GetPendingDeletesRequest model, CancellationToken stoppingToken)
+    public async Task<AppVersionInstallationModel[]> Execute(GetPendingDeletesRequest getRequest, CancellationToken stoppingToken)
     {
-        var installations = await hubFactory.Installations.GetPendingDeletes(model.MachineName);
         var appVersionInstallations = new List<AppVersionInstallationModel>();
-        foreach(var installation in installations)
+        foreach(var machineName in getRequest.MachineNames)
         {
-            var appVersion = await installation.AppVersion();
-            appVersionInstallations.Add
-            (
-                new AppVersionInstallationModel
+            var installations = await hubFactory.Installations.GetPendingDeletes(machineName);
+            foreach (var installation in installations)
+            {
+                var appVersion = await installation.AppVersion();
+                appVersionInstallations.Add
                 (
-                    appVersion.App.ToModel(),
-                    appVersion.Version.ToModel(),
-                    installation.ToModel()
-                )
-            );
+                    new AppVersionInstallationModel
+                    (
+                        appVersion.App.ToModel(),
+                        appVersion.Version.ToModel(),
+                        installation.ToModel()
+                    )
+                );
+            }
         }
         return appVersionInstallations.ToArray();
     }

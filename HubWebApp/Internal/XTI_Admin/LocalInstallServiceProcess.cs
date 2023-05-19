@@ -18,6 +18,7 @@ internal sealed class LocalInstallServiceProcess
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
         var options = scopes.GetRequiredService<AdminOptions>();
         using var client = httpClientFactory.CreateClient();
+        client.Timeout = TimeSpan.FromHours(1);
         using var content = new FormUrlEncodedContent
         (
             new[]

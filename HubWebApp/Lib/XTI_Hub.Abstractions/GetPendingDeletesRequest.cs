@@ -3,14 +3,14 @@
 public sealed class GetPendingDeletesRequest
 {
     public GetPendingDeletesRequest()
-        : this("")
+        : this(new string[0])
     {
     }
 
-    public GetPendingDeletesRequest(string machineName)
+    public GetPendingDeletesRequest(params string[] machineNames)
     {
-        MachineName = machineName;
+        MachineNames = machineNames;
     }
 
-    public string MachineName { get; set; }
+    public string[] MachineNames { get; set; }
 }

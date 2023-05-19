@@ -22,7 +22,20 @@ public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken ct)
     {
-        var pendingDeletes = await hubClient.Installations.GetPendingDeletes(new GetPendingDeletesRequest(Environment.MachineName), ct);
+        var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+        var machineNames = new List<string> { Environment.MachineName };
+        if (!string.IsNullOrWhiteSpace(domain))
+        {
+            machineNames.Add($"{Environment.MachineName}.{domain}");
+        }
+        var pendingDeletes = await hubClient.Installations.GetPendingDeletes
+        (
+            new GetPendingDeletesRequest
+            (
+                Environment.MachineName
+            ), 
+            ct
+        );
         foreach (var pendingDelete in pendingDeletes)
         {
             await hubClient.Installations.BeginDelete(new GetInstallationRequest(pendingDelete.Installation.ID), ct);
