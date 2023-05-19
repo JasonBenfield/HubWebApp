@@ -12,7 +12,7 @@ public sealed class AuthenticatorAppClientVersion
         string value;
         if (hostEnv.IsProduction())
         {
-            value = "V1419";
+            value = "V1420";
         }
         else
         {
