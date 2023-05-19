@@ -30,10 +30,7 @@ public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
         }
         var pendingDeletes = await hubClient.Installations.GetPendingDeletes
         (
-            new GetPendingDeletesRequest
-            (
-                Environment.MachineName
-            ), 
+            new GetPendingDeletesRequest(machineNames.ToArray()), 
             ct
         );
         foreach (var pendingDelete in pendingDeletes)

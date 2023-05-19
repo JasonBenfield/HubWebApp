@@ -94,7 +94,7 @@ interface IAppRequestModel {
 	TimeEnded: Date;
 }
 interface IGetPendingDeletesRequest {
-	MachineName: string;
+	MachineNames: string[];
 }
 interface IAppVersionInstallationModel {
 	App: IAppModel;
