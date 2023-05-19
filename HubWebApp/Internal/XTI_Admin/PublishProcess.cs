@@ -119,7 +119,7 @@ internal sealed class PublishProcess
             Console.WriteLine("Uploading versions.json");
             using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
             var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
-            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(versionStream, "versions.json", "text/plain"));
+            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(versionStream, "versions.json", "text/plain"));
         }
     }
 
@@ -147,7 +147,7 @@ internal sealed class PublishProcess
         using (var appStream = new MemoryStream(File.ReadAllBytes(appZipPath)))
         {
             appStream.Seek(0, SeekOrigin.Begin);
-            await gitHubRepo.UploadReleaseAsset(release, new FileUpload(appStream, $"{appKeyText}.zip", "application/zip"));
+            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(appStream, $"{appKeyText}.zip", "application/zip"));
         }
         var publishSetupDir = Path.Combine(publishDir, "Setup");
         if (Directory.Exists(publishSetupDir))
@@ -162,7 +162,7 @@ internal sealed class PublishProcess
             using (var setupStream = new MemoryStream(File.ReadAllBytes(setupZipPath)))
             {
                 setupStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
             }
         }
         var toolsPath = Path.Combine(publishDir, "Tools");
@@ -177,7 +177,7 @@ internal sealed class PublishProcess
             using (var toolsStream = new MemoryStream(File.ReadAllBytes(toolsZipPath)))
             {
                 toolsStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"));
             }
         }
         var psPath = Path.Combine(publishDir, "Powershell");
@@ -192,7 +192,7 @@ internal sealed class PublishProcess
             using (var toolsStream = new MemoryStream(File.ReadAllBytes(psZipPath)))
             {
                 toolsStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new FileUpload(toolsStream, $"{appKeyText}Powershell.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Powershell.zip", "application/zip"));
             }
         }
     }
