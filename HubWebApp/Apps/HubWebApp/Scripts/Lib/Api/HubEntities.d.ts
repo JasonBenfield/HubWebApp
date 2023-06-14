@@ -157,6 +157,11 @@ interface IExternalAuthKeyModel {
 	AuthenticatorKey: string;
 	ExternalUserKey: string;
 }
+interface IMoveAuthenticatorRequest {
+	AuthenticatorKey: string;
+	ExternalUserKey: string;
+	TargetUserID: number;
+}
 interface IRegisterAuthenticatorRequest {
 	AuthenticatorName: string;
 }
@@ -171,6 +176,10 @@ interface IAuthenticatorKey {
 interface IRegisterUserAuthenticatorRequest {
 	AuthenticatorKey: string;
 	UserID: number;
+	ExternalUserKey: string;
+}
+interface IUserOrAnonByAuthenticatorRequest {
+	AuthenticatorKey: string;
 	ExternalUserKey: string;
 }
 interface ILogBatchModel {

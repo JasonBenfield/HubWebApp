@@ -61,6 +61,15 @@ namespace XTI_HubWebAppApi {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authenticator &apos;{0}&apos; with external user key &apos;{1}&apos; belongs to user {2}.
+        /// </summary>
+        public static string AuthenticatorExistsForDifferentUser {
+            get {
+                return ResourceManager.GetString("AuthenticatorExistsForDifferentUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Machine Name is required..
         /// </summary>
         public static string MachineNameIsRequired {

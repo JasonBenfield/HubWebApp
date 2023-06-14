@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_HubAppClient;
@@ -30,12 +29,8 @@ public static class XtiSetupAppHost
                     services.AddMemoryCache();
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddHubClientServices();
-                    services.AddScoped<SystemUserCredentials>();
-                    services.AddScoped<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
-                    services.AddScoped<SystemUserXtiToken>();
-                    services.AddScoped<InstallationUserCredentials>();
-                    services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
-                    services.AddScoped<InstallationUserXtiToken>();
+                    services.AddSystemUserXtiToken();
+                    services.AddInstallationUserXtiToken();
                     services.AddXtiTokenAccessor((sp, tokenAccessor) =>
                     {
                         tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());

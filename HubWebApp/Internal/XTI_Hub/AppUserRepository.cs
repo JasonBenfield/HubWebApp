@@ -128,7 +128,7 @@ public sealed class AppUserRepository
         );
     }
 
-    public async Task<AppUser> UserByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey)
+    public async Task<AppUser> UserOrAnonByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
@@ -147,11 +147,11 @@ public sealed class AppUserRepository
             .Users.Retrieve()
             .Where(u => userIDs.Contains(u.ID))
             .FirstOrDefaultAsync();
-        return factory.User
-        (
-            userEntity
-            ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey)
-        );
+        if(userEntity == null)
+        {
+            userEntity = await GetUser(AppUserName.Anon);
+        }
+        return factory.User(userEntity ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey));
     }
 
     private Task<AppUserEntity?> GetUser(AppUserName userName)

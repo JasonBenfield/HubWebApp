@@ -35,7 +35,7 @@ internal sealed class RegisterUserAuthenticatorTest
         var authenticator = await db.Authenticators.Retrieve()
             .FirstAsync(a => a.AuthenticatorKey == authenticatorKey.Value);
         Assert.That(userAuthenticators[0].AuthenticatorID, Is.EqualTo(authenticator.ID));
-        Assert.That(userAuthenticators[0].UserID, Is.EqualTo(user.ToModel().ID));
+        Assert.That(userAuthenticators[0].UserID, Is.EqualTo(user.ID));
         Assert.That(userAuthenticators[0].ExternalUserKey, Is.EqualTo("external.id"));
     }
 
@@ -71,6 +71,32 @@ internal sealed class RegisterUserAuthenticatorTest
         );
     }
 
+    [Test]
+    public async Task ShouldNotAllowTheSameExternalUserKeyForDifferentUsers()
+    {
+        var tester = await Setup();
+        var user1 = await AddUser(tester, "someone");
+        var request = CreateRequest(user1);
+        await tester.Execute(request);
+        var user2 = await AddUser(tester, "someone.else");
+        request.UserID = user2.ID;
+        var ex = Assert.ThrowsAsync<AppException>(() => tester.Execute(request));
+        Assert.That
+        (
+            ex?.Message, 
+            Is.EqualTo
+            (
+                string.Format
+                (
+                    AppErrors.AuthenticatorExistsForDifferentUser, 
+                    authenticatorKey.DisplayText, 
+                    request.ExternalUserKey, 
+                    user1.ID
+                )
+            )
+        );
+    }
+
     private async Task<HubActionTester<RegisterUserAuthenticatorRequest, AuthenticatorModel>> Setup()
     {
         var host = new HubTestHost();
@@ -84,12 +110,12 @@ internal sealed class RegisterUserAuthenticatorTest
         return tester;
     }
 
-    private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
+    private async Task<AppUserModel> AddUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
-        var userID = await addUserTester.Execute
+        var user = await addUserTester.Execute
         (
             new AddOrUpdateUserRequest
             {
@@ -98,16 +124,14 @@ internal sealed class RegisterUserAuthenticatorTest
             },
             modifier
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
 
-    private static RegisterUserAuthenticatorRequest CreateRequest(AppUser user) =>
+    private static RegisterUserAuthenticatorRequest CreateRequest(AppUserModel user) =>
         new RegisterUserAuthenticatorRequest
         (
             authenticatorKey,
-            user.ToModel().ID,
+            user.ID,
             "external.id"
         );
 

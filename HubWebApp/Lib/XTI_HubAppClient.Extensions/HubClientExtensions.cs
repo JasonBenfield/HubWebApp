@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using XTI_App.Secrets;
 using XTI_Core.Extensions;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
@@ -30,6 +31,26 @@ public static class HubClientExtensions
         services.AddScoped<HubAppClientContext>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().AppContext);
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().UserContext);
+    }
+
+    public static void AddInstallationUserXtiToken(this IServiceCollection services)
+    {
+        services.AddScoped<InstallationUserCredentials>();
+        services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
+        services.AddScoped<InstallationUserXtiToken>();
+    }
+
+    public static void AddSystemUserXtiToken(this IServiceCollection services)
+    {
+        services.AddScoped<SystemUserCredentials>();
+        services.AddScoped<ISystemUserCredentials>(sp => sp.GetRequiredService<SystemUserCredentials>());
+        services.AddScoped<SystemUserXtiToken>();
+    }
+
+    public static void AddConfigurationXtiToken(this IServiceCollection services)
+    {
+        services.AddConfigurationOptions<XtiTokenOptions>(XtiTokenOptions.XtiToken);
+        services.AddScoped<ConfigurationXtiToken>();
     }
 
     public static void AddAppClientDomainSelector(this IServiceCollection services, Action<IServiceProvider, AppClientDomainSelector> configure)

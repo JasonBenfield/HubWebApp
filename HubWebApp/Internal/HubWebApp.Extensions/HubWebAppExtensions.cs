@@ -112,6 +112,7 @@ public static class HubWebAppExtensions
                 );
             }
         );
+        services.AddHostedService<AppAgendaHostedService>();
         services.AddThrottledLog<HubAppApi>
         (
             (api, throttledLogs) =>
