@@ -30,7 +30,7 @@ export class AddUserPanel implements IPanel {
         view.addUserForm.handleSubmit(this.onFormSubmit.bind(this));
     }
 
-    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+    private onFormSubmit(el: HTMLElement, evt: JQuery.Event) {
         evt.preventDefault();
         this.saveCommand.execute();
     }

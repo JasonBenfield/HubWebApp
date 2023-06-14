@@ -14,7 +14,11 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
     public async Task<string> Execute(ExternalAuthKeyModel model, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(model.AuthenticatorKey);
-        var user = await hubFactory.Users.UserByExternalKey(authenticatorKey, model.ExternalUserKey);
+        var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, model.ExternalUserKey);
+        if (user.IsUserName(AppUserName.Anon))
+        {
+            throw new ExternalUserNotFoundException(authenticatorKey, model.ExternalUserKey);
+        }
         var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
         var authKey = await storedObject.Store
         (

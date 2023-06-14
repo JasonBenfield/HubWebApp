@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 using XTI_App.Abstractions;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
@@ -23,6 +24,8 @@ public sealed class AppUser
     }
 
     internal int ID { get; }
+
+    public bool HasID(int id) => ID == id;
 
     public bool IsUserName(AppUserName userName) => new AppUserName(record.UserName).Equals(userName);
 
@@ -76,13 +79,64 @@ public sealed class AppUser
         );
     }
 
+    public async Task DeleteAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
+    {
+        var authenticatorIDs = QueryAuthenticatorIDs(authenticatorKey);
+        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs, externalUserKey);
+        if (userAuthenticator != null)
+        {
+            await factory.DB.UserAuthenticators.Delete(userAuthenticator);
+        }
+    }
+
+    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs, string externalUserKey) =>
+        factory.DB
+            .UserAuthenticators.Retrieve()
+            .Where
+            (
+                ua =>
+                    authenticatorIDs.Contains(ua.AuthenticatorID)
+                    && ua.UserID == ID
+                    && ua.ExternalUserKey == externalUserKey
+            )
+            .FirstOrDefaultAsync();
+
     public async Task<AuthenticatorModel> AddAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
     {
-        var authenticatorIDs = factory.DB
+        var authenticatorIDs = QueryAuthenticatorIDs(authenticatorKey);
+        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs);
+        int authenticatorID;
+        if (userAuthenticator == null)
+        {
+            authenticatorID = await authenticatorIDs.FirstAsync();
+            userAuthenticator = new UserAuthenticatorEntity
+            {
+                AuthenticatorID = authenticatorID,
+                UserID = ID,
+                ExternalUserKey = externalUserKey
+            };
+            await factory.DB.UserAuthenticators.Create(userAuthenticator);
+        }
+        else
+        {
+            authenticatorID = userAuthenticator.AuthenticatorID;
+            await factory.DB.UserAuthenticators.Update
+            (
+                userAuthenticator,
+                ua => ua.ExternalUserKey = externalUserKey
+            );
+        }
+        return new AuthenticatorModel(authenticatorID, authenticatorKey);
+    }
+
+    private IQueryable<int> QueryAuthenticatorIDs(AuthenticatorKey authenticatorKey) =>
+        factory.DB
             .Authenticators.Retrieve()
             .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
-        var entity = await factory.DB
+
+    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs) =>
+        factory.DB
             .UserAuthenticators.Retrieve()
             .Where
             (
@@ -91,29 +145,6 @@ public sealed class AppUser
                     && ua.UserID == ID
             )
             .FirstOrDefaultAsync();
-        int authenticatorID;
-        if (entity == null)
-        {
-            authenticatorID = await authenticatorIDs.FirstAsync();
-            entity = new UserAuthenticatorEntity
-            {
-                AuthenticatorID = authenticatorID,
-                UserID = ID,
-                ExternalUserKey = externalUserKey
-            };
-            await factory.DB.UserAuthenticators.Create(entity);
-        }
-        else
-        {
-            authenticatorID = entity.AuthenticatorID;
-            await factory.DB.UserAuthenticators.Update
-            (
-                entity,
-                ua => ua.ExternalUserKey = externalUserKey
-            );
-        }
-        return new AuthenticatorModel(authenticatorID, authenticatorKey);
-    }
 
     public async Task<UserAuthenticatorModel[]> Authenticators()
     {
@@ -319,7 +350,7 @@ public sealed class AppUser
             .ToArray();
     }
 
-    public AppUserModel ToModel() => 
+    public AppUserModel ToModel() =>
         new AppUserModel
         (
             ID: ID,
