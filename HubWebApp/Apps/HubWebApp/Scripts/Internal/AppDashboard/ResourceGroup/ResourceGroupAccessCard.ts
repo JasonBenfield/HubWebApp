@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
 import { RoleAccessListItemView } from "../RoleAccessListItemView";
@@ -14,7 +14,7 @@ export class ResourceGroupAccessCard {
     private groupID: number;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ResourceAccessCardView
     ) {
         new TextComponent(view.titleHeader).setText('Allowed Roles');
@@ -39,15 +39,12 @@ export class ResourceGroupAccessCard {
     }
 
     private async getRoleAccessItems() {
-        let allowedRoles: IAppRoleModel[];
-        await this.alert.infoAction(
+        const allowedRoles = await this.alert.infoAction(
             'Loading...',
-            async () => {
-                allowedRoles = await this.hubApi.ResourceGroup.GetRoleAccess({
-                    VersionKey: 'Current',
-                    GroupID: this.groupID
-                });
-            }
+            () => this.hubClient.ResourceGroup.GetRoleAccess({
+                VersionKey: 'Current',
+                GroupID: this.groupID
+            })
         );
         const accessItems: IRoleAccessItem[] = [];
         for (const allowedRole of allowedRoles) {

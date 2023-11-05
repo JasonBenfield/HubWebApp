@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModifierListCardView } from "./ModifierListCardView";
 import { ModifierListItem } from "./ModifierListItem";
 import { ModifierListItemView } from "./ModifierListItemView";
@@ -13,7 +13,7 @@ export class ModifierListCard {
     private readonly modifiers: ListGroup<ModifierListItem, ModifierListItemView>;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ModifierListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Modifiers');
@@ -40,7 +40,7 @@ export class ModifierListCard {
     private getModifiers() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.ModCategory.GetModifiers(this.modCategoryID)
+            () => this.hubClient.ModCategory.GetModifiers(this.modCategoryID)
         );
     }
 }

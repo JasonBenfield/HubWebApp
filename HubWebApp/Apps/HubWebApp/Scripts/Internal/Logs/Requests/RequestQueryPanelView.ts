@@ -1,5 +1,4 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
-import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
 import { ODataComponentView } from "@jasonbenfield/sharedwebapp/OData/ODataComponentView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
@@ -7,7 +6,7 @@ import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { ODataExpandedRequestColumnViewsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
+import { ODataExpandedRequestColumnViewsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { HubTheme } from "../../HubTheme";
 
 export class RequestQueryPanelView extends GridView {

@@ -3,7 +3,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceListCardView } from "./ResourceListCardView";
 import { ResourceListItem } from "./ResourceListItem";
 import { ResourceListItemView } from "./ResourceListItemView";
@@ -18,7 +18,7 @@ export class ResourceListCard {
     readonly resourceSelected = this._resourceSelected.handler();
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ResourceListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Resources');
@@ -49,7 +49,7 @@ export class ResourceListCard {
     private getResources() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.ResourceGroup.GetResources({
+            () => this.hubClient.ResourceGroup.GetResources({
                 VersionKey: 'Current',
                 GroupID: this.groupID
             })

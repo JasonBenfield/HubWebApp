@@ -7,13 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
+		<PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.1" />
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.38" />
-		<PackageReference Include="XTI_Core" Version="1.10.19" />
-		<PackageReference Include="XTI_Processes" Version="1.10.19" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231104221906776" />
+		<PackageReference Include="XTI_Core" Version="1.10.21-dev231101201230098" />
+		<PackageReference Include="XTI_Processes" Version="1.10.21-dev231101201230098" />
 	</ItemGroup>
 
 </Project>

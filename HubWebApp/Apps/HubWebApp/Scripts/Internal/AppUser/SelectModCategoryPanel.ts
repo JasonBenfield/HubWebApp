@@ -2,11 +2,10 @@
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { FilteredArray } from "@jasonbenfield/sharedwebapp/Enumerable";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 import { ModCategoryListItem } from "./ModCategoryListItem";
 import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
@@ -49,7 +48,7 @@ export class SelectModCategoryPanel implements IPanel {
     private readonly modCategories: ListGroup<ModCategoryListItem, ModCategoryButtonListItemView>;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: SelectModCategoryPanelView
     ) {
         new TextComponent(this.view.titleHeader).setText('Modifier Categories');
@@ -82,12 +81,9 @@ export class SelectModCategoryPanel implements IPanel {
     private async delayedStart() {
         let modCategories = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.App.GetModifierCategories()
+            () => this.hubClient.App.GetModifierCategories()
         );
-        modCategories = new FilteredArray(
-            modCategories,
-            mc => mc.Name.Value.toLowerCase() !== 'default'
-        ).value();
+        modCategories = modCategories.filter(mc => mc.Name.Value.toLowerCase() !== 'default');
         if (modCategories.length === 0) {
             this.awaitable.resolve(Result.defaultModSelected());
         }

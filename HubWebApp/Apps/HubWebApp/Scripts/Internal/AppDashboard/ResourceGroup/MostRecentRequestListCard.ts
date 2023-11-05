@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { MostRecentRequestListCardView } from "../MostRecentRequestListCardView";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
 import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
@@ -14,7 +14,7 @@ export class MostRecentRequestListCard {
     private groupID: number;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: MostRecentRequestListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Most Recent Requests');
@@ -41,7 +41,7 @@ export class MostRecentRequestListCard {
     private getRequests() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.ResourceGroup.GetMostRecentRequests({
+            () => this.hubClient.ResourceGroup.GetMostRecentRequests({
                 VersionKey: 'Current',
                 GroupID: this.groupID,
                 HowMany: 10

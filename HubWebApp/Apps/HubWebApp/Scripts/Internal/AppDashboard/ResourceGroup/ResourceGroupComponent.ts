@@ -1,7 +1,7 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupComponentView } from "./ResourceGroupComponentView";
 
 export class ResourceGroupComponent {
@@ -11,7 +11,7 @@ export class ResourceGroupComponent {
     private readonly groupName: TextComponent;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: ResourceGroupComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Resource Group');
@@ -35,17 +35,13 @@ export class ResourceGroupComponent {
         }
     }
 
-    private async getResourceGroup(groupID: number) {
-        let group: IResourceGroupModel;
-        await this.alert.infoAction(
+    private getResourceGroup(groupID: number) {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                group = await this.hubApi.ResourceGroup.GetResourceGroup({
-                    VersionKey: 'Current',
-                    GroupID: groupID
-                });
-            }
+            () => this.hubClient.ResourceGroup.GetResourceGroup({
+                VersionKey: 'Current',
+                GroupID: groupID
+            })
         );
-        return group;
     }
 }

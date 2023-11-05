@@ -1,7 +1,7 @@
 ﻿import { CardAlert } from '@jasonbenfield/sharedwebapp/Components/CardAlert';
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { AppComponentView } from "./AppComponentView";
 
 export class AppComponent {
@@ -10,7 +10,7 @@ export class AppComponent {
     private readonly appTitle: TextComponent;
     private readonly appType: TextComponent;
 
-    constructor(private readonly hubApi: HubAppApi, view: AppComponentView) {
+    constructor(private readonly hubClient: HubAppClient, view: AppComponentView) {
         new TextComponent(view.titleHeader).setText('App');
         this.alert = new CardAlert(view.alert).alert;
         this.appName = new TextComponent(view.appName);
@@ -25,14 +25,10 @@ export class AppComponent {
         this.appType.setText(app.AppKey.Type.DisplayText);
     }
 
-    private async getApp() {
-        let app: IAppModel;
-        await this.alert.infoAction(
+    private getApp() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                app = await this.hubApi.App.GetApp();
-            }
+            async () => this.hubClient.App.GetApp()
         );
-        return app;
     }
 }

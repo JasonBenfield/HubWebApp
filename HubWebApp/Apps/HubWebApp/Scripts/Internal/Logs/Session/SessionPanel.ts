@@ -5,7 +5,7 @@ import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLi
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
 import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { SessionPanelView } from "./SessionPanelView";
 
 interface IResult {
@@ -31,7 +31,7 @@ export class SessionPanel implements IPanel {
     private readonly requestsLink: TextLinkComponent;
     private sessionID: number;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: SessionPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.timeRange = new TextValueFormGroup(view.timeRange);
         this.userName = new TextValueFormGroup(view.userName);
@@ -51,7 +51,7 @@ export class SessionPanel implements IPanel {
     async refresh() {
         const detail = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Logs.GetSessionDetail(this.sessionID)
+            () => this.hubClient.Logs.GetSessionDetail(this.sessionID)
         );
         let timeRange: string;
         const timeStarted = new FormattedDate(detail.Session.TimeStarted).formatDateTime();
@@ -88,12 +88,12 @@ export class SessionPanel implements IPanel {
             this.view.hideUserAgent();
         }
         this.userLink.setHref(
-            this.hubApi.Users.Index.getModifierUrl(
+            this.hubClient.Users.Index.getModifierUrl(
                 detail.UserGroup.PublicKey.Value,
                 { UserID: detail.User.ID }
             )
         );
-        this.requestsLink.setHref(this.hubApi.Logs.AppRequests.getUrl({ SessionID: this.sessionID, InstallationID: null }));
+        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: this.sessionID, InstallationID: null }));
     }
 
     start() { return this.awaitable.start(); }

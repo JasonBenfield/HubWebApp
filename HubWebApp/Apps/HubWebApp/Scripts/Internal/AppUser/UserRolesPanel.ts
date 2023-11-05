@@ -5,7 +5,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
@@ -49,7 +49,7 @@ export class UserRolesPanel implements IPanel {
     private readonly defaultUserRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: UserRolesPanelView
     ) {
         this.appName = new TextComponent(view.appName);
@@ -75,7 +75,7 @@ export class UserRolesPanel implements IPanel {
     }
 
     private back() {
-        this.hubApi.Users.Index.open({ UserID: this.user.ID });
+        this.hubClient.Users.Index.open({ UserID: this.user.ID });
     }
 
     private requestAdd() {
@@ -89,7 +89,7 @@ export class UserRolesPanel implements IPanel {
     private async allowAccess() {
         await this.alert.infoAction(
             'Allowing Access...',
-            () => this.hubApi.AppUserMaintenance.AllowAccess({
+            () => this.hubClient.AppUserMaintenance.AllowAccess({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID
             })
@@ -100,7 +100,7 @@ export class UserRolesPanel implements IPanel {
     private async denyAccess() {
         await this.alert.infoAction(
             'Denying Access...',
-            () => this.hubApi.AppUserMaintenance.DenyAccess({
+            () => this.hubClient.AppUserMaintenance.DenyAccess({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID
             })
@@ -148,7 +148,7 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Loading',
             async () => {
-                userAccess = await this.hubApi.AppUser.GetUserAccess({
+                userAccess = await this.hubClient.AppUser.GetUserAccess({
                     UserID: this.user.ID,
                     ModifierID: this.modifier.ID
                 });
@@ -156,7 +156,7 @@ export class UserRolesPanel implements IPanel {
                     defaultUserAccess = userAccess;
                 }
                 else {
-                    defaultUserAccess = await this.hubApi.AppUser.GetUserAccess({
+                    defaultUserAccess = await this.hubClient.AppUser.GetUserAccess({
                         UserID: this.user.ID,
                         ModifierID: this.defaultModifier.ID
                     });
@@ -206,7 +206,7 @@ export class UserRolesPanel implements IPanel {
         const roleListItem = this.userRoles.getItemByElement(el);
         await this.alert.infoAction(
             'Removing role...',
-            () => this.hubApi.AppUserMaintenance.UnassignRole({
+            () => this.hubClient.AppUserMaintenance.UnassignRole({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID,
                 RoleID: roleListItem.role.ID

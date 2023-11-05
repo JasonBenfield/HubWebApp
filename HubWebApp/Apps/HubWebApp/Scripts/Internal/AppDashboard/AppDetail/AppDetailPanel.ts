@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from '@jasonbenfield/sharedwebapp/Awaitable';
 import { Command } from '@jasonbenfield/sharedwebapp/Components/Command';
-import { HubAppApi } from '../../../Lib/Api/HubAppApi';
+import { HubAppClient } from '../../../Lib/Http/HubAppClient';
 import { ResourceGroupListItem } from '../ResourceGroupListItem';
 import { AppComponent } from './AppComponent';
 import { AppDetailPanelView } from './AppDetailPanelView';
@@ -56,7 +56,7 @@ export class AppDetailPanel implements IPanel {
     private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubApi: HubAppClient,
         private readonly view: AppDetailPanelView
     ) {
         this.app = new AppComponent(this.hubApi, this.view.app);

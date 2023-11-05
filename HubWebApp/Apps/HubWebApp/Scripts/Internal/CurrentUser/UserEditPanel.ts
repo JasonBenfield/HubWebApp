@@ -3,8 +3,8 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { EditCurrentUserForm } from "../../Lib/Api/EditCurrentUserForm";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { EditCurrentUserForm } from "../../Lib/Http/EditCurrentUserForm";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserEditPanelView } from "./UserEditPanelView";
 
 interface IResult {
@@ -34,7 +34,7 @@ export class UserEditPanel implements IPanel {
     private readonly saveCommand = new AsyncCommand(this.save.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: UserEditPanelView
     ) {
         this.alert = new MessageAlert(this.view.alert);
@@ -45,7 +45,7 @@ export class UserEditPanel implements IPanel {
         this.editUserForm.handleSubmit(this.onFormSubmit.bind(this));
     }
 
-    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+    private onFormSubmit(el: HTMLElement, evt: JQuery.Event) {
         evt.preventDefault();
         this.saveCommand.execute();
     }
@@ -66,7 +66,7 @@ export class UserEditPanel implements IPanel {
     private async save() {
         const result = await this.alert.infoAction(
             'Saving...',
-            () => this.editUserForm.save(this.hubApi.CurrentUser.EditUserAction),
+            () => this.editUserForm.save(this.hubClient.CurrentUser.EditUserAction),
         );
         if (result.succeeded()) {
             this.awaitable.resolve(Result.saved(result.value));

@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCard } from "./AppListCard";
 import { AppListPanelView } from "./AppListPanelView";
 
@@ -31,11 +31,11 @@ export class AppListPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: AppListPanelView
     ) {
         this.appListCard = new AppListCard(
-            this.hubApi,
+            this.hubClient,
             this.view.appListCard
         );
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));

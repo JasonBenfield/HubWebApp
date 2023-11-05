@@ -8,7 +8,7 @@ import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { ODataExpandedUserColumnViewsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
+import { ODataExpandedUserColumnViewsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
 import { HubTheme } from "../HubTheme";
 
 export class UserQueryPanelView extends GridView {

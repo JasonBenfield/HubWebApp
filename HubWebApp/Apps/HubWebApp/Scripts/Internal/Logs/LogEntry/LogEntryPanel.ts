@@ -5,7 +5,7 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { LogEntryPanelView } from "./LogEntryPanelView";
 
 interface IResult {
@@ -39,7 +39,7 @@ export class LogEntryPanel implements IPanel {
     private readonly installationLink: TextLinkComponent;
     private logEntryID: number;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: LogEntryPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: LogEntryPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.appKey = new TextLinkComponent(view.appKeyLink);
         this.versionKey = new TextComponent(view.versionKey);
@@ -67,13 +67,13 @@ export class LogEntryPanel implements IPanel {
     async refresh() {
         const detail = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Logs.GetLogEntryDetail(this.logEntryID)
+            () => this.hubClient.Logs.GetLogEntryDetail(this.logEntryID)
         );
         this.appKey.setText(
             detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
         );
         this.appKey.setHref(
-            this.hubApi.App.Index.getModifierUrl(detail.App.PublicKey.DisplayText, {})
+            this.hubClient.App.Index.getModifierUrl(detail.App.PublicKey.DisplayText, {})
         );
         this.versionKey.setText(detail.Version.VersionKey.DisplayText);
         this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
@@ -105,21 +105,21 @@ export class LogEntryPanel implements IPanel {
             this.view.hideDetail();
         }
         if (detail.SourceLogEntryID) {
-            this.sourceLogEntryLink.setHref(this.hubApi.Logs.LogEntry.getUrl({ LogEntryID: detail.SourceLogEntryID }));
+            this.sourceLogEntryLink.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.SourceLogEntryID }));
             this.sourceLogEntryLink.show();
         }
         else {
             this.sourceLogEntryLink.hide();
         }
         if (detail.TargetLogEntryID) {
-            this.targetLogEntryLink.setHref(this.hubApi.Logs.LogEntry.getUrl({ LogEntryID: detail.TargetLogEntryID }));
+            this.targetLogEntryLink.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.TargetLogEntryID }));
             this.targetLogEntryLink.show();
         }
         else {
             this.targetLogEntryLink.hide();
         }
-        this.requestLink.setHref(this.hubApi.Logs.AppRequest.getUrl({ RequestID: detail.Request.ID }));
-        this.installationLink.setHref(this.hubApi.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
+        this.requestLink.setHref(this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.Request.ID }));
+        this.installationLink.setHref(this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
     }
 
     start() { return this.awaitable.start(); }

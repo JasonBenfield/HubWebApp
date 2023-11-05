@@ -1,9 +1,9 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ChangePasswordPanelView } from "./ChangePasswordPanelView";
-import { ChangePasswordForm } from '../../Lib/Api/ChangePasswordForm';
+import { ChangePasswordForm } from '../../Lib/Http/ChangePasswordForm';
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 
 interface IResult {
@@ -25,7 +25,7 @@ export class ChangePasswordPanel implements IPanel {
     private readonly saveCommand; AsyncCommand;
     private userID: number;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: ChangePasswordPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: ChangePasswordPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.changePasswordForm = new ChangePasswordForm(view.changePasswordForm);
         this.changePasswordForm.handleSubmit(this.onFormSubmit.bind(this));
@@ -34,7 +34,7 @@ export class ChangePasswordPanel implements IPanel {
         this.saveCommand.add(view.saveButton);
     }
 
-    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+    private onFormSubmit(el: HTMLElement, evt: JQuery.Event) {
         evt.preventDefault();
         this.saveCommand.execute();
     }
@@ -46,7 +46,7 @@ export class ChangePasswordPanel implements IPanel {
     private async save() {
         const result = await this.alert.infoAction(
             'Saving...',
-            () => this.changePasswordForm.save(this.hubApi.UserMaintenance.ChangePasswordAction)
+            () => this.changePasswordForm.save(this.hubClient.UserMaintenance.ChangePasswordAction)
         );
         if (result.succeeded()) {
             this.awaitable.resolve(Result.done());

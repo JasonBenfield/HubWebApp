@@ -2,8 +2,8 @@
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { ChangeCurrentUserPasswordForm } from "../../Lib/Api/ChangeCurrentUserPasswordForm";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { ChangeCurrentUserPasswordForm } from "../../Lib/Http/ChangeCurrentUserPasswordForm";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ChangePasswordPanelView } from "./ChangePasswordPanelView";
 
 interface IResult {
@@ -24,7 +24,7 @@ export class ChangePasswordPanel implements IPanel {
     private readonly changePasswordForm: ChangeCurrentUserPasswordForm;
     private readonly saveCommand; AsyncCommand;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: ChangePasswordPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: ChangePasswordPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.changePasswordForm = new ChangeCurrentUserPasswordForm(view.changePasswordForm);
         this.changePasswordForm.handleSubmit(this.onFormSubmit.bind(this));
@@ -33,7 +33,7 @@ export class ChangePasswordPanel implements IPanel {
         this.saveCommand.add(view.saveButton);
     }
 
-    private onFormSubmit(el: HTMLElement, evt: JQueryEventObject) {
+    private onFormSubmit(el: HTMLElement, evt: JQuery.Event) {
         evt.preventDefault();
         this.saveCommand.execute();
     }
@@ -45,7 +45,7 @@ export class ChangePasswordPanel implements IPanel {
     private async save() {
         const result = await this.alert.infoAction(
             'Saving...',
-            () => this.changePasswordForm.save(this.hubApi.CurrentUser.ChangePasswordAction)
+            () => this.changePasswordForm.save(this.hubClient.CurrentUser.ChangePasswordAction)
         );
         if (result.succeeded()) {
             this.awaitable.resolve(Result.done());

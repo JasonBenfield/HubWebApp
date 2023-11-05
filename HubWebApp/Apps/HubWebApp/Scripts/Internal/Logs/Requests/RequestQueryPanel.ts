@@ -6,8 +6,8 @@ import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
-import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Api/ODataExpandedRequestColumnsBuilder";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
 
@@ -27,7 +27,7 @@ export class RequestQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly odataComponent: ODataComponent<IExpandedRequest>;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: RequestQueryPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: RequestQueryPanelView) {
         const columns = new ODataExpandedRequestColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
         columns.RequestID.require();
@@ -62,7 +62,7 @@ export class RequestQueryPanel implements IPanel {
             orderby: true
         });
         options.setODataClient(
-            new ApiODataClient(hubApi.RequestQuery, { SessionID: sessionID, InstallationID: installationID })
+            new ApiODataClient(hubClient.RequestQuery, { SessionID: sessionID, InstallationID: installationID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
@@ -71,7 +71,7 @@ export class RequestQueryPanel implements IPanel {
 
     private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
         const requestID: number = eventArgs.record['RequestID'];
-        this.hubApi.Logs.AppRequest.open({ RequestID: requestID });
+        this.hubClient.Logs.AppRequest.open({ RequestID: requestID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

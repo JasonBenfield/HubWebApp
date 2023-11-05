@@ -1,4 +1,4 @@
-﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Http/WebPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { HubPage } from '../HubPage';
 import { MainMenuPanel } from '../MainMenuPanel';
@@ -14,10 +14,10 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.appListPanel = this.panels.add(
-            new AppListPanel(this.defaultApi, this.view.appListPanel)
+            new AppListPanel(this.defaultClient, this.view.appListPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
         );
         this.appListPanel.refresh();
         this.activateAppListPanel();
@@ -27,7 +27,7 @@ class MainPage extends HubPage {
         this.panels.activate(this.appListPanel);
         const result = await this.appListPanel.start();
         if (result.appSelected) {
-            const url = this.defaultApi.Apps.Index.getModifierUrl(
+            const url = this.defaultClient.Apps.Index.getModifierUrl(
                 result.appSelected.app.PublicKey.DisplayText,
                 {}
             );

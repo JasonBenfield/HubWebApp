@@ -3,7 +3,7 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserGroupListItem } from "./UserGroupListItem";
 import { UserGroupsPanelView } from "./UserGroupsPanelView";
 
@@ -31,7 +31,7 @@ export class UserGroupsPanel implements IPanel {
     private readonly refreshCommand: AsyncCommand;
     private readonly addCommand: Command;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: UserGroupsPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: UserGroupsPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.userGroups = new ListGroup(view.userGroups);
         this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
@@ -45,8 +45,8 @@ export class UserGroupsPanel implements IPanel {
     }
 
     private async getPermissions() {
-        const permissions = await this.hubApi.getUserAccess({
-            canAdd: this.hubApi.getAccessRequest(api => api.UserGroups.AddUserGroupIfNotExistsAction)
+        const permissions = await this.hubClient.getUserAccess({
+            canAdd: this.hubClient.getAccessRequest(api => api.UserGroups.AddUserGroupIfNotExistsAction)
         });
         if (permissions.canAdd) {
             this.addCommand.show();
@@ -64,14 +64,14 @@ export class UserGroupsPanel implements IPanel {
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,
-            (ug, itemView) => new UserGroupListItem(this.hubApi, ug, itemView)
+            (ug, itemView) => new UserGroupListItem(this.hubClient, ug, itemView)
         );
     }
 
     private getUserGroups() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.UserGroups.GetUserGroups()
+            () => this.hubClient.UserGroups.GetUserGroups()
         );
     }
 

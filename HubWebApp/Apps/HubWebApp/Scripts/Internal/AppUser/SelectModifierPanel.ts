@@ -3,7 +3,7 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ModifierButtonListItemView } from "./ModifierButtonListItemView";
 import { ModifierListItem } from "./ModifierListItem";
 import { SelectModifierPanelView } from "./SelectModifierPanelView";
@@ -38,7 +38,7 @@ export class SelectModifierPanel implements IPanel {
     private modCategory: IModifierCategoryModel;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: SelectModifierPanelView
     ) {
         this.alert = new MessageAlert(this.view.alert);
@@ -69,7 +69,7 @@ export class SelectModifierPanel implements IPanel {
     private async delayedStart() {
         const modifiers = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.ModCategory.GetModifiers(this.modCategory.ID)
+            () => this.hubClient.ModCategory.GetModifiers(this.modCategory.ID)
         );
         this.modifiers.setItems(
             modifiers,

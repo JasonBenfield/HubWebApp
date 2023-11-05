@@ -6,7 +6,7 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
 
 interface IResult {
@@ -39,7 +39,7 @@ export class InstallationPanel implements IPanel {
     private readonly requestsLink: TextLinkComponent;
     private installationID: number;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: InstallationPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.confirm = new ModalConfirm(view.confirm);
         this.appKey = new TextValueFormGroup(view.appKey);
@@ -65,7 +65,7 @@ export class InstallationPanel implements IPanel {
         if (isConfirmed) {
             await this.alert.infoAction(
                 'Deleting...',
-                () => this.hubApi.Installations.RequestDelete({
+                () => this.hubClient.Installations.RequestDelete({
                     InstallationID: this.installationID
                 })
             );
@@ -75,14 +75,14 @@ export class InstallationPanel implements IPanel {
 
     setInstallationID(installationID: number) {
         this.installationID = installationID;
-        this.requestsLink.setHref(this.hubApi.Logs.AppRequests.getUrl({ SessionID: null, InstallationID: installationID }));
-        this.logEntriesLink.setHref(this.hubApi.Logs.LogEntries.getUrl({ RequestID: null, InstallationID: installationID }));
+        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: null, InstallationID: installationID }));
+        this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: null, InstallationID: installationID }));
     }
 
     async refresh() {
         const detail = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Installations.GetInstallationDetail(this.installationID)
+            () => this.hubClient.Installations.GetInstallationDetail(this.installationID)
         );
         this.appKey.setValue(
             detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
@@ -113,7 +113,7 @@ export class InstallationPanel implements IPanel {
         else {
             this.view.hideMostRecentRequest();
         }
-        this.appLink.setHref(this.hubApi.App.Index.getModifierUrl(detail.App.PublicKey.Value, {}));
+        this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.App.PublicKey.Value, {}));
     }
 
     start() { return this.awaitable.start(); }

@@ -1,5 +1,5 @@
 ﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Apis } from '../Apis';
+import { AppClients } from '../AppClients';
 import { HubPage } from '../HubPage';
 import { MainMenuPanel } from '../MainMenuPanel';
 import { ChangePasswordPanel } from './ChangePasswordPanel';
@@ -17,7 +17,7 @@ class MainPage extends HubPage {
 
     constructor() {
         super(new MainPageView());
-        const hubApi = new Apis(this.view.modalError).Hub();
+        const hubApi = new AppClients(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(hubApi, this.view.mainMenuPanel)

@@ -2,20 +2,20 @@
 import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 
 export class UserGroupListItem extends BasicComponent {
-    constructor(hubApi: HubAppApi, userGroup: IAppUserGroupModel, protected readonly view: TextLinkListGroupItemView) {
+    constructor(hubClient: HubAppClient, userGroup: IAppUserGroupModel, protected readonly view: TextLinkListGroupItemView) {
         super(view);
         if (userGroup === null) {
             new LinkComponent(view).setHref(
-                hubApi.UserGroups.UserQuery.getUrl({ UserGroupName: '' })
+                hubClient.UserGroups.UserQuery.getUrl({ UserGroupName: '' })
             );
             new TextComponent(view).setText('All');
         }
         else {
             new LinkComponent(view).setHref(
-                hubApi.UserGroups.UserQuery.getUrl({
+                hubClient.UserGroups.UserQuery.getUrl({
                     UserGroupName: userGroup.GroupName.DisplayText.replace(/\s+/, '')
                 })
             );

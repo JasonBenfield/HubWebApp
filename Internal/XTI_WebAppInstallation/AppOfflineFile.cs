@@ -35,4 +35,12 @@ public sealed class AppOfflineFile
             );
         }
     }
+
+    public void Delete()
+    {
+        if (File.Exists(FilePath))
+        {
+            File.Delete(FilePath);
+        }
+    }
 }

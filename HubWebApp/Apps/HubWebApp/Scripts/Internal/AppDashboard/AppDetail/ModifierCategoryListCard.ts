@@ -3,7 +3,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { ModifierCategoryListItem } from "./ModifierCategoryListItem";
 import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
@@ -16,7 +16,7 @@ export class ModifierCategoryListCard {
     readonly modCategorySelected = this._modCategorySelected.handler();
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ModifierCategoryListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Categories');
@@ -41,10 +41,10 @@ export class ModifierCategoryListCard {
         }
     }
 
-    private async getModCategories() {
+    private getModCategories() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.App.GetModifierCategories()
+            () => this.hubClient.App.GetModifierCategories()
         );
     }
 

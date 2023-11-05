@@ -1,6 +1,5 @@
-﻿import { HubPage } from '../HubPage';
-import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Apis } from '../Apis';
+﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
+import { HubPage } from '../HubPage';
 import { MainMenuPanel } from '../MainMenuPanel';
 import { InstallationQueryPanel } from './InstallationQueryPanel';
 import { MainPageView } from './MainPageView';
@@ -13,8 +12,8 @@ class MainPage extends HubPage {
 
     constructor() {
         super(new MainPageView());
-        this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel));
-        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.defaultApi, this.view.installationQueryPanel));
+        this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel));
+        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.defaultClient, this.view.installationQueryPanel));
         this.installationQueryPanel.refresh();
         this.activateInstallationQueryPanel();
     }

@@ -21,7 +21,22 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
     {
         Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
         var appOfflineFile = new AppOfflineFile(scopes.GetRequiredService<XtiFolder>(), adminInstOptions.AppKey, installVersionKey);
-        await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName, appOfflineFile);
+        await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
+        try
+        {
+            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+        }
+        catch
+        {
+            await Task.Delay(TimeSpan.FromSeconds(15));
+            await RetryDelete(adminInstOptions, installVersionKey);
+        }
+        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
+        appOfflineFile.Delete();
+    }
+
+    private async Task RetryDelete(AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
+    {
         try
         {
             deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
@@ -31,8 +46,6 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
             await Task.Delay(TimeSpan.FromSeconds(15));
             deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
         }
-        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
-        File.Delete(appOfflineFile.FilePath);
     }
 
     private void deleteExistingWebFiles(AppKey appKey, AppVersionKey installVersionKey)
@@ -52,7 +65,7 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
         }
     }
 
-    private async Task prepareIis(AppKey appKey, AppVersionKey versionKey, string siteName, AppOfflineFile appOfflineFile)
+    private async Task prepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
     {
         var secretCredentialsValue = await retrieveCredentials("WebApp");
         var xtiFolder = scopes.GetRequiredService<XtiFolder>();

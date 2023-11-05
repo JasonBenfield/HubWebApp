@@ -1,7 +1,7 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
 export class ModCategoryComponent {
@@ -10,7 +10,7 @@ export class ModCategoryComponent {
     private readonly modCategoryName: TextComponent;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ModCategoryComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Category');
@@ -27,14 +27,10 @@ export class ModCategoryComponent {
         this.modCategoryName.setText(modCategory.Name.DisplayText);
     }
 
-    private async getModCategory(modCategoryID: number) {
-        let modCategory: IModifierCategoryModel;
-        await this.alert.infoAction(
+    private getModCategory(modCategoryID: number) {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                modCategory = await this.hubApi.ModCategory.GetModCategory(modCategoryID);
-            }
+            () => this.hubClient.ModCategory.GetModCategory(modCategoryID)
         );
-        return modCategory;
     }
 }

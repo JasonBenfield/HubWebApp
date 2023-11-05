@@ -3,7 +3,7 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
 export class ModCategoryComponent {
@@ -18,7 +18,7 @@ export class ModCategoryComponent {
     readonly clicked = this._clicked.handler();
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: ModCategoryComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Category');
@@ -42,17 +42,13 @@ export class ModCategoryComponent {
         this.view.showModCategory();
     }
 
-    private async getModCategory(groupID: number) {
-        let modCategory: IModifierCategoryModel;
-        await this.alert.infoAction(
+    private getModCategory(groupID: number) {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                modCategory = await this.hubApi.ResourceGroup.GetModCategory({
-                    VersionKey: 'Current',
-                    GroupID: groupID
-                });
-            }
+            () => this.hubClient.ResourceGroup.GetModCategory({
+                VersionKey: 'Current',
+                GroupID: groupID
+            })
         );
-        return modCategory;
     }
 }

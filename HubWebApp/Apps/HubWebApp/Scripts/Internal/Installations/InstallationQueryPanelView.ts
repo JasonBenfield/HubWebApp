@@ -8,7 +8,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { ODataExpandedInstallationColumnViewsBuilder } from '../../Lib/Api/ODataExpandedInstallationColumnsBuilder';
+import { ODataExpandedInstallationColumnViewsBuilder } from '../../Lib/Http/ODataExpandedInstallationColumnsBuilder';
 import { HubTheme } from "../HubTheme";
 
 export class InstallationQueryPanelView extends GridView {

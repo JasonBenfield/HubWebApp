@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { EventListItem } from "../EventListItem";
 import { EventListItemView } from "../EventListItemView";
 import { MostRecentErrorEventListCardView } from "../MostRecentErrorEventListCardView";
@@ -14,7 +14,7 @@ export class MostRecentErrorEventListCard {
     private resourceID: number;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: MostRecentErrorEventListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Most Recent Errors');
@@ -40,7 +40,7 @@ export class MostRecentErrorEventListCard {
     private getErrorEvents() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Resource.GetMostRecentErrorEvents({
+            () => this.hubClient.Resource.GetMostRecentErrorEvents({
                 VersionKey: 'Current',
                 ResourceID: this.resourceID,
                 HowMany: 10

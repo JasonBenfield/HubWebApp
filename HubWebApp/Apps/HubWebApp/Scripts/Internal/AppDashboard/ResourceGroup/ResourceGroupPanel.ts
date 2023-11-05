@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponent } from "./ModCategoryComponent";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
@@ -50,17 +50,17 @@ export class ResourceGroupPanel implements IPanel {
     private readonly backCommand = new Command(this.back.bind(this));
     private readonly awaitable = new Awaitable<Result>();
 
-    constructor(hubApi: HubAppApi, private readonly view: ResourceGroupPanelView) {
-        this.resourceGroupComponent = new ResourceGroupComponent(hubApi, view.resourceGroupComponent);
-        this.modCategoryComponent = new ModCategoryComponent(hubApi, view.modCategoryComponent);
+    constructor(hubClient: HubAppClient, private readonly view: ResourceGroupPanelView) {
+        this.resourceGroupComponent = new ResourceGroupComponent(hubClient, view.resourceGroupComponent);
+        this.modCategoryComponent = new ModCategoryComponent(hubClient, view.modCategoryComponent);
         this.modCategoryComponent.clicked.register(
             this.onModCategoryClicked.bind(this)
         );
-        this.roleAccessCard = new ResourceGroupAccessCard(hubApi, view.roleAccessCard);
-        this.resourceListCard = new ResourceListCard(hubApi, view.resourceListCard);
+        this.roleAccessCard = new ResourceGroupAccessCard(hubClient, view.roleAccessCard);
+        this.resourceListCard = new ResourceListCard(hubClient, view.resourceListCard);
         this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
-        this.mostRecentRequestListCard = new MostRecentRequestListCard(hubApi, view.mostRecentRequestListCard);
-        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubApi, view.mostRecentErrorEventListCard);
+        this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
         this.backCommand.add(view.backButton);
     }
 

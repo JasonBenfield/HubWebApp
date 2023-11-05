@@ -3,7 +3,7 @@ import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCardView } from "./AppListCardView";
 import { AppListItem } from "./AppListItem";
 import { AppListItemView } from "./AppListItemView";
@@ -16,7 +16,7 @@ export class AppListCard {
     readonly appSelected = this._appSelected.handler();
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: AppListCardView
     ) {
         new TextComponent(this.view.titleHeader).setText('Apps');
@@ -36,7 +36,7 @@ export class AppListCard {
             (app, listItem) =>
                 new AppListItem(
                     app,
-                    this.hubApi.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
+                    this.hubClient.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
                     listItem
                 )
         );
@@ -48,7 +48,7 @@ export class AppListCard {
     private getApps() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Apps.GetApps()
+            () => this.hubClient.Apps.GetApps()
         );
     }
 }

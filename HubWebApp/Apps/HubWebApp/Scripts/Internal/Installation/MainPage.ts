@@ -15,10 +15,10 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.installationPanel = this.panels.add(
-            new InstallationPanel(this.defaultApi, this.view.installationPanel)
+            new InstallationPanel(this.defaultClient, this.view.installationPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel)
+            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
         );
         const installationIDText = Url.current().getQueryValue("InstallationID");
         const installationID = installationIDText ? Number.parseInt(installationIDText) : 0;
@@ -28,7 +28,7 @@ class MainPage extends HubPage {
             this.activateInstallationPanel();
         }
         else {
-            this.defaultApi.Installations.Index.open({ QueryType: null });
+            this.defaultClient.Installations.Index.open({ QueryType: null });
         }
     }
 

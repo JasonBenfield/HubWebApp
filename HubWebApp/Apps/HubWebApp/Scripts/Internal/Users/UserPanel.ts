@@ -1,7 +1,7 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { WebPage } from "@jasonbenfield/sharedwebapp/Api/WebPage";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCard } from "./AppListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
@@ -42,23 +42,23 @@ export class UserPanel implements IPanel {
     private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: UserPanelView
     ) {
-        this.userComponent = new UserComponent(hubApi, view.userComponent);
+        this.userComponent = new UserComponent(hubClient, view.userComponent);
         this.appListCard = new AppListCard(
-            this.hubApi,
+            this.hubClient,
             this.view.appListCard
         );
         this.backCommand.add(view.backButton);
         this.appListCard.appSelected.register(this.onAppSelected.bind(this));
-        this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubApi, view.userAuthenticatorListCard);
+        this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubClient, view.userAuthenticatorListCard);
         this.userComponent.when.editRequested.then(this.onEditRequested.bind(this));
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));
     }
 
     private onAppSelected(app: IAppModel) {
-        const url = this.hubApi.AppUser.Index.getModifierUrl(
+        const url = this.hubClient.AppUser.Index.getModifierUrl(
             app.PublicKey.DisplayText,
             { App: app.PublicKey.DisplayText, UserID: this.userID }
         );

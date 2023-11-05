@@ -47,7 +47,7 @@ public sealed class AppRepository
         {
             await factory.DB.Apps.Update
             (
-                record, 
+                record,
                 r =>
                 {
                     r.DisplayText = appKey.Name.DisplayText;
@@ -95,7 +95,9 @@ public sealed class AppRepository
 
     public async Task<IEnumerable<App>> All()
     {
-        var records = await factory.DB.Apps.Retrieve().ToArrayAsync();
+        var records = await factory.DB.Apps.Retrieve()
+            .OrderBy(a => a.DisplayText)
+            .ToArrayAsync();
         return records.Select(r => factory.CreateApp(r));
     }
 

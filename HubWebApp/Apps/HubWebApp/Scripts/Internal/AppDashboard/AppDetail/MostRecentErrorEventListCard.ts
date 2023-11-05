@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { EventListItem } from "../EventListItem";
 import { EventListItemView } from "../EventListItemView";
 import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCardView";
@@ -11,7 +11,7 @@ export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
     private readonly errorEvents: ListGroup<EventListItem, EventListItemView>;
 
-    constructor(private readonly hubApi: HubAppApi, view: MostRecentErrorEventListCardView) {
+    constructor(private readonly hubApi: HubAppClient, view: MostRecentErrorEventListCardView) {
         new TextComponent(view.titleHeader).setText('Most Recent Errors');
         this.alert = new CardAlert(view.alert).alert;
         this.errorEvents = new ListGroup(view.errorEvents);

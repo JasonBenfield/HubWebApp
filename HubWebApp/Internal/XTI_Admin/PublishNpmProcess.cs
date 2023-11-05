@@ -30,24 +30,25 @@ internal sealed class PublishNpmProcess
         );
         if (Directory.Exists(sourceScriptPath))
         {
-            var tempExportDistDir = Path.Combine(Path.GetTempPath(), getAppName(appKey), "NpmExports");
             var exportScriptDir = Path.Combine(publishDir, "npm");
-            if (Directory.Exists(tempExportDistDir))
+            if (Directory.Exists(exportScriptDir))
             {
-                Directory.Delete(tempExportDistDir, true);
+                Directory.Delete(exportScriptDir, true);
             }
             Console.WriteLine($"Running tsc at '{sourceScriptPath}'");
             var tscProcess = new WinProcess("tsc")
                 .UseArgumentNameDelimiter("--")
                 .AddArgument("declaration", "true")
-                .AddArgument("outDir", tempExportDistDir);
+                .AddArgument("outDir", exportScriptDir);
             var tscResult = await new CmdProcess(tscProcess)
                 .SetWorkingDirectory(sourceScriptPath)
                 .WriteOutputToConsole()
                 .Run();
             tscResult.EnsureExitCodeIsZero();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+            Console.WriteLine($"Copying *.d.ts from '{sourceScriptPath}' to '{exportScriptDir}'");
+
+            await new RobocopyProcess(sourceScriptPath, exportScriptDir)
                 .CopySubdirectoriesIncludingEmpty()
                 .Pattern("*.d.ts")
                 .NoFileClassLogging()
@@ -55,9 +56,14 @@ internal sealed class PublishNpmProcess
                 .NoDirectoryLogging()
                 .NoJobHeader()
                 .NoJobSummary()
+                .MultiThreaded(DefaultRobocopyThreads.Value)
+                .NumberOfRetries(1)
+                .WaitTimeBetweenRetries(1)
                 .Run();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+            Console.WriteLine($"Copying *.html from '{sourceScriptPath}' to '{exportScriptDir}'");
+
+            await new RobocopyProcess(sourceScriptPath, exportScriptDir)
                 .CopySubdirectoriesIncludingEmpty()
                 .Pattern("*.html")
                 .NoFileClassLogging()
@@ -65,9 +71,14 @@ internal sealed class PublishNpmProcess
                 .NoDirectoryLogging()
                 .NoJobHeader()
                 .NoJobSummary()
+                .MultiThreaded(DefaultRobocopyThreads.Value)
+                .NumberOfRetries(1)
+                .WaitTimeBetweenRetries(1)
                 .Run();
 
-            await new RobocopyProcess(sourceScriptPath, tempExportDistDir)
+            Console.WriteLine($"Copying *.scss from '{sourceScriptPath}' to '{exportScriptDir}'");
+
+            await new RobocopyProcess(sourceScriptPath, exportScriptDir)
                 .CopySubdirectoriesIncludingEmpty()
                 .Pattern("*.scss")
                 .NoFileClassLogging()
@@ -75,35 +86,38 @@ internal sealed class PublishNpmProcess
                 .NoDirectoryLogging()
                 .NoJobHeader()
                 .NoJobSummary()
+                .MultiThreaded(DefaultRobocopyThreads.Value)
+                .NumberOfRetries(1)
+                .WaitTimeBetweenRetries(1)
                 .Run();
 
-            new IndexFile(tempExportDistDir).Write();
+            new IndexFile(exportScriptDir).Write();
             var npmrcPath = Path.Combine(projectDir, ".npmrc");
             if (File.Exists(npmrcPath))
             {
                 File.Copy
                 (
                     npmrcPath,
-                    Path.Combine(tempExportDistDir, ".npmrc")
+                    Path.Combine(exportScriptDir, ".npmrc")
                 );
             }
             File.Copy
             (
                 Path.Combine(projectDir, "package.json"),
-                Path.Combine(tempExportDistDir, "package.json")
+                Path.Combine(exportScriptDir, "package.json")
             );
-            Console.WriteLine($"Running npm install at '{tempExportDistDir}'");
+            Console.WriteLine($"Running npm install at '{exportScriptDir}'");
             var npmProcess = new WinProcess("npm")
                 .UseArgumentNameDelimiter("")
                 .AddArgument("install");
             var npmResult = await new CmdProcess(npmProcess)
                 .WriteOutputToConsole()
-                .SetWorkingDirectory(tempExportDistDir)
+                .SetWorkingDirectory(exportScriptDir)
                 .Run();
             npmResult.EnsureExitCodeIsZero();
-            File.Delete(Path.Combine(tempExportDistDir, "main.d.ts"));
-            File.Delete(Path.Combine(tempExportDistDir, "_references.d.ts"));
-            new IndexDeclarationFile(tempExportDistDir).Write();
+            File.Delete(Path.Combine(exportScriptDir, "main.d.ts"));
+            File.Delete(Path.Combine(exportScriptDir, "_references.d.ts"));
+            new IndexDeclarationFile(exportScriptDir).Write();
             var npmVersionProcess = new WinProcess("npm")
                 .UseArgumentNameDelimiter("")
                 .UseArgumentValueDelimiter(" ")
@@ -111,22 +125,15 @@ internal sealed class PublishNpmProcess
                 .UseArgumentNameDelimiter("--")
                 .AddArgument("allow-same-version");
             var npmVersionResult = await new CmdProcess(npmVersionProcess)
-                .SetWorkingDirectory(tempExportDistDir)
+                .SetWorkingDirectory(exportScriptDir)
                 .WriteOutputToConsole()
                 .Run();
             npmVersionResult.EnsureExitCodeIsZero();
 
-            await new RobocopyProcess(tempExportDistDir, exportScriptDir)
-                .CopySubdirectoriesIncludingEmpty()
-                .Purge()
-                .NoFileClassLogging()
-                .NoFileLogging()
-                .NoDirectoryLogging()
-                .NoJobHeader()
-                .NoJobSummary()
-                .Run();
             if (xtiEnv.IsProduction())
             {
+                Console.WriteLine("Publishing scripts to GitHub");
+
                 var npmPublishProcess = new WinProcess("npm")
                     .AddArgument("publish")
                     .UseArgumentNameDelimiter("--")

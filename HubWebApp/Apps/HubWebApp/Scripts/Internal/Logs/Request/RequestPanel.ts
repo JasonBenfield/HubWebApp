@@ -3,12 +3,10 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { DateRange } from "@jasonbenfield/sharedwebapp/DateRange";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
 import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
-import { ValueRangeBound } from "@jasonbenfield/sharedwebapp/ValueRangeBound";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { RequestPanelView } from "./RequestPanelView";
 
 interface IResult {
@@ -37,7 +35,7 @@ export class RequestPanel implements IPanel {
     private readonly logEntriesLink: TextLinkComponent;
     private requestID: number;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: RequestPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: RequestPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.appKey = new TextValueFormGroup(view.appKey);
         this.versionKey = new TextComponent(view.versionKey);
@@ -60,7 +58,7 @@ export class RequestPanel implements IPanel {
     async refresh() {
         const detail = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.Logs.GetRequestDetail(this.requestID)
+            () => this.hubClient.Logs.GetRequestDetail(this.requestID)
         );
         this.appKey.setValue(
             detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
@@ -95,8 +93,8 @@ export class RequestPanel implements IPanel {
         }
         this.timeRange.setValue(timeRange);
         this.path.setValue(detail.Request.Path);
-        this.installationLink.setHref(this.hubApi.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
-        this.logEntriesLink.setHref(this.hubApi.Logs.LogEntries.getUrl({ RequestID: this.requestID, InstallationID: null }));
+        this.installationLink.setHref(this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
+        this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: this.requestID, InstallationID: null }));
     }
 
     start() { return this.awaitable.start(); }

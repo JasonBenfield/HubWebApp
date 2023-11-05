@@ -5,7 +5,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { AddUserFormView } from "../../Lib/Api/AddUserFormView";
+import { AddUserFormView } from "../../Lib/Http/AddUserFormView";
 import { HubTheme } from "../HubTheme";
 
 export class AddUserPanelView extends GridView {

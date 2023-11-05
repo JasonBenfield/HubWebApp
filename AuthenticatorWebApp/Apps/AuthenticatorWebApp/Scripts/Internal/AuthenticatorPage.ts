@@ -1,12 +1,12 @@
 ﻿import { BasicPage } from "@jasonbenfield/sharedwebapp/Components/BasicPage";
-import { AuthenticatorAppApi } from "../Lib/Api/AuthenticatorAppApi";
-import { Apis } from "./Apis";
+import { AuthenticatorAppClient } from "../Lib/Http/AuthenticatorAppClient";
+import { AppClients } from "./AppClients";
 import { AuthenticatorPageView } from "./AuthenticatorPageView";
 
 export class AuthenticatorPage extends BasicPage {
-    protected readonly defaultApp: AuthenticatorAppApi;
+    protected readonly defaultClient: AuthenticatorAppClient;
 
     constructor(view: AuthenticatorPageView) {
-        super(new Apis(view.modalError).Authenticator(), view);
+        super(new AppClients(view.modalError).Authenticator(), view);
     }
 }

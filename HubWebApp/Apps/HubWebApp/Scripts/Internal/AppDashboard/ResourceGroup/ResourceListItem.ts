@@ -1,6 +1,6 @@
 ﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { ResourceResultType } from "../../../Lib/Api/ResourceResultType";
+import { ResourceResultType } from "../../../Lib/Http/ResourceResultType";
 import { ResourceListItemView } from "./ResourceListItemView";
 
 export class ResourceListItem extends BasicComponent {

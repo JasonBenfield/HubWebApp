@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceAccessCard } from "./ResourceAccessCard";
@@ -28,13 +28,13 @@ export class ResourcePanel implements IPanel {
     readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: ResourcePanelView
     ) {
-        this.resourceComponent = new ResourceComponent(this.hubApi, this.view.resourceComponent);
-        this.resourceAccessCard = new ResourceAccessCard(this.hubApi, this.view.resourceAccessCard);
-        this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
-        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.resourceComponent = new ResourceComponent(this.hubClient, this.view.resourceComponent);
+        this.resourceAccessCard = new ResourceAccessCard(this.hubClient, this.view.resourceAccessCard);
+        this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubClient, this.view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(this.hubClient, this.view.mostRecentErrorEventListCard);
         this.backCommand.add(this.view.backButton);
     }
 

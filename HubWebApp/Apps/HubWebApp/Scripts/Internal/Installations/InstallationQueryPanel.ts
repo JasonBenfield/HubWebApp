@@ -1,7 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { ModalMessageAlert } from "@jasonbenfield/sharedwebapp/Components/ModalMessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
@@ -11,9 +10,9 @@ import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
-import { InstallationQueryType } from "../../Lib/Api/InstallationQueryType";
-import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Api/ODataExpandedInstallationColumnsBuilder";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
+import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Http/ODataExpandedInstallationColumnsBuilder";
 import { InstallationDataRow } from "./InstallationDataRow";
 import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
 
@@ -34,7 +33,7 @@ export class InstallationQueryPanel implements IPanel {
     private readonly queryTypes: ListGroup<TextComponent, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedInstallation>;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: InstallationQueryPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.queryTypes = new ListGroup(this.view.queryTypes);
         const selectedQueryTypeText = Url.current().getQueryValue('QueryType');
@@ -46,7 +45,7 @@ export class InstallationQueryPanel implements IPanel {
             (queryType, itemView) => {
                 const listItem = new TextLinkComponent(itemView);
                 listItem.setText(queryType.DisplayText);
-                listItem.setHref(hubApi.Installations.Index.getUrl({ QueryType: queryType.Value }))
+                listItem.setHref(hubClient.Installations.Index.getUrl({ QueryType: queryType.Value }))
                 if (selectedQueryType === queryType) {
                     itemView.active();
                 }
@@ -75,7 +74,7 @@ export class InstallationQueryPanel implements IPanel {
             orderby: true
         });
         options.setODataClient(
-            new ApiODataClient(hubApi.InstallationQuery, { QueryType: selectedQueryType.Value })
+            new ApiODataClient(hubClient.InstallationQuery, { QueryType: selectedQueryType.Value })
         );
         options.setCreateDataRow(
             (rowIndex, columns, record: Queryable<IExpandedInstallation>, view) =>
@@ -88,7 +87,7 @@ export class InstallationQueryPanel implements IPanel {
 
     private onCellClicked(args: ODataCellClickedEventArgs) {
         const installationID: number = args.record['InstallationID'];
-        this.hubApi.Installations.Installation.open({ InstallationID: installationID });
+        this.hubClient.Installations.Installation.open({ InstallationID: installationID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

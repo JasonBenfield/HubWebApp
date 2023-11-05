@@ -32,6 +32,9 @@ internal sealed class PublishToolsProcess
                     .NoJobHeader()
                     .NoJobSummary()
                     .NoProgressDisplayed()
+                    .MultiThreaded(DefaultRobocopyThreads.Value)
+                    .NumberOfRetries(1)
+                    .WaitTimeBetweenRetries(1)
                     .Purge()
                     .Run();
             }

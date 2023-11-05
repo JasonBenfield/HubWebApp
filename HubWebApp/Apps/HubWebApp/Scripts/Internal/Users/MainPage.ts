@@ -1,4 +1,4 @@
-﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Http/WebPage';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Url } from '@jasonbenfield/sharedwebapp/Url';
 import { HubPage } from '../HubPage';
@@ -17,10 +17,10 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
-        this.userPanel = this.panels.add(new UserPanel(this.defaultApi, this.view.userPanel));
-        this.userEditPanel = this.panels.add(new UserEditPanel(this.defaultApi, this.view.userEditPanel));
+        this.userPanel = this.panels.add(new UserPanel(this.defaultClient, this.view.userPanel));
+        this.userEditPanel = this.panels.add(new UserEditPanel(this.defaultClient, this.view.userEditPanel));
         this.changePasswordPanel = this.panels.add(
-            new ChangePasswordPanel(this.defaultApi, this.view.changePasswordPanel)
+            new ChangePasswordPanel(this.defaultClient, this.view.changePasswordPanel)
         );
         const userIDValue = Url.current().getQueryValue('UserID');
         const userID = userIDValue ? Number(userIDValue) : 0;
@@ -32,7 +32,7 @@ class MainPage extends HubPage {
             this.activateUserPanel();
         }
         else {
-            this.defaultApi.UserGroups.Index.open({}, '');
+            this.defaultClient.UserGroups.Index.open({}, '');
         }
     }
 
@@ -40,7 +40,7 @@ class MainPage extends HubPage {
         this.panels.activate(this.userPanel);
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            const url = this.defaultApi.UserGroups.Index.getModifierUrl('', {});
+            const url = this.defaultClient.UserGroups.Index.getModifierUrl('', {});
             new WebPage(url).open();
         }
         else if (result.editRequested) {

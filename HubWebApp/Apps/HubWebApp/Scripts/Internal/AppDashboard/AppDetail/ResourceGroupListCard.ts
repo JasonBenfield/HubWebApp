@@ -3,7 +3,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
@@ -15,7 +15,7 @@ export class ResourceGroupListCard {
     readonly resourceGroupClicked = this._resourceGroupClicked;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         view: ResourceGroupListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Resource Groups');
@@ -43,7 +43,7 @@ export class ResourceGroupListCard {
     private getResourceGroups() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.App.GetResourceGroups()
+            () => this.hubClient.App.GetResourceGroups()
         );
     }
 }

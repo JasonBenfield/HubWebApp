@@ -8,8 +8,8 @@ import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
-import { ODataExpandedUserColumnsBuilder } from "../../Lib/Api/ODataExpandedUserColumnsBuilder";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
@@ -39,7 +39,7 @@ export class UserQueryPanel implements IPanel {
     private readonly odataComponent: ODataComponent<IExpandedUser>;
     private readonly userQueryModel: IUserGroupKey = { UserGroupName: '' };
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: UserQueryPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: UserQueryPanelView) {
         this.alert = new MessageAlert(this.view.alert);
         this.userGroups = new ListGroup(this.view.userGroups);
         const columns = new ODataExpandedUserColumnsBuilder(this.view.columns);
@@ -59,7 +59,7 @@ export class UserQueryPanel implements IPanel {
         );
         options.saveChanges();
         options.setODataClient(
-            new ApiODataClient(this.hubApi.UserQuery, this.userQueryModel)
+            new ApiODataClient(this.hubClient.UserQuery, this.userQueryModel)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
@@ -86,8 +86,8 @@ export class UserQueryPanel implements IPanel {
     }
 
     private async canAdd(userGroupName: string) {
-        const permissions = await this.hubApi.getUserAccess({
-            canAdd: this.hubApi.getAccessRequest(api => api.Users.AddUserAction, userGroupName)
+        const permissions = await this.hubClient.getUserAccess({
+            canAdd: this.hubClient.getAccessRequest(api => api.Users.AddUserAction, userGroupName)
         });
         return permissions.canAdd;
     }
@@ -96,7 +96,7 @@ export class UserQueryPanel implements IPanel {
         const userID: number = eventArgs.record['UserID'];
         let userGroupName: string = eventArgs.record['UserGroupName'];
         userGroupName = userGroupName.replace(/\s+/g, '');
-        this.hubApi.Users.Index.open({ UserID: userID }, userGroupName);
+        this.hubClient.Users.Index.open({ UserID: userID }, userGroupName);
     }
 
     async refresh() {
@@ -105,7 +105,7 @@ export class UserQueryPanel implements IPanel {
         this.userGroups.setItems(
             userGroups,
             (ug, itemView) => {
-                const listItem = new UserGroupListItem(this.hubApi, ug, itemView);
+                const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
                 const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
                 if (this.userQueryModel.UserGroupName === listItemGroupName) {
                     listItem.makeActive();
@@ -119,7 +119,7 @@ export class UserQueryPanel implements IPanel {
     private getUserGroups() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.UserGroups.GetUserGroups()
+            () => this.hubClient.UserGroups.GetUserGroups()
         );
     }
 

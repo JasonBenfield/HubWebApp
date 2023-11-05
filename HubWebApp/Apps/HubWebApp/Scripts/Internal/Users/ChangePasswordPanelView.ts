@@ -1,13 +1,11 @@
-﻿import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { ChangePasswordFormView } from '../../Lib/Http/ChangePasswordFormView';
 import { HubTheme } from "../HubTheme";
-import { ChangePasswordFormView } from '../../Lib/Api/ChangePasswordFormView';
-import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 
 export class ChangePasswordPanelView extends GridView {
     readonly alert: MessageAlertView;

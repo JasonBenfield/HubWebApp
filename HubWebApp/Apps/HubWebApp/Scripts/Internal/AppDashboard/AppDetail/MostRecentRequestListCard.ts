@@ -2,7 +2,7 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
 import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
@@ -12,7 +12,7 @@ export class MostRecentRequestListCard {
     private readonly requests: ListGroup<RequestExpandedListItem, RequestExpandedListItemView>;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubApi: HubAppClient,
         view: MostRecentRequestListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Most Recent Requests');

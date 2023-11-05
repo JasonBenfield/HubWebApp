@@ -4,7 +4,7 @@ import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AddRolePanelView } from "./AddRolePanelView";
 import { AppUserOptions } from "./AppUserOptions";
 import { RoleButtonListItemView } from "./RoleButtonListItemView";
@@ -38,7 +38,7 @@ export class AddRolePanel implements IPanel {
     private defaultModifier: IModifierModel;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: AddRolePanelView
     ) {
         new TextComponent(view.titleHeader).setText('Select Role');
@@ -72,7 +72,7 @@ export class AddRolePanel implements IPanel {
     private addRole(role: IAppRoleModel) {
         return this.alert.infoAction(
             'Adding role...',
-            () => this.hubApi.AppUserMaintenance.AssignRole({
+            () => this.hubClient.AppUserMaintenance.AssignRole({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID,
                 RoleID: role.ID
@@ -87,9 +87,9 @@ export class AddRolePanel implements IPanel {
     }
 
     private async delayedStart() {
-        let roles = await this.alert.infoAction(
+        const roles = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.AppUser.GetUnassignedRoles({
+            () => this.hubClient.AppUser.GetUnassignedRoles({
                 UserID: this.user.ID,
                 ModifierID: this.modifier.ID
             })

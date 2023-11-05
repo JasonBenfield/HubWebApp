@@ -1,7 +1,7 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppUserOptions } from "./AppUserOptions";
 import { AppUserDataPanelView } from "./AppUserDataPanelView";
 
@@ -27,7 +27,7 @@ export class AppUserDataPanel implements IPanel {
     private userID: number;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: AppUserDataPanelView
     ) {
         this.alert = new MessageAlert(this.view.alert);
@@ -47,9 +47,9 @@ export class AppUserDataPanel implements IPanel {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                const app = await this.hubApi.App.GetApp();
-                const user = await this.hubApi.UserInquiry.GetUser(this.userID);
-                const defaultModifier = await this.hubApi.App.GetDefaultModifier();
+                const app = await this.hubClient.App.GetApp();
+                const user = await this.hubClient.UserInquiry.GetUser(this.userID);
+                const defaultModifier = await this.hubClient.App.GetDefaultModifier();
                 appUserData = new AppUserOptions(app, user, defaultModifier);
             }
         );

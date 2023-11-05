@@ -5,7 +5,7 @@ import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicCompo
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { EditUserFormView } from "../../Lib/Api/EditUserFormView";
+import { EditUserFormView } from "../../Lib/Http/EditUserFormView";
 import { HubTheme } from "../HubTheme";
 
 export class UserEditPanelView extends GridView {

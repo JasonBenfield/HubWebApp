@@ -1,6 +1,6 @@
 ﻿import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
 
 export class CurrentVersionComponent {
@@ -8,7 +8,7 @@ export class CurrentVersionComponent {
     private readonly versionKey: TextComponent;
     private readonly version: TextComponent;
 
-    constructor(private readonly hubApi: HubAppApi, view: CurrentVersionComponentView) {
+    constructor(private readonly hubClient: HubAppClient, view: CurrentVersionComponentView) {
         new TextComponent(view.titleHeader).setText('Version');
         this.alert = new MessageAlert(view.alert);
         this.versionKey = new TextComponent(view.versionKey);
@@ -28,7 +28,7 @@ export class CurrentVersionComponent {
         await this.alert.infoAction(
             'Loading...',
             async () => {
-                currentVersion = await this.hubApi.Version.GetVersion('current');
+                currentVersion = await this.hubClient.Version.GetVersion('current');
             }
         );
         return currentVersion;

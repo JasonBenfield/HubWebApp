@@ -3,8 +3,8 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
-import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Api/ODataExpandedLogEntryColumnsBuilder";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Http/ODataExpandedLogEntryColumnsBuilder";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
 import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
@@ -25,7 +25,7 @@ export class LogEntryQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly odataComponent: ODataComponent<IExpandedLogEntry>;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: LogEntryQueryPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: LogEntryQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         const columns = new ODataExpandedLogEntryColumnsBuilder(this.view.columns);
         columns.EventID.require();
@@ -60,7 +60,7 @@ export class LogEntryQueryPanel implements IPanel {
             orderby: true
         });
         options.setODataClient(
-            new ApiODataClient(hubApi.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
+            new ApiODataClient(hubClient.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
@@ -69,7 +69,7 @@ export class LogEntryQueryPanel implements IPanel {
 
     private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
         const logEntryID: number = eventArgs.record['EventID'];
-        this.hubApi.Logs.LogEntry.open({ LogEntryID: logEntryID });
+        this.hubClient.Logs.LogEntry.open({ LogEntryID: logEntryID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

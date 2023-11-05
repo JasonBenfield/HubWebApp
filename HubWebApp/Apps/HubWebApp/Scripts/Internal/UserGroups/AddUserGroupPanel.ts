@@ -3,7 +3,7 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { InputControl } from "@jasonbenfield/sharedwebapp/Components/InputControl";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextToTextViewValue } from "@jasonbenfield/sharedwebapp/Forms/TextToTextViewValue";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AddUserGroupPanelView } from "./AddUserGroupPanelView";
 
 interface IResult {
@@ -24,7 +24,7 @@ export class AddUserGroupPanel implements IPanel {
     private readonly groupName: InputControl<string>;
     private readonly saveCommand: AsyncCommand;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: AddUserGroupPanelView) {
+    constructor(private readonly hubApi: HubAppClient, private readonly view: AddUserGroupPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.groupName = new InputControl<string>(view.groupNameInput, new TextToTextViewValue());
         new Command(this.cancel.bind(this)).add(view.cancelButton);

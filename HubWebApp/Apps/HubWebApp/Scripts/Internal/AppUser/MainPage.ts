@@ -1,5 +1,5 @@
-﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
-import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Http/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/Http/XtiUrl';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { Url } from '@jasonbenfield/sharedwebapp/Url';
 import { HubPage } from '../HubPage';
@@ -24,32 +24,32 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
-            new AppUserDataPanel(this.defaultApi, this.view.appUserDataPanel)
+            new AppUserDataPanel(this.defaultClient, this.view.appUserDataPanel)
         );
         this.selectModCategoryPanel = this.panels.add(
-            new SelectModCategoryPanel(this.defaultApi, this.view.selectModCategoryPanel)
+            new SelectModCategoryPanel(this.defaultClient, this.view.selectModCategoryPanel)
         );
         this.selectModifierPanel = this.panels.add(
-            new SelectModifierPanel(this.defaultApi, this.view.selectModifierPanel)
+            new SelectModifierPanel(this.defaultClient, this.view.selectModifierPanel)
         );
         this.userRolesPanel = this.panels.add(
-            new UserRolesPanel(this.defaultApi, this.view.userRolesPanel)
+            new UserRolesPanel(this.defaultClient, this.view.userRolesPanel)
         );
         this.addRolePanel = this.panels.add(
-            new AddRolePanel(this.defaultApi, this.view.addRolePanel)
+            new AddRolePanel(this.defaultClient, this.view.addRolePanel)
         );
         const url = Url.current();
         const appModKey = url.getQueryValue('App');
         const userIDValue = url.getQueryValue('UserID');
         if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
             const userID = Number(userIDValue);
-            this.defaultApi.App.withModifier(appModKey);
-            this.defaultApi.ModCategory.withModifier(appModKey);
+            this.defaultClient.App.withModifier(appModKey);
+            this.defaultClient.ModCategory.withModifier(appModKey);
             this.appUserDataPanel.setUserID(userID);
             this.activateAppUserDataPanel();
         }
         else {
-            new WebPage(this.defaultApi.UserGroups.Index.getUrl({})).open();
+            new WebPage(this.defaultClient.UserGroups.Index.getUrl({})).open();
         }
     }
 

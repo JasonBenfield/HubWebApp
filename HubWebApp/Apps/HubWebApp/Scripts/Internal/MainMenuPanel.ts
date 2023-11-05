@@ -1,7 +1,7 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MenuComponent } from "@jasonbenfield/sharedwebapp/Components/MenuComponent";
-import { HubAppApi } from "../Lib/Api/HubAppApi";
+import { HubAppClient } from "../Lib/Http/HubAppClient";
 import { MainMenuPanelView } from "./MainMenuPanelView";
 
 interface IResult {
@@ -19,8 +19,8 @@ class Result {
 export class MainMenuPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
             
-    constructor(hubApi: HubAppApi, private readonly view: MainMenuPanelView) {
-        const menu = new MenuComponent(hubApi, 'main', view.menu);
+    constructor(hubClient: HubAppClient, private readonly view: MainMenuPanelView) {
+        const menu = new MenuComponent(hubClient, 'main', view.menu);
         menu.refresh();
         new Command(this.back.bind(this)).add(view.backButton);
     }

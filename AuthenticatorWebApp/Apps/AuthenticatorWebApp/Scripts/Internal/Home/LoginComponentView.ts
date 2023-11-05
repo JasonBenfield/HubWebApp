@@ -1,4 +1,4 @@
-﻿import { VerifyLoginFormView } from "@hub/Api/VerifyLoginFormView";
+﻿import { VerifyLoginFormView } from "@hub/Http/VerifyLoginFormView";
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";

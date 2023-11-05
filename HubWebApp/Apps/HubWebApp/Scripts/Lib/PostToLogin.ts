@@ -1,13 +1,13 @@
 ﻿import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
-import { HubAppApi } from "./Api/HubAppApi";
+import { HubAppClient } from "./Http/HubAppClient";
 
 export class PostToLogin {
-    constructor(private readonly hubApi: HubAppApi) {
+    constructor(private readonly hubClient: HubAppClient) {
     }
 
     execute(credentials: ILoginCredentials, authKey: string) {
         const form = <HTMLFormElement>document.createElement('form');
-        form.action = this.hubApi.Auth.Login
+        form.action = this.hubClient.Auth.Login
             .getUrl(null)
             .value();
         form.style.position = 'absolute';

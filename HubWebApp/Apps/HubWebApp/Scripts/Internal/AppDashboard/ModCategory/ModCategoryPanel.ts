@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponent } from "./ModCategoryComponent";
 import { ModCategoryPanelView } from "./ModCategoryPanelView";
 import { ModifierListCard } from "./ModifierListCard";
@@ -39,12 +39,12 @@ export class ModCategoryPanel implements IPanel {
     readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: ModCategoryPanelView
     ) {
-        this.modCategoryComponent = new ModCategoryComponent(this.hubApi, this.view.modCategoryComponent);
-        this.modifierListCard = new ModifierListCard(this.hubApi, this.view.modifierListCard);
-        this.resourceGroupListCard = new ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
+        this.modCategoryComponent = new ModCategoryComponent(this.hubClient, this.view.modCategoryComponent);
+        this.modifierListCard = new ModifierListCard(this.hubClient, this.view.modifierListCard);
+        this.resourceGroupListCard = new ResourceGroupListCard(this.hubClient, this.view.resourceGroupListCard);
         this.backCommand.add(this.view.backButton);
         this.resourceGroupListCard.resourceGroupSelected.register(
             this.onResourceGroupSelected.bind(this)

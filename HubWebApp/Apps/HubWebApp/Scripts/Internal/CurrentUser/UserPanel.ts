@@ -2,7 +2,7 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserPanelView } from "./UserPanelView";
 
 interface IResult {
@@ -38,7 +38,7 @@ export class UserPanel implements IPanel {
     private readonly changePasswordCommand: Command;
     private user: IAppUserModel;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: UserPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: UserPanelView) {
         this.userName = new TextComponent(view.userName);
         this.personName = new TextComponent(view.personName);
         this.email = new TextComponent(view.email);
@@ -63,7 +63,7 @@ export class UserPanel implements IPanel {
     async refresh() {
         const user = await this.alert.infoAction(
             'Loading...',
-            () => this.hubApi.CurrentUser.GetUser()
+            () => this.hubClient.CurrentUser.GetUser()
         );
         this.setUser(user);
         this.editCommand.show();

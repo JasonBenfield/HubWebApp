@@ -1,12 +1,11 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
-import { UserComponentView } from "./UserComponentView";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
+import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { UserComponentView } from "./UserComponentView";
 
 type Events = {
     editRequested: number;
@@ -33,7 +32,7 @@ export class UserComponent {
     private canEdit: boolean = null;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: UserComponentView
     ) {
         this.alert = new CardAlert(this.view.alert).alert;
@@ -74,7 +73,7 @@ export class UserComponent {
     private async deactivate() {
         const user = await this.alert.infoAction(
             'Deactivating...',
-            () => this.hubApi.UserMaintenance.DeactivateUser(this.userID)
+            () => this.hubClient.UserMaintenance.DeactivateUser(this.userID)
         );
         this.loadUser(user);
     }
@@ -82,7 +81,7 @@ export class UserComponent {
     private async reactivate() {
         const user = await this.alert.infoAction(
             'Reactivating...',
-            () => this.hubApi.UserMaintenance.ReactivateUser(this.userID)
+            () => this.hubClient.UserMaintenance.ReactivateUser(this.userID)
         );
         this.loadUser(user);
     }
@@ -90,8 +89,8 @@ export class UserComponent {
     async refresh() {
         const user = await this.getUser(this.userID);
         if (this.canEdit === null) {
-            const access = await this.hubApi.getUserAccess({
-                canEdit: this.hubApi.getAccessRequest(api => api.UserMaintenance.EditUserAction)
+            const access = await this.hubClient.getUserAccess({
+                canEdit: this.hubClient.getAccessRequest(api => api.UserMaintenance.EditUserAction)
             });
             this.canEdit = access.canEdit;
         }
@@ -126,14 +125,10 @@ export class UserComponent {
         }
     }
 
-    private async getUser(userID: number) {
-        let user: IAppUserModel;
-        await this.alert.infoAction(
+    private getUser(userID: number) {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                user = await this.hubApi.UserInquiry.GetUser(userID);
-            }
+            () => this.hubClient.UserInquiry.GetUser(userID)
         );
-        return user;
     }
 }

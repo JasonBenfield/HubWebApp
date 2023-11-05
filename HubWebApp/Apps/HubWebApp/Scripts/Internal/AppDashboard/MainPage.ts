@@ -1,5 +1,5 @@
-﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Api/WebPage';
-import { XtiUrl } from '@jasonbenfield/sharedwebapp/Api/XtiUrl';
+﻿import { WebPage } from '@jasonbenfield/sharedwebapp/Http/WebPage';
+import { XtiUrl } from '@jasonbenfield/sharedwebapp/Http/XtiUrl';
 import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
 import { HubPage } from '../HubPage';
 import { AppDetailPanel } from './AppDetail/AppDetailPanel';
@@ -19,15 +19,15 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
-        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.defaultApi, this.view.appDetailPanel));
-        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.defaultApi, this.view.resourceGroupPanel));
-        this.resourcePanel = this.panels.add(new ResourcePanel(this.defaultApi, this.view.resourcePanel));
-        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.defaultApi, this.view.modCategoryPanel));
+        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.defaultClient, this.view.appDetailPanel));
+        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.defaultClient, this.view.resourceGroupPanel));
+        this.resourcePanel = this.panels.add(new ResourcePanel(this.defaultClient, this.view.resourcePanel));
+        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.defaultClient, this.view.modCategoryPanel));
         if (XtiUrl.current().path.modifier) {
             this.activateAppDetailPanel();
         }
         else {
-            new WebPage(this.defaultApi.Apps.Index.getUrl({})).open();
+            new WebPage(this.defaultClient.Apps.Index.getUrl({})).open();
         }
     }
 
@@ -36,7 +36,7 @@ class MainPage extends HubPage {
         this.appDetailPanel.refresh();
         const result = await this.appDetailPanel.start();
         if (result.backRequested) {
-            this.defaultApi.Apps.Index.open({});
+            this.defaultClient.Apps.Index.open({});
         }
         else if (result.resourceGroupSelected) {
             this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);

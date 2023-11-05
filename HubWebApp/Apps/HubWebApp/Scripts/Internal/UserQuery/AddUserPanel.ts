@@ -1,7 +1,7 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { AddUserForm } from "../../Lib/Api/AddUserForm";
-import { HubAppApi } from "../../Lib/Api/HubAppApi";
+import { AddUserForm } from "../../Lib/Http/AddUserForm";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AddUserPanelView } from "./AddUserPanelView";
 
 interface IResult {
@@ -22,7 +22,7 @@ export class AddUserPanel implements IPanel {
     private readonly addUserForm: AddUserForm;
     private readonly saveCommand: AsyncCommand;
 
-    constructor(private readonly hubApi: HubAppApi, private readonly view: AddUserPanelView) {
+    constructor(private readonly hubClient: HubAppClient, private readonly view: AddUserPanelView) {
         this.addUserForm = new AddUserForm(view.addUserForm);
         new Command(this.cancel.bind(this)).add(view.cancelButton);
         this.saveCommand = new AsyncCommand(this.save.bind(this));
@@ -38,7 +38,7 @@ export class AddUserPanel implements IPanel {
     private cancel() { this.awaitable.resolve(Result.done(false)); }
 
     private async save() {
-        const result = await this.addUserForm.save(this.hubApi.Users.AddUserAction);
+        const result = await this.addUserForm.save(this.hubClient.Users.AddUserAction);
         if (result.succeeded()) {
             this.awaitable.resolve(Result.done(true));
         }

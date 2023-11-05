@@ -4,7 +4,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
-import { ChangeCurrentUserPasswordFormView } from "../../Lib/Api/ChangeCurrentUserPasswordFormView";
+import { ChangeCurrentUserPasswordFormView } from "../../Lib/Http/ChangeCurrentUserPasswordFormView";
 import { HubTheme } from "../HubTheme";
 
 export class ChangePasswordPanelView extends GridView {

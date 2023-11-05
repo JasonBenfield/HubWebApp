@@ -7,7 +7,7 @@ import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../../HubTheme";
-import { ODataExpandedLogEntryColumnViewsBuilder } from '../../../Lib/Api/ODataExpandedLogEntryColumnsBuilder';
+import { ODataExpandedLogEntryColumnViewsBuilder } from '../../../Lib/Http/ODataExpandedLogEntryColumnsBuilder';
 
 export class LogEntryQueryPanelView extends GridView {
     readonly menuButton: ButtonCommandView;

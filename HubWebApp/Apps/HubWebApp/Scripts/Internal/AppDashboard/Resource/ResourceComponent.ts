@@ -1,8 +1,8 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { HubAppApi } from "../../../Lib/Api/HubAppApi";
-import { ResourceResultType } from '../../../Lib/Api/ResourceResultType';
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { ResourceResultType } from '../../../Lib/Http/ResourceResultType';
 import { ResourceComponentView } from "./ResourceComponentView";
 
 export class ResourceComponent {
@@ -12,7 +12,7 @@ export class ResourceComponent {
     private readonly resultType: TextComponent;
 
     constructor(
-        private readonly hubApi: HubAppApi,
+        private readonly hubClient: HubAppClient,
         private readonly view: ResourceComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Resource');
@@ -50,17 +50,13 @@ export class ResourceComponent {
         this.resultType.setText(resultTypeText);
     }
 
-    private async getResource(resourceID: number) {
-        let resource: IResourceModel;
-        await this.alert.infoAction(
+    private getResource(resourceID: number) {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                resource = await this.hubApi.Resource.GetResource({
-                    VersionKey: 'Current',
-                    ResourceID: resourceID
-                });
-            }
+            () => this.hubClient.Resource.GetResource({
+                VersionKey: 'Current',
+                ResourceID: resourceID
+            })
         );
-        return resource;
     }
 }

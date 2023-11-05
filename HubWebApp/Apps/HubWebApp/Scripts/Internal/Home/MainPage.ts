@@ -7,7 +7,7 @@ class MainPage extends HubPage {
 
     constructor() {
         super(new MainPageView());
-        new MainMenuPanel(this.defaultApi, this.view.mainMenuPanel);
+        new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel);
     }
 }
 new MainPage();

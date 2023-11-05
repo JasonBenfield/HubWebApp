@@ -27,7 +27,10 @@ internal sealed class CopyToInstallDirProcess
             .NoFileSizeLogging()
             .NoJobHeader()
             .NoJobSummary()
-            .NoProgressDisplayed();
+            .NoProgressDisplayed()
+            .MultiThreaded(DefaultRobocopyThreads.Value)
+            .NumberOfRetries(1)
+            .WaitTimeBetweenRetries(1);
         if (purge)
         {
             process.Purge();
