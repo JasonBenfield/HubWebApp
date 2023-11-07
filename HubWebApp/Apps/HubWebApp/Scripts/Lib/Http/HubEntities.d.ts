@@ -124,21 +124,6 @@ interface IExpandedInstallation {
 	LastRequestDaysAgo: number;
 	RequestCount: number;
 }
-interface IWebFileResult {
-	FileStream: IStream;
-	ContentType: string;
-	DownloadName: string;
-}
-interface IStream {
-	CanRead: boolean;
-	CanWrite: boolean;
-	CanSeek: boolean;
-	CanTimeout: boolean;
-	Length: number;
-	Position: number;
-	ReadTimeout: number;
-	WriteTimeout: number;
-}
 interface ILoginModel {
 	AuthKey: string;
 	ReturnKey: string;
