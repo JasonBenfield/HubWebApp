@@ -32,5 +32,6 @@ public interface IHubDbContext
     DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
     Task Transaction(Func<Task> action);
     Task<TResult> Transaction<TResult>(Func<Task<TResult>> action);
+    public void SetTimeout(TimeSpan timeout);
     void ClearCache();
 }

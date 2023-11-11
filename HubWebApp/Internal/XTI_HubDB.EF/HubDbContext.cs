@@ -101,5 +101,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
 
     public Task<TResult> Transaction<TResult>(Func<Task<TResult>> action) => unitOfWork.Execute(action);
 
+    public void SetTimeout(TimeSpan timeout) => Database.SetCommandTimeout(timeout);
+
     public void ClearCache() => ChangeTracker.Clear();
 }
