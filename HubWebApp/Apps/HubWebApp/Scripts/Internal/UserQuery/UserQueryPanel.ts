@@ -13,6 +13,7 @@ import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUse
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
+import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 
 interface IResult {
     menuRequested?: boolean;
@@ -49,7 +50,7 @@ export class UserQueryPanel implements IPanel {
         columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? 'Yes' : 'No' });
         const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: GridRowView) =>
                 new UserDataRow(rowIndex, columns, record, view)
         );
         options.query.select.addFields(

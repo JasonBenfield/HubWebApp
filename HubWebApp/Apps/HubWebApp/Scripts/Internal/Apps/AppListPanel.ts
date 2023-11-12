@@ -38,7 +38,7 @@ export class AppListPanel implements IPanel {
             this.hubClient,
             this.view.appListCard
         );
-        this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        this.appListCard.when.appSelected.then(this.onAppSelected.bind(this));
         new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
     }
 

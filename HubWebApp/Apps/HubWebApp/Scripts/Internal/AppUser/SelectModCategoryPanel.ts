@@ -54,7 +54,7 @@ export class SelectModCategoryPanel implements IPanel {
         new TextComponent(this.view.titleHeader).setText('Modifier Categories');
         this.alert = new CardAlert(view.alert).alert;
         this.modCategories = new ListGroup(view.modCategories);
-        this.modCategories.registerItemClicked(this.onModCategoryClicked.bind(this));
+        this.modCategories.when.itemClicked.then(this.onModCategoryClicked.bind(this));
         new Command(this.onDefaultModifierClicked.bind(this)).add(view.defaultModButton);
         new Command(this.back.bind(this)).add(view.backButton);
     }

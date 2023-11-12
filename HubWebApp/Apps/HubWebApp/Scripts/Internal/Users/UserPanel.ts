@@ -51,7 +51,7 @@ export class UserPanel implements IPanel {
             this.view.appListCard
         );
         this.backCommand.add(view.backButton);
-        this.appListCard.appSelected.register(this.onAppSelected.bind(this));
+        this.appListCard.when.appSelected.then(this.onAppSelected.bind(this));
         this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubClient, view.userAuthenticatorListCard);
         this.userComponent.when.editRequested.then(this.onEditRequested.bind(this));
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));

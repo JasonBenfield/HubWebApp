@@ -15,6 +15,7 @@ import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
 import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Http/ODataExpandedInstallationColumnsBuilder";
 import { InstallationDataRow } from "./InstallationDataRow";
 import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
+import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 
 interface IResult {
     menuRequested?: boolean;
@@ -77,7 +78,7 @@ export class InstallationQueryPanel implements IPanel {
             new ApiODataClient(hubClient.InstallationQuery, { QueryType: selectedQueryType.Value })
         );
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view) =>
+            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: GridRowView) =>
                 new InstallationDataRow(rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());

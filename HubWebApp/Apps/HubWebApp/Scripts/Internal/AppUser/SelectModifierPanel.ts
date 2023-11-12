@@ -43,7 +43,7 @@ export class SelectModifierPanel implements IPanel {
     ) {
         this.alert = new MessageAlert(this.view.alert);
         this.modifiers = new ListGroup(this.view.modifiers);
-        this.modifiers.registerItemClicked(this.onModifierClicked.bind(this));
+        this.modifiers.when.itemClicked.then(this.onModifierClicked.bind(this));
         new Command(this.back.bind(this)).add(this.view.backButton);
     }
 

@@ -62,11 +62,11 @@ export class AppDetailPanel implements IPanel {
         this.app = new AppComponent(this.hubApi, this.view.app);
         this.currentVersion = new CurrentVersionComponent(this.hubApi, this.view.currentVersion);
         this.resourceGroupListCard = new ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
-        this.resourceGroupListCard.resourceGroupClicked.register(
+        this.resourceGroupListCard.when.resourceGroupClicked.then(
             this.onResourceGroupSelected.bind(this)
         );
         this.modifierCategoryListCard = new ModifierCategoryListCard(this.hubApi, this.view.modifierCategoryListCard);
-        this.modifierCategoryListCard.modCategorySelected.register(
+        this.modifierCategoryListCard.when.modCategorySelected.then(
             this.onModCategorySelected.bind(this)
         );
         this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);

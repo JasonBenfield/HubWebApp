@@ -10,6 +10,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
+import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 
 interface IResult {
     menuRequested?: boolean;
@@ -33,7 +34,7 @@ export class RequestQueryPanel implements IPanel {
         columns.RequestID.require();
         columns.Succeeded.require();
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: GridRowView) =>
                 new RequestDataRow(rowIndex, columns, record, view)
         );
         options.query.select.addFields(

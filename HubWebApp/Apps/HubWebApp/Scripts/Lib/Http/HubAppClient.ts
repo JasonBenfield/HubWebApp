@@ -33,7 +33,11 @@ import { LogsGroup } from "./LogsGroup";
 
 export class HubAppClient extends AppClient {
 	constructor(events: AppClientEvents) {
-		super(events, 'Hub');
+		super(
+			events, 
+			'Hub', 
+			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1408' : 'Current'
+		);
 		this.CurrentUser = this.addGroup((evts, resourceUrl) => new CurrentUserGroup(evts, resourceUrl));
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 		this.Installations = this.addGroup((evts, resourceUrl) => new InstallationsGroup(evts, resourceUrl));

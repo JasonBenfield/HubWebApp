@@ -46,7 +46,7 @@ export class ModCategoryPanel implements IPanel {
         this.modifierListCard = new ModifierListCard(this.hubClient, this.view.modifierListCard);
         this.resourceGroupListCard = new ResourceGroupListCard(this.hubClient, this.view.resourceGroupListCard);
         this.backCommand.add(this.view.backButton);
-        this.resourceGroupListCard.resourceGroupSelected.register(
+        this.resourceGroupListCard.when.resourceGroupSelected.then(
             this.onResourceGroupSelected.bind(this)
         );
     }

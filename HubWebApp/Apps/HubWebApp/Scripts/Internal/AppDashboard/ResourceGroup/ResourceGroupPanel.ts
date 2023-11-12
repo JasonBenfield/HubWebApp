@@ -53,12 +53,12 @@ export class ResourceGroupPanel implements IPanel {
     constructor(hubClient: HubAppClient, private readonly view: ResourceGroupPanelView) {
         this.resourceGroupComponent = new ResourceGroupComponent(hubClient, view.resourceGroupComponent);
         this.modCategoryComponent = new ModCategoryComponent(hubClient, view.modCategoryComponent);
-        this.modCategoryComponent.clicked.register(
+        this.modCategoryComponent.when.clicked.then(
             this.onModCategoryClicked.bind(this)
         );
         this.roleAccessCard = new ResourceGroupAccessCard(hubClient, view.roleAccessCard);
         this.resourceListCard = new ResourceListCard(hubClient, view.resourceListCard);
-        this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
+        this.resourceListCard.when.resourceSelected.then(this.onResourceSelected.bind(this));
         this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
         this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
         this.backCommand.add(view.backButton);
