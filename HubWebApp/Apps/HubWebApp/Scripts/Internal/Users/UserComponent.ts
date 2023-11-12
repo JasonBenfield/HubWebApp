@@ -3,7 +3,7 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
 
@@ -15,10 +15,10 @@ type Events = {
 export class UserComponent {
     private userID: number;
     private readonly alert: MessageAlert;
-    private readonly userName: TextValueFormGroup;
-    private readonly fullName: TextValueFormGroup;
-    private readonly email: TextValueFormGroup;
-    private readonly timeDeactivated: TextValueFormGroup;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly fullNameFormGroup: FormGroupText;
+    private readonly emailFormGroup: FormGroupText;
+    private readonly timeDeactivatedFormGroup: FormGroupText;
     private readonly editCommand: Command;
     private readonly changePasswordCommand: Command;
     private readonly deactivateCommand: AsyncCommand;
@@ -36,14 +36,14 @@ export class UserComponent {
         private readonly view: UserComponentView
     ) {
         this.alert = new CardAlert(this.view.alert).alert;
-        this.userName = new TextValueFormGroup(view.userName);
-        this.userName.setCaption('User Name');
-        this.fullName = new TextValueFormGroup(view.fullName);
-        this.fullName.setCaption('Name');
-        this.email = new TextValueFormGroup(view.email);
-        this.email.setCaption('Email');
-        this.timeDeactivated = new TextValueFormGroup(view.timeDeactivated);
-        this.timeDeactivated.setCaption('Time Deactivated');
+        this.userNameFormGroup = new FormGroupText(view.userName);
+        this.userNameFormGroup.setCaption('User Name');
+        this.fullNameFormGroup = new FormGroupText(view.fullName);
+        this.fullNameFormGroup.setCaption('Name');
+        this.emailFormGroup = new FormGroupText(view.email);
+        this.emailFormGroup.setCaption('Email');
+        this.timeDeactivatedFormGroup = new FormGroupText(view.timeDeactivated);
+        this.timeDeactivatedFormGroup.setCaption('Time Deactivated');
         this.editCommand = new Command(this.requestEdit.bind(this));
         this.editCommand.add(this.view.editButton);
         this.editCommand.hide();
@@ -98,16 +98,16 @@ export class UserComponent {
     }
 
     private loadUser(user: IAppUserModel) {
-        this.userName.setValue(user.UserName.DisplayText);
-        this.fullName.setValue(user.Name.DisplayText);
-        this.email.setValue(user.Email);
+        this.userNameFormGroup.setValue(user.UserName.DisplayText);
+        this.fullNameFormGroup.setValue(user.Name.DisplayText);
+        this.emailFormGroup.setValue(user.Email);
         if (user.TimeDeactivated.getFullYear() === 9999) {
             this.view.timeDeactivated.hide();
-            this.timeDeactivated.setValue('');
+            this.timeDeactivatedFormGroup.setValue('');
         }
         else {
             this.view.timeDeactivated.show();
-            this.timeDeactivated.setValue(new FormattedDate(user.TimeDeactivated).formatDateTime());
+            this.timeDeactivatedFormGroup.setValue(new FormattedDate(user.TimeDeactivated).formatDateTime());
         }
         if (this.canEdit) {
             if (user.TimeDeactivated.getFullYear() === 9999) {

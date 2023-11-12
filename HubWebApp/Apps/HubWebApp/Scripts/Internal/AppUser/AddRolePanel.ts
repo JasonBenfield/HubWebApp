@@ -45,7 +45,7 @@ export class AddRolePanel implements IPanel {
         this.awaitable = new Awaitable();
         this.alert = new CardAlert(view.alert).alert;
         this.roles = new ListGroup(view.roles);
-        this.roles.registerItemClicked(this.onRoleClicked.bind(this));
+        this.roles.when.itemClicked.then(this.onRoleClicked.bind(this));
         new Command(this.back.bind(this)).add(view.backButton);
     }
 

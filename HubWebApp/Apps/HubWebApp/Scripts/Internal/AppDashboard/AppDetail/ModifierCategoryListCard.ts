@@ -1,19 +1,20 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { ModifierCategoryListItem } from "./ModifierCategoryListItem";
 import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
 
+type Events = { modCategorySelected: IModifierCategoryModel };
+
 export class ModifierCategoryListCard {
     private readonly alert: MessageAlert;
     private readonly modCategories: ListGroup<ModifierCategoryListItem, ModifierCategoryListItemView>;
-
-    private readonly _modCategorySelected = new DefaultEvent<IModifierCategoryModel>(this);
-    readonly modCategorySelected = this._modCategorySelected.handler();
+    private readonly eventSource = new EventSource<Events>(this, { modCategorySelected: null });
+    readonly when = this.eventSource.when;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -22,11 +23,11 @@ export class ModifierCategoryListCard {
         new TextComponent(view.titleHeader).setText('Modifier Categories');
         this.alert = new CardAlert(view.alert).alert;
         this.modCategories = new ListGroup(view.modCategories);
-        this.modCategories.registerItemClicked(this.onItemSelected.bind(this));
+        this.modCategories.when.itemClicked.then(this.onItemSelected.bind(this));
     }
 
     private onItemSelected(item: ModifierCategoryListItem) {
-        this._modCategorySelected.invoke(item.modCategory);
+        this.eventSource.events.modCategorySelected.invoke(item.modCategory);
     }
 
     async refresh() {

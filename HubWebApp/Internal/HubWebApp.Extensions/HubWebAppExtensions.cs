@@ -110,6 +110,18 @@ public static class HubWebAppExtensions
                             );
                     }
                 );
+                agenda.AddScheduled<HubAppApi>
+                (
+                    (api, agendaItem) =>
+                    {
+                        agendaItem.Action(api.PermanentLog.EndExpiredSessions)
+                            .Interval(TimeSpan.FromHours(1))
+                            .AddSchedule
+                            (
+                                Schedule.EveryDay().At(TimeRange.AllDay())
+                            );
+                    }
+                );
             }
         );
         services.AddHostedService<AppAgendaHostedService>();

@@ -3,7 +3,7 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { SessionPanelView } from "./SessionPanelView";
@@ -23,20 +23,20 @@ class Result {
 export class SessionPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly timeRange: TextValueFormGroup;
-    private readonly userName: TextValueFormGroup;
-    private readonly remoteAddress: TextValueFormGroup;
-    private readonly userAgent: TextValueFormGroup;
+    private readonly timeRangeFormGroup: FormGroupText;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly remoteAddressFormGroup: FormGroupText;
+    private readonly userAgentFormGroup: FormGroupText;
     private readonly userLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
     private sessionID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.timeRange = new TextValueFormGroup(view.timeRange);
-        this.userName = new TextValueFormGroup(view.userName);
-        this.remoteAddress = new TextValueFormGroup(view.remoteAddress);
-        this.userAgent = new TextValueFormGroup(view.userAgent);
+        this.timeRangeFormGroup = new FormGroupText(view.timeRange);
+        this.userNameFormGroup = new FormGroupText(view.userName);
+        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddress);
+        this.userAgentFormGroup = new FormGroupText(view.userAgent);
         this.userLink = new TextLinkComponent(view.userLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -71,17 +71,17 @@ export class SessionPanel implements IPanel {
             const ts = TimeSpan.dateDiff(detail.Session.TimeEnded, detail.Session.TimeStarted);
             timeRange = `${timeStarted} to ${timeEnded} [ ${ts} ]`;
         }
-        this.timeRange.setValue(timeRange);
-        this.userName.setValue(detail.User.UserName.DisplayText);
+        this.timeRangeFormGroup.setValue(timeRange);
+        this.userNameFormGroup.setValue(detail.User.UserName.DisplayText);
         if (detail.Session.RemoteAddress) {
-            this.remoteAddress.setValue(detail.Session.RemoteAddress);
+            this.remoteAddressFormGroup.setValue(detail.Session.RemoteAddress);
             this.view.showRemoteAddress();
         }
         else {
             this.view.hideRemoteAddress();
         }
         if (detail.Session.UserAgent) {
-            this.userAgent.setValue(detail.Session.UserAgent);
+            this.userAgentFormGroup.setValue(detail.Session.UserAgent);
             this.view.showUserAgent();
         }
         else {

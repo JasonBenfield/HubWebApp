@@ -4,7 +4,7 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { RequestPanelView } from "./RequestPanelView";
@@ -24,26 +24,26 @@ class Result {
 export class RequestPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly appKey: TextValueFormGroup;
+    private readonly appKey: FormGroupText;
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
-    private readonly userName: TextValueFormGroup;
-    private readonly currentInstallation: TextValueFormGroup;
-    private readonly timeRange: TextValueFormGroup;
-    private readonly path: TextValueFormGroup;
+    private readonly userName: FormGroupText;
+    private readonly currentInstallation: FormGroupText;
+    private readonly timeRange: FormGroupText;
+    private readonly path: FormGroupText;
     private readonly installationLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private requestID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: RequestPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.appKey = new TextValueFormGroup(view.appKey);
+        this.appKey = new FormGroupText(view.appKey);
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
-        this.userName = new TextValueFormGroup(view.userName);
-        this.currentInstallation = new TextValueFormGroup(view.currentInstallation);
-        this.timeRange = new TextValueFormGroup(view.timeRange);
-        this.path = new TextValueFormGroup(view.path);
+        this.userName = new FormGroupText(view.userName);
+        this.currentInstallation = new FormGroupText(view.currentInstallation);
+        this.timeRange = new FormGroupText(view.timeRange);
+        this.path = new FormGroupText(view.path);
         this.installationLink = new TextLinkComponent(view.installationLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         new Command(this.menu.bind(this)).add(view.menuButton);

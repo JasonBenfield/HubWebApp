@@ -5,7 +5,7 @@ import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfir
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
 
@@ -25,15 +25,15 @@ export class InstallationPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly confirm: ModalConfirm;
-    private readonly appKey: TextValueFormGroup;
+    private readonly appKey: FormGroupText;
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
-    private readonly installationStatus: TextValueFormGroup;
+    private readonly installationStatus: FormGroupText;
     private readonly location: TextComponent;
     private readonly current: TextComponent;
-    private readonly domain: TextValueFormGroup;
-    private readonly siteName: TextValueFormGroup;
-    private readonly mostRecentRequest: TextValueFormGroup;
+    private readonly domain: FormGroupText;
+    private readonly siteName: FormGroupText;
+    private readonly mostRecentRequest: FormGroupText;
     private readonly appLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
@@ -42,15 +42,15 @@ export class InstallationPanel implements IPanel {
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.confirm = new ModalConfirm(view.confirm);
-        this.appKey = new TextValueFormGroup(view.appKey);
+        this.appKey = new FormGroupText(view.appKey);
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
-        this.installationStatus = new TextValueFormGroup(view.installationStatus);
+        this.installationStatus = new FormGroupText(view.installationStatus);
         this.location = new TextComponent(view.location);
         this.current = new TextComponent(view.current);
-        this.domain = new TextValueFormGroup(view.domain);
-        this.siteName = new TextValueFormGroup(view.siteName);
-        this.mostRecentRequest = new TextValueFormGroup(view.mostRecentRequest);
+        this.domain = new FormGroupText(view.domain);
+        this.siteName = new FormGroupText(view.siteName);
+        this.mostRecentRequest = new FormGroupText(view.mostRecentRequest);
         this.appLink = new TextLinkComponent(view.appLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
