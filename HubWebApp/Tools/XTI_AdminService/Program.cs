@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 using XTI_Core;
 using XTI_Core.Extensions;
-using XTI_InstallService;
+using XTI_AdminService;
 
 #pragma warning disable CA1416 // Validate platform compatibility
-WebHost.CreateDefaultBuilder(args)
+var host = WebHost.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
     (
         (hostContext, configuration) =>
@@ -18,7 +18,7 @@ WebHost.CreateDefaultBuilder(args)
         (hostContext, services) =>
         {
             services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
-            services.AddSingleton<Installer>();
+            services.AddSingleton<AdminToolRunner>();
         }
     )
     .UseUrls("http://*:61862")
@@ -26,10 +26,17 @@ WebHost.CreateDefaultBuilder(args)
     {
         app.Run((context) =>
         {
-            var installer = context.RequestServices.GetRequiredService<Installer>();
-            return installer.Run(context);
+            var runner = context.RequestServices.GetRequiredService<AdminToolRunner>();
+            return runner.Run(context);
         });
     })
-    .Build()
-    .RunAsService();
+    .Build();
+if (args.Length > 0 && args[0].Equals("mode=console", StringComparison.OrdinalIgnoreCase))
+{
+    host.Run();
+}
+else
+{
+    host.RunAsService();
+}
 #pragma warning restore CA1416 // Validate platform compatibility

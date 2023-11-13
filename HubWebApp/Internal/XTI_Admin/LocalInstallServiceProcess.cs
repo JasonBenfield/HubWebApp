@@ -11,31 +11,20 @@ internal sealed class LocalInstallServiceProcess
         this.scopes = scopes;
     }
 
-    public async Task Run(string machineName, string remoteInstallKey)
+    public Task Run(string machineName, string remoteInstallKey)
     {
         var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var hubDbTypeAccessor = scopes.GetRequiredService<HubDbTypeAccessor>();
         var httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
         var options = scopes.GetRequiredService<AdminOptions>();
-        using var client = httpClientFactory.CreateClient();
-        client.Timeout = TimeSpan.FromHours(1);
-        using var content = new FormUrlEncodedContent
-        (
-            new[]
-            {
-                KeyValuePair.Create("command", "localInstall"),
-                KeyValuePair.Create("envName", xtiEnv.EnvironmentName),
-                KeyValuePair.Create("RemoteInstallKey", remoteInstallKey),
-                KeyValuePair.Create("HubAdministrationType", hubDbTypeAccessor.Value.ToString()),
-                KeyValuePair.Create("HubAppVersionKey", options.HubAppVersionKey),
-                KeyValuePair.Create("InstallationSource", options.GetInstallationSource(xtiEnv).ToString())
-            }
-        );
-        var installServiceUrl = $"http://{machineName}:61862";
-        Console.WriteLine($"Posting to '{installServiceUrl}' {remoteInstallKey}");
-        using var response = await client.PostAsync(installServiceUrl, content);
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Console.WriteLine($"Response: {response.StatusCode} {responseBody}");
-        response.EnsureSuccessStatusCode();
+        var remoteCommandService = new RemoteCommandService(xtiEnv, httpClientFactory);
+        var dict = new Dictionary<string, string>
+        {
+            { "RemoteInstallKey", remoteInstallKey },
+            { "HubAdministrationType", hubDbTypeAccessor.Value.ToString() },
+            { "HubAppVersionKey", options.HubAppVersionKey },
+            { "InstallationSource", options.GetInstallationSource(xtiEnv).ToString() }
+        };
+        return remoteCommandService.Run(machineName, "localInstall", dict);
     }
 }
