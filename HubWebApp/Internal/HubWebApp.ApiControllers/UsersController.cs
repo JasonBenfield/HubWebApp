@@ -9,9 +9,9 @@ public sealed partial class UsersController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(GetUserRequest model, CancellationToken ct)
+    public async Task<IActionResult> Index(UsersIndexRequest model, CancellationToken ct)
     {
-        var result = await api.Group("Users").Action<GetUserRequest, WebViewResult>("Index").Execute(model, ct);
+        var result = await api.Group("Users").Action<UsersIndexRequest, WebViewResult>("Index").Execute(model, ct);
         return View(result.Data!.ViewName);
     }
 

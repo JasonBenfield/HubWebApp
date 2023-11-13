@@ -75,7 +75,7 @@ export class UserRolesPanel implements IPanel {
     }
 
     private back() {
-        this.hubClient.Users.Index.open({ UserID: this.user.ID });
+        this.hubClient.Users.Index.open({ UserID: this.user.ID, ReturnTo: '' });
     }
 
     private requestAdd() {
