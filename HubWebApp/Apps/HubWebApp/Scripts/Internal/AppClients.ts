@@ -3,13 +3,13 @@ import { ModalErrorView } from "@jasonbenfield/sharedwebapp/Views/ModalError";
 import { HubAppClient } from "../Lib/Http/HubAppClient";
 
 export class AppClients {
-    private readonly appClientFactory;
+    private readonly appClientFactory: AppClientFactory;
 
     constructor(modalError: ModalErrorView) {
         this.appClientFactory = new AppClientFactory(modalError);
     }
 
     Hub() {
-        return this.appClientFactory.api(HubAppClient);
+        return this.appClientFactory.create(HubAppClient);
     }
 }

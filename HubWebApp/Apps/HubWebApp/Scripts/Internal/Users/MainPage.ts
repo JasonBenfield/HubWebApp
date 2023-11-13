@@ -6,6 +6,7 @@ import { ChangePasswordPanel } from './ChangePasswordPanel';
 import { MainPageView } from './MainPageView';
 import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
+import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 
 class MainPage extends HubPage {
     protected readonly view: MainPageView;
@@ -40,7 +41,14 @@ class MainPage extends HubPage {
         this.panels.activate(this.userPanel);
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            const url = this.defaultClient.UserGroups.Index.getModifierUrl('', {});
+            const returnTo = Url.current().getQueryValue('ReturnTo');
+            let url: UrlBuilder;
+            if (returnTo) {
+                url = this.defaultClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });
+            }
+            else {
+                url = this.defaultClient.UserGroups.Index.getModifierUrl('', {});
+            }
             new WebPage(url).open();
         }
         else if (result.editRequested) {

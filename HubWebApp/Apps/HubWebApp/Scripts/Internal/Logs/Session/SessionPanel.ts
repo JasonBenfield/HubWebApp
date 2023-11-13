@@ -90,7 +90,7 @@ export class SessionPanel implements IPanel {
         this.userLink.setHref(
             this.hubClient.Users.Index.getModifierUrl(
                 detail.UserGroup.PublicKey.Value,
-                { UserID: detail.User.ID }
+                { UserID: detail.User.ID, ReturnTo: '' }
             )
         );
         this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: this.sessionID, InstallationID: null }));

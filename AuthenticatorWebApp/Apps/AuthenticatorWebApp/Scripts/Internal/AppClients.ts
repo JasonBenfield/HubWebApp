@@ -4,17 +4,17 @@ import { AuthenticatorAppClient } from "../Lib/Http/AuthenticatorAppClient";
 import { HubAppClient } from "@hub/Http/HubAppClient";
 
 export class AppClients {
-    private readonly appClientFactory;
+    private readonly appClientFactory: AppClientFactory;
 
     constructor(modalError: ModalErrorView) {
         this.appClientFactory = new AppClientFactory(modalError);
     }
 
     Authenticator() {
-        return this.appClientFactory.api(AuthenticatorAppClient);
+        return this.appClientFactory.create(AuthenticatorAppClient);
     }
 
     Hub() {
-        return this.appClientFactory.api(HubAppClient);
+        return this.appClientFactory.create(HubAppClient);
     }
 }

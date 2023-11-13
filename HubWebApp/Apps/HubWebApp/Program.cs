@@ -36,27 +36,7 @@ builder.Services.AddControllersWithViews()
     (
         new AssemblyPart(typeof(HomeController).Assembly)
     );
-if (xtiEnv.IsDevelopment())
-{
-    builder.Services.AddCors
-    (
-        options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
-                builder.AllowAnyHeader();
-                builder.AllowAnyMethod();
-                builder.AllowCredentials();
-                builder.SetIsOriginAllowed(origin => new Uri(origin).Host.StartsWith("development.", StringComparison.OrdinalIgnoreCase));
-            });
-        }
-    );
-}
 var app = builder.Build();
 app.UseODataQueryRequest();
-if (xtiEnv.IsDevelopment())
-{
-    app.UseCors();
-}
 app.UseXtiDefaults();
 await app.RunAsync();

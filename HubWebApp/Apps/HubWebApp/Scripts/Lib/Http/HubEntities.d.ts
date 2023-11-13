@@ -398,8 +398,9 @@ interface IGetResourceLogRequest {
 	ResourceID: number;
 	HowMany: number;
 }
-interface IGetUserRequest {
+interface IUsersIndexRequest {
 	UserID: number;
+	ReturnTo: string;
 }
 interface IAppUserGroupModel {
 	ID: number;

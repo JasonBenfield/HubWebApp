@@ -14,6 +14,8 @@ import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
 import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl";
+import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 
 interface IResult {
     menuRequested?: boolean;
@@ -97,7 +99,10 @@ export class UserQueryPanel implements IPanel {
         const userID: number = eventArgs.record['UserID'];
         let userGroupName: string = eventArgs.record['UserGroupName'];
         userGroupName = userGroupName.replace(/\s+/g, '');
-        this.hubClient.Users.Index.open({ UserID: userID }, userGroupName);
+        this.hubClient.Users.Index.open({
+            UserID: userID,
+            ReturnTo: userGroupName
+        }, userGroupName);
     }
 
     async refresh() {

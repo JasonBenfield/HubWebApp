@@ -10,14 +10,14 @@ import { AddUserForm } from "./AddUserForm";
 export class UsersGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Users');
-		this.Index = this.createView<IGetUserRequest>('Index');
+		this.Index = this.createView<IUsersIndexRequest>('Index');
 		this.GetUserGroupAction = this.createAction<IEmptyRequest,IAppUserGroupModel>('GetUserGroup', 'Get User Group');
 		this.GetUsersAction = this.createAction<IEmptyRequest,IAppUserModel[]>('GetUsers', 'Get Users');
 		this.AddOrUpdateUserAction = this.createAction<IAddOrUpdateUserRequest,IAppUserModel>('AddOrUpdateUser', 'Add Or Update User');
 		this.AddUserAction = this.createAction<AddUserForm,IAppUserModel>('AddUser', 'Add User');
 	}
 	
-	readonly Index: AppClientView<IGetUserRequest>;
+	readonly Index: AppClientView<IUsersIndexRequest>;
 	readonly GetUserGroupAction: AppClientAction<IEmptyRequest,IAppUserGroupModel>;
 	readonly GetUsersAction: AppClientAction<IEmptyRequest,IAppUserModel[]>;
 	readonly AddOrUpdateUserAction: AppClientAction<IAddOrUpdateUserRequest,IAppUserModel>;
