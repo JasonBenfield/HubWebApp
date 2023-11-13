@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using XTI_Admin;
 using XTI_AdminTool;
 using XTI_App.Abstractions;
+using XTI_App.Extensions;
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
@@ -90,6 +91,7 @@ await Host.CreateDefaultBuilder(args)
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
+            services.AddSingleton<IAppClientRequestKey, EmptyAppClientRequestKey>();
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredService<IXtiConfiguration>();

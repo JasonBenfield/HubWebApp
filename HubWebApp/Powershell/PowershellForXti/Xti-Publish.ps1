@@ -192,9 +192,10 @@ function Xti-UploadTempLog {
     param (
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName
+        $EnvName,
+        $DestinationMachine = ""
     )
-    Xti-Admin -EnvName $EnvName -Command UploadTempLog
+    Xti-Admin -EnvName $EnvName -Command UploadTempLog -DestinationMachine "`"$($DestinationMachine)`""
 }
 
 function Xti-StoreCredentials {
