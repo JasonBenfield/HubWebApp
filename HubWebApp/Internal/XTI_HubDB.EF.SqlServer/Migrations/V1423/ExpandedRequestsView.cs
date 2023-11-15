@@ -51,7 +51,7 @@ select
 	ResourceGroups.IsAnonymousAllowed IsAnonymousAllowedToResourceGroup, AppXtiVersions.VersionID,
 	ModifierID, mod.ModKeyDisplayText ModKey, mod.TargetKey ModTargetKey, mod.DisplayText ModDisplayText,
 	mod.CategoryID ModCategoryID, modcat.DisplayText ModCategoryName, 
-	modcat.AppID, 
+	Apps.ID AppID, 
 	dbo.AppKeyDisplayText(Apps.DisplayText, Apps.Type) AppKey,
 	Apps.DisplayText AppName, dbo.GetLocalDateTime(Apps.TimeAdded) TimeAppAdded, Apps.Title AppTitle, 
 	Apps.Type AppTypeValue,
