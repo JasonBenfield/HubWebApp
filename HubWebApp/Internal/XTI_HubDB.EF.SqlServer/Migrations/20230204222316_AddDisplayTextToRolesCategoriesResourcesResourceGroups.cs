@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using XTI_HubDB.EF.SqlServer.Migrations.Views.V230204;
+using XTI_HubDB.EF.SqlServer.Migrations.V1422;
 
 #nullable disable
 

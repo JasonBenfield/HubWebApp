@@ -1,4 +1,4 @@
-﻿namespace XTI_HubDB.EF.SqlServer.Migrations.Views.V230204;
+﻿namespace XTI_HubDB.EF.SqlServer.Migrations.V1422;
 
 internal static class ExpandedInstallations
 {
