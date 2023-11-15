@@ -2,15 +2,12 @@
 
 internal sealed class BuildCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly BuildProcess buildProcess;
 
-    public BuildCommand(Scopes scopes)
+    public BuildCommand(BuildProcess buildProcess)
     {
-        this.scopes = scopes;
+        this.buildProcess = buildProcess;
     }
 
-    public async Task Execute()
-    {
-        await new BuildProcess(scopes).Run();
-    }
+    public Task Execute() => buildProcess.Run();
 }

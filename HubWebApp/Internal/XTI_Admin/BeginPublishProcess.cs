@@ -5,21 +5,24 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Admin;
 
-internal sealed class BeginPublishProcess
+public sealed class BeginPublishProcess
 {
-    private readonly Scopes scopes;
+    private readonly VersionKeyFromCurrentBranch versionKeyFromCurrentBranch;
+    private readonly ProductionHubAdmin productionHubAdmin;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public BeginPublishProcess(Scopes scopes)
+    public BeginPublishProcess(VersionKeyFromCurrentBranch versionKeyFromCurrentBranch, ProductionHubAdmin productionHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
-        this.scopes = scopes;
+        this.versionKeyFromCurrentBranch = versionKeyFromCurrentBranch;
+        this.productionHubAdmin = productionHubAdmin;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
     public async Task<XtiVersionModel> Run()
     {
         Console.WriteLine("Begin Publishing");
-        var versionKey = new VersionKeyFromCurrentBranch(scopes).Value();
-        var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.BeginPublish(scopes.GetRequiredService<AppVersionNameAccessor>().Value, versionKey);
+        var versionKey = versionKeyFromCurrentBranch.Value();
+        var version = await productionHubAdmin.Value.BeginPublish(versionNameAccessor.Value, versionKey);
         return version;
     }
 }

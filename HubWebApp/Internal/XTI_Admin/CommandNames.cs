@@ -8,7 +8,7 @@ public enum CommandNames
     Setup,
     Publish,
     Install,
-    LocalInstall,
+    FromRemote,
     PublishLib,
     NewVersion,
     NewIssue,
@@ -20,5 +20,6 @@ public enum CommandNames
     ShowCredentials,
     StoreCredentials,
     DecryptTempLog,
-    UploadTempLog
+    UploadTempLog,
+    RestartApp
 }

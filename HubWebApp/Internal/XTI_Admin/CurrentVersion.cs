@@ -1,23 +1,22 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class CurrentVersion
+public sealed class CurrentVersion
 {
-    private readonly IServiceProvider sp;
-    private readonly AppVersionName versionName;
+    private readonly IHubAdministration hubAdmin;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public CurrentVersion(Scopes scopes, AppVersionName versionName)
+    public CurrentVersion(ProductionHubAdmin hubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
-        sp = scopes.Production();
-        this.versionName = versionName;
+        this.hubAdmin = hubAdmin.Value;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
     public async Task<XtiVersionModel> Value()
     {
-        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        var versionName = versionNameAccessor.Value;
         var version = await hubAdmin.Version(versionName, AppVersionKey.Current);
         return version;
     }

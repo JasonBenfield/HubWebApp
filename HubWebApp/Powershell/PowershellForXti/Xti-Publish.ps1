@@ -198,6 +198,22 @@ function Xti-UploadTempLog {
     Xti-Admin -EnvName $EnvName -Command UploadTempLog -DestinationMachine "`"$($DestinationMachine)`""
 }
 
+function Xti-RestartApp {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        $AppType = "",
+        $VersionKey = "",
+        $DestinationMachine = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command RestartApp -DestinationMachine "`"$($DestinationMachine)`"" -AppName "`"$($AppName)`"" -AppType $AppType -VersionKey "`"$($VersionKey)`""
+}
+
 function Xti-StoreCredentials {
     param (
         [ValidateSet("Production", "Development", "Staging", "Test")]
@@ -229,12 +245,13 @@ function Xti-Admin {
         [ValidateSet("Production", “Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
-        [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials")]
+        [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials", "RestartApp")]
         [Parameter(Mandatory)]
         $Command,
         $AppName = "",
         [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
+        $VersionKey = "",
         $RepoOwner = "",
         $RepoName = "",
         $VersionNumber,
@@ -267,6 +284,9 @@ function Xti-Admin {
     }
     if(-not [string]::IsNullOrWhiteSpace($AppType)) {
         $Args += "--AppType $AppType"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($VersionKey) -and $VersionKey -ne "`"`"") {
+        $Args += "--VersionKey $VersionKey"
     }
     if(-not [string]::IsNullOrWhiteSpace($RepoOwner) -and $RepoOwner -ne "`"`"") {
         $Args += "--RepoOwner $RepoOwner"
