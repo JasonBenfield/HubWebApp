@@ -1,9 +1,15 @@
 ﻿Import-Module PowershellForXti -Force
 
-function Add-HubDBMigrations {
+function Xti-AddHubDbMigration {
     param ([Parameter(Mandatory)]$Name)
     $env:DOTNET_ENVIRONMENT="Development"
     dotnet ef --startup-project ./HubWebApp/Internal/HubDbTool migrations add $Name --project ./HubWebApp/Internal/XTI_HubDB.EF.SqlServer
+}
+
+function Xti-RemoveLastHubDbMigration {
+	param ()
+	$env:DOTNET_ENVIRONMENT="Development"
+	dotnet ef --startup-project ./HubWebApp/Internal/HubDbTool migrations remove --project ./HubWebApp/Internal/XTI_HubDB.EF.SqlServer
 }
 
 function Xti-ResetHubDb {
