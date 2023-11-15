@@ -10,18 +10,17 @@ using XTI_Git.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class VersionKeyFromCurrentBranch
+public sealed class VersionKeyFromCurrentBranch
 {
-    private readonly IServiceProvider sp;
+    private readonly IXtiGitRepository gitRepo;
 
-    public VersionKeyFromCurrentBranch(Scopes scopes)
+    public VersionKeyFromCurrentBranch(IXtiGitRepository gitRepo)
     {
-        sp = scopes.Production();
+        this.gitRepo = gitRepo;
     }
 
     public AppVersionKey Value()
     {
-        var gitRepo = sp.GetRequiredService<IXtiGitRepository>();
         var branchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(branchName);
         if (xtiBranchName is not XtiVersionBranchName versionBranchName)

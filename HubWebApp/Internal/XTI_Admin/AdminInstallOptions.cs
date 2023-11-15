@@ -2,7 +2,7 @@
 
 namespace XTI_Admin;
 
-internal sealed record AdminInstallOptions
+public sealed record AdminInstallOptions
 (
     AppKey AppKey,
     AppVersionKey VersionKey,

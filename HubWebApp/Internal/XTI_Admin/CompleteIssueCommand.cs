@@ -6,26 +6,27 @@ namespace XTI_Admin;
 
 public sealed class CompleteIssueCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly GitRepoInfo gitRepoInfo;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly XtiGitHubRepository gitHubRepo;
 
-    public CompleteIssueCommand(Scopes scopes)
+    public CompleteIssueCommand(GitRepoInfo gitRepoInfo, IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo)
     {
-        this.scopes = scopes;
+        this.gitRepoInfo = gitRepoInfo;
+        this.gitRepo = gitRepo;
+        this.gitHubRepo = gitHubRepo;
     }
 
     public async Task Execute()
     {
-        var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
         if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
         if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoName)) { throw new ArgumentException("Repo Name is required"); }
-        var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if (xtiBranchName is not XtiIssueBranchName issueBranchName)
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not an issue branch");
         }
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
         await gitRepo.CommitChanges(issue.Title);
         await gitHubRepo.CompleteIssue(issueBranchName);

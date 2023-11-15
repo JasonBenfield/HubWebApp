@@ -5,13 +5,19 @@ using XTI_Processes;
 
 namespace XTI_Admin;
 
-internal sealed class PublishLibProcess
+public sealed class PublishLibProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly XtiFolder xtiFolder;
+    private readonly GitRepoInfo gitRepoInfo;
+    private readonly IGitHubCredentialsAccessor credentialsAccessor;
 
-    public PublishLibProcess(Scopes scopes)
+    public PublishLibProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, GitRepoInfo gitRepoInfo, IGitHubCredentialsAccessor credentialsAccessor)
     {
-        this.scopes = scopes;
+        this.xtiEnv = xtiEnv;
+        this.xtiFolder = xtiFolder;
+        this.gitRepoInfo = gitRepoInfo;
+        this.credentialsAccessor = credentialsAccessor;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey, string semanticVersion)
@@ -20,20 +26,16 @@ internal sealed class PublishLibProcess
         var libDir = Path.Combine(Environment.CurrentDirectory, "Lib");
         if (Directory.Exists(libDir))
         {
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-            var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            var envName = xtiEnv.IsProduction()
-                ? "Production"
-                : "Development";
+            var envName = xtiEnv.IsProduction() ?
+                "Production" :
+                "Development";
             var outputPath = Path.Combine
             (
                 xtiFolder.FolderPath(),
                 "Packages",
                 envName
             );
-            var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
             var repositoryUrl = gitRepoInfo.RepositoryUrl();
-            var credentialsAccessor = scopes.GetRequiredService<IGitHubCredentialsAccessor>();
             var credentials = await credentialsAccessor.Value();
             foreach (var dir in Directory.GetDirectories(libDir))
             {
@@ -43,7 +45,7 @@ internal sealed class PublishLibProcess
                     .AddArgument("pack")
                     .AddArgument(dir)
                     .UseArgumentNameDelimiter("-")
-                    .AddArgument("c", getConfiguration())
+                    .AddArgument("c", GetConfiguration())
                     .AddArgument("o", new Quoted(outputPath))
                     .UseArgumentValueDelimiter("=")
                     .AddArgument("p:PackageVersion", semanticVersion)
@@ -80,11 +82,6 @@ internal sealed class PublishLibProcess
         }
     }
 
-    private string getConfiguration()
-    {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        return xtiEnv.IsProduction()
-            ? "Release"
-            : "Debug";
-    }
+    private string GetConfiguration() =>
+        xtiEnv.IsProduction() ? "Release" : "Debug";
 }

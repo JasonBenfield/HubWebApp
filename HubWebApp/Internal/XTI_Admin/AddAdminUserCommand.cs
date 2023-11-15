@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Credentials;
 using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
@@ -7,20 +6,24 @@ namespace XTI_Admin;
 
 internal sealed class AddAdminUserCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly IHubAdministration hubAdmin;
+    private readonly AdminOptions options;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly ISecretCredentialsFactory secretCredentialsFactory;
 
-    public AddAdminUserCommand(Scopes scopes)
+    public AddAdminUserCommand(IHubAdministration hubAdmin, AdminOptions options, SelectedAppKeys selectedAppKeys, ISecretCredentialsFactory secretCredentialsFactory)
     {
-        this.scopes = scopes;
+        this.hubAdmin = hubAdmin;
+        this.options = options;
+        this.selectedAppKeys = selectedAppKeys;
+        this.secretCredentialsFactory = secretCredentialsFactory;
     }
 
     public async Task Execute()
     {
-        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
-        var options = scopes.GetRequiredService<AdminOptions>();
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
-        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
+        var appKeys = selectedAppKeys.Values;
         foreach(var appKey in appKeys.Where(a => !a.Type.Equals(AppType.Values.Package)))
         {
             await hubAdmin.AddOrUpdateAdminUser
@@ -32,7 +35,6 @@ internal sealed class AddAdminUserCommand : ICommand
         }
         if (!string.IsNullOrWhiteSpace(options.CredentialKey))
         {
-            var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
             var secretCredentials = secretCredentialsFactory.Create(options.CredentialKey);
             await secretCredentials.Update(options.UserName, options.Password);
         }

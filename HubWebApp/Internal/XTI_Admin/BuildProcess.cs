@@ -7,21 +7,25 @@ namespace XTI_Admin;
 
 public sealed class BuildProcess
 {
-    private readonly Scopes scopes;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly AppVersionNameAccessor versionNameAccessor;
+    private readonly IHubAdministration hubAdmin;
+    private readonly BranchVersion branchVersion;
 
-    public BuildProcess(Scopes scopes)
+    public BuildProcess(SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, IHubAdministration hubAdmin, BranchVersion branchVersion)
     {
-        this.scopes = scopes;
+        this.selectedAppKeys = selectedAppKeys;
+        this.versionNameAccessor = versionNameAccessor;
+        this.hubAdmin = hubAdmin;
+        this.branchVersion = branchVersion;
     }
 
     public async Task Run()
     {
         Console.WriteLine("Add or Update Apps");
-        var version = await new BranchVersion(scopes).Value();
-        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
-        var options = scopes.GetRequiredService<AdminOptions>();
+        var version = await branchVersion.Value();
+        var appKeys = selectedAppKeys.Values;
+        var versionName = versionNameAccessor.Value;
         var appDefs = appKeys
             .Select(a => new AppDefinitionModel(a))
             .ToArray();
@@ -35,7 +39,7 @@ public sealed class BuildProcess
             {
                 Environment.CurrentDirectory = appDir;
             }
-            await runApiGenerator(appKey, version.VersionKey);
+            await RunApiGenerator(appKey, version.VersionKey);
             await runTsc(appKey);
             await runWebpack(appKey);
             Environment.CurrentDirectory = slnDir;
@@ -43,7 +47,7 @@ public sealed class BuildProcess
         await runDotnetBuild();
     }
 
-    private async Task runApiGenerator(AppKey appKey, AppVersionKey versionKey)
+    private async Task RunApiGenerator(AppKey appKey, AppVersionKey versionKey)
     {
         var apiGeneratorPath = Path.Combine
         (

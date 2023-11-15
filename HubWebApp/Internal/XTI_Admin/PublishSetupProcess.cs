@@ -4,13 +4,15 @@ using XTI_Processes;
 
 namespace XTI_Admin;
 
-internal sealed class PublishSetupProcess
+public sealed class PublishSetupProcess
 {
-    private readonly Scopes scopes;
+    private readonly PublishedFolder publishedFolder;
+    private readonly XtiEnvironment xtiEnv;
 
-    public PublishSetupProcess(Scopes scopes)
+    public PublishSetupProcess(PublishedFolder publishedFolder, XtiEnvironment xtiEnv)
     {
-        this.scopes = scopes;
+        this.publishedFolder = publishedFolder;
+        this.xtiEnv = xtiEnv;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey)
@@ -53,15 +55,10 @@ internal sealed class PublishSetupProcess
     }
 
     private string getPublishDir(AppKey appKey, AppVersionKey versionKey) =>
-        scopes.GetRequiredService<PublishedFolder>().AppDir(appKey, versionKey);
+        publishedFolder.AppDir(appKey, versionKey);
 
     private static string getAppName(AppKey appKey) => appKey.Name.DisplayText.Replace(" ", "");
 
-    private string getConfiguration()
-    {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        return xtiEnv.IsProduction()
-            ? "Release"
-            : "Debug";
-    }
+    private string getConfiguration() =>
+        xtiEnv.IsProduction() ? "Release" : "Debug";
 }

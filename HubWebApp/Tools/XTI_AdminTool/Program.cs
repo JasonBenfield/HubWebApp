@@ -138,28 +138,7 @@ await Host.CreateDefaultBuilder(args)
                 var appVersionNameAccessor = sp.GetRequiredService<AppVersionNameAccessor>();
                 return new PublishedFolder(xtiFolder, xtiEnv, appVersionNameAccessor);
             });
-            services.AddScoped<FolderPublishedAssets>();
-            services.AddScoped<GitHubPublishedAssets>();
-            services.AddTransient(sp =>
-            {
-                var options = sp.GetRequiredService<AdminOptions>();
-                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                var installationSource = options.GetInstallationSource(xtiEnv);
-                IPublishedAssets publishedAssets;
-                if (installationSource == InstallationSources.Folder)
-                {
-                    publishedAssets = sp.GetRequiredService<FolderPublishedAssets>();
-                }
-                else if (installationSource == InstallationSources.GitHub)
-                {
-                    publishedAssets = sp.GetRequiredService<GitHubPublishedAssets>();
-                }
-                else
-                {
-                    throw new NotSupportedException($"Installation Source {installationSource} is not supported");
-                }
-                return publishedAssets;
-            });
+            services.AddScoped<PublishedAssetsFactory>();
             services.AddHubClientServices();
             services.AddSingleton(sp =>
             {
@@ -275,6 +254,27 @@ await Host.CreateDefaultBuilder(args)
                 }
             );
             services.AddScoped<StoredObjectFactory>();
+            services.AddScoped<RemoteCommandService>();
+            services.AddScoped
+            (
+                sp => new ProductionHubAdmin
+                (
+                    sp.GetRequiredService<Scopes>().Production().GetRequiredService<IHubAdministration>()
+                )
+            );
+            services.AddScoped<CurrentVersion>();
+            services.AddScoped<VersionKeyFromCurrentBranch>();
+            services.AddScoped<PublishLibProcess>();
+            services.AddScoped<InstallWebAppProcess>();
+            services.AddScoped<InstallServiceAppProcess>();
+            services.AddScoped<LocalInstallProcess>();
+            services.AddScoped<InstallProcess>();
+            services.AddScoped<BranchVersion>();
+            services.AddScoped<BuildProcess>();
+            services.AddScoped<PublishProcess>();
+            services.AddScoped<PublishSetupProcess>();
+            services.AddScoped<BeginPublishProcess>();
+            services.AddScoped<CompleteVersionProcess>();
             services.AddSingleton<CommandFactory>();
             services.AddHostedService<HostedService>();
         }

@@ -7,24 +7,32 @@ namespace XTI_Admin;
 
 internal sealed class PublishLibCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly CurrentVersion currentVersionAccessor;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly XtiGitHubRepository gitHubRepo;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly VersionKeyFromCurrentBranch versionKeyFromCurrentBranch;
+    private readonly PublishLibProcess publishLibProcess;
 
-    public PublishLibCommand(Scopes scopes)
+    public PublishLibCommand(XtiEnvironment xtiEnv, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, SelectedAppKeys selectedAppKeys, VersionKeyFromCurrentBranch versionKeyFromCurrentBranch, PublishLibProcess publishLibProcess)
     {
-        this.scopes = scopes;
+        this.xtiEnv = xtiEnv;
+        this.currentVersionAccessor = currentVersionAccessor;
+        this.gitRepo = gitRepo;
+        this.gitHubRepo = gitHubRepo;
+        this.selectedAppKeys = selectedAppKeys;
+        this.versionKeyFromCurrentBranch = versionKeyFromCurrentBranch;
+        this.publishLibProcess = publishLibProcess;
     }
 
     public async Task Execute()
     {
         string semanticVersion;
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var currentVersion = await new CurrentVersion(scopes, versionName).Value();
+        var currentVersion = await currentVersionAccessor.Value();
         if (xtiEnv.IsProduction())
         {
-            var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
             var currentBranchName = gitRepo.CurrentBranchName();
-            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
             var repoInfo = await gitHubRepo.RepositoryInformation();
             if (!currentBranchName.Equals(repoInfo.DefaultBranch, StringComparison.OrdinalIgnoreCase))
             {
@@ -36,11 +44,11 @@ internal sealed class PublishLibCommand : ICommand
         {
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
-        var versionKey = xtiEnv.IsProduction()
-            ? new VersionKeyFromCurrentBranch(scopes).Value()
-            : AppVersionKey.Current;
+        var versionKey = xtiEnv.IsProduction() ? 
+            versionKeyFromCurrentBranch.Value() : 
+            AppVersionKey.Current;
         var slnDir = Environment.CurrentDirectory;
-        var appKeys = scopes.GetRequiredService<SelectedAppKeys>().Values;
+        var appKeys = selectedAppKeys.Values;
         foreach(var appKey in appKeys)
         {
             var projectDir = Path.Combine(slnDir, new AppDirectoryName(appKey).Value);
@@ -48,7 +56,7 @@ internal sealed class PublishLibCommand : ICommand
             {
                 Environment.CurrentDirectory = projectDir;
             }
-            await new PublishLibProcess(scopes).Run(appKey, versionKey, semanticVersion);
+            await publishLibProcess.Run(appKey, versionKey, semanticVersion);
             Environment.CurrentDirectory = slnDir;
         }
     }

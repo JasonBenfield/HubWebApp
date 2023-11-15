@@ -8,21 +8,23 @@ namespace XTI_Admin;
 
 internal sealed class AddSystemUserCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly IHubAdministration hubAdmin;
+    private readonly ISecretCredentialsFactory secretCredentialsFactory;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public AddSystemUserCommand(Scopes scopes)
+    public AddSystemUserCommand(SelectedAppKeys selectedAppKeys, IHubAdministration hubAdmin, ISecretCredentialsFactory secretCredentialsFactory, AppVersionNameAccessor versionNameAccessor)
     {
-        this.scopes = scopes;
+        this.selectedAppKeys = selectedAppKeys;
+        this.hubAdmin = hubAdmin;
+        this.secretCredentialsFactory = secretCredentialsFactory;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
     public async Task Execute()
     {
-        var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
         var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package));
-        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
-        var options = scopes.GetRequiredService<AdminOptions>();
-        var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
+        var versionName = versionNameAccessor.Value;
         var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
         await hubAdmin.AddOrUpdateApps(versionName, appDefs);
         foreach (var appKey in appKeys)

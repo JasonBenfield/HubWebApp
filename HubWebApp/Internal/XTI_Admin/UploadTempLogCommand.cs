@@ -6,18 +6,14 @@ namespace XTI_Admin;
 internal sealed class UploadTempLogCommand : ICommand
 {
     private readonly TempToPermanentLog tempToPermanent;
-    private readonly XtiEnvironment xtiEnv;
-    private readonly HubDbTypeAccessor hubDbTypeAccessor;
-    private readonly IHttpClientFactory httpClientFactory;
     private readonly AdminOptions options;
+    private readonly RemoteCommandService remoteCommandService;
 
-    public UploadTempLogCommand(Scopes scopes)
+    public UploadTempLogCommand(TempToPermanentLog tempToPermanent, AdminOptions options, RemoteCommandService remoteCommandService)
     {
-        tempToPermanent = scopes.GetRequiredService<TempToPermanentLog>();
-        xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        hubDbTypeAccessor = scopes.GetRequiredService<HubDbTypeAccessor>();
-        httpClientFactory = scopes.GetRequiredService<IHttpClientFactory>();
-        options = scopes.GetRequiredService<AdminOptions>();
+        this.tempToPermanent = tempToPermanent;
+        this.options = options;
+        this.remoteCommandService = remoteCommandService;
     }
 
     public async Task Execute()
@@ -28,16 +24,13 @@ internal sealed class UploadTempLogCommand : ICommand
         }
         else
         {
-            var remoteCommandService = new RemoteCommandService(xtiEnv, httpClientFactory);
-            var dict = new Dictionary<string, string>
-            {
-                { "HubAdministrationType", hubDbTypeAccessor.Value.ToString() }
-            };
+            var remoteOptions = options.Copy();
+            remoteOptions.DestinationMachine = "";
             await remoteCommandService.Run
             (
-                options.DestinationMachine, 
-                CommandNames.UploadTempLog.ToString(), 
-                dict
+                options.DestinationMachine,
+                CommandNames.UploadTempLog.ToString(),
+                remoteOptions
             );
         }
     }

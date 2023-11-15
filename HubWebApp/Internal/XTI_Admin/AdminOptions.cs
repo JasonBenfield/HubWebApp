@@ -16,7 +16,7 @@ public sealed class AdminOptions
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
-    public string RemoteInstallKey { get; set; } = "";
+    public string RemoteOptionsKey { get; set; } = "";
     public InstallationSources InstallationSource { get; set; } = InstallationSources.Default;
     public string VersionType { get; set; } = "";
     public string IssueTitle { get; set; } = "";
@@ -47,5 +47,56 @@ public sealed class AdminOptions
             }
         }
         return installationSource;
+    }
+
+    public AdminOptions Copy() =>
+        new AdminOptions
+        {
+            Command = Command,
+            AppName = AppName,
+            AppType = AppType,
+            HubAdministrationType = HubAdministrationType,
+            HubAppVersionKey = HubAppVersionKey,
+            CredentialKey = CredentialKey,
+            DestinationMachine = DestinationMachine,
+            Domain = Domain,
+            InstallationSource = InstallationSource,
+            IssueNumber = IssueNumber,
+            IssueTitle = IssueTitle,
+            UserName = UserName,
+            Password = Password,
+            RemoteOptionsKey = RemoteOptionsKey,
+            RepoName = RepoName,
+            RepoOwner = RepoOwner,
+            SiteName = SiteName,
+            StartIssue = StartIssue,
+            VersionKey = VersionKey,
+            VersionNumber = VersionNumber,
+            VersionType = VersionType
+        };
+
+    public void Load(AdminOptions options)
+    {
+        Command = options.Command;
+        AppName = options.AppName;
+        AppType = options.AppType;
+        HubAdministrationType = options.HubAdministrationType;
+        HubAppVersionKey = options.HubAppVersionKey;
+        CredentialKey = options.CredentialKey;
+        DestinationMachine = options.DestinationMachine;
+        Domain = options.Domain;
+        InstallationSource = options.InstallationSource;
+        IssueNumber = options.IssueNumber;
+        IssueTitle = options.IssueTitle;
+        UserName = options.UserName;
+        Password = options.Password;
+        RemoteOptionsKey = options.RemoteOptionsKey;
+        RepoName = options.RepoName;
+        RepoOwner = options.RepoOwner;
+        SiteName = options.SiteName;
+        StartIssue = options.StartIssue;
+        VersionKey = options.VersionKey;
+        VersionNumber = options.VersionNumber;
+        VersionType = options.VersionType;
     }
 }

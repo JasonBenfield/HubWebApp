@@ -7,17 +7,17 @@ namespace XTI_Admin;
 
 public sealed class GitHubPublishedAssets : IPublishedAssets
 {
-    private readonly Scopes scopes;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AppVersionName versionName;
+    private readonly CurrentVersion currentVersionAccessor;
     private string tempDir = "";
     private GitHubRelease? release;
 
-    public GitHubPublishedAssets(Scopes scopes, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
+    public GitHubPublishedAssets(XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor)
     {
-        this.scopes = scopes;
         this.gitHubRepo = gitHubRepo;
         versionName = versionNameAccessor.Value;
+        this.currentVersionAccessor = currentVersionAccessor;
         tempDir = Path.Combine
         (
             Path.GetTempPath(),
@@ -137,7 +137,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         {
             if (string.IsNullOrWhiteSpace(releaseTag))
             {
-                var currentVersion = await new CurrentVersion(scopes, versionName).Value();
+                var currentVersion = await currentVersionAccessor.Value();
                 releaseTag = $"v{currentVersion.VersionNumber.Format()}";
             }
             release = await gitHubRepo.Release(releaseTag);
