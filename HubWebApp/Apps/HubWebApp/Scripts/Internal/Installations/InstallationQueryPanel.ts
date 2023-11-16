@@ -61,10 +61,10 @@ export class InstallationQueryPanel implements IPanel {
             columns.QualifiedMachineName,
             columns.Domain,
             columns.IsCurrent,
-            columns.VersionStatusText,
+            columns.VersionStatus,
             columns.VersionRelease,
             columns.VersionKey,
-            columns.InstallationStatusDisplayText,
+            columns.InstallationStatus,
             columns.LastRequestDaysAgo,
             columns.RequestCount
         );

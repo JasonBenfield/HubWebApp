@@ -35,7 +35,7 @@ export class LogEntryQueryPanelView extends GridView {
         this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
         this.columns = new ODataExpandedLogEntryColumnViewsBuilder();
         this.columns.TimeOccurred.setWidth(CssLengthUnit.maxContent());
-        this.columns.SeverityText.setWidth(CssLengthUnit.maxContent());
+        this.columns.Severity.setWidth(CssLengthUnit.maxContent());
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
         );

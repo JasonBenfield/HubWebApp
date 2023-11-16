@@ -26,7 +26,7 @@ internal sealed class InstallationQueryAction : QueryAction<InstallationQueryReq
             .Where(installation => appIDs.Contains(installation.AppID));
         if (model.QueryType.Equals(InstallationQueryType.Values.Installed))
         {
-            query = query.Where(installation => installation.InstallationStatusDisplayText == "Installed");
+            query = query.Where(installation => installation.InstallationStatus == "Installed");
         }
         else if (model.QueryType.Equals(InstallationQueryType.Values.Current))
         {
@@ -34,7 +34,7 @@ internal sealed class InstallationQueryAction : QueryAction<InstallationQueryReq
                 .Where
                 (
                     installation => 
-                        installation.InstallationStatusDisplayText == "Installed" && 
+                        installation.InstallationStatus == "Installed" && 
                         installation.IsCurrent
                 );
         }
@@ -43,9 +43,9 @@ internal sealed class InstallationQueryAction : QueryAction<InstallationQueryReq
             query = query
                 .Where
                 (
-                    installation => installation.InstallationStatusDisplayText == "Installed" && 
+                    installation => installation.InstallationStatus == "Installed" && 
                     installation.IsCurrent && 
-                    installation.VersionStatusText != "Current"
+                    installation.VersionStatus != "Current"
                 );
         }
         return query;

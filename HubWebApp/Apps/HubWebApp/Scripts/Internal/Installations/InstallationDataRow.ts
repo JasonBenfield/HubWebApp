@@ -8,7 +8,7 @@ import { InstallStatus } from '../../Lib/Http/InstallStatus';
 export class InstallationDataRow extends ODataRow {
     constructor(rowIndex: number, columns: ODataColumn[], record: Queryable<IExpandedInstallation>, view: GridRowView) {
         super(rowIndex, columns, record, view);
-        const status = InstallStatus.values.value(record.InstallationStatusDisplayText);
+        const status = InstallStatus.values.value(record.InstallationStatus);
         if (InstallStatus.values.Deleted.equals(status)) {
             view.setContext(ContextualClass.danger);
         }

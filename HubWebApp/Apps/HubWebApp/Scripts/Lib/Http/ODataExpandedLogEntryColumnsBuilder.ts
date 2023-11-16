@@ -7,7 +7,7 @@ import { ODataColumns } from "@jasonbenfield/sharedwebapp/OData/Types";
 export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly EventID = new ODataColumnViewBuilder();
 	readonly TimeOccurred = new ODataColumnViewBuilder();
-	readonly SeverityText = new ODataColumnViewBuilder();
+	readonly Severity = new ODataColumnViewBuilder();
 	readonly Caption = new ODataColumnViewBuilder();
 	readonly Message = new ODataColumnViewBuilder();
 	readonly Detail = new ODataColumnViewBuilder();
@@ -16,7 +16,7 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly AppID = new ODataColumnViewBuilder();
 	readonly AppKey = new ODataColumnViewBuilder();
 	readonly AppName = new ODataColumnViewBuilder();
-	readonly AppTypeText = new ODataColumnViewBuilder();
+	readonly AppType = new ODataColumnViewBuilder();
 	readonly ResourceGroupName = new ODataColumnViewBuilder();
 	readonly ResourceName = new ODataColumnViewBuilder();
 	readonly ModCategoryName = new ODataColumnViewBuilder();
@@ -34,8 +34,8 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly VersionName = new ODataColumnViewBuilder();
 	readonly VersionKey = new ODataColumnViewBuilder();
 	readonly VersionRelease = new ODataColumnViewBuilder();
-	readonly VersionStatusText = new ODataColumnViewBuilder();
-	readonly VersionTypeText = new ODataColumnViewBuilder();
+	readonly VersionStatus = new ODataColumnViewBuilder();
+	readonly VersionType = new ODataColumnViewBuilder();
 	readonly InstallationID = new ODataColumnViewBuilder();
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
@@ -48,8 +48,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.EventID.setDisplayText('Event ID');
 		this.TimeOccurred = new ODataColumnBuilder('TimeOccurred', new SourceType('DateTimeOffset'), views.TimeOccurred);
 		this.TimeOccurred.setDisplayText('Time Occurred');
-		this.SeverityText = new ODataColumnBuilder('SeverityText', new SourceType('String'), views.SeverityText);
-		this.SeverityText.setDisplayText('Severity Text');
+		this.Severity = new ODataColumnBuilder('Severity', new SourceType('String'), views.Severity);
 		this.Caption = new ODataColumnBuilder('Caption', new SourceType('String'), views.Caption);
 		this.Message = new ODataColumnBuilder('Message', new SourceType('String'), views.Message);
 		this.Detail = new ODataColumnBuilder('Detail', new SourceType('String'), views.Detail);
@@ -62,8 +61,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.AppKey.setDisplayText('App Key');
 		this.AppName = new ODataColumnBuilder('AppName', new SourceType('String'), views.AppName);
 		this.AppName.setDisplayText('App Name');
-		this.AppTypeText = new ODataColumnBuilder('AppTypeText', new SourceType('String'), views.AppTypeText);
-		this.AppTypeText.setDisplayText('App Type Text');
+		this.AppType = new ODataColumnBuilder('AppType', new SourceType('String'), views.AppType);
+		this.AppType.setDisplayText('App Type');
 		this.ResourceGroupName = new ODataColumnBuilder('ResourceGroupName', new SourceType('String'), views.ResourceGroupName);
 		this.ResourceGroupName.setDisplayText('Resource Group Name');
 		this.ResourceName = new ODataColumnBuilder('ResourceName', new SourceType('String'), views.ResourceName);
@@ -98,10 +97,10 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.VersionKey.setDisplayText('Version Key');
 		this.VersionRelease = new ODataColumnBuilder('VersionRelease', new SourceType('String'), views.VersionRelease);
 		this.VersionRelease.setDisplayText('Version Release');
-		this.VersionStatusText = new ODataColumnBuilder('VersionStatusText', new SourceType('String'), views.VersionStatusText);
-		this.VersionStatusText.setDisplayText('Version Status Text');
-		this.VersionTypeText = new ODataColumnBuilder('VersionTypeText', new SourceType('String'), views.VersionTypeText);
-		this.VersionTypeText.setDisplayText('Version Type Text');
+		this.VersionStatus = new ODataColumnBuilder('VersionStatus', new SourceType('String'), views.VersionStatus);
+		this.VersionStatus.setDisplayText('Version Status');
+		this.VersionType = new ODataColumnBuilder('VersionType', new SourceType('String'), views.VersionType);
+		this.VersionType.setDisplayText('Version Type');
 		this.InstallationID = new ODataColumnBuilder('InstallationID', new SourceType('Int32'), views.InstallationID);
 		this.InstallationID.setDisplayText('Installation ID');
 		this.InstallLocation = new ODataColumnBuilder('InstallLocation', new SourceType('String'), views.InstallLocation);
@@ -113,7 +112,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	}
 	readonly EventID: ODataColumnBuilder;
 	readonly TimeOccurred: ODataColumnBuilder;
-	readonly SeverityText: ODataColumnBuilder;
+	readonly Severity: ODataColumnBuilder;
 	readonly Caption: ODataColumnBuilder;
 	readonly Message: ODataColumnBuilder;
 	readonly Detail: ODataColumnBuilder;
@@ -122,7 +121,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly AppID: ODataColumnBuilder;
 	readonly AppKey: ODataColumnBuilder;
 	readonly AppName: ODataColumnBuilder;
-	readonly AppTypeText: ODataColumnBuilder;
+	readonly AppType: ODataColumnBuilder;
 	readonly ResourceGroupName: ODataColumnBuilder;
 	readonly ResourceName: ODataColumnBuilder;
 	readonly ModCategoryName: ODataColumnBuilder;
@@ -140,8 +139,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly VersionName: ODataColumnBuilder;
 	readonly VersionKey: ODataColumnBuilder;
 	readonly VersionRelease: ODataColumnBuilder;
-	readonly VersionStatusText: ODataColumnBuilder;
-	readonly VersionTypeText: ODataColumnBuilder;
+	readonly VersionStatus: ODataColumnBuilder;
+	readonly VersionType: ODataColumnBuilder;
 	readonly InstallationID: ODataColumnBuilder;
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
@@ -151,7 +150,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		return {
 			EventID: this.EventID.build(),
 			TimeOccurred: this.TimeOccurred.build(),
-			SeverityText: this.SeverityText.build(),
+			Severity: this.Severity.build(),
 			Caption: this.Caption.build(),
 			Message: this.Message.build(),
 			Detail: this.Detail.build(),
@@ -160,7 +159,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			AppID: this.AppID.build(),
 			AppKey: this.AppKey.build(),
 			AppName: this.AppName.build(),
-			AppTypeText: this.AppTypeText.build(),
+			AppType: this.AppType.build(),
 			ResourceGroupName: this.ResourceGroupName.build(),
 			ResourceName: this.ResourceName.build(),
 			ModCategoryName: this.ModCategoryName.build(),
@@ -178,8 +177,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			VersionName: this.VersionName.build(),
 			VersionKey: this.VersionKey.build(),
 			VersionRelease: this.VersionRelease.build(),
-			VersionStatusText: this.VersionStatusText.build(),
-			VersionTypeText: this.VersionTypeText.build(),
+			VersionStatus: this.VersionStatus.build(),
+			VersionType: this.VersionType.build(),
 			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
 			IsCurrentInstallation: this.IsCurrentInstallation.build(),
