@@ -343,7 +343,7 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AppTypeDisplayText")
+                    b.Property<string>("AppType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -351,7 +351,7 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InstallationStatusDisplayText")
+                    b.Property<string>("InstallationStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -386,11 +386,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionStatusText")
+                    b.Property<string>("VersionStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionTypeText")
+                    b.Property<string>("VersionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -420,11 +420,15 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AppTypeText")
+                    b.Property<string>("AppType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -487,7 +491,7 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SeverityText")
+                    b.Property<string>("Severity")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -524,11 +528,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionStatusText")
+                    b.Property<string>("VersionStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionTypeText")
+                    b.Property<string>("VersionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -658,11 +662,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionStatusText")
+                    b.Property<string>("VersionStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VersionTypeText")
+                    b.Property<string>("VersionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -804,6 +808,11 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Detail")
                         .IsRequired()

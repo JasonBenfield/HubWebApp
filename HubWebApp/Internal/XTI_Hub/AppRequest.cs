@@ -58,7 +58,8 @@ public sealed class AppRequest
         string message,
         string detail,
         int actualCount,
-        string sourceLogEntryKey
+        string sourceLogEntryKey,
+        string category
     ) => factory.LogEntries.LogEvent
         (
             this,
@@ -69,7 +70,8 @@ public sealed class AppRequest
             message,
             detail,
             actualCount,
-            sourceLogEntryKey
+            sourceLogEntryKey,
+            category
         );
 
     public Task End(DateTimeOffset timeEnded)

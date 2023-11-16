@@ -106,6 +106,8 @@ internal sealed class PermanentLogTest
         var requests = (await session.Requests()).ToArray();
         var events = (await requests[0].Events()).ToArray();
         Assert.That(events.Length, Is.EqualTo(1), "Should log event on permanent log");
+        var eventModel = events[0].ToModel();
+        Assert.That(eventModel.Category, Is.EqualTo("Exception"));
     }
 
     private static Task startSession(HubActionTester<LogBatchModel, EmptyActionResult> tester, string sessionKey)
@@ -205,7 +207,8 @@ internal sealed class PermanentLogTest
                         Severity = AppEventSeverity.Values.CriticalError,
                         Caption = "An unexpected error occurred",
                         Message = exception.Message,
-                        Detail = exception.StackTrace ?? ""
+                        Detail = exception.StackTrace ?? "",
+                        Category = exception.GetType().Name
                     }
                 }
             }

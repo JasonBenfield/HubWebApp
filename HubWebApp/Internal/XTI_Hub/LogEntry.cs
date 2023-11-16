@@ -33,7 +33,8 @@ public sealed class LogEntry
             Severity: Severity(),
             Caption: record.Caption,
             Message: record.Message,
-            Detail: record.Detail
+            Detail: record.Detail,
+            Category: record.Category
         );
 
     private AppEventSeverity Severity() => AppEventSeverity.Values.Value(record.Severity);

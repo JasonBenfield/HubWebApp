@@ -11,7 +11,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231112213402320" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231116082834978" />
 		<PackageReference Include="XTI_Core" Version="1.10.21-dev231101201230098" />
 		<PackageReference Include="XTI_Processes" Version="1.10.21-dev231101201230098" />
 	</ItemGroup>
