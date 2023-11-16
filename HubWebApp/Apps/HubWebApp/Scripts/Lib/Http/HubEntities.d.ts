@@ -107,19 +107,19 @@ interface IGetInstallationRequest {
 interface IExpandedInstallation {
 	InstallationID: number;
 	IsCurrent: boolean;
-	InstallationStatusDisplayText: string;
+	InstallationStatus: string;
 	TimeInstallationAdded: Date;
 	QualifiedMachineName: string;
 	Domain: string;
 	AppID: number;
 	AppKey: string;
 	AppName: string;
-	AppTypeDisplayText: string;
+	AppType: string;
 	VersionName: string;
 	VersionRelease: string;
 	VersionKey: string;
-	VersionStatusText: string;
-	VersionTypeText: string;
+	VersionStatus: string;
+	VersionType: string;
 	LastRequestTime: Date;
 	LastRequestDaysAgo: number;
 	RequestCount: number;
@@ -641,8 +641,8 @@ interface IExpandedRequest {
 	VersionName: string;
 	VersionKey: string;
 	VersionRelease: string;
-	VersionStatusText: string;
-	VersionTypeText: string;
+	VersionStatus: string;
+	VersionType: string;
 	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
@@ -650,7 +650,7 @@ interface IExpandedRequest {
 interface IExpandedLogEntry {
 	EventID: number;
 	TimeOccurred: Date;
-	SeverityText: string;
+	Severity: string;
 	Caption: string;
 	Message: string;
 	Detail: string;
@@ -659,7 +659,7 @@ interface IExpandedLogEntry {
 	AppID: number;
 	AppKey: string;
 	AppName: string;
-	AppTypeText: string;
+	AppType: string;
 	ResourceGroupName: string;
 	ResourceName: string;
 	ModCategoryName: string;
@@ -677,8 +677,8 @@ interface IExpandedLogEntry {
 	VersionName: string;
 	VersionKey: string;
 	VersionRelease: string;
-	VersionStatusText: string;
-	VersionTypeText: string;
+	VersionStatus: string;
+	VersionType: string;
 	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;

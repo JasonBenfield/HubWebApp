@@ -10,7 +10,7 @@ RETURNS datetimeoffset
 AS 
 BEGIN
     RETURN case 
-        when @date is null then '9999-12-31 23:59:59.9999999 +00:00'
+        when @date is null then dbo.GetMaxDateTime()
         when year(@date) = 9999 then @date 
         else @date at time zone 'Eastern Standard Time'
         end

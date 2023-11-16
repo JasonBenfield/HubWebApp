@@ -29,11 +29,11 @@ export class LogEntryQueryPanel implements IPanel {
         new Command(this.menu.bind(this)).add(view.menuButton);
         const columns = new ODataExpandedLogEntryColumnsBuilder(this.view.columns);
         columns.EventID.require();
-        columns.SeverityText.setDisplayText('Severity');
+        columns.Severity.setDisplayText('Severity');
         const options = new ODataComponentOptionsBuilder<IExpandedLogEntry>('hub_logEntries', columns);
         options.query.select.addFields(
             columns.TimeOccurred,
-            columns.SeverityText,
+            columns.Severity,
             columns.Caption,
             columns.Message,
             columns.Detail,

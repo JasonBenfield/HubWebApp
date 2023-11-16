@@ -32,8 +32,8 @@ public sealed class ExpandedRequest
     public string VersionName { get; set; } = "";
     public string VersionKey { get; set; } = "";
     public string VersionRelease { get; set; } = "";
-    public string VersionStatusText { get; set; } = "";
-    public string VersionTypeText { get; set; } = "";
+    public string VersionStatus { get; set; } = "";
+    public string VersionType { get; set; } = "";
     public int InstallationID { get; set; }
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }

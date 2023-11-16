@@ -36,7 +36,7 @@ select
 	dbo.GetLocalDateTime(sessions.TimeEnded) SessionTimeEnded, 
 	dbo.TimeElapsedDisplayText(sessions.timestarted,sessions.timeended) SessionTimeElapsed,
 	sessions.RemoteAddress, sessions.UserAgent,
-	sessions.UserID, users.UserName, users.Name UserPersonalName, users.Email, 
+	users.ID UserID, users.UserName, users.Name UserPersonalName, users.Email, 
 	dbo.GetLocalDateTime(users.TimeAdded) TimeUserAdded,
 	UserGroups.ID UserGroupID, UserGroups.GroupName UserGroupName, UserGroups.DisplayText UserGroupDisplayText,
 	inst.ID InstallationID, inst.Domain, inst.IsCurrent IsCurrentInstallation, inst.Status InstallationStatusValue, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatus, 
