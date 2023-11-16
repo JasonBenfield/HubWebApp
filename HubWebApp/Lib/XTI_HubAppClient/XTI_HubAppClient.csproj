@@ -9,9 +9,9 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Api" Version="1.8.40-dev231112213402320" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.40-dev231112213402320" />
-		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.32-dev231101215137172" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.40-dev231116082834978" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.40-dev231116082834978" />
+		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.32-dev231116080100385" />
 	</ItemGroup>
 
 	<ItemGroup>

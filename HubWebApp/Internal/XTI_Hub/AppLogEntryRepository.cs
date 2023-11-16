@@ -23,7 +23,8 @@ public sealed class AppLogEntryRepository
         string message,
         string detail,
         int actualCount,
-        string sourceLogEntryKey
+        string sourceLogEntryKey,
+        string category
     )
     {
         var logEntryEntity = await factory.DB.Transaction
@@ -38,7 +39,8 @@ public sealed class AppLogEntryRepository
                 message,
                 detail,
                 actualCount,
-                sourceLogEntryKey
+                sourceLogEntryKey,
+                category
             )
         );
         return factory.CreateLogEntry(logEntryEntity);
@@ -54,7 +56,8 @@ public sealed class AppLogEntryRepository
         string message,
         string detail,
         int actualCount,
-        string sourceLogEntryKey
+        string sourceLogEntryKey,
+        string category
     )
     {
         var logEntryEntity = await AddOrUpdateLogEntry
@@ -66,7 +69,8 @@ public sealed class AppLogEntryRepository
             caption,
             message,
             detail,
-            actualCount
+            actualCount,
+            category
         );
         if (!string.IsNullOrWhiteSpace(sourceLogEntryKey))
         {
@@ -83,7 +87,18 @@ public sealed class AppLogEntryRepository
         return logEntryEntity;
     }
 
-    private async Task<LogEntryEntity> AddOrUpdateLogEntry(AppRequest request, string logEntryKey, DateTimeOffset timeOccurred, AppEventSeverity severity, string caption, string message, string detail, int actualCount)
+    private async Task<LogEntryEntity> AddOrUpdateLogEntry
+    (
+        AppRequest request, 
+        string logEntryKey, 
+        DateTimeOffset timeOccurred, 
+        AppEventSeverity severity, 
+        string caption, 
+        string message, 
+        string detail, 
+        int actualCount, 
+        string category
+    )
     {
         var logEntryEntity = await GetLogEntryByKey(logEntryKey);
         if (logEntryEntity == null)
@@ -97,7 +112,8 @@ public sealed class AppLogEntryRepository
                 Caption = caption,
                 Message = message,
                 Detail = detail,
-                ActualCount = actualCount
+                ActualCount = actualCount,
+                Category = category
             };
             await factory.DB.LogEntries.Create(logEntryEntity);
         }
@@ -109,13 +125,13 @@ public sealed class AppLogEntryRepository
                 evt =>
                 {
                     evt.RequestID = request.ID;
-                    evt.EventKey = logEntryKey;
                     evt.TimeOccurred = timeOccurred;
                     evt.Severity = severity.Value;
                     evt.Caption = caption;
                     evt.Message = message;
                     evt.Detail = detail;
                     evt.ActualCount = actualCount;
+                    evt.Category = category;
                 }
             );
         }
