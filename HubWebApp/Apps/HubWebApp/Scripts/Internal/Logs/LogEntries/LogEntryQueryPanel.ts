@@ -1,13 +1,13 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Http/ODataExpandedLogEntryColumnsBuilder";
-import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 
 interface IResult {
     menuRequested?: boolean;
@@ -48,6 +48,12 @@ export class LogEntryQueryPanel implements IPanel {
             columns.ModDisplayText,
             columns.VersionKey
         );
+        columns.Detail.setFormatter({
+            format: (col, record) => {
+                const value: string = record[col.columnName];
+                return value && value.length > 200 ? value.substring(0, 200) : value;
+            }
+        });
         options.query.orderBy.addDescending(columns.TimeOccurred);
         const url = Url.current();
         const requestIDText = url.getQueryValue('RequestID');
@@ -59,19 +65,20 @@ export class LogEntryQueryPanel implements IPanel {
             filter: !requestID,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
+        options.setDefaultODataClient(
+            hubClient.LogEntryQuery,
+            { args: { RequestID: requestID, InstallationID: installationID } }
+        );
+        options.setCreateLinkRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, row: ODataLinkRow) => {
+                const logEntryID: number = record['EventID'];
+                row.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: logEntryID }));
+            }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const logEntryID: number = eventArgs.record['EventID'];
-        this.hubClient.Logs.LogEntry.open({ LogEntryID: logEntryID });
-    }
-
+    
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
 
     refresh() { this.odataComponent.refresh(); }

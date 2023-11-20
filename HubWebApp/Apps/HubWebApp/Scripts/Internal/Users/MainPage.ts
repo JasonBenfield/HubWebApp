@@ -18,10 +18,10 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
-        this.userPanel = this.panels.add(new UserPanel(this.defaultClient, this.view.userPanel));
-        this.userEditPanel = this.panels.add(new UserEditPanel(this.defaultClient, this.view.userEditPanel));
+        this.userPanel = this.panels.add(new UserPanel(this.hubClient, this.view.userPanel));
+        this.userEditPanel = this.panels.add(new UserEditPanel(this.hubClient, this.view.userEditPanel));
         this.changePasswordPanel = this.panels.add(
-            new ChangePasswordPanel(this.defaultClient, this.view.changePasswordPanel)
+            new ChangePasswordPanel(this.hubClient, this.view.changePasswordPanel)
         );
         const userIDValue = Url.current().getQueryValue('UserID');
         const userID = userIDValue ? Number(userIDValue) : 0;
@@ -33,7 +33,7 @@ class MainPage extends HubPage {
             this.activateUserPanel();
         }
         else {
-            this.defaultClient.UserGroups.Index.open({}, '');
+            this.hubClient.UserGroups.Index.open({}, '');
         }
     }
 
@@ -44,10 +44,10 @@ class MainPage extends HubPage {
             const returnTo = Url.current().getQueryValue('ReturnTo');
             let url: UrlBuilder;
             if (returnTo) {
-                url = this.defaultClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });
+                url = this.hubClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });
             }
             else {
-                url = this.defaultClient.UserGroups.Index.getModifierUrl('', {});
+                url = this.hubClient.UserGroups.Index.getModifierUrl('', {});
             }
             new WebPage(url).open();
         }

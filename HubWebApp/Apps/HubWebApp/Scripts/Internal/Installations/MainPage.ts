@@ -12,8 +12,8 @@ class MainPage extends HubPage {
 
     constructor() {
         super(new MainPageView());
-        this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel));
-        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.defaultClient, this.view.installationQueryPanel));
+        this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.hubClient, this.view.mainMenuPanel));
+        this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.hubClient, this.view.installationQueryPanel));
         this.installationQueryPanel.refresh();
         this.activateInstallationQueryPanel();
     }

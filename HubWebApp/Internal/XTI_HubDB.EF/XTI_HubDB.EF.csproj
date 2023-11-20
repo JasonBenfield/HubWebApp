@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net7.0</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_Core.EF" Version="1.10.21-dev231101201230098" />
-    <PackageReference Include="XTI_DB" Version="1.10.21-dev231101201230098" />
+    <PackageReference Include="XTI_Core.EF" Version="1.10.21-dev231118105150033" />
+    <PackageReference Include="XTI_DB" Version="1.10.21-dev231118105150033" />
   </ItemGroup>
 
   <ItemGroup>

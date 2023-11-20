@@ -25,8 +25,11 @@ export class RequestPanelView extends GridView {
     readonly currentInstallation: FormGroupTextView;
     readonly timeRange: FormGroupTextView;
     readonly path: FormGroupTextView;
+    readonly sessionLink: TextLinkView;
     readonly installationLink: TextLinkView;
     readonly logEntriesLink: TextLinkView;
+    readonly sourceRequestLink: TextLinkView;
+    readonly targetRequestLink: TextLinkView;
     readonly menuButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
@@ -57,6 +60,12 @@ export class RequestPanelView extends GridView {
         const nav = mainContent.addView(NavView);
         nav.pills();
         nav.setFlexCss(new FlexCss().column());
+        this.sourceRequestLink = nav.addTextLink();
+        this.sourceRequestLink.setText('Source Request');
+        this.targetRequestLink = nav.addTextLink();
+        this.targetRequestLink.setText('View Target Requests');
+        this.sessionLink = nav.addTextLink();
+        this.sessionLink.setText('View Session');
         this.installationLink = nav.addTextLink();
         this.installationLink.setText('View Installation');
         this.logEntriesLink = nav.addTextLink();

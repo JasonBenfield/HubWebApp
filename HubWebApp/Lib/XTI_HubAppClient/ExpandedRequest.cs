@@ -37,4 +37,5 @@ public sealed partial class ExpandedRequest
     public int InstallationID { get; set; }
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }
+    public int SourceRequestID { get; set; }
 }

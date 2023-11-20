@@ -224,9 +224,10 @@ function Xti-StoreCredentials {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
 		$UserName = "",
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-		$Password = ""
+		$Password = "",
+        $DestinationMachine = ""
     )
-    Xti-Admin -EnvName $EnvName -Command StoreCredentials -CredentialKey "`"$($CredentialKey)`"" -UserName "`"$($UserName)`"" -Password "`"$($Password)`""
+    Xti-Admin -EnvName $EnvName -Command StoreCredentials -DestinationMachine "`"$($DestinationMachine)`"" -CredentialKey "`"$($CredentialKey)`"" -UserName "`"$($UserName)`"" -Password "`"$($Password)`""
 }
 
 function Xti-ShowCredentials {

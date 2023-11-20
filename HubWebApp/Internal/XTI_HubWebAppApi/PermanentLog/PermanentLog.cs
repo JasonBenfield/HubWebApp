@@ -89,7 +89,8 @@ public sealed class PermanentLog
                 installation,
                 startRequest.Path,
                 startRequest.TimeStarted,
-                startRequest.ActualCount
+                startRequest.ActualCount,
+                startRequest.SourceRequestKey
             );
         }
         catch (Exception ex)

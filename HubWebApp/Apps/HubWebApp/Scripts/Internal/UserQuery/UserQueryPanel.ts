@@ -2,20 +2,17 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
 import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
-import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
-import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl";
-import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 
 interface IResult {
     menuRequested?: boolean;
@@ -40,7 +37,7 @@ export class UserQueryPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedUser>;
-    private readonly userQueryModel: IUserGroupKey = { UserGroupName: '' };
+    private readonly queryArgs = { args: <IUserGroupKey>{ UserGroupName: '' } };
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserQueryPanelView) {
         this.alert = new MessageAlert(this.view.alert);
@@ -61,9 +58,7 @@ export class UserQueryPanel implements IPanel {
             columns.Email
         );
         options.saveChanges();
-        options.setODataClient(
-            new ApiODataClient(this.hubClient.UserQuery, this.userQueryModel)
-        );
+        options.setDefaultODataClient(this.hubClient.UserQuery, this.queryArgs);
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -73,7 +68,7 @@ export class UserQueryPanel implements IPanel {
     }
 
     setUserGroupName(userGroupName: string) {
-        this.userQueryModel.UserGroupName = userGroupName;
+        this.queryArgs.args.UserGroupName = userGroupName;
         if (userGroupName) {
             const canAdd = this.canAdd(userGroupName);
             if (canAdd) {
@@ -113,7 +108,7 @@ export class UserQueryPanel implements IPanel {
             (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
                 const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
-                if (this.userQueryModel.UserGroupName === listItemGroupName) {
+                if (this.queryArgs.args.UserGroupName === listItemGroupName) {
                     listItem.makeActive();
                 }
                 return listItem;

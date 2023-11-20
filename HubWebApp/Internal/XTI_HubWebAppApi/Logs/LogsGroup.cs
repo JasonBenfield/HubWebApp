@@ -5,10 +5,10 @@ public sealed class LogsGroup : AppApiGroupWrapper
     public LogsGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
-        GetLogEntryByKey = source.AddAction
+        GetLogEntryOrDefaultByKey = source.AddAction
         (
-            nameof(GetLogEntryByKey),
-            () => sp.GetRequiredService<GetLogEntryByKeyAction>(),
+            nameof(GetLogEntryOrDefaultByKey),
+            () => sp.GetRequiredService<GetLogEntryOrDefaultByKeyAction>(),
             access: Access.WithAllowed(HubInfo.Roles.ViewLog)
         );
         GetLogEntryDetail = source.AddAction
@@ -58,7 +58,7 @@ public sealed class LogsGroup : AppApiGroupWrapper
         );
     }
 
-    public AppApiAction<string, AppLogEntryModel> GetLogEntryByKey { get; }
+    public AppApiAction<string, AppLogEntryModel> GetLogEntryOrDefaultByKey { get; }
     public AppApiAction<int, AppLogEntryDetailModel> GetLogEntryDetail { get; }
     public AppApiAction<int, AppRequestDetailModel> GetRequestDetail { get; }
     public AppApiAction<int, AppSessionDetailModel> GetSessionDetail { get; }

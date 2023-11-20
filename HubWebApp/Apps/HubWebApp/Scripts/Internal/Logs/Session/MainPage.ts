@@ -15,10 +15,10 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.sessionPanel = this.panels.add(
-            new SessionPanel(this.defaultClient, this.view.sessionPanel)
+            new SessionPanel(this.hubClient, this.view.sessionPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         const sessionIDText = Url.current().getQueryValue("SessionID");
         const sessionID = sessionIDText ? Number.parseInt(sessionIDText) : 0;
@@ -28,7 +28,7 @@ class MainPage extends HubPage {
             this.activateSessionPanel();
         }
         else {
-            this.defaultClient.Logs.Sessions.open({});
+            this.hubClient.Logs.Sessions.open({});
         }
     }
 

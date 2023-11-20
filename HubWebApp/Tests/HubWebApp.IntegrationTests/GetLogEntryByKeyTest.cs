@@ -16,6 +16,6 @@ internal sealed class GetLogEntryByKeyTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup(envName);
-        return HubActionTester.Create(sp, hubApi => hubApi.Logs.GetLogEntryByKey);
+        return HubActionTester.Create(sp, hubApi => hubApi.Logs.GetLogEntryOrDefaultByKey);
     }
 }

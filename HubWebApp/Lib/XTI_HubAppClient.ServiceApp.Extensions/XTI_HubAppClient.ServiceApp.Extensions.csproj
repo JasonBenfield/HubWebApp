@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Description>Service App Extensions using $(XtiAppName) $(XtiVersion)</Description>
@@ -9,8 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231116082834978" />
-		<PackageReference Include="XTI_App.Hosting" Version="1.8.40-dev231116082834978" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231118172153455" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.40-dev231118172153455" />
 	</ItemGroup>
 
 	<ItemGroup>

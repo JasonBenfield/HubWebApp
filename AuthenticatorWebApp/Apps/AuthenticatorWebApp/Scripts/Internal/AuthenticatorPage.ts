@@ -4,9 +4,11 @@ import { AppClients } from "./AppClients";
 import { AuthenticatorPageView } from "./AuthenticatorPageView";
 
 export class AuthenticatorPage extends BasicPage {
-    protected readonly defaultClient: AuthenticatorAppClient;
+    protected readonly authClient: AuthenticatorAppClient;
 
     constructor(view: AuthenticatorPageView) {
-        super(new AppClients(view.modalError).Authenticator(), view);
+        const authClient = new AppClients(view.modalError).Authenticator();
+        super(authClient, view);
+        this.authClient = authClient;
     }
 }

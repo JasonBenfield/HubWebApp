@@ -1,16 +1,16 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { GridRowView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
 import { RequestQueryPanelView } from "./RequestQueryPanelView";
-import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 
 interface IResult {
     menuRequested?: boolean;
@@ -33,16 +33,12 @@ export class RequestQueryPanel implements IPanel {
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
         columns.RequestID.require();
         columns.Succeeded.require();
-        options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: GridRowView) =>
-                new RequestDataRow(rowIndex, columns, record, view)
-        );
         options.query.select.addFields(
             columns.RequestTimeStarted,
             columns.RequestTimeElapsed,
             columns.UserName,
             columns.Path,
-            columns.AppName,
+            columns.AppKey,
             columns.ResourceGroupName,
             columns.ResourceName,
             columns.InstallLocation,
@@ -57,22 +53,29 @@ export class RequestQueryPanel implements IPanel {
         const sessionID = sessionIDText ? Number(sessionIDText) : null;
         const installationIDText = url.getQueryValue('InstallationID');
         const installationID = installationIDText ? Number(installationIDText) : null;
+        const sourceRequestIDText = url.getQueryValue('SourceRequestID');
+        const sourceRequestID = sourceRequestIDText ? Number(sourceRequestIDText) : null;
         options.saveChanges({
             select: true,
             filter: !sessionID,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.RequestQuery, { SessionID: sessionID, InstallationID: installationID })
+        options.setDefaultODataClient(
+            hubClient.RequestQuery,
+            {
+                args: {
+                    SessionID: sessionID,
+                    InstallationID: installationID,
+                    SourceRequestID: sourceRequestID
+                }
+            }
+        );
+        options.setCreateDataRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, view: LinkGridRowView) =>
+                new RequestDataRow(hubClient, rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
-    }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const requestID: number = eventArgs.record['RequestID'];
-        this.hubClient.Logs.AppRequest.open({ RequestID: requestID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

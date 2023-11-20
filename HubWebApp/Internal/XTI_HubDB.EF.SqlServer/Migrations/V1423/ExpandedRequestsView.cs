@@ -19,12 +19,16 @@ ErrorCounts as
 	group by RequestID
 )
 select 
-	Requests.id RequestID, RequestKey, Path, 
+	Requests.id RequestID, Requests.RequestKey,
+	Requests.Path, 
 	dbo.GetLocalDateTime(Requests.TimeStarted) RequestTimeStarted, 
 	dbo.GetLocalDateTime(Requests.TimeEnded) RequestTimeEnded,
 	dbo.TimeElapsedDisplayText(Requests.TimeStarted, Requests.TimeEnded) RequestTimeElapsed,
 	Requests.ActualCount,
-	cast(case when datepart(year,Requests.TimeEnded) < 9999 and errorCounts.ErrorCount is null then 1 else 0 end as bit) Succeeded,
+	cast(case when datepart(year,Requests.TimeEnded) < 9999 and errorCounts.ErrorCount is null then 1 else 0 end as bit) Succeeded, 
+	isnull(srcreq.SourceRequestID, 0) SourceRequestID,
+	case isnull(srcreq.SourceRequestID, 0) when 0 then 0 else 1 end HasSourceRequest,
+	srcreq.Path SourceRequestPath,
 	isnull(criticalErrorCounts.LogEntryCount, 0) CriticalErrorCount,
 	isnull(accessDeniedCounts.LogEntryCount, 0) AccessDeniedCount,
 	isnull(appErrorCounts.LogEntryCount, 0) AppErrorCount,
@@ -36,7 +40,9 @@ select
 	dbo.GetLocalDateTime(sessions.TimeEnded) SessionTimeEnded, 
 	dbo.TimeElapsedDisplayText(sessions.timestarted,sessions.timeended) SessionTimeElapsed,
 	sessions.RemoteAddress, sessions.UserAgent,
-	users.ID UserID, users.UserName, users.Name UserPersonalName, users.Email, 
+	users.ID UserID, 
+	users.UserName, 
+	users.Name UserPersonalName, users.Email, 
 	dbo.GetLocalDateTime(users.TimeAdded) TimeUserAdded,
 	UserGroups.ID UserGroupID, UserGroups.GroupName UserGroupName, UserGroups.DisplayText UserGroupDisplayText,
 	inst.ID InstallationID, inst.Domain, inst.IsCurrent IsCurrentInstallation, inst.Status InstallationStatusValue, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatus, 
@@ -99,5 +105,7 @@ left outer join LogEntrySeverityCounts informationCounts
 on Requests.ID = informationCounts.RequestID and informationCounts.Severity = 50
 left outer join ErrorCounts errorCounts
 on Requests.ID = errorCounts.RequestID
+left outer join SourceRequests srcreq
+on Requests.ID = srcreq.TargetID
 """;
 }

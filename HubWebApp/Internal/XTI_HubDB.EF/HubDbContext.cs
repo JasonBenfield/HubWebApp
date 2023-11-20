@@ -16,6 +16,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
         Requests = new EfDataRepository<AppRequestEntity>(this);
+        SourceRequests = new EfDataRepository<SourceRequestEntity>(this);
         LogEntries = new EfDataRepository<LogEntryEntity>(this);
         SourceLogEntries = new EfDataRepository<SourceLogEntryEntity>(this);
         Apps = new EfDataRepository<AppEntity>(this);
@@ -47,6 +48,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SourceRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new LogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SourceLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEntityConfiguration());
@@ -76,6 +78,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }
     public DataRepository<AppRequestEntity> Requests { get; }
+    public DataRepository<SourceRequestEntity> SourceRequests { get; }
     public DataRepository<LogEntryEntity> LogEntries { get; }
     public DataRepository<SourceLogEntryEntity> SourceLogEntries { get; }
     public DataRepository<AppEntity> Apps { get; }

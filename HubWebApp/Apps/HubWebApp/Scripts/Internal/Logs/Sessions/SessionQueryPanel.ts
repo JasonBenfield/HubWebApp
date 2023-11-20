@@ -1,9 +1,9 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedSessionColumnsBuilder } from "../../../Lib/Http/ODataExpandedSessionColumnsBuilder";
 import { SessionQueryPanelView } from "./SessionQueryPanelView";
@@ -37,19 +37,17 @@ export class SessionQueryPanel implements IPanel {
         );
         options.query.orderBy.addDescending(columns.TimeStarted);
         options.saveChanges();
-        options.setODataClient(
-            new ApiODataClient(hubClient.SessionQuery, {})
+        options.setDefaultODataClient(hubClient.SessionQuery, { args: {} });
+        options.setCreateLinkRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, row: ODataLinkRow) => {
+                const sessionID: number = record['SessionID'];
+                row.setHref(this.hubClient.Logs.Session.getUrl({ SessionID: sessionID }));
+            }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const sessionID: number = eventArgs.record['SessionID'];
-        this.hubClient.Logs.Session.open({ SessionID: sessionID });
-    }
-
+    
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
 
     refresh() { this.odataComponent.refresh(); }

@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="7.0.13" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
 		<PackageReference Include="nunit" Version="3.14.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev231101201230098" />
-		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231101202441749" />
-		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.40-dev231116082834978" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev231118105150033" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231118165338904" />
+		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.40-dev231118172153455" />
 	</ItemGroup>
 
 	<ItemGroup>

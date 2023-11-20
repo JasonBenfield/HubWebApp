@@ -17,16 +17,16 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.userQueryPanel = this.panels.add(
-            new UserQueryPanel(this.defaultClient, this.view.userQueryPanel)
+            new UserQueryPanel(this.hubClient, this.view.userQueryPanel)
         );
         this.addUserPanel = this.panels.add(
-            new AddUserPanel(this.defaultClient, this.view.addUserPanel)
+            new AddUserPanel(this.hubClient, this.view.addUserPanel)
         );
         const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
-        this.defaultClient.Users.withModifier(userGroupName);
+        this.hubClient.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();
         this.activateUserQueryPanel();

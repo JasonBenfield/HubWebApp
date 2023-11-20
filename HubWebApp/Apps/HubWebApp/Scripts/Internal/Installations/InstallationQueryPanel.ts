@@ -3,19 +3,18 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
 import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
 import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Http/ODataExpandedInstallationColumnsBuilder";
 import { InstallationDataRow } from "./InstallationDataRow";
 import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
-import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 
 interface IResult {
     menuRequested?: boolean;
@@ -74,12 +73,13 @@ export class InstallationQueryPanel implements IPanel {
             filter: true,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.InstallationQuery, { QueryType: selectedQueryType.Value })
+        options.setDefaultODataClient(
+            hubClient.InstallationQuery,
+            { args: { QueryType: selectedQueryType.Value } }
         );
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: GridRowView) =>
-                new InstallationDataRow(rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: LinkGridRowView) =>
+                new InstallationDataRow(this.hubClient, rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));

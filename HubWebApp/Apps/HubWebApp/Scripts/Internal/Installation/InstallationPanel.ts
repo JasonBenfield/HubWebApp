@@ -75,7 +75,11 @@ export class InstallationPanel implements IPanel {
 
     setInstallationID(installationID: number) {
         this.installationID = installationID;
-        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: null, InstallationID: installationID }));
+        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
+            SessionID: null,
+            InstallationID: installationID,
+            SourceRequestID: null
+        }));
         this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: null, InstallationID: installationID }));
     }
 

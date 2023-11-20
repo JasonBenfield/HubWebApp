@@ -16,13 +16,13 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.userGroupsPanel = this.panels.add(
-            new UserGroupsPanel(this.defaultClient, this.view.userGroupsPanel)
+            new UserGroupsPanel(this.hubClient, this.view.userGroupsPanel)
         );
         this.addUserGroupPanel = this.panels.add(
-            new AddUserGroupPanel(this.defaultClient, this.view.addUserGroupPanel)
+            new AddUserGroupPanel(this.hubClient, this.view.addUserGroupPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.userGroupsPanel.refresh();
         this.activateUserGroupsPanel();
