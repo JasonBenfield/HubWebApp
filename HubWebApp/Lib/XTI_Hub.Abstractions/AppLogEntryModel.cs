@@ -18,4 +18,6 @@ public sealed record AppLogEntryModel
         : this(0, 0, DateTimeOffset.MaxValue, AppEventSeverity.Values.GetDefault(), "", "", "", "")
     {
     }
+
+    public bool IsFound() => ID > 0;
 }

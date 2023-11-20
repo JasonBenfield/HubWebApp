@@ -171,7 +171,8 @@ public sealed class CommandFactory
             command = new StoreCredentialsCommand
             (
                 scopes.GetRequiredService<AdminOptions>(),
-                scopes.GetRequiredService<ISecretCredentialsFactory>()
+                scopes.GetRequiredService<ISecretCredentialsFactory>(),
+                scopes.GetRequiredService<RemoteCommandService>()
             );
         }
         else if (commandName == CommandNames.DecryptTempLog)

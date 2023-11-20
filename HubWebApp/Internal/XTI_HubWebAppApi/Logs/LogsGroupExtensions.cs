@@ -6,7 +6,7 @@ internal static class LogsGroupExtensions
 {
     public static void AddLogsGroupServices(this IServiceCollection services)
     {
-        services.AddScoped<GetLogEntryByKeyAction>();
+        services.AddScoped<GetLogEntryOrDefaultByKeyAction>();
         services.AddScoped<GetLogEntryDetailAction>();
         services.AddScoped<GetRequestDetailAction>();
         services.AddScoped<GetSessionDetailAction>();

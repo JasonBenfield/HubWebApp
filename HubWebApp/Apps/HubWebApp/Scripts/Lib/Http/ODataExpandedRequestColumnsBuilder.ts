@@ -40,6 +40,7 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly InstallationID = new ODataColumnViewBuilder();
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
+	readonly SourceRequestID = new ODataColumnViewBuilder();
 }
 
 export class ODataExpandedRequestColumnsBuilder {
@@ -112,6 +113,8 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.InstallLocation.setDisplayText('Install Location');
 		this.IsCurrentInstallation = new ODataColumnBuilder('IsCurrentInstallation', new SourceType('Boolean'), views.IsCurrentInstallation);
 		this.IsCurrentInstallation.setDisplayText('Is Current Installation');
+		this.SourceRequestID = new ODataColumnBuilder('SourceRequestID', new SourceType('Int32'), views.SourceRequestID);
+		this.SourceRequestID.setDisplayText('Source Request ID');
 	}
 	readonly RequestID: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
@@ -148,6 +151,7 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly InstallationID: ODataColumnBuilder;
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
+	readonly SourceRequestID: ODataColumnBuilder;
 	
 	build() {
 		return {
@@ -185,7 +189,8 @@ export class ODataExpandedRequestColumnsBuilder {
 			VersionType: this.VersionType.build(),
 			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
-			IsCurrentInstallation: this.IsCurrentInstallation.build()
+			IsCurrentInstallation: this.IsCurrentInstallation.build(),
+			SourceRequestID: this.SourceRequestID.build()
 		} as ODataColumns<IExpandedRequest>;
 	}
 }

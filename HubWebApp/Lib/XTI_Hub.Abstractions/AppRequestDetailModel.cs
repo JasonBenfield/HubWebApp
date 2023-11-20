@@ -15,7 +15,9 @@ public sealed record AppRequestDetailModel
     AppModel App,
     AppSessionModel Session,
     AppUserGroupModel UserGroup,
-    AppUserModel User
+    AppUserModel User,
+    int SourceRequestID,
+    int[] TargetRequestIDs
 )
 {
     public AppRequestDetailModel()
@@ -32,7 +34,9 @@ public sealed record AppRequestDetailModel
             new AppModel(),
             new AppSessionModel(),
             new AppUserGroupModel(),
-            new AppUserModel()
+            new AppUserModel(),
+            0,
+            new int[0]
         )
     {
     }

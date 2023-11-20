@@ -10,6 +10,7 @@ public interface IHubDbContext
     DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     DataRepository<ModifierEntity> Modifiers { get; }
     DataRepository<AppRequestEntity> Requests { get; }
+    DataRepository<SourceRequestEntity> SourceRequests { get; }
     DataRepository<ResourceGroupRoleEntity> ResourceGroupRoles { get; }
     DataRepository<ResourceGroupEntity> ResourceGroups { get; }
     DataRepository<ResourceRoleEntity> ResourceRoles { get; }

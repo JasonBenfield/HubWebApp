@@ -4,6 +4,7 @@ interface ILinkModel {
 	LinkName: string;
 	DisplayText: string;
 	Url: string;
+	IsAuthenticationRequired: boolean;
 }
 interface IAppUserModel {
 	ID: number;
@@ -248,6 +249,7 @@ interface IAppLogEntryModel {
 	Caption: string;
 	Message: string;
 	Detail: string;
+	Category: string;
 }
 interface IModifierCategoryModel {
 	ID: number;
@@ -572,6 +574,8 @@ interface IAppRequestDetailModel {
 	Session: IAppSessionModel;
 	UserGroup: IAppUserGroupModel;
 	User: IAppUserModel;
+	SourceRequestID: number;
+	TargetRequestIDs: number[];
 }
 interface IAppSessionDetailModel {
 	Session: IAppSessionModel;
@@ -584,6 +588,7 @@ interface ISessionViewRequest {
 interface IAppRequestQueryRequest {
 	SessionID: number;
 	InstallationID: number;
+	SourceRequestID: number;
 }
 interface IAppRequestRequest {
 	RequestID: number;
@@ -646,6 +651,7 @@ interface IExpandedRequest {
 	InstallationID: number;
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
+	SourceRequestID: number;
 }
 interface IExpandedLogEntry {
 	EventID: number;
@@ -654,6 +660,7 @@ interface IExpandedLogEntry {
 	Caption: string;
 	Message: string;
 	Detail: string;
+	Category: string;
 	Path: string;
 	ActualCount: number;
 	AppID: number;

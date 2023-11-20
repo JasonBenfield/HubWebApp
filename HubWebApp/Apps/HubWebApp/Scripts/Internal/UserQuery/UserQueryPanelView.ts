@@ -4,7 +4,7 @@ import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { GridView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
@@ -55,7 +55,7 @@ export class UserQueryPanelView extends GridView {
         this.odataComponent = layoutGrid.addCell()
             .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);
-        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
+        this.odataComponent.configureDataRow(grid => grid.addRow(LinkGridRowView));
         this.columns = new ODataExpandedUserColumnViewsBuilder();
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)

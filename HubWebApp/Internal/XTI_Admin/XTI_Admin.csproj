@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_GitHub" Version="1.2.21-dev231104235107427" />
-		<PackageReference Include="XTI_Git" Version="1.2.21-dev231104235107427" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev231101201230098" />
+		<PackageReference Include="XTI_GitHub" Version="1.2.21-dev231118165811191" />
+		<PackageReference Include="XTI_Git" Version="1.2.21-dev231118165811191" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev231118105150033" />
 	</ItemGroup>
 
 	<ItemGroup>

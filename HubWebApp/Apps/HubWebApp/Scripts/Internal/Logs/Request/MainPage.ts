@@ -15,10 +15,10 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.requestPanel = this.panels.add(
-            new RequestPanel(this.defaultClient, this.view.requestPanel)
+            new RequestPanel(this.hubClient, this.view.requestPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         const requestIDText = Url.current().getQueryValue("RequestID");
         const requestID = requestIDText ? Number.parseInt(requestIDText) : 0;
@@ -28,7 +28,11 @@ class MainPage extends HubPage {
             this.activateRequestPanel();
         }
         else {
-            this.defaultClient.Logs.AppRequests.open({ SessionID: null, InstallationID: null });
+            this.hubClient.Logs.AppRequests.open({
+                SessionID: null,
+                InstallationID: null,
+                SourceRequestID: null
+            });
         }
     }
 

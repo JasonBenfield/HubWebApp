@@ -28,6 +28,7 @@ public static class XtiSetupAppHost
                     services.AddSingleton(_ => appKey);
                     services.AddMemoryCache();
                     services.AddFileSecretCredentials(xtiEnv);
+                    services.AddScoped<IAppClientRequestKey, EmptyAppClientRequestKey>();
                     services.AddHubClientServices();
                     services.AddSystemUserXtiToken();
                     services.AddInstallationUserXtiToken();

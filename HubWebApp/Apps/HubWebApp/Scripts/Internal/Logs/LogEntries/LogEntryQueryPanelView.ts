@@ -4,7 +4,7 @@ import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { GridView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../../HubTheme";
 import { ODataExpandedLogEntryColumnViewsBuilder } from '../../../Lib/Http/ODataExpandedLogEntryColumnsBuilder';
@@ -32,7 +32,7 @@ export class LogEntryQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         this.odataComponent = mainContent.addView(ODataComponentView);
-        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
+        this.odataComponent.configureDataRow(grid => grid.addRow(LinkGridRowView));
         this.columns = new ODataExpandedLogEntryColumnViewsBuilder();
         this.columns.TimeOccurred.setWidth(CssLengthUnit.maxContent());
         this.columns.Severity.setWidth(CssLengthUnit.maxContent());

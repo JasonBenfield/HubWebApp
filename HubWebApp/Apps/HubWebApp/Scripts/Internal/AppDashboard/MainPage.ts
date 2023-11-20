@@ -19,15 +19,15 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
-        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.defaultClient, this.view.appDetailPanel));
-        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.defaultClient, this.view.resourceGroupPanel));
-        this.resourcePanel = this.panels.add(new ResourcePanel(this.defaultClient, this.view.resourcePanel));
-        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.defaultClient, this.view.modCategoryPanel));
+        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubClient, this.view.appDetailPanel));
+        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubClient, this.view.resourceGroupPanel));
+        this.resourcePanel = this.panels.add(new ResourcePanel(this.hubClient, this.view.resourcePanel));
+        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubClient, this.view.modCategoryPanel));
         if (XtiUrl.current().path.modifier) {
             this.activateAppDetailPanel();
         }
         else {
-            new WebPage(this.defaultClient.Apps.Index.getUrl({})).open();
+            new WebPage(this.hubClient.Apps.Index.getUrl({})).open();
         }
     }
 
@@ -36,7 +36,7 @@ class MainPage extends HubPage {
         this.appDetailPanel.refresh();
         const result = await this.appDetailPanel.start();
         if (result.backRequested) {
-            this.defaultClient.Apps.Index.open({});
+            this.hubClient.Apps.Index.open({});
         }
         else if (result.resourceGroupSelected) {
             this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);

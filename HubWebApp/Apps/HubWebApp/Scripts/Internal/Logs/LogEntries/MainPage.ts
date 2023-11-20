@@ -14,10 +14,10 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.logEntryQueryPanel = this.panels.add(
-            new LogEntryQueryPanel(this.defaultClient, this.view.logEntryQueryPanel)
+            new LogEntryQueryPanel(this.hubClient, this.view.logEntryQueryPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.logEntryQueryPanel.refresh();
         this.activateLogEntryQueryPanel();

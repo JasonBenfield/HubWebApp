@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XTI_HubDB.Entities;
-
-namespace XTI_HubDB.EF;
+﻿namespace XTI_HubDB.EF;
 
 internal sealed class StoredObjectEntityConfiguration : IEntityTypeConfiguration<StoredObjectEntity>
 {

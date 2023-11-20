@@ -4,11 +4,11 @@ using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
-public sealed class AppLogEntryRepository
+public sealed class LogEntryRepository
 {
     private readonly HubFactory factory;
 
-    public AppLogEntryRepository(HubFactory factory)
+    public LogEntryRepository(HubFactory factory)
     {
         this.factory = factory;
     }
@@ -89,14 +89,14 @@ public sealed class AppLogEntryRepository
 
     private async Task<LogEntryEntity> AddOrUpdateLogEntry
     (
-        AppRequest request, 
-        string logEntryKey, 
-        DateTimeOffset timeOccurred, 
-        AppEventSeverity severity, 
-        string caption, 
-        string message, 
-        string detail, 
-        int actualCount, 
+        AppRequest request,
+        string logEntryKey,
+        DateTimeOffset timeOccurred,
+        AppEventSeverity severity,
+        string caption,
+        string message,
+        string detail,
+        int actualCount,
         string category
     )
     {
@@ -177,12 +177,12 @@ public sealed class AppLogEntryRepository
         }
     }
 
-    public async Task<LogEntry> LogEntryByKey(string eventKey)
+    public async Task<LogEntry> LogEntryOrDefaultByKey(string eventKey)
     {
         var entity = await GetLogEntryByKey(eventKey);
         return factory.CreateLogEntry
         (
-            entity ?? throw new Exception($"Log Entry not found with key '{eventKey}'")
+            entity ?? new LogEntryEntity()
         );
     }
 
@@ -199,44 +199,26 @@ public sealed class AppLogEntryRepository
 
     internal async Task<LogEntry> SourceLogEntryOrDefault(int forTargetID)
     {
-        LogEntryEntity? entity;
-        var sourceID = await factory.DB.SourceLogEntries.Retrieve()
+        var sourceIDs = factory.DB.SourceLogEntries.Retrieve()
             .Where(src => src.TargetID == forTargetID)
-            .Select(src => src.SourceID)
-            .FirstOrDefaultAsync();
-        if (sourceID > 0)
-        {
-            entity = await factory.DB
-                .LogEntries.Retrieve()
-                .Where(e => e.ID == sourceID)
-                .FirstAsync();
-        }
-        else
-        {
-            entity = new LogEntryEntity();
-        }
-        return factory.CreateLogEntry(entity);
+            .Select(src => src.SourceID);
+        var entities = await factory.DB
+            .LogEntries.Retrieve()
+            .Where(e => sourceIDs.Contains(e.ID))
+            .ToArrayAsync();
+        return factory.CreateLogEntry(entities.FirstOrDefault() ?? new());
     }
 
     internal async Task<LogEntry> TargetLogEntryOrDefault(int forSourceID)
     {
-        LogEntryEntity? entity;
-        var targetID = await factory.DB.SourceLogEntries.Retrieve()
+        var targetIDs = factory.DB.SourceLogEntries.Retrieve()
             .Where(src => src.SourceID == forSourceID)
-            .Select(src => src.TargetID)
-            .FirstOrDefaultAsync();
-        if (targetID > 0)
-        {
-            entity = await factory.DB
-                .LogEntries.Retrieve()
-                .Where(e => e.ID == targetID)
-                .FirstAsync();
-        }
-        else
-        {
-            entity = new LogEntryEntity();
-        }
-        return factory.CreateLogEntry(entity);
+            .Select(src => src.TargetID);
+        var entities = await factory.DB
+            .LogEntries.Retrieve()
+            .Where(e => targetIDs.Contains(e.ID))
+            .ToArrayAsync();
+        return factory.CreateLogEntry(entities.FirstOrDefault() ?? new());
     }
 
     private Task<LogEntryEntity?> GetLogEntryByKey(string eventKey) =>

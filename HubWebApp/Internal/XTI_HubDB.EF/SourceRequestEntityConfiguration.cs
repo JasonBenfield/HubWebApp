@@ -1,22 +1,22 @@
 ﻿namespace XTI_HubDB.EF;
 
-internal sealed class SourceLogEntryEntityConfiguration : IEntityTypeConfiguration<SourceLogEntryEntity>
+internal sealed class SourceRequestEntityConfiguration : IEntityTypeConfiguration<SourceRequestEntity>
 {
-    public void Configure(EntityTypeBuilder<SourceLogEntryEntity> builder)
+    public void Configure(EntityTypeBuilder<SourceRequestEntity> builder)
     {
         builder.HasKey(e => e.ID);
         builder.Property(e => e.ID).ValueGeneratedOnAdd();
         builder.HasIndex(r => new { r.SourceID, r.TargetID }).IsUnique();
         builder
-            .HasOne<LogEntryEntity>()
+            .HasOne<AppRequestEntity>()
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict)
             .HasForeignKey(e => e.SourceID);
         builder
-            .HasOne<LogEntryEntity>()
+            .HasOne<AppRequestEntity>()
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict)
             .HasForeignKey(e => e.TargetID);
-        builder.ToTable("SourceLogEntries");
+        builder.ToTable("SourceRequests");
     }
 }

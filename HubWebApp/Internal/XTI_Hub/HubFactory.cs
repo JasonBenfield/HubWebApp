@@ -88,9 +88,9 @@ public sealed class HubFactory
 
     public AuthenticatorRepository Authenticators { get => authenticators ??= new(this); }
 
-    private AppLogEntryRepository? logEntries;
+    private LogEntryRepository? logEntries;
 
-    public AppLogEntryRepository LogEntries { get => logEntries ??= new(this); }
+    public LogEntryRepository LogEntries { get => logEntries ??= new(this); }
 
     internal LogEntry CreateLogEntry(LogEntryEntity record) => new(this, record);
 

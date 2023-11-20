@@ -31,6 +31,9 @@ export class RequestPanel implements IPanel {
     private readonly currentInstallation: FormGroupText;
     private readonly timeRange: FormGroupText;
     private readonly path: FormGroupText;
+    private readonly sourceRequestLink: TextLinkComponent;
+    private readonly targetRequestLink: TextLinkComponent;
+    private readonly sessionLink: TextLinkComponent;
     private readonly installationLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private requestID: number;
@@ -44,6 +47,9 @@ export class RequestPanel implements IPanel {
         this.currentInstallation = new FormGroupText(view.currentInstallation);
         this.timeRange = new FormGroupText(view.timeRange);
         this.path = new FormGroupText(view.path);
+        this.sourceRequestLink = new TextLinkComponent(view.sourceRequestLink);
+        this.targetRequestLink = new TextLinkComponent(view.targetRequestLink);
+        this.sessionLink = new TextLinkComponent(view.sessionLink);
         this.installationLink = new TextLinkComponent(view.installationLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -93,6 +99,25 @@ export class RequestPanel implements IPanel {
         }
         this.timeRange.setValue(timeRange);
         this.path.setValue(detail.Request.Path);
+        this.sessionLink.setHref(this.hubClient.Logs.Session.getUrl({ SessionID: detail.Session.ID }));
+        if (detail.SourceRequestID) {
+            this.sourceRequestLink.setHref(this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.SourceRequestID }));
+            this.sourceRequestLink.show();
+        }
+        else {
+            this.sourceRequestLink.hide();
+        }
+        if (detail.TargetRequestIDs.length > 0) {
+            this.targetRequestLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
+                SessionID: null,
+                InstallationID: null,
+                SourceRequestID: detail.Request.ID
+            }));
+            this.targetRequestLink.show();
+        }
+        else {
+            this.targetRequestLink.hide();
+        }
         this.installationLink.setHref(this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
         this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: this.requestID, InstallationID: null }));
     }

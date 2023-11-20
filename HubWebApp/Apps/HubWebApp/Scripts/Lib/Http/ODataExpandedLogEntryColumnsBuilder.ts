@@ -11,6 +11,7 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly Caption = new ODataColumnViewBuilder();
 	readonly Message = new ODataColumnViewBuilder();
 	readonly Detail = new ODataColumnViewBuilder();
+	readonly Category = new ODataColumnViewBuilder();
 	readonly Path = new ODataColumnViewBuilder();
 	readonly ActualCount = new ODataColumnViewBuilder();
 	readonly AppID = new ODataColumnViewBuilder();
@@ -52,6 +53,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.Caption = new ODataColumnBuilder('Caption', new SourceType('String'), views.Caption);
 		this.Message = new ODataColumnBuilder('Message', new SourceType('String'), views.Message);
 		this.Detail = new ODataColumnBuilder('Detail', new SourceType('String'), views.Detail);
+		this.Category = new ODataColumnBuilder('Category', new SourceType('String'), views.Category);
 		this.Path = new ODataColumnBuilder('Path', new SourceType('String'), views.Path);
 		this.ActualCount = new ODataColumnBuilder('ActualCount', new SourceType('Int32'), views.ActualCount);
 		this.ActualCount.setDisplayText('Actual Count');
@@ -116,6 +118,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly Caption: ODataColumnBuilder;
 	readonly Message: ODataColumnBuilder;
 	readonly Detail: ODataColumnBuilder;
+	readonly Category: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
 	readonly ActualCount: ODataColumnBuilder;
 	readonly AppID: ODataColumnBuilder;
@@ -154,6 +157,7 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			Caption: this.Caption.build(),
 			Message: this.Message.build(),
 			Detail: this.Detail.build(),
+			Category: this.Category.build(),
 			Path: this.Path.build(),
 			ActualCount: this.ActualCount.build(),
 			AppID: this.AppID.build(),

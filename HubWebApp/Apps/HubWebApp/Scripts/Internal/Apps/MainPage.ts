@@ -14,10 +14,10 @@ class MainPage extends HubPage {
     constructor() {
         super(new MainPageView());
         this.appListPanel = this.panels.add(
-            new AppListPanel(this.defaultClient, this.view.appListPanel)
+            new AppListPanel(this.hubClient, this.view.appListPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.appListPanel.refresh();
         this.activateAppListPanel();
@@ -27,7 +27,7 @@ class MainPage extends HubPage {
         this.panels.activate(this.appListPanel);
         const result = await this.appListPanel.start();
         if (result.appSelected) {
-            const url = this.defaultClient.Apps.Index.getModifierUrl(
+            const url = this.hubClient.Apps.Index.getModifierUrl(
                 result.appSelected.app.PublicKey.DisplayText,
                 {}
             );

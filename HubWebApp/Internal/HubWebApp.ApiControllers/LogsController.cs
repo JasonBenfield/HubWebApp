@@ -10,9 +10,9 @@ public sealed partial class LogsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppLogEntryModel>> GetLogEntryByKey([FromBody] string model, CancellationToken ct)
+    public Task<ResultContainer<AppLogEntryModel>> GetLogEntryOrDefaultByKey([FromBody] string model, CancellationToken ct)
     {
-        return api.Group("Logs").Action<string, AppLogEntryModel>("GetLogEntryByKey").Execute(model, ct);
+        return api.Group("Logs").Action<string, AppLogEntryModel>("GetLogEntryOrDefaultByKey").Execute(model, ct);
     }
 
     [HttpPost]

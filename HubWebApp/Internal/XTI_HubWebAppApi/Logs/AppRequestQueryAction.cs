@@ -15,7 +15,7 @@ internal sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest model)
+    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest queryRequest)
     {
         var userGroupPermissions = await currentUser.GetUserGroupPermissions();
         var userGroupIDs = userGroupPermissions
@@ -29,13 +29,17 @@ internal sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest
             .ToArray();
         var query = db.ExpandedRequests.Retrieve()
             .Where(r => userGroupIDs.Contains(r.UserGroupID) && appIDs.Contains(r.AppID));
-        if (model.SessionID.HasValue)
+        if (queryRequest.SessionID.HasValue)
         {
-            query = query.Where(r => r.SessionID == model.SessionID.Value);
+            query = query.Where(r => r.SessionID == queryRequest.SessionID.Value);
         }
-        if (model.InstallationID.HasValue)
+        if (queryRequest.InstallationID.HasValue)
         {
-            query = query.Where(r => r.InstallationID == model.InstallationID.Value);
+            query = query.Where(r => r.InstallationID == queryRequest.InstallationID.Value);
+        }
+        if (queryRequest.SourceRequestID.HasValue)
+        {
+            query = query.Where(r => r.SourceRequestID == queryRequest.SourceRequestID);
         }
         return query;
     }

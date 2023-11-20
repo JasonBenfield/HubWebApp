@@ -24,32 +24,32 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
-            new AppUserDataPanel(this.defaultClient, this.view.appUserDataPanel)
+            new AppUserDataPanel(this.hubClient, this.view.appUserDataPanel)
         );
         this.selectModCategoryPanel = this.panels.add(
-            new SelectModCategoryPanel(this.defaultClient, this.view.selectModCategoryPanel)
+            new SelectModCategoryPanel(this.hubClient, this.view.selectModCategoryPanel)
         );
         this.selectModifierPanel = this.panels.add(
-            new SelectModifierPanel(this.defaultClient, this.view.selectModifierPanel)
+            new SelectModifierPanel(this.hubClient, this.view.selectModifierPanel)
         );
         this.userRolesPanel = this.panels.add(
-            new UserRolesPanel(this.defaultClient, this.view.userRolesPanel)
+            new UserRolesPanel(this.hubClient, this.view.userRolesPanel)
         );
         this.addRolePanel = this.panels.add(
-            new AddRolePanel(this.defaultClient, this.view.addRolePanel)
+            new AddRolePanel(this.hubClient, this.view.addRolePanel)
         );
         const url = Url.current();
         const appModKey = url.getQueryValue('App');
         const userIDValue = url.getQueryValue('UserID');
         if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
             const userID = Number(userIDValue);
-            this.defaultClient.App.withModifier(appModKey);
-            this.defaultClient.ModCategory.withModifier(appModKey);
+            this.hubClient.App.withModifier(appModKey);
+            this.hubClient.ModCategory.withModifier(appModKey);
             this.appUserDataPanel.setUserID(userID);
             this.activateAppUserDataPanel();
         }
         else {
-            new WebPage(this.defaultClient.UserGroups.Index.getUrl({})).open();
+            new WebPage(this.hubClient.UserGroups.Index.getUrl({})).open();
         }
     }
 

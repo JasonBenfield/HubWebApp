@@ -16,7 +16,7 @@ select
 	LogEntries.ID EventID, 
 	case when isnull(SourceCaption, '') = '' then LogEntries.caption else '[Source] ' + SourceCaption end Caption, 
 	case when isnull(SourceMessage, '') = '' then LogEntries.message else '[Source] ' + SourceMessage end Message, 
-	LogEntries.caption OriginalCaption, LogEntries.message OriginalMessage,
+	LogEntries.caption TargetCaption, LogEntries.message TargetMessage,
 	LogEntries.detail, LogEntries.Category,
 	dbo.GetLocalDateTime(LogEntries.TimeOccurred) TimeOccurred, 
 	LogEntries.Severity SeverityValue,
