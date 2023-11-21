@@ -4,14 +4,12 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
 {
     private readonly UnverifiedUser unverifiedUser;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
-    private readonly HubFactory hubFactory;
     private readonly StoredObjectFactory storedObjectFactory;
 
-    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, HubFactory hubFactory, StoredObjectFactory storedObjectFactory)
+    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, StoredObjectFactory storedObjectFactory)
     {
         this.unverifiedUser = unverifiedUser;
         this.hashedPasswordFactory = hashedPasswordFactory;
-        this.hubFactory = hubFactory;
         this.storedObjectFactory = storedObjectFactory;
     }
 

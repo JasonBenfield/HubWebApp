@@ -13,10 +13,16 @@ public sealed class StoredObject
         this.storageName = storageName;
     }
 
-    public Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter)
+    public Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter) =>
+        Store(generateKeyModel, data, expireAfter, false);
+
+    public Task<string> StoreSingleUse(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter) =>
+        Store(generateKeyModel, data, expireAfter, true);
+
+    private Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter, bool isSingleUse)
     {
         var serialized = data is string str ? str : XtiSerializer.Serialize(data);
-        return db.Store(storageName, generateKeyModel, serialized, expireAfter);
+        return db.Store(storageName, generateKeyModel, serialized, expireAfter, isSingleUse);
     }
 
     public Task<T> Value<T>(string storageKey) 

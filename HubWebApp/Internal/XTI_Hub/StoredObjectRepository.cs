@@ -13,15 +13,15 @@ public sealed class StoredObjectRepository
         this.factory = factory;
     }
 
-    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires)
+    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires, bool isSingleUse)
     {
-        var entity = await factory.DB.StoredObjects.Retrieve()
+        var storedObject = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync(so => so.StorageName == storageName.Value && so.Data == data);
-        if (entity == null)
+        if (storedObject == null)
         {
             var storageKey = generatedStorageKey.Value();
             var keyAttempts = 1;
-            var keyExists = await checkKeyExists(storageName, storageKey);
+            var keyExists = await DoesKeyExist(storageName, storageKey);
             if (keyExists && generatedStorageKey is FixedGeneratedKey)
             {
                 throw new Exception("Unable to generate a unique key");
@@ -34,31 +34,40 @@ public sealed class StoredObjectRepository
                 {
                     throw new Exception("Unable to generate a unique key");
                 }
-                keyExists = await checkKeyExists(storageName, storageKey);
+                keyExists = await DoesKeyExist(storageName, storageKey);
             }
-            entity = new StoredObjectEntity
+            storedObject = new StoredObjectEntity
             {
                 StorageName = storageName.Value,
                 StorageKey = storageKey,
                 Data = data,
-                TimeExpires = timeExpires
+                TimeExpires = timeExpires,
+                IsSingleUse = isSingleUse
             };
-            await factory.DB.StoredObjects.Create(entity);
+            await factory.DB.StoredObjects.Create(storedObject);
         }
-        else if (entity.TimeExpires != timeExpires)
+        else
         {
-            await factory.DB.StoredObjects.Update(entity, so => so.TimeExpires = timeExpires);
+            await factory.DB.StoredObjects.Update
+            (
+                storedObject,
+                so =>
+                {
+                    so.TimeExpires = timeExpires;
+                    so.IsSingleUse = isSingleUse;
+                }
+            );
         }
-        return entity.StorageKey;
+        return storedObject.StorageKey;
     }
 
-    private Task<bool> checkKeyExists(StorageName storageName, string storageKey) =>
+    private Task<bool> DoesKeyExist(StorageName storageName, string storageKey) =>
         factory.DB.StoredObjects.Retrieve()
             .AnyAsync(so => so.StorageName == storageName.Value && so.StorageKey == storageKey);
 
     public async Task<string> StoredObject(StorageName storageName, string storageKey, DateTimeOffset now)
     {
-        var entity = await factory.DB.StoredObjects.Retrieve()
+        var storedObject = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync
             (
                 so =>
@@ -66,17 +75,22 @@ public sealed class StoredObjectRepository
                     so.StorageKey == storageKey &&
                     so.TimeExpires >= now
             );
-        return entity?.Data ?? "";
+        var data = storedObject?.Data ?? "";
+        if(storedObject != null && storedObject.IsSingleUse)
+        {
+            await factory.DB.StoredObjects.Delete(storedObject);
+        }
+        return data;
     }
 
     public async Task DeleteExpired(DateTimeOffset expiredBefore)
     {
-        var entities = await factory.DB.StoredObjects.Retrieve()
+        var storedObjects = await factory.DB.StoredObjects.Retrieve()
             .Where(so => so.TimeExpires < expiredBefore)
             .ToArrayAsync();
-        foreach (var entity in entities)
+        foreach (var storedObject in storedObjects)
         {
-            await factory.DB.StoredObjects.Delete(entity);
+            await factory.DB.StoredObjects.Delete(storedObject);
         }
     }
 }

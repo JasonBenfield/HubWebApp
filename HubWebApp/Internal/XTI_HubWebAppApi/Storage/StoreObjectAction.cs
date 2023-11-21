@@ -9,11 +9,28 @@ internal sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public Task<string> Execute(StoreObjectRequest model, CancellationToken stoppingToken) =>
-        storedObjectFactory.CreateStoredObject(new StorageName(model.StorageName)).Store
-        (
-            model.GenerateKey, 
-            model.Data, 
-            model.ExpireAfter
-        );
+    public async Task<string> Execute(StoreObjectRequest model, CancellationToken stoppingToken)
+    {
+        var storedObject = storedObjectFactory.CreateStoredObject(new StorageName(model.StorageName));
+        string storageKey;
+        if (model.IsSingleUse)
+        {
+            storageKey = await storedObject.StoreSingleUse
+            (
+                model.GenerateKey,
+                model.Data,
+                model.ExpireAfter
+            );
+        }
+        else
+        {
+            storageKey = await storedObject.Store
+            (
+                model.GenerateKey,
+                model.Data,
+                model.ExpireAfter
+            );
+        }
+        return storageKey;
+    }
 }

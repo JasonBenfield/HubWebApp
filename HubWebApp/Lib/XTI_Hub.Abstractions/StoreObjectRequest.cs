@@ -7,6 +7,11 @@ public sealed class StoreObjectRequest
     {
     }
 
+    public StoreObjectRequest(StorageName storageName, string data, TimeSpan expireAfter)
+        : this(storageName, data, expireAfter, GenerateKeyModel.SixDigit())
+    {
+    }
+
     public StoreObjectRequest(StorageName storageName, string data, TimeSpan expireAfter, GenerateKeyModel generateKey)
     {
         StorageName = storageName.DisplayText;
@@ -19,4 +24,11 @@ public sealed class StoreObjectRequest
     public string Data { get; set; }
     public TimeSpan ExpireAfter { get; set; }
     public GenerateKeyModel GenerateKey { get; set; }
+    public bool IsSingleUse { get; set; }
+
+    public StoreObjectRequest SingleUse()
+    {
+        IsSingleUse = true;
+        return this;
+    }
 }

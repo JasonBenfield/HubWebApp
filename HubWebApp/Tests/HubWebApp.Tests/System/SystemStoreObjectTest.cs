@@ -5,55 +5,13 @@ using XTI_HubWebAppApi.Storage;
 
 namespace HubWebApp.Tests;
 
-internal sealed class StoreObjectTest
+internal sealed class SystemStoreObjectTest
 {
-    [Test]
-    public async Task ShouldAllowAnonymousUserToGetStoredObject()
-    {
-        var tester = await Setup();
-        await tester.LoginAsAdmin();
-        var request = new StoreObjectRequest
-        {
-            StorageName = "something",
-            Data = "Whatever"
-        };
-        var storageKey = await tester.Execute(request);
-        tester.Logout();
-        var getStoredObj = tester.Create((hubApi) => hubApi.Storage.GetStoredObject);
-        var modifier = await tester.DefaultModifier();
-        AccessAssertions.Create(getStoredObj).ShouldAllowAnonymous
-        (
-            new GetStoredObjectRequest
-            {
-                StorageName = request.StorageName,
-                StorageKey = storageKey
-            }
-        );
-    }
-
-    [Test]
-    public async Task ShouldThrowError_WhenRoleIsNotAssignedToUser()
-    {
-        var tester = await Setup();
-        var request = new StoreObjectRequest
-        {
-            StorageName = "something",
-            Data = "Whatever"
-        };
-        await AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenAccessIsDenied
-            (
-                request,
-                HubInfo.Roles.Admin,
-                HubInfo.Roles.AddStoredObject
-            );
-    }
-
     [Test]
     public async Task ShouldRequireStorageName()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "",
@@ -67,7 +25,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireData()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -81,7 +39,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireStorageName_WhenGettingStoredObject()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -96,7 +54,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldRequireStorageKey_WhenGettingStoredObject()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -111,7 +69,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldGetStoredObject()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -126,7 +84,7 @@ internal sealed class StoreObjectTest
     public async Task StorageNameShouldNotBeCaseSensitive()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
@@ -141,7 +99,7 @@ internal sealed class StoreObjectTest
     public async Task StorageNameShouldIgnoreSpaces()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "Something 1",
@@ -156,7 +114,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldStoreMultipleObjects()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request1 = new StoreObjectRequest
         {
             StorageName = "something",
@@ -179,7 +137,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldReturnTheSameKey_WhenStorageNameAndDataAreTheSame()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -194,7 +152,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldReturnDifferentKeys_WhenStorageNameIsTheSameButNotTheData()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -210,7 +168,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldThrowError_WhenStoredObjectIsNotFound()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "something",
@@ -226,7 +184,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldReturnEmptyString_WhenStoredObjectHasExpired()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var clock = tester.Services.GetRequiredService<FakeClock>();
         var request = new StoreObjectRequest
         {
@@ -244,7 +202,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldGenerateSixDigitKey()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
@@ -261,7 +219,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldGenerateTenDigitKey()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
@@ -278,7 +236,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldGenerateFixedKey()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         {
             StorageName = "Something",
@@ -293,7 +251,7 @@ internal sealed class StoreObjectTest
     public async Task ShouldDeleteSingleUseStoredObject()
     {
         var tester = await Setup();
-        await tester.LoginAsAdmin();
+        await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         (
             new StorageName("something"), 
@@ -310,7 +268,7 @@ internal sealed class StoreObjectTest
 
     private Task<string> GetStoredObject(IHubActionTester tester, string storageName, string storageKey)
     {
-        var getStoredObj = tester.Create((hubApi) => hubApi.Storage.GetStoredObject);
+        var getStoredObj = tester.Create((hubApi) => hubApi.System.GetStoredObject);
         return getStoredObj.Execute
         (
             new GetStoredObjectRequest
@@ -325,6 +283,32 @@ internal sealed class StoreObjectTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        return HubActionTester.Create(sp, hubApi => hubApi.Storage.StoreObject);
+        var tester = HubActionTester.Create(sp, hubApi => hubApi.System.StoreObject);
+        var systemUser = await AddUser(tester, GetSystemUserName().DisplayText);
+        var hubApp = await tester.HubApp();
+        var systemUserRole = await hubApp.Role(AppRoleName.System);
+        await systemUser.AssignRole(systemUserRole);
+        return tester;
+    }
+
+    private static AppUserName GetSystemUserName() =>
+        new SystemUserName(HubInfo.AppKey, Environment.MachineName).UserName;
+
+    private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
+    {
+        var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
+        await addUserTester.LoginAsAdmin();
+        await addUserTester.Execute
+        (
+            new AddOrUpdateUserRequest
+            {
+                UserName = userName,
+                Password = "Password12345"
+            },
+            new ModifierKey("General")
+        );
+        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        return user;
     }
 }
