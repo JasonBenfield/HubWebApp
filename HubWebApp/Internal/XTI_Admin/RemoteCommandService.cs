@@ -25,7 +25,7 @@ public sealed class RemoteCommandService
     )
     {
         var optionsKey = await storedObjFactory.CreateStoredObject(new RemoteOptionsStorageName().Value)
-            .Store
+            .StoreSingleUse
             (
                 GenerateKeyModel.SixDigit(),
                 commandOptions,

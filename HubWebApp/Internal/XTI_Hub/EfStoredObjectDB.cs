@@ -14,7 +14,7 @@ public sealed class EfStoredObjectDB : IStoredObjectDB
         this.clock = clock;
     }
 
-    public Task<string> Store(StorageName storageName, GenerateKeyModel generatedKey, string data, TimeSpan expiresAfter)
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generatedKey, string data, TimeSpan expiresAfter, bool isSingleUse)
     {
         var generatedStorageKey = new GeneratedKeyFactory().Create(generatedKey);
         return hubFactory.StoredObjects.AddOrUpdate
@@ -22,7 +22,8 @@ public sealed class EfStoredObjectDB : IStoredObjectDB
             storageName,
             generatedStorageKey,
             data,
-            clock.Now().Add(expiresAfter)
+            clock.Now().Add(expiresAfter),
+            isSingleUse
         );
     }
 

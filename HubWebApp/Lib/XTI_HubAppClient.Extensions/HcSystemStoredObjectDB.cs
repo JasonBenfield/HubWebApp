@@ -11,7 +11,7 @@ public sealed class HcSystemStoredObjectDB : IStoredObjectDB
         this.hubClient = hubClient;
     }
 
-    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, string data, TimeSpan expiresAfter)
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, string data, TimeSpan expiresAfter, bool isSingleUse)
     {
         hubClient.UseToken<SystemUserXtiToken>();
         return hubClient.System.StoreObject
@@ -21,7 +21,8 @@ public sealed class HcSystemStoredObjectDB : IStoredObjectDB
                 StorageName = storageName.Value,
                 GenerateKey = generateKey,
                 Data = data,
-                ExpireAfter = expiresAfter
+                ExpireAfter = expiresAfter,
+                IsSingleUse = isSingleUse
             }
         );
     }
