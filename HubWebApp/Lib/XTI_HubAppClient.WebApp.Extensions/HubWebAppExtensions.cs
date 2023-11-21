@@ -16,7 +16,7 @@ using XTI_WebApp.Extensions;
 
 namespace XTI_HubAppClient.WebApp.Extensions;
 
-public static class WebAppExtensions
+public static class HubWebAppExtensions
 {
     public static void ConfigureXtiCookieAndTokenAuthentication(this IServiceCollection services, XtiEnvironment xtiEnv, IConfiguration config) =>
         CookieAndTokenAuthentication.ConfigureXtiCookieAndTokenAuthentication(services, xtiEnv, config);

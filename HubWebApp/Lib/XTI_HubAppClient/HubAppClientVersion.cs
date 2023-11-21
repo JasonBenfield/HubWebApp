@@ -1,6 +1,6 @@
 // Generated Code
 namespace XTI_HubAppClient;
-public sealed class HubAppClientVersion
+public sealed partial class HubAppClientVersion
 {
     public static HubAppClientVersion Version(string value) => new HubAppClientVersion(value);
     public HubAppClientVersion(IHostEnvironment hostEnv) : this(getValue(hostEnv))

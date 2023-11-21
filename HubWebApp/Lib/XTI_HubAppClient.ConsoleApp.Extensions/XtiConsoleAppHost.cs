@@ -46,10 +46,10 @@ public sealed class XtiConsoleAppHost
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
                     services.AddScoped<SystemUserXtiToken>();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.UseToken<SystemUserXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());

@@ -32,11 +32,11 @@ public static class XtiSetupAppHost
                     services.AddHubClientServices();
                     services.AddSystemUserXtiToken();
                     services.AddInstallationUserXtiToken();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-                        tokenAccessor.UseToken<InstallationUserXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());

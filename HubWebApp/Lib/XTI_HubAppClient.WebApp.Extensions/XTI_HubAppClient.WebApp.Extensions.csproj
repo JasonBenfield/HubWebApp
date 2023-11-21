@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.40-dev231118172153455" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.40-dev231120093343503" />
 	</ItemGroup>
 
 	<ItemGroup>

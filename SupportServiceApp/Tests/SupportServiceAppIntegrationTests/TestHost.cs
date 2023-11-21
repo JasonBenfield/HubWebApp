@@ -45,10 +45,10 @@ internal sealed class TestHost
         host.Services.AddHostedService<AppAgendaHostedService>();
         host.Services.AddHubClientServices();
         host.Services.AddScoped<SystemUserXtiToken>();
-        host.Services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+        host.Services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
         {
-            tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-            tokenAccessor.UseToken<SystemUserXtiToken>();
+            tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+            tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
         });
         host.Services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
         host.Services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
@@ -76,10 +76,10 @@ internal sealed class TestHost
         host.Services.AddScoped<InstallationUserCredentials>();
         host.Services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
         host.Services.AddScoped<InstallationUserXtiToken>();
-        host.Services.AddXtiTokenAccessor((sp, accessor) =>
+        host.Services.AddXtiTokenAccessorFactory((sp, accessorFactory) =>
         {
-            accessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-            accessor.UseToken<InstallationUserXtiToken>();
+            accessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+            accessorFactory.UseDefaultToken<InstallationUserXtiToken>();
         });
         return host.Build();
     }

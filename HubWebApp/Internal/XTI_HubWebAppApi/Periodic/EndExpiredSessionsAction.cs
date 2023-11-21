@@ -1,6 +1,6 @@
 ﻿using XTI_Core;
 
-namespace XTI_HubWebAppApi.PermanentLog;
+namespace XTI_HubWebAppApi.Periodic;
 
 public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActionResult>
 {

@@ -10,16 +10,11 @@ export class PermanentLogGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'PermanentLog');
 		this.LogBatchAction = this.createAction<ILogBatchModel,IEmptyActionResult>('LogBatch', 'Log Batch');
-		this.EndExpiredSessionsAction = this.createAction<IEmptyRequest,IEmptyActionResult>('EndExpiredSessions', 'End Expired Sessions');
 	}
 	
 	readonly LogBatchAction: AppClientAction<ILogBatchModel,IEmptyActionResult>;
-	readonly EndExpiredSessionsAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	
 	LogBatch(model: ILogBatchModel, errorOptions?: IActionErrorOptions) {
 		return this.LogBatchAction.execute(model, errorOptions || {});
-	}
-	EndExpiredSessions(errorOptions?: IActionErrorOptions) {
-		return this.EndExpiredSessionsAction.execute({}, errorOptions || {});
 	}
 }

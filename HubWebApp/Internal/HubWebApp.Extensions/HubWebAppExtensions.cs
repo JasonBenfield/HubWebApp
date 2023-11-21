@@ -61,10 +61,10 @@ public static class HubWebAppExtensions
         (
             sp =>
             {
-                var tokenAccessor = new XtiTokenAccessor(sp.GetRequiredService<IMemoryCache>());
-                tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                tokenAccessor.UseToken<SystemUserXtiToken>();
-                return tokenAccessor;
+                var tokenAccessorFactory = new XtiTokenAccessorFactory(sp.GetRequiredService<IMemoryCache>());
+                tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
+                return tokenAccessorFactory;
             }
         );
         services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
@@ -102,8 +102,8 @@ public static class HubWebAppExtensions
                 (
                     (api, agendaItem) =>
                     {
-                        agendaItem.Action(api.Periodic.PurgeLogs)
-                            .Interval(TimeSpan.FromHours(7))
+                        agendaItem.Action(api.Periodic.DeleteExpiredStoredObjects)
+                            .Interval(TimeSpan.FromHours(1))
                             .AddSchedule
                             (
                                 Schedule.EveryDay().At(TimeRange.AllDay())
@@ -114,8 +114,20 @@ public static class HubWebAppExtensions
                 (
                     (api, agendaItem) =>
                     {
-                        agendaItem.Action(api.PermanentLog.EndExpiredSessions)
+                        agendaItem.Action(api.Periodic.EndExpiredSessions)
                             .Interval(TimeSpan.FromHours(1))
+                            .AddSchedule
+                            (
+                                Schedule.EveryDay().At(TimeRange.AllDay())
+                            );
+                    }
+                );
+                agenda.AddScheduled<HubAppApi>
+                (
+                    (api, agendaItem) =>
+                    {
+                        agendaItem.Action(api.Periodic.PurgeLogs)
+                            .Interval(TimeSpan.FromHours(7))
                             .AddSchedule
                             (
                                 Schedule.EveryDay().At(TimeRange.AllDay())

@@ -22,7 +22,7 @@ public sealed class StoredObjectRepository
             var storageKey = generatedStorageKey.Value();
             var keyAttempts = 1;
             var keyExists = await checkKeyExists(storageName, storageKey);
-            if(keyExists && generatedStorageKey is FixedGeneratedKey)
+            if (keyExists && generatedStorageKey is FixedGeneratedKey)
             {
                 throw new Exception("Unable to generate a unique key");
             }
@@ -30,7 +30,7 @@ public sealed class StoredObjectRepository
             {
                 storageKey = generatedStorageKey.Value();
                 keyAttempts++;
-                if(keyAttempts > 100)
+                if (keyAttempts > 100)
                 {
                     throw new Exception("Unable to generate a unique key");
                 }
@@ -45,7 +45,7 @@ public sealed class StoredObjectRepository
             };
             await factory.DB.StoredObjects.Create(entity);
         }
-        else if(entity.TimeExpires != timeExpires)
+        else if (entity.TimeExpires != timeExpires)
         {
             await factory.DB.StoredObjects.Update(entity, so => so.TimeExpires = timeExpires);
         }
@@ -67,5 +67,16 @@ public sealed class StoredObjectRepository
                     so.TimeExpires >= now
             );
         return entity?.Data ?? "";
+    }
+
+    public async Task DeleteExpired(DateTimeOffset expiredBefore)
+    {
+        var entities = await factory.DB.StoredObjects.Retrieve()
+            .Where(so => so.TimeExpires < expiredBefore)
+            .ToArrayAsync();
+        foreach (var entity in entities)
+        {
+            await factory.DB.StoredObjects.Delete(entity);
+        }
     }
 }

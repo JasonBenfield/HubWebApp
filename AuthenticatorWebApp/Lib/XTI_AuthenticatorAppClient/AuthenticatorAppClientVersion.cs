@@ -1,6 +1,6 @@
 // Generated Code
 namespace XTI_AuthenticatorAppClient;
-public sealed class AuthenticatorAppClientVersion
+public sealed partial class AuthenticatorAppClientVersion
 {
     public static AuthenticatorAppClientVersion Version(string value) => new AuthenticatorAppClientVersion(value);
     public AuthenticatorAppClientVersion(IHostEnvironment hostEnv) : this(getValue(hostEnv))
@@ -12,7 +12,7 @@ public sealed class AuthenticatorAppClientVersion
         string value;
         if (hostEnv.IsProduction())
         {
-            value = "V1423";
+            value = "Current";
         }
         else
         {

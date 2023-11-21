@@ -27,11 +27,11 @@ public static class XtiWebAppHost
         builder.Services.AddScoped<HubAppClientContext>();
         builder.Services.AddScoped<SystemUserXtiToken>();
         builder.Services.AddScoped<AuthCookieXtiToken>();
-        builder.Services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+        builder.Services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
         {
-            tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-            tokenAccessor.UseToken<SystemUserXtiToken>();
-            tokenAccessor.AddToken(() => sp.GetRequiredService<AuthCookieXtiToken>());
+            tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+            tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
+            tokenAccessorFactory.AddToken(() => sp.GetRequiredService<AuthCookieXtiToken>());
         });
         XTI_WebApp.Extensions.WebAppExtensions.AddWebAppServices(builder.Services);
         builder.Services.AddScoped<IUserProfileUrl, HcUserProfileUrl>();
