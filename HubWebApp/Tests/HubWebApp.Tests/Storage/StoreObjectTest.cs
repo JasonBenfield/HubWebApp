@@ -216,11 +216,13 @@ internal sealed class StoreObjectTest
             Data = "Whatever1"
         };
         var storageKey = await tester.Execute(request);
-        Assert.ThrowsAsync<StoredObjectNotFoundException>(() => GetStoredObject(tester, "something else", storageKey));
+        var serializedData = await GetStoredObject(tester, "something else", storageKey);
+        Assert.That(serializedData, Is.EqualTo(""), "Should return empty string when the stored object is not found");
+
     }
 
     [Test]
-    public async Task ShouldThrowError_WhenStoredObjectHasExpired()
+    public async Task ShouldReturnEmptyString_WhenStoredObjectHasExpired()
     {
         var tester = await Setup();
         await tester.LoginAsAdmin();
@@ -233,7 +235,8 @@ internal sealed class StoreObjectTest
         };
         var storageKey = await tester.Execute(request);
         clock.Add(request.ExpireAfter.Add(TimeSpan.FromSeconds(1)));
-        Assert.ThrowsAsync<StoredObjectNotFoundException>(() => GetStoredObject(tester, request.StorageName, storageKey));
+        var serializedData = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(serializedData, Is.EqualTo(""), "Should return empty string when the stored object has expired");
     }
 
     [Test]

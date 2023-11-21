@@ -9,7 +9,7 @@ using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppClient.ConsoleApp.Extensions;
 
-public static class ConsoleAppExtensions
+public static class HubConsoleAppExtensions
 {
     public static void AddAppAgenda(this IServiceCollection services, Action<IServiceProvider, AppAgendaBuilder> build) =>
         AppAgendaExtensions.AddAppAgenda

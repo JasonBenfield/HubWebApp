@@ -26,7 +26,7 @@ public sealed class StoredObject
     public async Task<T> Value<T>(string storageKey, Func<T> ifnull)
     {
         var data = await SerializedValue(storageKey);
-        return XtiSerializer.Deserialize(data, ifnull);
+        return string.IsNullOrWhiteSpace(data) ? ifnull() : XtiSerializer.Deserialize(data, ifnull);
     }
 
     public Task<string> SerializedValue(string storageKey) => db.Value(storageName, storageKey);

@@ -6,7 +6,8 @@ public static class AuthenticatorAppClientExtensions
 {
     public static void AddAuthenticatorAppClient(this IServiceCollection services)
     {
-        services.AddScoped<AuthenticatorAppClient>();
+        services.AddScoped<AuthenticatorAppClientFactory>();
+        services.AddScoped(sp => sp.GetRequiredService<AuthenticatorAppClientFactory>().Create());
         services.AddScoped<AuthenticatorAppClientVersion>();
     }
 }

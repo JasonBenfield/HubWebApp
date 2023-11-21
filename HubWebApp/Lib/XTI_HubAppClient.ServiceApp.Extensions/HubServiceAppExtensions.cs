@@ -8,7 +8,7 @@ using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppClient.ServiceApp.Extensions;
 
-public static class ServiceAppExtensions
+public static class HubServiceAppExtensions
 {
     public static void AddAppAgenda(this IServiceCollection services, Action<IServiceProvider, AppAgendaBuilder> build) =>
         AppAgendaExtensions.AddAppAgenda(services, build);

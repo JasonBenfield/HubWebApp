@@ -15,7 +15,7 @@ public static class HubClientExtensions
         services.AddHttpClient();
         services.AddConfigurationOptions<HubClientOptions>(HubClientOptions.HubClient);
         services.AddScoped<AnonymousXtiToken>();
-        services.AddXtiTokenAccessor((sp, accessor) => { });
+        services.AddXtiTokenAccessorFactory((sp, accessor) => { });
         services.AddScoped<HubClientOptionsAppClientDomain>();
         services.AddScoped<HubClientAppClientDomain>();
         if (!services.Any(s => s.ImplementationType == typeof(AppClientDomainSelector)))
@@ -25,7 +25,9 @@ public static class HubClientExtensions
         services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
         services.AddScoped<AppClientUrl>();
         services.AddSingleton<HubAppClientVersion>();
-        services.AddScoped<HubAppClient>();
+        services.AddScoped<HubAppClientFactory>();
+        services.AddScoped(sp => sp.GetRequiredService<HubAppClientFactory>().Create());
+        services.AddScoped<SystemHubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
         services.AddScoped<IPermanentLogClient, PermanentLogClient>();
         services.AddScoped<HubAppClientContext>();
@@ -73,9 +75,9 @@ public static class HubClientExtensions
         );
     }
 
-    public static void AddXtiTokenAccessor(this IServiceCollection services, Action<IServiceProvider, XtiTokenAccessor> configure)
+    public static void AddXtiTokenAccessorFactory(this IServiceCollection services, Action<IServiceProvider, XtiTokenAccessorFactory> configure)
     {
-        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
+        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessorFactory));
         if (existing != null)
         {
             services.Remove(existing);
@@ -85,9 +87,9 @@ public static class HubClientExtensions
             sp =>
             {
                 var cache = sp.GetRequiredService<IMemoryCache>();
-                var xtiTokenAccessor = new XtiTokenAccessor(cache);
-                configure(sp, xtiTokenAccessor);
-                return xtiTokenAccessor;
+                var xtiTokenAccessorFactory = new XtiTokenAccessorFactory(cache);
+                configure(sp, xtiTokenAccessorFactory);
+                return xtiTokenAccessorFactory;
             }
         );
     }

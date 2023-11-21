@@ -159,11 +159,12 @@ await Host.CreateDefaultBuilder(args)
                 {
                     var cache = sp.GetRequiredService<IMemoryCache>();
                     var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                    var xtiTokenAccessor = new XtiTokenAccessor(cache, xtiEnv.EnvironmentName);
-                    xtiTokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-                    xtiTokenAccessor.UseToken<InstallationUserXtiToken>();
-                    xtiTokenAccessor.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
-                    return xtiTokenAccessor;
+                    var xtiTokenAccessorFactory = new XtiTokenAccessorFactory(cache);
+                    xtiTokenAccessorFactory.SetDefaultIdentifier(xtiEnv.EnvironmentName);
+                    xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+                    xtiTokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
+                    xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
+                    return xtiTokenAccessorFactory;
                 }
             );
             services.AddScoped<IAdminTokenAccessor, AdminTokenAccessor>();

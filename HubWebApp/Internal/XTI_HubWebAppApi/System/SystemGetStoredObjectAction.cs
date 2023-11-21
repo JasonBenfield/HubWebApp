@@ -18,10 +18,6 @@ internal sealed class SystemGetStoredObjectAction : AppAction<GetStoredObjectReq
         var storageName = await new SystemStorageName(currentUserName, model.StorageName).Value();
         var storedObject = storedObjectFactory.CreateStoredObject(storageName);
         var data = await storedObject.SerializedValue(model.StorageKey);
-        if (string.IsNullOrWhiteSpace(data))
-        {
-            throw new StoredObjectNotFoundException(model.StorageName, model.StorageKey);
-        }
         return data;
     }
 }

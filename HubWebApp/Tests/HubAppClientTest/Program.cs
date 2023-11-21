@@ -27,10 +27,10 @@ await Host.CreateDefaultBuilder(args)
             services.AddHubClientServices();
             services.AddScoped<IInstallationUserCredentials, InstallationUserCredentials>();
             services.AddScoped<InstallationUserXtiToken>();
-            services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+            services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
             {
-                tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-                tokenAccessor.UseToken<InstallationUserXtiToken>();
+                tokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+                tokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
             });
             services.AddHostedService<HostedService>();
         }
