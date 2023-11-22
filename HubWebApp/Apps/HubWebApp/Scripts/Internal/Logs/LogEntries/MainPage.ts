@@ -22,7 +22,7 @@ class MainPage extends HubPage {
         this.logEntryQueryPanel.refresh();
         this.activateLogEntryQueryPanel();
     }
-
+    
     private async activateLogEntryQueryPanel() {
         this.panels.activate(this.logEntryQueryPanel);
         const result = await this.logEntryQueryPanel.start();

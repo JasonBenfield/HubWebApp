@@ -1,12 +1,15 @@
 using HubWebApp.ApiControllers;
 using HubWebApp.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.OData;
+using XTI_App.Hosting;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Hub;
+using XTI_HubWebAppApi;
+using XTI_Schedule;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Extensions;
-using Microsoft.AspNetCore.OData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
@@ -36,6 +39,49 @@ builder.Services.AddControllersWithViews()
     (
         new AssemblyPart(typeof(HomeController).Assembly)
     );
+builder.Services.AddAppAgenda
+(
+    (sp, agenda) =>
+    {
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.DeleteExpiredStoredObjects)
+                    .Interval(TimeSpan.FromHours(1))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.EndExpiredSessions)
+                    .Interval(TimeSpan.FromHours(1))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.PurgeLogs)
+                    .Interval(TimeSpan.FromHours(7))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+    }
+);
+builder.Services.AddHostedService<AppAgendaHostedService>();
 var app = builder.Build();
 app.UseODataQueryRequest();
 app.UseXtiDefaults();

@@ -15,7 +15,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.40-dev231120093343503" />
+		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.40-dev231121221843537" />
 	</ItemGroup>
 
 	<ItemGroup>

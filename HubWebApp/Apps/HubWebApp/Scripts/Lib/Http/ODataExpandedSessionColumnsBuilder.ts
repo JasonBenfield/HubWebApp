@@ -13,8 +13,8 @@ export class ODataExpandedSessionColumnViewsBuilder {
 	readonly UserGroupDisplayText = new ODataColumnViewBuilder();
 	readonly RemoteAddress = new ODataColumnViewBuilder();
 	readonly UserAgent = new ODataColumnViewBuilder();
-	readonly TimeStarted = new ODataColumnViewBuilder();
-	readonly TimeEnded = new ODataColumnViewBuilder();
+	readonly TimeSessionStarted = new ODataColumnViewBuilder();
+	readonly TimeSessionEnded = new ODataColumnViewBuilder();
 	readonly TimeElapsed = new ODataColumnViewBuilder();
 	readonly LastRequestTime = new ODataColumnViewBuilder();
 	readonly RequestCount = new ODataColumnViewBuilder();
@@ -38,10 +38,10 @@ export class ODataExpandedSessionColumnsBuilder {
 		this.RemoteAddress.setDisplayText('Remote Address');
 		this.UserAgent = new ODataColumnBuilder('UserAgent', new SourceType('String'), views.UserAgent);
 		this.UserAgent.setDisplayText('User Agent');
-		this.TimeStarted = new ODataColumnBuilder('TimeStarted', new SourceType('DateTimeOffset'), views.TimeStarted);
-		this.TimeStarted.setDisplayText('Time Started');
-		this.TimeEnded = new ODataColumnBuilder('TimeEnded', new SourceType('DateTimeOffset'), views.TimeEnded);
-		this.TimeEnded.setDisplayText('Time Ended');
+		this.TimeSessionStarted = new ODataColumnBuilder('TimeSessionStarted', new SourceType('DateTimeOffset'), views.TimeSessionStarted);
+		this.TimeSessionStarted.setDisplayText('Time Session Started');
+		this.TimeSessionEnded = new ODataColumnBuilder('TimeSessionEnded', new SourceType('DateTimeOffset'), views.TimeSessionEnded);
+		this.TimeSessionEnded.setDisplayText('Time Session Ended');
 		this.TimeElapsed = new ODataColumnBuilder('TimeElapsed', new SourceType('String'), views.TimeElapsed);
 		this.TimeElapsed.setDisplayText('Time Elapsed');
 		this.LastRequestTime = new ODataColumnBuilder('LastRequestTime', new SourceType('Nullable`1'), views.LastRequestTime);
@@ -57,8 +57,8 @@ export class ODataExpandedSessionColumnsBuilder {
 	readonly UserGroupDisplayText: ODataColumnBuilder;
 	readonly RemoteAddress: ODataColumnBuilder;
 	readonly UserAgent: ODataColumnBuilder;
-	readonly TimeStarted: ODataColumnBuilder;
-	readonly TimeEnded: ODataColumnBuilder;
+	readonly TimeSessionStarted: ODataColumnBuilder;
+	readonly TimeSessionEnded: ODataColumnBuilder;
 	readonly TimeElapsed: ODataColumnBuilder;
 	readonly LastRequestTime: ODataColumnBuilder;
 	readonly RequestCount: ODataColumnBuilder;
@@ -73,8 +73,8 @@ export class ODataExpandedSessionColumnsBuilder {
 			UserGroupDisplayText: this.UserGroupDisplayText.build(),
 			RemoteAddress: this.RemoteAddress.build(),
 			UserAgent: this.UserAgent.build(),
-			TimeStarted: this.TimeStarted.build(),
-			TimeEnded: this.TimeEnded.build(),
+			TimeSessionStarted: this.TimeSessionStarted.build(),
+			TimeSessionEnded: this.TimeSessionEnded.build(),
 			TimeElapsed: this.TimeElapsed.build(),
 			LastRequestTime: this.LastRequestTime.build(),
 			RequestCount: this.RequestCount.build()

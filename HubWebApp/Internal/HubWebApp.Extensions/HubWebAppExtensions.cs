@@ -29,10 +29,10 @@ public static class HubWebAppExtensions
         (
             _ => new AppPageModel
             {
-                PostStyleSheets = new[]
-                {
+                PostStyleSheets =
+                [
                     "~/styles/css/Hub.css"
-                }
+                ]
             }
         );
         services.AddHubDbContextForSqlServer();
@@ -94,49 +94,6 @@ public static class HubWebAppExtensions
                 return appClients;
             }
         );
-        services.AddAppAgenda
-        (
-            (sp, agenda) =>
-            {
-                agenda.AddScheduled<HubAppApi>
-                (
-                    (api, agendaItem) =>
-                    {
-                        agendaItem.Action(api.Periodic.DeleteExpiredStoredObjects)
-                            .Interval(TimeSpan.FromHours(1))
-                            .AddSchedule
-                            (
-                                Schedule.EveryDay().At(TimeRange.AllDay())
-                            );
-                    }
-                );
-                agenda.AddScheduled<HubAppApi>
-                (
-                    (api, agendaItem) =>
-                    {
-                        agendaItem.Action(api.Periodic.EndExpiredSessions)
-                            .Interval(TimeSpan.FromHours(1))
-                            .AddSchedule
-                            (
-                                Schedule.EveryDay().At(TimeRange.AllDay())
-                            );
-                    }
-                );
-                agenda.AddScheduled<HubAppApi>
-                (
-                    (api, agendaItem) =>
-                    {
-                        agendaItem.Action(api.Periodic.PurgeLogs)
-                            .Interval(TimeSpan.FromHours(7))
-                            .AddSchedule
-                            (
-                                Schedule.EveryDay().At(TimeRange.AllDay())
-                            );
-                    }
-                );
-            }
-        );
-        services.AddHostedService<AppAgendaHostedService>();
         services.AddThrottledLog<HubAppApi>
         (
             (api, throttledLogs) =>

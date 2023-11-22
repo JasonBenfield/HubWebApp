@@ -3,10 +3,10 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
-import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
-import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
-import { GridRowView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
@@ -75,7 +75,27 @@ export class RequestQueryPanel implements IPanel {
                 new RequestDataRow(hubClient, rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().getQueryValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(Number(page));
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
+    }
+
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPage = url.getQueryValue('page');
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
