@@ -13,6 +13,9 @@ import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUse
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 
 interface IResult {
     menuRequested?: boolean;
@@ -61,10 +64,30 @@ export class UserQueryPanel implements IPanel {
         options.setDefaultODataClient(this.hubClient.UserQuery, this.queryArgs);
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().getQueryValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(Number(page));
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.addCommand = new Command(this.add.bind(this));
         this.addCommand.add(view.addButton);
         this.addCommand.hide();
+    }
+
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPage = url.getQueryValue('page');
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     setUserGroupName(userGroupName: string) {

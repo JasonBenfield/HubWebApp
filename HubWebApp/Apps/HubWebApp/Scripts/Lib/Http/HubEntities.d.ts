@@ -445,6 +445,7 @@ interface IStoreObjectRequest {
 	Data: string;
 	ExpireAfter: string;
 	GenerateKey: IGenerateKeyModel;
+	IsSingleUse: boolean;
 }
 interface IGenerateKeyModel {
 	KeyType: IGeneratedKeyType;
@@ -609,8 +610,8 @@ interface IExpandedSession {
 	UserGroupDisplayText: string;
 	RemoteAddress: string;
 	UserAgent: string;
-	TimeStarted: Date;
-	TimeEnded: Date;
+	TimeSessionStarted: Date;
+	TimeSessionEnded: Date;
 	TimeElapsed: string;
 	LastRequestTime: Date;
 	RequestCount: number;

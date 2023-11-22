@@ -15,6 +15,8 @@ import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
 import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Http/ODataExpandedInstallationColumnsBuilder";
 import { InstallationDataRow } from "./InstallationDataRow";
 import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
 
 interface IResult {
     menuRequested?: boolean;
@@ -83,7 +85,27 @@ export class InstallationQueryPanel implements IPanel {
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().getQueryValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(Number(page));
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
+    }
+
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPage = url.getQueryValue('page');
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     private onCellClicked(args: ODataCellClickedEventArgs) {
