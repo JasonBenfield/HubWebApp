@@ -7,8 +7,9 @@ import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCardView } from "./AppListCardView";
 import { AppListItem } from "./AppListItem";
 import { AppListItemView } from "./AppListItemView";
+import { App } from "../../Lib/App";
 
-type Events = { appSelected: IAppModel };
+type Events = { appSelected: App };
 
 export class AppListCard {
     private readonly alert: MessageAlert;
@@ -31,13 +32,14 @@ export class AppListCard {
     }
 
     async refresh() {
-        const apps = await this.getApps();
+        const sourceApps = await this.getApps();
+        const apps = sourceApps.map(a => new App(a));
         this.apps.setItems(
             apps,
             (app, listItem) =>
                 new AppListItem(
                     app,
-                    this.hubClient.App.Index.getModifierUrl(app.PublicKey.DisplayText, {}).toString(),
+                    this.hubClient.App.Index.getModifierUrl(app.getModifier(), {}).toString(),
                     listItem
                 )
         );

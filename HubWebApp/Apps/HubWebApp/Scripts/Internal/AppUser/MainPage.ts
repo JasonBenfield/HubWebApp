@@ -39,10 +39,9 @@ class MainPage extends HubPage {
             new AddRolePanel(this.hubClient, this.view.addRolePanel)
         );
         const url = Url.current();
-        const appModKey = url.getQueryValue('App');
-        const userIDValue = url.getQueryValue('UserID');
-        if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
-            const userID = Number(userIDValue);
+        const appModKey = url.query.getValue('App');
+        const userID = url.query.getNumberValue('UserID');
+        if (XtiUrl.current().path.modifier && userID && appModKey) {
             this.hubClient.App.withModifier(appModKey);
             this.hubClient.ModCategory.withModifier(appModKey);
             this.appUserDataPanel.setUserID(userID);

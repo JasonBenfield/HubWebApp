@@ -7,8 +7,9 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceListCardView } from "./ResourceListCardView";
 import { ResourceListItem } from "./ResourceListItem";
 import { ResourceListItemView } from "./ResourceListItemView";
+import { AppResource } from "../../../Lib/AppResource";
 
-type Events = { resourceSelected: IResourceModel };
+type Events = { resourceSelected: AppResource };
 
 export class ResourceListCard {
     private readonly alert: MessageAlert;
@@ -36,7 +37,8 @@ export class ResourceListCard {
     }
 
     async refresh() {
-        const resources = await this.getResources();
+        const sourceResources = await this.getResources();
+        const resources = sourceResources.map(r => new AppResource(r));
         this.resources.setItems(
             resources,
             (sourceItem, listItem) => new ResourceListItem(sourceItem, listItem)

@@ -6,6 +6,7 @@ import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/Lis
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserGroupListItem } from "./UserGroupListItem";
 import { UserGroupsPanelView } from "./UserGroupsPanelView";
+import { AppUserGroup } from "../../Lib/AppUserGroup";
 
 interface IResult {
     addRequested?: boolean;
@@ -60,7 +61,8 @@ export class UserGroupsPanel implements IPanel {
     refresh() { return this.refreshCommand.execute(); }
 
     private async _refresh() {
-        const userGroups = await this.getUserGroups();
+        const sourceUserGroups = await this.getUserGroups();
+        const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,

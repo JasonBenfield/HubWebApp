@@ -38,10 +38,8 @@ export class InstallationQueryPanel implements IPanel {
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.queryTypes = new ListGroup(this.view.queryTypes);
-        const selectedQueryTypeText = Url.current().getQueryValue('QueryType');
-        const selectedQueryType = InstallationQueryType.values.value(
-            selectedQueryTypeText ? Number(selectedQueryTypeText) : 0
-        );
+        const selectedQueryTypeValue = Url.current().query.getNumberValue('QueryType');
+        const selectedQueryType = InstallationQueryType.values.value(selectedQueryTypeValue);
         this.queryTypes.setItems(
             InstallationQueryType.values.all,
             (queryType, itemView) => {
@@ -86,7 +84,7 @@ export class InstallationQueryPanel implements IPanel {
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().getQueryValue('page');
+        const page = Url.current().query.getNumberValue('page');
         if (page) {
             this.odataComponent.setCurrentPage(Number(page));
         }
@@ -96,7 +94,8 @@ export class InstallationQueryPanel implements IPanel {
     private onRefreshed(args: ODataRefreshedEventArgs) {
         const page = args.page > 1 ? args.page.toString() : '';
         const url = UrlBuilder.current();
-        const queryPage = url.getQueryValue('page');
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
         if (page !== queryPage) {
             if (page) {
                 url.replaceQuery('page', page);

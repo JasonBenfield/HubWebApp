@@ -1,14 +1,15 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
-type Events = { resourceGroupSelected: IResourceGroupModel };
+type Events = { resourceGroupSelected: AppResourceGroup };
 
 export class ResourceGroupListCard {
     private readonly eventSource = new EventSource<Events>(this, { resourceGroupSelected: null });
@@ -38,7 +39,8 @@ export class ResourceGroupListCard {
     }
 
     async refresh() {
-        let resourceGroups = await this.getResourceGroups();
+        const sourceResourceGroups = await this.getResourceGroups();
+        const resourceGroups = sourceResourceGroups.map(rg => new AppResourceGroup(rg));
         this.requests.setItems(
             resourceGroups,
             (sourceItem, listItem) =>

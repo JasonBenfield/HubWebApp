@@ -17,3 +17,7 @@
     padding-right: 0;
     padding-left: 0;
 }
+
+input[type="date"].form-control {
+    max-width: 30em;
+}

@@ -8,8 +8,9 @@ import { AppListCardView } from "../Apps/AppListCardView";
 import { AppListItem } from "../Apps/AppListItem";
 import { AppListItemView } from "../Apps/AppListItemView";
 import { AppType } from '../../Lib/Http/AppType';
+import { App } from "../../Lib/App";
 
-type Events = { appSelected: IAppModel };
+type Events = { appSelected: App };
 
 export class AppListCard {
     private readonly alert: MessageAlert;
@@ -43,7 +44,7 @@ export class AppListCard {
             apps,
             (app, listItem) =>
                 new AppListItem(
-                    app,
+                    new App(app),
                     this.hubClient.AppUser.Index.getUrl(
                         { App: app.PublicKey.DisplayText, UserID: this.userID }
                     ).toString(),

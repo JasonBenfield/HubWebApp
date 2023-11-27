@@ -1,4 +1,5 @@
 // Generated code
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { ChangePasswordFormView } from './ChangePasswordFormView';
 
@@ -7,8 +8,6 @@ export class ChangePasswordForm extends BaseForm {
 	
 	constructor(view: ChangePasswordFormView) {
 		super('ChangePasswordForm', view);
-		this.UserID.setCaption('User ID');
-		this.UserID.constraints.mustNotBeNull();
 		this.Password.setCaption('Password');
 		this.Password.constraints.mustNotBeNull();
 		this.Password.constraints.mustNotBeWhitespace('Must not be blank');
@@ -17,7 +16,7 @@ export class ChangePasswordForm extends BaseForm {
 		this.Confirm.constraints.mustNotBeNull();
 		this.Confirm.protect();
 	}
-	readonly UserID = this.addHiddenNumberFormGroup('UserID', this.view.UserID);
+	readonly UserID = this.addHiddenNumber('UserID', this.view.UserID);
 	readonly Password = this.addTextInputFormGroup('Password', this.view.Password);
 	readonly Confirm = this.addTextInputFormGroup('Confirm', this.view.Confirm);
 }

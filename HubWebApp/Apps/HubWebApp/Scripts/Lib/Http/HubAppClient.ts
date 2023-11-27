@@ -29,6 +29,7 @@ import { SystemGroup } from "./SystemGroup";
 import { UserGroupsGroup } from "./UserGroupsGroup";
 import { PeriodicGroup } from "./PeriodicGroup";
 import { LogsGroup } from "./LogsGroup";
+import { UserRolesGroup } from "./UserRolesGroup";
 
 
 export class HubAppClient extends AppClient {
@@ -69,6 +70,8 @@ export class HubAppClient extends AppClient {
 		this.SessionQuery = this.addODataGroup((evts, resourceUrl) => new AppClientQuery<IEmptyRequest, IExpandedSession>(evts, resourceUrl.odata('SessionQuery'), 'SessionQuery'));
 		this.RequestQuery = this.addODataGroup((evts, resourceUrl) => new AppClientQuery<IAppRequestQueryRequest, IExpandedRequest>(evts, resourceUrl.odata('RequestQuery'), 'RequestQuery'));
 		this.LogEntryQuery = this.addODataGroup((evts, resourceUrl) => new AppClientQuery<ILogEntryQueryRequest, IExpandedLogEntry>(evts, resourceUrl.odata('LogEntryQuery'), 'LogEntryQuery'));
+		this.UserRoles = this.addGroup((evts, resourceUrl) => new UserRolesGroup(evts, resourceUrl));
+		this.UserRoleQuery = this.addODataGroup((evts, resourceUrl) => new AppClientQuery<IUserRoleQueryRequest, IExpandedUserRole>(evts, resourceUrl.odata('UserRoleQuery'), 'UserRoleQuery'));
 	}
 	
 	readonly CurrentUser: CurrentUserGroup;
@@ -102,4 +105,6 @@ export class HubAppClient extends AppClient {
 	readonly SessionQuery: AppClientQuery<IEmptyRequest, IExpandedSession>;
 	readonly RequestQuery: AppClientQuery<IAppRequestQueryRequest, IExpandedRequest>;
 	readonly LogEntryQuery: AppClientQuery<ILogEntryQueryRequest, IExpandedLogEntry>;
+	readonly UserRoles: UserRolesGroup;
+	readonly UserRoleQuery: AppClientQuery<IUserRoleQueryRequest, IExpandedUserRole>;
 }

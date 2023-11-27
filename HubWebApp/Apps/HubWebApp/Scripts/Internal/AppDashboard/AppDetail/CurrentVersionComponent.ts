@@ -2,6 +2,7 @@
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
+import { XtiVersion } from "../../../Lib/XtiVersion";
 
 export class CurrentVersionComponent {
     private readonly alert: MessageAlert;
@@ -16,21 +17,16 @@ export class CurrentVersionComponent {
     }
 
     async refresh() {
-        const currentVersion = await this.getCurrentVersion();
-        this.versionKey.setText(currentVersion.VersionKey.DisplayText);
-        this.version.setText(
-            `${currentVersion.VersionNumber.Major}.${currentVersion.VersionNumber.Minor}.${currentVersion.VersionNumber.Patch}`
-        );
+        const sourceCurrentVersion = await this.getCurrentVersion();
+        const currentVersion = new XtiVersion(sourceCurrentVersion);
+        this.versionKey.setText(currentVersion.versionKey.displayText);
+        this.version.setText(currentVersion.versionNumber.format());
     }
 
-    private async getCurrentVersion() {
-        let currentVersion: IXtiVersionModel;
-        await this.alert.infoAction(
+    private getCurrentVersion() {
+        return this.alert.infoAction(
             'Loading...',
-            async () => {
-                currentVersion = await this.hubClient.Version.GetVersion('current');
-            }
+            () => this.hubClient.Version.GetVersion('current')
         );
-        return currentVersion;
     }
 } 

@@ -1,4 +1,4 @@
-﻿namespace XTI_HubWebAppApi.Logs;
+﻿namespace XTI_Hub.Abstractions;
 
 public sealed class LogEntryRequest
 {

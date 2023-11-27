@@ -1,12 +1,13 @@
 // Generated code
 import { BaseFormView } from '@jasonbenfield/sharedwebapp/Views/BaseFormView';
-import { SimpleFieldFormGroupInputView, SimpleFieldFormGroupSelectView } from '@jasonbenfield/sharedwebapp/Views/FormGroup';
+import * as views from '@jasonbenfield/sharedwebapp/Views/FormGroup';
 import { IFormGroupLayout } from '@jasonbenfield/sharedwebapp/Views/Types';
 import { BasicComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicComponentView';
+import { InputView } from '@jasonbenfield/sharedwebapp/Views/InputView';
 
 export interface IVerifyLoginFormView {
-	UserName: SimpleFieldFormGroupInputView;
-	Password: SimpleFieldFormGroupInputView;
+	UserName: views.SimpleFieldFormGroupInputView;
+	Password: views.SimpleFieldFormGroupInputView;
 }
 
 export class DefaultVerifyLoginFormViewLayout implements IFormGroupLayout<IVerifyLoginFormView> {

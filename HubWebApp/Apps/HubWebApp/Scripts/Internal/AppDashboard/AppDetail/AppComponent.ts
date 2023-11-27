@@ -3,6 +3,7 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { AppComponentView } from "./AppComponentView";
+import { App } from '../../../Lib/App';
 
 export class AppComponent {
     private readonly alert: MessageAlert;
@@ -19,10 +20,11 @@ export class AppComponent {
     }
 
     async refresh() {
-        const app = await this.getApp();
-        this.appName.setText(app.AppKey.Name.DisplayText);
-        this.appTitle.setText(`${app.AppKey.Name.DisplayText} ${app.AppKey.Type.DisplayText}`);
-        this.appType.setText(app.AppKey.Type.DisplayText);
+        const sourceApp = await this.getApp();
+        const app = new App(sourceApp);
+        this.appName.setText(app.appKey.name.displayText);
+        this.appTitle.setText(`${app.appKey.format()}`);
+        this.appType.setText(app.appKey.type.DisplayText);
     }
 
     private getApp() {

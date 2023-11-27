@@ -33,7 +33,7 @@ export class AddUserGroupPanel implements IPanel {
         view.handleFormSubmitted(this.onFormSubmitted.bind(this));
     }
 
-    private onFormSubmitted(el: HTMLElement, evt: JQueryEventObject) {
+    private onFormSubmitted(el: HTMLElement, evt: JQuery.Event) {
         this.saveCommand.execute();
         evt.preventDefault();
     }

@@ -5,8 +5,9 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
 
-type Events = { clicked: IModifierCategoryModel };
+type Events = { clicked: ModifierCategory };
 
 export class ModCategoryComponent {
     private readonly alert: MessageAlert;
@@ -15,7 +16,7 @@ export class ModCategoryComponent {
     readonly when = this.eventSource.when;
 
     private groupID: number;
-    private modCategory: IModifierCategoryModel;
+    private modCategory: ModifierCategory;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -37,8 +38,9 @@ export class ModCategoryComponent {
     }
 
     async refresh() {
-        this.modCategory = await this.getModCategory(this.groupID);
-        this.modCategoryName.setText(this.modCategory.Name.DisplayText);
+        const sourceModCategory = await this.getModCategory(this.groupID);
+        this.modCategory = new ModifierCategory(sourceModCategory);
+        this.modCategoryName.setText(this.modCategory.name.displayText);
         this.view.showModCategory();
     }
 

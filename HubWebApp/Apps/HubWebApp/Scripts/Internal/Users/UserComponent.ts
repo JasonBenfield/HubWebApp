@@ -2,7 +2,6 @@
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
@@ -101,16 +100,16 @@ export class UserComponent {
         this.userNameFormGroup.setValue(user.UserName.DisplayText);
         this.fullNameFormGroup.setValue(user.Name.DisplayText);
         this.emailFormGroup.setValue(user.Email);
-        if (user.TimeDeactivated.getFullYear() === 9999) {
+        if (user.TimeDeactivated.isMaxYear) {
             this.view.timeDeactivated.hide();
             this.timeDeactivatedFormGroup.setValue('');
         }
         else {
             this.view.timeDeactivated.show();
-            this.timeDeactivatedFormGroup.setValue(new FormattedDate(user.TimeDeactivated).formatDateTime());
+            this.timeDeactivatedFormGroup.setValue(user.TimeDeactivated.format());
         }
         if (this.canEdit) {
-            if (user.TimeDeactivated.getFullYear() === 9999) {
+            if (user.TimeDeactivated.isMaxYear) {
                 this.editCommand.show();
                 this.changePasswordCommand.show();
                 this.deactivateCommand.show();

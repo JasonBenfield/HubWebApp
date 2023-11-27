@@ -4,6 +4,9 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppUserOptions } from "./AppUserOptions";
 import { AppUserDataPanelView } from "./AppUserDataPanelView";
+import { App } from "../../Lib/App";
+import { AppUser } from "../../Lib/AppUser";
+import { Modifier } from "../../Lib/Modifier";
 
 interface IResult {
     done?: { appUserOptions: AppUserOptions; };
@@ -43,14 +46,16 @@ export class AppUserDataPanel implements IPanel {
     }
 
     private async delayedStart() {
-        let appUserData: AppUserOptions;
-        await this.alert.infoAction(
+        const appUserData = await this.alert.infoAction(
             'Loading...',
             async () => {
-                const app = await this.hubClient.App.GetApp();
-                const user = await this.hubClient.UserInquiry.GetUser(this.userID);
-                const defaultModifier = await this.hubClient.App.GetDefaultModifier();
-                appUserData = new AppUserOptions(app, user, defaultModifier);
+                const sourceApp = await this.hubClient.App.GetApp();
+                const app = new App(sourceApp);
+                const sourceUser = await this.hubClient.UserInquiry.GetUser(this.userID);
+                const user = new AppUser(sourceUser);
+                const sourceDefaultModifier = await this.hubClient.App.GetDefaultModifier();
+                const defaultModifier = new Modifier(sourceDefaultModifier);
+                return new AppUserOptions(app, user, defaultModifier);
             }
         );
         return this.awaitable.resolve(Result.done(appUserData));

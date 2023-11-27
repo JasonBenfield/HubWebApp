@@ -28,7 +28,7 @@ class MainPage extends HubPage {
         const result = await this.appListPanel.start();
         if (result.appSelected) {
             const url = this.hubClient.Apps.Index.getModifierUrl(
-                result.appSelected.app.PublicKey.DisplayText,
+                result.appSelected.app.getModifier(),
                 {}
             );
             new WebPage(url).open();

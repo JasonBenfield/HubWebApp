@@ -25,7 +25,7 @@ class MainPage extends HubPage {
         this.addUserPanel = this.panels.add(
             new AddUserPanel(this.hubClient, this.view.addUserPanel)
         );
-        const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
+        const userGroupName = Url.current().query.getValue('UserGroupName') || '';
         this.hubClient.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();

@@ -23,8 +23,7 @@ class MainPage extends HubPage {
         this.changePasswordPanel = this.panels.add(
             new ChangePasswordPanel(this.hubClient, this.view.changePasswordPanel)
         );
-        const userIDValue = Url.current().getQueryValue('UserID');
-        const userID = userIDValue ? Number(userIDValue) : 0;
+        const userID = Url.current().query.getNumberValue('UserID');
         if (userID) {
             this.userPanel.setUserID(userID);
             this.userEditPanel.setUserID(userID);
@@ -41,7 +40,7 @@ class MainPage extends HubPage {
         this.panels.activate(this.userPanel);
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            const returnTo = Url.current().getQueryValue('ReturnTo');
+            const returnTo = Url.current().query.getValue('ReturnTo');
             let url: UrlBuilder;
             if (returnTo) {
                 url = this.hubClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });

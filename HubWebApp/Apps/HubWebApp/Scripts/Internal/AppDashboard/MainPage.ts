@@ -39,10 +39,10 @@ class MainPage extends HubPage {
             this.hubClient.Apps.Index.open({});
         }
         else if (result.resourceGroupSelected) {
-            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.id);
         }
         else if (result.modCategorySelected) {
-            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.id);
         }
     }
 
@@ -57,10 +57,10 @@ class MainPage extends HubPage {
             this.activateAppDetailPanel();
         }
         else if (result.resourceSelected) {
-            this.activateResourcePanel(result.resourceSelected.resource.ID);
+            this.activateResourcePanel(result.resourceSelected.resource.id);
         }
         else if (result.modCategorySelected) {
-            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.id);
         }
     }
 
@@ -85,7 +85,7 @@ class MainPage extends HubPage {
             this.activateAppDetailPanel();
         }
         else if (result.resourceGroupSelected) {
-            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.id);
         }
     }
 }

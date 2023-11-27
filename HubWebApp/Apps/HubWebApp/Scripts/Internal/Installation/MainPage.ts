@@ -20,8 +20,7 @@ class MainPage extends HubPage {
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
-        const installationIDText = Url.current().getQueryValue("InstallationID");
-        const installationID = installationIDText ? Number.parseInt(installationIDText) : 0;
+        const installationID = Url.current().query.getNumberValue("InstallationID");
         if (installationID) {
             this.installationPanel.setInstallationID(installationID);
             this.installationPanel.refresh();

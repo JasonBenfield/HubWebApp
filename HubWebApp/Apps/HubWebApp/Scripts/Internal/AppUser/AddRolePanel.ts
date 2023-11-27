@@ -10,6 +10,9 @@ import { AppUserOptions } from "./AppUserOptions";
 import { RoleButtonListItemView } from "./RoleButtonListItemView";
 import { RoleListItem } from "./RoleListItem";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { AppRole } from "../../Lib/AppRole";
+import { AppUser } from "../../Lib/AppUser";
+import { Modifier } from "../../Lib/Modifier";
 
 interface IResult {
     back?: boolean;
@@ -33,9 +36,9 @@ export class AddRolePanel implements IPanel {
     private readonly awaitable: Awaitable<Result>;
     private readonly alert: MessageAlert;
     private readonly roles: ListGroup<RoleListItem, RoleButtonListItemView>;
-    private user: IAppUserModel;
-    private modifier: IModifierModel;
-    private defaultModifier: IModifierModel;
+    private user: AppUser;
+    private modifier: Modifier;
+    private defaultModifier: Modifier;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -65,17 +68,17 @@ export class AddRolePanel implements IPanel {
         this.setModifier(this.defaultModifier);
     }
 
-    setModifier(modifier: IModifierModel) {
+    setModifier(modifier: Modifier) {
         this.modifier = modifier;
     }
 
-    private addRole(role: IAppRoleModel) {
+    private addRole(role: AppRole) {
         return this.alert.infoAction(
             'Adding role...',
             () => this.hubClient.AppUserMaintenance.AssignRole({
-                UserID: this.user.ID,
-                ModifierID: this.modifier.ID,
-                RoleID: role.ID
+                UserID: this.user.id,
+                ModifierID: this.modifier.id,
+                RoleID: role.id
             })
         );
     }
@@ -87,13 +90,14 @@ export class AddRolePanel implements IPanel {
     }
 
     private async delayedStart() {
-        const roles = await this.alert.infoAction(
+        const sourceRoles = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.AppUser.GetUnassignedRoles({
-                UserID: this.user.ID,
-                ModifierID: this.modifier.ID
+                UserID: this.user.id,
+                ModifierID: this.modifier.id
             })
         );
+        const roles = sourceRoles.map(r => new AppRole(r));
         this.roles.setItems(
             roles,
             (role, view) => new RoleListItem(role, view)
