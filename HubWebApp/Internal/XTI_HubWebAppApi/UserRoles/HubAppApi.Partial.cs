@@ -1,5 +1,4 @@
 ﻿using XTI_HubDB.Entities;
-using XTI_HubWebAppApi.Logs;
 using XTI_HubWebAppApi.UserRoles;
 using XTI_ODataQuery.Api;
 

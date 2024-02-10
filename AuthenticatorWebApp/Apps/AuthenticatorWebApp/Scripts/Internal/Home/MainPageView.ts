@@ -12,7 +12,7 @@ export class MainPageView extends AuthenticatorPageView {
     constructor() {
         super();
         const grid = this.addView(GridView);
-        grid.layout();
+        grid.styleAsLayout();
         grid.height100();
         grid.setTemplateRows(CssLengthUnit.auto(), CssLengthUnit.flex(1));
         grid.addCell()

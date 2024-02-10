@@ -7,7 +7,8 @@ internal static class AppUserExtensions
     public static void AddAppUserGroupServices(this IServiceCollection services)
     {
         services.AddScoped<IndexAction>();
-        services.AddScoped<GetUnassignedRolesAction>();
-        services.AddScoped<GetUserAccessByUserModifierAction>();
+        services.AddScoped<GetAssignedRolesAction>();
+        services.AddScoped<GetExplicitlyUnassignedRolesAction>();
+        services.AddScoped<GetExplicitUserAccessAction>();
     }
 }

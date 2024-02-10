@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_HubDB.Entities;
+﻿using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
 
@@ -26,4 +21,6 @@ public sealed class AppUserRole
 
     public Task<AppRole> Role() => factory.Roles.Role(userRole.RoleID);
 
+    public Task Delete() =>
+        factory.DB.UserRoles.Delete(userRole);
 }

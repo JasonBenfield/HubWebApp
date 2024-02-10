@@ -232,6 +232,14 @@ interface IResourceGroupName {
 	Value: string;
 	DisplayText: string;
 }
+interface IAppRoleModel {
+	ID: number;
+	Name: IAppRoleName;
+}
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
+}
 interface IAppRequestExpandedModel {
 	ID: number;
 	UserName: string;
@@ -275,43 +283,60 @@ interface IAppApiTemplateModel {
 	GroupTemplates: IAppApiGroupTemplateModel[];
 }
 interface IAppApiGroupTemplateModel {
-	Name: string;
-	ModCategory: string;
+	Name: IResourceGroupName;
+	ModCategory: IModifierCategoryName;
 	IsAnonymousAllowed: boolean;
-	Roles: string[];
+	Roles: IAppRoleName[];
 	ActionTemplates: IAppApiActionTemplateModel[];
 }
 interface IAppApiActionTemplateModel {
-	Name: string;
+	Name: IResourceName;
 	IsAnonymousAllowed: boolean;
-	Roles: string[];
+	Roles: IAppRoleName[];
 	ResultType: IResourceResultType;
 }
-interface IAddOrUpdateAppsRequest {
-	VersionName: IAppVersionName;
-	Apps: IAppDefinitionModel[];
+interface IResourceName {
+	Value: string;
+	DisplayText: string;
 }
-interface IAppDefinitionModel {
-	AppKey: IAppKey;
+interface IAddOrUpdateAppsRequest {
+	VersionName: string;
+	AppKeys: IAppKeyRequest[];
+}
+interface IAppKeyRequest {
+	AppName: string;
+	AppType: number;
 }
 interface IAddOrUpdateVersionsRequest {
-	Apps: IAppKey[];
-	Versions: IXtiVersionModel[];
+	AppKeys: IAppKeyRequest[];
+	Versions: IAddVersionRequest[];
+}
+interface IAddVersionRequest {
+	VersionName: string;
+	VersionKey: string;
+	VersionType: number;
+	VersionStatus: number;
+	VersionNumber: IAppVersionNumberRequest;
+}
+interface IAppVersionNumberRequest {
+	Major: number;
+	Minor: number;
+	Patch: number;
 }
 interface IGetVersionRequest {
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
+	VersionName: string;
+	VersionKey: string;
 }
 interface IGetVersionsRequest {
-	VersionName: IAppVersionName;
+	VersionName: string;
 }
 interface IAddSystemUserRequest {
-	AppKey: IAppKey;
+	AppKey: IAppKeyRequest;
 	MachineName: string;
 	Password: string;
 }
 interface IAddAdminUserRequest {
-	AppKey: IAppKey;
+	AppKey: IAppKeyRequest;
 	UserName: string;
 	Password: string;
 }
@@ -320,8 +345,8 @@ interface IAddInstallationUserRequest {
 	Password: string;
 }
 interface INewInstallationRequest {
-	VersionName: IAppVersionName;
-	AppKey: IAppKey;
+	VersionName: string;
+	AppKey: IAppKeyRequest;
 	QualifiedMachineName: string;
 	Domain: string;
 	SiteName: string;
@@ -335,18 +360,18 @@ interface ISetUserAccessRequest {
 	RoleAssignments: ISetUserAccessRoleRequest[];
 }
 interface ISetUserAccessRoleRequest {
-	AppKey: IAppKey;
+	AppKey: IAppKeyRequest;
 	ModCategoryName: string;
 	ModKey: string;
 	RoleNames: string[];
 }
 interface INewVersionRequest {
-	VersionName: IAppVersionName;
-	VersionType: IAppVersionType;
+	VersionName: string;
+	VersionType: number;
 }
 interface IPublishVersionRequest {
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
+	VersionName: string;
+	VersionKey: string;
 }
 interface IGetResourceGroupRequest {
 	VersionKey: string;
@@ -362,21 +387,9 @@ interface IResourceModel {
 	IsAnonymousAllowed: boolean;
 	ResultType: IResourceResultType;
 }
-interface IResourceName {
-	Value: string;
-	DisplayText: string;
-}
 interface IGetResourceGroupRoleAccessRequest {
 	VersionKey: string;
 	GroupID: number;
-}
-interface IAppRoleModel {
-	ID: number;
-	Name: IAppRoleName;
-}
-interface IAppRoleName {
-	Value: string;
-	DisplayText: string;
 }
 interface IGetResourceGroupModCategoryRequest {
 	VersionKey: string;
@@ -418,6 +431,12 @@ interface IAddOrUpdateUserRequest {
 	Password: string;
 	PersonName: string;
 	Email: string;
+}
+interface IAppUserIDRequest {
+	UserID: number;
+}
+interface IAppUserNameRequest {
+	UserName: string;
 }
 interface IUserAuthenticatorModel {
 	Authenticator: IAuthenticatorModel;
@@ -526,6 +545,10 @@ interface IUserGroupKey {
 }
 interface IAddUserGroupIfNotExistsRequest {
 	GroupName: string;
+}
+interface IAppUserDetailModel {
+	User: IAppUserModel;
+	UserGroup: IAppUserGroupModel;
 }
 interface IExpandedUser {
 	UserID: number;
@@ -692,11 +715,15 @@ interface IExpandedLogEntry {
 	IsCurrentInstallation: boolean;
 	SourceID: number;
 }
+interface IUserRoleIDRequest {
+	UserRoleID: number;
+}
 interface IUserRoleQueryRequest {
 	AppID: number;
 }
 interface IUserRoleDetailModel {
 	ID: number;
+	UserGroup: IAppUserGroupModel;
 	User: IAppUserModel;
 	App: IAppModel;
 	Role: IAppRoleModel;
@@ -708,6 +735,7 @@ interface IExpandedUserRole {
 	UserGroupDisplayText: string;
 	UserName: string;
 	ModCategoryName: string;
+	ModDisplayText: string;
 	RoleDisplayText: string;
 	AppKey: string;
 	AppID: number;

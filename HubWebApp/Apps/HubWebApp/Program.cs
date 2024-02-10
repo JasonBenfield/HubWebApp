@@ -10,6 +10,7 @@ using XTI_HubWebAppApi;
 using XTI_Schedule;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Extensions;
+using XTI_WebApp.Scheduled;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
@@ -18,28 +19,7 @@ var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
 builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
 builder.Services.AddFileSecretCredentials(xtiEnv);
 builder.Services.AddServicesForHub();
-builder.Services
-    .AddMvc()
-    .AddOData(options =>
-    {
-        var edmModel = new EdmModelBuilder().GetEdmModel();
-        options.EnableQueryFeatures(10000)
-            .AddRouteComponents("odata", edmModel);
-    })
-    .AddJsonOptions(options =>
-    {
-        options.SetDefaultJsonOptions();
-    })
-    .AddMvcOptions(options =>
-    {
-        options.SetDefaultMvcOptions();
-    });
-builder.Services.AddControllersWithViews()
-    .PartManager.ApplicationParts.Add
-    (
-        new AssemblyPart(typeof(HomeController).Assembly)
-    );
-builder.Services.AddAppAgenda
+builder.Services.AddScheduledWebServices
 (
     (sp, agenda) =>
     {
@@ -81,7 +61,27 @@ builder.Services.AddAppAgenda
         );
     }
 );
-builder.Services.AddHostedService<AppAgendaHostedService>();
+builder.Services
+    .AddMvc()
+    .AddOData(options =>
+    {
+        var edmModel = new EdmModelBuilder().GetEdmModel();
+        options.EnableQueryFeatures(10000)
+            .AddRouteComponents("odata", edmModel);
+    })
+    .AddJsonOptions(options =>
+    {
+        options.SetDefaultJsonOptions();
+    })
+    .AddMvcOptions(options =>
+    {
+        options.SetDefaultMvcOptions();
+    });
+builder.Services.AddControllersWithViews()
+    .PartManager.ApplicationParts.Add
+    (
+        new AssemblyPart(typeof(HomeController).Assembly)
+    );
 var app = builder.Build();
 app.UseODataQueryRequest();
 app.UseXtiDefaults();

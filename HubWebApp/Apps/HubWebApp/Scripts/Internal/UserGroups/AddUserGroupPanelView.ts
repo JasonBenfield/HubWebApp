@@ -1,7 +1,8 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupInputView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupInputView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { FormView } from "@jasonbenfield/sharedwebapp/Views/FormView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { InputView } from "@jasonbenfield/sharedwebapp/Views/InputView";
@@ -19,17 +20,17 @@ export class AddUserGroupPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         const heading = mainContent.addView(TextHeading3View);
         heading.setText('Add User Group');
         this.form = mainContent.addView(FormView);
-        const formGroupGrid = this.form.addView(FormGroupGridView);
+        const formGroupGrid = this.form.addView(FormGroupContainerView);
         const groupNameFormGroup = formGroupGrid.addFormGroup(FormGroupInputView);
         groupNameFormGroup.caption.setText('Group Name');
-        this.groupNameInput = groupNameFormGroup.input;
+        this.groupNameInput = groupNameFormGroup.inputView;
         this.form.addOffscreenSubmit();
         this.alert = mainContent.addView(MessageAlertView);
         const toolbar = HubTheme.instance.commandToolbar.toolbar(

@@ -9,14 +9,13 @@ import { UserPanel } from './UserPanel';
 import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
     private readonly changePasswordPanel: ChangePasswordPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.userPanel = this.panels.add(new UserPanel(this.hubClient, this.view.userPanel));
         this.userEditPanel = this.panels.add(new UserEditPanel(this.hubClient, this.view.userEditPanel));
@@ -79,4 +78,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

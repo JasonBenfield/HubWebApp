@@ -16,7 +16,7 @@ internal sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, Empt
         var user = await hubFactory.Users.UserByUserName(new AppUserName(model.UserName));
         foreach (var assignment in model.RoleAssignments)
         {
-            var app = await hubFactory.Apps.App(assignment.AppKey);
+            var app = await hubFactory.Apps.App(assignment.AppKey.ToAppKey());
             var modCategory = await app.ModCategory(new ModifierCategoryName(assignment.ModCategoryName));
             var modifier = await modCategory.ModifierByModKey(new ModifierKey(assignment.ModKey));
             foreach (var roleName in assignment.RoleNames)

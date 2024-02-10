@@ -30,10 +30,17 @@ public sealed class UserGroupsGroup : AppApiGroupWrapper
             () => sp.GetRequiredService<GetUserGroupsAction>(),
             access: ResourceAccess.AllowAuthenticated()
         );
+        GetUserDetailOrAnon = source.AddAction
+        (
+            nameof(GetUserDetailOrAnon),
+            () => sp.GetRequiredService<GetUserDetailOrAnonAction>(),
+            access: new ResourceAccess(HubInfo.Roles.UserViewerRoles)
+        );
     }
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
     public AppApiAction<UserGroupKey, WebViewResult> UserQuery { get; }
     public AppApiAction<AddUserGroupIfNotExistsRequest, AppUserGroupModel> AddUserGroupIfNotExists { get; }
+    public AppApiAction<AppUserNameRequest, AppUserDetailModel> GetUserDetailOrAnon { get; }
     public AppApiAction<EmptyRequest, AppUserGroupModel[]> GetUserGroups { get; }
 }

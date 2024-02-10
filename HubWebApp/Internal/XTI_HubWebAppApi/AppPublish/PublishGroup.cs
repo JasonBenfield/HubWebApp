@@ -19,5 +19,5 @@ public sealed class PublishGroup : AppApiGroupWrapper
     public AppApiAction<NewVersionRequest, XtiVersionModel> NewVersion { get; }
     public AppApiAction<PublishVersionRequest, XtiVersionModel> BeginPublish { get; }
     public AppApiAction<PublishVersionRequest, XtiVersionModel> EndPublish { get; }
-    public AppApiAction<AppKey, XtiVersionModel[]> GetVersions { get; }
+    public AppApiAction<AppKeyRequest, XtiVersionModel[]> GetVersions { get; }
 }

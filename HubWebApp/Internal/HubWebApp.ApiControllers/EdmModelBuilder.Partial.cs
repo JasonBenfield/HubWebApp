@@ -8,5 +8,6 @@ partial class EdmModelBuilder
         RequestQuery.EntityType.HasKey(r => r.RequestID);
         LogEntryQuery.EntityType.HasKey(e => e.EventID);
         InstallationQuery.EntityType.HasKey(e => e.InstallationID);
+        UserRoleQuery.EntityType.HasKey(e => e.UserRoleID);
     }
 }

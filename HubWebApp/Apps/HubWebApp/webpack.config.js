@@ -10,6 +10,8 @@ const entry = {
     currentUser: './Scripts/Internal/CurrentUser/MainPage.ts',
     userGroups: './Scripts/Internal/UserGroups/MainPage.ts',
     userQuery: './Scripts/Internal/UserQuery/MainPage.ts',
+    userRoles: './Scripts/Internal/UserRoles/MainPage.ts',
+    userRole: './Scripts/Internal/UserRole/MainPage.ts',
     users: './Scripts/Internal/Users/MainPage.ts',
     appUser: './Scripts/Internal/AppUser/MainPage.ts',
     session: './Scripts/Internal/Logs/Session/MainPage.ts',

@@ -13,5 +13,6 @@ internal static class AppInquiryExtensions
         services.AddScoped<GetMostRecentErrorEventsAction>();
         services.AddScoped<GetMostRecentRequestsAction>();
         services.AddScoped<GetResourceGroupsAction>();
+        services.AddScoped<GetRolesAction>();
     }
 }

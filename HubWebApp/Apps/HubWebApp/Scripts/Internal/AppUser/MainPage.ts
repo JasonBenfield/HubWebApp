@@ -11,8 +11,6 @@ import { SelectModifierPanel } from './SelectModifierPanel';
 import { UserRolesPanel } from './UserRolesPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
-
     private readonly panels: SingleActivePanel;
     private readonly appUserDataPanel: AppUserDataPanel;
     private readonly selectModCategoryPanel: SelectModCategoryPanel;
@@ -20,8 +18,8 @@ class MainPage extends HubPage {
     private readonly userRolesPanel: UserRolesPanel;
     private readonly addRolePanel: AddRolePanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
             new AppUserDataPanel(this.hubClient, this.view.appUserDataPanel)
@@ -117,4 +115,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

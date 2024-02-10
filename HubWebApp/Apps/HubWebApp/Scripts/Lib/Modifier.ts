@@ -13,5 +13,7 @@ export class Modifier {
 		this.modKey = new ModifierKey(source.ModKey);
 		this.targetKey = source.TargetKey;
 		this.displayText = source.DisplayText;
-    }
+	}
+
+	get isDefault() { return this.modKey.isDefault; }
 }

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_HubDB.Entities;
+﻿namespace XTI_HubWebAppApi.UserRoles;
 
-namespace XTI_HubWebAppApi.UserRoles;
-
-internal sealed class GetUserRoleDetailAction : AppAction<int, UserRoleDetailModel>
+internal sealed class GetUserRoleDetailAction : AppAction<UserRoleIDRequest, UserRoleDetailModel>
 {
     private readonly CurrentAppUser currentUser;
     private readonly HubFactory hubFactory;
@@ -18,9 +11,9 @@ internal sealed class GetUserRoleDetailAction : AppAction<int, UserRoleDetailMod
         this.hubFactory = hubFactory;
     }
 
-    public async Task<UserRoleDetailModel> Execute(int userRoleID, CancellationToken stoppingToken)
+    public async Task<UserRoleDetailModel> Execute(UserRoleIDRequest getRequest, CancellationToken stoppingToken)
     {
-        var userRole = await hubFactory.UserRoles.UserRole(userRoleID);
+        var userRole = await hubFactory.UserRoles.UserRole(getRequest.UserRoleID);
         var user = await userRole.User();
         var userGroup = await user.UserGroup();
         var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup);
@@ -40,6 +33,7 @@ internal sealed class GetUserRoleDetailAction : AppAction<int, UserRoleDetailMod
         return new UserRoleDetailModel
         (
             userRole.ID, 
+            userGroup.ToModel(),
             user.ToModel(), 
             app.ToModel(), 
             role.ToModel(),

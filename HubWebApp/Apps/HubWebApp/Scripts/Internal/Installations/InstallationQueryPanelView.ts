@@ -20,7 +20,7 @@ export class InstallationQueryPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = this.addCell()
@@ -36,7 +36,7 @@ export class InstallationQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         const layoutGrid = mainContent.addView(GridView);
-        layoutGrid.layout();
+        layoutGrid.styleAsLayout();
         layoutGrid.height100();
         layoutGrid.setTemplateColumns(CssLengthUnit.percentage(25), CssLengthUnit.flex(1));
         const cell1 = layoutGrid.addCell()

@@ -10,6 +10,7 @@ export class ODataExpandedUserRoleColumnViewsBuilder {
 	readonly UserGroupDisplayText = new ODataColumnViewBuilder();
 	readonly UserName = new ODataColumnViewBuilder();
 	readonly ModCategoryName = new ODataColumnViewBuilder();
+	readonly ModDisplayText = new ODataColumnViewBuilder();
 	readonly RoleDisplayText = new ODataColumnViewBuilder();
 	readonly AppKey = new ODataColumnViewBuilder();
 	readonly AppID = new ODataColumnViewBuilder();
@@ -30,6 +31,8 @@ export class ODataExpandedUserRoleColumnsBuilder {
 		this.UserName.setDisplayText('User Name');
 		this.ModCategoryName = new ODataColumnBuilder('ModCategoryName', new SourceType('String'), views.ModCategoryName);
 		this.ModCategoryName.setDisplayText('Mod Category Name');
+		this.ModDisplayText = new ODataColumnBuilder('ModDisplayText', new SourceType('String'), views.ModDisplayText);
+		this.ModDisplayText.setDisplayText('Mod Display Text');
 		this.RoleDisplayText = new ODataColumnBuilder('RoleDisplayText', new SourceType('String'), views.RoleDisplayText);
 		this.RoleDisplayText.setDisplayText('Role Display Text');
 		this.AppKey = new ODataColumnBuilder('AppKey', new SourceType('String'), views.AppKey);
@@ -51,6 +54,7 @@ export class ODataExpandedUserRoleColumnsBuilder {
 	readonly UserGroupDisplayText: ODataColumnBuilder;
 	readonly UserName: ODataColumnBuilder;
 	readonly ModCategoryName: ODataColumnBuilder;
+	readonly ModDisplayText: ODataColumnBuilder;
 	readonly RoleDisplayText: ODataColumnBuilder;
 	readonly AppKey: ODataColumnBuilder;
 	readonly AppID: ODataColumnBuilder;
@@ -66,6 +70,7 @@ export class ODataExpandedUserRoleColumnsBuilder {
 			UserGroupDisplayText: this.UserGroupDisplayText.build(),
 			UserName: this.UserName.build(),
 			ModCategoryName: this.ModCategoryName.build(),
+			ModDisplayText: this.ModDisplayText.build(),
 			RoleDisplayText: this.RoleDisplayText.build(),
 			AppKey: this.AppKey.build(),
 			AppID: this.AppID.build(),

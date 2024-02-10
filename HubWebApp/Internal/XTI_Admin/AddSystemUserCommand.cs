@@ -23,10 +23,11 @@ internal sealed class AddSystemUserCommand : ICommand
 
     public async Task Execute()
     {
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package));
+        var appKeys = selectedAppKeys.Values
+            .Where(a => !a.Type.Equals(AppType.Values.Package))
+            .ToArray();
         var versionName = versionNameAccessor.Value;
-        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
-        await hubAdmin.AddOrUpdateApps(versionName, appDefs);
+        await hubAdmin.AddOrUpdateApps(versionName, appKeys);
         foreach (var appKey in appKeys)
         {
             var password = Guid.NewGuid().ToString();

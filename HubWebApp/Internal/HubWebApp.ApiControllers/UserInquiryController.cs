@@ -10,21 +10,21 @@ public sealed partial class UserInquiryController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUser([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUser([FromBody] AppUserIDRequest model, CancellationToken ct)
     {
-        return api.Group("UserInquiry").Action<int, AppUserModel>("GetUser").Execute(model, ct);
+        return api.Group("UserInquiry").Action<AppUserIDRequest, AppUserModel>("GetUser").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] string model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
     {
-        return api.Group("UserInquiry").Action<string, AppUserModel>("GetUserOrAnon").Execute(model, ct);
+        return api.Group("UserInquiry").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest model, CancellationToken ct)
     {
-        return api.Group("UserInquiry").Action<int, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
+        return api.Group("UserInquiry").Action<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
     }
 
     [HttpPost]

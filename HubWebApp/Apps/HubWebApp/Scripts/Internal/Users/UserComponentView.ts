@@ -2,14 +2,14 @@
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
-import { ButtonGroupView } from "@jasonbenfield/sharedwebapp/Views/ButtonGroupView";
 import { CardAlertView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
-import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { RowView } from "@jasonbenfield/sharedwebapp/Views/RowView";
 import { TextSpanView } from "@jasonbenfield/sharedwebapp/Views/TextSpanView";
 import { HubTheme } from "../HubTheme";
+import { ButtonContainerView } from "@jasonbenfield/sharedwebapp/Views/ButtonContainerView";
 
 export class UserComponentView extends CardView {
     readonly alert: CardAlertView;
@@ -35,27 +35,22 @@ export class UserComponentView extends CardView {
             .configure(b => HubTheme.instance.cardHeader.editButton(b));
         this.alert = this.addCardAlert();
         const body = this.addCardBody();
-        const formGroupGrid = body.addView(FormGroupGridView);
+        const formGroupGrid = body.addView(FormGroupContainerView);
         this.userName = formGroupGrid.addFormGroup(FormGroupTextView);
         this.fullName = formGroupGrid.addFormGroup(FormGroupTextView);
         this.email = formGroupGrid.addFormGroup(FormGroupTextView);
         this.timeDeactivated = formGroupGrid.addFormGroup(FormGroupTextView);
-        const btnGroup = body.addView(BlockView);
-        btnGroup.addCssName('d-grid');
-        btnGroup.addCssName('gap-2');
-        btnGroup.addCssName('col-6');
-        btnGroup.addCssName('mx-auto');
-        this.changePasswordButton = btnGroup.addView(ButtonCommandView);
+
+        const buttonContainer = body.addView(ButtonContainerView);
+        this.changePasswordButton = buttonContainer.addButtonCommand();
         this.changePasswordButton.icon.solidStyle('lock');
-        this.changePasswordButton.useOutlineStyle(ContextualClass.primary);
         this.changePasswordButton.setText('Change Password');
-        this.deactivateButton = btnGroup.addView(ButtonCommandView);
+        this.deactivateButton = buttonContainer.addButtonCommand();
         this.deactivateButton.icon.solidStyle('times');
         this.deactivateButton.useOutlineStyle(ContextualClass.danger);
         this.deactivateButton.setText('Deactivate');
-        this.reactivateButton = btnGroup.addView(ButtonCommandView);
+        this.reactivateButton = buttonContainer.addButtonCommand();
         this.reactivateButton.icon.solidStyle('check');
-        this.reactivateButton.useOutlineStyle(ContextualClass.primary);
         this.reactivateButton.setText('Reactivate');
     }
 }

@@ -9,15 +9,14 @@ import { ResourcePanel } from './Resource/ResourcePanel';
 import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly appDetailPanel: AppDetailPanel;
     private readonly resourceGroupPanel: ResourceGroupPanel;
     private readonly resourcePanel: ResourcePanel;
     private readonly modCategoryPanel: ModCategoryPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubClient, this.view.appDetailPanel));
         this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubClient, this.view.resourceGroupPanel));
@@ -89,4 +88,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

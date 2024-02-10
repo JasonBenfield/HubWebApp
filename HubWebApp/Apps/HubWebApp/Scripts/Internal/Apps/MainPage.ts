@@ -6,13 +6,12 @@ import { AppListPanel } from './AppListPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels = new SingleActivePanel();
     private readonly appListPanel: AppListPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.appListPanel = this.panels.add(
             new AppListPanel(this.hubClient, this.view.appListPanel)
         );
@@ -46,4 +45,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

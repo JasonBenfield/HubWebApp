@@ -8,5 +8,7 @@ export class ModifierKey {
         this.displayText = source.DisplayText;
     }
 
+    get isDefault() { return !this.value; }
+
     toString() { return this.displayText; }
 }

@@ -127,7 +127,7 @@ export class UserComponent {
     private getUser(userID: number) {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.UserInquiry.GetUser(userID)
+            () => this.hubClient.UserInquiry.GetUser({ UserID: userID })
         );
     }
 }

@@ -5,6 +5,7 @@ namespace XTI_Hub.Abstractions;
 public sealed record UserRoleDetailModel
 (
     int ID,
+    AppUserGroupModel UserGroup,
     AppUserModel User,
     AppModel App,
     AppRoleModel Role,
@@ -13,7 +14,7 @@ public sealed record UserRoleDetailModel
 )
 {
     public UserRoleDetailModel()
-        : this(0, new AppUserModel(), new AppModel(), new AppRoleModel(), new ModifierCategoryModel(), new ModifierModel())
+        : this(0, new AppUserGroupModel(), new AppUserModel(), new AppModel(), new AppRoleModel(), new ModifierCategoryModel(), new ModifierModel())
     {
     }
 }

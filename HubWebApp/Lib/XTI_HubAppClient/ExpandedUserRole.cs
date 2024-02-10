@@ -6,6 +6,7 @@ public sealed partial class ExpandedUserRole
     public string UserGroupDisplayText { get; set; } = "";
     public string UserName { get; set; } = "";
     public string ModCategoryName { get; set; } = "";
+    public string ModDisplayText { get; set; } = "";
     public string RoleDisplayText { get; set; } = "";
     public string AppKey { get; set; } = "";
     public int AppID { get; set; }

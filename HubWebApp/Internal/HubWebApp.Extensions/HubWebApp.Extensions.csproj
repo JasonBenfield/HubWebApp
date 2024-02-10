@@ -7,9 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.40-dev231127082836001" />
-		<PackageReference Include="XTI_App.Hosting" Version="1.8.40-dev231127082836001" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.40-dev231127082836001" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.40-dev231212123251291" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.40-dev231212123251291" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.40-dev231212123251291" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 using XTI_App.Abstractions;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
@@ -10,11 +9,6 @@ public sealed class AppUser
 {
     private readonly HubFactory factory;
     private readonly AppUserEntity record;
-
-    private static readonly AppRoleName[] viewAppRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewApp };
-    private static readonly AppRoleName[] editAppRoles = new[] { AppRoleName.Admin };
-    private static readonly AppRoleName[] viewUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.ViewUser };
-    private static readonly AppRoleName[] editUserRoles = new[] { AppRoleName.Admin, HubInfo.Roles.EditUser };
 
     internal AppUser(HubFactory factory, AppUserEntity record)
     {
@@ -241,9 +235,9 @@ public sealed class AppUser
             (
                 App: app,
                 CanView: userRoleModels
-                    .Any(ur => ur.Name.EqualsAny(viewAppRoles)),
+                    .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.AppViewerRoles)),
                 CanEdit: userRoleModels
-                    .Any(ur => ur.Name.EqualsAny(editAppRoles))
+                    .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.AppEditorRoles))
             );
         }
         return permission;
@@ -290,9 +284,9 @@ public sealed class AppUser
             (
                 UserGroup: userGroup,
                 CanView: userRoleModels
-                    .Any(ur => ur.Name.EqualsAny(viewUserRoles)),
+                    .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.UserViewerRoles)),
                 CanEdit: userRoleModels
-                    .Any(ur => ur.Name.EqualsAny(editUserRoles))
+                    .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.UserEditorRoles))
             );
         }
         return userGroupPermission;

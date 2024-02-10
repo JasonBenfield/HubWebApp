@@ -46,7 +46,7 @@ public sealed class InstallProcess
             var versionName = versionNameAccessor.Value;
             using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
             string release;
-            if(publishedAssets is GitHubPublishedAssets)
+            if (publishedAssets is GitHubPublishedAssets)
             {
                 var versionNumber = options.VersionNumber;
                 if (string.IsNullOrWhiteSpace(versionNumber))
@@ -66,13 +66,14 @@ public sealed class InstallProcess
             var versionsPath = await publishedAssets.LoadVersions(release);
             var versionReader = new VersionReader(versionsPath);
             var versions = await versionReader.Versions();
-            var appDefs = appKeys
-                .Select(a => new AppDefinitionModel(a))
-                .ToArray();
             Console.WriteLine("Adding or updating apps");
-            await hubAdministration.AddOrUpdateApps(versionName, appDefs);
+            await hubAdministration.AddOrUpdateApps(versionName, appKeys);
             Console.WriteLine("Adding or updating versions");
-            await hubAdministration.AddOrUpdateVersions(appKeys, versions);
+            await hubAdministration.AddOrUpdateVersions
+            (
+                appKeys,
+                versions.Select(v => new AddVersionRequest(v)).ToArray()
+            );
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             if (xtiEnv.IsProduction() && versionKey.IsCurrent())
             {
@@ -83,9 +84,9 @@ public sealed class InstallProcess
                 var installations = installOptionsAccessor.Installations(appKey);
                 foreach (var installationOptions in installations)
                 {
-                    var installMachineName = string.IsNullOrWhiteSpace(installationOptions.MachineName)
-                        ? GetLocalMachineName()
-                        : installationOptions.MachineName;
+                    var installMachineName = string.IsNullOrWhiteSpace(installationOptions.MachineName) ? 
+                        GetLocalMachineName() : 
+                        installationOptions.MachineName;
                     var instResult = await NewInstallation
                     (
                         appKey,
@@ -133,22 +134,22 @@ public sealed class InstallProcess
     private static string GetLocalMachineName()
     {
         var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
-        return string.IsNullOrWhiteSpace(domain) 
-            ? Environment.MachineName 
+        return string.IsNullOrWhiteSpace(domain)
+            ? Environment.MachineName
             : $"{Environment.MachineName}.{domain}";
     }
 
-    private readonly Dictionary<string, CredentialValue> machineCredentials = new ();
+    private readonly Dictionary<string, CredentialValue> machineCredentials = new();
 
     private async Task<CredentialValue> GetInstallerCredentials(IHubAdministration hubAdministration, string installMachineName)
     {
         var dotIndex = installMachineName.IndexOf('.');
-        if(dotIndex > -1)
+        if (dotIndex > -1)
         {
             installMachineName = installMachineName.Substring(0, dotIndex);
         }
         var key = installMachineName.ToLower();
-        if(!machineCredentials.TryGetValue(key, out var installerCreds))
+        if (!machineCredentials.TryGetValue(key, out var installerCreds))
         {
             var password = Guid.NewGuid().ToString();
             var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password);

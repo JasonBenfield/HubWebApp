@@ -34,11 +34,8 @@ internal sealed class SetupCommand : ICommand
         var appKeys = selectedAppKeys.Values
             .Where(ak => !ak.Type.Equals(AppType.Values.Package))
             .ToArray();
-        var appDefs = appKeys
-            .Select(a => new AppDefinitionModel(a))
-            .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubAdministration.AddOrUpdateApps(versionName, appDefs);
+        await hubAdministration.AddOrUpdateApps(versionName, appKeys);
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
         {

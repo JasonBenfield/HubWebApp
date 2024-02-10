@@ -25,7 +25,7 @@ export class AppDetailPanelView extends GridView {
     constructor(container: BasicComponentView) {
         super(container);
         this.height100();
-        this.layout();
+        this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1));
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.app = mainContent.addView(AppComponentView)

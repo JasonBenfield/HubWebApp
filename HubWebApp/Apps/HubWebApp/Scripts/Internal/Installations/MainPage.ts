@@ -5,13 +5,12 @@ import { InstallationQueryPanel } from './InstallationQueryPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels = new SingleActivePanel();
     private readonly mainMenuPanel: MainMenuPanel;
     private readonly installationQueryPanel: InstallationQueryPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.mainMenuPanel = this.panels.add(new MainMenuPanel(this.hubClient, this.view.mainMenuPanel));
         this.installationQueryPanel = this.panels.add(new InstallationQueryPanel(this.hubClient, this.view.installationQueryPanel));
         this.installationQueryPanel.refresh();
@@ -34,4 +33,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

@@ -17,12 +17,18 @@ sealed class BeginCurrentInstallationTest
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                appKey: HubInfo.AppKey,
+                qualifiedMachineName: qualifiedMachineName,
+                domain: "",
+                siteName: ""
+            )
+        );
         await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
         var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
         Assert.That
@@ -39,49 +45,64 @@ sealed class BeginCurrentInstallationTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: new AppVersionName("HubWebApp"),
+                appKey: HubInfo.AppKey,
+                qualifiedMachineName: qualifiedMachineName,
+                domain: "",
+                siteName: ""
+            )
+        );
         var hubApiFactory = tester.Services.GetRequiredService<HubAppApiFactory>();
         var hubApi = hubApiFactory.CreateForSuperUser();
         var nextVersion = await hubApi.Publish.NewVersion.Invoke
         (
             new NewVersionRequest
-            {
-                VersionName = new AppVersionName("HubWebApp"),
-                VersionType = AppVersionType.Values.Major
-            }
+            (
+                versionName: new AppVersionName("HubWebApp"),
+                versionType: AppVersionType.Values.Major
+            )
         );
         await hubApi.Publish.BeginPublish.Invoke
         (
             new PublishVersionRequest
-            {
-                VersionName = nextVersion.VersionName,
-                VersionKey = nextVersion.VersionKey
-            }
+            (
+                versionName: nextVersion.VersionName,
+                versionKey: nextVersion.VersionKey
+            )
         );
-        await hubApi.Install.RegisterApp.Invoke(new RegisterAppRequest
-        {
-            AppTemplate = hubApiFactory.CreateTemplate().ToModel(),
-            VersionKey = nextVersion.VersionKey
-        });
+        await hubApi.Install.RegisterApp.Invoke
+        (
+            new RegisterAppRequest
+            (
+                appTemplate: hubApiFactory.CreateTemplate().ToModel(),
+                versionKey: nextVersion.VersionKey
+            )
+        );
         await hubApi.Publish.EndPublish.Invoke
         (
             new PublishVersionRequest
-            {
-                VersionName = nextVersion.VersionName,
-                VersionKey = nextVersion.VersionKey
-            }
+            (
+                versionName: nextVersion.VersionName,
+                versionKey: nextVersion.VersionKey
+            )
         );
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = nextVersion.VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: nextVersion.VersionName,
+                appKey: HubInfo.AppKey,
+                qualifiedMachineName: qualifiedMachineName,
+                domain: "",
+                siteName: ""
+            )
+        );
         await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
         var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
         var installationVersion = await GetVersion(tester, currentInstallation);

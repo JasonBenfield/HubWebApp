@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_HubDB.Entities;
-using XTI_HubWebAppApi.AppInstall;
 
 namespace HubWebApp.Tests;
 
@@ -51,12 +50,18 @@ internal sealed class RequestDeleteTest
     {
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion();
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester, 
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
         await Installed(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
         return newInstResult.CurrentInstallationID;

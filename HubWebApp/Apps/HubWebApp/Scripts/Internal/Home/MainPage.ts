@@ -3,11 +3,9 @@ import { MainMenuPanel } from '../MainMenuPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
-
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         new MainMenuPanel(this.hubClient, this.view.mainMenuPanel);
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

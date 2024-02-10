@@ -10,24 +10,24 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class UserInquiryGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'UserInquiry');
-		this.GetUserAction = this.createAction<number,IAppUserModel>('GetUser', 'Get User');
-		this.GetUserOrAnonAction = this.createAction<string,IAppUserModel>('GetUserOrAnon', 'Get User Or Anon');
-		this.GetUserAuthenticatorsAction = this.createAction<number,IUserAuthenticatorModel[]>('GetUserAuthenticators', 'Get User Authenticators');
+		this.GetUserAction = this.createAction<IAppUserIDRequest,IAppUserModel>('GetUser', 'Get User');
+		this.GetUserOrAnonAction = this.createAction<IAppUserNameRequest,IAppUserModel>('GetUserOrAnon', 'Get User Or Anon');
+		this.GetUserAuthenticatorsAction = this.createAction<IAppUserIDRequest,IUserAuthenticatorModel[]>('GetUserAuthenticators', 'Get User Authenticators');
 		this.GetUsersAction = this.createAction<IEmptyRequest,IAppUserModel[]>('GetUsers', 'Get Users');
 	}
 	
-	readonly GetUserAction: AppClientAction<number,IAppUserModel>;
-	readonly GetUserOrAnonAction: AppClientAction<string,IAppUserModel>;
-	readonly GetUserAuthenticatorsAction: AppClientAction<number,IUserAuthenticatorModel[]>;
+	readonly GetUserAction: AppClientAction<IAppUserIDRequest,IAppUserModel>;
+	readonly GetUserOrAnonAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
+	readonly GetUserAuthenticatorsAction: AppClientAction<IAppUserIDRequest,IUserAuthenticatorModel[]>;
 	readonly GetUsersAction: AppClientAction<IEmptyRequest,IAppUserModel[]>;
 	
-	GetUser(model: number, errorOptions?: IActionErrorOptions) {
+	GetUser(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAction.execute(model, errorOptions || {});
 	}
-	GetUserOrAnon(model: string, errorOptions?: IActionErrorOptions) {
+	GetUserOrAnon(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserOrAnonAction.execute(model, errorOptions || {});
 	}
-	GetUserAuthenticators(model: number, errorOptions?: IActionErrorOptions) {
+	GetUserAuthenticators(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAuthenticatorsAction.execute(model, errorOptions || {});
 	}
 	GetUsers(errorOptions?: IActionErrorOptions) {

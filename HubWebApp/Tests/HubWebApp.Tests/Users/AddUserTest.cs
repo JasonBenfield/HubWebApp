@@ -11,22 +11,22 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await AccessAssertions.Create(tester)
-            .ShouldThrowError_WhenModifierIsBlank(createForm());
+            .ShouldThrowError_WhenModifierIsBlank(CreateForm());
     }
 
     [Test]
     public async Task ShouldThrowError_WhenAccessIsDenied()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
                 () =>
                 {
-                    var form = createForm(userSuffix);
+                    var form = CreateForm(userSuffix);
                     userSuffix++;
                     return Task.FromResult(form);
                 },
@@ -39,9 +39,9 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldThrowError_WhenUserNameIsBlank()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
-        var form = createForm();
+        var form = CreateForm();
         form.UserName.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
         Assert.That
@@ -55,9 +55,9 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldThrowError_WhenPasswordIsBlank()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
-        var form = createForm();
+        var form = CreateForm();
         form.Password.SetValue("");
         form.Confirm.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
@@ -72,9 +72,9 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldThrowError_WhenConfirmDoesNotEqualPassword()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
-        var form = createForm();
+        var form = CreateForm();
         form.Confirm.SetValue(form.Password.Value() + "Different");
         var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(form, modifier));
         Assert.That
@@ -88,9 +88,9 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldSetPassword()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var modifier = await tester.GeneralUserGroupModifier();
-        var form = createForm();
+        var form = CreateForm();
         await tester.Execute(form, modifier);
         var loginTester = tester.Create(api => api.Auth.VerifyLogin);
         var loginForm = new VerifyLoginForm();
@@ -102,12 +102,12 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldAddUser()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
-        var addedUser = await tester.Execute(createForm(), modifier);
+        var addedUser = await tester.Execute(CreateForm(), modifier);
         var getUserTester = tester.Create(api => api.UserInquiry.GetUser);
-        var user = await getUserTester.Execute(addedUser.ID, modifier);
+        var user = await getUserTester.Execute(new AppUserIDRequest(addedUser.ID), modifier);
         Assert.That(user.UserName, Is.EqualTo("new.user"), "Should add user");
         Assert.That(user.Name, Is.EqualTo("New User"), "Should add user");
         Assert.That(user.Email, Is.EqualTo("new.user@example.com"), "Should add user");
@@ -116,11 +116,11 @@ internal sealed class AddUserTest
     [Test]
     public async Task ShouldThrowError_WhenUserAlreadyExists()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
-        await tester.Execute(createForm(), modifier);
-        var ex = Assert.ThrowsAsync<AppException>(() => tester.Execute(createForm(), modifier));
+        await tester.Execute(CreateForm(), modifier);
+        var ex = Assert.ThrowsAsync<AppException>(() => tester.Execute(CreateForm(), modifier));
         Assert.That
         (
             ex?.Message,
@@ -129,7 +129,7 @@ internal sealed class AddUserTest
         );
     }
 
-    private AddUserForm createForm(int userSuffix = 0)
+    private AddUserForm CreateForm(int userSuffix = 0)
     {
         var form = new AddUserForm();
         form.UserName.SetValue("new.user" + (userSuffix > 0 ? userSuffix.ToString() : ""));
@@ -140,7 +140,7 @@ internal sealed class AddUserTest
         return form;
     }
 
-    private async Task<HubActionTester<AddUserForm, AppUserModel>> setup()
+    private async Task<HubActionTester<AddUserForm, AppUserModel>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();

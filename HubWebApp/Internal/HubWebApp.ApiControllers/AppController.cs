@@ -28,6 +28,12 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppRoleModel[]>> GetRoles(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, AppRoleModel[]>("GetRoles").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppRequestExpandedModel[]>> GetMostRecentRequests([FromBody] int model, CancellationToken ct)
     {
         return api.Group("App").Action<int, AppRequestExpandedModel[]>("GetMostRecentRequests").Execute(model, ct);

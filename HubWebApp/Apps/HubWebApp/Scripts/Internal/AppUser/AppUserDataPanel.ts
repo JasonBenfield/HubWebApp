@@ -51,7 +51,7 @@ export class AppUserDataPanel implements IPanel {
             async () => {
                 const sourceApp = await this.hubClient.App.GetApp();
                 const app = new App(sourceApp);
-                const sourceUser = await this.hubClient.UserInquiry.GetUser(this.userID);
+                const sourceUser = await this.hubClient.UserInquiry.GetUser({ UserID: this.userID });
                 const user = new AppUser(sourceUser);
                 const sourceDefaultModifier = await this.hubClient.App.GetDefaultModifier();
                 const defaultModifier = new Modifier(sourceDefaultModifier);

@@ -6,14 +6,13 @@ import { MainPageView } from './MainPageView';
 import { UserGroupsPanel } from './UserGroupsPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly userGroupsPanel: UserGroupsPanel;
     private readonly addUserGroupPanel: AddUserGroupPanel;
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.userGroupsPanel = this.panels.add(
             new UserGroupsPanel(this.hubClient, this.view.userGroupsPanel)
@@ -58,4 +57,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

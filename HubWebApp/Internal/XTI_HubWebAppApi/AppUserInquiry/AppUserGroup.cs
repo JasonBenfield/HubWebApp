@@ -6,19 +6,25 @@ public sealed class AppUserGroup : AppApiGroupWrapper
         : base(source)
     {
         Index = source.AddAction(nameof(Index), () => sp.GetRequiredService<IndexAction>());
-        GetUserAccess = source.AddAction
+        GetExplicitUserAccess = source.AddAction
         (
-            nameof(GetUserAccess), 
-            () => sp.GetRequiredService<GetUserAccessByUserModifierAction>()
+            nameof(GetExplicitUserAccess), 
+            () => sp.GetRequiredService<GetExplicitUserAccessAction>()
         );
-        GetUnassignedRoles = source.AddAction
+        GetAssignedRoles = source.AddAction
         (
-            nameof(GetUnassignedRoles), 
-            () => sp.GetRequiredService<GetUnassignedRolesAction>()
+            nameof(GetAssignedRoles),
+            () => sp.GetRequiredService<GetAssignedRolesAction>()
+        );
+        GetExplicitlyUnassignedRoles = source.AddAction
+        (
+            nameof(GetExplicitlyUnassignedRoles), 
+            () => sp.GetRequiredService<GetExplicitlyUnassignedRolesAction>()
         );
     }
 
     public AppApiAction<GetAppUserRequest, WebViewResult> Index { get; }
-    public AppApiAction<UserModifierKey, UserAccessModel> GetUserAccess { get; }
-    public AppApiAction<UserModifierKey, AppRoleModel[]> GetUnassignedRoles { get; }
+    public AppApiAction<UserModifierKey, UserAccessModel> GetExplicitUserAccess { get; }
+    public AppApiAction<UserModifierKey, AppRoleModel[]> GetAssignedRoles { get; }
+    public AppApiAction<UserModifierKey, AppRoleModel[]> GetExplicitlyUnassignedRoles { get; }
 }
