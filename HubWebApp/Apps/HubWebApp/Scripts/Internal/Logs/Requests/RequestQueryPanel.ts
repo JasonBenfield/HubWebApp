@@ -49,12 +49,9 @@ export class RequestQueryPanel implements IPanel {
         );
         options.query.orderBy.addDescending(columns.RequestTimeStarted);
         const url = Url.current();
-        const sessionIDText = url.getQueryValue('SessionID');
-        const sessionID = sessionIDText ? Number(sessionIDText) : null;
-        const installationIDText = url.getQueryValue('InstallationID');
-        const installationID = installationIDText ? Number(installationIDText) : null;
-        const sourceRequestIDText = url.getQueryValue('SourceRequestID');
-        const sourceRequestID = sourceRequestIDText ? Number(sourceRequestIDText) : null;
+        const sessionID = url.query.getNumberValue('SessionID');
+        const installationID = url.query.getNumberValue('InstallationID');
+        const sourceRequestID = url.query.getNumberValue('SourceRequestID');
         options.saveChanges({
             select: true,
             filter: !sessionID,
@@ -76,9 +73,9 @@ export class RequestQueryPanel implements IPanel {
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().getQueryValue('page');
+        const page = Url.current().query.getNumberValue('page');
         if (page) {
-            this.odataComponent.setCurrentPage(Number(page));
+            this.odataComponent.setCurrentPage(page);
         }
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
@@ -86,7 +83,8 @@ export class RequestQueryPanel implements IPanel {
     private onRefreshed(args: ODataRefreshedEventArgs) {
         const page = args.page > 1 ? args.page.toString() : '';
         const url = UrlBuilder.current();
-        const queryPage = url.getQueryValue('page');
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
         if (page !== queryPage) {
             if (page) {
                 url.replaceQuery('page', page);

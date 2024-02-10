@@ -62,11 +62,11 @@ export class LoginComponent {
         form.style.top = '-100px';
         form.style.left = '-100px';
         form.method = 'POST';
-        let userNameInput = this.createInput('UserName', cred.UserName, 'text');
-        let passwordInput = this.createInput('Password', cred.Password, 'password');
-        let urlBuilder = UrlBuilder.current();
-        let authKeyInput = this.createInput('AuthKey', authKey);
-        let returnKeyInput = this.createInput('ReturnKey', urlBuilder.getQueryValue('returnKey'));
+        const userNameInput = this.createInput('UserName', cred.UserName, 'text');
+        const passwordInput = this.createInput('Password', cred.Password, 'password');
+        const urlBuilder = UrlBuilder.current();
+        const authKeyInput = this.createInput('AuthKey', authKey);
+        const returnKeyInput = this.createInput('ReturnKey', urlBuilder.query.getValue('returnKey'));
         form.append(
             userNameInput,
             passwordInput,

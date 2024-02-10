@@ -11,8 +11,6 @@ import { SelectModifierPanel } from './SelectModifierPanel';
 import { UserRolesPanel } from './UserRolesPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
-
     private readonly panels: SingleActivePanel;
     private readonly appUserDataPanel: AppUserDataPanel;
     private readonly selectModCategoryPanel: SelectModCategoryPanel;
@@ -20,8 +18,8 @@ class MainPage extends HubPage {
     private readonly userRolesPanel: UserRolesPanel;
     private readonly addRolePanel: AddRolePanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.appUserDataPanel = this.panels.add(
             new AppUserDataPanel(this.hubClient, this.view.appUserDataPanel)
@@ -39,10 +37,9 @@ class MainPage extends HubPage {
             new AddRolePanel(this.hubClient, this.view.addRolePanel)
         );
         const url = Url.current();
-        const appModKey = url.getQueryValue('App');
-        const userIDValue = url.getQueryValue('UserID');
-        if (XtiUrl.current().path.modifier && userIDValue && appModKey) {
-            const userID = Number(userIDValue);
+        const appModKey = url.query.getValue('App');
+        const userID = url.query.getNumberValue('UserID');
+        if (XtiUrl.current().path.modifier && userID && appModKey) {
             this.hubClient.App.withModifier(appModKey);
             this.hubClient.ModCategory.withModifier(appModKey);
             this.appUserDataPanel.setUserID(userID);
@@ -118,4 +115,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

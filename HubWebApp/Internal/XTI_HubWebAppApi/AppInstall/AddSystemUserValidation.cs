@@ -4,17 +4,18 @@ namespace XTI_HubWebAppApi.AppInstall;
 
 internal sealed class AddSystemUserValidation : AppActionValidation<AddSystemUserRequest>
 {
-    public Task Validate(ErrorList errors, AddSystemUserRequest model, CancellationToken stoppingToken)
+    public Task Validate(ErrorList errors, AddSystemUserRequest addRequest, CancellationToken stoppingToken)
     {
-        if (model.AppKey.Name.Equals(AppName.Unknown))
+        var appKey = addRequest.AppKey.ToAppKey();
+        if (appKey.Name.Equals(AppName.Unknown))
         {
             errors.Add("App Name is required.");
         }
-        if (model.AppKey.Type.Equals(AppType.Values.NotFound))
+        if (appKey.Type.Equals(AppType.Values.NotFound))
         {
             errors.Add("App Type is required.");
         }
-        if (string.IsNullOrWhiteSpace(model.Password))
+        if (string.IsNullOrWhiteSpace(addRequest.Password))
         {
             errors.Add("Password is required");
         }

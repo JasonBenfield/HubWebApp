@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.UserInquiry;
 
-internal class GetUserOrAnonAction : AppAction<string, AppUserModel>
+internal class GetUserOrAnonAction : AppAction<AppUserNameRequest, AppUserModel>
 {
     private readonly UserGroupFromPath userGroupFromPath;
 
@@ -9,10 +9,10 @@ internal class GetUserOrAnonAction : AppAction<string, AppUserModel>
         this.userGroupFromPath = userGroupFromPath;
     }
 
-    public async Task<AppUserModel> Execute(string userName, CancellationToken stoppingToken)
+    public async Task<AppUserModel> Execute(AppUserNameRequest getRequest, CancellationToken stoppingToken)
     {
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.UserOrAnon(new AppUserName(userName));
+        var user = await userGroup.UserOrAnon(getRequest.ToAppUserName());
         return user.ToModel();
     }
 }

@@ -7,8 +7,9 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { ModifierCategoryListItem } from "./ModifierCategoryListItem";
 import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
 
-type Events = { modCategorySelected: IModifierCategoryModel };
+type Events = { modCategorySelected: ModifierCategory };
 
 export class ModifierCategoryListCard {
     private readonly alert: MessageAlert;
@@ -31,7 +32,8 @@ export class ModifierCategoryListCard {
     }
 
     async refresh() {
-        const modCategories = await this.getModCategories();
+        const sourceModCategories = await this.getModCategories();
+        const modCategories = sourceModCategories.map(mc => new ModifierCategory(mc));
         this.modCategories.setItems(
             modCategories,
             (modCategory, itemView) =>

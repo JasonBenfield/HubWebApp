@@ -20,8 +20,7 @@ class MainPage extends HubPage {
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
-        const requestIDText = Url.current().getQueryValue("RequestID");
-        const requestID = requestIDText ? Number.parseInt(requestIDText) : 0;
+        const requestID = Url.current().query.getNumberValue("RequestID");
         if (requestID) {
             this.requestPanel.setRequestID(requestID);
             this.requestPanel.refresh();

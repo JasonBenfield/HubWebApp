@@ -6,6 +6,8 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
 import { RoleAccessListItemView } from "../RoleAccessListItemView";
+import { IRoleAccessItem } from "../../IRoleAccessItem";
+import { AppRole } from "../../../Lib/AppRole";
 
 export class ResourceAccessCard {
     private readonly alert: MessageAlert;
@@ -39,13 +41,14 @@ export class ResourceAccessCard {
     }
 
     private async getRoleAccessItems() {
-        const roles = await this.alert.infoAction(
+        const sourceRoles = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Resource.GetRoleAccess({
                 VersionKey: 'Current',
                 ResourceID: this.resourceID
             })
         );
+        const roles = sourceRoles.map(r => new AppRole(r));
         const accessItems: IRoleAccessItem[] = [];
         for (const allowedRole of roles) {
             accessItems.push({

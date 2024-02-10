@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 

@@ -1,5 +1,6 @@
 // Generated code
 
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { AppClientGroup } from "@jasonbenfield/sharedwebapp/Http/AppClientGroup";
 import { AppClientAction } from "@jasonbenfield/sharedwebapp/Http/AppClientAction";
 import { AppClientView } from "@jasonbenfield/sharedwebapp/Http/AppClientView";
@@ -12,13 +13,13 @@ export class PublishGroup extends AppClientGroup {
 		this.NewVersionAction = this.createAction<INewVersionRequest,IXtiVersionModel>('NewVersion', 'New Version');
 		this.BeginPublishAction = this.createAction<IPublishVersionRequest,IXtiVersionModel>('BeginPublish', 'Begin Publish');
 		this.EndPublishAction = this.createAction<IPublishVersionRequest,IXtiVersionModel>('EndPublish', 'End Publish');
-		this.GetVersionsAction = this.createAction<IAppKey,IXtiVersionModel[]>('GetVersions', 'Get Versions');
+		this.GetVersionsAction = this.createAction<IAppKeyRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
 	}
 	
 	readonly NewVersionAction: AppClientAction<INewVersionRequest,IXtiVersionModel>;
 	readonly BeginPublishAction: AppClientAction<IPublishVersionRequest,IXtiVersionModel>;
 	readonly EndPublishAction: AppClientAction<IPublishVersionRequest,IXtiVersionModel>;
-	readonly GetVersionsAction: AppClientAction<IAppKey,IXtiVersionModel[]>;
+	readonly GetVersionsAction: AppClientAction<IAppKeyRequest,IXtiVersionModel[]>;
 	
 	NewVersion(model: INewVersionRequest, errorOptions?: IActionErrorOptions) {
 		return this.NewVersionAction.execute(model, errorOptions || {});
@@ -29,7 +30,7 @@ export class PublishGroup extends AppClientGroup {
 	EndPublish(model: IPublishVersionRequest, errorOptions?: IActionErrorOptions) {
 		return this.EndPublishAction.execute(model, errorOptions || {});
 	}
-	GetVersions(model: IAppKey, errorOptions?: IActionErrorOptions) {
+	GetVersions(model: IAppKeyRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetVersionsAction.execute(model, errorOptions || {});
 	}
 }

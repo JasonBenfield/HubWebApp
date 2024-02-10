@@ -6,30 +6,31 @@ public static class HubAppApiExtensions
     {
         services.AddScoped<CurrentAppUser>();
         services.AddScoped<UserGroupFromPath>();
-        services.AddCurrentUserGroupServices();
-        services.AddHomeGroupServices();
-        services.AddInstallationsGroupServices();
-        services.AddAuthenticatorsGroupServices();
         services.AddAppInquiryGroupServices();
         services.AddAppInstallGroupServices();
         services.AddAppListGroupServices();
         services.AddAppPublishGroupServices();
         services.AddAppUserGroupServices();
         services.AddAppUserMaintenanceGroupServices();
-        services.AddExternalAuthGroupServices();
+        services.AddAuthenticatorsGroupServices();
         services.AddAuthGroupServices();
+        services.AddCurrentUserGroupServices();
+        services.AddExternalAuthGroupServices();
+        services.AddHomeGroupServices();
+        services.AddInstallationsGroupServices();
+        services.AddLogsGroupServices();
         services.AddModCategoryGroupExtensions();
         services.AddPermanentLogGroupServices();
         services.AddResourceGroupInquiryGroupServices();
         services.AddResourceInquiryGroupServices();
-        services.AddUserInquiryGroupServices();
-        services.AddUserListGroupServices();
-        services.AddUserMaintenanceGroupServices();
-        services.AddVersionInquiryGroupServices();
+        services.AddPeriodicGroupServices();
         services.AddStorageGroupServices();
         services.AddSystemGroupServices();
         services.AddUserGroupsGroupServices();
-        services.AddPeriodicGroupServices();
-        services.AddLogsGroupServices();
+        services.AddUserInquiryGroupServices();
+        services.AddUserListGroupServices();
+        services.AddUserMaintenanceGroupServices();
+        services.AddUserRolesGroupServices();
+        services.AddVersionInquiryGroupServices();
     }
 }

@@ -19,12 +19,12 @@ public sealed class EfHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
-    public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs)
+    public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys)
     {
         var apps = new List<AppModel>();
-        foreach (var appDef in appDefs)
+        foreach (var appKey in appKeys)
         {
-            var app = await hubFactory.Apps.AddOrUpdate(versionName, appDef.AppKey, clock.Now());
+            var app = await hubFactory.Apps.AddOrUpdate(versionName, appKey, clock.Now());
             apps.Add(app.ToModel());
         }
         return apps.ToArray();
@@ -42,7 +42,7 @@ public sealed class EfHubAdministration : IHubAdministration
         return versions.Select(v => v.ToModel()).ToArray();
     }
 
-    public async Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions)
+    public async Task AddOrUpdateVersions(AppKey[] appKeys, AddVersionRequest[] publishedVersions)
     {
         if (publishedVersions.Any())
         {
@@ -50,20 +50,20 @@ public sealed class EfHubAdministration : IHubAdministration
             var exceptions = publishedVersions.Where(v => !v.VersionName.Equals(versionName));
             if (exceptions.Any())
             {
-                var joinedExceptions = string.Join(",", exceptions.Select(v => v.VersionName.DisplayText).Distinct());
-                throw new ArgumentException($"Expected version '{versionName.DisplayText}' but included versions {joinedExceptions}");
+                var joinedExceptions = string.Join(",", exceptions.Select(v => v.VersionName).Distinct());
+                throw new ArgumentException($"Expected version '{versionName}' but included versions {joinedExceptions}");
             }
             var versions = new List<XtiVersion>();
             foreach (var publishedVersion in publishedVersions)
             {
                 var version = await hubFactory.Versions.AddIfNotFound
                 (
-                    publishedVersion.VersionName,
-                    publishedVersion.VersionKey,
+                    publishedVersion.ToAppVersionName(),
+                    publishedVersion.ToAppVersionKey(),
                     clock.Now(),
-                    publishedVersion.Status,
-                    publishedVersion.VersionType,
-                    publishedVersion.VersionNumber
+                    publishedVersion.ToAppVersionStatus(),
+                    publishedVersion.ToAppVersionType(),
+                    publishedVersion.VersionNumber.ToAppVersionNumber()
                 );
                 versions.Add(version);
             }

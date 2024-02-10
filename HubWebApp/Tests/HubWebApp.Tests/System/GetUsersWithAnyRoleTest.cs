@@ -9,8 +9,8 @@ internal sealed class GetUsersWithAnyRoleTest
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
-        var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.Modifier(hubAppModifier).AssignRole(viewUserRole);
+        var viewUserRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewUser);
+        await AssignRole(tester, user, hubAppModifier, viewUserRole);
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
@@ -18,14 +18,14 @@ internal sealed class GetUsersWithAnyRoleTest
             (
                 0,
                 HubInfo.ModCategories.Apps,
-                hubAppModifier.ToModel().ModKey,
+                hubAppModifier.ModKey,
                 HubInfo.Roles.ViewUser
             )
         );
         Assert.That
         (
-            users.Select(u => u.UserName), 
-            Is.EqualTo(new[] { user.ToModel().UserName }),
+            users.Select(u => u.UserName),
+            Is.EqualTo(new[] { user.UserName }),
             "Should get users with modified role"
         );
     }
@@ -37,8 +37,9 @@ internal sealed class GetUsersWithAnyRoleTest
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
-        var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.AssignRole(viewUserRole);
+        var viewUserRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewUser);
+        var defaultModifier = await hubApp.DefaultModifier();
+        await AssignRole(tester, user, defaultModifier.ToModel(), viewUserRole);
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
@@ -46,14 +47,14 @@ internal sealed class GetUsersWithAnyRoleTest
             (
                 0,
                 HubInfo.ModCategories.Apps,
-                hubAppModifier.ToModel().ModKey,
+                hubAppModifier.ModKey,
                 HubInfo.Roles.ViewUser
             )
         );
         Assert.That
         (
             users.Select(u => u.UserName),
-            Is.EqualTo(new[] { user.ToModel().UserName }),
+            Is.EqualTo(new[] { user.UserName }),
             "Should get users with default role"
         );
     }
@@ -65,19 +66,20 @@ internal sealed class GetUsersWithAnyRoleTest
         var hubApp = await tester.HubApp();
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
-        var viewUserRole = await hubApp.Role(HubInfo.Roles.ViewUser);
-        await user.AssignRole(viewUserRole);
-        var viewAppRole = await hubApp.Role(HubInfo.Roles.ViewApp);
-        await user.Modifier(hubAppModifier).AssignRole(viewAppRole);
+        var viewUserRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewUser);
+        var defaultModifier = await hubApp.DefaultModifier();
+        await AssignRole(tester, user, defaultModifier.ToModel(), viewUserRole);
+        var viewAppRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewApp);
+        await AssignRole(tester, user, hubAppModifier, viewAppRole);
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                0,
-                HubInfo.ModCategories.Apps,
-                hubAppModifier.ToModel().ModKey,
-                HubInfo.Roles.ViewUser
+                installationID: 0,
+                modCategoryName: HubInfo.ModCategories.Apps,
+                modKey: hubAppModifier.ModKey,
+                roleNames: HubInfo.Roles.ViewUser
             )
         );
         Assert.That
@@ -95,19 +97,20 @@ internal sealed class GetUsersWithAnyRoleTest
         var tester = HubActionTester.Create(sp, hubApi => hubApi.System.GetUsersWithAnyRole);
         var systemUser = await AddUser(tester, GetSystemUserName().DisplayText);
         var hubApp = await tester.HubApp();
-        var systemUserRole = await hubApp.Role(AppRoleName.System);
-        await systemUser.AssignRole(systemUserRole);
+        var modifier = await hubApp.DefaultModifier();
+        var systemUserRole = await GetRole(tester, hubApp.ToModel(), AppRoleName.System);
+        await AssignRole(tester, systemUser, modifier.ToModel(), systemUserRole);
         return tester;
     }
 
-    private static AppUserName GetSystemUserName()=>
+    private static AppUserName GetSystemUserName() =>
         new SystemUserName(HubInfo.AppKey, Environment.MachineName).UserName;
 
-    private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
+    private async Task<AppUserModel> AddUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
-        await addUserTester.Execute
+        var user = await addUserTester.Execute
         (
             new AddOrUpdateUserRequest
             {
@@ -116,8 +119,33 @@ internal sealed class GetUsersWithAnyRoleTest
             },
             new ModifierKey("General")
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
+
+    private static async Task<AppRoleModel> GetRole(IHubActionTester sourceTester, AppModel app, AppRoleName roleName)
+    {
+        var tester = sourceTester.Create(api => api.App.GetRoles);
+        var roles = await tester.Execute(new EmptyRequest(), app.PublicKey);
+        return roles.FirstOrDefault(r => r.Name.Equals(roleName)) ?? new();
+    }
+
+    private async Task<int> AssignRole(IHubActionTester tester, AppUserModel user, ModifierModel modifier, AppRoleModel role)
+    {
+        var assignRoleTester = tester.Create(hubApi => hubApi.AppUserMaintenance.AssignRole);
+        await assignRoleTester.LoginAsAdmin();
+        var app = await tester.HubApp();
+        var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
+        var userRoleID = await assignRoleTester.Execute
+        (
+            new UserRoleRequest
+            {
+                UserID = user.ID,
+                ModifierID = modifier.ID,
+                RoleID = role.ID
+            },
+            generalUserGroupModifier
+        );
+        return userRoleID;
+    }
+
 }

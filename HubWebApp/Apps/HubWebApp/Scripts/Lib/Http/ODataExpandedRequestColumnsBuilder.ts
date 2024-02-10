@@ -1,4 +1,5 @@
 // Generated code
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { ODataColumnBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnBuilder";
 import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
 import { SourceType } from "@jasonbenfield/sharedwebapp/OData/SourceType";

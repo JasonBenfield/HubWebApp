@@ -2,7 +2,8 @@
 import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
@@ -23,12 +24,12 @@ export class SessionPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
-        const gridContainer = mainContent.addView(FormGroupGridView);
+        const gridContainer = mainContent.addView(FormGroupContainerView);
         this.timeRange = gridContainer.addFormGroup(FormGroupTextView);
         this.timeRange.caption.setText('Time Range');
         this.userName = gridContainer.addFormGroup(FormGroupTextView);

@@ -7,7 +7,8 @@ import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicCompo
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView, FormGroupView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupTextView, FormGroupView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ModalConfirmView } from "@jasonbenfield/sharedwebapp/Views/Modal";
@@ -18,7 +19,6 @@ import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 
 export class InstallationPanelView extends GridView {
-
     readonly alert: MessageAlertView;
     readonly confirm: ModalConfirmView;
     readonly appKey: FormGroupTextView;
@@ -38,13 +38,13 @@ export class InstallationPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
         this.confirm = mainContent.addView(ModalConfirmView);
-        const gridContainer = mainContent.addView(FormGroupGridView);
+        const gridContainer = mainContent.addView(FormGroupContainerView);
         this.appKey = gridContainer.addFormGroup(FormGroupTextView);
         this.appKey.caption.setText('App');
         const versionFormGroup = gridContainer.addFormGroup(FormGroupView);
@@ -54,7 +54,7 @@ export class InstallationPanelView extends GridView {
         this.versionKey = versionBlock.addView(TextSpanView);
         this.versionKey.setMargin(MarginCss.end(3));
         this.versionStatus = versionBlock.addView(TextSpanView);
-        this.installationStatus = gridContainer.addFormGroup(FormGroupTextView);
+        this.installationStatus = gridContainer.addFormGroupTextView();
         this.installationStatus.caption.setText('Installation Status');
         const locationFormGroup = gridContainer.addFormGroup(FormGroupView);
         locationFormGroup.caption.setText('Location');
@@ -63,11 +63,11 @@ export class InstallationPanelView extends GridView {
         this.location = locationBlock.addView(TextSpanView);
         this.location.setMargin(MarginCss.end(3));
         this.current = locationBlock.addView(TextSpanView);
-        this.domain = gridContainer.addFormGroup(FormGroupTextView);
+        this.domain = gridContainer.addFormGroupTextView();
         this.domain.caption.setText('Domain');
-        this.siteName = gridContainer.addFormGroup(FormGroupTextView);
+        this.siteName = gridContainer.addFormGroupTextView();
         this.siteName.caption.setText('Site Name');
-        this.mostRecentRequest = gridContainer.addFormGroup(FormGroupTextView);
+        this.mostRecentRequest = gridContainer.addFormGroupTextView();
         this.mostRecentRequest.caption.setText('Latest Request');
         this.deleteButton = mainContent.addView(ButtonCommandView);
         this.deleteButton.setTextCss(new TextCss().start());

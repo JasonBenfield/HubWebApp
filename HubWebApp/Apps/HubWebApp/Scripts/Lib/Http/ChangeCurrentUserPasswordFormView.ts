@@ -1,12 +1,13 @@
 // Generated code
 import { BaseFormView } from '@jasonbenfield/sharedwebapp/Views/BaseFormView';
-import { SimpleFieldFormGroupInputView, SimpleFieldFormGroupSelectView } from '@jasonbenfield/sharedwebapp/Views/FormGroup';
+import * as views from '@jasonbenfield/sharedwebapp/Views/FormGroup';
 import { IFormGroupLayout } from '@jasonbenfield/sharedwebapp/Views/Types';
 import { BasicComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicComponentView';
+import { InputView } from '@jasonbenfield/sharedwebapp/Views/InputView';
 
 export interface IChangeCurrentUserPasswordFormView {
-	Password: SimpleFieldFormGroupInputView;
-	Confirm: SimpleFieldFormGroupInputView;
+	Password: views.SimpleFieldFormGroupInputView;
+	Confirm: views.SimpleFieldFormGroupInputView;
 }
 
 export class DefaultChangeCurrentUserPasswordFormViewLayout implements IFormGroupLayout<IChangeCurrentUserPasswordFormView> {

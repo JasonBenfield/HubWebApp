@@ -6,13 +6,12 @@ import { InstallationPanel } from './InstallationPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly installationPanel: InstallationPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.installationPanel = this.panels.add(
             new InstallationPanel(this.hubClient, this.view.installationPanel)
@@ -20,8 +19,7 @@ class MainPage extends HubPage {
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
-        const installationIDText = Url.current().getQueryValue("InstallationID");
-        const installationID = installationIDText ? Number.parseInt(installationIDText) : 0;
+        const installationID = Url.current().query.getNumberValue("InstallationID");
         if (installationID) {
             this.installationPanel.setInstallationID(installationID);
             this.installationPanel.refresh();
@@ -48,4 +46,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

@@ -10,6 +10,8 @@ internal static class UserGroupsGroupExtensions
         services.AddScoped<UserQueryView>();
         services.AddScoped<AddUserGroupIfNotExistsValidation>();
         services.AddScoped<AddUserGroupIfNotExistsAction>();
+        services.AddScoped<GetUserDetailOrAnonAction>();
+        services.AddScoped<GetUserGroupForUserAction>();
         services.AddScoped<GetUserGroupsAction>();
         services.AddScoped<UserQueryAction>();
     }

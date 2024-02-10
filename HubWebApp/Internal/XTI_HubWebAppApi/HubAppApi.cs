@@ -47,6 +47,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         createUserGroupsGroup(sp);
         createPeriodicGroup(sp);
         createLogsGroup(sp);
+        createUserRolesGroup(sp);
     }
 
     partial void createCurrentUserGroup(IServiceProvider sp);
@@ -96,6 +97,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     partial void createSystemGroup(IServiceProvider sp);
 
     partial void createUserGroupsGroup(IServiceProvider sp);
+
+    partial void createUserRolesGroup(IServiceProvider sp);
 
     partial void createPeriodicGroup(IServiceProvider sp);
 

@@ -24,7 +24,7 @@ export class ResourceGroupPanelView extends GridView {
     constructor(container: BasicComponentView) {
         super(container);
         this.height100();
-        this.layout();
+        this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.resourceGroupComponent = mainContent.addView(ResourceGroupComponentView)

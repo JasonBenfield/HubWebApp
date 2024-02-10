@@ -1,4 +1,4 @@
-﻿import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+﻿import { ButtonCommandView, LinkCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
 import { ContextualClass } from "@jasonbenfield/sharedwebapp/ContextualClass";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
@@ -24,7 +24,7 @@ export class HubTheme {
                 b.setPadding(PaddingCss.top(3));
             });
     }
-
+    
     readonly listItem = {
         deleteButton(button: ButtonCommandView) {
             return button

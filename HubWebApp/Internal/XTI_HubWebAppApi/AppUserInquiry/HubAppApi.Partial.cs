@@ -14,7 +14,7 @@ partial class HubAppApi
             (
                 nameof(AppUser),
                 HubInfo.ModCategories.UserGroups,
-                Access.WithAllowed(HubInfo.Roles.ViewUser)
+                new(HubInfo.Roles.UserViewerRoles)
             ),
             sp
         );

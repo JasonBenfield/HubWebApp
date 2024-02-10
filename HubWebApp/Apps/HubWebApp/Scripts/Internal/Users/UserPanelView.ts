@@ -19,7 +19,7 @@ export class UserPanelView extends GridView {
         super(container);
         this.setViewName(UserPanelView.name);
         this.height100();
-        this.layout();
+        this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.userComponent = mainContent.addView(UserComponentView)

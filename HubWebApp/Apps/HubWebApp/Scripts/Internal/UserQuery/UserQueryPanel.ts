@@ -2,20 +2,20 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
-import { GridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { AppUserGroup } from "../../Lib/AppUserGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
-import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
-import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
-import { Url } from "@jasonbenfield/sharedwebapp/Url";
 
 interface IResult {
     menuRequested?: boolean;
@@ -52,8 +52,8 @@ export class UserQueryPanel implements IPanel {
         columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? 'Yes' : 'No' });
         const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: GridRowView) =>
-                new UserDataRow(rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: LinkGridRowView) =>
+                new UserDataRow(hubClient, rowIndex, columns, record, view)
         );
         options.query.select.addFields(
             columns.UserName,
@@ -63,11 +63,10 @@ export class UserQueryPanel implements IPanel {
         options.saveChanges();
         options.setDefaultODataClient(this.hubClient.UserQuery, this.queryArgs);
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().getQueryValue('page');
+        const page = Url.current().query.getNumberValue('page');
         if (page) {
-            this.odataComponent.setCurrentPage(Number(page));
+            this.odataComponent.setCurrentPage(page);
         }
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.addCommand = new Command(this.add.bind(this));
@@ -78,7 +77,8 @@ export class UserQueryPanel implements IPanel {
     private onRefreshed(args: ODataRefreshedEventArgs) {
         const page = args.page > 1 ? args.page.toString() : '';
         const url = UrlBuilder.current();
-        const queryPage = url.getQueryValue('page');
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
         if (page !== queryPage) {
             if (page) {
                 url.replaceQuery('page', page);
@@ -112,25 +112,16 @@ export class UserQueryPanel implements IPanel {
         });
         return permissions.canAdd;
     }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const userID: number = eventArgs.record['UserID'];
-        let userGroupName: string = eventArgs.record['UserGroupName'];
-        userGroupName = userGroupName.replace(/\s+/g, '');
-        this.hubClient.Users.Index.open({
-            UserID: userID,
-            ReturnTo: userGroupName
-        }, userGroupName);
-    }
-
+    
     async refresh() {
-        const userGroups = await this.getUserGroups();
+        const sourceUserGroups = await this.getUserGroups();
+        const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,
             (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
-                const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
+                const listItemGroupName = ug ? ug.groupName.displayText : '';
                 if (this.queryArgs.args.UserGroupName === listItemGroupName) {
                     listItem.makeActive();
                 }

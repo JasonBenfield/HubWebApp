@@ -1,9 +1,12 @@
-﻿
+﻿import { App } from "../../Lib/App";
+import { AppUser } from "../../Lib/AppUser";
+import { Modifier } from "../../Lib/Modifier";
+
 export class AppUserOptions {
     constructor(
-        readonly app: IAppModel,
-        readonly user: IAppUserModel,
-        readonly defaultModifier: IModifierModel
+        readonly app: App,
+        readonly user: AppUser,
+        readonly defaultModifier: Modifier
     ) {
     }
 }

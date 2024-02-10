@@ -28,8 +28,8 @@ public sealed partial class PublishController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] AppKey model, CancellationToken ct)
+    public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] AppKeyRequest model, CancellationToken ct)
     {
-        return api.Group("Publish").Action<AppKey, XtiVersionModel[]>("GetVersions").Execute(model, ct);
+        return api.Group("Publish").Action<AppKeyRequest, XtiVersionModel[]>("GetVersions").Execute(model, ct);
     }
 }

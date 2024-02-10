@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppInstall;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 
@@ -11,13 +9,16 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldRequireVersionName()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: AppVersionName.None,
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(request));
         Assert.That(ex?.Errors.Select(e => e.Message), Is.EquivalentTo(new[] { AppErrors.VersionNameIsRequired }));
     }
@@ -25,14 +26,16 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldRequireMachineName()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = ""
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "",
+            domain: "",
+            siteName: ""
+        );
         var ex = Assert.ThrowsAsync<ValidationFailedException>(() => tester.Execute(request));
         Assert.That(ex?.Errors.Select(e => e.Message), Is.EquivalentTo(new[] { AppErrors.MachineNameIsRequired }));
     }
@@ -40,16 +43,18 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldAddInstallLocation()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
-        var installLocations = await getInstallLocations(tester);
+        var installLocations = await GetInstallLocations(tester);
         Assert.That(installLocations.Length, Is.EqualTo(1), "Should add install location");
         Assert.That(installLocations[0].QualifiedMachineName, Is.EqualTo(request.QualifiedMachineName), "Should add install location");
     }
@@ -57,70 +62,78 @@ sealed class NewInstallationTest
     [Test]
     public async Task ShouldNotAddInstallLocationWithDuplicateQualifiedMachineName()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
         await tester.Execute(request);
-        var installLocations = await getInstallLocations(tester);
+        var installLocations = await GetInstallLocations(tester);
         Assert.That(installLocations.Length, Is.EqualTo(1), "Should not add duplicate install location");
     }
 
     [Test]
     public async Task ShouldAddCurrentInstallation()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var hubApp = await tester.HubApp();
         await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
-        var currentInstallation = await getCurrentInstallation(tester);
-        var installationVersion = await getVersion(tester, currentInstallation);
+        var currentInstallation = await GetCurrentInstallation(tester);
+        var installationVersion = await GetVersion(tester, currentInstallation);
         Assert.That(currentInstallation?.AppVersionID, Is.EqualTo(installationVersion.ID), "Should add current installation");
-        var installLocations = await getInstallLocations(tester);
+        var installLocations = await GetInstallLocations(tester);
         Assert.That(currentInstallation?.LocationID, Is.EqualTo(installLocations[0].ID));
     }
 
     [Test]
     public async Task ShouldAddCurrentInstallationWithInstallPendingStatus()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
-        var currentInstallation = await getCurrentInstallation(tester);
+        var currentInstallation = await GetCurrentInstallation(tester);
         Assert.That(currentInstallation?.Status, Is.EqualTo(InstallStatus.Values.InstallPending.Value), "Should add current installation with install pending status");
     }
 
     [Test]
     public async Task ShouldAddDuplicateCurrentInstallation()
     {
-        var tester = await setup();
+        var tester = await Setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
         await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
@@ -134,18 +147,20 @@ sealed class NewInstallationTest
     public async Task ShouldAddVersionInstallation()
     {
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
-        var tester = await setup();
+        var tester = await Setup();
         var hubApp = await tester.HubApp();
         var version = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
-        var versionInstallation = await getVersionInstallation(tester, version);
+        var versionInstallation = await GetVersionInstallation(tester, version);
         Assert.That
         (
             versionInstallation?.Status,
@@ -158,16 +173,18 @@ sealed class NewInstallationTest
     public async Task ShouldAddDuplicateVersionInstallations()
     {
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
-        var tester = await setup();
+        var tester = await Setup();
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
-        {
-            VersionName = new AppVersionName("HubWebApp"),
-            AppKey = HubInfo.AppKey,
-            QualifiedMachineName = "destination.example.com"
-        };
+        (
+            versionName: new AppVersionName("HubWebApp"),
+            appKey: HubInfo.AppKey,
+            qualifiedMachineName: "destination.example.com",
+            domain: "",
+            siteName: ""
+        );
         await tester.Execute(request);
         await tester.Execute(request);
         var db = tester.Services.GetRequiredService<HubDbContext>();
@@ -181,22 +198,26 @@ sealed class NewInstallationTest
         Assert.That(versionInstallations.Length, Is.EqualTo(2), "Should not add duplicate version installation");
     }
 
-    private static Task<InstallLocationEntity[]> getInstallLocations(IHubActionTester tester)
+    private static Task<InstallLocationEntity[]> GetInstallLocations(IHubActionTester tester)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
-        return db.InstallLocations.Retrieve().Where(loc => loc.QualifiedMachineName != "unknown").ToArrayAsync();
+        return db.InstallLocations.Retrieve()
+            .Where(loc => loc.QualifiedMachineName != "unknown")
+            .ToArrayAsync();
     }
 
-    private static async Task<InstallationEntity> getCurrentInstallation(IHubActionTester tester)
+    private static async Task<InstallationEntity> GetCurrentInstallation(IHubActionTester tester)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var unknownLocation = await getUnknownInstallLocation(db);
-        var installations = await db.Installations.Retrieve().Where(inst => inst.LocationID != unknownLocation.ID).ToArrayAsync();
+        var installations = await db.Installations.Retrieve()
+            .Where(inst => inst.LocationID != unknownLocation.ID)
+            .ToArrayAsync();
         var currentInstallation = installations.First(inst => inst.IsCurrent);
         return currentInstallation;
     }
 
-    private static Task<AppXtiVersionEntity> getVersion(IHubActionTester tester, InstallationEntity installation)
+    private static Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationEntity installation)
     {
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         return db.AppVersions.Retrieve()
@@ -204,7 +225,7 @@ sealed class NewInstallationTest
             .FirstAsync();
     }
 
-    private static async Task<InstallationEntity> getVersionInstallation(IHubActionTester tester, AppVersion appVersion)
+    private static async Task<InstallationEntity> GetVersionInstallation(IHubActionTester tester, AppVersion appVersion)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var appVersionID = db.AppVersions.Retrieve()
@@ -217,12 +238,11 @@ sealed class NewInstallationTest
         return versionInstallation;
     }
 
-    private static async Task<InstallLocationEntity> getUnknownInstallLocation(HubDbContext db)
-    {
-        return await db.InstallLocations.Retrieve().FirstAsync(loc => loc.QualifiedMachineName == "unknown");
-    }
+    private static Task<InstallLocationEntity> getUnknownInstallLocation(HubDbContext db) =>
+        db.InstallLocations.Retrieve()
+            .FirstAsync(loc => loc.QualifiedMachineName == "unknown");
 
-    private async Task<HubActionTester<NewInstallationRequest, NewInstallationResult>> setup()
+    private async Task<HubActionTester<NewInstallationRequest, NewInstallationResult>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

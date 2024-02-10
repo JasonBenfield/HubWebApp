@@ -31,6 +31,7 @@ public interface IHubDbContext
     DataRepository<ExpandedRequest> ExpandedRequests { get; }
     DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
     DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
+    DataRepository<ExpandedUserRole> ExpandedUserRoles { get; }
     Task Transaction(Func<Task> action);
     Task<TResult> Transaction<TResult>(Func<Task<TResult>> action);
     public void SetTimeout(TimeSpan timeout);

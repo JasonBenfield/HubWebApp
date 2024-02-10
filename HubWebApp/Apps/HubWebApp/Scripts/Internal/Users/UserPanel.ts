@@ -6,6 +6,7 @@ import { AppListCard } from "./AppListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
 import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
+import { App } from "../../Lib/App";
 
 interface IResults {
     backRequested?: boolean;
@@ -57,10 +58,10 @@ export class UserPanel implements IPanel {
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));
     }
 
-    private onAppSelected(app: IAppModel) {
+    private onAppSelected(app: App) {
         const url = this.hubClient.AppUser.Index.getModifierUrl(
-            app.PublicKey.DisplayText,
-            { App: app.PublicKey.DisplayText, UserID: this.userID }
+            app.getModifier(),
+            { App: app.publicKey.displayText, UserID: this.userID }
         );
         new WebPage(url).open();
     }

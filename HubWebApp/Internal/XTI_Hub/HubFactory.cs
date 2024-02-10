@@ -19,6 +19,10 @@ public sealed class HubFactory
 
     public AppUserRepository Users { get => users ??= new(this); }
 
+    private AppUserRoleRepository? userRoles;
+
+    public AppUserRoleRepository UserRoles { get => userRoles ??= new(this); }
+
     private SystemUserRepository? systemUsers;
 
     public SystemUserRepository SystemUsers { get => systemUsers ??= new(this); }

@@ -1,5 +1,6 @@
 // Generated code
 
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { AppClientGroup } from "@jasonbenfield/sharedwebapp/Http/AppClientGroup";
 import { AppClientAction } from "@jasonbenfield/sharedwebapp/Http/AppClientAction";
 import { AppClientView } from "@jasonbenfield/sharedwebapp/Http/AppClientView";
@@ -12,6 +13,7 @@ export class AppGroup extends AppClientGroup {
 		this.Index = this.createView<IEmptyRequest>('Index');
 		this.GetAppAction = this.createAction<IEmptyRequest,IAppModel>('GetApp', 'Get App');
 		this.GetResourceGroupsAction = this.createAction<IEmptyRequest,IResourceGroupModel[]>('GetResourceGroups', 'Get Resource Groups');
+		this.GetRolesAction = this.createAction<IEmptyRequest,IAppRoleModel[]>('GetRoles', 'Get Roles');
 		this.GetMostRecentRequestsAction = this.createAction<number,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
 		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 		this.GetModifierCategoriesAction = this.createAction<IEmptyRequest,IModifierCategoryModel[]>('GetModifierCategories', 'Get Modifier Categories');
@@ -21,6 +23,7 @@ export class AppGroup extends AppClientGroup {
 	readonly Index: AppClientView<IEmptyRequest>;
 	readonly GetAppAction: AppClientAction<IEmptyRequest,IAppModel>;
 	readonly GetResourceGroupsAction: AppClientAction<IEmptyRequest,IResourceGroupModel[]>;
+	readonly GetRolesAction: AppClientAction<IEmptyRequest,IAppRoleModel[]>;
 	readonly GetMostRecentRequestsAction: AppClientAction<number,IAppRequestExpandedModel[]>;
 	readonly GetMostRecentErrorEventsAction: AppClientAction<number,IAppLogEntryModel[]>;
 	readonly GetModifierCategoriesAction: AppClientAction<IEmptyRequest,IModifierCategoryModel[]>;
@@ -31,6 +34,9 @@ export class AppGroup extends AppClientGroup {
 	}
 	GetResourceGroups(errorOptions?: IActionErrorOptions) {
 		return this.GetResourceGroupsAction.execute({}, errorOptions || {});
+	}
+	GetRoles(errorOptions?: IActionErrorOptions) {
+		return this.GetRolesAction.execute({}, errorOptions || {});
 	}
 	GetMostRecentRequests(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});

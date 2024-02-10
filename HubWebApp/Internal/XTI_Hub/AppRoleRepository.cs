@@ -51,6 +51,18 @@ public sealed class AppRoleRepository
             .Select(r => factory.CreateRole(r))
             .ToArrayAsync();
 
+    internal async Task<AppRole> Role(int roleID)
+    {
+        var record = await factory.DB.Roles.Retrieve()
+            .Where(r => r.ID == roleID)
+            .FirstOrDefaultAsync();
+        return factory.CreateRole
+        (
+            record
+            ?? throw new Exception($"Role {roleID} not found.")
+        );
+    }
+
     internal async Task<AppRole> Role(App app, int roleID)
     {
         var record = await rolesForApp(app)

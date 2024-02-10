@@ -18,7 +18,7 @@ export class PostToLogin {
         const passwordInput = this.createInput('Password', credentials.Password, 'password');
         const urlBuilder = UrlBuilder.current();
         const authKeyInput = this.createInput('AuthKey', authKey);
-        const returnKeyInput = this.createInput('ReturnKey', urlBuilder.getQueryValue('returnKey'));
+        const returnKeyInput = this.createInput('ReturnKey', urlBuilder.query.getValue('returnKey'));
         form.append(
             userNameInput,
             passwordInput,

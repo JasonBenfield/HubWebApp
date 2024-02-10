@@ -34,15 +34,15 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] string model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<string, AppUserModel>("GetUserOrAnon").Execute(model, ct);
+        return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<int, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
+        return api.Group("System").Action<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
     }
 
     [HttpPost]

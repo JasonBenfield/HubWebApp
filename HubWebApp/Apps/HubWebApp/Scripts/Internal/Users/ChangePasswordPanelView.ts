@@ -17,7 +17,7 @@ export class ChangePasswordPanelView extends GridView {
         super(container);
         this.setViewName(ChangePasswordPanelView.name);
         this.height100();
-        this.layout();
+        this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);

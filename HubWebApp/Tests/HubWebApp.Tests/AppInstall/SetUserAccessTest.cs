@@ -18,8 +18,8 @@ internal sealed class SetUserAccessTest
         );
         var appContext = tester.Services.GetRequiredService<IAppContext>();
         var app = await appContext.App();
-        var modCategory = app.ModifierCategories.First(mc => mc.ModifierCategory.Name.Equals(ModifierCategoryName.Default));
-        var modifier = modCategory.Modifiers.First(m => m.ModKey.Equals(ModifierKey.Default));
+        var modCategory = await GetModCategory(tester, app.App, ModifierCategoryName.Default);
+        var modifier = await GetModifier(tester, app.App, modCategory, ModifierKey.Default);
         var roles = await GetUserRoles(tester, modifier, userModel);
         Assert.That
         (
@@ -49,9 +49,8 @@ internal sealed class SetUserAccessTest
         );
         var appContext = tester.Services.GetRequiredService<IAppContext>();
         var app = await appContext.App();
-        var modCategory = app.ModifierCategories
-            .First(mc => mc.ModifierCategory.Name.Equals(HubInfo.ModCategories.UserGroups));
-        var modifier = modCategory.Modifiers.First(m => m.ModKey.Equals(new ModifierKey("General")));
+        var modCategory = await GetModCategory(tester, app.App, HubInfo.ModCategories.UserGroups);
+        var modifier = await GetModifier(tester, app.App, modCategory, new ModifierKey("General"));
         var roles = await GetUserRoles(tester, modifier, userModel);
         Assert.That
         (
@@ -84,18 +83,34 @@ internal sealed class SetUserAccessTest
         return userModel;
     }
 
+    private static async Task<ModifierCategoryModel> GetModCategory(IHubActionTester sourceTester, AppModel app, ModifierCategoryName modCategoryName)
+    {
+        var tester = sourceTester.Create(api => api.App.GetModifierCategories);
+        await tester.LoginAsAdmin();
+        var modCategories = await tester.Execute(new EmptyRequest(), app.PublicKey);
+        return modCategories.FirstOrDefault(mc => mc.Name.Equals(modCategoryName)) ?? new();
+    }
+
+    private static async Task<ModifierModel> GetModifier(IHubActionTester sourceTester, AppModel app, ModifierCategoryModel modCategory, ModifierKey modKey)
+    {
+        var tester = sourceTester.Create(api => api.ModCategory.GetModifiers);
+        await tester.LoginAsAdmin();
+        var modifiers = await tester.Execute(modCategory.ID, app.PublicKey);
+        return modifiers.FirstOrDefault(m => m.ModKey.Equals(modKey)) ?? new();
+    }
+
     private async Task<AppRoleModel[]> GetUserRoles(IHubActionTester tester, ModifierModel userModifier, AppUserModel user)
     {
-        var getRolesTester = tester.Create(hubApi => hubApi.AppUser.GetUserAccess);
+        var getRolesTester = tester.Create(hubApi => hubApi.AppUser.GetExplicitUserAccess);
         await getRolesTester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
         var userAccess = await getRolesTester.Execute
         (
             new UserModifierKey
-            {
-                ModifierID = userModifier.ID,
-                UserID = user.ID
-            },
+            (
+                modifierID: userModifier.ID,
+                userID: user.ID
+            ),
             modifier
         );
         return userAccess.AssignedRoles;

@@ -9,11 +9,12 @@ import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 import { ModCategoryListItem } from "./ModCategoryListItem";
 import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
+import { ModifierCategory } from "../../Lib/ModifierCategory";
 
 interface IResult {
     back?: boolean;
     defaultModSelected?: boolean;
-    modCategorySelected?: { modCategory: IModifierCategoryModel; };
+    modCategorySelected?: { modCategory: ModifierCategory; };
 }
 
 class Result {
@@ -23,7 +24,7 @@ class Result {
         return new Result({ defaultModSelected: true });
     }
 
-    static modCategorySelected(modCategory: IModifierCategoryModel) {
+    static modCategorySelected(modCategory: ModifierCategory) {
         return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
@@ -79,11 +80,12 @@ export class SelectModCategoryPanel implements IPanel {
     }
 
     private async delayedStart() {
-        let modCategories = await this.alert.infoAction(
+        const sourceModCategories = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.App.GetModifierCategories()
         );
-        modCategories = modCategories.filter(mc => mc.Name.Value.toLowerCase() !== 'default');
+        const modCategories = sourceModCategories.map(mc => new ModifierCategory(mc))
+            .filter(mc => !mc.isDefault);
         if (modCategories.length === 0) {
             this.awaitable.resolve(Result.defaultModSelected());
         }

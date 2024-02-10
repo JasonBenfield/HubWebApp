@@ -20,8 +20,7 @@ class MainPage extends HubPage {
         this.mainMenuPanel = this.panels.add(
             new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
-        const sessionIDText = Url.current().getQueryValue("SessionID");
-        const sessionID = sessionIDText ? Number.parseInt(sessionIDText) : 0;
+        const sessionID = Url.current().query.getNumberValue("SessionID");
         if (sessionID) {
             this.sessionPanel.setSessionID(sessionID);
             this.sessionPanel.refresh();

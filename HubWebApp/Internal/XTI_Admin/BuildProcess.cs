@@ -26,10 +26,7 @@ public sealed class BuildProcess
         var version = await branchVersion.Value();
         var appKeys = selectedAppKeys.Values;
         var versionName = versionNameAccessor.Value;
-        var appDefs = appKeys
-            .Select(a => new AppDefinitionModel(a))
-            .ToArray();
-        await hubAdmin.AddOrUpdateApps(versionName, appDefs);
+        await hubAdmin.AddOrUpdateApps(versionName, appKeys);
         Console.WriteLine("Building Apps");
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)

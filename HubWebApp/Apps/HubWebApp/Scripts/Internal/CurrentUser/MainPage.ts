@@ -8,15 +8,14 @@ import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
     private readonly changePasswordPanel: ChangePasswordPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         const hubApi = new AppClients(this.view.modalError).Hub();
         this.panels = new SingleActivePanel();
         this.mainMenuPanel = this.panels.add(
@@ -74,4 +73,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

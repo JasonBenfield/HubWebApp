@@ -19,7 +19,7 @@ partial class HubAppApi
             (
                 nameof(Version),
                 HubInfo.ModCategories.Apps,
-                Access.WithAllowed(HubInfo.Roles.ViewApp)
+                ResourceAccess.AllowAuthenticated().WithAllowed(HubInfo.Roles.AppViewerRoles)
             ),
             sp
         );

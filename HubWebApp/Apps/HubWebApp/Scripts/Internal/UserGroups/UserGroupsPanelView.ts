@@ -19,7 +19,7 @@ export class UserGroupsPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());

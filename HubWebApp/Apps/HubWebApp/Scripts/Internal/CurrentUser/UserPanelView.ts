@@ -5,7 +5,8 @@ import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
@@ -24,21 +25,21 @@ export class UserPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         mainContent.addView(TextHeading1View).configure(h => h.setText('Current User'));
-        const formGroupGrid = mainContent.addView(FormGroupGridView);
+        const formGroupGrid = mainContent.addView(FormGroupContainerView);
         const userNameFormGroup = formGroupGrid.addFormGroup(FormGroupTextView);
         userNameFormGroup.caption.setText('User Name');
-        this.userName = userNameFormGroup.textValue;
+        this.userName = userNameFormGroup.valueTextView;
         const personNameFormGroup = formGroupGrid.addFormGroup(FormGroupTextView);
         personNameFormGroup.caption.setText('Name');
-        this.personName = personNameFormGroup.textValue;
+        this.personName = personNameFormGroup.valueTextView;
         const emailFormGroup = formGroupGrid.addFormGroup(FormGroupTextView);
         emailFormGroup.caption.setText('Email');
-        this.email = emailFormGroup.textValue;
+        this.email = emailFormGroup.valueTextView;
         this.alert = mainContent.addView(MessageAlertView);
         const nav = mainContent.addView(NavView);
         nav.pills();

@@ -3,6 +3,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
@@ -31,7 +32,8 @@ export class ResourceGroupListCard {
     }
 
     async refresh() {
-        const resourceGroups = await this.getResourceGroups();
+        const sourceResourceGroups = await this.getResourceGroups();
+        const resourceGroups = sourceResourceGroups.map(rg => new AppResourceGroup(rg));
         this.resourceGroups.setItems(
             resourceGroups,
             (sourceItem, listItem) =>

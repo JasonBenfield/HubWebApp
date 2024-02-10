@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.UserInquiry;
 
-public sealed class GetUserAction : AppAction<int, AppUserModel>
+public sealed class GetUserAction : AppAction<AppUserIDRequest, AppUserModel>
 {
     private readonly UserGroupFromPath userGroupFromPath;
 
@@ -9,10 +9,10 @@ public sealed class GetUserAction : AppAction<int, AppUserModel>
         this.userGroupFromPath = userGroupFromPath;
     }
 
-    public async Task<AppUserModel> Execute(int userID, CancellationToken stoppingToken)
+    public async Task<AppUserModel> Execute(AppUserIDRequest getRequest, CancellationToken stoppingToken)
     {
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(userID);
+        var user = await userGroup.User(getRequest.UserID);
         return user.ToModel();
     }
 }

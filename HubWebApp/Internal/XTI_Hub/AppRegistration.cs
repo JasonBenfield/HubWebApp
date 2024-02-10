@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_App.Api;
 
 namespace XTI_Hub;
 
@@ -17,7 +16,6 @@ public sealed class AppRegistration
         var appKey = template.AppKey;
         var app = await hubFactory.Apps.App(appKey);
         var roleNames = template.RecursiveRoles()
-            .Select(r => new AppRoleName(r))
             .Union(new[] { AppRoleName.DenyAccess })
             .Distinct();
         await app.SetRoles(roleNames);
@@ -33,10 +31,8 @@ public sealed class AppRegistration
 
     private static async Task UpdateResourceGroupFromTemplate(App app, AppVersion appVersion, AppApiGroupTemplateModel groupTemplate)
     {
-        var modCategoryName = new ModifierCategoryName(groupTemplate.ModCategory);
-        var modCategory = await app.AddOrUpdateModCategory(modCategoryName);
-        var groupName = new ResourceGroupName(groupTemplate.Name);
-        var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupName, modCategory);
+        var modCategory = await app.AddOrUpdateModCategory(groupTemplate.ModCategory);
+        var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupTemplate.Name, modCategory);
         if (groupTemplate.IsAnonymousAllowed)
         {
             await resourceGroup.AllowAnonymous();
@@ -45,18 +41,17 @@ public sealed class AppRegistration
         {
             await resourceGroup.DenyAnonymous();
         }
-        var allowedGroupRoles = await rolesFromNames(app, groupTemplate.Roles.Select(r => new AppRoleName(r)));
+        var allowedGroupRoles = await RolesFromNames(app, groupTemplate.Roles);
         await resourceGroup.SetRoleAccess(allowedGroupRoles);
         foreach (var actionTemplate in groupTemplate.ActionTemplates)
         {
-            await updateResourceFromTemplate(app, resourceGroup, actionTemplate);
+            await UpdateResourceFromTemplate(app, resourceGroup, actionTemplate);
         }
     }
 
-    private static async Task updateResourceFromTemplate(App app, ResourceGroup resourceGroup, AppApiActionTemplateModel actionTemplate)
+    private static async Task UpdateResourceFromTemplate(App app, ResourceGroup resourceGroup, AppApiActionTemplateModel actionTemplate)
     {
-        var resourceName = new ResourceName(actionTemplate.Name);
-        var resource = await resourceGroup.AddOrUpdateResource(resourceName, actionTemplate.ResultType);
+        var resource = await resourceGroup.AddOrUpdateResource(actionTemplate.Name, actionTemplate.ResultType);
         if (actionTemplate.IsAnonymousAllowed)
         {
             await resource.AllowAnonymous();
@@ -65,11 +60,11 @@ public sealed class AppRegistration
         {
             await resource.DenyAnonymous();
         }
-        var allowedResourceRoles = await rolesFromNames(app, actionTemplate.Roles.Select(r => new AppRoleName(r)));
+        var allowedResourceRoles = await RolesFromNames(app, actionTemplate.Roles);
         await resource.SetRoleAccess(allowedResourceRoles);
     }
 
-    private static async Task<IEnumerable<AppRole>> rolesFromNames(App app, IEnumerable<AppRoleName> roleNames)
+    private static async Task<IEnumerable<AppRole>> RolesFromNames(App app, IEnumerable<AppRoleName> roleNames)
     {
         var roles = new List<AppRole>();
         foreach (var roleName in roleNames)

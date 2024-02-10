@@ -7,16 +7,18 @@ import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ModifierButtonListItemView } from "./ModifierButtonListItemView";
 import { ModifierListItem } from "./ModifierListItem";
 import { SelectModifierPanelView } from "./SelectModifierPanelView";
+import { Modifier } from "../../Lib/Modifier";
+import { ModifierCategory } from "../../Lib/ModifierCategory";
 
 interface IResult {
     back?: boolean;
-    modifierSelected?: { modifier: IModifierModel; };
+    modifierSelected?: { modifier: Modifier; };
 }
 
 class Result {
     static back() { return new Result({ back: true }); }
 
-    static modifierSelected(modifier: IModifierModel) {
+    static modifierSelected(modifier: Modifier) {
         return new Result({
             modifierSelected: { modifier: modifier }
         });
@@ -35,7 +37,7 @@ export class SelectModifierPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly modifiers: ListGroup<ModifierListItem, ModifierButtonListItemView>;
-    private modCategory: IModifierCategoryModel;
+    private modCategory: ModifierCategory;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -51,7 +53,7 @@ export class SelectModifierPanel implements IPanel {
         this.awaitable.resolve(Result.back());
     }
 
-    setModCategory(modCategory: IModifierCategoryModel) {
+    setModCategory(modCategory: ModifierCategory) {
         this.modCategory = modCategory;
     }
 
@@ -67,10 +69,11 @@ export class SelectModifierPanel implements IPanel {
     }
 
     private async delayedStart() {
-        const modifiers = await this.alert.infoAction(
+        const sourceModifiers = await this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ModCategory.GetModifiers(this.modCategory.ID)
+            () => this.hubClient.ModCategory.GetModifiers(this.modCategory.id)
         );
+        const modifiers = sourceModifiers.map(m => new Modifier(m));
         this.modifiers.setItems(
             modifiers,
             (mod, itemView) => new ModifierListItem(mod, itemView)

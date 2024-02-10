@@ -8,7 +8,8 @@ internal sealed class GetUserOrAnonTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         await AddUser(tester, "User1");
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank("User1");
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenModifierIsBlank(new AppUserNameRequest("User1"));
     }
 
     [Test]
@@ -21,7 +22,7 @@ internal sealed class GetUserOrAnonTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                "User1",
+                new AppUserNameRequest("User1"),
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.ViewUser
@@ -35,7 +36,7 @@ internal sealed class GetUserOrAnonTest
         await tester.LoginAsAdmin();
         var addedUser = await AddUser(tester, "User1");
         var modifier = await tester.GeneralUserGroupModifier();
-        var user = await tester.Execute("User1", modifier);
+        var user = await tester.Execute(new AppUserNameRequest("User1"), modifier);
         Assert.That(user, Is.EqualTo(addedUser), "Should get user by user name");
     }
 
@@ -45,11 +46,11 @@ internal sealed class GetUserOrAnonTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
-        var user = await tester.Execute("User1", modifier);
+        var user = await tester.Execute(new AppUserNameRequest("User1"), modifier);
         Assert.That(user.UserName, Is.EqualTo(AppUserName.Anon), "Should get anon user when not found");
     }
 
-    private async Task<HubActionTester<string, AppUserModel>> Setup()
+    private async Task<HubActionTester<AppUserNameRequest, AppUserModel>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

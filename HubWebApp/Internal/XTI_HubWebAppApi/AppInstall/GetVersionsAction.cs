@@ -11,7 +11,7 @@ internal sealed class GetVersionsAction : AppAction<GetVersionsRequest, XtiVersi
 
     public async Task<XtiVersionModel[]> Execute(GetVersionsRequest request, CancellationToken stoppingToken)
     {
-        var versions = await appFactory.Versions.VersionsByName(request.VersionName);
+        var versions = await appFactory.Versions.VersionsByName(request.ToAppVersionName());
         return versions.Select(v => v.ToModel()).ToArray();
     }
 }

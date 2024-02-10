@@ -1,60 +1,38 @@
-﻿using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppInstall;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 public sealed class RegisterAppTest
 {
     [Test]
     public async Task ShouldAddWebApp()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var appModel = app.ToModel();
         Assert.That(appModel.AppKey, Is.EqualTo(FakeInfo.AppKey), "Should add app");
-    }
-
-    private static async Task<App> getApp(IHubActionTester tester)
-    {
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await appFactory.Apps.App(FakeInfo.AppKey);
-        return app;
-    }
-
-    private static RegisterAppRequest createRequest(IHubActionTester tester)
-    {
-        var apiFactory = new FakeAppApiFactory(tester.Services);
-        var fakeApi = apiFactory.CreateTemplate();
-        var request = new RegisterAppRequest
-        {
-            AppTemplate = fakeApi.ToModel(),
-            VersionKey = AppVersionKey.Current
-        };
-        return request;
     }
 
     [Test]
     public async Task ShouldAddCurrentVersion()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         Assert.DoesNotThrowAsync(() => app.CurrentVersion());
     }
 
     [Test]
     public async Task ShouldAddRoles()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var roleNames = new[]
         {
             AppRoleName.Admin,
@@ -70,9 +48,9 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddUnknownApp()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
@@ -82,9 +60,9 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddUnknownResourceGroup()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
@@ -96,9 +74,9 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddUnknownResource()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown);
@@ -111,11 +89,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddResourceGroupsFromAppTemplateGroups()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var groups = (await version.ResourceGroups()).ToArray();
         Assert.That
@@ -139,11 +117,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddAllowedGroupRoleFromAppGroupTemplate()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups())
             .First(g => g.NameEquals(new ResourceGroupName("Employee")));
@@ -159,11 +137,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddResourcesFromAppTemplateActions()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(new ResourceGroupName("employee"));
         var resources = (await group.Resources()).ToArray();
@@ -178,11 +156,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddAllowedResourceRoleFromActionTemplate()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups()).First(g => g.NameEquals(new ResourceGroupName("Employee")));
         var addEmployeeAction = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
@@ -198,11 +176,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddDefaultModifierCategory()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var modCategory = await app.ModCategory(ModifierCategoryName.Default);
         Assert.That
         (
@@ -215,11 +193,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAddDefaultModifierCategoryToApp()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var category = await app.ModCategory(ModifierCategoryName.Default);
         Assert.That(category.ID, Is.GreaterThan(0), "Should add default modifier to app");
     }
@@ -227,11 +205,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldSetModifierCategoryForGroup()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
         var modCategory = await employeeGroup.ModCategory();
@@ -241,11 +219,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAllowAnonymousForResourceGroup()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
         var loginGroupModel = loginGroup.ToModel();
@@ -255,11 +233,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldDenyAnonymousForResourceGroup()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
         var employeeGroupModel = employeeGroup.ToModel();
@@ -269,11 +247,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldAllowAnonymousForResource()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
         var resource = await loginGroup.ResourceByName(new ResourceName("Authenticate"));
@@ -284,11 +262,11 @@ public sealed class RegisterAppTest
     [Test]
     public async Task ShouldDenyAnonymousForResource()
     {
-        var tester = await setup();
+        var tester = await Setup();
         await tester.LoginAsAdmin();
-        var request = createRequest(tester);
+        var request = CreateRequest(tester);
         await tester.Execute(request);
-        var app = await getApp(tester);
+        var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
         var resource = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
@@ -296,29 +274,47 @@ public sealed class RegisterAppTest
         Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }
 
-    private async Task<HubActionTester<RegisterAppRequest, AppModel>> setup()
+    private async Task<HubActionTester<RegisterAppRequest, AppModel>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
         var versionName = new AppVersionName("FakeWebApp");
-        await hubAdmin.AddOrUpdateApps(versionName, new[] { new AppDefinitionModel(FakeInfo.AppKey) });
+        await hubAdmin.AddOrUpdateApps(versionName, [FakeInfo.AppKey]);
         await hubAdmin.AddOrUpdateVersions
         (
-            new[] { FakeInfo.AppKey },
-            new[]
-            {
-                new XtiVersionModel
-                {
-                    VersionName = versionName,
-                    VersionKey = new AppVersionKey(1),
-                    VersionNumber = new AppVersionNumber(1,0,0),
-                    Status = AppVersionStatus.Values.Current,
-                    VersionType = AppVersionType.Values.Major,
-                    TimeAdded = DateTime.Now
-                }
-            }
+            [FakeInfo.AppKey],
+            [
+                new AddVersionRequest
+                (
+                    versionName: versionName,
+                    versionKey: new AppVersionKey(1),
+                    versionNumber: new AppVersionNumber(1,0,0),
+                    status: AppVersionStatus.Values.Current,
+                    versionType: AppVersionType.Values.Major
+                )
+            ]
         );
         return HubActionTester.Create(sp, hubApi => hubApi.Install.RegisterApp);
     }
+
+    private static async Task<App> GetApp(IHubActionTester tester)
+    {
+        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var app = await appFactory.Apps.App(FakeInfo.AppKey);
+        return app;
+    }
+
+    private static RegisterAppRequest CreateRequest(IHubActionTester tester)
+    {
+        var apiFactory = new FakeAppApiFactory(tester.Services);
+        var fakeApi = apiFactory.CreateTemplate();
+        var request = new RegisterAppRequest
+        {
+            AppTemplate = fakeApi.ToModel(),
+            VersionKey = AppVersionKey.Current
+        };
+        return request;
+    }
+
 }

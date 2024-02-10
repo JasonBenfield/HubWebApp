@@ -10,7 +10,8 @@ internal sealed class GetUserAuthenticatorsTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         var user = await AddUser(tester, "User1");
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(user.ID);
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenModifierIsBlank(new AppUserIDRequest(user.ID));
     }
 
     [Test]
@@ -23,7 +24,7 @@ internal sealed class GetUserAuthenticatorsTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                user.ID,
+                new AppUserIDRequest(user.ID),
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.ViewUser
@@ -39,7 +40,7 @@ internal sealed class GetUserAuthenticatorsTest
         const string externalUserKey = "ExternalUser1";
         await RegisterUserAuthenticator(tester, user.ID, externalUserKey);
         var modifier = await tester.GeneralUserGroupModifier();
-        var userAuthenticators = await tester.Execute(user.ID, modifier);
+        var userAuthenticators = await tester.Execute(new AppUserIDRequest(user.ID), modifier);
         Assert.That
         (
             userAuthenticators.Select(ua => ua.ExternalUserID).ToArray(),
@@ -54,7 +55,7 @@ internal sealed class GetUserAuthenticatorsTest
         );
     }
 
-    private async Task<HubActionTester<int, UserAuthenticatorModel[]>> Setup()
+    private async Task<HubActionTester<AppUserIDRequest, UserAuthenticatorModel[]>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

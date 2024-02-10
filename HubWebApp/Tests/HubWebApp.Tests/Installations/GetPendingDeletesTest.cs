@@ -1,6 +1,4 @@
-﻿using XTI_HubWebAppApi.AppInstall;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal sealed class GetPendingDeletesTest
 {
@@ -41,12 +39,18 @@ internal sealed class GetPendingDeletesTest
         const string machineName = "machine.example.com";
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion();
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = machineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester, 
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: machineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         var installationID = newInstResult.CurrentInstallationID;
         await StartInstallation(tester, new GetInstallationRequest(installationID));
         await Installed(tester, new GetInstallationRequest(installationID));
@@ -70,12 +74,18 @@ internal sealed class GetPendingDeletesTest
     {
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion();
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
         await Installed(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
         await RequestDelete(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));

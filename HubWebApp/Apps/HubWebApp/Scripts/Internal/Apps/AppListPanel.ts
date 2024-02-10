@@ -3,14 +3,15 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCard } from "./AppListCard";
 import { AppListPanelView } from "./AppListPanelView";
+import { App } from "../../Lib/App";
 
 interface IResult {
-    appSelected?: { app: IAppModel; };
+    appSelected?: { app: App; };
     mainMenuRequested?: {};
 }
 
 class Result {
-    static appSelected(app: IAppModel) {
+    static appSelected(app: App) {
         return new Result({ appSelected: { app: app } });
     }
 
@@ -42,7 +43,7 @@ export class AppListPanel implements IPanel {
         new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
     }
 
-    private onAppSelected(app: IAppModel) {
+    private onAppSelected(app: App) {
         this.awaitable.resolve(
             Result.appSelected(app)
         );

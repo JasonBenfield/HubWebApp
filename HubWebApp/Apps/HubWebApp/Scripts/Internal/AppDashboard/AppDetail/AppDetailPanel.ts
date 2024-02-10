@@ -9,11 +9,13 @@ import { ModifierCategoryListCard } from './ModifierCategoryListCard';
 import { MostRecentErrorEventListCard } from './MostRecentErrorEventListCard';
 import { MostRecentRequestListCard } from './MostRecentRequestListCard';
 import { ResourceGroupListCard } from './ResourceGroupListCard';
+import { ModifierCategory } from '../../../Lib/ModifierCategory';
+import { AppResourceGroup } from '../../../Lib/AppResourceGroup';
 
 interface IResult {
     backRequested?: {};
-    resourceGroupSelected?: { resourceGroup: IResourceGroupModel; };
-    modCategorySelected?: { modCategory: IModifierCategoryModel; };
+    resourceGroupSelected?: { resourceGroup: AppResourceGroup; };
+    modCategorySelected?: { modCategory: ModifierCategory; };
 }
 
 class Result {
@@ -21,13 +23,13 @@ class Result {
         return new Result({ backRequested: {} });
     }
 
-    static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
+    static resourceGroupSelected(resourceGroup: AppResourceGroup) {
         return new Result({
             resourceGroupSelected: { resourceGroup: resourceGroup }
         });
     }
 
-    static modCategorySelected(modCategory: IModifierCategoryModel) {
+    static modCategorySelected(modCategory: ModifierCategory) {
         return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
@@ -81,7 +83,7 @@ export class AppDetailPanel implements IPanel {
         );
     }
 
-    private onModCategorySelected(modCategory: IModifierCategoryModel) {
+    private onModCategorySelected(modCategory: ModifierCategory) {
         this.awaitable.resolve(
             Result.modCategorySelected(modCategory)
         );

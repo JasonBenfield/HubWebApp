@@ -4,10 +4,10 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfirm";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
+import { InstallationDetail } from "../../Lib/InstallationDetail";
 
 interface IResult {
     menuRequested?: boolean;
@@ -84,40 +84,39 @@ export class InstallationPanel implements IPanel {
     }
 
     async refresh() {
-        const detail = await this.alert.infoAction(
+        const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Installations.GetInstallationDetail(this.installationID)
         );
-        this.appKey.setValue(
-            detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
-        );
-        this.versionKey.setText(detail.Version.VersionKey.DisplayText);
-        this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
-        this.installationStatus.setValue(detail.Installation.Status.DisplayText);
-        this.location.setText(detail.InstallLocation.QualifiedMachineName);
-        this.current.setText(detail.Installation.IsCurrent ? '[ Current ]' : '');
-        if (detail.Installation.Domain) {
-            this.domain.setValue(detail.Installation.Domain);
+        const detail = new InstallationDetail(sourceDetail);
+        this.appKey.setValue(detail.app.appKey.format());
+        this.versionKey.setText(detail.version.versionKey.displayText);
+        this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.installationStatus.setValue(detail.installation.status.DisplayText);
+        this.location.setText(detail.installLocation.qualifiedMachineName);
+        this.current.setText(detail.installation.isCurrent ? '[ Current ]' : '');
+        if (detail.installation.domain) {
+            this.domain.setValue(detail.installation.domain);
             this.view.showDomain();
         }
         else {
             this.view.hideDomain();
         }
-        if (detail.Installation.SiteName) {
-            this.siteName.setValue(detail.Installation.SiteName);
+        if (detail.installation.siteName) {
+            this.siteName.setValue(detail.installation.siteName);
             this.view.showSiteName();
         }
         else {
             this.view.hideSiteName();
         }
-        if (detail.MostRecentRequest.ID) {
-            this.mostRecentRequest.setValue(new FormattedDate(detail.MostRecentRequest.TimeStarted).formatDateTime());
+        if (detail.mostRecentRequest.id) {
+            this.mostRecentRequest.setValue(detail.mostRecentRequest.timeStarted.format());
             this.view.showMostRecentRequest();
         }
         else {
             this.view.hideMostRecentRequest();
         }
-        this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.App.PublicKey.Value, {}));
+        this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.app.getModifier(), {}));
     }
 
     start() { return this.awaitable.start(); }

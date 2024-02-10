@@ -58,10 +58,8 @@ export class LogEntryQueryPanel implements IPanel {
         });
         options.query.orderBy.addDescending(columns.TimeOccurred);
         const url = Url.current();
-        const requestIDText = url.getQueryValue('RequestID');
-        const requestID = requestIDText ? Number(requestIDText) : null;
-        const installationIDText = url.getQueryValue('InstallationID');
-        const installationID = installationIDText ? Number(installationIDText) : null;
+        const requestID = url.query.getNumberValue('RequestID');
+        const installationID = url.query.getNumberValue('InstallationID');
         options.saveChanges({
             select: true,
             filter: !requestID,
@@ -79,9 +77,9 @@ export class LogEntryQueryPanel implements IPanel {
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().getQueryValue('page');
+        const page = Url.current().query.getNumberValue('page');
         if (page) {
-            this.odataComponent.setCurrentPage(Number(page));
+            this.odataComponent.setCurrentPage(page);
         }
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
@@ -89,7 +87,8 @@ export class LogEntryQueryPanel implements IPanel {
     private onRefreshed(args: ODataRefreshedEventArgs) {
         const page = args.page > 1 ? args.page.toString() : '';
         const url = UrlBuilder.current();
-        const queryPage = url.getQueryValue('page');
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
         if (page !== queryPage) {
             if (page) {
                 url.replaceQuery('page', page);
