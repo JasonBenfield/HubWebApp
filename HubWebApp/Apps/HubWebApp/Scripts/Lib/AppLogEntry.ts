@@ -18,7 +18,7 @@ export class AppLogEntry {
         this.severity = AppEventSeverity.values.value(source.Severity);
         this.caption = source.Caption;
         this.message = source.Message;
-        this.detail = source.Message;
+        this.detail = source.Detail;
         this.category = source.Category;
     }
 }

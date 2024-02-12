@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.Auth;
 
-public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
+public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, AuthenticatedLoginResult>
 {
     private readonly UnverifiedUser unverifiedUser;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
@@ -13,19 +13,20 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, string>
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public async Task<string> Execute(VerifyLoginForm model, CancellationToken stoppingToken)
+    public async Task<AuthenticatedLoginResult> Execute(VerifyLoginForm model, CancellationToken stoppingToken)
     {
         var userName = model.UserName.Value() ?? "";
         var password = model.Password.Value() ?? "";
         var hashedPassword = hashedPasswordFactory.Create(password);
         await unverifiedUser.Verify(new AppUserName(userName), hashedPassword);
         var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
+        var authID = Guid.NewGuid().ToString("N");
         var authKey = await storedObject.Store
         (
             GenerateKeyModel.SixDigit(),
-            new AuthenticatedModel {  UserName = userName },
-            TimeSpan.FromMinutes(30)
+            new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
+            TimeSpan.FromMinutes(15)
         );
-        return authKey;
+        return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }
 }

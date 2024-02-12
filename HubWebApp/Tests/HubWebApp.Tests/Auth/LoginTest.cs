@@ -73,8 +73,8 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        var authKey = await tester.Execute(model);
-        var authenticated = await getAuthenticated(tester, authKey);
+        var loginResult = await tester.Execute(model);
+        var authenticated = await getAuthenticated(tester, loginResult.AuthKey);
         Assert.That(authenticated.UserName, Is.EqualTo(model.UserName.Value()), "Should return auth key");
     }
 
@@ -94,9 +94,9 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        var authKey = await tester.Execute(model);
+        var loginResult = await tester.Execute(model);
         var returnKey = await loginReturnKey(tester, "./Home");
-        await login(tester, authKey, returnKey);
+        await login(tester, loginResult, returnKey);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
         (
@@ -115,9 +115,9 @@ internal sealed class LoginTest
     {
         var tester = await setup();
         var model = createLoginModel();
-        var authKey = await tester.Execute(model);
+        var loginResult = await tester.Execute(model);
         var returnKey = await loginReturnKey(tester, "./Home");
-        await login(tester, authKey, returnKey);
+        await login(tester, loginResult, returnKey);
         var tempLog = tester.Services.GetRequiredService<TempLog>();
         var clock = tester.Services.GetRequiredService<IClock>();
         var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
@@ -154,15 +154,15 @@ internal sealed class LoginTest
         {
             User = new FakeHttpUser().Create("", user)
         };
-        var authKey = await tester.Execute(model);
-        await login(tester, authKey, returnKey);
+        var loginResult = await tester.Execute(model);
+        await login(tester, loginResult, returnKey);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.User.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
-        authKey = await tester.Execute(model);
-        await login(tester, authKey, returnKey);
+        loginResult = await tester.Execute(model);
+        await login(tester, loginResult, returnKey);
         var secondCachedUser = await userContext.User();
         Assert.That(secondCachedUser.User.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
@@ -178,17 +178,25 @@ internal sealed class LoginTest
         return result;
     }
 
-    private async Task login(IHubActionTester tester, string authKey, string returnKey)
+    private async Task login(IHubActionTester tester, AuthenticatedLoginResult loginResult, string returnKey)
     {
         var loginTester = tester.Create(hubApi => hubApi.Auth.Login);
-        await loginTester.Execute(new LoginModel { AuthKey = authKey, ReturnKey = returnKey });
+        await loginTester.Execute
+        (
+            new AuthenticatedLoginRequest
+            (
+                authKey: loginResult.AuthKey, 
+                authID: loginResult.AuthID, 
+                returnKey: returnKey
+            )
+        );
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         var claims = new XtiClaims(httpContextAccessor.HttpContext!);
         var currentUserName = tester.Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(claims.UserName());
     }
 
-    private async Task<HubActionTester<VerifyLoginForm, string>> setup()
+    private async Task<HubActionTester<VerifyLoginForm, AuthenticatedLoginResult>> setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup

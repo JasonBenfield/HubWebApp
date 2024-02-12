@@ -70,3 +70,8 @@ function Xti-UpdateHubDb {
         Throw "Update failed"
     }
 }
+
+function Xti-UpdateNpm {
+	Start-Process -FilePath "cmd.exe" -WorkingDirectory HubWebApp/Apps/HubWebApp -ArgumentList "/c", "npm install @jasonbenfield/sharedwebapp@latest"
+	Start-Process -FilePath "cmd.exe" -WorkingDirectory AuthenticatorWebApp/Apps/AuthenticatorWebApp -ArgumentList "/c", "npm install @jasonbenfield/sharedwebapp@latest"
+}

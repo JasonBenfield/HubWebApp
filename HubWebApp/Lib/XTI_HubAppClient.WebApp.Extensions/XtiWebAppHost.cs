@@ -24,6 +24,7 @@ public static class XtiWebAppHost
         builder.Services.AddAppServices();
         builder.Services.AddFileSecretCredentials(xtiEnv);
         builder.Services.AddHubClientServices();
+        builder.Services.AddHubClientContext();
         builder.Services.AddScoped<HubAppClientContext>();
         builder.Services.AddScoped<SystemUserXtiToken>();
         builder.Services.AddScoped<AuthCookieXtiToken>();

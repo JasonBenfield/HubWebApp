@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231212123251291" />
-    <PackageReference Include="XTI_ODataQuery.Api" Version="1.8.40-dev231212123251291" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.8.40-dev231212123251291" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev240210170635339" />
+    <PackageReference Include="XTI_ODataQuery.Api" Version="1.8.40-dev240210170635339" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.8.40-dev240210170635339" />
   </ItemGroup>
 
   <ItemGroup>

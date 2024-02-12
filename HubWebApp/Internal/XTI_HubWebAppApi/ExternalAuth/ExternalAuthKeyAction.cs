@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.ExternalAuth;
 
-internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, string>
+internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, AuthenticatedLoginResult>
 {
     private readonly HubFactory hubFactory;
     private readonly StoredObjectFactory storedObjectFactory;
@@ -11,7 +11,7 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public async Task<string> Execute(ExternalAuthKeyModel model, CancellationToken stoppingToken)
+    public async Task<AuthenticatedLoginResult> Execute(ExternalAuthKeyModel model, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(model.AuthenticatorKey);
         var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, model.ExternalUserKey);
@@ -20,12 +20,13 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, st
             throw new ExternalUserNotFoundException(authenticatorKey, model.ExternalUserKey);
         }
         var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
+        var authID = Guid.NewGuid().ToString("N");
         var authKey = await storedObject.Store
         (
             GenerateKeyModel.SixDigit(),
-            new AuthenticatedModel(user.ToModel().UserName),
+            new AuthenticatedModel(userName: user.ToModel().UserName, authID: authID),
             TimeSpan.FromMinutes(30)
         );
-        return authKey;
+        return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }
 }

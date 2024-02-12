@@ -6,7 +6,6 @@ global using XTI_App.Api;
 global using XTI_Hub;
 global using XTI_HubDB.Entities;
 global using XTI_HubWebAppApi;
-global using XTI_HubWebAppApi.Auth;
 global using XTI_HubWebAppApi.Installations;
 global using XTI_HubWebAppApi.Logs;
 global using XTI_HubWebAppApi.ResourceGroupInquiry;
