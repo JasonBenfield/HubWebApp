@@ -125,8 +125,13 @@ interface IExpandedInstallation {
 	LastRequestDaysAgo: number;
 	RequestCount: number;
 }
-interface ILoginModel {
+interface IAuthenticatedLoginResult {
 	AuthKey: string;
+	AuthID: string;
+}
+interface IAuthenticatedLoginRequest {
+	AuthKey: string;
+	AuthID: string;
 	ReturnKey: string;
 }
 interface ILoginReturnModel {

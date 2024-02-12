@@ -1,7 +1,5 @@
-﻿using XTI_App.Extensions;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_HubWebAppApi.Auth;
-using XTI_TempLog;
 
 namespace XTI_HubWebAppApi;
 
@@ -21,10 +19,12 @@ internal static class AuthExtensions
             var anonClient = sp.GetRequiredService<IAnonClient>();
             var hubFactory = sp.GetRequiredService<HubFactory>();
             var clock = sp.GetRequiredService<IClock>();
-            return new LoginAction(auth, anonClient, hubFactory, clock);
+            var options = sp.GetRequiredService<LoginOptions>();
+            return new LoginAction(auth, anonClient, hubFactory, clock, options);
         });
         services.AddScoped<VerifyLoginAction>();
         services.AddScoped<VerifyLoginFormAction>();
         services.AddScoped<LoginReturnKeyAction>();
+        services.AddScoped<LoginValidation>();
     }
 }

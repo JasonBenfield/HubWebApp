@@ -30,6 +30,10 @@ public static class HubClientExtensions
         services.AddScoped<SystemHubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
         services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+    }
+
+    public static void AddHubClientContext(this IServiceCollection services)
+    {
         services.AddScoped<HubAppClientContext>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().AppContext);
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().UserContext);

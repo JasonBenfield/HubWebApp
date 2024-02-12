@@ -9,7 +9,7 @@ public sealed class AuthApiGroup : AppApiGroupWrapper
         (
             nameof(Authenticate),
             () => sp.GetRequiredService<AuthenticateAction>(),
-            () => new LoginValidation()
+            () => new AuthenticateValidation()
         );
     }
     public AppApiAction<LoginCredentials, LoginResult> Authenticate { get; }

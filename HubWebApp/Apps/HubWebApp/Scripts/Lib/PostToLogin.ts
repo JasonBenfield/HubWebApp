@@ -5,7 +5,7 @@ export class PostToLogin {
     constructor(private readonly hubClient: HubAppClient) {
     }
 
-    execute(credentials: ILoginCredentials, authKey: string) {
+    execute(credentials: ILoginCredentials, authKey: string, authID: string) {
         const form = <HTMLFormElement>document.createElement('form');
         form.action = this.hubClient.Auth.Login
             .getUrl(null)
@@ -18,11 +18,13 @@ export class PostToLogin {
         const passwordInput = this.createInput('Password', credentials.Password, 'password');
         const urlBuilder = UrlBuilder.current();
         const authKeyInput = this.createInput('AuthKey', authKey);
+        const authIDInput = this.createInput('AuthID', authID);
         const returnKeyInput = this.createInput('ReturnKey', urlBuilder.query.getValue('returnKey'));
         form.append(
             userNameInput,
             passwordInput,
             authKeyInput,
+            authIDInput,
             returnKeyInput
         );
         document.body.append(form);

@@ -45,6 +45,7 @@ public sealed class XtiConsoleAppHost
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
+                    services.AddHubClientContext();
                     services.AddScoped<SystemUserXtiToken>();
                     services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {

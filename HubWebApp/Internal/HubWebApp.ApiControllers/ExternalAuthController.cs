@@ -10,8 +10,8 @@ public sealed partial class ExternalAuthController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> ExternalAuthKey([FromBody] ExternalAuthKeyModel model, CancellationToken ct)
+    public Task<ResultContainer<AuthenticatedLoginResult>> ExternalAuthKey([FromBody] ExternalAuthKeyModel model, CancellationToken ct)
     {
-        return api.Group("ExternalAuth").Action<ExternalAuthKeyModel, string>("ExternalAuthKey").Execute(model, ct);
+        return api.Group("ExternalAuth").Action<ExternalAuthKeyModel, AuthenticatedLoginResult>("ExternalAuthKey").Execute(model, ct);
     }
 }

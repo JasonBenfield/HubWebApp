@@ -18,7 +18,8 @@ public sealed class AuthGroup : AppApiGroupWrapper
         Login = source.AddAction
         (
             nameof(Login),
-            () => sp.GetRequiredService<LoginAction>()
+            () => sp.GetRequiredService<LoginAction>(),
+            () => sp.GetRequiredService<LoginValidation>()
         );
         LoginReturnKey = source.AddAction
         (
@@ -29,8 +30,8 @@ public sealed class AuthGroup : AppApiGroupWrapper
         );
 
     }
-    public AppApiAction<VerifyLoginForm, string> VerifyLogin { get; }
+    public AppApiAction<VerifyLoginForm, AuthenticatedLoginResult> VerifyLogin { get; }
     public AppApiAction<EmptyRequest, WebPartialViewResult> VerifyLoginForm { get; }
-    public AppApiAction<LoginModel, WebRedirectResult> Login { get; }
+    public AppApiAction<AuthenticatedLoginRequest, WebRedirectResult> Login { get; }
     public AppApiAction<LoginReturnModel, string> LoginReturnKey { get; }
 }

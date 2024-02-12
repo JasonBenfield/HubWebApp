@@ -17,7 +17,7 @@ public sealed class HcBasicAuthValidator : IBasicAuthValidator
         var form = new VerifyLoginForm();
         form.UserName.SetValue(username);
         form.Password.SetValue(password);
-        var authKey = await hubClient.Auth.VerifyLogin(form);
-        return !string.IsNullOrWhiteSpace(authKey);
+        var loginResult = await hubClient.Auth.VerifyLogin(form);
+        return !string.IsNullOrWhiteSpace(loginResult.AuthKey);
     }
 }
