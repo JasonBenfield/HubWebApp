@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.40-dev231104221906776" />
+    <PackageReference Include="XTI_ApiGeneratorApp.Extensions" Version="1.3.31" />
+	  <PackageReference Include="XTI_App.Fakes" Version="1.8.39" />
+	  <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.39" />
   </ItemGroup>
 
   <ItemGroup>

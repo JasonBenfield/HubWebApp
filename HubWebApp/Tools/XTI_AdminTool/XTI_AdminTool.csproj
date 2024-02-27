@@ -24,10 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_Git.GitLib" Version="1.2.21-dev231104235107427" />
-		<PackageReference Include="XTI_GitHub.Web" Version="1.2.21-dev231104235107427" />
-		<PackageReference Include="XTI_Git.Secrets" Version="1.2.21-dev231104235107427" />
-		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231101202441749" />
+		<PackageReference Include="XTI_Git.GitLib" Version="1.2.22" />
+		<PackageReference Include="XTI_GitHub.Web" Version="1.2.22" />
+		<PackageReference Include="XTI_Git.Secrets" Version="1.2.22" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.9" />
 	</ItemGroup>
 
 	<ItemGroup>

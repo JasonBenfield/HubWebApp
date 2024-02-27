@@ -16,13 +16,11 @@ public sealed class HubAppClientContext
         var xtiTokenAccessor = new XtiTokenAccessor(cache);
         xtiTokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
         xtiTokenAccessor.UseToken<SystemUserXtiToken>();
-        var requestKey = sp.GetRequiredService<IAppClientRequestKey>();
         var hubClient = new HubAppClient
         (
             httpClientFactory, 
             xtiTokenAccessor, 
             clientUrl,
-            requestKey,
             clientVersion
         );
         var installationIDAccessor = sp.GetRequiredService<InstallationIDAccessor>();

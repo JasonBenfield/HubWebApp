@@ -18,9 +18,13 @@ public sealed partial class EdmModelBuilder
 
     partial void init();
     public EntitySetConfiguration<ExpandedInstallation> InstallationQuery { get; }
+
     public EntitySetConfiguration<ExpandedUser> UserQuery { get; }
+
     public EntitySetConfiguration<ExpandedSession> SessionQuery { get; }
+
     public EntitySetConfiguration<ExpandedRequest> RequestQuery { get; }
+
     public EntitySetConfiguration<ExpandedLogEntry> LogEntryQuery { get; }
 
     public IEdmModel GetEdmModel() => odataBuilder.GetEdmModel();

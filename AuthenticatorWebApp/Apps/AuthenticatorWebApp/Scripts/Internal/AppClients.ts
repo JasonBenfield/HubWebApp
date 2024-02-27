@@ -1,7 +1,7 @@
 ﻿import { AppClientFactory } from "@jasonbenfield/sharedwebapp/Http/AppClientFactory";
 import { ModalErrorView } from "@jasonbenfield/sharedwebapp/Views/ModalError";
-import { AuthenticatorAppClient } from "../Lib/Http/AuthenticatorAppClient";
-import { HubAppClient } from "@hub/Http/HubAppClient";
+import { AuthenticatorAppClient } from "../Lib/Api/AuthenticatorAppClient";
+import { HubAppClient } from "@hub/Api/HubAppClient";
 
 export class AppClients {
     private readonly appClientFactory;
