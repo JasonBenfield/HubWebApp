@@ -24,6 +24,8 @@ public interface IHubDbContext
     DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     DataRepository<XtiVersionEntity> Versions { get; }
     DataRepository<AppXtiVersionEntity> AppVersions { get; }
+    DataRepository<InstallConfigurationEntity> InstallConfigurations { get; }
+    DataRepository<InstallConfigurationTemplateEntity> InstallConfigurationTemplates { get; }
     DataRepository<InstallLocationEntity> InstallLocations { get; }
     DataRepository<InstallationEntity> Installations { get; }
     DataRepository<StoredObjectEntity> StoredObjects { get; }

@@ -22,9 +22,9 @@ public sealed class InstallWebAppProcess : InstallAppProcess
 
     public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
-        Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
+        Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.SiteName}");
         var appOfflineFile = new AppOfflineFile(xtiFolder, adminInstOptions.AppKey, installVersionKey);
-        await PrepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
+        await PrepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.SiteName);
         try
         {
             DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);

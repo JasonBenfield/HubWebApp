@@ -28,7 +28,7 @@ public sealed class LocalInstallProcess
         this.installServiceAppProcess = installServiceAppProcess;
     }
 
-    public async Task Run(AdminInstallOptions adminInstOptions, IPublishedAssets publishedAssets)
+    public async Task Run(AdminInstallOptions adminInstOptions, IPublishedAssets publishedAssets, CancellationToken ct)
     {
         var installerCreds = new CredentialValue
         (
@@ -43,21 +43,21 @@ public sealed class LocalInstallProcess
             versionKey = adminInstOptions.VersionKey;
         }
         Console.WriteLine($"Starting install {appKey.Name.DisplayText} {appKey.Type.DisplayText} {versionKey}");
-        var setupAppPath = await publishedAssets.LoadSetup(adminInstOptions.Release, appKey, versionKey);
-        var appPath = await publishedAssets.LoadApps(adminInstOptions.Release, appKey, versionKey);
+        var setupAppPath = await publishedAssets.LoadSetup(adminInstOptions.Release, appKey, versionKey, ct);
+        var appPath = await publishedAssets.LoadApps(adminInstOptions.Release, appKey, versionKey, ct);
         var versionName = versionNameAccessor.Value;
         await new RunSetupProcess(xtiEnv).Run(versionName, appKey, adminInstOptions.VersionKey, setupAppPath);
         var installAppProcess = GetInstallAppProcess(appKey);
         if (xtiEnv.IsProduction())
         {
-            await hubAdministration.BeginInstall(adminInstOptions.VersionInstallationID);
+            await hubAdministration.BeginInstall(adminInstOptions.VersionInstallationID, ct);
             await installAppProcess.Run(appPath, adminInstOptions, versionKey);
-            await hubAdministration.Installed(adminInstOptions.VersionInstallationID);
+            await hubAdministration.Installed(adminInstOptions.VersionInstallationID, ct);
             await WriteInstallationID(adminInstOptions.VersionInstallationID, appKey, versionKey);
         }
-        await hubAdministration.BeginInstall(adminInstOptions.CurrentInstallationID);
+        await hubAdministration.BeginInstall(adminInstOptions.CurrentInstallationID, ct);
         await installAppProcess.Run(appPath, adminInstOptions, AppVersionKey.Current);
-        await hubAdministration.Installed(adminInstOptions.CurrentInstallationID);
+        await hubAdministration.Installed(adminInstOptions.CurrentInstallationID, ct);
         await WriteInstallationID(adminInstOptions.CurrentInstallationID, appKey, AppVersionKey.Current);
         Console.WriteLine("Installation Complete");
     }

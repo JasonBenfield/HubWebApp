@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
@@ -22,7 +21,7 @@ public sealed class BranchVersion
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task<XtiVersionModel> Value()
+    public async Task<XtiVersionModel> Value(CancellationToken ct)
     {
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
@@ -41,7 +40,7 @@ public sealed class BranchVersion
         {
             versionKey = AppVersionKey.Current;
         }
-        var version = await hubAdmin.Version(versionNameAccessor.Value, versionKey);
+        var version = await hubAdmin.Version(versionNameAccessor.Value, versionKey, ct);
         return version;
     }
 }

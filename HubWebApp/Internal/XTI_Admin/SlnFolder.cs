@@ -6,57 +6,29 @@ namespace XTI_Admin;
 
 public sealed class SlnFolder
 {
-    private readonly List<SlnAppFolder> appFolders = new();
-    private readonly XtiEnvironment xtiEnv;
+    private readonly List<AppKey> appKeys = new();
 
-    public SlnFolder(XtiEnvironment xtiEnv, string folderPath)
+    public SlnFolder(string folderPath)
     {
-        this.xtiEnv = xtiEnv;
         foreach (var folder in Directory.GetDirectories(folderPath))
         {
             var appKey = GetAppKey(folder);
             if (appKey != null)
             {
-                var installOptions = getInstallOptions(folder);
-                appFolders.Add(new SlnAppFolder(appKey, installOptions));
+                appKeys.Add(appKey);
             }
         }
-        if (!appFolders.Any())
+        if (!appKeys.Any())
         {
             var appKey = GetAppKey(folderPath);
             if (appKey != null)
             {
-                var installOptions = getInstallOptions(folderPath);
-                appFolders.Add(new SlnAppFolder(appKey, installOptions));
+                appKeys.Add(appKey);
             }
         }
     }
 
-    private InstallOptions getInstallOptions(string folder)
-    {
-        var installOptions = new InstallOptions
-        (
-            new InstallationOptions[] { new InstallationOptions("", "", "") },
-            999
-        );
-        var installConfigPath = Path.Combine(folder, $"install.{xtiEnv.EnvironmentName}.private.json");
-        if (File.Exists(installConfigPath))
-        {
-            var serialized = File.ReadAllText(installConfigPath);
-            var deserialized = JsonSerializer.Deserialize<InstallOptions>(serialized);
-            if (deserialized != null)
-            {
-                installOptions = deserialized;
-            }
-        }
-        return installOptions;
-    }
-
-    internal SlnAppFolder[] Folders() => appFolders.ToArray();
-
-    internal SlnAppFolder? Folder(AppKey appKey) => appFolders.FirstOrDefault(af => af.AppKey.Equals(appKey));
-
-    public AppKey[] AppKeys() => appFolders.OrderBy(f => f.InstallOptions.Sequence).Select(af => af.AppKey).ToArray();
+    public AppKey[] AppKeys() => appKeys.ToArray();
 
     private AppKey? GetAppKey(string folderPath)
     {

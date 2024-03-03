@@ -43,7 +43,7 @@ public sealed class PublishProcess
         this.completeVersionProcess = completeVersionProcess;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         if (!appKeys.Any())
@@ -56,13 +56,13 @@ public sealed class PublishProcess
         string semanticVersion;
         if (xtiEnv.IsProduction())
         {
-            var version = await beginPublishProcess.Run();
+            var version = await beginPublishProcess.Run(ct);
             semanticVersion = version.VersionNumber.Format();
             Console.WriteLine($"Publishing Version '{semanticVersion}'");
         }
         else
         {
-            var currentVersion = await currentVersionAccessor.Value();
+            var currentVersion = await currentVersionAccessor.Value(ct);
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
         var release = await CreateGitHubRelease(versionKey, semanticVersion);
@@ -91,9 +91,9 @@ public sealed class PublishProcess
         }
         if (xtiEnv.IsProduction())
         {
-            await completeVersionProcess.Run();
+            await completeVersionProcess.Run(ct);
         }
-        await PublishVersions(release);
+        await PublishVersions(release, ct);
         if (xtiEnv.IsProduction() && release != null)
         {
             Console.WriteLine($"Finalizing release {release.TagName}");
@@ -116,7 +116,7 @@ public sealed class PublishProcess
         return release;
     }
 
-    private async Task PublishVersions(GitHubRelease? release)
+    private async Task PublishVersions(GitHubRelease? release, CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         var versionsPath = publishFolder.VersionsPath();
@@ -125,7 +125,7 @@ public sealed class PublishProcess
             publishFolder.TryCreateVersionDir();
             if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
             var persistedVersions = new PersistedVersions(versionsPath);
-            var versions = await prodHubAdmin.Value.Versions(versionNameAccessor.Value);
+            var versions = await prodHubAdmin.Value.Versions(versionNameAccessor.Value, ct);
             await persistedVersions.Store(versions);
         }
         if (release != null)

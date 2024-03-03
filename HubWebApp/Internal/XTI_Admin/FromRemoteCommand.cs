@@ -15,7 +15,7 @@ internal sealed class FromRemoteCommand : ICommand
         this.storedObjFactory = storedObjFactory;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.RemoteOptionsKey))
         {
@@ -26,6 +26,6 @@ internal sealed class FromRemoteCommand : ICommand
             .Value<AdminOptions>(options.RemoteOptionsKey);
         options.Load(remoteOptions);
         var command = commandFactory.CreateCommand(options);
-        await command.Execute();
+        await command.Execute(ct);
     }
 }

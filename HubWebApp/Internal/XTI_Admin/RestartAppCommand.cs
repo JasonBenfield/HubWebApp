@@ -20,7 +20,7 @@ internal sealed class RestartAppCommand : ICommand
         this.remoteCommandService = remoteCommandService;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var appKey = options.AppKey();
         if (string.IsNullOrWhiteSpace(options.DestinationMachine))

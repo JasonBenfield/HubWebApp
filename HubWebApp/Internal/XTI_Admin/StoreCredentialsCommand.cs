@@ -16,7 +16,7 @@ internal sealed class StoreCredentialsCommand : ICommand
         this.remoteCommandService = remoteCommandService;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.CredentialKey)) { throw new ArgumentException("CredentialKey is required"); }
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }

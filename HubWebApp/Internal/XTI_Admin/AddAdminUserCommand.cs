@@ -19,7 +19,7 @@ internal sealed class AddAdminUserCommand : ICommand
         this.secretCredentialsFactory = secretCredentialsFactory;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
@@ -30,7 +30,8 @@ internal sealed class AddAdminUserCommand : ICommand
             (
                 appKey, 
                 new AppUserName(options.UserName), 
-                options.Password
+                options.Password,
+                ct
             );
         }
         if (!string.IsNullOrWhiteSpace(options.CredentialKey))

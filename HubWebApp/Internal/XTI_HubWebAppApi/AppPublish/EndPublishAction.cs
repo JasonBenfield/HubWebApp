@@ -13,6 +13,7 @@ public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersi
         hubAdministration.EndPublish
         (
             publishRequest.ToAppVersionName(), 
-            publishRequest.ToAppVersionKey()
+            publishRequest.ToAppVersionKey(),
+            stoppingToken
         );
 }

@@ -17,7 +17,7 @@ public sealed class StartIssueCommand : ICommand
         this.gitHubRepo = gitHubRepo;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (options.IssueNumber <= 0) { throw new ArgumentException("Issue Number is required"); }
         var currentBranchName = gitRepo.CurrentBranchName();

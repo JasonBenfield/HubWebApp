@@ -30,6 +30,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         ResourceRoles = new EfDataRepository<ResourceRoleEntity>(this);
         ModifierCategories = new EfDataRepository<ModifierCategoryEntity>(this);
         Modifiers = new EfDataRepository<ModifierEntity>(this);
+        InstallConfigurations = new EfDataRepository<InstallConfigurationEntity>(this);
+        InstallConfigurationTemplates = new EfDataRepository<InstallConfigurationTemplateEntity>(this);
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
         StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
@@ -63,6 +65,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new ResourceRoleEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ModifierCategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ModifierEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InstallConfigurationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InstallConfigurationTemplateEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
@@ -94,6 +98,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ResourceRoleEntity> ResourceRoles { get; }
     public DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     public DataRepository<ModifierEntity> Modifiers { get; }
+    public DataRepository<InstallConfigurationEntity> InstallConfigurations { get; }
+    public DataRepository<InstallConfigurationTemplateEntity> InstallConfigurationTemplates { get; }
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
     public DataRepository<StoredObjectEntity> StoredObjects { get; }

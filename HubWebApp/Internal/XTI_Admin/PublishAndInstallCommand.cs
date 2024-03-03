@@ -1,6 +1,4 @@
-﻿using XTI_Hub.Abstractions;
-
-namespace XTI_Admin;
+﻿namespace XTI_Admin;
 
 internal sealed class PublishAndInstallCommand : ICommand
 {
@@ -17,13 +15,13 @@ internal sealed class PublishAndInstallCommand : ICommand
         this.installProcess = installProcess;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
-        await buildProcess.Run();
-        await publishProcess.Run();
-        await installProcess.Run();
+        await buildProcess.Run(ct);
+        await publishProcess.Run(ct);
+        await installProcess.Run(ct);
     }
 }

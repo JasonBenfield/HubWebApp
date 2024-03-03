@@ -13,6 +13,7 @@ public sealed class BeginPublishAction : AppAction<PublishVersionRequest, XtiVer
         hubAdministration.BeginPublish
         (
             publishRequest.ToAppVersionName(), 
-            publishRequest.ToAppVersionKey()
+            publishRequest.ToAppVersionKey(),
+            stoppingToken
         );
 }

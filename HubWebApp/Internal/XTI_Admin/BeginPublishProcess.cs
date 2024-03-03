@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
-using XTI_HubDB.Entities;
+﻿using XTI_App.Abstractions;
 
 namespace XTI_Admin;
 
@@ -18,11 +15,11 @@ public sealed class BeginPublishProcess
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task<XtiVersionModel> Run()
+    public async Task<XtiVersionModel> Run(CancellationToken ct)
     {
         Console.WriteLine("Begin Publishing");
         var versionKey = versionKeyFromCurrentBranch.Value();
-        var version = await productionHubAdmin.Value.BeginPublish(versionNameAccessor.Value, versionKey);
+        var version = await productionHubAdmin.Value.BeginPublish(versionNameAccessor.Value, versionKey, ct);
         return version;
     }
 }

@@ -23,7 +23,7 @@ public sealed class NewVersionCommand : ICommand
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var currentBranchName = gitRepo.CurrentBranchName();
         var repoInfo = await gitHubRepo.RepositoryInformation();
@@ -40,7 +40,8 @@ public sealed class NewVersionCommand : ICommand
         var newVersion = await hubAdministration.StartNewVersion
         (
             versionName,
-            versionType
+            versionType,
+            ct
         );
         var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey.DisplayText);
         await gitHubRepo.CreateNewVersion(gitVersion);

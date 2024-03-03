@@ -39,6 +39,11 @@ public sealed class PublishLibProcess
             var credentials = await credentialsAccessor.Value();
             foreach (var dir in Directory.GetDirectories(libDir))
             {
+                var prjFiles = Directory.GetFiles(dir, "*.csproj");
+                if (!prjFiles.Any())
+                {
+                    throw new Exception($"Project file not found in '{dir}'");
+                }
                 var packProcess = new WinProcess("dotnet")
                     .WriteOutputToConsole()
                     .UseArgumentNameDelimiter("")
