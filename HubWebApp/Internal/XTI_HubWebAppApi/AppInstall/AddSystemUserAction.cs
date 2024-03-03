@@ -14,6 +14,7 @@ public sealed class AddSystemUserAction : AppAction<AddSystemUserRequest, AppUse
         (
             addRequest.AppKey.ToAppKey(), 
             addRequest.MachineName, 
-            addRequest.Password
+            addRequest.Password,
+            stoppingToken
         );
 }

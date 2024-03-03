@@ -15,10 +15,10 @@ internal sealed class AddInstallationUserCommand : ICommand
         this.credentials = credentials;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var password = Guid.NewGuid().ToString();
-        var user = await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password);
+        var user = await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password, ct);
         await credentials.Update
         (
             new CredentialValue

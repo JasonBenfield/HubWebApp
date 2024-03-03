@@ -17,19 +17,19 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "css-loader": "^6.8.1",
+    "css-loader": "^6.10.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
-    "html-loader": "^4.2.0",
+    "html-loader": "^5.0.0",
     "mini-css-extract-plugin": "^2.0.0",
     "resolve-url-loader": "^4.0.0",
-    "sass": "^1.56.1",
-    "sass-loader": "^13.3.2",
+    "sass": "^1.71.1",
+    "sass-loader": "^14.1.1",
     "style-loader": "^3.3.3",
-    "ts-loader": "^9.5.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
-    "webpack": "^5.89.0",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
   }
 }

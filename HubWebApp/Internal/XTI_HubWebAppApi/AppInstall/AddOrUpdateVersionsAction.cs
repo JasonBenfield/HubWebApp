@@ -14,7 +14,8 @@ internal sealed class AddOrUpdateVersionsAction : AppAction<AddOrUpdateVersionsR
         await hubAdmin.AddOrUpdateVersions
         (
             addRequest.ToAppKeys(), 
-            addRequest.Versions
+            addRequest.Versions,
+            stoppingToken
         );
         return new EmptyActionResult();
     }

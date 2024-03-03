@@ -15,7 +15,7 @@ internal sealed class HostedService : IHostedService
         this.sp = sp;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken ct)
     {
         try
         {
@@ -29,7 +29,7 @@ internal sealed class HostedService : IHostedService
             var commandFactory = scope.ServiceProvider.GetRequiredService<CommandFactory>();
             var options = scope.ServiceProvider.GetRequiredService<AdminOptions>();
             var command = commandFactory.CreateCommand(options);
-            await command.Execute();
+            await command.Execute(ct);
         }
         catch (Exception ex)
         {

@@ -18,9 +18,13 @@ export class InstallGroup extends AppClientGroup {
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
 		this.AddAdminUserAction = this.createAction<IAddAdminUserRequest,IAppUserModel>('AddAdminUser', 'Add Admin User');
 		this.AddInstallationUserAction = this.createAction<IAddInstallationUserRequest,IAppUserModel>('AddInstallationUser', 'Add Installation User');
-		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
 		this.BeginInstallationAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('BeginInstallation', 'Begin Installation');
+		this.ConfigureInstallTemplateAction = this.createAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>('ConfigureInstallTemplate', 'Configure Install Template');
+		this.ConfigureInstallAction = this.createAction<IConfigureInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
+		this.DeleteInstallConfigurationAction = this.createAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
+		this.GetInstallConfigurationsAction = this.createAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>('GetInstallConfigurations', 'Get Install Configurations');
 		this.InstalledAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('Installed', 'Installed');
+		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
 		this.SetUserAccessAction = this.createAction<ISetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
 	
@@ -32,9 +36,13 @@ export class InstallGroup extends AppClientGroup {
 	readonly AddSystemUserAction: AppClientAction<IAddSystemUserRequest,IAppUserModel>;
 	readonly AddAdminUserAction: AppClientAction<IAddAdminUserRequest,IAppUserModel>;
 	readonly AddInstallationUserAction: AppClientAction<IAddInstallationUserRequest,IAppUserModel>;
-	readonly NewInstallationAction: AppClientAction<INewInstallationRequest,INewInstallationResult>;
 	readonly BeginInstallationAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
+	readonly ConfigureInstallTemplateAction: AppClientAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>;
+	readonly ConfigureInstallAction: AppClientAction<IConfigureInstallRequest,IInstallConfigurationModel>;
+	readonly DeleteInstallConfigurationAction: AppClientAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>;
+	readonly GetInstallConfigurationsAction: AppClientAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>;
 	readonly InstalledAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
+	readonly NewInstallationAction: AppClientAction<INewInstallationRequest,INewInstallationResult>;
 	readonly SetUserAccessAction: AppClientAction<ISetUserAccessRequest,IEmptyActionResult>;
 	
 	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
@@ -61,14 +69,26 @@ export class InstallGroup extends AppClientGroup {
 	AddInstallationUser(model: IAddInstallationUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddInstallationUserAction.execute(model, errorOptions || {});
 	}
-	NewInstallation(model: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.NewInstallationAction.execute(model, errorOptions || {});
-	}
 	BeginInstallation(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.BeginInstallationAction.execute(model, errorOptions || {});
 	}
+	ConfigureInstallTemplate(model: IConfigureInstallTemplateRequest, errorOptions?: IActionErrorOptions) {
+		return this.ConfigureInstallTemplateAction.execute(model, errorOptions || {});
+	}
+	ConfigureInstall(model: IConfigureInstallRequest, errorOptions?: IActionErrorOptions) {
+		return this.ConfigureInstallAction.execute(model, errorOptions || {});
+	}
+	DeleteInstallConfiguration(model: IDeleteInstallConfigurationRequest, errorOptions?: IActionErrorOptions) {
+		return this.DeleteInstallConfigurationAction.execute(model, errorOptions || {});
+	}
+	GetInstallConfigurations(model: IGetInstallConfigurationsRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetInstallConfigurationsAction.execute(model, errorOptions || {});
+	}
 	Installed(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.InstalledAction.execute(model, errorOptions || {});
+	}
+	NewInstallation(model: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.NewInstallationAction.execute(model, errorOptions || {});
 	}
 	SetUserAccess(model: ISetUserAccessRequest, errorOptions?: IActionErrorOptions) {
 		return this.SetUserAccessAction.execute(model, errorOptions || {});

@@ -44,6 +44,11 @@ internal sealed class PublishToolsProcess
         {
             foreach (var srcDir in Directory.GetDirectories(srcToolsDir))
             {
+                var prjFiles = Directory.GetFiles(srcDir, "*.csproj");
+                if (!prjFiles.Any())
+                {
+                    throw new Exception($"Project file not found in '{srcDir}'");
+                }
                 var prjName = new DirectoryInfo(srcDir).Name;
                 var publishToolsDir = Path.Combine(publishDir, "Tools", prjName);
                 Console.WriteLine($"Publishing tools to '{publishToolsDir}'");

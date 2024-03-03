@@ -98,6 +98,14 @@ public sealed class HubFactory
 
     internal LogEntry CreateLogEntry(LogEntryEntity record) => new(this, record);
 
+    private InstallConfigurationRepository? installConfigurations;
+
+    public InstallConfigurationRepository InstallConfigurations { get => installConfigurations ??= new(this); }
+
+    private InstallConfigurationTemplateRepository? installConfigurationTemplates;
+
+    internal InstallConfigurationTemplateRepository InstallConfigurationTemplates { get => installConfigurationTemplates ??= new(this); }
+
     private InstallLocationRepository? installLocations;
 
     public InstallLocationRepository InstallLocations { get => installLocations ??= new(this); }

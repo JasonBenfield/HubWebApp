@@ -17,7 +17,7 @@ internal sealed class NewIssueCommand : ICommand
         this.gitHubRepo = gitHubRepo;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.IssueTitle)) { throw new ArgumentException("Issue Title is required"); }
         var currentBranchName = gitRepo.CurrentBranchName();

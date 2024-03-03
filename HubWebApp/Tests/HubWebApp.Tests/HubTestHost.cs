@@ -28,7 +28,8 @@ internal sealed class HubTestHost
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
-            [HubInfo.AppKey]
+            [HubInfo.AppKey],
+            default
         );
         await hubAdmin.AddOrUpdateVersions
         (
@@ -42,7 +43,8 @@ internal sealed class HubTestHost
                     status: AppVersionStatus.Values.Current,
                     versionType: AppVersionType.Values.Major
                 )
-            ]
+            ],
+            default
         );
         var setup = sp.GetRequiredService<IAppSetup>();
         await setup.Run(AppVersionKey.Current);

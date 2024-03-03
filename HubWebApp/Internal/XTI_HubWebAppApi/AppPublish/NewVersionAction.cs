@@ -13,6 +13,7 @@ internal sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersion
         hubAdministration.StartNewVersion
         (
             newVersionRequest.ToAppVersionName(),
-            newVersionRequest.ToAppVersionType()
+            newVersionRequest.ToAppVersionType(),
+            stoppingToken
         );
 }

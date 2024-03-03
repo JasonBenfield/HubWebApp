@@ -17,7 +17,7 @@ public sealed class CompleteIssueCommand : ICommand
         this.gitHubRepo = gitHubRepo;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoOwner)) { throw new ArgumentException("Repo Owner is required"); }
         if (string.IsNullOrWhiteSpace(gitRepoInfo.RepoName)) { throw new ArgumentException("Repo Name is required"); }

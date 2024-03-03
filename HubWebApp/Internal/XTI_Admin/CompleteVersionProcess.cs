@@ -20,7 +20,7 @@ public sealed class CompleteVersionProcess
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
@@ -45,7 +45,8 @@ public sealed class CompleteVersionProcess
         await prodHubAdmin.Value.EndPublish
         (
             versionNameAccessor.Value, 
-            versionKey
+            versionKey,
+            ct
         );
         if (isDefaultCheckedOut)
         {

@@ -14,6 +14,7 @@ internal sealed class AddAdminUserAction : AppAction<AddAdminUserRequest, AppUse
         (
             addRequest.AppKey.ToAppKey(),
             addRequest.ToAppUserName(),
-            addRequest.Password
+            addRequest.Password,
+            stoppingToken
         );
 }

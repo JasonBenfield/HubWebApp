@@ -21,17 +21,17 @@ internal sealed class AddSystemUserCommand : ICommand
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var appKeys = selectedAppKeys.Values
             .Where(a => !a.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubAdmin.AddOrUpdateApps(versionName, appKeys);
+        await hubAdmin.AddOrUpdateApps(versionName, appKeys, ct);
         foreach (var appKey in appKeys)
         {
             var password = Guid.NewGuid().ToString();
-            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password);
+            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password, ct);
             var systemUserCredentials = new SystemUserCredentials(secretCredentialsFactory, appKey);
             await systemUserCredentials.Update(new CredentialValue(systemUser.UserName.Value, password));
         }

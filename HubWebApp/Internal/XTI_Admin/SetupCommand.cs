@@ -27,7 +27,7 @@ internal sealed class SetupCommand : ICommand
         this.publishSetupProcess = publishSetupProcess;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var slnDir = Environment.CurrentDirectory;
         using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
@@ -35,7 +35,7 @@ internal sealed class SetupCommand : ICommand
             .Where(ak => !ak.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubAdministration.AddOrUpdateApps(versionName, appKeys);
+        await hubAdministration.AddOrUpdateApps(versionName, appKeys, ct);
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
         {
@@ -45,9 +45,9 @@ internal sealed class SetupCommand : ICommand
         {
             SetCurrentDirectory(slnDir, appKey);
             await publishSetupProcess.Run(appKey, versionKey);
-            var appVersion = await currentVersionAccessor.Value();
+            var appVersion = await currentVersionAccessor.Value(ct);
             var release = $"v{appVersion.VersionNumber.Format()}";
-            var setupAppPath = await publishedAssets.LoadSetup(release, appKey, versionKey);
+            var setupAppPath = await publishedAssets.LoadSetup(release, appKey, versionKey, ct);
             await new RunSetupProcess(xtiEnv).Run(versionName, appKey, versionKey, setupAppPath);
         }
         Environment.CurrentDirectory = slnDir;

@@ -17,7 +17,8 @@ public sealed class NewInstallationAction : AppAction<NewInstallationRequest, Ne
             addRequest.AppKey.ToAppKey(),
             addRequest.QualifiedMachineName,
             addRequest.Domain,
-            addRequest.SiteName
+            addRequest.SiteName,
+            stoppingToken
         );
         return result;
     }

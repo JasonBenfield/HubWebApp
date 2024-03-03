@@ -13,6 +13,9 @@ public sealed class AdminOptions
     public string VersionNumber { get; set; } = "";
     public string RepoOwner { get; set; } = "";
     public string RepoName { get; set; } = "";
+    public string InstallConfigurationName { get; set; } = "";
+    public string InstallTemplateName { get; set; } = "";
+    public int InstallSequence { get; set; } 
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
@@ -68,6 +71,9 @@ public sealed class AdminOptions
             RemoteOptionsKey = RemoteOptionsKey,
             RepoName = RepoName,
             RepoOwner = RepoOwner,
+            InstallConfigurationName = InstallConfigurationName,
+            InstallTemplateName = InstallTemplateName,
+            InstallSequence = InstallSequence,
             SiteName = SiteName,
             StartIssue = StartIssue,
             VersionKey = VersionKey,
@@ -91,8 +97,11 @@ public sealed class AdminOptions
         UserName = options.UserName;
         Password = options.Password;
         RemoteOptionsKey = options.RemoteOptionsKey;
-        RepoName = options.RepoName;
         RepoOwner = options.RepoOwner;
+        RepoName = options.RepoName;
+        InstallConfigurationName = options.InstallConfigurationName;
+        InstallTemplateName = options.InstallTemplateName;
+        InstallSequence = options.InstallSequence;
         SiteName = options.SiteName;
         StartIssue = options.StartIssue;
         VersionKey = options.VersionKey;

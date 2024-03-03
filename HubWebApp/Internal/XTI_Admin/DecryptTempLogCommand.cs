@@ -18,7 +18,7 @@ internal sealed class DecryptTempLogCommand : ICommand
         this.xtiFolder = xtiFolder;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var modifiedBefore = clock.Now();
         var logs = tempLogs.Logs();

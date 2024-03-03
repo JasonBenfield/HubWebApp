@@ -203,6 +203,32 @@ public sealed class CommandFactory
                 scopes.GetRequiredService<RemoteCommandService>()
             );
         }
+        else if (commandName == CommandNames.ConfigureInstallTemplate)
+        {
+            command = new ConfigureInstallTemplateCommand
+            (
+                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<AdminOptions>()
+            );
+        }
+        else if (commandName == CommandNames.ConfigureInstall)
+        {
+            command = new ConfigureInstallCommand
+            (
+                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<AdminOptions>(),
+                scopes.GetRequiredService<GitRepoInfo>()
+            );
+        }
+        else if (commandName == CommandNames.DeleteInstallConfiguration)
+        {
+            command = new DeleteInstallConfigurationCommand
+            (
+                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<AdminOptions>(),
+                scopes.GetRequiredService<GitRepoInfo>()
+            );
+        }
         else
         {
             throw new NotSupportedException($"Command '{options.Command}' is not supported");

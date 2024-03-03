@@ -13,6 +13,7 @@ internal sealed class AddOrUpdateAppsAction : AppAction<AddOrUpdateAppsRequest, 
         hubAdmin.AddOrUpdateApps
         (
             addRequest.ToAppVersionName(),
-            addRequest.ToAppKeys()
+            addRequest.ToAppKeys(),
+            stoppingToken
         );
 }

@@ -13,12 +13,12 @@ internal sealed class PublishCommand : ICommand
         this.publishProcess = publishProcess;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
-        await buildProcess.Run();
-        await publishProcess.Run();
+        await buildProcess.Run(ct);
+        await publishProcess.Run(ct);
     }
 }

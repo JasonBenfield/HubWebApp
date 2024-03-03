@@ -114,8 +114,7 @@ await Host.CreateDefaultBuilder(args)
             (
                 sp => sp.GetRequiredService<IXtiGitFactory>().CreateRepository(slnDir)
             );
-            services.AddScoped(sp => new SlnFolder(sp.GetRequiredService<XtiEnvironment>(), slnDir));
-            services.AddScoped<InstallOptionsAccessor>();
+            services.AddScoped(sp => new SlnFolder(slnDir));
             services.AddScoped<SelectedAppKeys>();
             services.AddScoped<ITempLogs>(sp =>
             {

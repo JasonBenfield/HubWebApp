@@ -14,10 +14,10 @@ public sealed class CurrentVersion
         this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task<XtiVersionModel> Value()
+    public async Task<XtiVersionModel> Value(CancellationToken ct)
     {
         var versionName = versionNameAccessor.Value;
-        var version = await hubAdmin.Version(versionName, AppVersionKey.Current);
+        var version = await hubAdmin.Version(versionName, AppVersionKey.Current, ct);
         return version;
     }
 }

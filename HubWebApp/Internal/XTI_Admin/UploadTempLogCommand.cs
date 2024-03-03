@@ -16,7 +16,7 @@ internal sealed class UploadTempLogCommand : ICommand
         this.remoteCommandService = remoteCommandService;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.DestinationMachine))
         {

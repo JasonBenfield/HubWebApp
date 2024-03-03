@@ -26,10 +26,10 @@ internal sealed class PublishLibCommand : ICommand
         this.publishLibProcess = publishLibProcess;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         string semanticVersion;
-        var currentVersion = await currentVersionAccessor.Value();
+        var currentVersion = await currentVersionAccessor.Value(ct);
         if (xtiEnv.IsProduction())
         {
             var currentBranchName = gitRepo.CurrentBranchName();

@@ -699,10 +699,10 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("TimeEnded")
+                    b.Property<DateTimeOffset>("TimeSessionEnded")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("TimeStarted")
+                    b.Property<DateTimeOffset>("TimeSessionStarted")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UserAgent")
@@ -732,6 +732,143 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("ExpandedSessions", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.ExpandedUserRole", b =>
+                {
+                    b.Property<int>("UserRoleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AppID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModCategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModCategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModifierID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserGroupDisplayText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserGroupID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserRoleID");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("ExpandedUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.InstallConfigurationEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("AppName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("AppType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConfigurationName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("InstallSequence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RepoName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RepoOwner")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("TemplateID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("TemplateID");
+
+                    b.HasIndex("RepoOwner", "RepoName", "ConfigurationName", "AppName", "AppType")
+                        .IsUnique();
+
+                    b.ToTable("InstallConfigurations", (string)null);
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.InstallConfigurationTemplateEntity", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("DestinationMachineName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SiteName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("TemplateName")
+                        .IsUnique();
+
+                    b.ToTable("InstallConfigurationTemplates", (string)null);
                 });
 
             modelBuilder.Entity("XTI_HubDB.Entities.InstallLocationEntity", b =>
@@ -1323,6 +1460,15 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                     b.HasOne("XTI_HubDB.Entities.XtiVersionEntity", null)
                         .WithMany()
                         .HasForeignKey("VersionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("XTI_HubDB.Entities.InstallConfigurationEntity", b =>
+                {
+                    b.HasOne("XTI_HubDB.Entities.InstallConfigurationTemplateEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TemplateID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -349,6 +349,45 @@ interface IAddInstallationUserRequest {
 	MachineName: string;
 	Password: string;
 }
+interface IConfigureInstallTemplateRequest {
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface IInstallConfigurationTemplateModel {
+	ID: number;
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface IConfigureInstallRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKeyRequest;
+	TemplateName: string;
+	InstallSequence: number;
+}
+interface IInstallConfigurationModel {
+	ID: number;
+	ConfigurationName: string;
+	AppKey: IAppKey;
+	Template: IInstallConfigurationTemplateModel;
+	InstallSequence: number;
+}
+interface IDeleteInstallConfigurationRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKeyRequest;
+}
+interface IGetInstallConfigurationsRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+}
 interface INewInstallationRequest {
 	VersionName: string;
 	AppKey: IAppKeyRequest;

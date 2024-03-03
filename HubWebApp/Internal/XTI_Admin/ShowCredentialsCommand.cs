@@ -13,7 +13,7 @@ internal sealed class ShowCredentialsCommand : ICommand
         this.credentialFactory = credentialFactory;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(options.CredentialKey)) { throw new ArgumentException("CredentialKey is required"); }
         var secretCredentials = credentialFactory.Create(options.CredentialKey);

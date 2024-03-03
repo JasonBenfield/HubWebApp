@@ -19,13 +19,13 @@ public sealed class BuildProcess
         this.branchVersion = branchVersion;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
         Console.WriteLine("Add or Update Apps");
-        var version = await branchVersion.Value();
+        var version = await branchVersion.Value(ct);
         var appKeys = selectedAppKeys.Values;
         var versionName = versionNameAccessor.Value;
-        await hubAdmin.AddOrUpdateApps(versionName, appKeys);
+        await hubAdmin.AddOrUpdateApps(versionName, appKeys, ct);
         Console.WriteLine("Building Apps");
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
@@ -36,11 +36,11 @@ public sealed class BuildProcess
                 Environment.CurrentDirectory = appDir;
             }
             await RunApiGenerator(appKey, version.VersionKey);
-            await runTsc(appKey);
-            await runWebpack(appKey);
+            await RunTsc(appKey);
+            await RunWebpack(appKey);
             Environment.CurrentDirectory = slnDir;
         }
-        await runDotnetBuild();
+        await RunDotnetBuild();
     }
 
     private async Task RunApiGenerator(AppKey appKey, AppVersionKey versionKey)
@@ -49,7 +49,7 @@ public sealed class BuildProcess
         (
             Environment.CurrentDirectory,
             "Apps",
-            $"{getAppName(appKey)}ApiGeneratorApp"
+            $"{GetAppName(appKey)}ApiGeneratorApp"
         );
         if (Directory.Exists(apiGeneratorPath))
         {
@@ -69,20 +69,20 @@ public sealed class BuildProcess
         }
     }
 
-    private async Task runTsc(AppKey appKey)
+    private async Task RunTsc(AppKey appKey)
     {
-        var webAppDir = getWebAppDir(appKey);
-        await runTsc
+        var webAppDir = GetWebAppDir(appKey);
+        await RunTsc
         (
             Path.Combine
             (
                 webAppDir,
                 "Scripts",
-                getAppName(appKey),
+                GetAppName(appKey),
                 "tsconfig.json"
             )
         );
-        await runTsc
+        await RunTsc
         (
             Path.Combine
             (
@@ -94,7 +94,7 @@ public sealed class BuildProcess
         );
     }
 
-    private static async Task runTsc(string tsConfigPath)
+    private static async Task RunTsc(string tsConfigPath)
     {
         if (File.Exists(tsConfigPath))
         {
@@ -109,16 +109,14 @@ public sealed class BuildProcess
         }
     }
 
-    private async Task runWebpack(AppKey appKey)
+    private async Task RunWebpack(AppKey appKey)
     {
-        var projectDir = getWebAppDir(appKey);
+        var projectDir = GetWebAppDir(appKey);
         var webpackConfigPath = Path.Combine(projectDir, "webpack.config.js");
         if (File.Exists(webpackConfigPath))
         {
             Console.WriteLine("Running webpack");
             var webpackProcess = new WinProcess("webpack");
-            //.UseArgumentNameDelimiter("--")
-            //.AddArgument("config", new Quoted(webpackConfigPath));
             var result = await new CmdProcess(webpackProcess)
                 .SetWorkingDirectory(projectDir)
                 .WriteOutputToConsole()
@@ -127,7 +125,7 @@ public sealed class BuildProcess
         }
     }
 
-    private async Task runDotnetBuild()
+    private async Task RunDotnetBuild()
     {
         Console.WriteLine("Running dotnet build");
         var result = await new WinProcess("dotnet")
@@ -141,7 +139,7 @@ public sealed class BuildProcess
         result.EnsureExitCodeIsZero();
     }
 
-    private string getWebAppDir(AppKey appKey)
+    private string GetWebAppDir(AppKey appKey)
         => Path.Combine
         (
             Environment.CurrentDirectory,
@@ -149,6 +147,6 @@ public sealed class BuildProcess
             new AppDirectoryName(appKey).Value
         );
 
-    private string getAppName(AppKey appKey)
+    private string GetAppName(AppKey appKey)
         => appKey.Name.DisplayText.Replace(" ", "");
 }

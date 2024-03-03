@@ -21,5 +21,8 @@ public enum CommandNames
     StoreCredentials,
     DecryptTempLog,
     UploadTempLog,
-    RestartApp
+    RestartApp,
+    ConfigureInstallTemplate,
+    ConfigureInstall,
+    DeleteInstallConfiguration
 }

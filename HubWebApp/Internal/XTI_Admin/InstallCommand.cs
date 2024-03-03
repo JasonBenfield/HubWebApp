@@ -11,11 +11,11 @@ internal sealed class InstallCommand : ICommand
         this.installProcess = installProcess;
     }
 
-    public Task Execute()
+    public Task Execute(CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
-        return installProcess.Run();
+        return installProcess.Run(ct);
     }
 }

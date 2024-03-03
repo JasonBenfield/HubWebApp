@@ -9,5 +9,5 @@ internal sealed class BuildCommand : ICommand
         this.buildProcess = buildProcess;
     }
 
-    public Task Execute() => buildProcess.Run();
+    public Task Execute(CancellationToken ct) => buildProcess.Run(ct);
 }
