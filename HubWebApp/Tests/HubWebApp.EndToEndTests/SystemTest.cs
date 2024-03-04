@@ -34,9 +34,9 @@ internal sealed class SystemTest
         var sp = new TestHost().Setup(AppKey.WebApp("Test"), "Development");
         var hubClient = sp.GetRequiredService<HubAppClient>();
         hubClient.UseToken<SystemUserXtiToken>();
-        var userContext = await hubClient.System.GetUserContext
+        var userContext = await hubClient.System.GetUserOrAnon
         (
-            new GetUserContextRequest(installationID: 1190, userName: new AppUserName("JB"))
+            new AppUserNameRequest(userName: new AppUserName("JB"))
         );
         userContext.WriteToConsole();
     }

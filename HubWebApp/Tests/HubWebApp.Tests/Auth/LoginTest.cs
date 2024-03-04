@@ -159,12 +159,12 @@ internal sealed class LoginTest
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
         var db = tester.Services.GetRequiredService<IHubDbContext>();
-        var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.User.ID);
+        var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
         loginResult = await tester.Execute(model);
         await login(tester, loginResult, returnKey);
         var secondCachedUser = await userContext.User();
-        Assert.That(secondCachedUser.User.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
+        Assert.That(secondCachedUser.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
 
     private async Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)

@@ -15,8 +15,8 @@ internal sealed class ChangePasswordAction : AppAction<ChangeCurrentUserPassword
 
     public async Task<EmptyActionResult> Execute(ChangeCurrentUserPasswordForm model, CancellationToken stoppingToken)
     {
-        var userContextModel = await userContext.User();
-        var user = await hubFactory.Users.User(userContextModel.User.ID);
+        var userModel = await userContext.User();
+        var user = await hubFactory.Users.User(userModel.ID);
         var hashedPassword = hashedPasswordFactory.Create(model.Password.Value() ?? "");
         await user.ChangePassword(hashedPassword);
         return new EmptyActionResult();

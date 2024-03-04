@@ -23,9 +23,10 @@ internal sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, Au
         var authID = Guid.NewGuid().ToString("N");
         var authKey = await storedObject.Store
         (
-            GenerateKeyModel.SixDigit(),
-            new AuthenticatedModel(userName: user.ToModel().UserName, authID: authID),
-            TimeSpan.FromMinutes(30)
+            generateKeyModel: GenerateKeyModel.SixDigit(),
+            data: new AuthenticatedModel(userName: user.ToModel().UserName, authID: authID),
+            expireAfter: TimeSpan.FromMinutes(30),
+            isSlidingExpiration: false
         );
         return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }

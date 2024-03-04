@@ -25,10 +25,17 @@ public sealed class StoreObjectRequest
     public TimeSpan ExpireAfter { get; set; }
     public GenerateKeyModel GenerateKey { get; set; }
     public bool IsSingleUse { get; set; }
+    public bool IsSlidingExpiration { get; set; }
 
     public StoreObjectRequest SingleUse()
     {
         IsSingleUse = true;
+        return this;
+    }
+
+    public StoreObjectRequest SlidingExpiration()
+    {
+        IsSlidingExpiration = true;
         return this;
     }
 }

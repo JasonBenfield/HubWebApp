@@ -9,7 +9,7 @@ public sealed class HcStoredObjectDB : IStoredObjectDB
         this.hubClient = hubClient;
     }
 
-    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, string data, TimeSpan expiresAfter, bool isSingleUse) =>
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, string data, TimeSpan expiresAfter, bool isSingleUse, bool isSlidingExpiration) =>
         hubClient.Storage.StoreObject
         (
             new StoreObjectRequest
@@ -18,7 +18,8 @@ public sealed class HcStoredObjectDB : IStoredObjectDB
                 GenerateKey = generateKey,
                 Data = data,
                 ExpireAfter = expiresAfter,
-                IsSingleUse = isSingleUse
+                IsSingleUse = isSingleUse,
+                IsSlidingExpiration = isSlidingExpiration
             }
         );
 

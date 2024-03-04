@@ -9,9 +9,6 @@ internal sealed class GetUserAction : AppAction<EmptyRequest, AppUserModel>
         this.userContext = userContext;
     }
 
-    public async Task<AppUserModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
-    {
-        var userContextModel = await userContext.User();
-        return userContextModel.User;
-    }
+    public Task<AppUserModel> Execute(EmptyRequest model, CancellationToken stoppingToken) =>
+        userContext.User();
 }

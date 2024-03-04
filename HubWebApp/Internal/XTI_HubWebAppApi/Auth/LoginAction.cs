@@ -6,26 +6,23 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
 {
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
-    private readonly HubFactory hubFactory;
-    private readonly IClock clock;
     private readonly LoginOptions options;
+    private readonly IStoredObjectDB storedObjectDB;
 
-    public LoginAction(Authentication auth, IAnonClient anonClient, HubFactory hubFactory, IClock clock, LoginOptions options)
+    public LoginAction(Authentication auth, IAnonClient anonClient, LoginOptions options, IStoredObjectDB storedObjectDB)
     {
         this.auth = auth;
         this.anonClient = anonClient;
-        this.hubFactory = hubFactory;
-        this.clock = clock;
         this.options = options;
+        this.storedObjectDB = storedObjectDB;
     }
 
     public async Task<WebRedirectResult> Execute(AuthenticatedLoginRequest model, CancellationToken stoppingToken)
     {
-        var serializedAuthenticated = await hubFactory.StoredObjects.StoredObject
+        var serializedAuthenticated = await storedObjectDB.Value
         (
             new StorageName("XTI Authenticated"),
-            model.AuthKey,
-            clock.Now()
+            model.AuthKey
         );
         var authenticated = string.IsNullOrWhiteSpace(serializedAuthenticated) ?
             new() :
@@ -41,7 +38,7 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
         await auth.Authenticate(new AppUserName(authenticated.UserName));
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var serializedLoginReturn = await hubFactory.StoredObjects.StoredObject(new StorageName("Login Return"), model.ReturnKey, clock.Now());
+        var serializedLoginReturn = await storedObjectDB.Value(new StorageName("Login Return"), model.ReturnKey);
         var loginReturn = string.IsNullOrWhiteSpace(serializedLoginReturn) ?
             new() :
             XtiSerializer.Deserialize<LoginReturnModel>(serializedLoginReturn);

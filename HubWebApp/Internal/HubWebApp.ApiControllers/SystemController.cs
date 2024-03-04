@@ -16,9 +16,9 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserContextModel>> GetUserContext([FromBody] GetUserContextRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModifierRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<GetUserContextRequest, UserContextModel>("GetUserContext").Execute(model, ct);
+        return api.Group("System").Action<GetModifierRequest, ModifierModel>("GetModifier").Execute(model, ct);
     }
 
     [HttpPost]
@@ -37,6 +37,12 @@ public sealed partial class SystemController : Controller
     public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
     {
         return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").Execute(model, ct);
     }
 
     [HttpPost]
