@@ -8,12 +8,15 @@ public sealed class WebUserContext : ISourceUserContext
 {
     private readonly EfUserContext userContext;
 
-    public WebUserContext(HubFactory hubFactory, AppKey appKey, ICurrentUserName currentUserName)
+    public WebUserContext(HubFactory hubFactory, ICurrentUserName currentUserName)
     {
-        userContext = new EfUserContext(hubFactory, appKey, currentUserName);
+        userContext = new EfUserContext(hubFactory, currentUserName);
     }
 
-    public Task<UserContextModel> User() => userContext.User();
+    public Task<AppUserModel> User() => userContext.User();
 
-    public Task<UserContextModel> User(AppUserName userName) => userContext.User(userName);
+    public Task<AppUserModel> User(AppUserName userName) => userContext.User(userName);
+
+    public Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier) =>
+        userContext.UserRoles(user, modifier);
 }

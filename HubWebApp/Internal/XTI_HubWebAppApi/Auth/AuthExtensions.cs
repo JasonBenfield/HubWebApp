@@ -1,5 +1,4 @@
-﻿using XTI_Core;
-using XTI_HubWebAppApi.Auth;
+﻿using XTI_HubWebAppApi.Auth;
 
 namespace XTI_HubWebAppApi;
 
@@ -17,10 +16,9 @@ internal static class AuthExtensions
         {
             var auth = sp.GetRequiredService<AuthenticationFactory>().CreateForLogin();
             var anonClient = sp.GetRequiredService<IAnonClient>();
-            var hubFactory = sp.GetRequiredService<HubFactory>();
-            var clock = sp.GetRequiredService<IClock>();
+            var storedObjectDB = sp.GetRequiredService<IStoredObjectDB>();
             var options = sp.GetRequiredService<LoginOptions>();
-            return new LoginAction(auth, anonClient, hubFactory, clock, options);
+            return new LoginAction(auth, anonClient, options, storedObjectDB);
         });
         services.AddScoped<VerifyLoginAction>();
         services.AddScoped<VerifyLoginFormAction>();

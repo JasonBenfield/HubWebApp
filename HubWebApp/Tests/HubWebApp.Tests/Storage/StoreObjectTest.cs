@@ -308,6 +308,48 @@ internal sealed class StoreObjectTest
         Assert.That(storedObjects.Length, Is.EqualTo(0), "Should delete single use stored object");
     }
 
+    [Test]
+    public async Task ShouldSlideExpiration()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        (
+            new StorageName("something"),
+            "Whatever",
+            TimeSpan.FromMinutes(15)
+        )
+        .SlidingExpiration();
+        var storageKey = await tester.Execute(request);
+        var clock = tester.Services.GetRequiredService<FakeClock>();
+        clock.Add(TimeSpan.FromMinutes(5));
+        await GetStoredObject(tester, request.StorageName, storageKey);
+        clock.Add(TimeSpan.FromMinutes(11));
+        var storedObject = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(storedObject, Is.Not.EqualTo(""), "Should slide expiration");
+    }
+
+    [Test]
+    public async Task ShouldExpireAfterSlidingExpiration()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        (
+            new StorageName("something"),
+            "Whatever",
+            TimeSpan.FromMinutes(15)
+        )
+        .SlidingExpiration();
+        var storageKey = await tester.Execute(request);
+        var clock = tester.Services.GetRequiredService<FakeClock>();
+        clock.Add(TimeSpan.FromMinutes(5));
+        await GetStoredObject(tester, request.StorageName, storageKey);
+        clock.Add(TimeSpan.FromMinutes(16));
+        var storedObject = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(storedObject, Is.EqualTo(""), "Should expire after sliding expiration");
+    }
+
     private Task<string> GetStoredObject(IHubActionTester tester, string storageName, string storageKey)
     {
         var getStoredObj = tester.Create((hubApi) => hubApi.Storage.GetStoredObject);

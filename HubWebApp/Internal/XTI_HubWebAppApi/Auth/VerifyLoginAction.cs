@@ -23,9 +23,10 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
         var authID = Guid.NewGuid().ToString("N");
         var authKey = await storedObject.Store
         (
-            GenerateKeyModel.SixDigit(),
-            new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
-            TimeSpan.FromMinutes(15)
+            generateKeyModel: GenerateKeyModel.SixDigit(),
+            data: new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
+            expireAfter: TimeSpan.FromMinutes(15),
+            isSlidingExpiration: false
         );
         return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }

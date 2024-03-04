@@ -25,5 +25,11 @@ namespace XTI_HubAppClient
             );
             return appContextModel;
         }
+
+        public Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey) =>
+            hubClient.System.GetModifier
+            (
+                new GetModifierRequest(category.ID, modKey)
+            );
     }
 }

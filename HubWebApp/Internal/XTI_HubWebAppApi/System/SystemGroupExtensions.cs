@@ -8,7 +8,8 @@ internal static class SystemGroupExtensions
     {
         services.AddScoped<AppFromSystemUser>();
         services.AddScoped<GetAppContextAction>();
-        services.AddScoped<GetUserContextAction>();
+        services.AddScoped<GetModifierAction>();
+        services.AddScoped<GetUserRolesAction>();
         services.AddScoped<GetUserOrAnonAction>();
         services.AddScoped<GetUsersWithAnyRoleAction>();
         services.AddScoped<GetUserAuthenticatorsAction>();

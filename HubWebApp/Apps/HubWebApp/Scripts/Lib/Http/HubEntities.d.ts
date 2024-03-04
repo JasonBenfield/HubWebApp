@@ -509,6 +509,7 @@ interface IStoreObjectRequest {
 	ExpireAfter: import('@jasonbenfield/sharedwebapp/Common').TimeSpan;
 	GenerateKey: IGenerateKeyModel;
 	IsSingleUse: boolean;
+	IsSlidingExpiration: boolean;
 }
 interface IGenerateKeyModel {
 	KeyType: IGeneratedKeyType;
@@ -525,12 +526,8 @@ interface IAppContextModel {
 	App: IAppModel;
 	Version: IXtiVersionModel;
 	Roles: IAppRoleModel[];
-	ModifierCategories: IAppContextModifierCategoryModel[];
+	ModCategories: IModifierCategoryModel[];
 	ResourceGroups: IAppContextResourceGroupModel[];
-}
-interface IAppContextModifierCategoryModel {
-	ModifierCategory: IModifierCategoryModel;
-	Modifiers: IModifierModel[];
 }
 interface IAppContextResourceGroupModel {
 	ResourceGroup: IResourceGroupModel;
@@ -541,18 +538,9 @@ interface IAppContextResourceModel {
 	Resource: IResourceModel;
 	AllowedRoles: IAppRoleModel[];
 }
-interface IGetUserContextRequest {
-	InstallationID: number;
-	UserName: string;
-}
-interface IUserContextModel {
-	User: IAppUserModel;
-	ModifiedRoles: IUserContextRoleModel[];
-}
-interface IUserContextRoleModel {
-	ModifierCategory: IModifierCategoryModel;
-	Modifier: IModifierModel;
-	Roles: IAppRoleModel[];
+interface IGetModifierRequest {
+	CategoryID: number;
+	ModKey: string;
 }
 interface ISystemAddOrUpdateModifierByTargetKeyRequest {
 	InstallationID: number;
@@ -567,6 +555,10 @@ interface ISystemAddOrUpdateModifierByModKeyRequest {
 	ModKey: string;
 	TargetKey: string;
 	TargetDisplayText: string;
+}
+interface IGetUserRolesRequest {
+	UserID: number;
+	ModifierID: number;
 }
 interface ISystemGetUsersWithAnyRoleRequest {
 	InstallationID: number;

@@ -24,9 +24,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_Git.GitLib" Version="1.2.21-dev231118165811191" />
-		<PackageReference Include="XTI_GitHub.Web" Version="1.2.21-dev231118165811191" />
-		<PackageReference Include="XTI_Git.Secrets" Version="1.2.21-dev231118165811191" />
+		<PackageReference Include="XTI_Git.GitLib" Version="1.2.22" />
+		<PackageReference Include="XTI_GitHub.Web" Version="1.2.22" />
+		<PackageReference Include="XTI_Git.Secrets" Version="1.2.22" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231118165338904" />
 	</ItemGroup>
 

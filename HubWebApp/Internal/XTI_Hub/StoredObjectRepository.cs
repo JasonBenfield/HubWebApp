@@ -13,7 +13,7 @@ public sealed class StoredObjectRepository
         this.factory = factory;
     }
 
-    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires, bool isSingleUse)
+    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires, bool isSingleUse, TimeSpan expirationTimeSpan)
     {
         var storedObject = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync(so => so.StorageName == storageName.Value && so.Data == data);
@@ -42,7 +42,8 @@ public sealed class StoredObjectRepository
                 StorageKey = storageKey,
                 Data = data,
                 TimeExpires = timeExpires,
-                IsSingleUse = isSingleUse
+                IsSingleUse = isSingleUse,
+                ExpirationTimeSpan = expirationTimeSpan.ToString()
             };
             await factory.DB.StoredObjects.Create(storedObject);
         }
@@ -55,6 +56,7 @@ public sealed class StoredObjectRepository
                 {
                     so.TimeExpires = timeExpires;
                     so.IsSingleUse = isSingleUse;
+                    so.ExpirationTimeSpan = expirationTimeSpan.ToString();
                 }
             );
         }
@@ -76,9 +78,23 @@ public sealed class StoredObjectRepository
                     so.TimeExpires >= now
             );
         var data = storedObject?.Data ?? "";
-        if(storedObject != null && storedObject.IsSingleUse)
+        if(storedObject != null)
         {
-            await factory.DB.StoredObjects.Delete(storedObject);
+            if (storedObject.IsSingleUse)
+            {
+                await factory.DB.StoredObjects.Delete(storedObject);
+            }
+            else if(TimeSpan.TryParse(storedObject.ExpirationTimeSpan, out var expirationTimeSpan) && !expirationTimeSpan.Equals(TimeSpan.Zero))
+            {
+                await factory.DB.StoredObjects.Update
+                (
+                    storedObject,
+                    so =>
+                    {
+                        so.TimeExpires = now.Add(expirationTimeSpan);
+                    }
+                );
+            }
         }
         return data;
     }

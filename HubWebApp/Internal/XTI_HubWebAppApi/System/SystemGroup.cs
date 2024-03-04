@@ -12,10 +12,10 @@ public sealed class SystemGroup : AppApiGroupWrapper
             nameof(GetAppContext), 
             () => sp.GetRequiredService<GetAppContextAction>()
         );
-        GetUserContext = source.AddAction
+        GetModifier = source.AddAction
         (
-            nameof(GetUserContext), 
-            () => sp.GetRequiredService<GetUserContextAction>()
+            nameof(GetModifier),
+            () => sp.GetRequiredService<GetModifierAction>()
         );
         AddOrUpdateModifierByTargetKey = source.AddAction
         (
@@ -31,6 +31,11 @@ public sealed class SystemGroup : AppApiGroupWrapper
         (
             nameof(GetUserOrAnon),
             () => sp.GetRequiredService<GetUserOrAnonAction>()
+        );
+        GetUserRoles = source.AddAction
+        (
+            nameof(GetUserRoles),
+            () => sp.GetRequiredService<GetUserRolesAction>()
         );
         GetUserAuthenticators = source.AddAction
         (
@@ -62,8 +67,9 @@ public sealed class SystemGroup : AppApiGroupWrapper
     }
 
     public AppApiAction<GetAppContextRequest, AppContextModel> GetAppContext { get; }
-    public AppApiAction<GetUserContextRequest, UserContextModel> GetUserContext { get; }
+    public AppApiAction<GetModifierRequest, ModifierModel> GetModifier { get; }
     public AppApiAction<AppUserNameRequest, AppUserModel> GetUserOrAnon { get; }
+    public AppApiAction<GetUserRolesRequest, AppRoleModel[]> GetUserRoles { get; }
     public AppApiAction<AppUserIDRequest, UserAuthenticatorModel[]> GetUserAuthenticators { get; }
     public AppApiAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
     public AppApiAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel> AddOrUpdateModifierByTargetKey { get; }
