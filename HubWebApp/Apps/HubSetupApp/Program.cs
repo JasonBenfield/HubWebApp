@@ -22,6 +22,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddSingleton(_ => xtiEnv);
         services.AddSingleton<XtiFolder>();
         services.AddSingleton(_ => HubInfo.AppKey);
+        services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddHubDbContextForSqlServer();
         services.AddFileSecretCredentials(xtiEnv);
         services.AddScoped<SystemUserCredentials>();

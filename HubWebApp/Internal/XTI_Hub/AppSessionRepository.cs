@@ -173,6 +173,23 @@ public sealed class AppSessionRepository
         {
             await factory.DB.LogEntries.Delete(logEntry);
         }
+
+        var sourceRequests = await factory.DB.SourceRequests.Retrieve()
+            .Where(r => requestIDs.Contains(r.SourceID))
+            .ToArrayAsync();
+        foreach(var sourceRequest in sourceRequests)
+        {
+            await factory.DB.SourceRequests.Delete(sourceRequest);
+        }
+
+        var targetRequests = await factory.DB.SourceRequests.Retrieve()
+            .Where(r => requestIDs.Contains(r.TargetID))
+            .ToArrayAsync();
+        foreach (var targetRequest in targetRequests)
+        {
+            await factory.DB.SourceRequests.Delete(targetRequest);
+        }
+
         var requests = await factory.DB.Requests.Retrieve()
             .Where(r => requestIDs.Contains(r.ID))
             .ToArrayAsync();

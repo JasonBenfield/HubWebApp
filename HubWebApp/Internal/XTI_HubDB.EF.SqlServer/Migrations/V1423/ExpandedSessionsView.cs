@@ -26,6 +26,7 @@ select
 	users.GroupID UserGroupID, userGroups.GroupName UserGroupName, 
 	userGroups.DisplayText UserGroupDisplayText,
 	users.UserName, dbo.GetLocalDateTime(users.TimeAdded) TimeUserAdded, 
+	dbo.GetLocalDateTime(users.TimeLoggedIn) TimeUserLoggedIn, 
 	dbo.GetLocalDateTime(users.TimeDeactivated) TimeUserDeactivated, 
 	users.Email, users.Name, 
 	isnull(RequestCounts.RequestCount, 0) requestCount,

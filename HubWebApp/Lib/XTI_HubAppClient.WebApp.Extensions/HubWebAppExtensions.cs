@@ -42,7 +42,7 @@ public static class HubWebAppExtensions
 
     public static void AddAppClients(this IServiceCollection services, Action<IServiceProvider, AppClients> configure)
     {
-        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(AppClients));
+        var existing = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(AppClients));
         if (existing != null)
         {
             services.Remove(existing);
