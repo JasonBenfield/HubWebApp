@@ -152,7 +152,7 @@ await Host.CreateDefaultBuilder(args)
                     ? HubAppClientVersion.Version(AppVersionKey.Current.DisplayText)
                     : HubAppClientVersion.Version(options.HubAppVersionKey);
             });
-            var existingTokenAccessor = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
+            var existingTokenAccessor = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(XtiTokenAccessor));
             if (existingTokenAccessor != null)
             {
                 services.Remove(existingTokenAccessor);

@@ -1,4 +1,6 @@
-﻿namespace XTI_AppSetupApp.Extensions;
+﻿using XTI_Core;
+
+namespace XTI_AppSetupApp.Extensions;
 
 public sealed class SetupOptions
 {
@@ -6,4 +8,5 @@ public sealed class SetupOptions
 
     public string VersionName { get; set; } = "";
     public string VersionKey { get; set; } = "";
+    public DbOptions DB { get; set; } = new();
 }
