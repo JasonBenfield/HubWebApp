@@ -1,4 +1,5 @@
-﻿using XTI_Credentials;
+﻿using XTI_App.Api;
+using XTI_Credentials;
 using XTI_WebAppClient;
 
 namespace XTI_HubAppClient.Extensions;

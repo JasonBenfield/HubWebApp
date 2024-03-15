@@ -6,10 +6,10 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
 {
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
-    private readonly LoginOptions options;
+    private readonly HubWebAppOptions options;
     private readonly IStoredObjectDB storedObjectDB;
 
-    public LoginAction(Authentication auth, IAnonClient anonClient, LoginOptions options, IStoredObjectDB storedObjectDB)
+    public LoginAction(Authentication auth, IAnonClient anonClient, HubWebAppOptions options, IStoredObjectDB storedObjectDB)
     {
         this.auth = auth;
         this.anonClient = anonClient;
@@ -17,33 +17,33 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
         this.storedObjectDB = storedObjectDB;
     }
 
-    public async Task<WebRedirectResult> Execute(AuthenticatedLoginRequest model, CancellationToken stoppingToken)
+    public async Task<WebRedirectResult> Execute(AuthenticatedLoginRequest loginRequest, CancellationToken stoppingToken)
     {
         var serializedAuthenticated = await storedObjectDB.Value
         (
             new StorageName("XTI Authenticated"),
-            model.AuthKey
+            loginRequest.AuthKey
         );
         var authenticated = string.IsNullOrWhiteSpace(serializedAuthenticated) ?
             new() :
             XtiSerializer.Deserialize<AuthenticatedModel>(serializedAuthenticated);
         if (string.IsNullOrWhiteSpace(authenticated.UserName))
         {
-            throw new Exception($"AuthKey '{model.AuthKey}' is not valid");
+            throw new Exception($"AuthKey '{loginRequest.AuthKey}' is not valid");
         }
-        if (!authenticated.AuthID.Equals(model.AuthID, StringComparison.OrdinalIgnoreCase))
+        if (!authenticated.AuthID.Equals(loginRequest.AuthID, StringComparison.OrdinalIgnoreCase))
         {
-            throw new Exception($"AuthKey auth id '{authenticated.AuthID}' does not match given auth id '{model.AuthID}'");
+            throw new Exception($"AuthKey auth id '{authenticated.AuthID}' does not match given auth id '{loginRequest.AuthID}'");
         }
         await auth.Authenticate(new AppUserName(authenticated.UserName));
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var serializedLoginReturn = await storedObjectDB.Value(new StorageName("Login Return"), model.ReturnKey);
+        var serializedLoginReturn = await storedObjectDB.Value(new StorageName("Login Return"), loginRequest.ReturnKey);
         var loginReturn = string.IsNullOrWhiteSpace(serializedLoginReturn) ?
             new() :
             XtiSerializer.Deserialize<LoginReturnModel>(serializedLoginReturn);
         var returnUrl = string.IsNullOrWhiteSpace(loginReturn.ReturnUrl) ?
-            options.DefaultReturnUrl :
+            options.Login.DefaultReturnUrl :
             loginReturn.ReturnUrl;
         return new WebRedirectResult(returnUrl);
     }

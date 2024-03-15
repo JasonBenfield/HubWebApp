@@ -5,6 +5,7 @@ public sealed partial class SupportAppApi : AppApiWrapper
     public SupportAppApi
     (
         IAppApiUser user,
+        string serializedDefaultOptions,
         IServiceProvider sp
     )
         : base
@@ -14,7 +15,8 @@ public sealed partial class SupportAppApi : AppApiWrapper
                 SupportInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(AppRoleName.Admin)
+                    .WithAllowed(AppRoleName.Admin),
+                serializedDefaultOptions
             )
         )
     {

@@ -63,8 +63,7 @@ internal sealed class DeleteUserRoleTest
         var role = await GetRole(tester, app, HubInfo.Roles.ViewApp);
         await AssignRole(tester, userToEdit, role, defaultModifier);
         var userRoleID = await GetUserRoleID(tester, userToEdit, defaultModifier, role);
-        var modifier = await tester.GeneralUserGroupModifier();
-        await tester.Execute(new UserRoleIDRequest(userRoleID), modifier);
+        await tester.Execute(new UserRoleIDRequest(userRoleID));
         var afterDeleteUserRoleID = await GetUserRoleID(tester, userToEdit, defaultModifier, role);
         Assert.That(afterDeleteUserRoleID, Is.EqualTo(0), "Should delete user role");
     }

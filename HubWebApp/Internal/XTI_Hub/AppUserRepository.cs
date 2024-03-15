@@ -14,6 +14,14 @@ public sealed class AppUserRepository
         this.factory = factory;
     }
 
+    public Task<AppUser[]> UsersLoggedInBefore(DateTimeOffset maxTime) =>
+        factory.DB
+            .Users
+            .Retrieve()
+            .Where(u => u.TimeLoggedIn < maxTime || (u.TimeLoggedIn.Year == 9999 && u.TimeAdded < maxTime))
+            .Select(u => factory.User(u))
+            .ToArrayAsync();
+
     internal Task<AppUser[]> Users(AppUserGroup userGroup) => 
         factory.DB
             .Users

@@ -15,7 +15,7 @@ public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActi
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var timeRange = DateTimeRange.OnOrBefore(clock.Now().AddHours(-5));
+        var timeRange = DateTimeRange.OnOrBefore(clock.Now().AddDays(-1));
         var activeSessions = await appFactory.Sessions.ActiveSessions(timeRange);
         foreach (var activeSession in activeSessions)
         {

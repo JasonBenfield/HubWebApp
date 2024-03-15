@@ -2,5 +2,5 @@
 
 partial class AuthApiGroup : IAuthApiClientGroup
 {
-    async Task<ILoginResult> IAuthApiClientGroup.Authenticate(LoginCredentials model) => await Authenticate(model);
+    async Task<LoginResult> IAuthApiClientGroup.Authenticate(AuthenticateRequest authRequest) => await Authenticate(authRequest);
 }

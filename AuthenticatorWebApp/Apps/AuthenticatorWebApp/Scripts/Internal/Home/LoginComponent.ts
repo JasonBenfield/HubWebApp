@@ -47,7 +47,7 @@ export class LoginComponent {
     }
 
     private getCredentials() {
-        return <ILoginCredentials>{
+        return <IAuthenticateRequest>{
             UserName: this.verifyLoginForm.UserName.getValue(),
             Password: this.verifyLoginForm.Password.getValue()
         };

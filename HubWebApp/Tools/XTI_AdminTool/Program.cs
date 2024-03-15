@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using XTI_Admin;
 using XTI_AdminTool;
 using XTI_App.Abstractions;
+using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Secrets;
 using XTI_Core;
@@ -31,7 +32,7 @@ using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_TempLog.Extensions;
 using XTI_WebAppClient;
-
+              
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
     (
@@ -56,14 +57,17 @@ await Host.CreateDefaultBuilder(args)
             });
             services.AddScoped(sp => sp.GetRequiredService<XtiEnvironmentAccessor>().Environment);
             services.AddScoped<XtiFolder>();
-            services.AddScoped<IXtiConfiguration>(sp =>
-            {
-                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                var configuration = new ConfigurationBuilder()
-                    .UseXtiConfiguration(xtiEnv, "", "", args)
-                    .Build();
-                return new XtiConfiguration(configuration);
-            });
+            services.AddKeyedScoped<IConfiguration>
+            (
+                "XTI",
+                (sp, key) =>
+                {
+                    var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+                    return new ConfigurationBuilder()
+                        .UseXtiConfiguration(xtiEnv, "", "", args)
+                        .Build();
+                }
+            );
             services.AddXtiDataProtection();
             services.AddScoped<ISecretCredentialsFactory>(sp =>
             {
@@ -83,19 +87,20 @@ await Host.CreateDefaultBuilder(args)
             services.AddSingleton<Scopes>();
             services.AddSingleton<IClock, UtcClock>();
             services.AddHubDbContextForSqlServer();
+            services.AddConfigurationOptions<AdminToolOptions>();
             services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(DbOptions.DB).Get<DbOptions>() ?? new DbOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminToolOptions>()?.DB ?? new DbOptions();
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
             services.AddSingleton<IAppClientRequestKey, EmptyAppClientRequestKey>();
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.Get<AdminOptions>() ?? new AdminOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminOptions>() ?? new AdminOptions();
             });
             var slnDir = Environment.CurrentDirectory;
             services.AddScoped(sp => new GitRepoInfo(sp.GetRequiredService<AdminOptions>(), slnDir));
@@ -180,8 +185,8 @@ await Host.CreateDefaultBuilder(args)
             );
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(HubClientOptions.HubClient).Get<HubClientOptions>() ?? new HubClientOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminToolOptions>()?.HubClient ?? new HubClientOptions();
             });
             services.AddScoped<InstallationUserCredentials>();
             services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());

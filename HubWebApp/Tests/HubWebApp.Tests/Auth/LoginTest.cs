@@ -23,8 +23,8 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequireUserName()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         model.UserName.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
@@ -41,8 +41,8 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequirePassword()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         model.Password.SetValue("");
         var ex = Assert.ThrowsAsync<ValidationFailedException>
         (
@@ -59,8 +59,8 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldRequireCorrectPassword()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         model.Password.SetValue("Incorrect");
         Assert.ThrowsAsync<PasswordIncorrectException>
         (
@@ -71,8 +71,8 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldReturnAuthKey()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         var loginResult = await tester.Execute(model);
         var authenticated = await getAuthenticated(tester, loginResult.AuthKey);
         Assert.That(authenticated.UserName, Is.EqualTo(model.UserName.Value()), "Should return auth key");
@@ -92,11 +92,11 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldAuthenticateUser()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         var loginResult = await tester.Execute(model);
-        var returnKey = await loginReturnKey(tester, "./Home");
-        await login(tester, loginResult, returnKey);
+        var returnKey = await LoginReturnKey(tester, "./Home");
+        await Login(tester, loginResult, returnKey);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
         (
@@ -113,11 +113,11 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldAuthenticateTempLogSession()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         var loginResult = await tester.Execute(model);
-        var returnKey = await loginReturnKey(tester, "./Home");
-        await login(tester, loginResult, returnKey);
+        var returnKey = await LoginReturnKey(tester, "./Home");
+        await Login(tester, loginResult, returnKey);
         var tempLog = tester.Services.GetRequiredService<TempLog>();
         var clock = tester.Services.GetRequiredService<IClock>();
         var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
@@ -132,8 +132,8 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldClearSessionForAnonUser()
     {
-        var tester = await setup();
-        var model = createLoginModel();
+        var tester = await Setup();
+        var model = CreateLoginModel();
         await tester.Execute(model);
         var anonClient = tester.Services.GetRequiredService<IAnonClient>();
         Assert.That(anonClient.SessionKey, Is.EqualTo(""), "Should clear session for anon client after authenticating");
@@ -142,11 +142,11 @@ internal sealed class LoginTest
     [Test]
     public async Task ShouldResetCache()
     {
-        var tester = await setup();
-        var returnKey = await loginReturnKey(tester, "./Home");
+        var tester = await Setup();
+        var returnKey = await LoginReturnKey(tester, "./Home");
         var currentUserName = tester.Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(AppUserName.Anon);
-        var model = createLoginModel();
+        var model = CreateLoginModel();
         var user = await tester.Services.GetRequiredService<ISourceUserContext>()
             .User(new AppUserName(model.UserName.Value() ?? ""));
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
@@ -155,19 +155,19 @@ internal sealed class LoginTest
             User = new FakeHttpUser().Create("", user)
         };
         var loginResult = await tester.Execute(model);
-        await login(tester, loginResult, returnKey);
+        await Login(tester, loginResult, returnKey);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User();
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
         loginResult = await tester.Execute(model);
-        await login(tester, loginResult, returnKey);
+        await Login(tester, loginResult, returnKey);
         var secondCachedUser = await userContext.User();
         Assert.That(secondCachedUser.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
 
-    private async Task<string> loginReturnKey(IHubActionTester tester, string returnUrl)
+    private async Task<string> LoginReturnKey(IHubActionTester tester, string returnUrl)
     {
         var loginReturnKeyTester = tester.Create(hubApi => hubApi.Auth.LoginReturnKey);
         await loginReturnKeyTester.LoginAsAdmin();
@@ -178,7 +178,7 @@ internal sealed class LoginTest
         return result;
     }
 
-    private async Task login(IHubActionTester tester, AuthenticatedLoginResult loginResult, string returnKey)
+    private async Task Login(IHubActionTester tester, AuthenticatedLoginResult loginResult, string returnKey)
     {
         var loginTester = tester.Create(hubApi => hubApi.Auth.Login);
         await loginTester.Execute
@@ -196,7 +196,7 @@ internal sealed class LoginTest
         currentUserName.SetUserName(claims.UserName());
     }
 
-    private async Task<HubActionTester<VerifyLoginForm, AuthenticatedLoginResult>> setup()
+    private async Task<HubActionTester<VerifyLoginForm, AuthenticatedLoginResult>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup
@@ -208,16 +208,16 @@ internal sealed class LoginTest
             }
         );
         var tester = HubActionTester.Create(services, hubApi => hubApi.Auth.VerifyLogin);
-        await addUser(tester, "xartogg", "Password12345");
+        await AddUser(tester, "xartogg", "Password12345");
         return tester;
     }
 
-    private async Task<AppUser> addUser(IHubActionTester tester, string userName, string password)
+    private async Task<AppUserModel> AddUser(IHubActionTester tester, string userName, string password)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
-        var userID = await addUserTester.Execute
+        var user = await addUserTester.Execute
         (
             new AddOrUpdateUserRequest
             {
@@ -226,12 +226,10 @@ internal sealed class LoginTest
             },
             modifier
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
         return user;
     }
 
-    private VerifyLoginForm createLoginModel()
+    private VerifyLoginForm CreateLoginModel()
     {
         var form = new VerifyLoginForm();
         form.UserName.SetValue("xartogg");

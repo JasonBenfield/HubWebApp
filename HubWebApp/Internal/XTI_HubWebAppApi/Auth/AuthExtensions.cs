@@ -17,7 +17,7 @@ internal static class AuthExtensions
             var auth = sp.GetRequiredService<AuthenticationFactory>().CreateForLogin();
             var anonClient = sp.GetRequiredService<IAnonClient>();
             var storedObjectDB = sp.GetRequiredService<IStoredObjectDB>();
-            var options = sp.GetRequiredService<LoginOptions>();
+            var options = sp.GetRequiredService<HubWebAppOptions>();
             return new LoginAction(auth, anonClient, options, storedObjectDB);
         });
         services.AddScoped<VerifyLoginAction>();
