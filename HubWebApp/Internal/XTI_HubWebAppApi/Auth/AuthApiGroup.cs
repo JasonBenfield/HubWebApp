@@ -12,5 +12,5 @@ public sealed class AuthApiGroup : AppApiGroupWrapper
             () => new AuthenticateValidation()
         );
     }
-    public AppApiAction<LoginCredentials, LoginResult> Authenticate { get; }
+    public AppApiAction<AuthenticateRequest, LoginResult> Authenticate { get; }
 }

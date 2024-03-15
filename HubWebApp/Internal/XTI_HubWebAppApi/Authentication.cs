@@ -1,4 +1,5 @@
 ﻿using XTI_App.Extensions;
+using XTI_Core;
 using XTI_TempLog;
 
 namespace XTI_HubWebAppApi;
@@ -10,6 +11,7 @@ public sealed class Authentication
     private readonly IAccess access;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly CachedUserContext userContext;
+    private readonly IClock clock;
 
     internal Authentication
     (
@@ -17,7 +19,8 @@ public sealed class Authentication
         UnverifiedUser unverifiedUser,
         IAccess access,
         IHashedPasswordFactory hashedPasswordFactory,
-        CachedUserContext userContext
+        CachedUserContext userContext,
+        IClock clock
     )
     {
         this.tempLog = tempLog;
@@ -25,14 +28,16 @@ public sealed class Authentication
         this.access = access;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.userContext = userContext;
+        this.clock = clock;
     }
 
     public async Task<LoginResult> Authenticate(string userNameText, string password)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
         var userName = new AppUserName(userNameText);
-        await unverifiedUser.Verify(userName, hashedPassword);
+        var user = await unverifiedUser.Verify(userName, hashedPassword);
         var result =  await Authenticate(userName);
+        await user.LoggedIn(clock.Now());
         return result;
     }
 

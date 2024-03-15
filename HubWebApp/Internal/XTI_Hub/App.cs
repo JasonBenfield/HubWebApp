@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -35,17 +34,13 @@ public sealed class App
         return modifier;
     }
 
-    public Task<ModifierCategory[]> ModCategories()
-        => factory.ModCategories.Categories(this);
+    public Task<ModifierCategory[]> ModCategories() => factory.ModCategories.Categories(this);
 
-    public Task<ModifierCategory> ModCategory(int modCategoryID)
-        => factory.ModCategories.Category(this, modCategoryID);
+    public Task<ModifierCategory> ModCategory(int modCategoryID) => factory.ModCategories.Category(this, modCategoryID);
 
-    public Task<ModifierCategory> ModCategory(ModifierCategoryName name)
-        => factory.ModCategories.Category(this, name);
+    public Task<ModifierCategory> ModCategory(ModifierCategoryName name) => factory.ModCategories.Category(this, name);
 
-    public Task<AppRole> AddOrUpdateRole(AppRoleName name) =>
-        factory.Roles.AddOrUpdate(this, name);
+    public Task<AppRole> AddOrUpdateRole(AppRoleName name) => factory.Roles.AddOrUpdate(this, name);
 
     public async Task<AppRole[]> Roles()
     {

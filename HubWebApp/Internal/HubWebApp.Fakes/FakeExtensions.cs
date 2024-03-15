@@ -18,6 +18,7 @@ public static class FakeExtensions
     public static void AddFakesForHubWebApp(this IServiceCollection services)
     {
         services.AddFakesForXtiWebApp();
+        services.AddSingleton<HubWebAppOptions>();
         services.AddScoped<ISourceAppContext, EfAppContext>();
         services.AddScoped<IAppContext>(sp => sp.GetRequiredService<ISourceAppContext>());
         services.AddScoped<ISourceUserContext, EfUserContext>();

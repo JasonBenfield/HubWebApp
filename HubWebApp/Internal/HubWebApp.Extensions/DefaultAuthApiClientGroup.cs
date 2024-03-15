@@ -1,4 +1,6 @@
-﻿using XTI_HubWebAppApi;
+﻿using XTI_App.Abstractions;
+using XTI_HubWebAppApi;
+using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
 
 namespace HubWebApp.Extensions;
@@ -12,19 +14,9 @@ internal sealed class DefaultAuthApiClientGroup : IAuthApiClientGroup
         this.auth = auth;
     }
 
-    public async Task<ILoginResult> Authenticate(LoginCredentials model)
+    public async Task<LoginResult> Authenticate(AuthenticateRequest authRequest)
     {
-        var result = await auth.Authenticate(model.UserName, model.Password);
-        return new DefaultLoginResult(result.Token);
-    }
-
-    private sealed class DefaultLoginResult : ILoginResult
-    {
-        public DefaultLoginResult(string token)
-        {
-            Token = token;
-        }
-
-        public string Token { get; set; }
+        var result = await auth.Authenticate(authRequest.UserName, authRequest.Password);
+        return new LoginResult(result.Token);
     }
 }

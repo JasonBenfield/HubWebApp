@@ -10,6 +10,12 @@ public sealed partial class PeriodicController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> DeactivateUsers(CancellationToken ct)
+    {
+        return api.Group("Periodic").Action<EmptyRequest, EmptyActionResult>("DeactivateUsers").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> DeleteExpiredStoredObjects(CancellationToken ct)
     {
         return api.Group("Periodic").Action<EmptyRequest, EmptyActionResult>("DeleteExpiredStoredObjects").Execute(new EmptyRequest(), ct);

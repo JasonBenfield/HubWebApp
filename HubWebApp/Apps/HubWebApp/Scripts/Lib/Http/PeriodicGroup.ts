@@ -10,15 +10,20 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class PeriodicGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Periodic');
+		this.DeactivateUsersAction = this.createAction<IEmptyRequest,IEmptyActionResult>('DeactivateUsers', 'Deactivate Users');
 		this.DeleteExpiredStoredObjectsAction = this.createAction<IEmptyRequest,IEmptyActionResult>('DeleteExpiredStoredObjects', 'Delete Expired Stored Objects');
 		this.EndExpiredSessionsAction = this.createAction<IEmptyRequest,IEmptyActionResult>('EndExpiredSessions', 'End Expired Sessions');
 		this.PurgeLogsAction = this.createAction<IEmptyRequest,IEmptyActionResult>('PurgeLogs', 'Purge Logs');
 	}
 	
+	readonly DeactivateUsersAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	readonly DeleteExpiredStoredObjectsAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	readonly EndExpiredSessionsAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	readonly PurgeLogsAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	
+	DeactivateUsers(errorOptions?: IActionErrorOptions) {
+		return this.DeactivateUsersAction.execute({}, errorOptions || {});
+	}
 	DeleteExpiredStoredObjects(errorOptions?: IActionErrorOptions) {
 		return this.DeleteExpiredStoredObjectsAction.execute({}, errorOptions || {});
 	}

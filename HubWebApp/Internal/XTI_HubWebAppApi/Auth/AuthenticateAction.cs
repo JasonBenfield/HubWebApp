@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.Auth;
 
-public sealed class AuthenticateAction : AppAction<LoginCredentials, LoginResult>
+public sealed class AuthenticateAction : AppAction<AuthenticateRequest, LoginResult>
 {
     private readonly Authentication auth;
 
@@ -9,6 +9,6 @@ public sealed class AuthenticateAction : AppAction<LoginCredentials, LoginResult
         this.auth = auth;
     }
 
-    public Task<LoginResult> Execute(LoginCredentials model, CancellationToken stoppingToken) => 
-        auth.Authenticate(model.UserName, model.Password);
+    public Task<LoginResult> Execute(AuthenticateRequest authRequest, CancellationToken stoppingToken) =>
+        auth.Authenticate(authRequest.UserName, authRequest.Password);
 }

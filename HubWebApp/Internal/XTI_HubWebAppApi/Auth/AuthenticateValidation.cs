@@ -2,9 +2,9 @@
 
 namespace XTI_HubWebAppApi.Auth;
 
-public sealed class AuthenticateValidation : AppActionValidation<LoginCredentials>
+public sealed class AuthenticateValidation : AppActionValidation<AuthenticateRequest>
 {
-    public Task Validate(ErrorList errors, LoginCredentials model, CancellationToken stoppingToken)
+    public Task Validate(ErrorList errors, AuthenticateRequest model, CancellationToken stoppingToken)
     {
         if (string.IsNullOrWhiteSpace(model.UserName))
         {

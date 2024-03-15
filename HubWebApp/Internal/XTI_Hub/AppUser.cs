@@ -344,6 +344,16 @@ public sealed class AppUser
             .ToArray();
     }
 
+    public Task LoggedIn(DateTimeOffset timeLoggedIn) =>
+        factory.DB.Users.Update
+        (
+            record,
+            u =>
+            {
+                u.TimeLoggedIn = timeLoggedIn;
+            }
+        );
+
     public AppUserModel ToModel() =>
         new AppUserModel
         (
@@ -355,4 +365,5 @@ public sealed class AppUser
         );
 
     public override string ToString() => $"{nameof(AppUser)} {ID}";
+
 }

@@ -1,4 +1,5 @@
 ﻿using XTI_App.Extensions;
+using XTI_Core;
 using XTI_TempLog;
 
 namespace XTI_HubWebAppApi;
@@ -9,14 +10,16 @@ public sealed class AuthenticationFactory
     private readonly HubFactory hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly CachedUserContext cachedUserContext;
+    private readonly IClock clock;
     private readonly IServiceProvider sp;
 
-    public AuthenticationFactory(TempLogSession tempLogSession, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, CachedUserContext cachedUserContext, IServiceProvider sp)
+    public AuthenticationFactory(TempLogSession tempLogSession, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, CachedUserContext cachedUserContext, IClock clock, IServiceProvider sp)
     {
         this.tempLogSession = tempLogSession;
         this.hubFactory = hubFactory;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.cachedUserContext = cachedUserContext;
+        this.clock = clock;
         this.sp = sp;
     }
 
@@ -35,7 +38,8 @@ public sealed class AuthenticationFactory
             unverifiedUser,
             access,
             hashedPasswordFactory,
-            cachedUserContext
+            cachedUserContext,
+            clock
         );
     }
 }

@@ -5,6 +5,7 @@ public sealed partial class AuthenticatorAppApi : WebAppApiWrapper
     public AuthenticatorAppApi
     (
         IAppApiUser user,
+        string serializedDefaultOptions,
         IServiceProvider sp
     )
         : base
@@ -14,7 +15,8 @@ public sealed partial class AuthenticatorAppApi : WebAppApiWrapper
                 AuthenticatorInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(AppRoleName.Admin)
+                    .WithAllowed(AppRoleName.Admin),
+                serializedDefaultOptions
             ),
             sp
         )

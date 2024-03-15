@@ -10,12 +10,12 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class AuthApiGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AuthApi');
-		this.AuthenticateAction = this.createAction<ILoginCredentials,ILoginResult>('Authenticate', 'Authenticate');
+		this.AuthenticateAction = this.createAction<IAuthenticateRequest,ILoginResult>('Authenticate', 'Authenticate');
 	}
 	
-	readonly AuthenticateAction: AppClientAction<ILoginCredentials,ILoginResult>;
+	readonly AuthenticateAction: AppClientAction<IAuthenticateRequest,ILoginResult>;
 	
-	Authenticate(model: ILoginCredentials, errorOptions?: IActionErrorOptions) {
+	Authenticate(model: IAuthenticateRequest, errorOptions?: IActionErrorOptions) {
 		return this.AuthenticateAction.execute(model, errorOptions || {});
 	}
 }

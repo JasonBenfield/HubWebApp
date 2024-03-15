@@ -137,7 +137,7 @@ interface IAuthenticatedLoginRequest {
 interface ILoginReturnModel {
 	ReturnUrl: string;
 }
-interface ILoginCredentials {
+interface IAuthenticateRequest {
 	UserName: string;
 	Password: string;
 }

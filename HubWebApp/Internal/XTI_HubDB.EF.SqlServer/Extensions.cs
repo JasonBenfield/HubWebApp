@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_Core;
-using XTI_Core.Extensions;
 using XTI_DB;
 using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
@@ -12,7 +11,6 @@ public static class Extensions
 {
     public static void AddHubDbContextForSqlServer(this IServiceCollection services)
     {
-        services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
         services.AddDbContext<HubDbContext>((sp, options) =>
         {
             var xtiEnv = sp.GetRequiredService<XtiEnvironment>();

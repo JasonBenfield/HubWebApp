@@ -22,7 +22,7 @@ public static class HubWebAppExtensions
     {
         services.AddHttpClient();
         services.AddAppServices();
-        services.AddWebAppServices();
+        services.AddDefaultWebAppServices();
         services.AddSingleton
         (
             _ => new AppPageModel
@@ -92,7 +92,7 @@ public static class HubWebAppExtensions
                 return appClients;
             }
         );
-        services.AddConfigurationOptions<LoginOptions>(LoginOptions.Login);
+        services.AddConfigurationOptions<HubWebAppOptions>();
         services.AddThrottledLog<HubAppApi>
         (
             (api, throttledLogs) =>
