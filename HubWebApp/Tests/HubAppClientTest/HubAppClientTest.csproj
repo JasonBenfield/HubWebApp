@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240312074712013" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240329220622946" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231118165338904" />
 	</ItemGroup>
 

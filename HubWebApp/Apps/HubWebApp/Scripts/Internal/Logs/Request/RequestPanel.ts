@@ -24,13 +24,15 @@ class Result {
 export class RequestPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly appKey: FormGroupText;
-    private readonly versionKey: TextComponent;
-    private readonly versionStatus: TextComponent;
-    private readonly userName: FormGroupText;
-    private readonly currentInstallation: FormGroupText;
-    private readonly timeRange: FormGroupText;
-    private readonly path: FormGroupText;
+    private readonly appKeyFormGroup: FormGroupText;
+    private readonly versionKeyTextComponent: TextComponent;
+    private readonly versionStatusTextComponent: TextComponent;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly userAgentFormGroup: FormGroupText;
+    private readonly remoteAddressFormGroup: FormGroupText;
+    private readonly currentInstallationFormGroup: FormGroupText;
+    private readonly timeRangeFormGroup: FormGroupText;
+    private readonly pathFormGroup: FormGroupText;
     private readonly sourceRequestLink: TextLinkComponent;
     private readonly targetRequestLink: TextLinkComponent;
     private readonly sessionLink: TextLinkComponent;
@@ -40,13 +42,17 @@ export class RequestPanel implements IPanel {
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: RequestPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.appKey = new FormGroupText(view.appKey);
-        this.versionKey = new TextComponent(view.versionKey);
-        this.versionStatus = new TextComponent(view.versionStatus);
-        this.userName = new FormGroupText(view.userName);
-        this.currentInstallation = new FormGroupText(view.currentInstallation);
-        this.timeRange = new FormGroupText(view.timeRange);
-        this.path = new FormGroupText(view.path);
+        this.appKeyFormGroup = new FormGroupText(view.appKeyFormGroupView);
+        this.versionKeyTextComponent = new TextComponent(view.versionKeyFormGroupView);
+        this.versionStatusTextComponent = new TextComponent(view.versionStatusFormGroupView);
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
+        this.userAgentFormGroup = new FormGroupText(view.userAgentFormGroupView);
+        this.userAgentFormGroup.setCaption('User Agent');
+        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddressFormGroupView);
+        this.remoteAddressFormGroup.setCaption('Remote Address');
+        this.currentInstallationFormGroup = new FormGroupText(view.currentInstallationFormGroupView);
+        this.timeRangeFormGroup = new FormGroupText(view.timeRangeFormGroupView);
+        this.pathFormGroup = new FormGroupText(view.pathFormGroupView);
         this.sourceRequestLink = new TextLinkComponent(view.sourceRequestLink);
         this.targetRequestLink = new TextLinkComponent(view.targetRequestLink);
         this.sessionLink = new TextLinkComponent(view.sessionLink);
@@ -62,31 +68,41 @@ export class RequestPanel implements IPanel {
     }
 
     async refresh() {
+        this.sourceRequestLink.hide();
+        this.targetRequestLink.hide();
+        this.userAgentFormGroup.hide();
+        this.remoteAddressFormGroup.hide();
         const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Logs.GetRequestDetail(this.requestID)
         );
         const detail = new AppRequestDetail(sourceDetail);
-        this.appKey.setValue(detail.app.appKey.format());
-        this.versionKey.setText(detail.version.versionKey.displayText);
-        this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
-        this.userName.setValue(detail.user.userName.displayText);
+        this.appKeyFormGroup.setValue(detail.app.appKey.format());
+        this.versionKeyTextComponent.setText(detail.version.versionKey.displayText);
+        this.versionStatusTextComponent.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.userNameFormGroup.setValue(detail.user.userName.displayText);
         if (detail.installation.isCurrent) {
-            this.currentInstallation.setValue('Current');
+            this.currentInstallationFormGroup.setValue('Current');
             this.view.showCurrentInstallation();
         }
         else {
             this.view.hideCurrentInstallation();
         }
-        this.timeRange.setValue(new FormattedTimeRange(detail.request.timeStarted, detail.request.timeEnded).format());
-        this.path.setValue(detail.request.path);
+        this.userAgentFormGroup.setValue(detail.session.userAgent);
+        this.userAgentFormGroup.setTitle(detail.session.rawUserAgent);
+        if (detail.session.userAgent) {
+            this.userAgentFormGroup.show();
+        }
+        this.remoteAddressFormGroup.setValue(detail.session.remoteAddress);
+        if (detail.session.remoteAddress) {
+            this.remoteAddressFormGroup.show();
+        }
+        this.timeRangeFormGroup.setValue(new FormattedTimeRange(detail.request.timeStarted, detail.request.timeEnded).format());
+        this.pathFormGroup.setValue(detail.request.path);
         this.sessionLink.setHref(this.hubClient.Logs.Session.getUrl({ SessionID: detail.session.id }));
         if (detail.sourceRequestID) {
             this.sourceRequestLink.setHref(this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.sourceRequestID }));
             this.sourceRequestLink.show();
-        }
-        else {
-            this.sourceRequestLink.hide();
         }
         if (detail.targetRequestIDs.length > 0) {
             this.targetRequestLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
@@ -95,9 +111,6 @@ export class RequestPanel implements IPanel {
                 SourceRequestID: detail.request.id
             }));
             this.targetRequestLink.show();
-        }
-        else {
-            this.targetRequestLink.hide();
         }
         this.installationLink.setHref(
             this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.installation.id })

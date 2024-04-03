@@ -9,7 +9,7 @@
         $RepoName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
@@ -40,7 +40,7 @@ function Xti-Build {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [ValidateSet("Default", "DB", "HubClient")]
@@ -58,7 +58,7 @@ function Xti-Setup {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [ValidateSet("Default", "DB", "HubClient")]
@@ -78,7 +78,7 @@ function Xti-Install {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
@@ -111,7 +111,7 @@ function Xti-PublishLib {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         $RepoOwner,
@@ -145,7 +145,7 @@ function Xti-AddSystemUser {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $Domain = "",
@@ -168,7 +168,7 @@ function Xti-AddAdminUser {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $CredentialKey = "",
@@ -206,7 +206,7 @@ function Xti-RestartApp {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
         $VersionKey = "",
         $DestinationMachine = ""

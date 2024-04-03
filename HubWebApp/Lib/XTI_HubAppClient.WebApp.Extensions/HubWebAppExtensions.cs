@@ -28,7 +28,7 @@ public static class HubWebAppExtensions
         CookieAndTokenAuthentication.SetXtiJwtBearerOptions(options, config);
 
     public static void UseXtiDefaults(this WebApplication app) =>
-        WebAppExtensions.UseXtiDefaults(app);
+        DefaultWebAppExtensions.UseXtiDefaults(app);
 
     public static void AddThrottledLog<TAppApi>(this IServiceCollection services, Action<TAppApi, ThrottledLogsBuilder> action)
     where TAppApi : IAppApi =>
@@ -75,8 +75,8 @@ public static class HubWebAppExtensions
     }
 
     public static void SetDefaultJsonOptions(this JsonOptions options) =>
-        WebAppExtensions.SetDefaultJsonOptions(options);
+        DefaultWebAppExtensions.SetDefaultJsonOptions(options);
 
     public static void SetDefaultMvcOptions(this MvcOptions options) =>
-        WebAppExtensions.SetDefaultMvcOptions(options);
+        DefaultWebAppExtensions.SetDefaultMvcOptions(options);
 }

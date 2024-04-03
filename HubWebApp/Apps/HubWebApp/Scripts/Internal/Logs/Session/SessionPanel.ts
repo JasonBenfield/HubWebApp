@@ -3,11 +3,10 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
-import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
 import { AppSessionDetail } from "../../../Lib/AppSessionDetail";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
-import { SessionPanelView } from "./SessionPanelView";
 import { FormattedTimeRange } from "../../../lib/FormattedTimeRange";
+import { SessionPanelView } from "./SessionPanelView";
 
 interface IResult {
     menuRequested?: boolean;
@@ -34,10 +33,10 @@ export class SessionPanel implements IPanel {
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.timeRangeFormGroup = new FormGroupText(view.timeRange);
-        this.userNameFormGroup = new FormGroupText(view.userName);
-        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddress);
-        this.userAgentFormGroup = new FormGroupText(view.userAgent);
+        this.timeRangeFormGroup = new FormGroupText(view.timeRangeTextView);
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
+        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddressFormGroupView);
+        this.userAgentFormGroup = new FormGroupText(view.userAgentFormGroupView);
         this.userLink = new TextLinkComponent(view.userLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -50,6 +49,8 @@ export class SessionPanel implements IPanel {
     }
 
     async refresh() {
+        this.userAgentFormGroup.hide();
+        this.remoteAddressFormGroup.hide();
         const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Logs.GetSessionDetail(this.sessionID)
@@ -59,19 +60,13 @@ export class SessionPanel implements IPanel {
             new FormattedTimeRange(detail.session.timeStarted, detail.session.timeEnded).format()
         );
         this.userNameFormGroup.setValue(detail.user.userName.displayText);
+        this.remoteAddressFormGroup.setValue(detail.session.remoteAddress);
         if (detail.session.remoteAddress) {
-            this.remoteAddressFormGroup.setValue(detail.session.remoteAddress);
-            this.view.showRemoteAddress();
+            this.remoteAddressFormGroup.show();
         }
-        else {
-            this.view.hideRemoteAddress();
-        }
+        this.userAgentFormGroup.setValue(detail.session.userAgent);
         if (detail.session.userAgent) {
-            this.userAgentFormGroup.setValue(detail.session.userAgent);
-            this.view.showUserAgent();
-        }
-        else {
-            this.view.hideUserAgent();
+            this.userAgentFormGroup.show();
         }
         this.userLink.setHref(
             this.hubClient.Users.Index.getModifierUrl(

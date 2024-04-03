@@ -17,6 +17,7 @@ internal sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest
 
     public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest queryRequest)
     {
+        db.SetTimeout(TimeSpan.FromMinutes(5));
         var userGroupPermissions = await currentUser.GetUserGroupPermissions();
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)

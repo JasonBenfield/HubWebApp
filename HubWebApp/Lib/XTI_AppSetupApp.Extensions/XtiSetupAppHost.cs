@@ -42,6 +42,8 @@ public static class XtiSetupAppHost
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddConfigurationOptions<SetupOptions>();
                     services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().DB);
+                    services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().XtiToken);
+                    services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().HubClient);
                     services.AddScoped<DefaultAppSetup>();
                     services.AddHostedService<SetupHostedService>();
                 }

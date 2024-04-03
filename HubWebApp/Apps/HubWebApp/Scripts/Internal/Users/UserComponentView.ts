@@ -12,11 +12,11 @@ import { HubTheme } from "../HubTheme";
 import { ButtonContainerView } from "@jasonbenfield/sharedwebapp/Views/ButtonContainerView";
 
 export class UserComponentView extends CardView {
-    readonly alert: CardAlertView;
-    readonly userName: FormGroupTextView;
-    readonly fullName: FormGroupTextView;
-    readonly email: FormGroupTextView;
-    readonly timeDeactivated: FormGroupTextView;
+    readonly alertView: CardAlertView;
+    readonly userNameFormGroupView: FormGroupTextView;
+    readonly fullNameFormGroupView: FormGroupTextView;
+    readonly emailFormGroupView: FormGroupTextView;
+    readonly timeDeactivatedFormGroupView: FormGroupTextView;
     readonly editButton: ButtonCommandView;
     readonly changePasswordButton: ButtonCommandView;
     readonly deactivateButton: ButtonCommandView;
@@ -33,13 +33,13 @@ export class UserComponentView extends CardView {
             .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
             .addView(ButtonCommandView)
             .configure(b => HubTheme.instance.cardHeader.editButton(b));
-        this.alert = this.addCardAlert();
+        this.alertView = this.addCardAlert();
         const body = this.addCardBody();
         const formGroupGrid = body.addView(FormGroupContainerView);
-        this.userName = formGroupGrid.addFormGroup(FormGroupTextView);
-        this.fullName = formGroupGrid.addFormGroup(FormGroupTextView);
-        this.email = formGroupGrid.addFormGroup(FormGroupTextView);
-        this.timeDeactivated = formGroupGrid.addFormGroup(FormGroupTextView);
+        this.userNameFormGroupView = formGroupGrid.addFormGroupTextView();
+        this.fullNameFormGroupView = formGroupGrid.addFormGroupTextView();
+        this.emailFormGroupView = formGroupGrid.addFormGroupTextView();
+        this.timeDeactivatedFormGroupView = formGroupGrid.addFormGroupTextView();
 
         const buttonContainer = body.addView(ButtonContainerView);
         this.changePasswordButton = buttonContainer.addButtonCommand();

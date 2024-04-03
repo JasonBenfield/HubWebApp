@@ -12,9 +12,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240312074712013" />
-		<PackageReference Include="XTI_Processes" Version="1.10.21-dev240312074712013" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240329220622946" />
+		<PackageReference Include="XTI_Processes" Version="1.10.21-dev240329220622946" />
 	</ItemGroup>
 </Project>

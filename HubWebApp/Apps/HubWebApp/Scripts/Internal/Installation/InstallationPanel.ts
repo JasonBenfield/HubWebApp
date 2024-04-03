@@ -8,6 +8,7 @@ import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
 import { InstallationDetail } from "../../Lib/InstallationDetail";
+import { InstallStatus } from "../../Lib/Http/InstallStatus";
 
 interface IResult {
     menuRequested?: boolean;
@@ -37,6 +38,7 @@ export class InstallationPanel implements IPanel {
     private readonly appLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
+    private readonly deleteCommand: AsyncCommand;
     private installationID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
@@ -55,7 +57,8 @@ export class InstallationPanel implements IPanel {
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
-        new AsyncCommand(this.onDelete.bind(this)).add(view.deleteButton);
+        this.deleteCommand = new AsyncCommand(this.onDelete.bind(this));
+        this.deleteCommand.add(view.deleteButton);
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
@@ -84,6 +87,7 @@ export class InstallationPanel implements IPanel {
     }
 
     async refresh() {
+        this.deleteCommand.hide();
         const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Installations.GetInstallationDetail(this.installationID)
@@ -117,6 +121,9 @@ export class InstallationPanel implements IPanel {
             this.view.hideMostRecentRequest();
         }
         this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.app.getModifier(), {}));
+        if (detail.installation.status.equals(InstallStatus.values.Installed)) {
+            this.deleteCommand.show();
+        }
     }
 
     start() { return this.awaitable.start(); }

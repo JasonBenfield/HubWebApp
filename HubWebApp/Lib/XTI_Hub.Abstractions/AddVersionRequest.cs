@@ -4,6 +4,11 @@ namespace XTI_Hub.Abstractions;
 
 public sealed class AddVersionRequest
 {
+    public AddVersionRequest()
+        : this(new XtiVersionModel())
+    {
+    }
+
     public AddVersionRequest(XtiVersionModel source)
         : this(source.VersionName, source.VersionKey, source.VersionType, source.Status, source.VersionNumber)
     {

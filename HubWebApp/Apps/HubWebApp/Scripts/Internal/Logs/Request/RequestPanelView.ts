@@ -18,13 +18,15 @@ import { HubTheme } from "../../HubTheme";
 export class RequestPanelView extends GridView {
 
     readonly alert: MessageAlertView;
-    readonly appKey: FormGroupTextView;
-    readonly versionKey: BasicTextComponentView;
-    readonly versionStatus: BasicTextComponentView;
-    readonly userName: FormGroupTextView;
-    readonly currentInstallation: FormGroupTextView;
-    readonly timeRange: FormGroupTextView;
-    readonly path: FormGroupTextView;
+    readonly appKeyFormGroupView: FormGroupTextView;
+    readonly versionKeyFormGroupView: BasicTextComponentView;
+    readonly versionStatusFormGroupView: BasicTextComponentView;
+    readonly userNameFormGroupView: FormGroupTextView;
+    readonly userAgentFormGroupView: FormGroupTextView;
+    readonly remoteAddressFormGroupView: FormGroupTextView;
+    readonly currentInstallationFormGroupView: FormGroupTextView;
+    readonly timeRangeFormGroupView: FormGroupTextView;
+    readonly pathFormGroupView: FormGroupTextView;
     readonly sessionLink: TextLinkView;
     readonly installationLink: TextLinkView;
     readonly logEntriesLink: TextLinkView;
@@ -40,23 +42,25 @@ export class RequestPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
         const gridContainer = mainContent.addView(FormGroupContainerView);
-        this.appKey = gridContainer.addFormGroup(FormGroupTextView);
-        this.appKey.caption.setText('App');
+        this.appKeyFormGroupView = gridContainer.addFormGroupTextView();
+        this.appKeyFormGroupView.caption.setText('App');
         const versionFormGroup = gridContainer.addFormGroup(FormGroupView);
         versionFormGroup.caption.setText('Version');
         const versionBlock = versionFormGroup.valueCell.addView(BlockView);
         versionBlock.addCssName('form-control-plaintext');
-        this.versionKey = versionBlock.addView(TextSpanView);
-        this.versionKey.setMargin(MarginCss.end(3));
-        this.versionStatus = versionBlock.addView(TextSpanView);
-        this.userName = gridContainer.addFormGroup(FormGroupTextView);
-        this.userName.caption.setText('User Name');
-        this.currentInstallation = gridContainer.addFormGroup(FormGroupTextView);
-        this.currentInstallation.caption.setText('Installation');
-        this.timeRange = gridContainer.addFormGroup(FormGroupTextView);
-        this.timeRange.caption.setText('Time Range');
-        this.path = gridContainer.addFormGroup(FormGroupTextView);
-        this.path.caption.setText('Path');
+        this.versionKeyFormGroupView = versionBlock.addView(TextSpanView);
+        this.versionKeyFormGroupView.setMargin(MarginCss.end(3));
+        this.versionStatusFormGroupView = versionBlock.addView(TextSpanView);
+        this.userNameFormGroupView = gridContainer.addFormGroupTextView();
+        this.userNameFormGroupView.caption.setText('User Name');
+        this.userAgentFormGroupView = gridContainer.addFormGroupTextView();
+        this.remoteAddressFormGroupView = gridContainer.addFormGroupTextView();
+        this.currentInstallationFormGroupView = gridContainer.addFormGroupTextView();
+        this.currentInstallationFormGroupView.caption.setText('Installation');
+        this.timeRangeFormGroupView = gridContainer.addFormGroupTextView();
+        this.timeRangeFormGroupView.caption.setText('Time Range');
+        this.pathFormGroupView = gridContainer.addFormGroupTextView();
+        this.pathFormGroupView.caption.setText('Path');
         const nav = mainContent.addView(NavView);
         nav.pills();
         nav.setFlexCss(new FlexCss().column());
@@ -78,7 +82,7 @@ export class RequestPanelView extends GridView {
         );
     }
 
-    showCurrentInstallation() { this.currentInstallation.show(); }
+    showCurrentInstallation() { this.currentInstallationFormGroupView.show(); }
 
-    hideCurrentInstallation() { this.currentInstallation.hide(); }
+    hideCurrentInstallation() { this.currentInstallationFormGroupView.hide(); }
 }

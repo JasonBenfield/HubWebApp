@@ -160,6 +160,7 @@ public sealed class InstallProcess
                             remoteOptions
                         );
                     }
+                    await Task.Delay(TimeSpan.FromSeconds(15));
                 }
                 else
                 {

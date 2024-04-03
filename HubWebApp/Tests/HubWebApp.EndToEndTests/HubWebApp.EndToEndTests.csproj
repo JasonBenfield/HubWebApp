@@ -8,15 +8,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-		<PackageReference Include="nunit" Version="3.14.0" />
+		<PackageReference Include="nunit" Version="4.1.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240312074712013" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21-dev240329220622946" />
 		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.10-dev231118165338904" />
-		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.40-dev240314091308388" />
+		<PackageReference Include="XTI_WebApp.Fakes" Version="1.8.40-dev240403103328293" />
 	</ItemGroup>
 
 	<ItemGroup>

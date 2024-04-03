@@ -17,7 +17,7 @@ await Host.CreateDefaultBuilder(args)
     {
         services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
         services.AddConfigurationOptions<HubDbToolOptions>();
-        services.AddConfigurationOptions<DbOptions>(DbOptions.DB);
+        services.AddSingleton(sp => sp.GetRequiredService<HubDbToolOptions>().DB);
         services.AddHubDbContextForSqlServer();
         services.AddScoped<DbAdmin<HubDbContext>>();
         services.AddScoped<HubFactory>();

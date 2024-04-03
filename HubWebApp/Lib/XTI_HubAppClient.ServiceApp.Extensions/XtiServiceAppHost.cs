@@ -27,10 +27,11 @@ public static class XtiServiceAppHost
                 (hostContext, services) =>
                 {
                     services.AddSingleton(_ => appKey);
+                    services.AddAppServices();
                     services.AddConfigurationOptions<DefaultServiceAppOptions>();
-                    services.AddScoped(sp => sp.GetRequiredService<DefaultServiceAppOptions>().HubClient);
-                    services.AddScoped(sp => sp.GetRequiredService<DefaultServiceAppOptions>().XtiToken);
-                    services.AddScoped(sp => sp.GetRequiredService<DefaultServiceAppOptions>().DB);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().HubClient);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().XtiToken);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().DB);
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>

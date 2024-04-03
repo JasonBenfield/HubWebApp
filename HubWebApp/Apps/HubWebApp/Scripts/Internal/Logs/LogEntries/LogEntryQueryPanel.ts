@@ -53,7 +53,13 @@ export class LogEntryQueryPanel implements IPanel {
         columns.Detail.setFormatter({
             format: (col, record) => {
                 const value: string = record[col.columnName];
-                return value && value.length > 200 ? value.substring(0, 200) : value;
+                return value && value.length > 200 ? value.substring(0, 200) + '...' : value;
+            }
+        });
+        columns.Message.setFormatter({
+            format: (col, record) => {
+                const value: string = record[col.columnName];
+                return value && value.length > 300 ? value.substring(0, 300) + '...' : value;
             }
         });
         options.query.orderBy.addDescending(columns.TimeOccurred);

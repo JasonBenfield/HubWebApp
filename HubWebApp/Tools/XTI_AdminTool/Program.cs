@@ -86,7 +86,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddHttpClient();
             services.AddSingleton<Scopes>();
             services.AddSingleton<IClock, UtcClock>();
-            services.AddHubDbContextForSqlServer();
+            services.AddHubDbContextForSqlServer(ServiceLifetime.Scoped);
             services.AddConfigurationOptions<AdminToolOptions>();
             services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>

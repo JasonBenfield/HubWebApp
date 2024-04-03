@@ -22,7 +22,6 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
         services.AddScoped<ITempLogs>(sp =>
         {
             var dataProtector = sp.GetDataProtector("XTI_TempLog");
-            var hostEnv = sp.GetRequiredService<IHostEnvironment>();
             var appKey = sp.GetRequiredService<AppKey>();
             var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
             return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");

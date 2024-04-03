@@ -5,6 +5,7 @@ import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
+import { AppUser } from "../../Lib/AppUser";
 
 type Events = {
     editRequested: number;
@@ -34,14 +35,14 @@ export class UserComponent {
         private readonly hubClient: HubAppClient,
         private readonly view: UserComponentView
     ) {
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.userNameFormGroup = new FormGroupText(view.userName);
+        this.alert = new CardAlert(this.view.alertView).alert;
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
         this.userNameFormGroup.setCaption('User Name');
-        this.fullNameFormGroup = new FormGroupText(view.fullName);
+        this.fullNameFormGroup = new FormGroupText(view.fullNameFormGroupView);
         this.fullNameFormGroup.setCaption('Name');
-        this.emailFormGroup = new FormGroupText(view.email);
+        this.emailFormGroup = new FormGroupText(view.emailFormGroupView);
         this.emailFormGroup.setCaption('Email');
-        this.timeDeactivatedFormGroup = new FormGroupText(view.timeDeactivated);
+        this.timeDeactivatedFormGroup = new FormGroupText(view.timeDeactivatedFormGroupView);
         this.timeDeactivatedFormGroup.setCaption('Time Deactivated');
         this.editCommand = new Command(this.requestEdit.bind(this));
         this.editCommand.add(this.view.editButton);
@@ -70,22 +71,25 @@ export class UserComponent {
     }
 
     private async deactivate() {
-        const user = await this.alert.infoAction(
+        this.reset();
+        const sourceUser = await this.alert.infoAction(
             'Deactivating...',
             () => this.hubClient.UserMaintenance.DeactivateUser(this.userID)
         );
-        this.loadUser(user);
+        this.loadUser(new AppUser(sourceUser));
     }
 
     private async reactivate() {
-        const user = await this.alert.infoAction(
+        this.reset();
+        const sourceUser = await this.alert.infoAction(
             'Reactivating...',
             () => this.hubClient.UserMaintenance.ReactivateUser(this.userID)
         );
-        this.loadUser(user);
+        this.loadUser(new AppUser(sourceUser));
     }
 
     async refresh() {
+        this.reset();
         const user = await this.getUser(this.userID);
         if (this.canEdit === null) {
             const access = await this.hubClient.getUserAccess({
@@ -93,32 +97,39 @@ export class UserComponent {
             });
             this.canEdit = access.canEdit;
         }
-        this.loadUser(user);
+        this.loadUser(new AppUser(user));
     }
 
-    private loadUser(user: IAppUserModel) {
-        this.userNameFormGroup.setValue(user.UserName.DisplayText);
-        this.fullNameFormGroup.setValue(user.Name.DisplayText);
-        this.emailFormGroup.setValue(user.Email);
-        if (user.TimeDeactivated.isMaxYear) {
-            this.view.timeDeactivated.hide();
+    private reset() {
+        this.emailFormGroup.hide();
+        this.timeDeactivatedFormGroup.hide();
+        this.editCommand.hide();
+        this.changePasswordCommand.hide();
+        this.deactivateCommand.hide();
+        this.reactivateCommand.hide();
+    }
+
+    private loadUser(user: AppUser) {
+        this.userNameFormGroup.setValue(user.userName.displayText);
+        this.fullNameFormGroup.setValue(user.name.displayText);
+        this.emailFormGroup.setValue(user.email);
+        if (user.email) {
+            this.emailFormGroup.show();
+        }
+        if (user.isActive) {
             this.timeDeactivatedFormGroup.setValue('');
         }
         else {
-            this.view.timeDeactivated.show();
-            this.timeDeactivatedFormGroup.setValue(user.TimeDeactivated.format());
+            this.timeDeactivatedFormGroup.setValue(user.timeDeactivated.format());
+            this.view.timeDeactivatedFormGroupView.show();
         }
         if (this.canEdit) {
-            if (user.TimeDeactivated.isMaxYear) {
+            if (user.isActive) {
                 this.editCommand.show();
                 this.changePasswordCommand.show();
                 this.deactivateCommand.show();
-                this.reactivateCommand.hide();
             }
             else {
-                this.editCommand.hide();
-                this.changePasswordCommand.hide();
-                this.deactivateCommand.hide();
                 this.reactivateCommand.show();
             }
         }

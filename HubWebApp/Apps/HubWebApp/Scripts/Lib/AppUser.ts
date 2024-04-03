@@ -17,5 +17,5 @@ export class AppUser {
 		this.timeDeactivated = source.TimeDeactivated;
 	}
 
-	get isActive() { return this.timeDeactivated > DateTimeOffset.now(); }
+	get isActive() { return this.timeDeactivated.compareTo(DateTimeOffset.now()) > 0; }
 }

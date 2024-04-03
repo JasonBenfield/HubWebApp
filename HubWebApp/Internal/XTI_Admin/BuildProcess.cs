@@ -35,9 +35,15 @@ public sealed class BuildProcess
             {
                 Environment.CurrentDirectory = appDir;
             }
-            await RunApiGenerator(appKey, version.VersionKey);
-            await RunTsc(appKey);
-            await RunWebpack(appKey);
+            if (appKey.IsAppType(AppType.Values.WebApp))
+            {
+                await RunApiGenerator(appKey, version.VersionKey);
+            }
+            if (appKey.IsAnyAppType(AppType.Values.WebApp, AppType.Values.WebPackage))
+            {
+                await RunTsc(appKey);
+                await RunWebpack(appKey);
+            }
             Environment.CurrentDirectory = slnDir;
         }
         await RunDotnetBuild();
@@ -66,6 +72,10 @@ public sealed class BuildProcess
                 )
                 .Run();
             result.EnsureExitCodeIsZero();
+        }
+        else
+        {
+            Console.WriteLine($"API Generator app not found at '{apiGeneratorPath}'.");
         }
     }
 
@@ -122,6 +132,10 @@ public sealed class BuildProcess
                 .WriteOutputToConsole()
                 .Run();
             result.EnsureExitCodeIsZero();
+        }
+        else
+        {
+            Console.WriteLine($"webpack file '{webpackConfigPath}' not found.");
         }
     }
 

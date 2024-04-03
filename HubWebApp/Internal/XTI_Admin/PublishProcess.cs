@@ -11,7 +11,6 @@ namespace XTI_Admin;
 public sealed class PublishProcess
 {
     private readonly XtiEnvironment xtiEnv;
-    private readonly XtiFolder xtiFolder;
     private readonly SlnFolder slnFolder;
     private readonly AdminOptions options;
     private readonly AppVersionNameAccessor versionNameAccessor;
@@ -25,10 +24,9 @@ public sealed class PublishProcess
     private readonly ProductionHubAdmin prodHubAdmin;
     private readonly CompleteVersionProcess completeVersionProcess;
 
-    public PublishProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, SlnFolder slnFolder, AdminOptions options, AppVersionNameAccessor versionNameAccessor, XtiGitHubRepository gitHubRepo, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, BeginPublishProcess beginPublishProcess, PublishedFolder publishFolder, PublishLibProcess publishLibProcess, PublishSetupProcess publishSetupProcess, ProductionHubAdmin prodHubAdmin, CompleteVersionProcess completeVersionProcess)
+    public PublishProcess(XtiEnvironment xtiEnv, SlnFolder slnFolder, AdminOptions options, AppVersionNameAccessor versionNameAccessor, XtiGitHubRepository gitHubRepo, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, BeginPublishProcess beginPublishProcess, PublishedFolder publishFolder, PublishLibProcess publishLibProcess, PublishSetupProcess publishSetupProcess, ProductionHubAdmin prodHubAdmin, CompleteVersionProcess completeVersionProcess)
     {
         this.xtiEnv = xtiEnv;
-        this.xtiFolder = xtiFolder;
         this.slnFolder = slnFolder;
         this.options = options;
         this.versionNameAccessor = versionNameAccessor;
@@ -75,14 +73,20 @@ public sealed class PublishProcess
             {
                 Directory.Delete(publishDir, true);
             }
-            await publishSetupProcess.Run(appKey, versionKey);
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+            {
+                await publishSetupProcess.Run(appKey, versionKey);
+            }
             await new PublishToolsProcess(publishFolder).Run(appKey, versionKey);
-            if (!appKey.Type.Equals(AppType.Values.Package))
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
             {
                 await RunDotNetPublish(appKey, versionKey);
             }
-            await new PublishNpmProcess(xtiEnv, xtiFolder, publishFolder).Run(appKey, versionKey, semanticVersion);
-            if (!appKey.Type.Equals(AppType.Values.Package) && !appKey.Type.Equals(AppType.Values.WebPackage) && release != null)
+            if (appKey.IsAnyAppType(AppType.Values.WebApp, AppType.Values.WebPackage))
+            {
+                await new PublishNpmProcess(xtiEnv, publishFolder).Run(appKey, versionKey, semanticVersion);
+            }
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage) && release != null)
             {
                 await UploadReleaseAssets(appKey, versionKey, release);
             }
@@ -213,18 +217,33 @@ public sealed class PublishProcess
     {
         var publishDir = GetPublishDir(appKey, versionKey);
         var publishAppDir = Path.Combine(publishDir, "App");
-        Console.WriteLine($"Publishing web app to '{publishAppDir}'");
+        Console.WriteLine($"Publishing app to '{publishAppDir}'");
+        var projectDir = GetProjectDir(appKey);
+        var pubxmlFile = Path.Combine(projectDir, "Properties", "PublishProfiles", "Default.pubxml");
         var publishProcess = new WinProcess("dotnet")
             .WriteOutputToConsole()
             .UseArgumentNameDelimiter("")
             .AddArgument("publish")
-            .AddArgument(new Quoted(GetProjectDir(appKey)))
+            .AddArgument(new Quoted(projectDir))
             .UseArgumentNameDelimiter("-")
             .AddArgument("c", GetConfiguration())
             .UseArgumentValueDelimiter("=")
-            .AddArgument("p:PublishProfile", "Default")
-            .AddArgument("p:PublishDir", publishAppDir)
-            .AddArgument("p:TypeScriptCompileBlocked", "true");
+            .AddArgument("p:PublishDir", publishAppDir);
+        if (File.Exists(pubxmlFile))
+        {
+            publishProcess.AddArgument("p:PublishProfile", "Default");
+        }
+        if (appKey.Type.Equals(AppType.Values.WebApp))
+        {
+            publishProcess.AddArgument("p:TypeScriptCompileBlocked", "true");
+        }
+        else if (appKey.Type.EqualsAny(AppType.Values.ServiceApp, AppType.Values.ConsoleApp))
+        {
+            if (!File.Exists(pubxmlFile))
+            {
+                publishProcess.AddArgument("p:PublishSingleFile", "true");
+            }
+        }
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
         var privateFiles = Directory.GetFiles(publishAppDir, "*.private.*")

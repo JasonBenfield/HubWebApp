@@ -12,7 +12,7 @@ public sealed class SelectedAppKeys
         }
         else
         {
-            Values = new[] { options.AppKey() };
+            Values = [options.AppKey()];
         }
     }
 
