@@ -27,9 +27,9 @@ public sealed class SetupHostedService : IHostedService
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
             await dbContext.Database.MigrateAsync();
-            await addOrUpdateApp(scope);
-            await addSystemUser(scope);
-            await runSetup(scope);
+            await AddOrUpdateApp(scope);
+            await AddSystemUser(scope);
+            await RunSetup(scope);
         }
         catch (Exception ex)
         {
@@ -40,7 +40,7 @@ public sealed class SetupHostedService : IHostedService
         lifetime.StopApplication();
     }
 
-    private static Task addOrUpdateApp(IServiceScope scope)
+    private static Task AddOrUpdateApp(IServiceScope scope)
     {
         var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
@@ -53,7 +53,7 @@ public sealed class SetupHostedService : IHostedService
         );
     }
 
-    private static async Task addSystemUser(IServiceScope scope)
+    private static async Task AddSystemUser(IServiceScope scope)
     {
         var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var hashedPasswordFactory = scope.ServiceProvider.GetRequiredService<IHashedPasswordFactory>();
@@ -76,7 +76,7 @@ public sealed class SetupHostedService : IHostedService
         );
     }
 
-    private static async Task runSetup(IServiceScope scope)
+    private static async Task RunSetup(IServiceScope scope)
     {
         var hubSetup = scope.ServiceProvider.GetRequiredService<HubAppSetup>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();

@@ -18,6 +18,8 @@ export class AppGroup extends AppClientGroup {
 		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 		this.GetModifierCategoriesAction = this.createAction<IEmptyRequest,IModifierCategoryModel[]>('GetModifierCategories', 'Get Modifier Categories');
 		this.GetDefaultModifierAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModifier', 'Get Default Modifier');
+		this.GetDefaultOptionsAction = this.createAction<IEmptyRequest,string>('GetDefaultOptions', 'Get Default Options');
+		this.GetDefaultAppOptionsAction = this.createAction<IEmptyRequest,string>('GetDefaultAppOptions', 'Get Default App Options');
 	}
 	
 	readonly Index: AppClientView<IEmptyRequest>;
@@ -28,6 +30,8 @@ export class AppGroup extends AppClientGroup {
 	readonly GetMostRecentErrorEventsAction: AppClientAction<number,IAppLogEntryModel[]>;
 	readonly GetModifierCategoriesAction: AppClientAction<IEmptyRequest,IModifierCategoryModel[]>;
 	readonly GetDefaultModifierAction: AppClientAction<IEmptyRequest,IModifierModel>;
+	readonly GetDefaultOptionsAction: AppClientAction<IEmptyRequest,string>;
+	readonly GetDefaultAppOptionsAction: AppClientAction<IEmptyRequest,string>;
 	
 	GetApp(errorOptions?: IActionErrorOptions) {
 		return this.GetAppAction.execute({}, errorOptions || {});
@@ -49,5 +53,11 @@ export class AppGroup extends AppClientGroup {
 	}
 	GetDefaultModifier(errorOptions?: IActionErrorOptions) {
 		return this.GetDefaultModifierAction.execute({}, errorOptions || {});
+	}
+	GetDefaultOptions(errorOptions?: IActionErrorOptions) {
+		return this.GetDefaultOptionsAction.execute({}, errorOptions || {});
+	}
+	GetDefaultAppOptions(errorOptions?: IActionErrorOptions) {
+		return this.GetDefaultAppOptionsAction.execute({}, errorOptions || {});
 	}
 }

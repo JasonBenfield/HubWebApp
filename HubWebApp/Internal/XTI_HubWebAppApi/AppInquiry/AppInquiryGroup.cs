@@ -13,6 +13,8 @@ public sealed class AppInquiryGroup : AppApiGroupWrapper
         GetMostRecentErrorEvents = source.AddAction(nameof(GetMostRecentErrorEvents), () => sp.GetRequiredService<GetMostRecentErrorEventsAction>());
         GetModifierCategories = source.AddAction(nameof(GetModifierCategories), () => sp.GetRequiredService<GetModifierCategoriesAction>());
         GetDefaultModifier = source.AddAction(nameof(GetDefaultModifier), () => sp.GetRequiredService<GetDefaultModifierAction>());
+        GetDefaultOptions = source.AddAction(nameof(GetDefaultOptions), () => sp.GetRequiredService<GetDefaultOptionsAction>());
+        GetDefaultAppOptions = source.AddAction(nameof(GetDefaultAppOptions), () => sp.GetRequiredService<GetDefaultAppOptionsAction>());
     }
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
@@ -23,4 +25,6 @@ public sealed class AppInquiryGroup : AppApiGroupWrapper
     public AppApiAction<int, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
     public AppApiAction<EmptyRequest, ModifierCategoryModel[]> GetModifierCategories { get; }
     public AppApiAction<EmptyRequest, ModifierModel> GetDefaultModifier { get; }
+    public AppApiAction<EmptyRequest, string> GetDefaultOptions { get; }
+    public AppApiAction<EmptyRequest, string> GetDefaultAppOptions { get; }
 }

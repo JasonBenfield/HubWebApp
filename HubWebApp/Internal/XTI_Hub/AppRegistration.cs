@@ -15,6 +15,7 @@ public sealed class AppRegistration
     {
         var appKey = template.AppKey;
         var app = await hubFactory.Apps.App(appKey);
+        await app.UpdateDefaultOptions(template.SerializedDefaultOptions);
         var roleNames = template.RecursiveRoles()
             .Union(new[] { AppRoleName.DenyAccess })
             .Distinct();
@@ -24,7 +25,7 @@ public sealed class AppRegistration
         {
             await UpdateResourceGroupFromTemplate(app, version, groupTemplate);
         }
-        var modifier = await AddAppModifier(appKey, app);
+        await AddAppModifier(appKey, app);
         await AddManageCacheRoleToHubSystemUsers(app);
         return app.ToModel();
     }

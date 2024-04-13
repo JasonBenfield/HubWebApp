@@ -56,4 +56,16 @@ public sealed partial class AppController : Controller
     {
         return api.Group("App").Action<EmptyRequest, ModifierModel>("GetDefaultModifier").Execute(new EmptyRequest(), ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> GetDefaultOptions(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, string>("GetDefaultOptions").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> GetDefaultAppOptions(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, string>("GetDefaultAppOptions").Execute(new EmptyRequest(), ct);
+    }
 }
