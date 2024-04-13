@@ -285,6 +285,7 @@ interface IRegisterAppRequest {
 }
 interface IAppApiTemplateModel {
 	AppKey: IAppKey;
+	SerializedDefaultOptions: string;
 	GroupTemplates: IAppApiGroupTemplateModel[];
 }
 interface IAppApiGroupTemplateModel {
