@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Secrets;
-using XTI_Core.Extensions;
 using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
@@ -13,21 +12,26 @@ public static class HubClientExtensions
     public static void AddHubClientServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddConfigurationOptions<HubClientOptions>(HubClientOptions.HubClient);
         services.AddScoped<AnonymousXtiToken>();
-        services.AddXtiTokenAccessor((sp, accessor) => { });
+        services.AddXtiTokenAccessorFactory((sp, accessor) => { });
         services.AddScoped<HubClientOptionsAppClientDomain>();
         services.AddScoped<HubClientAppClientDomain>();
-        if (!services.Any(s => s.ImplementationType == typeof(AppClientDomainSelector)))
+        if (!services.Any(s => !s.IsKeyedService && s.ImplementationType == typeof(AppClientDomainSelector)))
         {
             AddAppClientDomainSelector(services, (sp, domains) => { });
         }
         services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
         services.AddScoped<AppClientUrl>();
         services.AddSingleton<HubAppClientVersion>();
-        services.AddScoped<HubAppClient>();
+        services.AddScoped<HubAppClientFactory>();
+        services.AddScoped(sp => sp.GetRequiredService<HubAppClientFactory>().Create());
+        services.AddScoped<SystemHubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
         services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+    }
+
+    public static void AddHubClientContext(this IServiceCollection services)
+    {
         services.AddScoped<HubAppClientContext>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().AppContext);
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientContext>().UserContext);
@@ -49,13 +53,12 @@ public static class HubClientExtensions
 
     public static void AddConfigurationXtiToken(this IServiceCollection services)
     {
-        services.AddConfigurationOptions<XtiTokenOptions>(XtiTokenOptions.XtiToken);
         services.AddScoped<ConfigurationXtiToken>();
     }
 
     public static void AddAppClientDomainSelector(this IServiceCollection services, Action<IServiceProvider, AppClientDomainSelector> configure)
     {
-        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(AppClientDomainSelector));
+        var existing = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(AppClientDomainSelector));
         if (existing != null)
         {
             services.Remove(existing);
@@ -73,9 +76,9 @@ public static class HubClientExtensions
         );
     }
 
-    public static void AddXtiTokenAccessor(this IServiceCollection services, Action<IServiceProvider, XtiTokenAccessor> configure)
+    public static void AddXtiTokenAccessorFactory(this IServiceCollection services, Action<IServiceProvider, XtiTokenAccessorFactory> configure)
     {
-        var existing = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
+        var existing = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(XtiTokenAccessorFactory));
         if (existing != null)
         {
             services.Remove(existing);
@@ -85,9 +88,9 @@ public static class HubClientExtensions
             sp =>
             {
                 var cache = sp.GetRequiredService<IMemoryCache>();
-                var xtiTokenAccessor = new XtiTokenAccessor(cache);
-                configure(sp, xtiTokenAccessor);
-                return xtiTokenAccessor;
+                var xtiTokenAccessorFactory = new XtiTokenAccessorFactory(cache);
+                configure(sp, xtiTokenAccessorFactory);
+                return xtiTokenAccessorFactory;
             }
         );
     }

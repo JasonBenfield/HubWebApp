@@ -11,5 +11,5 @@ public sealed class ExternalAuthGroup : AppApiGroupWrapper
             () => sp.GetRequiredService<ExternalAuthKeyAction>()
         );
     }
-    public AppApiAction<ExternalAuthKeyModel, string> ExternalAuthKey { get; }
+    public AppApiAction<ExternalAuthKeyModel, AuthenticatedLoginResult> ExternalAuthKey { get; }
 }

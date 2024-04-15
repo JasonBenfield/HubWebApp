@@ -34,6 +34,8 @@ internal sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMo
         {
             throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");
         }
+        var sourceRequest = await request.SourceRequestOrDefault();
+        var targetRequestIDs = await request.TargetRequestIDs();
         var detail = new AppRequestDetailModel
         (
             Request: request.ToModel(),
@@ -47,7 +49,9 @@ internal sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMo
             App: appVersion.App.ToModel(),
             Session: session.ToModel(),
             UserGroup: userGroup.ToModel(),
-            User: user.ToModel()
+            User: user.ToModel(),
+            SourceRequestID: sourceRequest.ToModel().ID,
+            TargetRequestIDs: targetRequestIDs
         );
         return detail;
     }

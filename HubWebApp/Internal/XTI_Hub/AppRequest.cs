@@ -49,6 +49,12 @@ public sealed class AppRequest
 
     public Task<LogEntry[]> Events() => factory.LogEntries.RetrieveByRequest(this);
 
+    public Task<AppRequest> SourceRequestOrDefault() =>
+        factory.Requests.SourceRequestOrDefault(record.ID);
+
+    public Task<int[]> TargetRequestIDs() =>
+        factory.Requests.TargetRequestIDs(record.ID);
+
     public Task<LogEntry> LogEvent
     (
         string logEntryKey,
@@ -58,7 +64,8 @@ public sealed class AppRequest
         string message,
         string detail,
         int actualCount,
-        string sourceLogEntryKey
+        string sourceLogEntryKey,
+        string category
     ) => factory.LogEntries.LogEvent
         (
             this,
@@ -69,7 +76,8 @@ public sealed class AppRequest
             message,
             detail,
             actualCount,
-            sourceLogEntryKey
+            sourceLogEntryKey,
+            category
         );
 
     public Task End(DateTimeOffset timeEnded)

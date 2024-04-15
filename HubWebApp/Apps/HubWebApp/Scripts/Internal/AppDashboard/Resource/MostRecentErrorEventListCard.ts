@@ -6,6 +6,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { EventListItem } from "../EventListItem";
 import { EventListItemView } from "../EventListItemView";
 import { MostRecentErrorEventListCardView } from "../MostRecentErrorEventListCardView";
+import { AppLogEntry } from "../../../Lib/AppLogEntry";
 
 export class MostRecentErrorEventListCard {
     private readonly alert: MessageAlert;
@@ -27,7 +28,8 @@ export class MostRecentErrorEventListCard {
     }
 
     async refresh() {
-        const errorEvents = await this.getErrorEvents();
+        const sourceErrorEvents = await this.getErrorEvents();
+        const errorEvents = sourceErrorEvents.map(e => new AppLogEntry(e));
         this.errorEvents.setItems(
             errorEvents,
             (sourceItem, listItem) => new EventListItem(sourceItem, listItem)

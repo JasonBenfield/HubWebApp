@@ -16,9 +16,9 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserContextModel>> GetUserContext([FromBody] GetUserContextRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModifierRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<GetUserContextRequest, UserContextModel>("GetUserContext").Execute(model, ct);
+        return api.Group("System").Action<GetModifierRequest, ModifierModel>("GetModifier").Execute(model, ct);
     }
 
     [HttpPost]
@@ -34,15 +34,21 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] string model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<string, AppUserModel>("GetUserOrAnon").Execute(model, ct);
+        return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest model, CancellationToken ct)
     {
-        return api.Group("System").Action<int, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
+        return api.Group("System").Action<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
     }
 
     [HttpPost]

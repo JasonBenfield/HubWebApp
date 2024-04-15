@@ -1,4 +1,5 @@
 // Generated code
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { AddUserFormView } from './AddUserFormView';
 

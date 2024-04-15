@@ -61,23 +61,23 @@ internal sealed class HubSetupTest
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
-            new[] { new AppDefinitionModel(HubInfo.AppKey) }
+            [HubInfo.AppKey],
+            default
         );
         await hubAdmin.AddOrUpdateVersions
         (
-            new[] { HubInfo.AppKey },
-            new[]
-            {
-                new XtiVersionModel
-                {
-                    VersionName = new AppVersionName("HubWebApp"),
-                    VersionKey = new AppVersionKey(1),
-                    VersionNumber = new AppVersionNumber(1,0,0),
-                    Status = AppVersionStatus.Values.Current,
-                    VersionType = AppVersionType.Values.Major,
-                    TimeAdded = DateTime.Now
-                }
-            }
+            [HubInfo.AppKey],
+            [
+                new AddVersionRequest
+                (
+                    versionName: new AppVersionName("HubWebApp"),
+                    versionKey: new AppVersionKey(1),
+                    versionNumber: new AppVersionNumber(1,0,0),
+                    status: AppVersionStatus.Values.Current,
+                    versionType: AppVersionType.Values.Major
+                )
+            ],
+            default
         );
         return sp;
     }

@@ -1,19 +1,37 @@
-﻿using System.Text.Json;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_PermanentLog;
-using XTI_TempLog;
-using XTI_TempLog.Abstractions;
 
 namespace XTI_Admin;
 
 internal sealed class UploadTempLogCommand : ICommand
 {
     private readonly TempToPermanentLog tempToPermanent;
+    private readonly AdminOptions options;
+    private readonly RemoteCommandService remoteCommandService;
 
-    public UploadTempLogCommand(Scopes scopes)
+    public UploadTempLogCommand(TempToPermanentLog tempToPermanent, AdminOptions options, RemoteCommandService remoteCommandService)
     {
-        tempToPermanent = scopes.GetRequiredService<TempToPermanentLog>();
+        this.tempToPermanent = tempToPermanent;
+        this.options = options;
+        this.remoteCommandService = remoteCommandService;
     }
 
-    public Task Execute() => tempToPermanent.Move();
+    public async Task Execute(CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+        {
+            await tempToPermanent.Move();
+        }
+        else
+        {
+            var remoteOptions = options.Copy();
+            remoteOptions.DestinationMachine = "";
+            await remoteCommandService.Run
+            (
+                options.DestinationMachine,
+                CommandNames.UploadTempLog.ToString(),
+                remoteOptions
+            );
+        }
+    }
 }

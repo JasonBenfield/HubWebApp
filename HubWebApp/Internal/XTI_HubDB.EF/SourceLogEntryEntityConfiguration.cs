@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace XTI_HubDB.EF;
+﻿namespace XTI_HubDB.EF;
 
 internal sealed class SourceLogEntryEntityConfiguration : IEntityTypeConfiguration<SourceLogEntryEntity>
 {
@@ -12,6 +6,7 @@ internal sealed class SourceLogEntryEntityConfiguration : IEntityTypeConfigurati
     {
         builder.HasKey(e => e.ID);
         builder.Property(e => e.ID).ValueGeneratedOnAdd();
+        builder.HasIndex(r => new { r.SourceID, r.TargetID }).IsUnique();
         builder
             .HasOne<LogEntryEntity>()
             .WithMany()

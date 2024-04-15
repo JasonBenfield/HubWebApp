@@ -1,4 +1,5 @@
-﻿using XTI_WebApp.Abstractions;
+﻿using XTI_App.Api;
+using XTI_WebApp.Abstractions;
 
 namespace XTI_HubAppClient.Extensions;
 

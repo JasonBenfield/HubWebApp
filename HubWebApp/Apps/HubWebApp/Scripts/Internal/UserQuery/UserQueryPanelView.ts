@@ -4,7 +4,7 @@ import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { GridView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { LinkListGroupView, TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
@@ -21,7 +21,7 @@ export class UserQueryPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = this.addCell()
@@ -37,7 +37,7 @@ export class UserQueryPanelView extends GridView {
                 b.setPadding(PaddingCss.top(3));
             });
         const layoutGrid = mainContent.addView(GridView);
-        layoutGrid.layout();
+        layoutGrid.styleAsLayout();
         layoutGrid.height100();
         layoutGrid.setTemplateColumns(CssLengthUnit.percentage(25), CssLengthUnit.flex(1));
         const cell1 = layoutGrid.addCell()
@@ -55,7 +55,7 @@ export class UserQueryPanelView extends GridView {
         this.odataComponent = layoutGrid.addCell()
             .configure(c => c.setPadding(PaddingCss.start(3)))
             .addView(ODataComponentView);
-        this.odataComponent.configureDataRow(row => row.addCssName('clickable'));
+        this.odataComponent.configureDataRow(grid => grid.addRow(LinkGridRowView));
         this.columns = new ODataExpandedUserColumnViewsBuilder();
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)

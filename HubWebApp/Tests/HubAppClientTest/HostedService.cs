@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Core;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 
 namespace HubAppClientTest;
@@ -39,14 +40,14 @@ internal sealed class HostedService : IHostedService
                 default
             );
             Console.WriteLine($"logEntries: {XtiSerializer.Serialize(logEntries)}");
-            var userAccess = await hubClient.AppUser.GetUserAccess
+            var userAccess = await hubClient.AppUser.GetExplicitUserAccess
             (
                 "XTI",
                 new UserModifierKey
-                {
-                    UserID = 1009,
-                    ModifierID = 17
-                }
+                (
+                    userID: 1009,
+                    modifierID: 17
+                )
             );
             Console.WriteLine($"hasAccess: {userAccess.HasAccess}");
             var fileResult = await hubClient.UserQuery.ToExcel

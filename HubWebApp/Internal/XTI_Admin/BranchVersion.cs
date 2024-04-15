@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
@@ -7,24 +6,28 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class BranchVersion
+public sealed class BranchVersion
 {
-    private readonly IServiceProvider sp;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly XtiGitHubRepository gitHubRepo;
+    private readonly IHubAdministration hubAdmin;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public BranchVersion(Scopes scopes)
+    public BranchVersion(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, ProductionHubAdmin prodHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
-        sp = scopes.Production();
+        this.gitRepo = gitRepo;
+        this.gitHubRepo = gitHubRepo;
+        hubAdmin = prodHubAdmin.Value;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task<XtiVersionModel> Value()
+    public async Task<XtiVersionModel> Value(CancellationToken ct)
     {
-        var gitRepo = sp.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         AppVersionKey versionKey;
         if (xtiBranchName is XtiIssueBranchName issueBranchName)
         {
-            var gitHubRepo = sp.GetRequiredService<XtiGitHubRepository>();
             var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
             var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
             versionKey = AppVersionKey.Parse(milestoneName.Version.Key);
@@ -37,8 +40,7 @@ internal sealed class BranchVersion
         {
             versionKey = AppVersionKey.Current;
         }
-        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.Version(sp.GetRequiredService<AppVersionNameAccessor>().Value, versionKey);
+        var version = await hubAdmin.Version(versionNameAccessor.Value, versionKey, ct);
         return version;
     }
 }

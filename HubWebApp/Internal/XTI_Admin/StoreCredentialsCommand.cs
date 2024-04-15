@@ -1,31 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XTI_Credentials;
+﻿using XTI_Credentials;
 using XTI_Secrets;
 
 namespace XTI_Admin;
 
 internal sealed class StoreCredentialsCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly AdminOptions options;
+    private readonly ISecretCredentialsFactory credentialFactory;
+    private readonly RemoteCommandService remoteCommandService;
 
-    public StoreCredentialsCommand(Scopes scopes)
+    public StoreCredentialsCommand(AdminOptions options, ISecretCredentialsFactory credentialFactory, RemoteCommandService remoteCommandService)
     {
-        this.scopes = scopes;
+        this.options = options;
+        this.credentialFactory = credentialFactory;
+        this.remoteCommandService = remoteCommandService;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
         if (string.IsNullOrWhiteSpace(options.CredentialKey)) { throw new ArgumentException("CredentialKey is required"); }
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
-        var credentialFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
-        var secretCredentials = credentialFactory.Create(options.CredentialKey);
-        await secretCredentials.Update(new CredentialValue(options.UserName, options.Password));
-        Console.WriteLine($"Secrets stored for user {options.UserName}");
+        if (string.IsNullOrWhiteSpace(options.DestinationMachine))
+        {
+            var secretCredentials = credentialFactory.Create(options.CredentialKey);
+            await secretCredentials.Update(new CredentialValue(options.UserName, options.Password));
+            Console.WriteLine($"Secrets stored for user {options.UserName}");
+        }
+        else
+        {
+            var remoteOptions = options.Copy();
+            remoteOptions.DestinationMachine = "";
+            await remoteCommandService.Run
+            (
+                options.DestinationMachine,
+                CommandNames.StoreCredentials.ToString(),
+                remoteOptions
+            );
+        }
     }
 }

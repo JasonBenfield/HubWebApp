@@ -7,16 +7,15 @@ namespace XTI_Admin;
 
 internal sealed class CopyToInstallDirProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiFolder xtiFolder;
 
-    public CopyToInstallDirProcess(Scopes scopes)
+    public CopyToInstallDirProcess(XtiFolder xtiFolder)
     {
-        this.scopes = scopes;
+        this.xtiFolder = xtiFolder;
     }
 
     public Task Run(string sourceDir, AppKey appKey, AppVersionKey installVersionKey, bool purge)
     {
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
         Console.WriteLine($"Copying from '{sourceDir}' to '{installDir}'");
         var process = new RobocopyProcess(sourceDir, installDir)

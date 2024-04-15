@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Processes;
 
@@ -8,20 +7,18 @@ namespace XTI_Admin;
 internal sealed class PublishNpmProcess
 {
     private readonly XtiEnvironment xtiEnv;
-    private readonly XtiFolder xtiFolder;
     private readonly PublishedFolder publishFolder;
 
-    public PublishNpmProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, PublishedFolder publishFolder)
+    public PublishNpmProcess(XtiEnvironment xtiEnv, PublishedFolder publishFolder)
     {
         this.xtiEnv = xtiEnv;
-        this.xtiFolder = xtiFolder;
         this.publishFolder = publishFolder;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey, string versionNumber)
     {
         var publishDir = publishFolder.AppDir(appKey, versionKey);
-        var projectDir = getProjectDir(appKey);
+        var projectDir = GetProjectDir(appKey);
         var sourceScriptPath = Path.Combine
         (
             projectDir,
@@ -153,15 +150,12 @@ internal sealed class PublishNpmProcess
         }
     }
 
-    private static string getProjectDir(AppKey appKey) =>
+    private static string GetProjectDir(AppKey appKey) =>
         Path.Combine
         (
             Environment.CurrentDirectory,
             "Apps",
-            $"{getAppName(appKey)}WebApp"
+            $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "")
         );
-
-    private static string getAppName(AppKey appKey)
-        => appKey.Name.DisplayText.Replace(" ", "");
 
 }

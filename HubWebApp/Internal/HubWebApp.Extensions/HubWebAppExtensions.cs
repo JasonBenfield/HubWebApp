@@ -3,18 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
+using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
+using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApi.PermanentLog;
-using XTI_HubDB.Extensions;
 using XTI_WebApp.Abstractions;
-using XTI_WebApp.Extensions;
-using XTI_App.Hosting;
-using XTI_Schedule;
-using XTI_Core;
-using XTI_WebAppClient;
 using XTI_WebApp.Api;
+using XTI_WebApp.Extensions;
+using XTI_WebAppClient;
 
 namespace HubWebApp.Extensions;
 
@@ -24,15 +22,15 @@ public static class HubWebAppExtensions
     {
         services.AddHttpClient();
         services.AddAppServices();
-        services.AddWebAppServices();
+        services.AddDefaultWebAppServices();
         services.AddSingleton
         (
             _ => new AppPageModel
             {
-                PostStyleSheets = new[]
-                {
+                PostStyleSheets =
+                [
                     "~/styles/css/Hub.css"
-                }
+                ]
             }
         );
         services.AddHubDbContextForSqlServer();
@@ -61,10 +59,10 @@ public static class HubWebAppExtensions
         (
             sp =>
             {
-                var tokenAccessor = new XtiTokenAccessor(sp.GetRequiredService<IMemoryCache>());
-                tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                tokenAccessor.UseToken<SystemUserXtiToken>();
-                return tokenAccessor;
+                var tokenAccessorFactory = new XtiTokenAccessorFactory(sp.GetRequiredService<IMemoryCache>());
+                tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
+                return tokenAccessorFactory;
             }
         );
         services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
@@ -94,25 +92,7 @@ public static class HubWebAppExtensions
                 return appClients;
             }
         );
-        services.AddAppAgenda
-        (
-            (sp, agenda) =>
-            {
-                agenda.AddScheduled<HubAppApi>
-                (
-                    (api, agendaItem) =>
-                    {
-                        agendaItem.Action(api.Periodic.PurgeLogs)
-                            .Interval(TimeSpan.FromHours(7))
-                            .AddSchedule
-                            (
-                                Schedule.EveryDay().At(TimeRange.AllDay())
-                            );
-                    }
-                );
-            }
-        );
-        services.AddHostedService<AppAgendaHostedService>();
+        services.AddConfigurationOptions<HubWebAppOptions>();
         services.AddThrottledLog<HubAppApi>
         (
             (api, throttledLogs) =>

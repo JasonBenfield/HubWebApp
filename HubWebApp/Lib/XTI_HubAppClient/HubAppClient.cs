@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class HubAppClient : AppClient
 {
-    public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, IAppClientRequestKey requestKey, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessor, clientUrl, requestKey, "Hub", version.Value)
+    public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessorFactory xtiTokenAccessorFactory, AppClientUrl clientUrl, IAppClientRequestKey requestKey, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessorFactory, clientUrl, requestKey, "Hub", version.Value)
     {
         CurrentUser = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new CurrentUserGroup(_clientFactory, _tokenAccessor, _url, _options));
         Home = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new HomeGroup(_clientFactory, _tokenAccessor, _url, _options));
@@ -35,6 +35,8 @@ public sealed partial class HubAppClient : AppClient
         SessionQuery = CreateODataGroup<EmptyRequest, ExpandedSession>("SessionQuery");
         RequestQuery = CreateODataGroup<AppRequestQueryRequest, ExpandedRequest>("RequestQuery");
         LogEntryQuery = CreateODataGroup<LogEntryQueryRequest, ExpandedLogEntry>("LogEntryQuery");
+        UserRoles = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new UserRolesGroup(_clientFactory, _tokenAccessor, _url, _options));
+        UserRoleQuery = CreateODataGroup<UserRoleQueryRequest, ExpandedUserRole>("UserRoleQuery");
     }
 
     public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
@@ -70,4 +72,6 @@ public sealed partial class HubAppClient : AppClient
     public AppClientODataGroup<EmptyRequest, ExpandedSession> SessionQuery { get; }
     public AppClientODataGroup<AppRequestQueryRequest, ExpandedRequest> RequestQuery { get; }
     public AppClientODataGroup<LogEntryQueryRequest, ExpandedLogEntry> LogEntryQuery { get; }
+    public UserRolesGroup UserRoles { get; }
+    public AppClientODataGroup<UserRoleQueryRequest, ExpandedUserRole> UserRoleQuery { get; }
 }

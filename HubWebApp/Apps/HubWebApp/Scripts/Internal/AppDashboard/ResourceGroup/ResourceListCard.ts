@@ -2,20 +2,21 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceListCardView } from "./ResourceListCardView";
 import { ResourceListItem } from "./ResourceListItem";
 import { ResourceListItemView } from "./ResourceListItemView";
+import { AppResource } from "../../../Lib/AppResource";
+
+type Events = { resourceSelected: AppResource };
 
 export class ResourceListCard {
     private readonly alert: MessageAlert;
     private readonly resources: ListGroup<ResourceListItem, ResourceListItemView>;
-
+    private readonly eventSource = new EventSource<Events>(this, { resourceSelected: null });
+    readonly when = this.eventSource.when;
     private groupID: number;
-
-    private readonly _resourceSelected = new DefaultEvent<IResourceModel>(this);
-    readonly resourceSelected = this._resourceSelected.handler();
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -24,11 +25,11 @@ export class ResourceListCard {
         new TextComponent(view.titleHeader).setText('Resources');
         this.alert = new CardAlert(view.alert).alert;
         this.resources = new ListGroup(view.resources);
-        this.resources.registerItemClicked(this.onItemSelected.bind(this));
+        this.resources.when.itemClicked.then(this.onItemSelected.bind(this));
     }
 
     private onItemSelected(item: ResourceListItem) {
-        this._resourceSelected.invoke(item.resource);
+        this.eventSource.events.resourceSelected.invoke(item.resource);
     }
 
     setGroupID(groupID: number) {
@@ -36,7 +37,8 @@ export class ResourceListCard {
     }
 
     async refresh() {
-        const resources = await this.getResources();
+        const sourceResources = await this.getResources();
+        const resources = sourceResources.map(r => new AppResource(r));
         this.resources.setItems(
             resources,
             (sourceItem, listItem) => new ResourceListItem(sourceItem, listItem)

@@ -3,18 +3,20 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
 import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
 import { ODataExpandedInstallationColumnsBuilder } from "../../Lib/Http/ODataExpandedInstallationColumnsBuilder";
 import { InstallationDataRow } from "./InstallationDataRow";
 import { InstallationQueryPanelView } from "./InstallationQueryPanelView";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
 
 interface IResult {
     menuRequested?: boolean;
@@ -36,10 +38,8 @@ export class InstallationQueryPanel implements IPanel {
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.queryTypes = new ListGroup(this.view.queryTypes);
-        const selectedQueryTypeText = Url.current().getQueryValue('QueryType');
-        const selectedQueryType = InstallationQueryType.values.value(
-            selectedQueryTypeText ? Number(selectedQueryTypeText) : 0
-        );
+        const selectedQueryTypeValue = Url.current().query.getNumberValue('QueryType');
+        const selectedQueryType = InstallationQueryType.values.value(selectedQueryTypeValue);
         this.queryTypes.setItems(
             InstallationQueryType.values.all,
             (queryType, itemView) => {
@@ -60,10 +60,10 @@ export class InstallationQueryPanel implements IPanel {
             columns.QualifiedMachineName,
             columns.Domain,
             columns.IsCurrent,
-            columns.VersionStatusText,
+            columns.VersionStatus,
             columns.VersionRelease,
             columns.VersionKey,
-            columns.InstallationStatusDisplayText,
+            columns.InstallationStatus,
             columns.LastRequestDaysAgo,
             columns.RequestCount
         );
@@ -73,16 +73,38 @@ export class InstallationQueryPanel implements IPanel {
             filter: true,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.InstallationQuery, { QueryType: selectedQueryType.Value })
+        options.setDefaultODataClient(
+            hubClient.InstallationQuery,
+            { args: { QueryType: selectedQueryType.Value } }
         );
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view) =>
-                new InstallationDataRow(rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: LinkGridRowView) =>
+                new InstallationDataRow(this.hubClient, rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().query.getNumberValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(Number(page));
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
+    }
+
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     private onCellClicked(args: ODataCellClickedEventArgs) {

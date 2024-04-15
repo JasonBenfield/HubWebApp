@@ -56,12 +56,12 @@ internal sealed class TestHost
                         }
                     );
                     services.AddHubClientServices();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<TesterXtiToken>());
-                        tokenAccessor.UseToken<TesterXtiToken>();
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<NewUserXtiToken>());
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<TesterXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<TesterXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<NewUserXtiToken>());
                     });
                 }
             )

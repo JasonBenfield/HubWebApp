@@ -5,10 +5,11 @@ import { ModCategoryComponent } from "./ModCategoryComponent";
 import { ModCategoryPanelView } from "./ModCategoryPanelView";
 import { ModifierListCard } from "./ModifierListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 
 interface IResult {
     backRequested?: {};
-    resourceGroupSelected?: { resourceGroup: IResourceGroupModel };
+    resourceGroupSelected?: { resourceGroup: AppResourceGroup };
 }
 
 class Result {
@@ -16,7 +17,7 @@ class Result {
         return new Result({ backRequested: {} });
     }
 
-    static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
+    static resourceGroupSelected(resourceGroup: AppResourceGroup) {
         return new Result({
             resourceGroupSelected: { resourceGroup: resourceGroup }
         });
@@ -46,12 +47,12 @@ export class ModCategoryPanel implements IPanel {
         this.modifierListCard = new ModifierListCard(this.hubClient, this.view.modifierListCard);
         this.resourceGroupListCard = new ResourceGroupListCard(this.hubClient, this.view.resourceGroupListCard);
         this.backCommand.add(this.view.backButton);
-        this.resourceGroupListCard.resourceGroupSelected.register(
+        this.resourceGroupListCard.when.resourceGroupSelected.then(
             this.onResourceGroupSelected.bind(this)
         );
     }
 
-    private onResourceGroupSelected(resourceGroup: IResourceGroupModel) {
+    private onResourceGroupSelected(resourceGroup: AppResourceGroup) {
         this.awaitable.resolve(
             Result.resourceGroupSelected(resourceGroup)
         );

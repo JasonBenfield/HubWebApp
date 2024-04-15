@@ -37,8 +37,8 @@ export class LoginComponent {
             if (result.succeeded()) {
                 const cred = this.getCredentials();
                 this.alert.info('Opening page...');
-                new PostToLogin(this.hubClient).execute(cred, result.value);
-                this.postLogin(cred, result.value);
+                const loginResult = result.value;
+                new PostToLogin(this.hubClient).execute(cred, loginResult.AuthKey, loginResult.AuthID);
             }
         }
         finally {
@@ -47,41 +47,9 @@ export class LoginComponent {
     }
 
     private getCredentials() {
-        return <ILoginCredentials>{
+        return <IAuthenticateRequest>{
             UserName: this.verifyLoginForm.UserName.getValue(),
             Password: this.verifyLoginForm.Password.getValue()
         };
-    }
-
-    private postLogin(cred: ILoginCredentials, authKey: string) {
-        const form = <HTMLFormElement>document.createElement('form');
-        form.action = this.hubClient.Auth.Login
-            .getUrl(null)
-            .value();
-        form.style.position = 'absolute';
-        form.style.top = '-100px';
-        form.style.left = '-100px';
-        form.method = 'POST';
-        let userNameInput = this.createInput('UserName', cred.UserName, 'text');
-        let passwordInput = this.createInput('Password', cred.Password, 'password');
-        let urlBuilder = UrlBuilder.current();
-        let authKeyInput = this.createInput('AuthKey', authKey);
-        let returnKeyInput = this.createInput('ReturnKey', urlBuilder.getQueryValue('returnKey'));
-        form.append(
-            userNameInput,
-            passwordInput,
-            authKeyInput,
-            returnKeyInput
-        );
-        document.body.append(form);
-        form.submit();
-    }
-
-    private createInput(name: string, value: string, type: string = 'hidden') {
-        const input = <HTMLInputElement>document.createElement('input');
-        input.type = type;
-        input.name = name;
-        input.value = value;
-        return input;
     }
 }

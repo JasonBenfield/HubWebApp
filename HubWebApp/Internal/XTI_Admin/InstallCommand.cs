@@ -2,18 +2,20 @@
 
 internal sealed class InstallCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly SlnFolder slnFolder;
+    private readonly InstallProcess installProcess;
 
-    public InstallCommand(Scopes scopes)
+    public InstallCommand(SlnFolder slnFolder, InstallProcess installProcess)
     {
-        this.scopes = scopes;
+        this.slnFolder = slnFolder;
+        this.installProcess = installProcess;
     }
 
-    public Task Execute()
+    public Task Execute(CancellationToken ct)
     {
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
+        var appKeys = slnFolder.AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
-        return new InstallProcess(scopes).Run();
+        return installProcess.Run(ct);
     }
 }

@@ -15,20 +15,19 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.logEntryPanel = this.panels.add(
-            new LogEntryPanel(this.defaultClient, this.view.logEntryPanel)
+            new LogEntryPanel(this.hubClient, this.view.logEntryPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
-        const logEntryIDText = Url.current().getQueryValue("LogEntryID");
-        const logEntryID = logEntryIDText ? Number.parseInt(logEntryIDText) : 0;
+        const logEntryID = Url.current().query.getNumberValue("LogEntryID");
         if (logEntryID) {
             this.logEntryPanel.setLogEntryID(logEntryID);
             this.logEntryPanel.refresh();
             this.activateLogEntryPanel();
         }
         else {
-            this.defaultClient.Logs.LogEntries.open({ RequestID: null, InstallationID: null });
+            this.hubClient.Logs.LogEntries.open({ RequestID: null, InstallationID: null });
         }
     }
 

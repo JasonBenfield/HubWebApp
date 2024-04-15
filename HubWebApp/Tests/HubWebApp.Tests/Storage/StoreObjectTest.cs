@@ -1,5 +1,6 @@
-﻿using XTI_Core.Fakes;
-using XTI_Hub.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using XTI_Core.Fakes;
+using XTI_HubDB.EF;
 using XTI_HubWebAppApi.Storage;
 
 namespace HubWebApp.Tests;
@@ -216,11 +217,13 @@ internal sealed class StoreObjectTest
             Data = "Whatever1"
         };
         var storageKey = await tester.Execute(request);
-        Assert.ThrowsAsync<StoredObjectNotFoundException>(() => GetStoredObject(tester, "something else", storageKey));
+        var serializedData = await GetStoredObject(tester, "something else", storageKey);
+        Assert.That(serializedData, Is.EqualTo(""), "Should return empty string when the stored object is not found");
+
     }
 
     [Test]
-    public async Task ShouldThrowError_WhenStoredObjectHasExpired()
+    public async Task ShouldReturnEmptyString_WhenStoredObjectHasExpired()
     {
         var tester = await Setup();
         await tester.LoginAsAdmin();
@@ -233,7 +236,8 @@ internal sealed class StoreObjectTest
         };
         var storageKey = await tester.Execute(request);
         clock.Add(request.ExpireAfter.Add(TimeSpan.FromSeconds(1)));
-        Assert.ThrowsAsync<StoredObjectNotFoundException>(() => GetStoredObject(tester, request.StorageName, storageKey));
+        var serializedData = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(serializedData, Is.EqualTo(""), "Should return empty string when the stored object has expired");
     }
 
     [Test]
@@ -283,6 +287,67 @@ internal sealed class StoreObjectTest
         };
         var storageKey = await tester.Execute(request);
         Assert.That(storageKey, Is.EqualTo("SomeKey"), "Should generate fixed key");
+    }
+
+    [Test]
+    public async Task ShouldDeleteSingleUseStoredObject()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        (
+            new StorageName("something"), 
+            "Whatever", 
+            TimeSpan.FromMinutes(15)
+        )
+        .SingleUse();
+        var storageKey = await tester.Execute(request);
+        await GetStoredObject(tester, request.StorageName, storageKey);
+        var db = tester.Services.GetRequiredService<HubDbContext>();
+        var storedObjects = await db.StoredObjects.Retrieve().ToArrayAsync();
+        Assert.That(storedObjects.Length, Is.EqualTo(0), "Should delete single use stored object");
+    }
+
+    [Test]
+    public async Task ShouldSlideExpiration()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        (
+            new StorageName("something"),
+            "Whatever",
+            TimeSpan.FromMinutes(15)
+        )
+        .SlidingExpiration();
+        var storageKey = await tester.Execute(request);
+        var clock = tester.Services.GetRequiredService<FakeClock>();
+        clock.Add(TimeSpan.FromMinutes(5));
+        await GetStoredObject(tester, request.StorageName, storageKey);
+        clock.Add(TimeSpan.FromMinutes(11));
+        var storedObject = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(storedObject, Is.Not.EqualTo(""), "Should slide expiration");
+    }
+
+    [Test]
+    public async Task ShouldExpireAfterSlidingExpiration()
+    {
+        var tester = await Setup();
+        await tester.LoginAsAdmin();
+        var request = new StoreObjectRequest
+        (
+            new StorageName("something"),
+            "Whatever",
+            TimeSpan.FromMinutes(15)
+        )
+        .SlidingExpiration();
+        var storageKey = await tester.Execute(request);
+        var clock = tester.Services.GetRequiredService<FakeClock>();
+        clock.Add(TimeSpan.FromMinutes(5));
+        await GetStoredObject(tester, request.StorageName, storageKey);
+        clock.Add(TimeSpan.FromMinutes(16));
+        var storedObject = await GetStoredObject(tester, request.StorageName, storageKey);
+        Assert.That(storedObject, Is.EqualTo(""), "Should expire after sliding expiration");
     }
 
     private Task<string> GetStoredObject(IHubActionTester tester, string storageName, string storageKey)

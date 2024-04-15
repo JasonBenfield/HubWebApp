@@ -2,20 +2,20 @@
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ResourceResultType } from "../../../Lib/Http/ResourceResultType";
 import { ResourceListItemView } from "./ResourceListItemView";
+import { AppResource } from "../../../Lib/AppResource";
 
 export class ResourceListItem extends BasicComponent {
-    constructor(readonly resource: IResourceModel, view: ResourceListItemView) {
+    constructor(readonly resource: AppResource, view: ResourceListItemView) {
         super(view);
-        new TextComponent(view.resourceName).setText(resource.Name.DisplayText);
-        const resultType = ResourceResultType.values.value(resource.ResultType.Value);
+        new TextComponent(view.resourceName).setText(resource.name.displayText);
         let resultTypeText: string;
         if (
-            resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
+            resource.resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
         ) {
             resultTypeText = '';
         }
         else {
-            resultTypeText = resultType.DisplayText;
+            resultTypeText = resource.resultType.DisplayText;
         }
         new TextComponent(view.resultType).setText(resultTypeText);
     }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -7,16 +6,18 @@ namespace XTI_Hub;
 public sealed class App
 {
     private readonly HubFactory factory;
-    private readonly AppEntity record;
+    private readonly AppEntity app;
 
-    internal App(HubFactory factory, AppEntity record)
+    internal App(HubFactory factory, AppEntity app)
     {
         this.factory = factory;
-        this.record = record ?? new AppEntity();
-        ID = this.record.ID;
+        this.app = app ?? new AppEntity();
+        ID = this.app.ID;
     }
 
     internal int ID { get; }
+
+    public string SerializedDefaultOptions { get => app.SerializedDefaultOptions; }
 
     public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
 
@@ -35,17 +36,13 @@ public sealed class App
         return modifier;
     }
 
-    public Task<ModifierCategory[]> ModCategories()
-        => factory.ModCategories.Categories(this);
+    public Task<ModifierCategory[]> ModCategories() => factory.ModCategories.Categories(this);
 
-    public Task<ModifierCategory> ModCategory(int modCategoryID)
-        => factory.ModCategories.Category(this, modCategoryID);
+    public Task<ModifierCategory> ModCategory(int modCategoryID) => factory.ModCategories.Category(this, modCategoryID);
 
-    public Task<ModifierCategory> ModCategory(ModifierCategoryName name)
-        => factory.ModCategories.Category(this, name);
+    public Task<ModifierCategory> ModCategory(ModifierCategoryName name) => factory.ModCategories.Category(this, name);
 
-    public Task<AppRole> AddOrUpdateRole(AppRoleName name) =>
-        factory.Roles.AddOrUpdate(this, name);
+    public Task<AppRole> AddOrUpdateRole(AppRoleName name) => factory.Roles.AddOrUpdate(this, name);
 
     public async Task<AppRole[]> Roles()
     {
@@ -71,7 +68,7 @@ public sealed class App
 
     internal async Task<AppVersion> AddVersionIfNotFound(AppVersionKey versionKey)
     {
-        var version = await factory.Versions.VersionByName(new AppVersionName(record.VersionName), versionKey);
+        var version = await factory.Versions.VersionByName(new AppVersionName(app.VersionName), versionKey);
         await AddVersionIfNotFound(version);
         return new AppVersion(factory, this, version);
     }
@@ -92,6 +89,16 @@ public sealed class App
             await deleteRoles(rolesToDelete);
         });
     }
+
+    public Task UpdateDefaultOptions(string serializedDefaultOptions) =>
+        factory.DB.Apps.Update
+        (
+            app,
+            a =>
+            {
+                a.SerializedDefaultOptions = serializedDefaultOptions;
+            }
+        );
 
     private async Task addRoles(IEnumerable<AppRoleName> roleNames, IEnumerable<AppRole> existingRoles)
     {
@@ -145,7 +152,7 @@ public sealed class App
         (
             ID: ID,
             AppKey: key,
-            VersionName: new AppVersionName(record.VersionName),
+            VersionName: new AppVersionName(app.VersionName),
             PublicKey: key.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
                 ? ModifierKey.Default
                 : new ModifierKey(key.Format())
@@ -155,5 +162,5 @@ public sealed class App
     public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
 
     private AppKey ToAppKey() => 
-        new AppKey(new AppName(record.DisplayText), AppType.Values.Value(record.Type));
+        new AppKey(new AppName(app.DisplayText), AppType.Values.Value(app.Type));
 }

@@ -1,6 +1,4 @@
-﻿using XTI_HubWebAppApi.Storage;
-
-namespace XTI_HubWebAppApi.System;
+﻿namespace XTI_HubWebAppApi.System;
 
 internal sealed class SystemStoreObjectAction : AppAction<StoreObjectRequest, string>
 {
@@ -13,16 +11,30 @@ internal sealed class SystemStoreObjectAction : AppAction<StoreObjectRequest, st
         this.storedObjectFactory = storedObjectFactory;
     }
 
-    public async Task<string> Execute(StoreObjectRequest model, CancellationToken stoppingToken)
+    public async Task<string> Execute(StoreObjectRequest storeRequest, CancellationToken stoppingToken)
     {
-        var storageName = await new SystemStorageName(currentUserName, model.StorageName).Value();
+        var storageName = await new SystemStorageName(currentUserName, storeRequest.StorageName).Value();
         var storedObject = storedObjectFactory.CreateStoredObject(storageName);
-        var storageKey = await storedObject.Store
-        (
-            model.GenerateKey,
-            model.Data,
-            model.ExpireAfter
-        );
+        string storageKey;
+        if (storeRequest.IsSingleUse)
+        {
+            storageKey = await storedObject.StoreSingleUse
+            (
+                storeRequest.GenerateKey,
+                storeRequest.Data,
+                storeRequest.ExpireAfter
+            );
+        }
+        else
+        {
+            storageKey = await storedObject.Store
+            (
+                storeRequest.GenerateKey,
+                storeRequest.Data,
+                storeRequest.ExpireAfter,
+                storeRequest.IsSlidingExpiration
+            );
+        }
         return storageKey;
     }
 }

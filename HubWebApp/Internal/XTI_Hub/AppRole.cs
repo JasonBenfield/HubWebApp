@@ -27,7 +27,7 @@ public sealed class AppRole
     private Task UpdateTimeDeactivated(DateTimeOffset timeDeactivated) => 
         factory.DB.Roles.Update(record, r => r.TimeDeactivated = timeDeactivated);
 
-    internal Task<App> App() => factory.Apps.App(record.AppID);
+    public Task<App> App() => factory.Apps.App(record.AppID);
 
     public bool IsDenyAccess() => NameEquals(AppRoleName.DenyAccess);
 

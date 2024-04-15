@@ -1,12 +1,16 @@
 using HubWebApp.ApiControllers;
 using HubWebApp.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.OData;
+using XTI_App.Hosting;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Hub;
+using XTI_HubWebAppApi;
+using XTI_Schedule;
 using XTI_Secrets.Extensions;
 using XTI_WebApp.Extensions;
-using Microsoft.AspNetCore.OData;
+using XTI_WebApp.Scheduled;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
@@ -15,6 +19,48 @@ var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
 builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
 builder.Services.AddFileSecretCredentials(xtiEnv);
 builder.Services.AddServicesForHub();
+builder.Services.AddScheduledWebServices
+(
+    (sp, agenda) =>
+    {
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.DeleteExpiredStoredObjects)
+                    .Interval(TimeSpan.FromHours(1))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.EndExpiredSessions)
+                    .Interval(TimeSpan.FromHours(1))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+        agenda.AddScheduled<HubAppApi>
+        (
+            (api, agendaItem) =>
+            {
+                agendaItem.Action(api.Periodic.PurgeLogs)
+                    .Interval(TimeSpan.FromHours(7))
+                    .AddSchedule
+                    (
+                        Schedule.EveryDay().At(TimeRange.AllDay())
+                    );
+            }
+        );
+    }
+);
 builder.Services
     .AddMvc()
     .AddOData(options =>
@@ -36,27 +82,7 @@ builder.Services.AddControllersWithViews()
     (
         new AssemblyPart(typeof(HomeController).Assembly)
     );
-if (xtiEnv.IsDevelopment())
-{
-    builder.Services.AddCors
-    (
-        options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
-                builder.AllowAnyHeader();
-                builder.AllowAnyMethod();
-                builder.AllowCredentials();
-                builder.SetIsOriginAllowed(origin => new Uri(origin).Host.StartsWith("development.", StringComparison.OrdinalIgnoreCase));
-            });
-        }
-    );
-}
 var app = builder.Build();
 app.UseODataQueryRequest();
-if (xtiEnv.IsDevelopment())
-{
-    app.UseCors();
-}
 app.UseXtiDefaults();
 await app.RunAsync();

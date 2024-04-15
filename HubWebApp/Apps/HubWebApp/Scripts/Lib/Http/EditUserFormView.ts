@@ -1,19 +1,20 @@
 // Generated code
 import { BaseFormView } from '@jasonbenfield/sharedwebapp/Views/BaseFormView';
-import { SimpleFieldFormGroupInputView, SimpleFieldFormGroupSelectView } from '@jasonbenfield/sharedwebapp/Views/FormGroup';
+import * as views from '@jasonbenfield/sharedwebapp/Views/FormGroup';
 import { IFormGroupLayout } from '@jasonbenfield/sharedwebapp/Views/Types';
 import { BasicComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicComponentView';
+import { InputView } from '@jasonbenfield/sharedwebapp/Views/InputView';
 
 export interface IEditUserFormView {
-	UserID: SimpleFieldFormGroupInputView;
-	PersonName: SimpleFieldFormGroupInputView;
-	Email: SimpleFieldFormGroupInputView;
+	UserID: InputView;
+	PersonName: views.SimpleFieldFormGroupInputView;
+	Email: views.SimpleFieldFormGroupInputView;
 }
 
 export class DefaultEditUserFormViewLayout implements IFormGroupLayout<IEditUserFormView> {
 	addFormGroups(form: EditUserFormView) {
 		return {
-			UserID: form.addInputFormGroup(),
+			UserID: form.addHiddenInput(),
 			PersonName: form.addInputFormGroup(),
 			Email: form.addInputFormGroup()
 		}

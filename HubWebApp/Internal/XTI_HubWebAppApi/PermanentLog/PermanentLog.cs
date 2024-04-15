@@ -89,7 +89,8 @@ public sealed class PermanentLog
                 installation,
                 startRequest.Path,
                 startRequest.TimeStarted,
-                startRequest.ActualCount
+                startRequest.ActualCount,
+                startRequest.SourceRequestKey
             );
         }
         catch (Exception ex)
@@ -136,7 +137,7 @@ public sealed class PermanentLog
         }
     }
 
-    private Task HandleError(Exception ex)=>
+    private Task HandleError(Exception ex) =>
         logEvent
         (
             new LogEntryModel
@@ -162,7 +163,8 @@ public sealed class PermanentLog
             model.Message,
             model.Detail,
             model.ActualCount,
-            model.ParentEventKey
+            model.ParentEventKey,
+            model.Category
         );
     }
 }

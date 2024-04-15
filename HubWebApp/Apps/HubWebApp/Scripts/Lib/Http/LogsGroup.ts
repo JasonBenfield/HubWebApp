@@ -1,5 +1,6 @@
 // Generated code
 
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { AppClientGroup } from "@jasonbenfield/sharedwebapp/Http/AppClientGroup";
 import { AppClientAction } from "@jasonbenfield/sharedwebapp/Http/AppClientAction";
 import { AppClientView } from "@jasonbenfield/sharedwebapp/Http/AppClientView";
@@ -9,7 +10,7 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class LogsGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Logs');
-		this.GetLogEntryByKeyAction = this.createAction<string,IAppLogEntryModel>('GetLogEntryByKey', 'Get Log Entry By Key');
+		this.GetLogEntryOrDefaultByKeyAction = this.createAction<string,IAppLogEntryModel>('GetLogEntryOrDefaultByKey', 'Get Log Entry Or Default By Key');
 		this.GetLogEntryDetailAction = this.createAction<number,IAppLogEntryDetailModel>('GetLogEntryDetail', 'Get Log Entry Detail');
 		this.GetRequestDetailAction = this.createAction<number,IAppRequestDetailModel>('GetRequestDetail', 'Get Request Detail');
 		this.GetSessionDetailAction = this.createAction<number,IAppSessionDetailModel>('GetSessionDetail', 'Get Session Detail');
@@ -21,7 +22,7 @@ export class LogsGroup extends AppClientGroup {
 		this.LogEntries = this.createView<ILogEntryQueryRequest>('LogEntries');
 	}
 	
-	readonly GetLogEntryByKeyAction: AppClientAction<string,IAppLogEntryModel>;
+	readonly GetLogEntryOrDefaultByKeyAction: AppClientAction<string,IAppLogEntryModel>;
 	readonly GetLogEntryDetailAction: AppClientAction<number,IAppLogEntryDetailModel>;
 	readonly GetRequestDetailAction: AppClientAction<number,IAppRequestDetailModel>;
 	readonly GetSessionDetailAction: AppClientAction<number,IAppSessionDetailModel>;
@@ -32,8 +33,8 @@ export class LogsGroup extends AppClientGroup {
 	readonly LogEntry: AppClientView<ILogEntryRequest>;
 	readonly LogEntries: AppClientView<ILogEntryQueryRequest>;
 	
-	GetLogEntryByKey(model: string, errorOptions?: IActionErrorOptions) {
-		return this.GetLogEntryByKeyAction.execute(model, errorOptions || {});
+	GetLogEntryOrDefaultByKey(model: string, errorOptions?: IActionErrorOptions) {
+		return this.GetLogEntryOrDefaultByKeyAction.execute(model, errorOptions || {});
 	}
 	GetLogEntryDetail(model: number, errorOptions?: IActionErrorOptions) {
 		return this.GetLogEntryDetailAction.execute(model, errorOptions || {});

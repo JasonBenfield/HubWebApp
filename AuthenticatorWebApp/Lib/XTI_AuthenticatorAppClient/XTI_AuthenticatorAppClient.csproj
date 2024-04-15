@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Description>App Client for $(XtiAppName) $(XtiVersion)</Description>
@@ -9,9 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Api" Version="1.8.40-dev231104221906776" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.40-dev231104221906776" />
-		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.32-dev231101215137172" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+		<PackageReference Include="XTI_App.Api" Version="1.8.40" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.40" />
+		<PackageReference Include="XTI_TempLog.Abstractions" Version="1.2.32" />
 	</ItemGroup>
 
 </Project>

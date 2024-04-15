@@ -9,6 +9,12 @@ internal sealed class AddAdminUserAction : AppAction<AddAdminUserRequest, AppUse
         this.hubAdmin = hubAdmin;
     }
 
-    public Task<AppUserModel> Execute(AddAdminUserRequest model, CancellationToken stoppingToken) =>
-        hubAdmin.AddOrUpdateAdminUser(model.AppKey, new AppUserName(model.UserName), model.Password);
+    public Task<AppUserModel> Execute(AddAdminUserRequest addRequest, CancellationToken stoppingToken) =>
+        hubAdmin.AddOrUpdateAdminUser
+        (
+            addRequest.AppKey.ToAppKey(),
+            addRequest.ToAppUserName(),
+            addRequest.Password,
+            stoppingToken
+        );
 }

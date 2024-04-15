@@ -8,7 +8,11 @@ import { HomeGroup } from "./HomeGroup";
 
 export class AuthenticatorAppClient extends AppClient {
 	constructor(events: AppClientEvents) {
-		super(events, 'Authenticator');
+		super(
+			events, 
+			'Authenticator', 
+			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1423' : 'Current'
+		);
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 	}
 	

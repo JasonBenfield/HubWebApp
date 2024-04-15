@@ -10,6 +10,10 @@ import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 import { UserRolesPanelView } from "./UserRolesPanelView";
+import { Modifier } from "../../Lib/Modifier";
+import { ModifierCategory } from "../../Lib/ModifierCategory";
+import { AppUser } from "../../Lib/AppUser";
+import { UserAccess } from "../../Lib/UserAccess";
 
 interface Results {
     addRequested?: boolean;
@@ -40,9 +44,9 @@ export class UserRolesPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly userRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
     private readonly awaitable: Awaitable<Result>;
-    private user: IAppUserModel;
-    private defaultModifier: IModifierModel;
-    private modifier: IModifierModel;
+    private user: AppUser;
+    private defaultModifier: Modifier;
+    private modifier: Modifier;
     private readonly addCommand: Command;
     private readonly allowAccessCommand: AsyncCommand;
     private readonly denyAccessCommand: AsyncCommand;
@@ -75,7 +79,7 @@ export class UserRolesPanel implements IPanel {
     }
 
     private back() {
-        this.hubClient.Users.Index.open({ UserID: this.user.ID });
+        this.hubClient.Users.Index.open({ UserID: this.user.id, ReturnTo: '' });
     }
 
     private requestAdd() {
@@ -90,8 +94,8 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Allowing Access...',
             () => this.hubClient.AppUserMaintenance.AllowAccess({
-                UserID: this.user.ID,
-                ModifierID: this.modifier.ID
+                UserID: this.user.id,
+                ModifierID: this.modifier.id
             })
         );
         await this.refresh();
@@ -101,18 +105,18 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Denying Access...',
             () => this.hubClient.AppUserMaintenance.DenyAccess({
-                UserID: this.user.ID,
-                ModifierID: this.modifier.ID
+                UserID: this.user.id,
+                ModifierID: this.modifier.id
             })
         );
         await this.refresh();
     }
 
     setAppUserOptions(appUserOptions: AppUserOptions) {
-        this.appName.setText(appUserOptions.app.AppKey.Name.DisplayText);
-        this.appType.setText(appUserOptions.app.AppKey.Type.DisplayText);
-        this.userName.setText(appUserOptions.user.UserName.DisplayText);
-        this.personName.setText(appUserOptions.user.Name.DisplayText);
+        this.appName.setText(appUserOptions.app.appKey.name.displayText);
+        this.appType.setText(appUserOptions.app.appKey.type.DisplayText);
+        this.userName.setText(appUserOptions.user.userName.displayText);
+        this.personName.setText(appUserOptions.user.name.displayText);
         this.user = appUserOptions.user;
         this.defaultModifier = appUserOptions.defaultModifier;
     }
@@ -123,12 +127,12 @@ export class UserRolesPanel implements IPanel {
         this.modifier = this.defaultModifier;
     }
 
-    setModCategory(modCategory: IModifierCategoryModel) {
-        this.categoryName.setText(modCategory.Name.DisplayText);
+    setModCategory(modCategory: ModifierCategory) {
+        this.categoryName.setText(modCategory.name.displayText);
     }
 
-    setModifier(modifier: IModifierModel) {
-        this.modifierDisplayText.setText(modifier.DisplayText);
+    setModifier(modifier: Modifier) {
+        this.modifierDisplayText.setText(modifier.displayText);
         this.modifier = modifier;
     }
 
@@ -142,28 +146,30 @@ export class UserRolesPanel implements IPanel {
         this.allowAccessCommand.hide();
         this.denyAccessCommand.hide();
         this.addCommand.hide();
-        let isDefaultModifier = this.modifier.ID === this.defaultModifier.ID;
-        let userAccess: IUserAccessModel;
-        let defaultUserAccess: IUserAccessModel;
+        let isDefaultModifier = this.modifier.id === this.defaultModifier.id;
+        let userAccess: UserAccess;
+        let defaultUserAccess: UserAccess;
         await this.alert.infoAction(
             'Loading',
             async () => {
-                userAccess = await this.hubClient.AppUser.GetUserAccess({
-                    UserID: this.user.ID,
-                    ModifierID: this.modifier.ID
+                const sourceUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                    UserID: this.user.id,
+                    ModifierID: this.modifier.id
                 });
+                userAccess = new UserAccess(sourceUserAccess);
                 if (isDefaultModifier) {
                     defaultUserAccess = userAccess;
                 }
                 else {
-                    defaultUserAccess = await this.hubClient.AppUser.GetUserAccess({
-                        UserID: this.user.ID,
-                        ModifierID: this.defaultModifier.ID
+                    const sourceDefaultUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                        UserID: this.user.id,
+                        ModifierID: this.defaultModifier.id
                     });
+                    defaultUserAccess = new UserAccess(sourceDefaultUserAccess);
                 }
             }
         );
-        if (userAccess.HasAccess) {
+        if (userAccess.hasAccess) {
             this.denyAccessCommand.show();
             this.addCommand.show();
         }
@@ -171,7 +177,7 @@ export class UserRolesPanel implements IPanel {
             this.allowAccessCommand.show();
         }
         this.userRoles.setItems(
-            userAccess.AssignedRoles,
+            userAccess.assignedRoles,
             (role, itemView) =>
                 new UserRoleListItem(role, itemView)
         );
@@ -179,14 +185,14 @@ export class UserRolesPanel implements IPanel {
             this.view.hideDefaultUserRoles();
         }
         else {
-            if (defaultUserAccess.AssignedRoles.length > 0) {
+            if (defaultUserAccess.assignedRoles.length > 0) {
                 this.view.showDefaultUserRoles();
             }
             else {
                 this.view.hideDefaultUserRoles();
             }
             this.defaultUserRoles.setItems(
-                defaultUserAccess.AssignedRoles,
+                defaultUserAccess.assignedRoles,
                 (role, itemView) => {
                     const listItem = new UserRoleListItem(role, itemView);
                     listItem.hideDeleteButton();
@@ -194,10 +200,10 @@ export class UserRolesPanel implements IPanel {
                 }
             );
         }
-        if (!userAccess.HasAccess) {
+        if (!userAccess.hasAccess) {
             this.alert.danger('Access is denied.');
         }
-        else if (userAccess.AssignedRoles.length === 0) {
+        else if (userAccess.assignedRoles.length === 0) {
             this.alert.warning('No roles have been assigned.');
         }
     }
@@ -207,9 +213,9 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Removing role...',
             () => this.hubClient.AppUserMaintenance.UnassignRole({
-                UserID: this.user.ID,
-                ModifierID: this.modifier.ID,
-                RoleID: roleListItem.role.ID
+                UserID: this.user.id,
+                ModifierID: this.modifier.id,
+                RoleID: roleListItem.role.id
             })
         );
         await this.refresh();

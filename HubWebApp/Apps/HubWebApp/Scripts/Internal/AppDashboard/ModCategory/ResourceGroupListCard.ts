@@ -1,16 +1,19 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
+type Events = { resourceGroupSelected: AppResourceGroup };
+
 export class ResourceGroupListCard {
-    private readonly _resourceSelected = new DefaultEvent<IResourceGroupModel>(this);
-    readonly resourceGroupSelected = this._resourceSelected.handler();
+    private readonly eventSource = new EventSource<Events>(this, { resourceGroupSelected: null });
+    readonly when = this.eventSource.when;
 
     private readonly alert: MessageAlert;
     private readonly requests: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
@@ -24,11 +27,11 @@ export class ResourceGroupListCard {
         new TextComponent(view.titleHeader).setText('Resource Groups');
         this.alert = new CardAlert(view.alert).alert;
         this.requests = new ListGroup(view.requests);
-        this.requests.registerItemClicked(this.onItemSelected.bind(this));
+        this.requests.when.itemClicked.then(this.onItemSelected.bind(this));
     }
 
     private onItemSelected(item: ResourceGroupListItem) {
-        this._resourceSelected.invoke(item.group);
+        this.eventSource.events.resourceGroupSelected.invoke(item.group);
     }
 
     setModCategoryID(modCategoryID: number) {
@@ -36,7 +39,8 @@ export class ResourceGroupListCard {
     }
 
     async refresh() {
-        let resourceGroups = await this.getResourceGroups();
+        const sourceResourceGroups = await this.getResourceGroups();
+        const resourceGroups = sourceResourceGroups.map(rg => new AppResourceGroup(rg));
         this.requests.setItems(
             resourceGroups,
             (sourceItem, listItem) =>

@@ -7,26 +7,25 @@ import { MainPageView } from './MainPageView';
 import { UserQueryPanel } from './UserQueryPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly mainMenuPanel: MainMenuPanel;
     private readonly userQueryPanel: UserQueryPanel;
     private readonly addUserPanel: AddUserPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.userQueryPanel = this.panels.add(
-            new UserQueryPanel(this.defaultClient, this.view.userQueryPanel)
+            new UserQueryPanel(this.hubClient, this.view.userQueryPanel)
         );
         this.addUserPanel = this.panels.add(
-            new AddUserPanel(this.defaultClient, this.view.addUserPanel)
+            new AddUserPanel(this.hubClient, this.view.addUserPanel)
         );
-        const userGroupName = Url.current().getQueryValue('UserGroupName') || '';
-        this.defaultClient.Users.withModifier(userGroupName);
+        const userGroupName = Url.current().query.getValue('UserGroupName') || '';
+        this.hubClient.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();
         this.activateUserQueryPanel();
@@ -62,4 +61,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

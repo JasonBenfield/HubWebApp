@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -28,7 +29,8 @@ public sealed class AppRequestRepository
         Installation installation,
         string path,
         DateTimeOffset timeRequested,
-        int actualCount
+        int actualCount,
+        string sourceRequestKey
     )
     {
         XtiPath xtiPath;
@@ -52,8 +54,7 @@ public sealed class AppRequestRepository
         var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action);
         var modCategory = await resourceGroup.ModCategory();
         var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier);
-        var record = await factory.DB.Requests.Retrieve()
-            .FirstOrDefaultAsync(r => r.RequestKey == requestKey);
+        var record = await GetRequestEntityByKey(requestKey);
         if (record == null)
         {
             record = await Add
@@ -88,13 +89,18 @@ public sealed class AppRequestRepository
                     }
                 );
         }
-        return factory.CreateRequest(record);
+        var request = factory.CreateRequest(record);
+        if (!string.IsNullOrWhiteSpace(sourceRequestKey))
+        {
+            var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeRequested);
+            await AddSourceLinkIfNotExists(request, sourceRequest);
+        }
+        return request;
     }
 
     public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now)
     {
-        var requestEntity = await factory.DB.Requests.Retrieve()
-            .FirstOrDefaultAsync(r => r.RequestKey == requestKey);
+        var requestEntity = await GetRequestEntityByKey(requestKey);
         if (requestEntity == null)
         {
             var session = await factory.Sessions.DefaultSession(now);
@@ -119,6 +125,27 @@ public sealed class AppRequestRepository
         }
         return factory.CreateRequest(requestEntity);
     }
+
+    private async Task AddSourceLinkIfNotExists(AppRequest request, AppRequest sourceRequest)
+    {
+        var linkExists = await factory.DB.SourceRequests.Retrieve()
+            .Where(src => src.SourceID == sourceRequest.ID && src.TargetID == request.ID)
+            .AnyAsync();
+        if (!linkExists)
+        {
+            await factory.DB.SourceRequests.Create
+            (
+                new SourceRequestEntity
+                {
+                    SourceID = sourceRequest.ID,
+                    TargetID = request.ID
+                }
+            );
+        }
+    }
+
+    private Task<AppRequestEntity?> GetRequestEntityByKey(string requestKey) =>
+        factory.DB.Requests.Retrieve().FirstOrDefaultAsync(r => r.RequestKey == requestKey);
 
     private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Installation installation, Resource resource, Modifier modifier, string path, DateTimeOffset timeStarted, DateTimeOffset timeEnded, int actualCount)
     {
@@ -309,6 +336,24 @@ public sealed class AppRequestRepository
             )
             .ToArrayAsync();
     }
+
+    internal async Task<AppRequest> SourceRequestOrDefault(int forTargetID)
+    {
+        var sourceIDs = factory.DB.SourceRequests.Retrieve()
+            .Where(src => src.TargetID == forTargetID)
+            .Select(src => src.SourceID);
+        var entities = await factory.DB
+            .Requests.Retrieve()
+            .Where(e => sourceIDs.Contains(e.ID))
+            .ToArrayAsync();
+        return factory.CreateRequest(entities.FirstOrDefault() ?? new());
+    }
+
+    internal Task<int[]> TargetRequestIDs(int forSourceID) =>
+        factory.DB.SourceRequests.Retrieve()
+            .Where(src => src.SourceID == forSourceID)
+            .Select(src => src.TargetID)
+            .ToArrayAsync();
 
     private sealed class ResourceWithGroupRecord
     {

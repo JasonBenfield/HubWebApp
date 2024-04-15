@@ -2,10 +2,10 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
-import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { AppSessionDetail } from "../../../Lib/AppSessionDetail";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { FormattedTimeRange } from "../../../lib/FormattedTimeRange";
 import { SessionPanelView } from "./SessionPanelView";
 
 interface IResult {
@@ -23,20 +23,20 @@ class Result {
 export class SessionPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly timeRange: TextValueFormGroup;
-    private readonly userName: TextValueFormGroup;
-    private readonly remoteAddress: TextValueFormGroup;
-    private readonly userAgent: TextValueFormGroup;
+    private readonly timeRangeFormGroup: FormGroupText;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly remoteAddressFormGroup: FormGroupText;
+    private readonly userAgentFormGroup: FormGroupText;
     private readonly userLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
     private sessionID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.timeRange = new TextValueFormGroup(view.timeRange);
-        this.userName = new TextValueFormGroup(view.userName);
-        this.remoteAddress = new TextValueFormGroup(view.remoteAddress);
-        this.userAgent = new TextValueFormGroup(view.userAgent);
+        this.timeRangeFormGroup = new FormGroupText(view.timeRangeTextView);
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
+        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddressFormGroupView);
+        this.userAgentFormGroup = new FormGroupText(view.userAgentFormGroupView);
         this.userLink = new TextLinkComponent(view.userLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -49,51 +49,36 @@ export class SessionPanel implements IPanel {
     }
 
     async refresh() {
-        const detail = await this.alert.infoAction(
+        this.userAgentFormGroup.hide();
+        this.remoteAddressFormGroup.hide();
+        const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Logs.GetSessionDetail(this.sessionID)
         );
-        let timeRange: string;
-        const timeStarted = new FormattedDate(detail.Session.TimeStarted).formatDateTime();
-        if (detail.Session.TimeEnded.getFullYear() === 9999) {
-            timeRange = `${timeStarted} to ???`;
+        const detail = new AppSessionDetail(sourceDetail);
+        this.timeRangeFormGroup.setValue(
+            new FormattedTimeRange(detail.session.timeStarted, detail.session.timeEnded).format()
+        );
+        this.userNameFormGroup.setValue(detail.user.userName.displayText);
+        this.remoteAddressFormGroup.setValue(detail.session.remoteAddress);
+        if (detail.session.remoteAddress) {
+            this.remoteAddressFormGroup.show();
         }
-        else {
-            let timeEnded: string;
-            const dateStarted = new Date(detail.Session.TimeStarted.getFullYear(), detail.Session.TimeStarted.getMonth(), detail.Session.TimeStarted.getDate());
-            const dateEnded = new Date(detail.Session.TimeEnded.getFullYear(), detail.Session.TimeEnded.getMonth(), detail.Session.TimeEnded.getDate());
-            if (dateStarted.getTime() === dateEnded.getTime()) {
-                timeEnded = new FormattedDate(detail.Session.TimeEnded).formatTime();
-            }
-            else {
-                timeEnded = new FormattedDate(detail.Session.TimeEnded).formatDateTime();
-            }
-            const ts = TimeSpan.dateDiff(detail.Session.TimeEnded, detail.Session.TimeStarted);
-            timeRange = `${timeStarted} to ${timeEnded} [ ${ts} ]`;
-        }
-        this.timeRange.setValue(timeRange);
-        this.userName.setValue(detail.User.UserName.DisplayText);
-        if (detail.Session.RemoteAddress) {
-            this.remoteAddress.setValue(detail.Session.RemoteAddress);
-            this.view.showRemoteAddress();
-        }
-        else {
-            this.view.hideRemoteAddress();
-        }
-        if (detail.Session.UserAgent) {
-            this.userAgent.setValue(detail.Session.UserAgent);
-            this.view.showUserAgent();
-        }
-        else {
-            this.view.hideUserAgent();
+        this.userAgentFormGroup.setValue(detail.session.userAgent);
+        if (detail.session.userAgent) {
+            this.userAgentFormGroup.show();
         }
         this.userLink.setHref(
             this.hubClient.Users.Index.getModifierUrl(
-                detail.UserGroup.PublicKey.Value,
-                { UserID: detail.User.ID }
+                detail.userGroup.getModifier(),
+                { UserID: detail.user.id, ReturnTo: '' }
             )
         );
-        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: this.sessionID, InstallationID: null }));
+        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
+            SessionID: this.sessionID,
+            InstallationID: null,
+            SourceRequestID: null
+        }));
     }
 
     start() { return this.awaitable.start(); }

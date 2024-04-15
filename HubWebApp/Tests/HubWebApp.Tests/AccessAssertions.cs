@@ -1,7 +1,4 @@
-﻿using Microsoft.OData.UriParser;
-using XTI_WebApp.Api;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal static class AccessAssertions
 {
@@ -64,18 +61,18 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         await ShouldThrowError_WhenAccessIsDenied(createModel, modifier, allowedRoles);
     }
 
-    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, Modifier modifier, params AppRoleName[] allowedRoles) =>
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, ModifierModel modifier, params AppRoleName[] allowedRoles) =>
         ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), modifier, allowedRoles);
 
-    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles) =>
+    public Task ShouldThrowError_WhenAccessIsDenied(TModel model, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] allowedRoles) =>
         ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), rolesToKeep, modifier, allowedRoles);
 
-    public Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, Modifier modifier, params AppRoleName[] allowedRoles) =>
+    public Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, ModifierModel modifier, params AppRoleName[] allowedRoles) =>
         ShouldThrowError_WhenAccessIsDenied(createModel, new AppRoleName[0], modifier, allowedRoles);
 
-    public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] allowedRoles)
+    public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] allowedRoles)
     {
-        var modKey = modifier.ToModel().ModKey;
+        var modKey = modifier.ModKey;
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
         foreach (var roleName in allowedRoles)
@@ -116,19 +113,20 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         );
     }
 
-    private async Task SetUserRoles(AppUser loggedInUser, AppRoleName[] rolesToKeep, Modifier modifier, params AppRoleName[] roleNames)
+    private async Task SetUserRoles(AppUser loggedInUser, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] roleNames)
     {
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
-        var userRoles = await loggedInUser.Modifier(modifier).AssignedRoles();
+        var efModifier = await app.Modifier(modifier.ID);
+        var userRoles = await loggedInUser.Modifier(efModifier).AssignedRoles();
         foreach (var userRole in userRoles)
         {
-            await loggedInUser.Modifier(modifier).UnassignRole(userRole);
+            await loggedInUser.Modifier(efModifier).UnassignRole(userRole);
         }
         foreach (var roleName in roleNames)
         {
             var role = await app.Role(roleName);
-            await loggedInUser.Modifier(modifier).AssignRole(role);
+            await loggedInUser.Modifier(efModifier).AssignRole(role);
         }
         if (rolesToKeep.Any())
         {

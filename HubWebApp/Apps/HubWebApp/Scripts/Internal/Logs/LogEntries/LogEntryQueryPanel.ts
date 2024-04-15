@@ -1,13 +1,15 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedLogEntryColumnsBuilder } from "../../../Lib/Http/ODataExpandedLogEntryColumnsBuilder";
-import { Url } from "@jasonbenfield/sharedwebapp/Url";
 import { LogEntryQueryPanelView } from "./LogEntryQueryPanelView";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 
 interface IResult {
     menuRequested?: boolean;
@@ -29,11 +31,11 @@ export class LogEntryQueryPanel implements IPanel {
         new Command(this.menu.bind(this)).add(view.menuButton);
         const columns = new ODataExpandedLogEntryColumnsBuilder(this.view.columns);
         columns.EventID.require();
-        columns.SeverityText.setDisplayText('Severity');
+        columns.Severity.setDisplayText('Severity');
         const options = new ODataComponentOptionsBuilder<IExpandedLogEntry>('hub_logEntries', columns);
         options.query.select.addFields(
             columns.TimeOccurred,
-            columns.SeverityText,
+            columns.Severity,
             columns.Caption,
             columns.Message,
             columns.Detail,
@@ -48,30 +50,62 @@ export class LogEntryQueryPanel implements IPanel {
             columns.ModDisplayText,
             columns.VersionKey
         );
+        columns.Detail.setFormatter({
+            format: (col, record) => {
+                const value: string = record[col.columnName];
+                return value && value.length > 200 ? value.substring(0, 200) + '...' : value;
+            }
+        });
+        columns.Message.setFormatter({
+            format: (col, record) => {
+                const value: string = record[col.columnName];
+                return value && value.length > 300 ? value.substring(0, 300) + '...' : value;
+            }
+        });
         options.query.orderBy.addDescending(columns.TimeOccurred);
         const url = Url.current();
-        const requestIDText = url.getQueryValue('RequestID');
-        const requestID = requestIDText ? Number(requestIDText) : null;
-        const installationIDText = url.getQueryValue('InstallationID');
-        const installationID = installationIDText ? Number(installationIDText) : null;
+        const requestID = url.query.getNumberValue('RequestID');
+        const installationID = url.query.getNumberValue('InstallationID');
         options.saveChanges({
             select: true,
             filter: !requestID,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.LogEntryQuery, { RequestID: requestID, InstallationID: installationID })
+        options.setDefaultODataClient(
+            hubClient.LogEntryQuery,
+            { args: { RequestID: requestID, InstallationID: installationID } }
+        );
+        options.setCreateLinkRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, row: ODataLinkRow) => {
+                const logEntryID: number = record['EventID'];
+                row.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: logEntryID }));
+            }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().query.getNumberValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(page);
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const logEntryID: number = eventArgs.record['EventID'];
-        this.hubClient.Logs.LogEntry.open({ LogEntryID: logEntryID });
+    
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
-
+    
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
 
     refresh() { this.odataComponent.refresh(); }

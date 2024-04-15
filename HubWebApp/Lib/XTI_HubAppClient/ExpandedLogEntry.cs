@@ -4,16 +4,17 @@ public sealed partial class ExpandedLogEntry
 {
     public int EventID { get; set; }
     public DateTimeOffset TimeOccurred { get; set; }
-    public string SeverityText { get; set; } = "";
+    public string Severity { get; set; } = "";
     public string Caption { get; set; } = "";
     public string Message { get; set; } = "";
     public string Detail { get; set; } = "";
+    public string Category { get; set; } = "";
     public string Path { get; set; } = "";
     public int ActualCount { get; set; }
     public int AppID { get; set; }
     public string AppKey { get; set; } = "";
     public string AppName { get; set; } = "";
-    public string AppTypeText { get; set; } = "";
+    public string AppType { get; set; } = "";
     public string ResourceGroupName { get; set; } = "";
     public string ResourceName { get; set; } = "";
     public string ModCategoryName { get; set; } = "";
@@ -31,8 +32,8 @@ public sealed partial class ExpandedLogEntry
     public string VersionName { get; set; } = "";
     public string VersionKey { get; set; } = "";
     public string VersionRelease { get; set; } = "";
-    public string VersionStatusText { get; set; } = "";
-    public string VersionTypeText { get; set; } = "";
+    public string VersionStatus { get; set; } = "";
+    public string VersionType { get; set; } = "";
     public int InstallationID { get; set; }
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }

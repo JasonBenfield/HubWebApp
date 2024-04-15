@@ -6,6 +6,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModifierListCardView } from "./ModifierListCardView";
 import { ModifierListItem } from "./ModifierListItem";
 import { ModifierListItemView } from "./ModifierListItemView";
+import { Modifier } from "../../../Lib/Modifier";
 
 export class ModifierListCard {
     private modCategoryID: number;
@@ -26,7 +27,8 @@ export class ModifierListCard {
     }
 
     async refresh() {
-        const modifiers = await this.getModifiers();
+        const sourceModifiers = await this.getModifiers();
+        const modifiers = sourceModifiers.map(m => new Modifier(m));
         this.modifiers.setItems(
             modifiers,
             (sourceItem, listItem) =>

@@ -1,21 +1,22 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
+
+type Events = { clicked: ModifierCategory };
 
 export class ModCategoryComponent {
-    private groupID: number;
-
     private readonly alert: MessageAlert;
     private readonly modCategoryName: TextComponent;
+    private readonly eventSource = new EventSource<Events>(this, { clicked: null });
+    readonly when = this.eventSource.when;
 
-    private modCategory: IModifierCategoryModel;
-
-    private readonly _clicked = new DefaultEvent<IModifierCategoryModel>(this);
-    readonly clicked = this._clicked.handler();
+    private groupID: number;
+    private modCategory: ModifierCategory;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -24,11 +25,11 @@ export class ModCategoryComponent {
         new TextComponent(view.titleHeader).setText('Modifier Category');
         this.alert = new CardAlert(view.alert).alert;
         this.modCategoryName = new TextComponent(view.modCategoryName);
-        new ListGroup(view.listGroup).registerItemClicked(this.onClicked.bind(this));
+        new ListGroup(view.listGroup).when.itemClicked.then(this.onClicked.bind(this));
     }
 
     private onClicked() {
-        this._clicked.invoke(this.modCategory);
+        this.eventSource.events.clicked.invoke(this.modCategory);
     }
 
     setGroupID(groupID: number) {
@@ -37,8 +38,9 @@ export class ModCategoryComponent {
     }
 
     async refresh() {
-        this.modCategory = await this.getModCategory(this.groupID);
-        this.modCategoryName.setText(this.modCategory.Name.DisplayText);
+        const sourceModCategory = await this.getModCategory(this.groupID);
+        this.modCategory = new ModifierCategory(sourceModCategory);
+        this.modCategoryName.setText(this.modCategory.name.displayText);
         this.view.showModCategory();
     }
 

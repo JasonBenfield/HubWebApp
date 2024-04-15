@@ -5,16 +5,16 @@ namespace XTI_Admin;
 
 internal sealed class PublishToolsProcess
 {
-    private readonly Scopes scopes;
+    private readonly PublishedFolder publishedFolder;
 
-    public PublishToolsProcess(Scopes scopes)
+    public PublishToolsProcess(PublishedFolder publishedFolder)
     {
-        this.scopes = scopes;
+        this.publishedFolder = publishedFolder;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey)
     {
-        var publishDir = scopes.GetRequiredService<PublishedFolder>().AppDir(appKey, versionKey);
+        var publishDir = publishedFolder.AppDir(appKey, versionKey);
         var srcPsDir = Path.Combine(Environment.CurrentDirectory, "Powershell");
         if (Directory.Exists(srcPsDir))
         {
@@ -44,6 +44,11 @@ internal sealed class PublishToolsProcess
         {
             foreach (var srcDir in Directory.GetDirectories(srcToolsDir))
             {
+                var prjFiles = Directory.GetFiles(srcDir, "*.csproj");
+                if (!prjFiles.Any())
+                {
+                    throw new Exception($"Project file not found in '{srcDir}'");
+                }
                 var prjName = new DirectoryInfo(srcDir).Name;
                 var publishToolsDir = Path.Combine(publishDir, "Tools", prjName);
                 Console.WriteLine($"Publishing tools to '{publishToolsDir}'");

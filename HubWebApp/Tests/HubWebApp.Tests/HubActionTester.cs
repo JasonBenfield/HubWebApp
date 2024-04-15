@@ -15,8 +15,8 @@ internal interface IHubActionTester
     IServiceProvider Services { get; }
     HubActionTester<TOtherModel, TOtherResult> Create<TOtherModel, TOtherResult>(Func<HubAppApi, AppApiAction<TOtherModel, TOtherResult>> getAction);
     Task<App> HubApp();
-    Task<Modifier> HubAppModifier();
-    Task<Modifier> GeneralUserGroupModifier();
+    Task<ModifierModel> HubAppModifier();
+    Task<ModifierModel> GeneralUserGroupModifier();
 }
 
 internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
@@ -67,10 +67,15 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return user;
     }
 
-    public Task<AppUser> Login(Modifier modifier, params AppRoleName[]? roleNames) =>
+    public Task<AppUser> Login(ModifierModel modifier, params AppRoleName[]? roleNames) =>
         Login(new AppRoleName[0], modifier, roleNames);
 
-    public async Task<AppUser> Login(AppRoleName[] defaultRoleNames, Modifier modifier, params AppRoleName[]? roleNames)
+    public async Task<AppUser> Login
+    (
+        AppRoleName[] defaultRoleNames, 
+        ModifierModel modifier, 
+        params AppRoleName[]? roleNames
+    )
     {
         var factory = Services.GetRequiredService<HubFactory>();
         var userGroup = await factory.UserGroups.GetGeneral();
@@ -90,10 +95,11 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             var role = await hubApp.Role(roleName);
             await user.AssignRole(role);
         }
+        var efModifier = await factory.Modifiers.Modifier(modifier.ID);
         foreach (var roleName in roleNames ?? new AppRoleName[0])
         {
             var role = await hubApp.Role(roleName);
-            await user.Modifier(modifier).AssignRole(role);
+            await user.Modifier(efModifier).AssignRole(role);
         }
         return user;
     }
@@ -111,10 +117,10 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return role;
     }
 
-    public Task<Modifier> GeneralUserGroupModifier() =>
+    public Task<ModifierModel> GeneralUserGroupModifier() =>
         UserGroupModifier(AppUserGroupName.General);
 
-    public async Task<Modifier> UserGroupModifier(AppUserGroupName name)
+    public async Task<ModifierModel> UserGroupModifier(AppUserGroupName name)
     {
         var factory = Services.GetRequiredService<HubFactory>();
         var userGroup = await factory.UserGroups.UserGroup(name);
@@ -127,19 +133,19 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             userGroupModel.ID.ToString(),
             userGroupModel.GroupName.DisplayText
         );
-        return userGroupModifier;
+        return userGroupModifier.ToModel();
     }
 
-    public async Task<Modifier> DefaultModifier()
+    public async Task<ModifierModel> DefaultModifier()
     {
         var hubApp = await HubApp();
         var defaultModifier = await hubApp.DefaultModifier();
-        return defaultModifier;
+        return defaultModifier.ToModel();
     }
 
-    public Task<Modifier> HubAppModifier() => AppModifier(HubInfo.AppKey);
+    public Task<ModifierModel> HubAppModifier() => AppModifier(HubInfo.AppKey);
 
-    public async Task<Modifier> AppModifier(AppKey appKey)
+    public async Task<ModifierModel> AppModifier(AppKey appKey)
     {
         var factory = Services.GetRequiredService<HubFactory>();
         var app = await factory.Apps.App(appKey);
@@ -160,14 +166,14 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             appModel.ID.ToString(),
             appModel.AppKey.Format()
         );
-        return hubAppModifier;
+        return hubAppModifier.ToModel();
     }
 
     public Task<TResult> Execute(TModel model) =>
         Execute(model, ModifierKey.Default);
 
-    public Task<TResult> Execute(TModel model, Modifier modifier) =>
-        Execute(model, modifier.ToModel().ModKey);
+    public Task<TResult> Execute(TModel model, ModifierModel modifier) =>
+        Execute(model, modifier.ModKey);
 
     public async Task<TResult> Execute(TModel model, ModifierKey modKey)
     {

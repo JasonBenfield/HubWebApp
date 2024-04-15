@@ -5,86 +5,92 @@ using XTI_Processes;
 
 namespace XTI_Admin;
 
-internal sealed class PublishLibProcess
+public sealed class PublishLibProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly XtiFolder xtiFolder;
+    private readonly GitRepoInfo gitRepoInfo;
+    private readonly IGitHubCredentialsAccessor credentialsAccessor;
 
-    public PublishLibProcess(Scopes scopes)
+    public PublishLibProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, GitRepoInfo gitRepoInfo, IGitHubCredentialsAccessor credentialsAccessor)
     {
-        this.scopes = scopes;
+        this.xtiEnv = xtiEnv;
+        this.xtiFolder = xtiFolder;
+        this.gitRepoInfo = gitRepoInfo;
+        this.credentialsAccessor = credentialsAccessor;
     }
 
     public async Task Run(AppKey appKey, AppVersionKey versionKey, string semanticVersion)
     {
-        Console.WriteLine("Packing Lib Projects");
         var libDir = Path.Combine(Environment.CurrentDirectory, "Lib");
         if (Directory.Exists(libDir))
         {
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-            var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            var envName = xtiEnv.IsProduction()
-                ? "Production"
-                : "Development";
+            var envName = xtiEnv.IsProduction() ?
+                "Production" :
+                "Development";
             var outputPath = Path.Combine
             (
                 xtiFolder.FolderPath(),
                 "Packages",
                 envName
             );
-            var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
             var repositoryUrl = gitRepoInfo.RepositoryUrl();
-            var credentialsAccessor = scopes.GetRequiredService<IGitHubCredentialsAccessor>();
             var credentials = await credentialsAccessor.Value();
-            foreach (var dir in Directory.GetDirectories(libDir))
+            var libDirs = Directory.GetDirectories(libDir);
+            if (libDirs.Any())
             {
-                var packProcess = new WinProcess("dotnet")
-                    .WriteOutputToConsole()
-                    .UseArgumentNameDelimiter("")
-                    .AddArgument("pack")
-                    .AddArgument(dir)
-                    .UseArgumentNameDelimiter("-")
-                    .AddArgument("c", getConfiguration())
-                    .AddArgument("o", new Quoted(outputPath))
-                    .UseArgumentValueDelimiter("=")
-                    .AddArgument("p:PackageVersion", semanticVersion)
-                    .AddArgument("p:RepositoryUrl", repositoryUrl)
-                    .AddArgument("p:XtiAppName", new Quoted(appKey.Name.DisplayText))
-                    .AddArgument("p:XtiAppType", new Quoted(appKey.Type.DisplayText))
-                    .AddArgument("p:XtiAppKey", new Quoted(appKey.Format()))
-                    .AddArgument("p:XtiVersion", new Quoted(versionKey.DisplayText));
-                if (!xtiEnv.IsProduction())
+                Console.WriteLine("Packing Lib Projects");
+                foreach (var dir in libDirs)
                 {
-                    packProcess
-                    .UseArgumentNameDelimiter("--")
-                        .AddArgument("include-source")
-                        .AddArgument("include-symbols");
-                }
-                var packResult = await packProcess.Run();
-                packResult.EnsureExitCodeIsZero();
-                if (xtiEnv.IsProduction())
-                {
-                    var publishProcess = new WinProcess("dotnet")
+                    var prjFiles = Directory.GetFiles(dir, "*.csproj");
+                    if (!prjFiles.Any())
+                    {
+                        throw new Exception($"Project file not found in '{dir}'");
+                    }
+                    var packProcess = new WinProcess("dotnet")
                         .WriteOutputToConsole()
                         .UseArgumentNameDelimiter("")
-                        .AddArgument("nuget")
-                        .AddArgument("push")
-                        .AddArgument(new Quoted(Path.Combine(outputPath, $"{new DirectoryInfo(dir).Name}.{semanticVersion}.nupkg")))
+                        .AddArgument("pack")
+                        .AddArgument(dir)
+                        .UseArgumentNameDelimiter("-")
+                        .AddArgument("c", GetConfiguration())
+                        .AddArgument("o", new Quoted(outputPath))
+                        .UseArgumentValueDelimiter("=")
+                        .AddArgument("p:PackageVersion", semanticVersion)
+                        .AddArgument("p:RepositoryUrl", repositoryUrl)
+                        .AddArgument("p:XtiAppName", new Quoted(appKey.Name.DisplayText))
+                        .AddArgument("p:XtiAppType", new Quoted(appKey.Type.DisplayText))
+                        .AddArgument("p:XtiAppKey", new Quoted(appKey.Format()))
+                        .AddArgument("p:XtiVersion", new Quoted(versionKey.DisplayText));
+                    if (!xtiEnv.IsProduction())
+                    {
+                        packProcess
                         .UseArgumentNameDelimiter("--")
-                        .AddArgument("api-key", credentials.Password)
-                        .AddArgument("source", $"https://nuget.pkg.github.com/{gitRepoInfo.RepoOwner}/index.json")
-                        .AddArgument("skip-duplicate");
-                    var publishResult = await publishProcess.Run();
-                    publishResult.EnsureExitCodeIsZero();
+                            .AddArgument("include-source")
+                            .AddArgument("include-symbols");
+                    }
+                    var packResult = await packProcess.Run();
+                    packResult.EnsureExitCodeIsZero();
+                    if (xtiEnv.IsProduction())
+                    {
+                        var publishProcess = new WinProcess("dotnet")
+                            .WriteOutputToConsole()
+                            .UseArgumentNameDelimiter("")
+                            .AddArgument("nuget")
+                            .AddArgument("push")
+                            .AddArgument(new Quoted(Path.Combine(outputPath, $"{new DirectoryInfo(dir).Name}.{semanticVersion}.nupkg")))
+                            .UseArgumentNameDelimiter("--")
+                            .AddArgument("api-key", credentials.Password)
+                            .AddArgument("source", $"https://nuget.pkg.github.com/{gitRepoInfo.RepoOwner}/index.json")
+                            .AddArgument("skip-duplicate");
+                        var publishResult = await publishProcess.Run();
+                        publishResult.EnsureExitCodeIsZero();
+                    }
                 }
             }
         }
     }
 
-    private string getConfiguration()
-    {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        return xtiEnv.IsProduction()
-            ? "Release"
-            : "Debug";
-    }
+    private string GetConfiguration() =>
+        xtiEnv.IsProduction() ? "Release" : "Debug";
 }

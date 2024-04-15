@@ -23,6 +23,8 @@ internal sealed class HubTestHost
             _ => new FakeHostEnvironment { EnvironmentName = envName }
         );
         builder.Services.AddMemoryCache();
+        builder.Services.AddSingleton<FakeClock>();
+        builder.Services.AddSingleton<IClock>(sp => sp.GetRequiredService<FakeClock>());
         builder.Services.AddScoped<IAppApiUser, AppApiSuperUser>();
         builder.Services.AddSingleton(_ => AppVersionKey.Current);
         builder.Services.AddSingleton(_ => new FakeXtiPathAccessor(new XtiPath(HubInfo.AppKey)));

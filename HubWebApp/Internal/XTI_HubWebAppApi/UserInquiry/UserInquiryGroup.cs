@@ -11,8 +11,8 @@ public sealed class UserInquiryGroup : AppApiGroupWrapper
         GetUsers = source.AddAction(nameof(GetUsers), () => sp.GetRequiredService<GetUsersAction>());
     }
 
-    public AppApiAction<int, AppUserModel> GetUser { get; }
-    public AppApiAction<string, AppUserModel> GetUserOrAnon { get; }
-    public AppApiAction<int, UserAuthenticatorModel[]> GetUserAuthenticators { get; }
+    public AppApiAction<AppUserIDRequest, AppUserModel> GetUser { get; }
+    public AppApiAction<AppUserNameRequest, AppUserModel> GetUserOrAnon { get; }
+    public AppApiAction<AppUserIDRequest, UserAuthenticatorModel[]> GetUserAuthenticators { get; }
     public AppApiAction<EmptyRequest, AppUserModel[]> GetUsers { get; }
 }

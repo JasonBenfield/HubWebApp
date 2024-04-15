@@ -11,7 +11,11 @@ public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionMo
 
     public async Task<XtiVersionModel> Execute(GetVersionRequest model, CancellationToken stoppingToken)
     {
-        var version = await appFactory.Versions.VersionByName(model.VersionName, model.VersionKey);
+        var version = await appFactory.Versions.VersionByName
+        (
+            model.ToAppVersionName(), 
+            model.ToAppVersionKey()
+        );
         return version.ToModel();
     }
 }

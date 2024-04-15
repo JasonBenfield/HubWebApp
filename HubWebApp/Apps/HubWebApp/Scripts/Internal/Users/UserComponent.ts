@@ -2,10 +2,10 @@
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
+import { AppUser } from "../../Lib/AppUser";
 
 type Events = {
     editRequested: number;
@@ -15,10 +15,10 @@ type Events = {
 export class UserComponent {
     private userID: number;
     private readonly alert: MessageAlert;
-    private readonly userName: TextValueFormGroup;
-    private readonly fullName: TextValueFormGroup;
-    private readonly email: TextValueFormGroup;
-    private readonly timeDeactivated: TextValueFormGroup;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly fullNameFormGroup: FormGroupText;
+    private readonly emailFormGroup: FormGroupText;
+    private readonly timeDeactivatedFormGroup: FormGroupText;
     private readonly editCommand: Command;
     private readonly changePasswordCommand: Command;
     private readonly deactivateCommand: AsyncCommand;
@@ -35,15 +35,15 @@ export class UserComponent {
         private readonly hubClient: HubAppClient,
         private readonly view: UserComponentView
     ) {
-        this.alert = new CardAlert(this.view.alert).alert;
-        this.userName = new TextValueFormGroup(view.userName);
-        this.userName.setCaption('User Name');
-        this.fullName = new TextValueFormGroup(view.fullName);
-        this.fullName.setCaption('Name');
-        this.email = new TextValueFormGroup(view.email);
-        this.email.setCaption('Email');
-        this.timeDeactivated = new TextValueFormGroup(view.timeDeactivated);
-        this.timeDeactivated.setCaption('Time Deactivated');
+        this.alert = new CardAlert(this.view.alertView).alert;
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
+        this.userNameFormGroup.setCaption('User Name');
+        this.fullNameFormGroup = new FormGroupText(view.fullNameFormGroupView);
+        this.fullNameFormGroup.setCaption('Name');
+        this.emailFormGroup = new FormGroupText(view.emailFormGroupView);
+        this.emailFormGroup.setCaption('Email');
+        this.timeDeactivatedFormGroup = new FormGroupText(view.timeDeactivatedFormGroupView);
+        this.timeDeactivatedFormGroup.setCaption('Time Deactivated');
         this.editCommand = new Command(this.requestEdit.bind(this));
         this.editCommand.add(this.view.editButton);
         this.editCommand.hide();
@@ -71,22 +71,25 @@ export class UserComponent {
     }
 
     private async deactivate() {
-        const user = await this.alert.infoAction(
+        this.reset();
+        const sourceUser = await this.alert.infoAction(
             'Deactivating...',
             () => this.hubClient.UserMaintenance.DeactivateUser(this.userID)
         );
-        this.loadUser(user);
+        this.loadUser(new AppUser(sourceUser));
     }
 
     private async reactivate() {
-        const user = await this.alert.infoAction(
+        this.reset();
+        const sourceUser = await this.alert.infoAction(
             'Reactivating...',
             () => this.hubClient.UserMaintenance.ReactivateUser(this.userID)
         );
-        this.loadUser(user);
+        this.loadUser(new AppUser(sourceUser));
     }
 
     async refresh() {
+        this.reset();
         const user = await this.getUser(this.userID);
         if (this.canEdit === null) {
             const access = await this.hubClient.getUserAccess({
@@ -94,32 +97,39 @@ export class UserComponent {
             });
             this.canEdit = access.canEdit;
         }
-        this.loadUser(user);
+        this.loadUser(new AppUser(user));
     }
 
-    private loadUser(user: IAppUserModel) {
-        this.userName.setValue(user.UserName.DisplayText);
-        this.fullName.setValue(user.Name.DisplayText);
-        this.email.setValue(user.Email);
-        if (user.TimeDeactivated.getFullYear() === 9999) {
-            this.view.timeDeactivated.hide();
-            this.timeDeactivated.setValue('');
+    private reset() {
+        this.emailFormGroup.hide();
+        this.timeDeactivatedFormGroup.hide();
+        this.editCommand.hide();
+        this.changePasswordCommand.hide();
+        this.deactivateCommand.hide();
+        this.reactivateCommand.hide();
+    }
+
+    private loadUser(user: AppUser) {
+        this.userNameFormGroup.setValue(user.userName.displayText);
+        this.fullNameFormGroup.setValue(user.name.displayText);
+        this.emailFormGroup.setValue(user.email);
+        if (user.email) {
+            this.emailFormGroup.show();
+        }
+        if (user.isActive) {
+            this.timeDeactivatedFormGroup.setValue('');
         }
         else {
-            this.view.timeDeactivated.show();
-            this.timeDeactivated.setValue(new FormattedDate(user.TimeDeactivated).formatDateTime());
+            this.timeDeactivatedFormGroup.setValue(user.timeDeactivated.format());
+            this.view.timeDeactivatedFormGroupView.show();
         }
         if (this.canEdit) {
-            if (user.TimeDeactivated.getFullYear() === 9999) {
+            if (user.isActive) {
                 this.editCommand.show();
                 this.changePasswordCommand.show();
                 this.deactivateCommand.show();
-                this.reactivateCommand.hide();
             }
             else {
-                this.editCommand.hide();
-                this.changePasswordCommand.hide();
-                this.deactivateCommand.hide();
                 this.reactivateCommand.show();
             }
         }
@@ -128,7 +138,7 @@ export class UserComponent {
     private getUser(userID: number) {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.UserInquiry.GetUser(userID)
+            () => this.hubClient.UserInquiry.GetUser({ UserID: userID })
         );
     }
 }

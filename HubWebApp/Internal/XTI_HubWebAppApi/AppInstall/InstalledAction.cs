@@ -11,7 +11,7 @@ public sealed class InstalledAction : AppAction<GetInstallationRequest, EmptyAct
 
     public async Task<EmptyActionResult> Execute(GetInstallationRequest model, CancellationToken stoppingToken)
     {
-        await hubAdministration.Installed(model.InstallationID);
+        await hubAdministration.Installed(model.InstallationID, stoppingToken);
         return new EmptyActionResult();
     }
 }

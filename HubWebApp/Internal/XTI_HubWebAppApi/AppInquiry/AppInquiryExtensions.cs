@@ -9,9 +9,12 @@ internal static class AppInquiryExtensions
         services.AddScoped<IndexAction>();
         services.AddScoped<GetAppAction>();
         services.AddScoped<GetDefaultModifierAction>();
+        services.AddScoped<GetDefaultAppOptionsAction>();
+        services.AddScoped<GetDefaultOptionsAction>();
         services.AddScoped<GetModifierCategoriesAction>();
         services.AddScoped<GetMostRecentErrorEventsAction>();
         services.AddScoped<GetMostRecentRequestsAction>();
         services.AddScoped<GetResourceGroupsAction>();
+        services.AddScoped<GetRolesAction>();
     }
 }

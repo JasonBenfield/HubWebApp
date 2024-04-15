@@ -19,6 +19,10 @@ public sealed class HubFactory
 
     public AppUserRepository Users { get => users ??= new(this); }
 
+    private AppUserRoleRepository? userRoles;
+
+    public AppUserRoleRepository UserRoles { get => userRoles ??= new(this); }
+
     private SystemUserRepository? systemUsers;
 
     public SystemUserRepository SystemUsers { get => systemUsers ??= new(this); }
@@ -88,11 +92,19 @@ public sealed class HubFactory
 
     public AuthenticatorRepository Authenticators { get => authenticators ??= new(this); }
 
-    private AppLogEntryRepository? logEntries;
+    private LogEntryRepository? logEntries;
 
-    public AppLogEntryRepository LogEntries { get => logEntries ??= new(this); }
+    public LogEntryRepository LogEntries { get => logEntries ??= new(this); }
 
     internal LogEntry CreateLogEntry(LogEntryEntity record) => new(this, record);
+
+    private InstallConfigurationRepository? installConfigurations;
+
+    public InstallConfigurationRepository InstallConfigurations { get => installConfigurations ??= new(this); }
+
+    private InstallConfigurationTemplateRepository? installConfigurationTemplates;
+
+    internal InstallConfigurationTemplateRepository InstallConfigurationTemplates { get => installConfigurationTemplates ??= new(this); }
 
     private InstallLocationRepository? installLocations;
 

@@ -28,18 +28,22 @@ public static class XtiSetupAppHost
                     services.AddSingleton(_ => appKey);
                     services.AddMemoryCache();
                     services.AddFileSecretCredentials(xtiEnv);
+                    services.AddScoped<IAppClientRequestKey, EmptyAppClientRequestKey>();
                     services.AddHubClientServices();
                     services.AddSystemUserXtiToken();
                     services.AddInstallationUserXtiToken();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-                        tokenAccessor.UseToken<InstallationUserXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddConfigurationOptions<SetupOptions>();
+                    services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().DB);
+                    services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().XtiToken);
+                    services.AddSingleton(sp => sp.GetRequiredService<SetupOptions>().HubClient);
                     services.AddScoped<DefaultAppSetup>();
                     services.AddHostedService<SetupHostedService>();
                 }

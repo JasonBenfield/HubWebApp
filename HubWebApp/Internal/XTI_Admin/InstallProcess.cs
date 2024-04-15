@@ -6,35 +6,49 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class InstallProcess
+public sealed class InstallProcess
 {
-    private readonly Scopes scopes;
+    private readonly AdminOptions options;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly AppVersionNameAccessor versionNameAccessor;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly XtiGitHubRepository gitHubRepo;
+    private readonly IHubAdministration hubAdministration;
+    private readonly GitRepoInfo gitRepoInfo;
+    private readonly PublishedAssetsFactory publishedAssetsFactory;
+    private readonly RemoteCommandService remoteCommandService;
+    private readonly LocalInstallProcess localInstallProcess;
 
-    public InstallProcess(Scopes scopes)
+    public InstallProcess(AdminOptions options, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, XtiEnvironment xtiEnv, XtiGitHubRepository gitHubRepo, IHubAdministration hubAdministration, GitRepoInfo gitRepoInfo, PublishedAssetsFactory publishedAssetsFactory, RemoteCommandService remoteCommandService, LocalInstallProcess localInstallProcess)
     {
-        this.scopes = scopes;
+        this.options = options;
+        this.selectedAppKeys = selectedAppKeys;
+        this.versionNameAccessor = versionNameAccessor;
+        this.xtiEnv = xtiEnv;
+        this.gitHubRepo = gitHubRepo;
+        this.hubAdministration = hubAdministration;
+        this.gitRepoInfo = gitRepoInfo;
+        this.publishedAssetsFactory = publishedAssetsFactory;
+        this.remoteCommandService = remoteCommandService;
+        this.localInstallProcess = localInstallProcess;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
-        var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
         var appKeys = selectedAppKeys.Values
             .Where(a => !a.Type.Equals(AppType.Values.Package) && !a.Type.Equals(AppType.Values.WebPackage))
             .ToArray();
         if (appKeys.Any())
         {
             Console.WriteLine("Beginning Install");
-            var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-            using var publishedAssets = scopes.GetRequiredService<IPublishedAssets>();
-            var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
+            var versionName = versionNameAccessor.Value;
+            using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
             string release;
-            if(publishedAssets is GitHubPublishedAssets)
+            if (publishedAssets is GitHubPublishedAssets)
             {
                 var versionNumber = options.VersionNumber;
                 if (string.IsNullOrWhiteSpace(versionNumber))
                 {
-                    var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
                     var latestRelease = await gitHubRepo.LatestRelease();
                     release = latestRelease.TagName;
                 }
@@ -50,69 +64,107 @@ internal sealed class InstallProcess
             var versionsPath = await publishedAssets.LoadVersions(release);
             var versionReader = new VersionReader(versionsPath);
             var versions = await versionReader.Versions();
-            var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-            var appDefs = appKeys
-                .Select(a => new AppDefinitionModel(a))
-                .ToArray();
             Console.WriteLine("Adding or updating apps");
-            await hubAdministration.AddOrUpdateApps(versionName, appDefs);
+            await hubAdministration.AddOrUpdateApps(versionName, appKeys, ct);
             Console.WriteLine("Adding or updating versions");
-            await hubAdministration.AddOrUpdateVersions(appKeys, versions);
+            await hubAdministration.AddOrUpdateVersions
+            (
+                appKeys,
+                versions.Select(v => new AddVersionRequest(v)).ToArray(),
+                ct
+            );
             var versionKey = string.IsNullOrWhiteSpace(options.VersionKey) ? AppVersionKey.Current : AppVersionKey.Parse(options.VersionKey);
             if (xtiEnv.IsProduction() && versionKey.IsCurrent())
             {
                 versionKey = versions.First(v => v.IsCurrent()).VersionKey;
             }
-            foreach (var appKey in appKeys)
+            var installConfigs = await hubAdministration.InstallConfigurations
+            (
+                new GetInstallConfigurationsRequest
+                (
+                    repoOwner: gitRepoInfo.RepoOwner,
+                    repoName: gitRepoInfo.RepoName,
+                    configurationName: options.InstallConfigurationName
+                ),
+                ct
+            );
+            var configurationNames = installConfigs
+                .Select(c => c.ConfigurationName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            var installConfigsWithAppKey =
+                configurationNames.SelectMany
+                (
+                    configName => appKeys
+                        .Select
+                        (
+                            a =>
+                            {
+                                return new InstallConfigurationWithAppKey
+                                (
+                                    installConfigs.FirstOrDefault(c => c.IsMatch(a, configName)) ??
+                                    new(),
+                                    a
+                                );
+                            }
+                        )
+                        .OrderBy(c => c.Config.InstallSequence)
+                );
+            foreach (var installConfig in installConfigsWithAppKey)
             {
-                var installations = scopes.GetRequiredService<InstallOptionsAccessor>().Installations(appKey);
-                foreach (var installationOptions in installations)
+                if (installConfig.Config.IsFound())
                 {
-                    var installMachineName = string.IsNullOrWhiteSpace(installationOptions.MachineName)
-                        ? GetLocalMachineName()
-                        : installationOptions.MachineName;
-                    var instResult = await newInstallation
+                    var isLocal = string.IsNullOrWhiteSpace(installConfig.Config.Template.DestinationMachineName);
+                    var installMachineName = isLocal ?
+                        GetLocalMachineName() :
+                        installConfig.Config.Template.DestinationMachineName;
+                    var instResult = await NewInstallation
                     (
-                        appKey,
+                        installConfig.AppKey,
                         installMachineName,
                         versionName,
-                        installationOptions.Domain,
-                        installationOptions.SiteName
+                        installConfig.Config.Template.Domain,
+                        installConfig.Config.Template.SiteName,
+                        ct
                     );
-                    var installerCreds = await getInstallerCredentials(hubAdministration, installMachineName);
-                    var gitRepoInfo = scopes.GetRequiredService<GitRepoInfo>();
-                    var adminInstallOptions = new AdminInstallOptions
-                    (
-                        AppKey: appKey,
-                        VersionKey: versionKey,
-                        RepoOwner: gitRepoInfo.RepoOwner,
-                        RepoName: gitRepoInfo.RepoName,
-                        Release: release,
-                        CurrentInstallationID: instResult.CurrentInstallationID,
-                        VersionInstallationID: instResult.VersionInstallationID,
-                        InstallerUserName: installerCreds.UserName,
-                        InstallerPassword: installerCreds.Password,
-                        Options: installationOptions
-                    );
-                    if (string.IsNullOrWhiteSpace(installationOptions.MachineName))
+                    var installerCreds = await GetInstallerCredentials(hubAdministration, installMachineName, ct);
+                    if (isLocal)
                     {
-                        await new LocalInstallProcess(scopes, publishedAssets)
-                            .Run(adminInstallOptions);
+                        var adminInstallOptions = new AdminInstallOptions
+                        (
+                            AppKey: installConfig.AppKey,
+                            VersionKey: versionKey,
+                            RepoOwner: gitRepoInfo.RepoOwner,
+                            RepoName: gitRepoInfo.RepoName,
+                            Release: release,
+                            CurrentInstallationID: instResult.CurrentInstallationID,
+                            VersionInstallationID: instResult.VersionInstallationID,
+                            InstallerUserName: installerCreds.UserName,
+                            InstallerPassword: installerCreds.Password,
+                            DestinationMachineName: installConfig.Config.Template.DestinationMachineName,
+                            Domain: installConfig.Config.Template.Domain,
+                            SiteName: installConfig.Config.Template.SiteName
+                        );
+                        await localInstallProcess.Run(adminInstallOptions, publishedAssets, ct);
                     }
                     else
                     {
-                        var storedObjFactory = scopes.GetRequiredService<StoredObjectFactory>();
-                        var storageName = new StorageName("XTI Remote Install");
-                        var remoteInstallKey = await storedObjFactory.CreateStoredObject(storageName)
-                            .Store
-                            (
-                                GenerateKeyModel.SixDigit(),
-                                adminInstallOptions,
-                                TimeSpan.FromMinutes(30)
-                            );
-                        await new LocalInstallServiceProcess(scopes)
-                            .Run(installationOptions.MachineName, remoteInstallKey);
+                        var remoteOptions = options.Copy();
+                        remoteOptions.DestinationMachine = "";
+                        remoteOptions.Domain = installConfig.Config.Template.Domain;
+                        remoteOptions.SiteName = installConfig.Config.Template.SiteName;
+                        await remoteCommandService.Run
+                        (
+                            installConfig.Config.Template.DestinationMachineName,
+                            CommandNames.FromRemote.ToString(),
+                            remoteOptions
+                        );
                     }
+                    await Task.Delay(TimeSpan.FromSeconds(15));
+                }
+                else
+                {
+                    Console.WriteLine($"Install Config not found for '{installConfig.AppKey.Format()}'");
                 }
             }
         }
@@ -121,25 +173,25 @@ internal sealed class InstallProcess
     private static string GetLocalMachineName()
     {
         var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
-        return string.IsNullOrWhiteSpace(domain) 
-            ? Environment.MachineName 
+        return string.IsNullOrWhiteSpace(domain)
+            ? Environment.MachineName
             : $"{Environment.MachineName}.{domain}";
     }
 
-    private readonly Dictionary<string, CredentialValue> machineCredentials = new ();
+    private readonly Dictionary<string, CredentialValue> machineCredentials = new();
 
-    private async Task<CredentialValue> getInstallerCredentials(IHubAdministration hubAdministration, string installMachineName)
+    private async Task<CredentialValue> GetInstallerCredentials(IHubAdministration hubAdministration, string installMachineName, CancellationToken ct)
     {
         var dotIndex = installMachineName.IndexOf('.');
-        if(dotIndex > -1)
+        if (dotIndex > -1)
         {
             installMachineName = installMachineName.Substring(0, dotIndex);
         }
         var key = installMachineName.ToLower();
-        if(!machineCredentials.TryGetValue(key, out var installerCreds))
+        if (!machineCredentials.TryGetValue(key, out var installerCreds))
         {
             var password = Guid.NewGuid().ToString();
-            var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password);
+            var installationUser = await hubAdministration.AddOrUpdateInstallationUser(installMachineName, password, ct);
             installerCreds = new CredentialValue
             (
                 installationUser.UserName.Value,
@@ -150,10 +202,9 @@ internal sealed class InstallProcess
         return installerCreds;
     }
 
-    private Task<NewInstallationResult> newInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain, string siteName)
+    private Task<NewInstallationResult> NewInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain, string siteName, CancellationToken ct)
     {
         Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
-        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain, siteName);
+        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain, siteName, ct);
     }
 }

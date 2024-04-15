@@ -8,14 +8,14 @@ internal sealed class GetUserAuthenticatorsTest
     public async Task ShouldGetUserAuthenticators()
     {
         var tester = await Setup();
-        var userAuthenticators = await tester.Execute(1013, new ModifierKey("General"));
+        var userAuthenticators = await tester.Execute(new AppUserIDRequest(1013), new ModifierKey("General"));
         userAuthenticators.WriteToConsole();
     }
 
-    private async Task<HubActionTester<int, UserAuthenticatorModel[]>> Setup(string envName = "Development")
+    private async Task<HubActionTester<AppUserIDRequest, UserAuthenticatorModel[]>> Setup(string envName = "Development")
     {
         var host = new HubTestHost();
         var sp = await host.Setup(envName);
-        return  HubActionTester.Create(sp, hubApi => hubApi.UserInquiry.GetUserAuthenticators);
+        return HubActionTester.Create(sp, hubApi => hubApi.UserInquiry.GetUserAuthenticators);
     }
 }

@@ -10,11 +10,14 @@ public sealed record AppLogEntryModel
     AppEventSeverity Severity,
     string Caption,
     string Message,
-    string Detail
+    string Detail,
+    string Category
 )
 {
     public AppLogEntryModel()
-        : this(0, 0, DateTimeOffset.MaxValue, AppEventSeverity.Values.GetDefault(), "", "", "")
+        : this(0, 0, DateTimeOffset.MaxValue, AppEventSeverity.Values.GetDefault(), "", "", "", "")
     {
     }
+
+    public bool IsFound() => ID > 0;
 }

@@ -4,10 +4,11 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfirm";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
+import { InstallationDetail } from "../../Lib/InstallationDetail";
+import { InstallStatus } from "../../Lib/Http/InstallStatus";
 
 interface IResult {
     menuRequested?: boolean;
@@ -25,37 +26,39 @@ export class InstallationPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly confirm: ModalConfirm;
-    private readonly appKey: TextValueFormGroup;
+    private readonly appKey: FormGroupText;
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
-    private readonly installationStatus: TextValueFormGroup;
+    private readonly installationStatus: FormGroupText;
     private readonly location: TextComponent;
     private readonly current: TextComponent;
-    private readonly domain: TextValueFormGroup;
-    private readonly siteName: TextValueFormGroup;
-    private readonly mostRecentRequest: TextValueFormGroup;
+    private readonly domain: FormGroupText;
+    private readonly siteName: FormGroupText;
+    private readonly mostRecentRequest: FormGroupText;
     private readonly appLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
+    private readonly deleteCommand: AsyncCommand;
     private installationID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.confirm = new ModalConfirm(view.confirm);
-        this.appKey = new TextValueFormGroup(view.appKey);
+        this.appKey = new FormGroupText(view.appKey);
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
-        this.installationStatus = new TextValueFormGroup(view.installationStatus);
+        this.installationStatus = new FormGroupText(view.installationStatus);
         this.location = new TextComponent(view.location);
         this.current = new TextComponent(view.current);
-        this.domain = new TextValueFormGroup(view.domain);
-        this.siteName = new TextValueFormGroup(view.siteName);
-        this.mostRecentRequest = new TextValueFormGroup(view.mostRecentRequest);
+        this.domain = new FormGroupText(view.domain);
+        this.siteName = new FormGroupText(view.siteName);
+        this.mostRecentRequest = new FormGroupText(view.mostRecentRequest);
         this.appLink = new TextLinkComponent(view.appLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
-        new AsyncCommand(this.onDelete.bind(this)).add(view.deleteButton);
+        this.deleteCommand = new AsyncCommand(this.onDelete.bind(this));
+        this.deleteCommand.add(view.deleteButton);
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
@@ -75,45 +78,52 @@ export class InstallationPanel implements IPanel {
 
     setInstallationID(installationID: number) {
         this.installationID = installationID;
-        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({ SessionID: null, InstallationID: installationID }));
+        this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
+            SessionID: null,
+            InstallationID: installationID,
+            SourceRequestID: null
+        }));
         this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: null, InstallationID: installationID }));
     }
 
     async refresh() {
-        const detail = await this.alert.infoAction(
+        this.deleteCommand.hide();
+        const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Installations.GetInstallationDetail(this.installationID)
         );
-        this.appKey.setValue(
-            detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
-        );
-        this.versionKey.setText(detail.Version.VersionKey.DisplayText);
-        this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
-        this.installationStatus.setValue(detail.Installation.Status.DisplayText);
-        this.location.setText(detail.InstallLocation.QualifiedMachineName);
-        this.current.setText(detail.Installation.IsCurrent ? '[ Current ]' : '');
-        if (detail.Installation.Domain) {
-            this.domain.setValue(detail.Installation.Domain);
+        const detail = new InstallationDetail(sourceDetail);
+        this.appKey.setValue(detail.app.appKey.format());
+        this.versionKey.setText(detail.version.versionKey.displayText);
+        this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.installationStatus.setValue(detail.installation.status.DisplayText);
+        this.location.setText(detail.installLocation.qualifiedMachineName);
+        this.current.setText(detail.installation.isCurrent ? '[ Current ]' : '');
+        if (detail.installation.domain) {
+            this.domain.setValue(detail.installation.domain);
             this.view.showDomain();
         }
         else {
             this.view.hideDomain();
         }
-        if (detail.Installation.SiteName) {
-            this.siteName.setValue(detail.Installation.SiteName);
+        if (detail.installation.siteName) {
+            this.siteName.setValue(detail.installation.siteName);
             this.view.showSiteName();
         }
         else {
             this.view.hideSiteName();
         }
-        if (detail.MostRecentRequest.ID) {
-            this.mostRecentRequest.setValue(new FormattedDate(detail.MostRecentRequest.TimeStarted).formatDateTime());
+        if (detail.mostRecentRequest.id) {
+            this.mostRecentRequest.setValue(detail.mostRecentRequest.timeStarted.format());
             this.view.showMostRecentRequest();
         }
         else {
             this.view.hideMostRecentRequest();
         }
-        this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.App.PublicKey.Value, {}));
+        this.appLink.setHref(this.hubClient.App.Index.getModifierUrl(detail.app.getModifier(), {}));
+        if (detail.installation.status.equals(InstallStatus.values.Installed)) {
+            this.deleteCommand.show();
+        }
     }
 
     start() { return this.awaitable.start(); }

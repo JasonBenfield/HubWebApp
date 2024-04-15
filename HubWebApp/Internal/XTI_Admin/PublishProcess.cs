@@ -1,93 +1,114 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using XTI_App.Abstractions;
 using XTI_Core;
+using XTI_Git;
 using XTI_GitHub;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_Processes;
 
 namespace XTI_Admin;
 
-internal sealed class PublishProcess
+public sealed class PublishProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly SlnFolder slnFolder;
+    private readonly AdminOptions options;
+    private readonly AppVersionNameAccessor versionNameAccessor;
+    private readonly XtiGitHubRepository gitHubRepo;
+    private readonly CurrentVersion currentVersionAccessor;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly BeginPublishProcess beginPublishProcess;
+    private readonly PublishedFolder publishFolder;
+    private readonly PublishLibProcess publishLibProcess;
+    private readonly PublishSetupProcess publishSetupProcess;
+    private readonly ProductionHubAdmin prodHubAdmin;
+    private readonly CompleteVersionProcess completeVersionProcess;
 
-    internal PublishProcess(Scopes scopes)
+    public PublishProcess(XtiEnvironment xtiEnv, SlnFolder slnFolder, AdminOptions options, AppVersionNameAccessor versionNameAccessor, XtiGitHubRepository gitHubRepo, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, BeginPublishProcess beginPublishProcess, PublishedFolder publishFolder, PublishLibProcess publishLibProcess, PublishSetupProcess publishSetupProcess, ProductionHubAdmin prodHubAdmin, CompleteVersionProcess completeVersionProcess)
     {
-        this.scopes = scopes;
+        this.xtiEnv = xtiEnv;
+        this.slnFolder = slnFolder;
+        this.options = options;
+        this.versionNameAccessor = versionNameAccessor;
+        this.gitHubRepo = gitHubRepo;
+        this.currentVersionAccessor = currentVersionAccessor;
+        this.gitRepo = gitRepo;
+        this.beginPublishProcess = beginPublishProcess;
+        this.publishFolder = publishFolder;
+        this.publishLibProcess = publishLibProcess;
+        this.publishSetupProcess = publishSetupProcess;
+        this.prodHubAdmin = prodHubAdmin;
+        this.completeVersionProcess = completeVersionProcess;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
+        var appKeys = slnFolder.AppKeys();
         if (!appKeys.Any())
         {
             throw new ArgumentException("App keys are required");
         }
         var versionKey = xtiEnv.IsProduction()
-            ? new VersionKeyFromCurrentBranch(scopes).Value()
+            ? new VersionKeyFromCurrentBranch(gitRepo).Value()
             : AppVersionKey.Current;
         string semanticVersion;
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
         if (xtiEnv.IsProduction())
         {
-            var version = await new BeginPublishProcess(scopes).Run();
+            var version = await beginPublishProcess.Run(ct);
             semanticVersion = version.VersionNumber.Format();
             Console.WriteLine($"Publishing Version '{semanticVersion}'");
         }
         else
         {
-            var currentVersion = await new CurrentVersion(scopes, versionName).Value();
+            var currentVersion = await currentVersionAccessor.Value(ct);
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
-        var release = await createGitHubRelease(versionKey, semanticVersion);
-        var publishFolder = scopes.GetRequiredService<PublishedFolder>();
+        var release = await CreateGitHubRelease(versionKey, semanticVersion);
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {
-            setCurrentDirectory(slnDir, appKey);
-            var publishDir = getPublishDir(appKey, versionKey);
+            SetCurrentDirectory(slnDir, appKey);
+            var publishDir = GetPublishDir(appKey, versionKey);
             if (Directory.Exists(publishDir))
             {
                 Directory.Delete(publishDir, true);
             }
-            await new PublishSetupProcess(scopes).Run(appKey, versionKey);
-            await new PublishToolsProcess(scopes).Run(appKey, versionKey);
-            if (!appKey.Type.Equals(AppType.Values.Package))
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
             {
-                await runDotNetPublish(appKey, versionKey);
+                await publishSetupProcess.Run(appKey, versionKey);
             }
-            var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-            await new PublishNpmProcess(xtiEnv, xtiFolder, publishFolder).Run(appKey, versionKey, semanticVersion);
-            if (!appKey.Type.Equals(AppType.Values.Package) && !appKey.Type.Equals(AppType.Values.WebPackage) && release != null)
+            await new PublishToolsProcess(publishFolder).Run(appKey, versionKey);
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
             {
-                await uploadReleaseAssets(appKey, versionKey, release);
+                await RunDotNetPublish(appKey, versionKey);
             }
-            await new PublishLibProcess(scopes).Run(appKey, versionKey, semanticVersion);
+            if (appKey.IsAnyAppType(AppType.Values.WebApp, AppType.Values.WebPackage))
+            {
+                await new PublishNpmProcess(xtiEnv, publishFolder).Run(appKey, versionKey, semanticVersion);
+            }
+            if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage) && release != null)
+            {
+                await UploadReleaseAssets(appKey, versionKey, release);
+            }
+            await publishLibProcess.Run(appKey, versionKey, semanticVersion);
             Environment.CurrentDirectory = slnDir;
         }
         if (xtiEnv.IsProduction())
         {
-            await new CompleteVersionProcess(scopes).Run();
+            await completeVersionProcess.Run(ct);
         }
-        await publishVersions(release);
+        await PublishVersions(release, ct);
         if (xtiEnv.IsProduction() && release != null)
         {
             Console.WriteLine($"Finalizing release {release.TagName}");
-            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
             await gitHubRepo.FinalizeRelease(release);
-            var options = scopes.GetRequiredService<AdminOptions>();
             options.VersionNumber = semanticVersion;
         }
     }
 
-    private async Task<GitHubRelease?> createGitHubRelease(AppVersionKey versionKey, string semanticVersion)
+    private async Task<GitHubRelease?> CreateGitHubRelease(AppVersionKey versionKey, string semanticVersion)
     {
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
+        var appKeys = slnFolder.AppKeys();
         GitHubRelease? release = null;
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
         {
@@ -99,31 +120,27 @@ internal sealed class PublishProcess
         return release;
     }
 
-    private async Task publishVersions(GitHubRelease? release)
+    private async Task PublishVersions(GitHubRelease? release, CancellationToken ct)
     {
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        var publishFolder = scopes.GetRequiredService<PublishedFolder>();
+        var appKeys = slnFolder.AppKeys();
         var versionsPath = publishFolder.VersionsPath();
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)))
         {
             publishFolder.TryCreateVersionDir();
             if (File.Exists(versionsPath)) { File.Delete(versionsPath); }
             var persistedVersions = new PersistedVersions(versionsPath);
-            var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-            var versions = await hubAdmin.Versions(scopes.GetRequiredService<AppVersionNameAccessor>().Value);
+            var versions = await prodHubAdmin.Value.Versions(versionNameAccessor.Value, ct);
             await persistedVersions.Store(versions);
         }
         if (release != null)
         {
             Console.WriteLine("Uploading versions.json");
             using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
-            var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
             await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(versionStream, "versions.json", "text/plain"));
         }
     }
 
-    private static void setCurrentDirectory(string slnDir, AppKey appKey)
+    private static void SetCurrentDirectory(string slnDir, AppKey appKey)
     {
         var projectDir = Path.Combine(slnDir, new AppDirectoryName(appKey).Value);
         if (Directory.Exists(projectDir))
@@ -132,11 +149,10 @@ internal sealed class PublishProcess
         }
     }
 
-    private async Task uploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, GitHubRelease release)
+    private async Task UploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, GitHubRelease release)
     {
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         Console.WriteLine("Uploading app.zip");
-        var publishDir = getPublishDir(appKey, versionKey);
+        var publishDir = GetPublishDir(appKey, versionKey);
         var appKeyText = $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
         var appZipPath = Path.Combine(publishDir, $"{appKeyText}.zip");
         if (File.Exists(appZipPath))
@@ -197,22 +213,37 @@ internal sealed class PublishProcess
         }
     }
 
-    private async Task runDotNetPublish(AppKey appKey, AppVersionKey versionKey)
+    private async Task RunDotNetPublish(AppKey appKey, AppVersionKey versionKey)
     {
-        var publishDir = getPublishDir(appKey, versionKey);
+        var publishDir = GetPublishDir(appKey, versionKey);
         var publishAppDir = Path.Combine(publishDir, "App");
-        Console.WriteLine($"Publishing web app to '{publishAppDir}'");
+        Console.WriteLine($"Publishing app to '{publishAppDir}'");
+        var projectDir = GetProjectDir(appKey);
+        var pubxmlFile = Path.Combine(projectDir, "Properties", "PublishProfiles", "Default.pubxml");
         var publishProcess = new WinProcess("dotnet")
             .WriteOutputToConsole()
             .UseArgumentNameDelimiter("")
             .AddArgument("publish")
-            .AddArgument(new Quoted(getProjectDir(appKey)))
+            .AddArgument(new Quoted(projectDir))
             .UseArgumentNameDelimiter("-")
-            .AddArgument("c", getConfiguration())
+            .AddArgument("c", GetConfiguration())
             .UseArgumentValueDelimiter("=")
-            .AddArgument("p:PublishProfile", "Default")
-            .AddArgument("p:PublishDir", publishAppDir)
-            .AddArgument("p:TypeScriptCompileBlocked", "true");
+            .AddArgument("p:PublishDir", publishAppDir);
+        if (File.Exists(pubxmlFile))
+        {
+            publishProcess.AddArgument("p:PublishProfile", "Default");
+        }
+        if (appKey.Type.Equals(AppType.Values.WebApp))
+        {
+            publishProcess.AddArgument("p:TypeScriptCompileBlocked", "true");
+        }
+        else if (appKey.Type.EqualsAny(AppType.Values.ServiceApp, AppType.Values.ConsoleApp))
+        {
+            if (!File.Exists(pubxmlFile))
+            {
+                publishProcess.AddArgument("p:PublishSingleFile", "true");
+            }
+        }
         var result = await publishProcess.Run();
         result.EnsureExitCodeIsZero();
         var privateFiles = Directory.GetFiles(publishAppDir, "*.private.*")
@@ -223,24 +254,17 @@ internal sealed class PublishProcess
         }
     }
 
-    private string getPublishDir(AppKey appKey, AppVersionKey versionKey) =>
-        scopes.GetRequiredService<PublishedFolder>().AppDir(appKey, versionKey);
+    private string GetPublishDir(AppKey appKey, AppVersionKey versionKey) =>
+        publishFolder.AppDir(appKey, versionKey);
 
-    private static string getProjectDir(AppKey appKey)
-    {
-        return Path.Combine
+    private static string GetProjectDir(AppKey appKey) =>
+        Path.Combine
         (
             Environment.CurrentDirectory,
             "Apps",
             new AppDirectoryName(appKey).Value
         );
-    }
 
-    private string getConfiguration()
-    {
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
-        return xtiEnv.IsProduction()
-            ? "Release"
-            : "Debug";
-    }
+    private string GetConfiguration() =>
+        xtiEnv.IsProduction() ? "Release" : "Debug";
 }

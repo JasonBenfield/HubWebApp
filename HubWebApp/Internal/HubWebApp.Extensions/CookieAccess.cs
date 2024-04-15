@@ -24,7 +24,7 @@ public sealed class CookieAccess : AccessForLogin
         (
             new ClaimsIdentity
             (
-                claims.Union(new[] { new Claim("token", token) }),
+                claims.Union([new Claim("token", token)]),
                 "Password",
                 ClaimTypes.Name,
                 "Recipient"
@@ -33,14 +33,13 @@ public sealed class CookieAccess : AccessForLogin
         var authProps = new AuthenticationProperties();
         authProps.StoreTokens
         (
-            new[]
-            {
+            [
                 new AuthenticationToken()
                 {
                     Name = "Jwt",
                     Value = token
                 }
-            }
+            ]
         );
         authProps.IsPersistent = true;
         var httpContext = httpContextAccessor.HttpContext;

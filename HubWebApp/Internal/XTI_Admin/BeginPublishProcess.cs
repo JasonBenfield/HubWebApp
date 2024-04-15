@@ -1,25 +1,25 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
-using XTI_HubDB.Entities;
+﻿using XTI_App.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class BeginPublishProcess
+public sealed class BeginPublishProcess
 {
-    private readonly Scopes scopes;
+    private readonly VersionKeyFromCurrentBranch versionKeyFromCurrentBranch;
+    private readonly ProductionHubAdmin productionHubAdmin;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public BeginPublishProcess(Scopes scopes)
+    public BeginPublishProcess(VersionKeyFromCurrentBranch versionKeyFromCurrentBranch, ProductionHubAdmin productionHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
-        this.scopes = scopes;
+        this.versionKeyFromCurrentBranch = versionKeyFromCurrentBranch;
+        this.productionHubAdmin = productionHubAdmin;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task<XtiVersionModel> Run()
+    public async Task<XtiVersionModel> Run(CancellationToken ct)
     {
         Console.WriteLine("Begin Publishing");
-        var versionKey = new VersionKeyFromCurrentBranch(scopes).Value();
-        var hubAdmin = scopes.Production().GetRequiredService<IHubAdministration>();
-        var version = await hubAdmin.BeginPublish(scopes.GetRequiredService<AppVersionNameAccessor>().Value, versionKey);
+        var versionKey = versionKeyFromCurrentBranch.Value();
+        var version = await productionHubAdmin.Value.BeginPublish(versionNameAccessor.Value, versionKey, ct);
         return version;
     }
 }

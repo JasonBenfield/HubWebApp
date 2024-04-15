@@ -13,10 +13,13 @@ public sealed class AdminOptions
     public string VersionNumber { get; set; } = "";
     public string RepoOwner { get; set; } = "";
     public string RepoName { get; set; } = "";
+    public string InstallConfigurationName { get; set; } = "";
+    public string InstallTemplateName { get; set; } = "";
+    public int InstallSequence { get; set; } 
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
-    public string RemoteInstallKey { get; set; } = "";
+    public string RemoteOptionsKey { get; set; } = "";
     public InstallationSources InstallationSource { get; set; } = InstallationSources.Default;
     public string VersionType { get; set; } = "";
     public string IssueTitle { get; set; } = "";
@@ -47,5 +50,62 @@ public sealed class AdminOptions
             }
         }
         return installationSource;
+    }
+
+    public AdminOptions Copy() =>
+        new AdminOptions
+        {
+            Command = Command,
+            AppName = AppName,
+            AppType = AppType,
+            HubAdministrationType = HubAdministrationType,
+            HubAppVersionKey = HubAppVersionKey,
+            CredentialKey = CredentialKey,
+            DestinationMachine = DestinationMachine,
+            Domain = Domain,
+            InstallationSource = InstallationSource,
+            IssueNumber = IssueNumber,
+            IssueTitle = IssueTitle,
+            UserName = UserName,
+            Password = Password,
+            RemoteOptionsKey = RemoteOptionsKey,
+            RepoName = RepoName,
+            RepoOwner = RepoOwner,
+            InstallConfigurationName = InstallConfigurationName,
+            InstallTemplateName = InstallTemplateName,
+            InstallSequence = InstallSequence,
+            SiteName = SiteName,
+            StartIssue = StartIssue,
+            VersionKey = VersionKey,
+            VersionNumber = VersionNumber,
+            VersionType = VersionType
+        };
+
+    public void Load(AdminOptions options)
+    {
+        Command = options.Command;
+        AppName = options.AppName;
+        AppType = options.AppType;
+        HubAdministrationType = options.HubAdministrationType;
+        HubAppVersionKey = options.HubAppVersionKey;
+        CredentialKey = options.CredentialKey;
+        DestinationMachine = options.DestinationMachine;
+        Domain = options.Domain;
+        InstallationSource = options.InstallationSource;
+        IssueNumber = options.IssueNumber;
+        IssueTitle = options.IssueTitle;
+        UserName = options.UserName;
+        Password = options.Password;
+        RemoteOptionsKey = options.RemoteOptionsKey;
+        RepoOwner = options.RepoOwner;
+        RepoName = options.RepoName;
+        InstallConfigurationName = options.InstallConfigurationName;
+        InstallTemplateName = options.InstallTemplateName;
+        InstallSequence = options.InstallSequence;
+        SiteName = options.SiteName;
+        StartIssue = options.StartIssue;
+        VersionKey = options.VersionKey;
+        VersionNumber = options.VersionNumber;
+        VersionType = options.VersionType;
     }
 }

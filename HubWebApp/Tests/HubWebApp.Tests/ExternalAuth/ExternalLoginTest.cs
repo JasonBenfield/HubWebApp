@@ -1,6 +1,5 @@
 ﻿using HubWebApp.Fakes;
 using System.Security.Claims;
-using XTI_HubWebAppApi.Auth;
 using XTI_WebApp.Api;
 
 namespace HubWebApp.Tests;
@@ -16,13 +15,14 @@ internal sealed class ExternalLoginTest
         var user = await AddUser(tester, "someone");
         const string externalUserKey = "external.id";
         await AddUserAuthenticator(tester, user.ToModel(), externalUserKey);
-        var authKey = await ExternalAuthKey(tester, externalUserKey);
+        var loginResult = await ExternalAuthKey(tester, externalUserKey);
         var returnKey = await LoginReturnKey(tester, "/Home");
-        var request = new LoginModel
-        {
-            AuthKey = authKey,
-            ReturnKey = returnKey
-        };
+        var request = new AuthenticatedLoginRequest
+        (
+            authKey: loginResult.AuthKey,
+            authID: loginResult.AuthID,
+            returnKey: returnKey
+        );
         await tester.Execute(request);
         var access = tester.Services.GetRequiredService<FakeAccessForLogin>();
         Assert.That
@@ -37,7 +37,7 @@ internal sealed class ExternalLoginTest
         );
     }
 
-    private async Task<HubActionTester<LoginModel, WebRedirectResult>> Setup()
+    private async Task<HubActionTester<AuthenticatedLoginRequest, WebRedirectResult>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
@@ -69,15 +69,15 @@ internal sealed class ExternalLoginTest
         return user;
     }
 
-    private async Task<string> ExternalAuthKey(IHubActionTester tester, string externalUserKey)
+    private async Task<AuthenticatedLoginResult> ExternalAuthKey(IHubActionTester tester, string externalUserKey)
     {
         var externalAuthKeyTester = tester.Create(hubApi => hubApi.ExternalAuth.ExternalAuthKey);
         await externalAuthKeyTester.LoginAsAdmin();
-        var authKey = await externalAuthKeyTester.Execute
+        var loginResult = await externalAuthKeyTester.Execute
         (
             new ExternalAuthKeyModel(authenticatorKey, externalUserKey)
         );
-        return authKey;
+        return loginResult;
     }
 
     private async Task<string> LoginReturnKey(IHubActionTester tester, string returnUrl)

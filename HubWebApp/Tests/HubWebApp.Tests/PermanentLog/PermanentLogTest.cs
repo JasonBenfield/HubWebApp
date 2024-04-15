@@ -106,6 +106,8 @@ internal sealed class PermanentLogTest
         var requests = (await session.Requests()).ToArray();
         var events = (await requests[0].Events()).ToArray();
         Assert.That(events.Length, Is.EqualTo(1), "Should log event on permanent log");
+        var eventModel = events[0].ToModel();
+        Assert.That(eventModel.Category, Is.EqualTo("Exception"));
     }
 
     private static Task startSession(HubActionTester<LogBatchModel, EmptyActionResult> tester, string sessionKey)
@@ -205,7 +207,8 @@ internal sealed class PermanentLogTest
                         Severity = AppEventSeverity.Values.CriticalError,
                         Caption = "An unexpected error occurred",
                         Message = exception.Message,
-                        Detail = exception.StackTrace ?? ""
+                        Detail = exception.StackTrace ?? "",
+                        Category = exception.GetType().Name
                     }
                 }
             }
@@ -221,33 +224,49 @@ internal sealed class PermanentLogTest
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();
-        await hubApi.Install.AddOrUpdateApps.Invoke(new AddOrUpdateAppsRequest
-        {
-            VersionName = new AppVersionName("FakeWebApp"),
-            Apps = new[] { new AppDefinitionModel(AppKey.WebApp("Fake")) }
-        });
-        var version = await hubApi.Publish.NewVersion.Invoke(new NewVersionRequest
-        {
-            VersionName = new AppVersionName("FakeWebApp"),
-            VersionType = AppVersionType.Values.Major
-        });
-        await hubApi.Publish.BeginPublish.Invoke(new PublishVersionRequest
-        {
-            VersionName = version.VersionName,
-            VersionKey = version.VersionKey
-        });
-        await hubApi.Publish.EndPublish.Invoke(new PublishVersionRequest
-        {
-            VersionName = version.VersionName,
-            VersionKey = version.VersionKey
-        });
-        var newInstResult = await hubApi.Install.NewInstallation.Invoke(new NewInstallationRequest
-        {
-            AppKey = AppKey.WebApp("Fake"),
-            VersionName = version.VersionName,
-            QualifiedMachineName = "destination.xartogg.com",
-            Domain = "test.xartogg.com"
-        });
+        await hubApi.Install.AddOrUpdateApps.Invoke
+        (
+            new AddOrUpdateAppsRequest
+            (
+                versionName: new AppVersionName("FakeWebApp"),
+                appKeys: [AppKey.WebApp("Fake")]
+            )
+        );
+        var version = await hubApi.Publish.NewVersion.Invoke
+        (
+            new NewVersionRequest
+            (
+                versionName: new AppVersionName("FakeWebApp"),
+                versionType: AppVersionType.Values.Major
+            )
+        );
+        await hubApi.Publish.BeginPublish.Invoke
+        (
+            new PublishVersionRequest
+            (
+                versionName: version.VersionName,
+                versionKey: version.VersionKey
+            )
+        );
+        await hubApi.Publish.EndPublish.Invoke
+        (
+            new PublishVersionRequest
+            (
+                versionName: version.VersionName,
+                versionKey: version.VersionKey
+            )
+        );
+        var newInstResult = await hubApi.Install.NewInstallation.Invoke
+        (
+            new NewInstallationRequest
+            (
+                appKey: AppKey.WebApp("Fake"),
+                versionName: version.VersionName,
+                qualifiedMachineName: "destination.xartogg.com",
+                domain: "test.xartogg.com",
+                siteName: ""
+            )
+        );
         await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.CurrentInstallationID));
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
         installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);

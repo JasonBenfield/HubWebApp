@@ -10,8 +10,8 @@ public sealed partial class AuthApiController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<LoginResult>> Authenticate([FromBody] LoginCredentials model, CancellationToken ct)
+    public Task<ResultContainer<LoginResult>> Authenticate([FromBody] AuthenticateRequest model, CancellationToken ct)
     {
-        return api.Group("AuthApi").Action<LoginCredentials, LoginResult>("Authenticate").Execute(model, ct);
+        return api.Group("AuthApi").Action<AuthenticateRequest, LoginResult>("Authenticate").Execute(model, ct);
     }
 }

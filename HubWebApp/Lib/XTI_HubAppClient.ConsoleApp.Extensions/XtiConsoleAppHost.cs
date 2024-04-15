@@ -44,12 +44,17 @@ public sealed class XtiConsoleAppHost
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddHostedService<AppAgendaHostedService>();
+                    services.AddConfigurationOptions<DefaultConsoleAppOptions>();
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().HubClient);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().XtiToken);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().DB);
                     services.AddHubClientServices();
+                    services.AddHubClientContext();
                     services.AddScoped<SystemUserXtiToken>();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.UseToken<SystemUserXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());

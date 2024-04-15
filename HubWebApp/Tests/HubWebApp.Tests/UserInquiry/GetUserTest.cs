@@ -8,7 +8,8 @@ internal sealed class GetUserTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         var addedUser = await AddUser(tester, "User1");
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(addedUser.ID);
+        await AccessAssertions.Create(tester)
+            .ShouldThrowError_WhenModifierIsBlank(new AppUserIDRequest(addedUser.ID));
     }
 
     [Test]
@@ -21,7 +22,7 @@ internal sealed class GetUserTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                addedUser.ID,
+                new AppUserIDRequest(addedUser.ID),
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.ViewUser
@@ -35,11 +36,11 @@ internal sealed class GetUserTest
         await tester.LoginAsAdmin();
         var addedUser = await AddUser(tester, "User1");
         var modifier = await tester.GeneralUserGroupModifier();
-        var user = await tester.Execute(addedUser.ID, modifier);
+        var user = await tester.Execute(new AppUserIDRequest(addedUser.ID), modifier);
         Assert.That(user, Is.EqualTo(addedUser), "Should get user by ID");
     }
 
-    private async Task<HubActionTester<int, AppUserModel>> Setup()
+    private async Task<HubActionTester<AppUserIDRequest, AppUserModel>> Setup()
     {
         var host = new HubTestHost();
         var sp = await host.Setup();

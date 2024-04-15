@@ -13,10 +13,16 @@ public sealed class StoredObject
         this.storageName = storageName;
     }
 
-    public Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter)
+    public Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter, bool isSlidingExpiration) =>
+        Store(generateKeyModel, data, expireAfter, false, isSlidingExpiration);
+
+    public Task<string> StoreSingleUse(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter) =>
+        Store(generateKeyModel, data, expireAfter, true, false);
+
+    private Task<string> Store(GenerateKeyModel generateKeyModel, object data, TimeSpan expireAfter, bool isSingleUse, bool isSlidingExpiration)
     {
         var serialized = data is string str ? str : XtiSerializer.Serialize(data);
-        return db.Store(storageName, generateKeyModel, serialized, expireAfter);
+        return db.Store(storageName, generateKeyModel, serialized, expireAfter, isSingleUse, isSlidingExpiration);
     }
 
     public Task<T> Value<T>(string storageKey) 
@@ -26,7 +32,7 @@ public sealed class StoredObject
     public async Task<T> Value<T>(string storageKey, Func<T> ifnull)
     {
         var data = await SerializedValue(storageKey);
-        return XtiSerializer.Deserialize(data, ifnull);
+        return string.IsNullOrWhiteSpace(data) ? ifnull() : XtiSerializer.Deserialize(data, ifnull);
     }
 
     public Task<string> SerializedValue(string storageKey) => db.Value(storageName, storageKey);

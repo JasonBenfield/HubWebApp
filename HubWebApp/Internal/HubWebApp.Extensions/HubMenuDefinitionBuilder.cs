@@ -24,6 +24,7 @@ internal sealed class HubMenuDefinitionBuilder : IMenuDefinitionBuilder
                 "main",
                 new LinkModel("apps", "Apps", api.Apps.Index.Path.RootPath()),
                 new LinkModel("userGroups", "User Groups", api.UserGroups.Index.Path.RootPath()),
+                new LinkModel("userRoles", "User Roles", api.UserRoles.Index.Path.RootPath()),
                 new LinkModel("sessionLog", "Session Log", api.Logs.Sessions.Path.RootPath()),
                 new LinkModel("accessLog", "Access Log", api.Logs.AppRequests.Path.RootPath()),
                 new LinkModel("eventLog", "Event Log", api.Logs.LogEntries.Path.RootPath()),

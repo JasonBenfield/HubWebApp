@@ -8,35 +8,40 @@ namespace XTI_Admin;
 
 public sealed class NewVersionCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly XtiGitHubRepository gitHubRepo;
+    private readonly AdminOptions options;
+    private readonly IHubAdministration hubAdministration;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public NewVersionCommand(Scopes scopes)
+    public NewVersionCommand(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, AdminOptions options, IHubAdministration hubAdministration, AppVersionNameAccessor versionNameAccessor)
     {
-        this.scopes = scopes;
+        this.gitRepo = gitRepo;
+        this.gitHubRepo = gitHubRepo;
+        this.options = options;
+        this.hubAdministration = hubAdministration;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         var repoInfo = await gitHubRepo.RepositoryInformation();
         if (!currentBranchName.Equals(repoInfo.DefaultBranch, StringComparison.OrdinalIgnoreCase))
         {
             throw new ArgumentException($"Current branch '{currentBranchName}' is not the default branch '{repoInfo.DefaultBranch}'");
         }
-        var options = scopes.GetRequiredService<AdminOptions>();
         var versionType = AppVersionType.Values.Value(options.VersionType);
         if (versionType == null)
         {
             throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
         }
-        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
+        var versionName = versionNameAccessor.Value;
         var newVersion = await hubAdministration.StartNewVersion
         (
             versionName,
-            versionType
+            versionType,
+            ct
         );
         var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey.DisplayText);
         await gitHubRepo.CreateNewVersion(gitVersion);

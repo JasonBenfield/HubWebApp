@@ -6,34 +6,30 @@ namespace XTI_HubAppClient
     {
         private readonly HubAppClient hubClient;
         private readonly ICurrentUserName currentUserName;
-        private readonly InstallationIDAccessor installationIDAccessor;
 
-        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName, InstallationIDAccessor installationIDAccessor)
+        public HcUserContext(HubAppClient hubClient, ICurrentUserName currentUserName)
         {
             this.hubClient = hubClient;
             this.currentUserName = currentUserName;
-            this.installationIDAccessor = installationIDAccessor;
         }
 
-        public async Task<UserContextModel> User()
+        public async Task<AppUserModel> User()
         {
             var userName = await currentUserName.Value();
             var user = await User(userName);
             return user;
         }
 
-        public async Task<UserContextModel> User(AppUserName userName)
-        {
-            var installationID = await installationIDAccessor.Value();
-            var userContextModel = await hubClient.System.GetUserContext
+        public Task<AppUserModel> User(AppUserName userName) =>
+            hubClient.System.GetUserOrAnon
             (
-                new GetUserContextRequest
-                {
-                    UserName = userName.Value,
-                    InstallationID = installationID
-                }
+                new AppUserNameRequest(userName)
             );
-            return userContextModel;
-        }
+
+        public Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier) =>
+            hubClient.System.GetUserRoles
+            (
+                new GetUserRolesRequest(user.ID, modifier.ID)
+            );
     }
 }

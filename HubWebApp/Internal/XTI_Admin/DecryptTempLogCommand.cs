@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using XTI_Core;
 using XTI_TempLog;
 using XTI_TempLog.Abstractions;
@@ -12,18 +7,19 @@ namespace XTI_Admin;
 
 internal sealed class DecryptTempLogCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly IClock clock;
+    private readonly ITempLogs tempLogs;
+    private readonly XtiFolder xtiFolder;
 
-    public DecryptTempLogCommand(Scopes scopes)
+    public DecryptTempLogCommand(IClock clock, ITempLogs tempLogs, XtiFolder xtiFolder)
     {
-        this.scopes = scopes;
+        this.clock = clock;
+        this.tempLogs = tempLogs;
+        this.xtiFolder = xtiFolder;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var clock = scopes.GetRequiredService<IClock>();
-        var tempLogs = scopes.GetRequiredService<ITempLogs>();
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var modifiedBefore = clock.Now();
         var logs = tempLogs.Logs();
         var logBatch = await processBatch(logs, modifiedBefore);

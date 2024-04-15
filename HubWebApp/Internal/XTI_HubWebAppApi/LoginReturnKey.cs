@@ -13,8 +13,9 @@ public sealed class LoginReturnKey : ILoginReturnKey
         storedObjectFactory.CreateStoredObject(new StorageName("Login Return"))
             .Store
             (
-                GenerateKeyModel.SixDigit(),
-                new LoginReturnModel { ReturnUrl = returnUrl },
-                TimeSpan.FromDays(90)
+                generateKeyModel: GenerateKeyModel.SixDigit(),
+                data: new LoginReturnModel { ReturnUrl = returnUrl },
+                expireAfter: TimeSpan.FromDays(90),
+                isSlidingExpiration: true
             );
 }

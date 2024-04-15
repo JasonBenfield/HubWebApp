@@ -9,5 +9,6 @@ public sealed class AppUserEntity
     public string Email { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
     public DateTimeOffset TimeDeactivated { get; set; } = DateTimeOffset.MaxValue;
+    public DateTimeOffset TimeLoggedIn { get; set; } = DateTimeOffset.MaxValue;
     public int GroupID { get; set; }
 }

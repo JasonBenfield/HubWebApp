@@ -1,37 +1,33 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.ServiceProcess;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Processes;
 
 namespace XTI_ServiceAppInstallation;
 
-[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Windows Service")]
 public sealed class WinServiceInstallation
 {
     private readonly XtiFolder xtiFolder;
     private readonly XtiEnvironment xtiEnv;
     private readonly AppKey appKey;
-    private ServiceController? sc;
+    private readonly WinServiceApp app;
 
     public WinServiceInstallation(XtiFolder xtiFolder, XtiEnvironment xtiEnv, AppKey appKey)
     {
         this.xtiFolder = xtiFolder;
         this.xtiEnv = xtiEnv;
         this.appKey = appKey;
+        app = new WinServiceApp(xtiEnv, appKey);
     }
 
-    public bool Exists() =>
-        GetService() != null;
+    public bool Exists() => app.Exists();
 
-    public bool IsRunning() =>
-        GetService()?.Status == ServiceControllerStatus.Running;
+    public bool IsRunning() => app.IsRunning();
 
     public async Task Create(string userName, string password)
     {
         var appName = appKey.Name.DisplayText.Replace(" ", "");
-        var serviceName = $"Xti_{xtiEnv.EnvironmentName}_{appName}";
+        var serviceName = new WinServiceName(xtiEnv, appKey).Value;
         var binPath = Path.Combine
         (
             xtiFolder.InstallPath(appKey, AppVersionKey.Current),
@@ -52,63 +48,9 @@ public sealed class WinServiceInstallation
         createServiceResult.EnsureExitCodeIsZero();
     }
 
-    public void StopService()
-    {
-        var sc = GetService();
-        if (sc != null)
-        {
-            sc.Stop();
-            sc.WaitForStatus(ServiceControllerStatus.Stopped);
-        }
-    }
+    public void StopService() => app.StopService();
 
-    public void StartService()
-    {
-        var sc = GetService();
-        if (sc != null)
-        {
-            sc.Start();
-        }
-    }
+    public void StartService() => app.StartService();
 
-    public async Task Delete()
-    {
-        var sc = GetService();
-        if (sc != null)
-        {
-            sc.Stop();
-            sc.WaitForStatus(ServiceControllerStatus.Stopped);
-            var deleteServiceProcess = new WinProcess("sc")
-                .WriteOutputToConsole()
-                .UseArgumentNameDelimiter("")
-                .AddArgument("delete")
-                .AddArgument(GetServiceName());
-            var createServiceResult = await deleteServiceProcess.Run();
-            createServiceResult.EnsureExitCodeIsZero();
-            this.sc = null;
-        }
-    }
-
-    private ServiceController? GetService()
-    {
-        if (sc == null)
-        {
-            var serviceName = GetServiceName();
-            sc = ServiceController
-                .GetServices(".")
-                .FirstOrDefault
-                (
-                    c => c.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase)
-                );
-        }
-        return sc;
-    }
-
-    private string GetServiceName()
-    {
-        var appName = GetAppName();
-        return $"Xti_{xtiEnv.EnvironmentName}_{appName}";
-    }
-
-    private string GetAppName() => appKey.Name.DisplayText.Replace(" ", "");
+    public Task Delete() => app.Delete();
 }

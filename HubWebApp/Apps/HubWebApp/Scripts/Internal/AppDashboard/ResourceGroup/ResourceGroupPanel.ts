@@ -8,23 +8,25 @@ import { ResourceGroupAccessCard } from "./ResourceGroupAccessCard";
 import { ResourceGroupComponent } from "./ResourceGroupComponent";
 import { ResourceGroupPanelView } from "./ResourceGroupPanelView";
 import { ResourceListCard } from "./ResourceListCard";
+import { AppResource } from "../../../Lib/AppResource";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
 
 interface IResult {
     backRequested?: {};
-    resourceSelected?: { resource: IResourceModel; };
-    modCategorySelected?: { modCategory: IModifierCategoryModel };
+    resourceSelected?: { resource: AppResource; };
+    modCategorySelected?: { modCategory: ModifierCategory };
 }
 
 class Result {
     static backRequested() { return new Result({ backRequested: {} }); }
 
-    static resourceSelected(resource: IResourceModel) {
+    static resourceSelected(resource: AppResource) {
         return new Result({
             resourceSelected: { resource: resource }
         });
     }
 
-    static modCategorySelected(modCategory: IModifierCategoryModel) {
+    static modCategorySelected(modCategory: ModifierCategory) {
         return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
@@ -53,24 +55,24 @@ export class ResourceGroupPanel implements IPanel {
     constructor(hubClient: HubAppClient, private readonly view: ResourceGroupPanelView) {
         this.resourceGroupComponent = new ResourceGroupComponent(hubClient, view.resourceGroupComponent);
         this.modCategoryComponent = new ModCategoryComponent(hubClient, view.modCategoryComponent);
-        this.modCategoryComponent.clicked.register(
+        this.modCategoryComponent.when.clicked.then(
             this.onModCategoryClicked.bind(this)
         );
         this.roleAccessCard = new ResourceGroupAccessCard(hubClient, view.roleAccessCard);
         this.resourceListCard = new ResourceListCard(hubClient, view.resourceListCard);
-        this.resourceListCard.resourceSelected.register(this.onResourceSelected.bind(this));
+        this.resourceListCard.when.resourceSelected.then(this.onResourceSelected.bind(this));
         this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
         this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
         this.backCommand.add(view.backButton);
     }
 
-    private onModCategoryClicked(modCategory: IModifierCategoryModel) {
+    private onModCategoryClicked(modCategory: ModifierCategory) {
         this.awaitable.resolve(
             Result.modCategorySelected(modCategory)
         );
     }
 
-    private onResourceSelected(resource: IResourceModel) {
+    private onResourceSelected(resource: AppResource) {
         this.awaitable.resolve(Result.resourceSelected(resource));
     }
 

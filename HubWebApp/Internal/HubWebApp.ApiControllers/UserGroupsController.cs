@@ -32,4 +32,10 @@ public sealed partial class UserGroupsController : Controller
     {
         return api.Group("UserGroups").Action<EmptyRequest, AppUserGroupModel[]>("GetUserGroups").Execute(new EmptyRequest(), ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserDetailModel>> GetUserDetailOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
+    {
+        return api.Group("UserGroups").Action<AppUserNameRequest, AppUserDetailModel>("GetUserDetailOrAnon").Execute(model, ct);
+    }
 }

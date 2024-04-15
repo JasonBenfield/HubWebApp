@@ -1,5 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
+﻿using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -28,7 +27,8 @@ public sealed class AppSession
         Installation installation,
         string path,
         DateTimeOffset timeRequested,
-        int actualCount
+        int actualCount,
+        string sourceRequestKey
     ) => factory.Requests.AddOrUpdate
         (
             this,
@@ -36,7 +36,8 @@ public sealed class AppSession
             installation,
             path,
             timeRequested,
-            actualCount
+            actualCount,
+            sourceRequestKey
         );
 
     public Task Authenticate(AppUser user) =>

@@ -3,10 +3,10 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { LogEntryPanelView } from "./LogEntryPanelView";
+import { AppLogEntryDetail } from "../../../Lib/AppLogEntryDetail";
 
 interface IResult {
     menuRequested?: boolean;
@@ -26,13 +26,13 @@ export class LogEntryPanel implements IPanel {
     private readonly appKey: TextLinkComponent;
     private readonly versionKey: TextComponent;
     private readonly versionStatus: TextComponent;
-    private readonly userName: TextValueFormGroup;
-    private readonly path: TextValueFormGroup;
-    private readonly timeOccurred: TextValueFormGroup;
-    private readonly severity: TextValueFormGroup;
-    private readonly caption: TextValueFormGroup;
-    private readonly message: TextValueFormGroup;
-    private readonly detail: TextValueFormGroup;
+    private readonly userName: FormGroupText;
+    private readonly path: FormGroupText;
+    private readonly timeOccurred: FormGroupText;
+    private readonly severity: FormGroupText;
+    private readonly caption: FormGroupText;
+    private readonly message: FormGroupText;
+    private readonly detail: FormGroupText;
     private readonly sourceLogEntryLink: TextLinkComponent;
     private readonly targetLogEntryLink: TextLinkComponent;
     private readonly requestLink: TextLinkComponent;
@@ -44,13 +44,13 @@ export class LogEntryPanel implements IPanel {
         this.appKey = new TextLinkComponent(view.appKeyLink);
         this.versionKey = new TextComponent(view.versionKey);
         this.versionStatus = new TextComponent(view.versionStatus);
-        this.userName = new TextValueFormGroup(view.userName);
-        this.path = new TextValueFormGroup(view.path);
-        this.timeOccurred = new TextValueFormGroup(view.timeOccurred);
-        this.severity = new TextValueFormGroup(view.severity);
-        this.caption = new TextValueFormGroup(view.caption);
-        this.message = new TextValueFormGroup(view.message);
-        this.detail = new TextValueFormGroup(view.detail);
+        this.userName = new FormGroupText(view.userName);
+        this.path = new FormGroupText(view.path);
+        this.timeOccurred = new FormGroupText(view.timeOccurred);
+        this.severity = new FormGroupText(view.severity);
+        this.caption = new FormGroupText(view.caption);
+        this.message = new FormGroupText(view.message);
+        this.detail = new FormGroupText(view.detail);
         this.sourceLogEntryLink = new TextLinkComponent(view.sourceLogEntryLink);
         this.targetLogEntryLink = new TextLinkComponent(view.targetLogEntryLink);
         this.requestLink = new TextLinkComponent(view.requestLink);
@@ -65,61 +65,66 @@ export class LogEntryPanel implements IPanel {
     }
 
     async refresh() {
-        const detail = await this.alert.infoAction(
+        const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Logs.GetLogEntryDetail(this.logEntryID)
         );
-        this.appKey.setText(
-            detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
-        );
+        const detail = new AppLogEntryDetail(sourceDetail);
+        this.appKey.setText(detail.app.appKey.format());
         this.appKey.setHref(
-            this.hubClient.App.Index.getModifierUrl(detail.App.PublicKey.DisplayText, {})
+            this.hubClient.App.Index.getModifierUrl(detail.app.publicKey.displayText, {})
         );
-        this.versionKey.setText(detail.Version.VersionKey.DisplayText);
-        this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
-        this.userName.setValue(detail.User.UserName.DisplayText);
-        this.path.setValue(detail.Request.Path);
-        this.timeOccurred.setValue(
-            new FormattedDate(detail.LogEntry.TimeOccurred).formatDateTime()
-        );
-        this.severity.setValue(detail.LogEntry.Severity.DisplayText);
-        if (detail.LogEntry.Caption) {
-            this.caption.setValue(detail.LogEntry.Caption);
+        this.versionKey.setText(detail.version.versionKey.displayText);
+        this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.userName.setValue(detail.user.userName.displayText);
+        this.path.setValue(detail.request.path);
+        this.timeOccurred.setValue(detail.logEntry.timeOccurred.format());
+        this.severity.setValue(detail.logEntry.severity.DisplayText);
+        if (detail.logEntry.caption) {
+            this.caption.setValue(detail.logEntry.caption);
             this.view.showCaption();
         }
         else {
             this.view.hideCaption();
         }
-        if (detail.LogEntry.Message) {
-            this.message.setValue(detail.LogEntry.Message);
+        if (detail.logEntry.message) {
+            this.message.setValue(detail.logEntry.message);
             this.view.showMessage();
         }
         else {
             this.view.hideMessage();
         }
-        if (detail.LogEntry.Detail) {
-            this.detail.setValue(detail.LogEntry.Detail);
+        if (detail.logEntry.detail) {
+            this.detail.setValue(detail.logEntry.detail);
             this.view.showDetail();
         }
         else {
             this.view.hideDetail();
         }
-        if (detail.SourceLogEntryID) {
-            this.sourceLogEntryLink.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.SourceLogEntryID }));
+        if (detail.sourceLogEntryID) {
+            this.sourceLogEntryLink.setHref(
+                this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.sourceLogEntryID })
+            );
             this.sourceLogEntryLink.show();
         }
         else {
             this.sourceLogEntryLink.hide();
         }
-        if (detail.TargetLogEntryID) {
-            this.targetLogEntryLink.setHref(this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.TargetLogEntryID }));
+        if (detail.targetLogEntryID) {
+            this.targetLogEntryLink.setHref(
+                this.hubClient.Logs.LogEntry.getUrl({ LogEntryID: detail.targetLogEntryID })
+            );
             this.targetLogEntryLink.show();
         }
         else {
             this.targetLogEntryLink.hide();
         }
-        this.requestLink.setHref(this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.Request.ID }));
-        this.installationLink.setHref(this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
+        this.requestLink.setHref(
+            this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.request.id })
+        );
+        this.installationLink.setHref(
+            this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.installation.id })
+        );
     }
 
     start() { return this.awaitable.start(); }

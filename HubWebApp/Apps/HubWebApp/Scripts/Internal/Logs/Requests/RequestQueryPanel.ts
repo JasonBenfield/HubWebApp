@@ -1,11 +1,12 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
-import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedRequestColumnsBuilder } from "../../../Lib/Http/ODataExpandedRequestColumnsBuilder";
 import { RequestDataRow } from "./RequestDataRow";
@@ -32,16 +33,12 @@ export class RequestQueryPanel implements IPanel {
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
         columns.RequestID.require();
         columns.Succeeded.require();
-        options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
-                new RequestDataRow(rowIndex, columns, record, view)
-        );
         options.query.select.addFields(
             columns.RequestTimeStarted,
             columns.RequestTimeElapsed,
             columns.UserName,
             columns.Path,
-            columns.AppName,
+            columns.AppKey,
             columns.ResourceGroupName,
             columns.ResourceName,
             columns.InstallLocation,
@@ -52,26 +49,51 @@ export class RequestQueryPanel implements IPanel {
         );
         options.query.orderBy.addDescending(columns.RequestTimeStarted);
         const url = Url.current();
-        const sessionIDText = url.getQueryValue('SessionID');
-        const sessionID = sessionIDText ? Number(sessionIDText) : null;
-        const installationIDText = url.getQueryValue('InstallationID');
-        const installationID = installationIDText ? Number(installationIDText) : null;
+        const sessionID = url.query.getNumberValue('SessionID');
+        const installationID = url.query.getNumberValue('InstallationID');
+        const sourceRequestID = url.query.getNumberValue('SourceRequestID');
         options.saveChanges({
             select: true,
             filter: !sessionID,
             orderby: true
         });
-        options.setODataClient(
-            new ApiODataClient(hubClient.RequestQuery, { SessionID: sessionID, InstallationID: installationID })
+        options.setDefaultODataClient(
+            hubClient.RequestQuery,
+            {
+                args: {
+                    SessionID: sessionID,
+                    InstallationID: installationID,
+                    SourceRequestID: sourceRequestID
+                }
+            }
+        );
+        options.setCreateDataRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, view: LinkGridRowView) =>
+                new RequestDataRow(hubClient, rowIndex, columns, record, view)
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().query.getNumberValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(page);
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
 
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const requestID: number = eventArgs.record['RequestID'];
-        this.hubClient.Logs.AppRequest.open({ RequestID: requestID });
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

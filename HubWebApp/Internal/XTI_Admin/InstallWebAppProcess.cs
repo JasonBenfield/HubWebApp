@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.Administration;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Credentials;
@@ -8,30 +7,34 @@ using XTI_WebAppInstallation;
 
 namespace XTI_Admin;
 
-internal sealed class InstallWebAppProcess : InstallAppProcess
+public sealed class InstallWebAppProcess : InstallAppProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiFolder xtiFolder;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly ISecretCredentialsFactory credentialsFactory;
 
-    public InstallWebAppProcess(Scopes scopes)
+    public InstallWebAppProcess(XtiFolder xtiFolder, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
     {
-        this.scopes = scopes;
+        this.xtiFolder = xtiFolder;
+        this.xtiEnv = xtiEnv;
+        this.credentialsFactory = credentialsFactory;
     }
 
     public async Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)
     {
-        Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.Options.SiteName}");
-        var appOfflineFile = new AppOfflineFile(scopes.GetRequiredService<XtiFolder>(), adminInstOptions.AppKey, installVersionKey);
-        await prepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.Options.SiteName);
+        Console.WriteLine($"Installing {adminInstOptions.AppKey.Name.DisplayText} {adminInstOptions.VersionKey.DisplayText} to website {adminInstOptions.SiteName}");
+        var appOfflineFile = new AppOfflineFile(xtiFolder, adminInstOptions.AppKey, installVersionKey);
+        await PrepareIis(adminInstOptions.AppKey, installVersionKey, adminInstOptions.SiteName);
         try
         {
-            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+            DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
         }
         catch
         {
             await Task.Delay(TimeSpan.FromSeconds(15));
             await RetryDelete(adminInstOptions, installVersionKey);
         }
-        await new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
+        await new CopyToInstallDirProcess(xtiFolder).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, false);
         appOfflineFile.Delete();
     }
 
@@ -39,18 +42,17 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
     {
         try
         {
-            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+            DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
         }
         catch
         {
             await Task.Delay(TimeSpan.FromSeconds(15));
-            deleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+            DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
         }
     }
 
-    private void deleteExistingWebFiles(AppKey appKey, AppVersionKey installVersionKey)
+    private void DeleteExistingWebFiles(AppKey appKey, AppVersionKey installVersionKey)
     {
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
         Console.WriteLine($"Deleting files in '{installDir}'");
         var files = Directory.GetFiles(installDir)
@@ -65,19 +67,13 @@ internal sealed class InstallWebAppProcess : InstallAppProcess
         }
     }
 
-    private async Task prepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
+    private async Task PrepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
     {
         var secretCredentialsValue = await retrieveCredentials("WebApp");
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var iisWebSite = new IisWebSite(xtiFolder, xtiEnv, appKey, versionKey, siteName);
         await iisWebSite.CreateOrUpdate(secretCredentialsValue.UserName, secretCredentialsValue.Password);
     }
 
-    private async Task<CredentialValue> retrieveCredentials(string credentialKey)
-    {
-        var credentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
-        var credentials = await credentialsFactory.Create(credentialKey).Value();
-        return credentials;
-    }
+    private Task<CredentialValue> retrieveCredentials(string credentialKey) =>
+        credentialsFactory.Create(credentialKey).Value();
 }

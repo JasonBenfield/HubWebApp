@@ -1,4 +1,6 @@
-﻿namespace XTI_AuthenticatorWebAppApi;
+﻿using XTI_Core;
+
+namespace XTI_AuthenticatorWebAppApi;
 
 public sealed class AuthenticatorAppApiFactory : AppApiFactory
 {
@@ -12,5 +14,6 @@ public sealed class AuthenticatorAppApiFactory : AppApiFactory
     public new AuthenticatorAppApi Create(IAppApiUser user) => (AuthenticatorAppApi)base.Create(user);
     public new AuthenticatorAppApi CreateForSuperUser() => (AuthenticatorAppApi)base.CreateForSuperUser();
 
-    protected override IAppApi _Create(IAppApiUser user) => new AuthenticatorAppApi(user, sp);
+    protected override IAppApi _Create(IAppApiUser user) => 
+        new AuthenticatorAppApi(user, XtiSerializer.Serialize(new AuthenticatorWebAppOptions()), sp);
 }

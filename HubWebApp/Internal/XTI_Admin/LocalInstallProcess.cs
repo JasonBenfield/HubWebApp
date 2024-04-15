@@ -7,68 +7,75 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
-internal sealed class LocalInstallProcess
+public sealed class LocalInstallProcess
 {
-    private readonly Scopes scopes;
-    private readonly IPublishedAssets publishedAssets;
+    private readonly InstallationUserCredentials credentials;
+    private readonly XtiEnvironment xtiEnv;
+    private readonly IHubAdministration hubAdministration;
+    private readonly AppVersionNameAccessor versionNameAccessor;
+    private readonly XtiFolder xtiFolder;
+    private readonly InstallWebAppProcess installWebAppProcess;
+    private readonly InstallServiceAppProcess installServiceAppProcess;
 
-    public LocalInstallProcess(Scopes scopes, IPublishedAssets publishedAssets)
+    public LocalInstallProcess(InstallationUserCredentials credentials, XtiEnvironment xtiEnv, IHubAdministration hubAdministration, AppVersionNameAccessor versionNameAccessor, XtiFolder xtiFolder, InstallWebAppProcess installWebAppProcess, InstallServiceAppProcess installServiceAppProcess)
     {
-        this.scopes = scopes;
-        this.publishedAssets = publishedAssets;
+        this.credentials = credentials;
+        this.xtiEnv = xtiEnv;
+        this.hubAdministration = hubAdministration;
+        this.versionNameAccessor = versionNameAccessor;
+        this.xtiFolder = xtiFolder;
+        this.installWebAppProcess = installWebAppProcess;
+        this.installServiceAppProcess = installServiceAppProcess;
     }
 
-    public async Task Run(AdminInstallOptions adminInstOptions)
+    public async Task Run(AdminInstallOptions adminInstOptions, IPublishedAssets publishedAssets, CancellationToken ct)
     {
         var installerCreds = new CredentialValue
         (
             adminInstOptions.InstallerUserName,
             adminInstOptions.InstallerPassword
         );
-        var credentials = scopes.GetRequiredService<InstallationUserCredentials>();
         await credentials.Update(installerCreds);
         var appKey = adminInstOptions.AppKey;
-        var xtiEnv = scopes.GetRequiredService<XtiEnvironment>();
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !adminInstOptions.VersionKey.Equals(AppVersionKey.None))
         {
             versionKey = adminInstOptions.VersionKey;
         }
         Console.WriteLine($"Starting install {appKey.Name.DisplayText} {appKey.Type.DisplayText} {versionKey}");
-        var setupAppPath = await publishedAssets.LoadSetup(adminInstOptions.Release, appKey, versionKey);
-        var appPath = await publishedAssets.LoadApps(adminInstOptions.Release, appKey, versionKey);
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
+        var setupAppPath = await publishedAssets.LoadSetup(adminInstOptions.Release, appKey, versionKey, ct);
+        var appPath = await publishedAssets.LoadApps(adminInstOptions.Release, appKey, versionKey, ct);
+        var versionName = versionNameAccessor.Value;
         await new RunSetupProcess(xtiEnv).Run(versionName, appKey, adminInstOptions.VersionKey, setupAppPath);
-        var installAppProcess = getInstallAppProcess(appKey);
-        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
+        var installAppProcess = GetInstallAppProcess(appKey);
         if (xtiEnv.IsProduction())
         {
-            await hubAdministration.BeginInstall(adminInstOptions.VersionInstallationID);
+            await hubAdministration.BeginInstall(adminInstOptions.VersionInstallationID, ct);
             await installAppProcess.Run(appPath, adminInstOptions, versionKey);
-            await hubAdministration.Installed(adminInstOptions.VersionInstallationID);
+            await hubAdministration.Installed(adminInstOptions.VersionInstallationID, ct);
             await WriteInstallationID(adminInstOptions.VersionInstallationID, appKey, versionKey);
         }
-        await hubAdministration.BeginInstall(adminInstOptions.CurrentInstallationID);
+        await hubAdministration.BeginInstall(adminInstOptions.CurrentInstallationID, ct);
         await installAppProcess.Run(appPath, adminInstOptions, AppVersionKey.Current);
-        await hubAdministration.Installed(adminInstOptions.CurrentInstallationID);
+        await hubAdministration.Installed(adminInstOptions.CurrentInstallationID, ct);
         await WriteInstallationID(adminInstOptions.CurrentInstallationID, appKey, AppVersionKey.Current);
         Console.WriteLine("Installation Complete");
     }
 
-    private InstallAppProcess getInstallAppProcess(AppKey appKey)
+    private InstallAppProcess GetInstallAppProcess(AppKey appKey)
     {
         InstallAppProcess installAppProcess;
         if (appKey.IsAppType(AppType.Values.WebApp))
         {
-            installAppProcess = new InstallWebAppProcess(scopes);
+            installAppProcess = installWebAppProcess;
         }
         else if (appKey.IsAppType(AppType.Values.ServiceApp))
         {
-            installAppProcess = new InstallServiceAppProcess(scopes);
+            installAppProcess = installServiceAppProcess;
         }
         else
         {
-            installAppProcess = new InstallDefaultAppProcess(scopes);
+            installAppProcess = new InstallDefaultAppProcess(xtiFolder);
         }
         return installAppProcess;
     }
@@ -79,7 +86,6 @@ internal sealed class LocalInstallProcess
         (
             new { InstallationID = installationID }
         );
-        var xtiFolder = scopes.GetRequiredService<XtiFolder>();
         var installDir = xtiFolder.InstallPath(appKey, versionKey);
         using var writer = new StreamWriter(Path.Combine(installDir, "installation.json"), false);
         await writer.WriteAsync(serializedInstallationID);

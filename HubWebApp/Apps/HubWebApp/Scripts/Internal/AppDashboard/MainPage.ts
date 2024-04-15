@@ -9,25 +9,24 @@ import { ResourcePanel } from './Resource/ResourcePanel';
 import { ResourceGroupPanel } from './ResourceGroup/ResourceGroupPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly appDetailPanel: AppDetailPanel;
     private readonly resourceGroupPanel: ResourceGroupPanel;
     private readonly resourcePanel: ResourcePanel;
     private readonly modCategoryPanel: ModCategoryPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
-        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.defaultClient, this.view.appDetailPanel));
-        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.defaultClient, this.view.resourceGroupPanel));
-        this.resourcePanel = this.panels.add(new ResourcePanel(this.defaultClient, this.view.resourcePanel));
-        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.defaultClient, this.view.modCategoryPanel));
+        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubClient, this.view.appDetailPanel));
+        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubClient, this.view.resourceGroupPanel));
+        this.resourcePanel = this.panels.add(new ResourcePanel(this.hubClient, this.view.resourcePanel));
+        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubClient, this.view.modCategoryPanel));
         if (XtiUrl.current().path.modifier) {
             this.activateAppDetailPanel();
         }
         else {
-            new WebPage(this.defaultClient.Apps.Index.getUrl({})).open();
+            new WebPage(this.hubClient.Apps.Index.getUrl({})).open();
         }
     }
 
@@ -36,13 +35,13 @@ class MainPage extends HubPage {
         this.appDetailPanel.refresh();
         const result = await this.appDetailPanel.start();
         if (result.backRequested) {
-            this.defaultClient.Apps.Index.open({});
+            this.hubClient.Apps.Index.open({});
         }
         else if (result.resourceGroupSelected) {
-            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.id);
         }
         else if (result.modCategorySelected) {
-            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.id);
         }
     }
 
@@ -57,10 +56,10 @@ class MainPage extends HubPage {
             this.activateAppDetailPanel();
         }
         else if (result.resourceSelected) {
-            this.activateResourcePanel(result.resourceSelected.resource.ID);
+            this.activateResourcePanel(result.resourceSelected.resource.id);
         }
         else if (result.modCategorySelected) {
-            this.activateModCategoryPanel(result.modCategorySelected.modCategory.ID);
+            this.activateModCategoryPanel(result.modCategorySelected.modCategory.id);
         }
     }
 
@@ -85,8 +84,8 @@ class MainPage extends HubPage {
             this.activateAppDetailPanel();
         }
         else if (result.resourceGroupSelected) {
-            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.ID);
+            this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.id);
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

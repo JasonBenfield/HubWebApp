@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using XTI_Admin;
 using XTI_AdminTool;
 using XTI_App.Abstractions;
+using XTI_App.Api;
+using XTI_App.Extensions;
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
@@ -30,7 +32,7 @@ using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_TempLog.Extensions;
 using XTI_WebAppClient;
-
+              
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
     (
@@ -55,14 +57,17 @@ await Host.CreateDefaultBuilder(args)
             });
             services.AddScoped(sp => sp.GetRequiredService<XtiEnvironmentAccessor>().Environment);
             services.AddScoped<XtiFolder>();
-            services.AddScoped<IXtiConfiguration>(sp =>
-            {
-                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                var configuration = new ConfigurationBuilder()
-                    .UseXtiConfiguration(xtiEnv, "", "", args)
-                    .Build();
-                return new XtiConfiguration(configuration);
-            });
+            services.AddKeyedScoped<IConfiguration>
+            (
+                "XTI",
+                (sp, key) =>
+                {
+                    var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
+                    return new ConfigurationBuilder()
+                        .UseXtiConfiguration(xtiEnv, "", "", args)
+                        .Build();
+                }
+            );
             services.AddXtiDataProtection();
             services.AddScoped<ISecretCredentialsFactory>(sp =>
             {
@@ -81,19 +86,21 @@ await Host.CreateDefaultBuilder(args)
             services.AddHttpClient();
             services.AddSingleton<Scopes>();
             services.AddSingleton<IClock, UtcClock>();
-            services.AddHubDbContextForSqlServer();
+            services.AddHubDbContextForSqlServer(ServiceLifetime.Scoped);
+            services.AddConfigurationOptions<AdminToolOptions>();
             services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(DbOptions.DB).Get<DbOptions>() ?? new DbOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminToolOptions>()?.DB ?? new DbOptions();
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
+            services.AddSingleton<IAppClientRequestKey, EmptyAppClientRequestKey>();
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.Get<AdminOptions>() ?? new AdminOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminOptions>() ?? new AdminOptions();
             });
             var slnDir = Environment.CurrentDirectory;
             services.AddScoped(sp => new GitRepoInfo(sp.GetRequiredService<AdminOptions>(), slnDir));
@@ -112,8 +119,7 @@ await Host.CreateDefaultBuilder(args)
             (
                 sp => sp.GetRequiredService<IXtiGitFactory>().CreateRepository(slnDir)
             );
-            services.AddScoped(sp => new SlnFolder(sp.GetRequiredService<XtiEnvironment>(), slnDir));
-            services.AddScoped<InstallOptionsAccessor>();
+            services.AddScoped(sp => new SlnFolder(slnDir));
             services.AddScoped<SelectedAppKeys>();
             services.AddScoped<ITempLogs>(sp =>
             {
@@ -136,28 +142,7 @@ await Host.CreateDefaultBuilder(args)
                 var appVersionNameAccessor = sp.GetRequiredService<AppVersionNameAccessor>();
                 return new PublishedFolder(xtiFolder, xtiEnv, appVersionNameAccessor);
             });
-            services.AddScoped<FolderPublishedAssets>();
-            services.AddScoped<GitHubPublishedAssets>();
-            services.AddTransient(sp =>
-            {
-                var options = sp.GetRequiredService<AdminOptions>();
-                var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                var installationSource = options.GetInstallationSource(xtiEnv);
-                IPublishedAssets publishedAssets;
-                if (installationSource == InstallationSources.Folder)
-                {
-                    publishedAssets = sp.GetRequiredService<FolderPublishedAssets>();
-                }
-                else if (installationSource == InstallationSources.GitHub)
-                {
-                    publishedAssets = sp.GetRequiredService<GitHubPublishedAssets>();
-                }
-                else
-                {
-                    throw new NotSupportedException($"Installation Source {installationSource} is not supported");
-                }
-                return publishedAssets;
-            });
+            services.AddScoped<PublishedAssetsFactory>();
             services.AddHubClientServices();
             services.AddSingleton(sp =>
             {
@@ -167,7 +152,7 @@ await Host.CreateDefaultBuilder(args)
                     ? HubAppClientVersion.Version(AppVersionKey.Current.DisplayText)
                     : HubAppClientVersion.Version(options.HubAppVersionKey);
             });
-            var existingTokenAccessor = services.FirstOrDefault(s => s.ImplementationType == typeof(XtiTokenAccessor));
+            var existingTokenAccessor = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(XtiTokenAccessor));
             if (existingTokenAccessor != null)
             {
                 services.Remove(existingTokenAccessor);
@@ -178,11 +163,12 @@ await Host.CreateDefaultBuilder(args)
                 {
                     var cache = sp.GetRequiredService<IMemoryCache>();
                     var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                    var xtiTokenAccessor = new XtiTokenAccessor(cache, xtiEnv.EnvironmentName);
-                    xtiTokenAccessor.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
-                    xtiTokenAccessor.UseToken<InstallationUserXtiToken>();
-                    xtiTokenAccessor.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
-                    return xtiTokenAccessor;
+                    var xtiTokenAccessorFactory = new XtiTokenAccessorFactory(cache);
+                    xtiTokenAccessorFactory.SetDefaultIdentifier(xtiEnv.EnvironmentName);
+                    xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
+                    xtiTokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
+                    xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
+                    return xtiTokenAccessorFactory;
                 }
             );
             services.AddScoped<IAdminTokenAccessor, AdminTokenAccessor>();
@@ -199,8 +185,8 @@ await Host.CreateDefaultBuilder(args)
             );
             services.AddScoped(sp =>
             {
-                var config = sp.GetRequiredService<IXtiConfiguration>();
-                return config.Source.GetSection(HubClientOptions.HubClient).Get<HubClientOptions>() ?? new HubClientOptions();
+                var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
+                return config.Get<AdminToolOptions>()?.HubClient ?? new HubClientOptions();
             });
             services.AddScoped<InstallationUserCredentials>();
             services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
@@ -273,6 +259,27 @@ await Host.CreateDefaultBuilder(args)
                 }
             );
             services.AddScoped<StoredObjectFactory>();
+            services.AddScoped<RemoteCommandService>();
+            services.AddScoped
+            (
+                sp => new ProductionHubAdmin
+                (
+                    sp.GetRequiredService<Scopes>().Production().GetRequiredService<IHubAdministration>()
+                )
+            );
+            services.AddScoped<CurrentVersion>();
+            services.AddScoped<VersionKeyFromCurrentBranch>();
+            services.AddScoped<PublishLibProcess>();
+            services.AddScoped<InstallWebAppProcess>();
+            services.AddScoped<InstallServiceAppProcess>();
+            services.AddScoped<LocalInstallProcess>();
+            services.AddScoped<InstallProcess>();
+            services.AddScoped<BranchVersion>();
+            services.AddScoped<BuildProcess>();
+            services.AddScoped<PublishProcess>();
+            services.AddScoped<PublishSetupProcess>();
+            services.AddScoped<BeginPublishProcess>();
+            services.AddScoped<CompleteVersionProcess>();
             services.AddSingleton<CommandFactory>();
             services.AddHostedService<HostedService>();
         }

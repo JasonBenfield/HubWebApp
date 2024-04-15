@@ -16,6 +16,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         UserAuthenticators = new EfDataRepository<UserAuthenticatorEntity>(this);
         Sessions = new EfDataRepository<AppSessionEntity>(this);
         Requests = new EfDataRepository<AppRequestEntity>(this);
+        SourceRequests = new EfDataRepository<SourceRequestEntity>(this);
         LogEntries = new EfDataRepository<LogEntryEntity>(this);
         SourceLogEntries = new EfDataRepository<SourceLogEntryEntity>(this);
         Apps = new EfDataRepository<AppEntity>(this);
@@ -29,6 +30,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         ResourceRoles = new EfDataRepository<ResourceRoleEntity>(this);
         ModifierCategories = new EfDataRepository<ModifierCategoryEntity>(this);
         Modifiers = new EfDataRepository<ModifierEntity>(this);
+        InstallConfigurations = new EfDataRepository<InstallConfigurationEntity>(this);
+        InstallConfigurationTemplates = new EfDataRepository<InstallConfigurationTemplateEntity>(this);
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
         StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
@@ -36,6 +39,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         ExpandedRequests = new EfDataRepository<ExpandedRequest>(this);
         ExpandedLogEntries = new EfDataRepository<ExpandedLogEntry>(this);
         ExpandedInstallations = new EfDataRepository<ExpandedInstallation>(this);
+        ExpandedUserRoles = new EfDataRepository<ExpandedUserRole>(this);
         unitOfWork = new UnitOfWork(this);
     }
 
@@ -47,6 +51,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new AppUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppRequestEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SourceRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new LogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SourceLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new AppEntityConfiguration());
@@ -60,6 +65,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new ResourceRoleEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ModifierCategoryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ModifierEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InstallConfigurationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InstallConfigurationTemplateEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
@@ -67,6 +74,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
         modelBuilder.ApplyConfiguration(new ExpandedRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedInstallationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedUserRoleEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 
@@ -76,6 +84,7 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     public DataRepository<AppSessionEntity> Sessions { get; }
     public DataRepository<AppRequestEntity> Requests { get; }
+    public DataRepository<SourceRequestEntity> SourceRequests { get; }
     public DataRepository<LogEntryEntity> LogEntries { get; }
     public DataRepository<SourceLogEntryEntity> SourceLogEntries { get; }
     public DataRepository<AppEntity> Apps { get; }
@@ -89,6 +98,8 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ResourceRoleEntity> ResourceRoles { get; }
     public DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     public DataRepository<ModifierEntity> Modifiers { get; }
+    public DataRepository<InstallConfigurationEntity> InstallConfigurations { get; }
+    public DataRepository<InstallConfigurationTemplateEntity> InstallConfigurationTemplates { get; }
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
     public DataRepository<StoredObjectEntity> StoredObjects { get; }
@@ -96,10 +107,13 @@ public sealed class HubDbContext : DbContext, IHubDbContext
     public DataRepository<ExpandedRequest> ExpandedRequests { get; }
     public DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
     public DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
+    public DataRepository<ExpandedUserRole> ExpandedUserRoles { get; }
 
     public Task Transaction(Func<Task> action) => unitOfWork.Execute(action);
 
     public Task<TResult> Transaction<TResult>(Func<Task<TResult>> action) => unitOfWork.Execute(action);
+
+    public void SetTimeout(TimeSpan timeout) => Database.SetCommandTimeout(timeout);
 
     public void ClearCache() => ChangeTracker.Clear();
 }

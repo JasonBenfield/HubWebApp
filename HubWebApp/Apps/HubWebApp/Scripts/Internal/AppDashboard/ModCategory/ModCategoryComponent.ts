@@ -3,6 +3,7 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
 
 export class ModCategoryComponent {
     private modCategoryID: number;
@@ -23,8 +24,9 @@ export class ModCategoryComponent {
     }
 
     async refresh() {
-        const modCategory = await this.getModCategory(this.modCategoryID);
-        this.modCategoryName.setText(modCategory.Name.DisplayText);
+        const sourceModCategory = await this.getModCategory(this.modCategoryID);
+        const modCategory = new ModifierCategory(sourceModCategory);
+        this.modCategoryName.setText(modCategory.name.displayText);
     }
 
     private getModCategory(modCategoryID: number) {

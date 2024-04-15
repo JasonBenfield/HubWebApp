@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net7.0</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.40-dev231104221906776" />
-    <PackageReference Include="XTI_ODataQuery.Api" Version="1.8.40-dev231104221906776" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.8.40-dev231104221906776" />
+    <PackageReference Include="XTI_App.Extensions" Version="1.8.40" />
+    <PackageReference Include="XTI_ODataQuery.Api" Version="1.8.40" />
+    <PackageReference Include="XTI_WebApp.Api" Version="1.8.40" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@ public interface IHubDbContext
     DataRepository<ModifierCategoryEntity> ModifierCategories { get; }
     DataRepository<ModifierEntity> Modifiers { get; }
     DataRepository<AppRequestEntity> Requests { get; }
+    DataRepository<SourceRequestEntity> SourceRequests { get; }
     DataRepository<ResourceGroupRoleEntity> ResourceGroupRoles { get; }
     DataRepository<ResourceGroupEntity> ResourceGroups { get; }
     DataRepository<ResourceRoleEntity> ResourceRoles { get; }
@@ -23,6 +24,8 @@ public interface IHubDbContext
     DataRepository<UserAuthenticatorEntity> UserAuthenticators { get; }
     DataRepository<XtiVersionEntity> Versions { get; }
     DataRepository<AppXtiVersionEntity> AppVersions { get; }
+    DataRepository<InstallConfigurationEntity> InstallConfigurations { get; }
+    DataRepository<InstallConfigurationTemplateEntity> InstallConfigurationTemplates { get; }
     DataRepository<InstallLocationEntity> InstallLocations { get; }
     DataRepository<InstallationEntity> Installations { get; }
     DataRepository<StoredObjectEntity> StoredObjects { get; }
@@ -30,7 +33,9 @@ public interface IHubDbContext
     DataRepository<ExpandedRequest> ExpandedRequests { get; }
     DataRepository<ExpandedLogEntry> ExpandedLogEntries { get; }
     DataRepository<ExpandedInstallation> ExpandedInstallations { get; }
+    DataRepository<ExpandedUserRole> ExpandedUserRoles { get; }
     Task Transaction(Func<Task> action);
     Task<TResult> Transaction<TResult>(Func<Task<TResult>> action);
+    public void SetTimeout(TimeSpan timeout);
     void ClearCache();
 }

@@ -2,7 +2,7 @@
 
 namespace XTI_Admin;
 
-internal sealed record AdminInstallOptions
+public sealed record AdminInstallOptions
 (
     AppKey AppKey,
     AppVersionKey VersionKey,
@@ -13,11 +13,13 @@ internal sealed record AdminInstallOptions
     int VersionInstallationID,
     string InstallerUserName,
     string InstallerPassword,
-    InstallationOptions Options
+    string DestinationMachineName,
+    string Domain,
+    string SiteName
 )
 {
     public AdminInstallOptions()
-        : this(AppKey.Unknown, AppVersionKey.None, "", "", "", 0, 0, "", "", new InstallationOptions())
+        : this(AppKey.Unknown, AppVersionKey.None, "", "", "", 0, 0, "", "", "", "", "")
     {
     }
 }

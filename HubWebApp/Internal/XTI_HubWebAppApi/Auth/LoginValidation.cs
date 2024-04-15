@@ -2,17 +2,17 @@
 
 namespace XTI_HubWebAppApi.Auth;
 
-public sealed class LoginValidation : AppActionValidation<LoginCredentials>
+public sealed class LoginValidation : AppActionValidation<AuthenticatedLoginRequest>
 {
-    public Task Validate(ErrorList errors, LoginCredentials model, CancellationToken stoppingToken)
+    public Task Validate(ErrorList errors, AuthenticatedLoginRequest model, CancellationToken stoppingToken)
     {
-        if (string.IsNullOrWhiteSpace(model.UserName))
+        if (string.IsNullOrWhiteSpace(model.AuthKey))
         {
-            errors.Add(AuthErrors.UserNameIsRequired, "User Name", nameof(model.UserName));
+            errors.Add("Auth Key is Required");
         }
-        if (string.IsNullOrWhiteSpace(model.Password))
+        if (string.IsNullOrWhiteSpace(model.AuthID))
         {
-            errors.Add(AuthErrors.PasswordIsRequired, "Password", nameof(model.Password));
+            errors.Add("Auth ID is Required");
         }
         return Task.CompletedTask;
     }

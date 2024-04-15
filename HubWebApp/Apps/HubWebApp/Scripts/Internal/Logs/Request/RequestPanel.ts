@@ -3,10 +3,10 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
-import { FormattedDate } from "@jasonbenfield/sharedwebapp/FormattedDate";
-import { TextValueFormGroup } from "@jasonbenfield/sharedwebapp/Forms/TextValueFormGroup";
-import { TimeSpan } from "@jasonbenfield/sharedwebapp/TimeSpan";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { AppRequestDetail } from "../../../Lib/AppRequestDetail";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { FormattedTimeRange } from "../../../lib/FormattedTimeRange";
 import { RequestPanelView } from "./RequestPanelView";
 
 interface IResult {
@@ -24,26 +24,38 @@ class Result {
 export class RequestPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly appKey: TextValueFormGroup;
-    private readonly versionKey: TextComponent;
-    private readonly versionStatus: TextComponent;
-    private readonly userName: TextValueFormGroup;
-    private readonly currentInstallation: TextValueFormGroup;
-    private readonly timeRange: TextValueFormGroup;
-    private readonly path: TextValueFormGroup;
+    private readonly appKeyFormGroup: FormGroupText;
+    private readonly versionKeyTextComponent: TextComponent;
+    private readonly versionStatusTextComponent: TextComponent;
+    private readonly userNameFormGroup: FormGroupText;
+    private readonly userAgentFormGroup: FormGroupText;
+    private readonly remoteAddressFormGroup: FormGroupText;
+    private readonly currentInstallationFormGroup: FormGroupText;
+    private readonly timeRangeFormGroup: FormGroupText;
+    private readonly pathFormGroup: FormGroupText;
+    private readonly sourceRequestLink: TextLinkComponent;
+    private readonly targetRequestLink: TextLinkComponent;
+    private readonly sessionLink: TextLinkComponent;
     private readonly installationLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private requestID: number;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: RequestPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.appKey = new TextValueFormGroup(view.appKey);
-        this.versionKey = new TextComponent(view.versionKey);
-        this.versionStatus = new TextComponent(view.versionStatus);
-        this.userName = new TextValueFormGroup(view.userName);
-        this.currentInstallation = new TextValueFormGroup(view.currentInstallation);
-        this.timeRange = new TextValueFormGroup(view.timeRange);
-        this.path = new TextValueFormGroup(view.path);
+        this.appKeyFormGroup = new FormGroupText(view.appKeyFormGroupView);
+        this.versionKeyTextComponent = new TextComponent(view.versionKeyFormGroupView);
+        this.versionStatusTextComponent = new TextComponent(view.versionStatusFormGroupView);
+        this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
+        this.userAgentFormGroup = new FormGroupText(view.userAgentFormGroupView);
+        this.userAgentFormGroup.setCaption('User Agent');
+        this.remoteAddressFormGroup = new FormGroupText(view.remoteAddressFormGroupView);
+        this.remoteAddressFormGroup.setCaption('Remote Address');
+        this.currentInstallationFormGroup = new FormGroupText(view.currentInstallationFormGroupView);
+        this.timeRangeFormGroup = new FormGroupText(view.timeRangeFormGroupView);
+        this.pathFormGroup = new FormGroupText(view.pathFormGroupView);
+        this.sourceRequestLink = new TextLinkComponent(view.sourceRequestLink);
+        this.targetRequestLink = new TextLinkComponent(view.targetRequestLink);
+        this.sessionLink = new TextLinkComponent(view.sessionLink);
         this.installationLink = new TextLinkComponent(view.installationLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         new Command(this.menu.bind(this)).add(view.menuButton);
@@ -56,44 +68,53 @@ export class RequestPanel implements IPanel {
     }
 
     async refresh() {
-        const detail = await this.alert.infoAction(
+        this.sourceRequestLink.hide();
+        this.targetRequestLink.hide();
+        this.userAgentFormGroup.hide();
+        this.remoteAddressFormGroup.hide();
+        const sourceDetail = await this.alert.infoAction(
             'Loading...',
             () => this.hubClient.Logs.GetRequestDetail(this.requestID)
         );
-        this.appKey.setValue(
-            detail.App.AppKey.Name.DisplayText + ' ' + detail.App.AppKey.Type.DisplayText
-        );
-        this.versionKey.setText(detail.Version.VersionKey.DisplayText);
-        this.versionStatus.setText(`[ ${detail.Version.Status.DisplayText} ]`);
-        this.userName.setValue(detail.User.UserName.DisplayText);
-        if (detail.Installation.IsCurrent) {
-            this.currentInstallation.setValue('Current');
+        const detail = new AppRequestDetail(sourceDetail);
+        this.appKeyFormGroup.setValue(detail.app.appKey.format());
+        this.versionKeyTextComponent.setText(detail.version.versionKey.displayText);
+        this.versionStatusTextComponent.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.userNameFormGroup.setValue(detail.user.userName.displayText);
+        if (detail.installation.isCurrent) {
+            this.currentInstallationFormGroup.setValue('Current');
             this.view.showCurrentInstallation();
         }
         else {
             this.view.hideCurrentInstallation();
         }
-        let timeRange: string;
-        const timeStarted = new FormattedDate(detail.Request.TimeStarted).formatDateTime();
-        if (detail.Request.TimeEnded.getFullYear() === 9999) {
-            timeRange = `${timeStarted} to ???`;
+        this.userAgentFormGroup.setValue(detail.session.userAgent);
+        this.userAgentFormGroup.setTitle(detail.session.rawUserAgent);
+        if (detail.session.userAgent) {
+            this.userAgentFormGroup.show();
         }
-        else {
-            let timeEnded: string;
-            const dateStarted = new Date(detail.Request.TimeStarted.getFullYear(), detail.Request.TimeStarted.getMonth(), detail.Request.TimeStarted.getDate());
-            const dateEnded = new Date(detail.Request.TimeEnded.getFullYear(), detail.Request.TimeEnded.getMonth(), detail.Request.TimeEnded.getDate());
-            if (dateStarted.getTime() === dateEnded.getTime()) {
-                timeEnded = new FormattedDate(detail.Request.TimeEnded).formatTime();
-            }
-            else {
-                timeEnded =  new FormattedDate(detail.Request.TimeEnded).formatDateTime();
-            }
-            const ts = TimeSpan.dateDiff(detail.Request.TimeEnded, detail.Request.TimeStarted);
-            timeRange = `${timeStarted} to ${timeEnded} [ ${ts} ]`;
+        this.remoteAddressFormGroup.setValue(detail.session.remoteAddress);
+        if (detail.session.remoteAddress) {
+            this.remoteAddressFormGroup.show();
         }
-        this.timeRange.setValue(timeRange);
-        this.path.setValue(detail.Request.Path);
-        this.installationLink.setHref(this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.Installation.ID }));
+        this.timeRangeFormGroup.setValue(new FormattedTimeRange(detail.request.timeStarted, detail.request.timeEnded).format());
+        this.pathFormGroup.setValue(detail.request.path);
+        this.sessionLink.setHref(this.hubClient.Logs.Session.getUrl({ SessionID: detail.session.id }));
+        if (detail.sourceRequestID) {
+            this.sourceRequestLink.setHref(this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.sourceRequestID }));
+            this.sourceRequestLink.show();
+        }
+        if (detail.targetRequestIDs.length > 0) {
+            this.targetRequestLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
+                SessionID: null,
+                InstallationID: null,
+                SourceRequestID: detail.request.id
+            }));
+            this.targetRequestLink.show();
+        }
+        this.installationLink.setHref(
+            this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.installation.id })
+        );
         this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: this.requestID, InstallationID: null }));
     }
 

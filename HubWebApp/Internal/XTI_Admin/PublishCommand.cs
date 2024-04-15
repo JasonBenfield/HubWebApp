@@ -2,19 +2,23 @@
 
 internal sealed class PublishCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly SlnFolder slnFolder;
+    private readonly BuildProcess buildProcess;
+    private readonly PublishProcess publishProcess;
 
-    public PublishCommand(Scopes scopes)
+    public PublishCommand(SlnFolder slnFolder, BuildProcess buildProcess, PublishProcess publishProcess)
     {
-        this.scopes = scopes;
+        this.slnFolder = slnFolder;
+        this.buildProcess = buildProcess;
+        this.publishProcess = publishProcess;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var appKeys = scopes.GetRequiredService<SlnFolder>().AppKeys();
+        var appKeys = slnFolder.AppKeys();
         var joinedAppKeys = string.Join(",", appKeys.Select(a => a.Serialize()));
         Console.WriteLine($"App Keys: {joinedAppKeys}");
-        await new BuildProcess(scopes).Run();
-        await new PublishProcess(scopes).Run();
+        await buildProcess.Run(ct);
+        await publishProcess.Run(ct);
     }
 }

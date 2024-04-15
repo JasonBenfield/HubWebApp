@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApi.AppPublish;
 
-public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionModel>
+internal sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionModel>
 {
     private readonly IHubAdministration hubAdministration;
 
@@ -9,13 +9,11 @@ public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionMo
         this.hubAdministration = hubAdministration;
     }
 
-    public async Task<XtiVersionModel> Execute(NewVersionRequest model, CancellationToken stoppingToken)
-    {
-        var version = await hubAdministration.StartNewVersion
+    public Task<XtiVersionModel> Execute(NewVersionRequest newVersionRequest, CancellationToken stoppingToken) =>
+        hubAdministration.StartNewVersion
         (
-            model.VersionName,
-            model.VersionType
+            newVersionRequest.ToAppVersionName(),
+            newVersionRequest.ToAppVersionType(),
+            stoppingToken
         );
-        return version;
-    }
 }

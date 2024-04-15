@@ -8,27 +8,30 @@ namespace XTI_Admin;
 
 internal sealed class AddSystemUserCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly SelectedAppKeys selectedAppKeys;
+    private readonly IHubAdministration hubAdmin;
+    private readonly ISecretCredentialsFactory secretCredentialsFactory;
+    private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public AddSystemUserCommand(Scopes scopes)
+    public AddSystemUserCommand(SelectedAppKeys selectedAppKeys, IHubAdministration hubAdmin, ISecretCredentialsFactory secretCredentialsFactory, AppVersionNameAccessor versionNameAccessor)
     {
-        this.scopes = scopes;
+        this.selectedAppKeys = selectedAppKeys;
+        this.hubAdmin = hubAdmin;
+        this.secretCredentialsFactory = secretCredentialsFactory;
+        this.versionNameAccessor = versionNameAccessor;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var selectedAppKeys = scopes.GetRequiredService<SelectedAppKeys>();
-        var appKeys = selectedAppKeys.Values.Where(a => !a.Type.Equals(AppType.Values.Package));
-        var hubAdmin = scopes.GetRequiredService<IHubAdministration>();
-        var options = scopes.GetRequiredService<AdminOptions>();
-        var secretCredentialsFactory = scopes.GetRequiredService<ISecretCredentialsFactory>();
-        var versionName = scopes.GetRequiredService<AppVersionNameAccessor>().Value;
-        var appDefs = appKeys.Select(ak => new AppDefinitionModel(ak)).ToArray();
-        await hubAdmin.AddOrUpdateApps(versionName, appDefs);
+        var appKeys = selectedAppKeys.Values
+            .Where(a => !a.Type.Equals(AppType.Values.Package))
+            .ToArray();
+        var versionName = versionNameAccessor.Value;
+        await hubAdmin.AddOrUpdateApps(versionName, appKeys, ct);
         foreach (var appKey in appKeys)
         {
             var password = Guid.NewGuid().ToString();
-            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password);
+            var systemUser = await hubAdmin.AddOrUpdateSystemUser(appKey, Environment.MachineName, password, ct);
             var systemUserCredentials = new SystemUserCredentials(secretCredentialsFactory, appKey);
             await systemUserCredentials.Update(new CredentialValue(systemUser.UserName.Value, password));
         }

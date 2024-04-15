@@ -6,20 +6,21 @@ namespace XTI_Admin;
 
 internal sealed class NewIssueCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly AdminOptions options;
+    private readonly IXtiGitRepository gitRepo;
+    private readonly XtiGitHubRepository gitHubRepo;
 
-    public NewIssueCommand(Scopes scopes)
+    public NewIssueCommand(AdminOptions options, IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo)
     {
-        this.scopes = scopes;
+        this.options = options;
+        this.gitRepo = gitRepo;
+        this.gitHubRepo = gitHubRepo;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var options = scopes.GetRequiredService<AdminOptions>();
         if (string.IsNullOrWhiteSpace(options.IssueTitle)) { throw new ArgumentException("Issue Title is required"); }
-        var gitRepo = scopes.GetRequiredService<IXtiGitRepository>();
         var currentBranchName = gitRepo.CurrentBranchName();
-        var gitHubRepo = scopes.GetRequiredService<XtiGitHubRepository>();
         XtiGitVersion xtiGitVersion;
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if (xtiBranchName is XtiIssueBranchName issueBranchName)

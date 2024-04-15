@@ -7,4 +7,6 @@ public sealed class StoredObjectEntity
     public string StorageKey { get; set; } = "";
     public string Data { get; set; } = "";
     public DateTimeOffset TimeExpires { get; set; } = DateTimeOffset.MaxValue;
+    public bool IsSingleUse { get; set; }
+    public string ExpirationTimeSpan { get; set; } = "";
 }

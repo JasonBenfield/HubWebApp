@@ -25,7 +25,7 @@ export class UserAuthenticatorListCard extends BasicComponent {
     async refresh() {
         const userAuthenticators = await this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.UserInquiry.GetUserAuthenticators(this.userID)
+            () => this.hubClient.UserInquiry.GetUserAuthenticators({ UserID: this.userID })
         );
         this.userAuthenticators.setItems(
             userAuthenticators,

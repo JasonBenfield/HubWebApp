@@ -1,5 +1,6 @@
 // Generated code
 
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { AppClientGroup } from "@jasonbenfield/sharedwebapp/Http/AppClientGroup";
 import { AppClientAction } from "@jasonbenfield/sharedwebapp/Http/AppClientAction";
 import { AppClientView } from "@jasonbenfield/sharedwebapp/Http/AppClientView";
@@ -10,18 +11,23 @@ export class AppUserGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUser');
 		this.Index = this.createView<IGetAppUserRequest>('Index');
-		this.GetUserAccessAction = this.createAction<IUserModifierKey,IUserAccessModel>('GetUserAccess', 'Get User Access');
-		this.GetUnassignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetUnassignedRoles', 'Get Unassigned Roles');
+		this.GetExplicitUserAccessAction = this.createAction<IUserModifierKey,IUserAccessModel>('GetExplicitUserAccess', 'Get Explicit User Access');
+		this.GetAssignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetAssignedRoles', 'Get Assigned Roles');
+		this.GetExplicitlyUnassignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetExplicitlyUnassignedRoles', 'Get Explicitly Unassigned Roles');
 	}
 	
 	readonly Index: AppClientView<IGetAppUserRequest>;
-	readonly GetUserAccessAction: AppClientAction<IUserModifierKey,IUserAccessModel>;
-	readonly GetUnassignedRolesAction: AppClientAction<IUserModifierKey,IAppRoleModel[]>;
+	readonly GetExplicitUserAccessAction: AppClientAction<IUserModifierKey,IUserAccessModel>;
+	readonly GetAssignedRolesAction: AppClientAction<IUserModifierKey,IAppRoleModel[]>;
+	readonly GetExplicitlyUnassignedRolesAction: AppClientAction<IUserModifierKey,IAppRoleModel[]>;
 	
-	GetUserAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.GetUserAccessAction.execute(model, errorOptions || {});
+	GetExplicitUserAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetExplicitUserAccessAction.execute(model, errorOptions || {});
 	}
-	GetUnassignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.GetUnassignedRolesAction.execute(model, errorOptions || {});
+	GetAssignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetAssignedRolesAction.execute(model, errorOptions || {});
+	}
+	GetExplicitlyUnassignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetExplicitlyUnassignedRolesAction.execute(model, errorOptions || {});
 	}
 }

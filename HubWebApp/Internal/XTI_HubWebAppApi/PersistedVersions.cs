@@ -17,7 +17,7 @@ public sealed class PersistedVersions
 
     public async Task Store()
     {
-        var versions = await hubApi.Publish.GetVersions.Invoke(appKey);
+        var versions = await hubApi.Publish.GetVersions.Invoke(new AppKeyRequest(appKey));
         var serialized = JsonSerializer.Serialize
         (
             versions,

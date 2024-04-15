@@ -2,12 +2,15 @@
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { AppUserGroup } from "../../Lib/AppUserGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
@@ -37,7 +40,7 @@ export class UserQueryPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedUser>;
-    private readonly userQueryModel: IUserGroupKey = { UserGroupName: '' };
+    private readonly queryArgs = { args: <IUserGroupKey>{ UserGroupName: '' } };
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserQueryPanelView) {
         this.alert = new MessageAlert(this.view.alert);
@@ -49,8 +52,8 @@ export class UserQueryPanel implements IPanel {
         columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? 'Yes' : 'No' });
         const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
-                new UserDataRow(rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: LinkGridRowView) =>
+                new UserDataRow(hubClient, rowIndex, columns, record, view)
         );
         options.query.select.addFields(
             columns.UserName,
@@ -58,19 +61,37 @@ export class UserQueryPanel implements IPanel {
             columns.Email
         );
         options.saveChanges();
-        options.setODataClient(
-            new ApiODataClient(this.hubClient.UserQuery, this.userQueryModel)
-        );
+        options.setDefaultODataClient(this.hubClient.UserQuery, this.queryArgs);
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().query.getNumberValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(page);
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.addCommand = new Command(this.add.bind(this));
         this.addCommand.add(view.addButton);
         this.addCommand.hide();
     }
 
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
+    }
+
     setUserGroupName(userGroupName: string) {
-        this.userQueryModel.UserGroupName = userGroupName;
+        this.queryArgs.args.UserGroupName = userGroupName;
         if (userGroupName) {
             const canAdd = this.canAdd(userGroupName);
             if (canAdd) {
@@ -91,23 +112,17 @@ export class UserQueryPanel implements IPanel {
         });
         return permissions.canAdd;
     }
-
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const userID: number = eventArgs.record['UserID'];
-        let userGroupName: string = eventArgs.record['UserGroupName'];
-        userGroupName = userGroupName.replace(/\s+/g, '');
-        this.hubClient.Users.Index.open({ UserID: userID }, userGroupName);
-    }
-
+    
     async refresh() {
-        const userGroups = await this.getUserGroups();
+        const sourceUserGroups = await this.getUserGroups();
+        const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
         userGroups.splice(0, 0, null);
         this.userGroups.setItems(
             userGroups,
             (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
-                const listItemGroupName = ug ? ug.GroupName.DisplayText : '';
-                if (this.userQueryModel.UserGroupName === listItemGroupName) {
+                const listItemGroupName = ug ? ug.groupName.displayText : '';
+                if (this.queryArgs.args.UserGroupName === listItemGroupName) {
                     listItem.makeActive();
                 }
                 return listItem;

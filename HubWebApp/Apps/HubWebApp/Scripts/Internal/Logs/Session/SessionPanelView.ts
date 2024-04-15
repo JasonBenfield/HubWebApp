@@ -2,7 +2,8 @@
 import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
@@ -13,30 +14,30 @@ import { HubTheme } from "../../HubTheme";
 export class SessionPanelView extends GridView {
 
     readonly alert: MessageAlertView;
-    readonly timeRange: FormGroupTextView;
-    readonly userName: FormGroupTextView;
-    readonly remoteAddress: FormGroupTextView;
-    readonly userAgent: FormGroupTextView;
+    readonly timeRangeTextView: FormGroupTextView;
+    readonly userNameFormGroupView: FormGroupTextView;
+    readonly remoteAddressFormGroupView: FormGroupTextView;
+    readonly userAgentFormGroupView: FormGroupTextView;
     readonly userLink: TextLinkView;
     readonly requestsLink: TextLinkView;
     readonly menuButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
-        const gridContainer = mainContent.addView(FormGroupGridView);
-        this.timeRange = gridContainer.addFormGroup(FormGroupTextView);
-        this.timeRange.caption.setText('Time Range');
-        this.userName = gridContainer.addFormGroup(FormGroupTextView);
-        this.userName.caption.setText('User Name');
-        this.remoteAddress = gridContainer.addFormGroup(FormGroupTextView);
-        this.remoteAddress.caption.setText('Remote Address');
-        this.userAgent = gridContainer.addFormGroup(FormGroupTextView);
-        this.userAgent.caption.setText('User Agent');
+        const gridContainer = mainContent.addView(FormGroupContainerView);
+        this.timeRangeTextView = gridContainer.addFormGroup(FormGroupTextView);
+        this.timeRangeTextView.caption.setText('Time Range');
+        this.userNameFormGroupView = gridContainer.addFormGroup(FormGroupTextView);
+        this.userNameFormGroupView.caption.setText('User Name');
+        this.remoteAddressFormGroupView = gridContainer.addFormGroup(FormGroupTextView);
+        this.remoteAddressFormGroupView.caption.setText('Remote Address');
+        this.userAgentFormGroupView = gridContainer.addFormGroup(FormGroupTextView);
+        this.userAgentFormGroupView.caption.setText('User Agent');
         const nav = mainContent.addView(NavView);
         nav.pills();
         nav.setFlexCss(new FlexCss().column());
@@ -51,12 +52,4 @@ export class SessionPanelView extends GridView {
             toolbar.columnStart.addView(ButtonCommandView)
         );
     }
-
-    showUserAgent() { this.userAgent.show(); }
-
-    hideUserAgent() { this.userAgent.hide(); }
-
-    showRemoteAddress() { this.remoteAddress.show(); }
-
-    hideRemoteAddress() { this.remoteAddress.hide(); }
 }

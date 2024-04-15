@@ -1,17 +1,24 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Core;
 
 namespace XTI_Admin;
 
-internal sealed class InstallDefaultAppProcess :  InstallAppProcess
+public sealed class InstallDefaultAppProcess :  InstallAppProcess
 {
-    private readonly Scopes scopes;
+    private readonly XtiFolder xtiFolder;
 
-    public InstallDefaultAppProcess(Scopes scopes)
+    public InstallDefaultAppProcess(XtiFolder xtiFolder)
     {
-        this.scopes = scopes;
+        this.xtiFolder = xtiFolder;
     }
 
     public Task Run(string publishedAppDir, AdminInstallOptions adminInstOptions, AppVersionKey installVersionKey)=>
-        new CopyToInstallDirProcess(scopes).Run(publishedAppDir, adminInstOptions.AppKey, installVersionKey, true);
+        new CopyToInstallDirProcess(xtiFolder).Run
+        (
+            publishedAppDir, 
+            adminInstOptions.AppKey, 
+            installVersionKey, 
+            true
+        );
 
 }

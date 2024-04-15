@@ -9,7 +9,7 @@
         $RepoName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
@@ -40,7 +40,7 @@ function Xti-Build {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [ValidateSet("Default", "DB", "HubClient")]
@@ -58,7 +58,7 @@ function Xti-Setup {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [ValidateSet("Default", "DB", "HubClient")]
@@ -78,7 +78,7 @@ function Xti-Install {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
@@ -111,7 +111,7 @@ function Xti-PublishLib {
         $EnvName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         $RepoOwner,
@@ -145,7 +145,7 @@ function Xti-AddSystemUser {
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $Domain = "",
@@ -168,7 +168,7 @@ function Xti-AddAdminUser {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $AppName = "",
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        [ValidateSet("", "WebApp", "WebService", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $CredentialKey = "",
@@ -192,9 +192,26 @@ function Xti-UploadTempLog {
     param (
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName
+        $EnvName,
+        $DestinationMachine = ""
     )
-    Xti-Admin -EnvName $EnvName -Command UploadTempLog
+    Xti-Admin -EnvName $EnvName -Command UploadTempLog -DestinationMachine "`"$($DestinationMachine)`""
+}
+
+function Xti-RestartApp {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        $AppType = "",
+        $VersionKey = "",
+        $DestinationMachine = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command RestartApp -DestinationMachine "`"$($DestinationMachine)`"" -AppName "`"$($AppName)`"" -AppType $AppType -VersionKey "`"$($VersionKey)`""
 }
 
 function Xti-StoreCredentials {
@@ -207,9 +224,10 @@ function Xti-StoreCredentials {
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
 		$UserName = "",
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-		$Password = ""
+		$Password = "",
+        $DestinationMachine = ""
     )
-    Xti-Admin -EnvName $EnvName -Command StoreCredentials -CredentialKey "`"$($CredentialKey)`"" -UserName "`"$($UserName)`"" -Password "`"$($Password)`""
+    Xti-Admin -EnvName $EnvName -Command StoreCredentials -DestinationMachine "`"$($DestinationMachine)`"" -CredentialKey "`"$($CredentialKey)`"" -UserName "`"$($UserName)`"" -Password "`"$($Password)`""
 }
 
 function Xti-ShowCredentials {
@@ -223,17 +241,75 @@ function Xti-ShowCredentials {
     Xti-Admin -EnvName $EnvName -Command ShowCredentials -CredentialKey "`"$($CredentialKey)`""
 }
 
+function Xti-ConfigureInstallTemplate {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$TemplateName = "",
+		$DestinationMachine = "",
+		$Domain = "",
+        $SiteName = "",
+        [ValidateSet("Default", "DB", "HubClient")]
+        $HubAdministrationType = "Default"
+    )
+    Xti-Admin -EnvName $EnvName -Command ConfigureInstallTemplate -InstallTemplateName "`"$($TemplateName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType
+}
+
+function Xti-ConfigureInstall {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        $AppType = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+		$TemplateName = "",
+        $InstallSequence = 0,
+        [ValidateSet("Default", "DB", "HubClient")]
+        $HubAdministrationType = "Default",
+		$ConfigurationName = "",
+		$RepoOwner = "",
+		$RepoName = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command ConfigureInstall -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -InstallConfigurationName "`"$($ConfigurationName)`"" -AppName "`"$($AppName)`"" -AppType $AppType -InstallTemplateName "`"$($TemplateName)`"" -InstallSequence "`"$($InstallSequence)`"" -HubAdministrationType $HubAdministrationType
+}
+
+function Xti-DeleteInstallConfiguration {
+    param (
+        [ValidateSet("Production", "Development", "Staging", "Test")]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $EnvName,
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        $AppName = "",
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
+        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
+        $AppType = "",
+        [ValidateSet("Default", "DB", "HubClient")]
+        $HubAdministrationType = "Default",
+		$ConfigurationName = "",
+		$RepoOwner = "",
+		$RepoName = ""
+    )
+    Xti-Admin -EnvName $EnvName -Command DeleteInstallConfiguration -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -InstallConfigurationName "`"$($ConfigurationName)`"" -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType
+}
+
 function Xti-Admin {
     param (
         [ValidateSet("Production", “Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
-        [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials")]
+        [ValidateSet("PublishAndInstall", "Build", "Setup", "Publish", "PublishLib", "Install", "NewVersion", "NewIssue", "StartIssue", "CompleteIssue", "AddInstallationUser", "AddSystemUser", "AddAdminUser", "DecryptTempLog", "UploadTempLog", "ShowCredentials", "StoreCredentials", "RestartApp", "ConfigureInstallTemplate", "ConfigureInstall", "DeleteInstallConfiguration")]
         [Parameter(Mandatory)]
         $Command,
         $AppName = "",
         [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         $AppType = "",
+        $VersionKey = "",
         $RepoOwner = "",
         $RepoName = "",
         $VersionNumber,
@@ -255,7 +331,10 @@ function Xti-Admin {
         $InstallationSource = "Default",
 		$CredentialKey = "",
 		$UserName = "",
-		$Password = ""
+		$Password = "",
+		$InstallTemplateName = "",
+		$InstallConfigurationName = "",
+		$InstallSequence = 0
     )
     $ErrorActionPreference = "Stop"
     $Args = @()
@@ -266,6 +345,9 @@ function Xti-Admin {
     }
     if(-not [string]::IsNullOrWhiteSpace($AppType)) {
         $Args += "--AppType $AppType"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($VersionKey) -and $VersionKey -ne "`"`"") {
+        $Args += "--VersionKey $VersionKey"
     }
     if(-not [string]::IsNullOrWhiteSpace($RepoOwner) -and $RepoOwner -ne "`"`"") {
         $Args += "--RepoOwner $RepoOwner"
@@ -323,6 +405,15 @@ function Xti-Admin {
     }
     if($StartIssue) {
         $Args += "--StartIssue true"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($InstallTemplateName) -and $InstallTemplateName -ne "`"`"") {
+        $Args += "--InstallTemplateName $InstallTemplateName"
+    }
+    if(-not [string]::IsNullOrWhiteSpace($InstallConfigurationName) -and $InstallConfigurationName -ne "`"`"") {
+        $Args += "--InstallConfigurationName $InstallConfigurationName"
+    }
+    if($InstallSequence -ne 0) {
+        $Args += "--InstallSequence $InstallSequence"
     }
     $ArgsText = $Args -join " "
     Write-Host "ArgsText: $ArgsText"

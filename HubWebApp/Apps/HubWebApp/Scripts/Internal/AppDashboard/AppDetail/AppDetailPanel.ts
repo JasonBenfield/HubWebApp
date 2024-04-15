@@ -9,11 +9,16 @@ import { ModifierCategoryListCard } from './ModifierCategoryListCard';
 import { MostRecentErrorEventListCard } from './MostRecentErrorEventListCard';
 import { MostRecentRequestListCard } from './MostRecentRequestListCard';
 import { ResourceGroupListCard } from './ResourceGroupListCard';
+import { ModifierCategory } from '../../../Lib/ModifierCategory';
+import { AppResourceGroup } from '../../../Lib/AppResourceGroup';
+import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
+import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
+import { CardAlert } from '@jasonbenfield/sharedwebapp/Components/CardAlert';
 
 interface IResult {
     backRequested?: {};
-    resourceGroupSelected?: { resourceGroup: IResourceGroupModel; };
-    modCategorySelected?: { modCategory: IModifierCategoryModel; };
+    resourceGroupSelected?: { resourceGroup: AppResourceGroup; };
+    modCategorySelected?: { modCategory: ModifierCategory; };
 }
 
 class Result {
@@ -21,13 +26,13 @@ class Result {
         return new Result({ backRequested: {} });
     }
 
-    static resourceGroupSelected(resourceGroup: IResourceGroupModel) {
+    static resourceGroupSelected(resourceGroup: AppResourceGroup) {
         return new Result({
             resourceGroupSelected: { resourceGroup: resourceGroup }
         });
     }
 
-    static modCategorySelected(modCategory: IModifierCategoryModel) {
+    static modCategorySelected(modCategory: ModifierCategory) {
         return new Result({
             modCategorySelected: { modCategory: modCategory }
         });
@@ -46,6 +51,10 @@ class Result {
 export class AppDetailPanel implements IPanel {
     private readonly app: AppComponent;
     private readonly currentVersion: CurrentVersionComponent;
+    private readonly appOptionsAlert: MessageAlert;
+    private readonly appOptionsTextComponent: TextComponent;
+    private readonly optionsAlert: MessageAlert;
+    private readonly optionsTextComponent: TextComponent;
     private readonly resourceGroupListCard: ResourceGroupListCard;
     private readonly modifierCategoryListCard: ModifierCategoryListCard;
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
@@ -56,23 +65,27 @@ export class AppDetailPanel implements IPanel {
     private readonly backCommand = new Command(this.back.bind(this));
 
     constructor(
-        private readonly hubApi: HubAppClient,
+        private readonly hubClient: HubAppClient,
         private readonly view: AppDetailPanelView
     ) {
-        this.app = new AppComponent(this.hubApi, this.view.app);
-        this.currentVersion = new CurrentVersionComponent(this.hubApi, this.view.currentVersion);
-        this.resourceGroupListCard = new ResourceGroupListCard(this.hubApi, this.view.resourceGroupListCard);
-        this.resourceGroupListCard.resourceGroupClicked.register(
+        this.app = new AppComponent(hubClient, view.app);
+        this.currentVersion = new CurrentVersionComponent(hubClient, view.currentVersion);
+        this.appOptionsAlert = new CardAlert(view.appOptionsAlertView).alert;
+        this.appOptionsTextComponent = new TextComponent(view.appOptionsTextView);
+        this.optionsAlert = new CardAlert(view.optionsAlertView).alert;
+        this.optionsTextComponent = new TextComponent(view.optionsTextView);
+        this.resourceGroupListCard = new ResourceGroupListCard(hubClient, view.resourceGroupListCard);
+        this.resourceGroupListCard.when.resourceGroupClicked.then(
             this.onResourceGroupSelected.bind(this)
         );
-        this.modifierCategoryListCard = new ModifierCategoryListCard(this.hubApi, this.view.modifierCategoryListCard);
-        this.modifierCategoryListCard.modCategorySelected.register(
+        this.modifierCategoryListCard = new ModifierCategoryListCard(hubClient, view.modifierCategoryListCard);
+        this.modifierCategoryListCard.when.modCategorySelected.then(
             this.onModCategorySelected.bind(this)
         );
-        this.mostRecentRequestListCard = new MostRecentRequestListCard(this.hubApi, this.view.mostRecentRequestListCard);
-        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(this.hubApi, this.view.mostRecentErrorEventListCard);
+        this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
+        this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
 
-        this.backCommand.add(this.view.backButton);
+        this.backCommand.add(view.backButton);
     }
 
     private onResourceGroupSelected(listItem: ResourceGroupListItem) {
@@ -81,22 +94,57 @@ export class AppDetailPanel implements IPanel {
         );
     }
 
-    private onModCategorySelected(modCategory: IModifierCategoryModel) {
+    private onModCategorySelected(modCategory: ModifierCategory) {
         this.awaitable.resolve(
             Result.modCategorySelected(modCategory)
         );
     }
 
     async refresh() {
-        let promises: Promise<any>[] = [
+        const promises: Promise<any>[] = [
             this.app.refresh(),
             this.currentVersion.refresh(),
+            this.refreshDefaultAppOptions(),
+            this.refreshDefaultOptions(),
             this.resourceGroupListCard.refresh(),
             this.modifierCategoryListCard.refresh(),
             this.mostRecentRequestListCard.refresh(),
             this.mostRecentErrorEventListCard.refresh()
         ];
         return Promise.all(promises);
+    }
+
+    private async refreshDefaultAppOptions() {
+        this.appOptionsTextComponent.setText('');
+        this.view.showAppOptions();
+        const defaultAppOptions = await this.appOptionsAlert.infoAction(
+            'Loading...',
+            () => this.hubClient.App.GetDefaultAppOptions()
+        );
+        if (defaultAppOptions) {
+            const stringified = JSON.stringify(JSON.parse(defaultAppOptions), undefined, 2);
+            this.appOptionsTextComponent.setText(stringified);
+        }
+        else {
+            this.view.hideAppOptions();
+        }
+    }
+
+    private async refreshDefaultOptions() {
+        this.optionsTextComponent.setText('');
+        this.view.showAppOptions();
+        const defaultOptions = await this.optionsAlert.infoAction(
+            'Loading...',
+            () => this.hubClient.App.GetDefaultOptions()
+        );
+        if (defaultOptions) {
+            const stringified = JSON.stringify(JSON.parse(defaultOptions), undefined, 2);
+            console.log(stringified);
+            this.optionsTextComponent.setText(stringified);
+        }
+        else {
+            this.view.hideOptions();
+        }
     }
 
     private back() {

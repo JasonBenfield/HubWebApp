@@ -13,7 +13,7 @@ using XTI_TempLog;
 using XTI_TempLog.Abstractions;
 using XTI_TempLog.Extensions;
 
-await XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
+var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
     .ConfigureServices((hostContext, services) =>
     {
         services.AddSupportAppApiServices();
@@ -22,7 +22,6 @@ await XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
         services.AddScoped<ITempLogs>(sp =>
         {
             var dataProtector = sp.GetDataProtector("XTI_TempLog");
-            var hostEnv = sp.GetRequiredService<IHostEnvironment>();
             var appKey = sp.GetRequiredService<AppKey>();
             var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
             return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
@@ -81,7 +80,9 @@ await XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
                     .Exceptions().For(5).Minutes();
             }
         );
-    })
-    .UseWindowsService()
-    .Build()
-    .RunAsync();
+    });
+if (args.Length <= 0 || !args[0].Equals("RunAsConsole", StringComparison.OrdinalIgnoreCase))
+{
+    hostBuilder.UseWindowsService();
+}
+await hostBuilder.Build().RunAsync();

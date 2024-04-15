@@ -34,9 +34,9 @@ internal sealed class SystemTest
         var sp = new TestHost().Setup(AppKey.WebApp("Test"), "Development");
         var hubClient = sp.GetRequiredService<HubAppClient>();
         hubClient.UseToken<SystemUserXtiToken>();
-        var userContext = await hubClient.System.GetUserContext
+        var userContext = await hubClient.System.GetUserOrAnon
         (
-            new GetUserContextRequest(installationID: 1190, userName: new AppUserName("JB"))
+            new AppUserNameRequest(userName: new AppUserName("JB"))
         );
         userContext.WriteToConsole();
     }
@@ -64,9 +64,9 @@ internal sealed class SystemTest
         var sp = new TestHost().Setup(AppKey.WebApp("Test"), "Development");
         var hubClient = sp.GetRequiredService<HubAppClient>();
         hubClient.UseToken<SystemUserXtiToken>();
-        var user = await hubClient.System.GetUserOrAnon("JB");
+        var user = await hubClient.System.GetUserOrAnon(new AppUserNameRequest(new AppUserName("JB")));
         user.WriteToConsole();
-        var notAUser = await hubClient.System.GetUserOrAnon("not_a_user");
+        var notAUser = await hubClient.System.GetUserOrAnon(new AppUserNameRequest(new AppUserName("not_a_user")));
         notAUser.WriteToConsole();
     }
 
@@ -104,7 +104,7 @@ internal sealed class SystemTest
         var sp = new TestHost().Setup(AppKey.WebApp("Test"), "Development");
         var hubClient = sp.GetRequiredService<HubAppClient>();
         hubClient.UseToken<SystemUserXtiToken>();
-        var userAuthenticators = await hubClient.System.GetUserAuthenticators(2);
+        var userAuthenticators = await hubClient.System.GetUserAuthenticators(new AppUserIDRequest(2));
         userAuthenticators.WriteToConsole();
     }
 

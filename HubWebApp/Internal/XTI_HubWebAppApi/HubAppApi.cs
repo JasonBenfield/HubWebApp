@@ -7,6 +7,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     public HubAppApi
     (
         IAppApiUser user,
+        string serializedDefaultOptions,
         IServiceProvider sp
     )
         : base
@@ -16,7 +17,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
                 HubInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(HubInfo.Roles.Admin)
+                    .WithAllowed(HubInfo.Roles.Admin),
+                serializedDefaultOptions
             ),
             sp
         )
@@ -47,6 +49,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         createUserGroupsGroup(sp);
         createPeriodicGroup(sp);
         createLogsGroup(sp);
+        createUserRolesGroup(sp);
     }
 
     partial void createCurrentUserGroup(IServiceProvider sp);
@@ -97,6 +100,8 @@ public sealed partial class HubAppApi : WebAppApiWrapper
 
     partial void createUserGroupsGroup(IServiceProvider sp);
 
+    partial void createUserRolesGroup(IServiceProvider sp);
+
     partial void createPeriodicGroup(IServiceProvider sp);
 
     partial void createLogsGroup(IServiceProvider sp);
@@ -111,10 +116,11 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     {
         if(codeGenerator == ApiCodeGenerators.Dotnet)
         {
-            return templ.DataType == typeof(LoginCredentials)
-                || templ.DataType.Namespace == "XTI_App.Abstractions"
-                || templ.DataType.Namespace == "XTI_TempLog.Abstractions"
-                || templ.DataType.Namespace == "XTI_Hub.Abstractions";
+            return templ.DataType == typeof(AuthenticateRequest) || 
+                templ.DataType.Namespace == "XTI_App.Abstractions" || 
+                templ.DataType.Namespace == "XTI_WebApp.Abstractions" || 
+                templ.DataType.Namespace == "XTI_TempLog.Abstractions" || 
+                templ.DataType.Namespace == "XTI_Hub.Abstractions";
         }
         return false;
     }

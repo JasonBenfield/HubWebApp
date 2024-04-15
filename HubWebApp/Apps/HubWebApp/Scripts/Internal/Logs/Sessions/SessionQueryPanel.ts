@@ -1,12 +1,15 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { ApiODataClient } from "@jasonbenfield/sharedwebapp/OData/ApiODataClient";
-import { ODataCellClickedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataCellClickedEventArgs";
+import { ODataColumn } from "@jasonbenfield/sharedwebapp/OData/ODataColumn";
 import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent";
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
+import { ODataLinkRow } from "@jasonbenfield/sharedwebapp/OData/ODataLinkRow";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ODataExpandedSessionColumnsBuilder } from "../../../Lib/Http/ODataExpandedSessionColumnsBuilder";
 import { SessionQueryPanelView } from "./SessionQueryPanelView";
+import { ODataRefreshedEventArgs } from "@jasonbenfield/sharedwebapp/OData/ODataRefreshedEventArgs";
+import { UrlBuilder } from "@jasonbenfield/sharedwebapp/UrlBuilder";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 
 interface IResult {
     menuRequested?: boolean;
@@ -30,24 +33,43 @@ export class SessionQueryPanel implements IPanel {
         columns.SessionID.require();
         columns.UserID.require();
         options.query.select.addFields(
-            columns.TimeStarted,
+            columns.TimeSessionStarted,
             columns.UserName,
             columns.RequestCount,
             columns.LastRequestTime
         );
-        options.query.orderBy.addDescending(columns.TimeStarted);
+        options.query.orderBy.addDescending(columns.TimeSessionStarted);
         options.saveChanges();
-        options.setODataClient(
-            new ApiODataClient(hubClient.SessionQuery, {})
+        options.setDefaultODataClient(hubClient.SessionQuery, { args: {} });
+        options.setCreateLinkRow(
+            (rowIndex: number, columns: ODataColumn[], record: any, row: ODataLinkRow) => {
+                const sessionID: number = record['SessionID'];
+                row.setHref(this.hubClient.Logs.Session.getUrl({ SessionID: sessionID }));
+            }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onDataCellClicked.bind(this));
+        this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
+        const page = Url.current().query.getNumberValue('page');
+        if (page) {
+            this.odataComponent.setCurrentPage(page);
+        }
         new Command(this.menu.bind(this)).add(view.menuButton);
     }
 
-    private onDataCellClicked(eventArgs: ODataCellClickedEventArgs) {
-        const sessionID: number = eventArgs.record['SessionID'];
-        this.hubClient.Logs.Session.open({ SessionID: sessionID });
+    private onRefreshed(args: ODataRefreshedEventArgs) {
+        const page = args.page > 1 ? args.page.toString() : '';
+        const url = UrlBuilder.current();
+        const queryPageValue = url.query.getNumberValue('page');
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        if (page !== queryPage) {
+            if (page) {
+                url.replaceQuery('page', page);
+            }
+            else {
+                url.removeQuery('page');
+            }
+            history.replaceState({}, '', url.value());
+        }
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

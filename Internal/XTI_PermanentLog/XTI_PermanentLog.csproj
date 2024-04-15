@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_TempLog" Version="1.2.32-dev231101215137172" />
+    <PackageReference Include="XTI_TempLog" Version="1.2.32" />
   </ItemGroup>
 
 </Project>

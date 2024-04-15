@@ -15,12 +15,12 @@ public sealed class AddInstallationUserAction : AppAction<AddInstallationUserReq
         this.hashedPasswordFactory = hashedPasswordFactory;
     }
 
-    public async Task<AppUserModel> Execute(AddInstallationUserRequest model, CancellationToken stoppingToken)
+    public async Task<AppUserModel> Execute(AddInstallationUserRequest addRequest, CancellationToken stoppingToken)
     {
-        var hashedPassword = hashedPasswordFactory.Create(model.Password);
+        var hashedPassword = hashedPasswordFactory.Create(addRequest.Password);
         var systemUser = await appFactory.Installers.AddOrUpdateInstaller
         (
-            model.MachineName,
+            addRequest.MachineName,
             hashedPassword, 
             clock.Now()
         );

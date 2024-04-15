@@ -16,14 +16,20 @@ public sealed partial class AppUserController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAccessModel>> GetUserAccess([FromBody] UserModifierKey model, CancellationToken ct)
+    public Task<ResultContainer<UserAccessModel>> GetExplicitUserAccess([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUser").Action<UserModifierKey, UserAccessModel>("GetUserAccess").Execute(model, ct);
+        return api.Group("AppUser").Action<UserModifierKey, UserAccessModel>("GetExplicitUserAccess").Execute(model, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetUnassignedRoles([FromBody] UserModifierKey model, CancellationToken ct)
+    public Task<ResultContainer<AppRoleModel[]>> GetAssignedRoles([FromBody] UserModifierKey model, CancellationToken ct)
     {
-        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetUnassignedRoles").Execute(model, ct);
+        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetAssignedRoles").Execute(model, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppRoleModel[]>> GetExplicitlyUnassignedRoles([FromBody] UserModifierKey model, CancellationToken ct)
+    {
+        return api.Group("AppUser").Action<UserModifierKey, AppRoleModel[]>("GetExplicitlyUnassignedRoles").Execute(model, ct);
     }
 }

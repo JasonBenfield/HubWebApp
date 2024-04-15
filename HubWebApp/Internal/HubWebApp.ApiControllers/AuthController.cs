@@ -10,9 +10,9 @@ public sealed partial class AuthController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> VerifyLogin([FromBody] VerifyLoginForm model, CancellationToken ct)
+    public Task<ResultContainer<AuthenticatedLoginResult>> VerifyLogin([FromBody] VerifyLoginForm model, CancellationToken ct)
     {
-        return api.Group("Auth").Action<VerifyLoginForm, string>("VerifyLogin").Execute(model, ct);
+        return api.Group("Auth").Action<VerifyLoginForm, AuthenticatedLoginResult>("VerifyLogin").Execute(model, ct);
     }
 
     [ResponseCache(CacheProfileName = "Default")]
@@ -22,9 +22,9 @@ public sealed partial class AuthController : Controller
         return PartialView(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> Login(LoginModel model, CancellationToken ct)
+    public async Task<IActionResult> Login(AuthenticatedLoginRequest model, CancellationToken ct)
     {
-        var result = await api.Group("Auth").Action<LoginModel, WebRedirectResult>("Login").Execute(model, ct);
+        var result = await api.Group("Auth").Action<AuthenticatedLoginRequest, WebRedirectResult>("Login").Execute(model, ct);
         return Redirect(result.Data!.Url);
     }
 

@@ -6,6 +6,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { RequestExpandedListItem } from "../RequestExpandedListItem";
 import { RequestExpandedListItemView } from "../RequestExpandedListItemView";
 import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
+import { ExpandedAppRequest } from "../../../Lib/ExpandedAppRequest";
 
 export class MostRecentRequestListCard {
     private readonly alert: MessageAlert;
@@ -21,7 +22,8 @@ export class MostRecentRequestListCard {
     }
 
     async refresh() {
-        const requests = await this.getRequests();
+        const sourceRequests = await this.getRequests();
+        const requests = sourceRequests.map(r => new ExpandedAppRequest(r));
         this.requests.setItems(
             requests,
             (sourceItem, listItem) => new RequestExpandedListItem(sourceItem, listItem)

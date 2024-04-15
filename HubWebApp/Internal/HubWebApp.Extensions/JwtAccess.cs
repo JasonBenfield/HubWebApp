@@ -9,17 +9,17 @@ namespace HubWebApp.Extensions;
 
 public sealed class JwtAccess : AccessForAuthenticate
 {
-    private readonly XtiAuthenticationOptions xtiAuthOptions;
+    private readonly DefaultWebAppOptions options;
 
-    public JwtAccess(XtiAuthenticationOptions xtiAuthOptions)
+    public JwtAccess(DefaultWebAppOptions options)
     {
-        this.xtiAuthOptions = xtiAuthOptions;
+        this.options = options;
     }
 
     protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(xtiAuthOptions.JwtSecret);
+        var key = Encoding.ASCII.GetBytes(options.XtiAuthentication.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity

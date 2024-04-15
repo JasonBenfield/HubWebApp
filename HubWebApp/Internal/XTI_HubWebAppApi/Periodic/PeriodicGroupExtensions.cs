@@ -6,6 +6,9 @@ internal static class PeriodicGroupExtensions
 {
     public static void AddPeriodicGroupServices(this IServiceCollection services)
     {
+        services.AddScoped<DeactivateUsersAction>();
+        services.AddScoped<DeleteExpiredStoredObjectsAction>();
+        services.AddScoped<EndExpiredSessionsAction>();
         services.AddScoped<PurgeLogsAction>();
     }
 }

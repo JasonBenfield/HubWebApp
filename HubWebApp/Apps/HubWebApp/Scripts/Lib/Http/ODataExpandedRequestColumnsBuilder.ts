@@ -1,4 +1,5 @@
 // Generated code
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { ODataColumnBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnBuilder";
 import { ODataColumnViewBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataColumnViewBuilder";
 import { SourceType } from "@jasonbenfield/sharedwebapp/OData/SourceType";
@@ -35,11 +36,12 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly VersionName = new ODataColumnViewBuilder();
 	readonly VersionKey = new ODataColumnViewBuilder();
 	readonly VersionRelease = new ODataColumnViewBuilder();
-	readonly VersionStatusText = new ODataColumnViewBuilder();
-	readonly VersionTypeText = new ODataColumnViewBuilder();
+	readonly VersionStatus = new ODataColumnViewBuilder();
+	readonly VersionType = new ODataColumnViewBuilder();
 	readonly InstallationID = new ODataColumnViewBuilder();
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
+	readonly SourceRequestID = new ODataColumnViewBuilder();
 }
 
 export class ODataExpandedRequestColumnsBuilder {
@@ -102,16 +104,18 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.VersionKey.setDisplayText('Version Key');
 		this.VersionRelease = new ODataColumnBuilder('VersionRelease', new SourceType('String'), views.VersionRelease);
 		this.VersionRelease.setDisplayText('Version Release');
-		this.VersionStatusText = new ODataColumnBuilder('VersionStatusText', new SourceType('String'), views.VersionStatusText);
-		this.VersionStatusText.setDisplayText('Version Status Text');
-		this.VersionTypeText = new ODataColumnBuilder('VersionTypeText', new SourceType('String'), views.VersionTypeText);
-		this.VersionTypeText.setDisplayText('Version Type Text');
+		this.VersionStatus = new ODataColumnBuilder('VersionStatus', new SourceType('String'), views.VersionStatus);
+		this.VersionStatus.setDisplayText('Version Status');
+		this.VersionType = new ODataColumnBuilder('VersionType', new SourceType('String'), views.VersionType);
+		this.VersionType.setDisplayText('Version Type');
 		this.InstallationID = new ODataColumnBuilder('InstallationID', new SourceType('Int32'), views.InstallationID);
 		this.InstallationID.setDisplayText('Installation ID');
 		this.InstallLocation = new ODataColumnBuilder('InstallLocation', new SourceType('String'), views.InstallLocation);
 		this.InstallLocation.setDisplayText('Install Location');
 		this.IsCurrentInstallation = new ODataColumnBuilder('IsCurrentInstallation', new SourceType('Boolean'), views.IsCurrentInstallation);
 		this.IsCurrentInstallation.setDisplayText('Is Current Installation');
+		this.SourceRequestID = new ODataColumnBuilder('SourceRequestID', new SourceType('Int32'), views.SourceRequestID);
+		this.SourceRequestID.setDisplayText('Source Request ID');
 	}
 	readonly RequestID: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
@@ -143,11 +147,12 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly VersionName: ODataColumnBuilder;
 	readonly VersionKey: ODataColumnBuilder;
 	readonly VersionRelease: ODataColumnBuilder;
-	readonly VersionStatusText: ODataColumnBuilder;
-	readonly VersionTypeText: ODataColumnBuilder;
+	readonly VersionStatus: ODataColumnBuilder;
+	readonly VersionType: ODataColumnBuilder;
 	readonly InstallationID: ODataColumnBuilder;
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
+	readonly SourceRequestID: ODataColumnBuilder;
 	
 	build() {
 		return {
@@ -181,11 +186,12 @@ export class ODataExpandedRequestColumnsBuilder {
 			VersionName: this.VersionName.build(),
 			VersionKey: this.VersionKey.build(),
 			VersionRelease: this.VersionRelease.build(),
-			VersionStatusText: this.VersionStatusText.build(),
-			VersionTypeText: this.VersionTypeText.build(),
+			VersionStatus: this.VersionStatus.build(),
+			VersionType: this.VersionType.build(),
 			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
-			IsCurrentInstallation: this.IsCurrentInstallation.build()
+			IsCurrentInstallation: this.IsCurrentInstallation.build(),
+			SourceRequestID: this.SourceRequestID.build()
 		} as ODataColumns<IExpandedRequest>;
 	}
 }

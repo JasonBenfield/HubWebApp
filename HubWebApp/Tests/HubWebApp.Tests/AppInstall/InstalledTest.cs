@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_HubDB.Entities;
-using XTI_HubWebAppApi.AppInstall;
 
 namespace HubWebApp.Tests;
 
@@ -14,12 +13,18 @@ sealed class InstalledTest
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester, 
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
         await tester.Execute
         (
@@ -43,12 +48,18 @@ sealed class InstalledTest
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult.VersionInstallationID));
         await tester.Execute
         (
@@ -71,18 +82,30 @@ sealed class InstalledTest
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult1 = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
-        var newInstResult2 = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult1 = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
+        var newInstResult2 = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult2.CurrentInstallationID));
         await tester.Execute
         (
@@ -103,18 +126,30 @@ sealed class InstalledTest
         const string qualifiedMachineName = "machine.example.com";
         var fakeApp = await registerFakeApp(tester);
         var fakeVersion = await fakeApp.CurrentVersion();
-        var newInstResult1 = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = fakeVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = FakeInfo.AppKey
-        });
-        var newInstResult2 = await NewInstallation(tester, new NewInstallationRequest
-        {
-            VersionName = appVersion.Version.ToModel().VersionName,
-            QualifiedMachineName = qualifiedMachineName,
-            AppKey = HubInfo.AppKey
-        });
+        var newInstResult1 = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: fakeVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: FakeInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
+        var newInstResult2 = await NewInstallation
+        (
+            tester,
+            new NewInstallationRequest
+            (
+                versionName: appVersion.Version.ToModel().VersionName,
+                qualifiedMachineName: qualifiedMachineName,
+                appKey: HubInfo.AppKey,
+                domain: "",
+                siteName: ""
+            )
+        );
         await StartInstallation(tester, new GetInstallationRequest(newInstResult2.CurrentInstallationID));
         await tester.Execute
         (

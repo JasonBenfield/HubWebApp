@@ -1,13 +1,13 @@
 ﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
 import { FlexCss } from "@jasonbenfield/sharedwebapp/FlexCss";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
-import { PaddingCss } from "@jasonbenfield/sharedwebapp/PaddingCss";
 import { TextCss } from "@jasonbenfield/sharedwebapp/TextCss";
 import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
 import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
 import { BlockView } from "@jasonbenfield/sharedwebapp/Views/BlockView";
 import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
-import { FormGroupGridView, FormGroupTextView, FormGroupView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupTextView, FormGroupView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { FormGroupContainerView } from "@jasonbenfield/sharedwebapp/Views/FormGroupContainerView";
 import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 import { NavView } from "@jasonbenfield/sharedwebapp/Views/NavView";
@@ -37,17 +37,16 @@ export class LogEntryPanelView extends GridView {
 
     constructor(container: BasicComponentView) {
         super(container);
-        this.layout();
+        this.styleAsLayout();
         this.height100();
         this.setTemplateRows(CssLengthUnit.flex(1), CssLengthUnit.auto());
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         this.alert = mainContent.addView(MessageAlertView);
-        const gridContainer = mainContent.addView(FormGroupGridView);
+        const gridContainer = mainContent.addView(FormGroupContainerView);
         const appKeyFormGroup = gridContainer.addFormGroup(FormGroupView);
         appKeyFormGroup.caption.setText('App');
         this.appKeyLink = appKeyFormGroup.valueCell.addView(TextLinkView);
         this.appKeyLink.addCssName('form-control-link');
-        //this.appKeyLink.addCssName('btn btn-link');
         this.appKeyLink.setTextCss(new TextCss().start());
         const versionFormGroup = gridContainer.addFormGroup(FormGroupView);
         versionFormGroup.caption.setText('Version');

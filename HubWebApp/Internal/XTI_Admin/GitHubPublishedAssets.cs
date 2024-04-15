@@ -1,23 +1,22 @@
 ﻿using System.IO.Compression;
 using XTI_App.Abstractions;
 using XTI_GitHub;
-using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
 public sealed class GitHubPublishedAssets : IPublishedAssets
 {
-    private readonly Scopes scopes;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AppVersionName versionName;
+    private readonly CurrentVersion currentVersionAccessor;
     private string tempDir = "";
     private GitHubRelease? release;
 
-    public GitHubPublishedAssets(Scopes scopes, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
+    public GitHubPublishedAssets(XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor)
     {
-        this.scopes = scopes;
         this.gitHubRepo = gitHubRepo;
         versionName = versionNameAccessor.Value;
+        this.currentVersionAccessor = currentVersionAccessor;
         tempDir = Path.Combine
         (
             Path.GetTempPath(),
@@ -25,25 +24,25 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         );
     }
 
-    public async Task<string> LoadSetup(string releaseTag, AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadSetup(string releaseTag, AppKey appKey, AppVersionKey versionKey, CancellationToken ct)
     {
-        var appTempDir = prepareTempDir(appKey);
-        var appKeyText = getAppKeyText(appKey);
-        var release = await getRelease(releaseTag);
-        var setupPath = await downloadSetup(appTempDir, appKeyText, release);
+        var appTempDir = PrepareTempDir(appKey);
+        var appKeyText = GetAppKeyText(appKey);
+        var release = await GetRelease(releaseTag, ct);
+        var setupPath = await DownloadSetup(appTempDir, appKeyText, release);
         return setupPath;
     }
 
-    public async Task<string> LoadApps(string releaseTag, AppKey appKey, AppVersionKey versionKey)
+    public async Task<string> LoadApps(string releaseTag, AppKey appKey, AppVersionKey versionKey, CancellationToken ct)
     {
-        var appTempDir = prepareTempDir(appKey);
-        var appKeyText = getAppKeyText(appKey);
-        var release = await getRelease(releaseTag);
-        var appPath = await downloadApp(appTempDir, appKeyText, release);
+        var appTempDir = PrepareTempDir(appKey);
+        var appKeyText = GetAppKeyText(appKey);
+        var release = await GetRelease(releaseTag, ct);
+        var appPath = await DownloadApp(appTempDir, appKeyText, release);
         return appPath;
     }
 
-    private async Task<string> downloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
+    private async Task<string> DownloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
     {
         var setupAppPath = "";
         var setupAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}Setup.zip", StringComparison.OrdinalIgnoreCase));
@@ -68,7 +67,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return setupAppPath;
     }
 
-    private async Task<string> downloadApp(string appTempDir, string appKeyText, GitHubRelease release)
+    private async Task<string> DownloadApp(string appTempDir, string appKeyText, GitHubRelease release)
     {
         var appPath = "";
         var appAsset = release.Assets.FirstOrDefault(a => a.Name.Equals($"{appKeyText}.zip", StringComparison.OrdinalIgnoreCase));
@@ -115,9 +114,9 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return versionsPath;
     }
 
-    private static string getAppKeyText(AppKey appKey) => $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
+    private static string GetAppKeyText(AppKey appKey) => $"{appKey.Name.DisplayText}{appKey.Type.DisplayText}".Replace(" ", "");
 
-    private string prepareTempDir(AppKey appKey)
+    private string PrepareTempDir(AppKey appKey)
     {
         var appTempDir = Path.Combine
         (
@@ -131,13 +130,13 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return appTempDir;
     }
 
-    private async Task<GitHubRelease> getRelease(string releaseTag)
+    private async Task<GitHubRelease> GetRelease(string releaseTag, CancellationToken ct)
     {
         if (release == null || release.TagName != releaseTag)
         {
             if (string.IsNullOrWhiteSpace(releaseTag))
             {
-                var currentVersion = await new CurrentVersion(scopes, versionName).Value();
+                var currentVersion = await currentVersionAccessor.Value(ct);
                 releaseTag = $"v{currentVersion.VersionNumber.Format()}";
             }
             release = await gitHubRepo.Release(releaseTag);

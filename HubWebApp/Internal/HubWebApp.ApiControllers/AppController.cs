@@ -28,6 +28,12 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppRoleModel[]>> GetRoles(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, AppRoleModel[]>("GetRoles").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppRequestExpandedModel[]>> GetMostRecentRequests([FromBody] int model, CancellationToken ct)
     {
         return api.Group("App").Action<int, AppRequestExpandedModel[]>("GetMostRecentRequests").Execute(model, ct);
@@ -49,5 +55,17 @@ public sealed partial class AppController : Controller
     public Task<ResultContainer<ModifierModel>> GetDefaultModifier(CancellationToken ct)
     {
         return api.Group("App").Action<EmptyRequest, ModifierModel>("GetDefaultModifier").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> GetDefaultOptions(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, string>("GetDefaultOptions").Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<string>> GetDefaultAppOptions(CancellationToken ct)
+    {
+        return api.Group("App").Action<EmptyRequest, string>("GetDefaultAppOptions").Execute(new EmptyRequest(), ct);
     }
 }

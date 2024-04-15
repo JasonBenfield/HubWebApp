@@ -9,118 +9,132 @@ public sealed class HcHubAdministration : IHubAdministration
         this.hubClient = hubClient;
     }
 
-    public Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password)
+    public Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password, CancellationToken ct)
     {
         var request = new AddInstallationUserRequest
-        {
-            MachineName = machineName,
-            Password = password
-        };
-        return hubClient.Install.AddInstallationUser(request);
+        (
+            machineName: machineName,
+            password: password
+        );
+        return hubClient.Install.AddInstallationUser(request, ct);
     }
 
-    public Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password)
+    public Task<AppUserModel> AddOrUpdateSystemUser(AppKey appKey, string machineName, string password, CancellationToken ct)
     {
         var request = new AddSystemUserRequest
-        {
-            AppKey = appKey,
-            MachineName = machineName,
-            Password = password
-        };
-        return hubClient.Install.AddSystemUser(request);
+        (
+            appKey: appKey,
+            machineName: machineName,
+            password: password
+        );
+        return hubClient.Install.AddSystemUser(request, ct);
     }
 
-    public Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password) =>
+    public Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password, CancellationToken ct) =>
         hubClient.Install.AddAdminUser
         (
             new AddAdminUserRequest
-            {
-                AppKey = appKey,
-                UserName = userName.Value,
-                Password = password
-            }
+            (
+                appKey: appKey,
+                userName: userName,
+                password: password
+            ),
+            ct
         );
 
-    public Task BeginInstall(int installationID) =>
-        hubClient.Install.BeginInstallation(new GetInstallationRequest(installationID));
+    public Task BeginInstall(int installationID, CancellationToken ct) =>
+        hubClient.Install.BeginInstallation(new GetInstallationRequest(installationID), ct);
 
-    public Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
         var request = new PublishVersionRequest
-        {
-            VersionName = versionName,
-            VersionKey = versionKey
-        };
-        return hubClient.Publish.BeginPublish(request);
+        (
+            versionName: versionName,
+            versionKey: versionKey
+        );
+        return hubClient.Publish.BeginPublish(request, ct);
     }
 
-    public Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
         var request = new PublishVersionRequest
-        {
-            VersionName = versionName,
-            VersionKey = versionKey
-        };
-        return hubClient.Publish.EndPublish(request);
+        (
+            versionName: versionName,
+            versionKey: versionKey
+        );
+        return hubClient.Publish.EndPublish(request, ct);
     }
 
-    public Task Installed(int installationID) =>
-        hubClient.Install.Installed(new GetInstallationRequest(installationID));
+    public Task Installed(int installationID, CancellationToken ct) =>
+        hubClient.Install.Installed(new GetInstallationRequest(installationID), ct);
 
-    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName)
+    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
     {
         var request = new NewInstallationRequest
-        {
-            VersionName = versionName,
-            AppKey = appKey,
-            QualifiedMachineName = machineName,
-            Domain = domain,
-            SiteName = siteName
-        };
-        return hubClient.Install.NewInstallation(request);
+        (
+            versionName: versionName,
+            appKey: appKey,
+            qualifiedMachineName: machineName,
+            domain: domain,
+            siteName: siteName
+        );
+        return hubClient.Install.NewInstallation(request, ct);
     }
 
-    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType)
+    public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, CancellationToken ct)
     {
         var request = new NewVersionRequest
-        {
-            VersionName = versionName,
-            VersionType = versionType
-        };
-        return hubClient.Publish.NewVersion(request);
+        (
+            versionName: versionName,
+            versionType: versionType
+        );
+        return hubClient.Publish.NewVersion(request, ct);
     }
 
-    public Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey)
+    public Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
         var request = new GetVersionRequest
-        {
-            VersionName = versionName,
-            VersionKey = versionKey
-        };
-        return hubClient.Install.GetVersion(request);
+        (
+            versionName: versionName,
+            versionKey: versionKey
+        );
+        return hubClient.Install.GetVersion(request, ct);
     }
 
-    public Task<XtiVersionModel[]> Versions(AppVersionName versionName) =>
-        hubClient.Install.GetVersions(new GetVersionsRequest { VersionName = versionName });
+    public Task<XtiVersionModel[]> Versions(AppVersionName versionName, CancellationToken ct) =>
+        hubClient.Install.GetVersions(new GetVersionsRequest(versionName), ct);
 
-    public Task AddOrUpdateVersions(AppKey[] appKeys, XtiVersionModel[] publishedVersions) =>
+    public Task AddOrUpdateVersions(AppKey[] appKeys, AddVersionRequest[] publishedVersions, CancellationToken ct) =>
         hubClient.Install.AddOrUpdateVersions
         (
             new AddOrUpdateVersionsRequest
-            {
-                Apps = appKeys,
-                Versions = publishedVersions
-            }
+            (
+                apps: appKeys,
+                versions: publishedVersions
+            ),
+            ct
         );
 
-    public Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppDefinitionModel[] appDefs) =>
+    public Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys, CancellationToken ct) =>
         hubClient.Install.AddOrUpdateApps
         (
             new AddOrUpdateAppsRequest
-            {
-                VersionName = versionName,
-                Apps = appDefs
-            }
+            (
+                versionName: versionName,
+                appKeys: appKeys
+            ),
+            ct
         );
 
+    public Task<InstallConfigurationTemplateModel> ConfigureInstallTemplate(ConfigureInstallTemplateRequest configRequest, CancellationToken ct) =>
+        hubClient.Install.ConfigureInstallTemplate(configRequest, ct);
+
+    public Task<InstallConfigurationModel[]> InstallConfigurations(GetInstallConfigurationsRequest getRequest, CancellationToken ct) =>
+        hubClient.Install.GetInstallConfigurations(getRequest, ct);
+
+    public Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest configRequest, CancellationToken ct) =>
+        hubClient.Install.ConfigureInstall(configRequest, ct);
+
+    public Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct) =>
+        hubClient.Install.DeleteInstallConfiguration(deleteRequest, ct);
 }

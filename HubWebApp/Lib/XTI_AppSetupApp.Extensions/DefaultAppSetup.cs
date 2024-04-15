@@ -40,20 +40,20 @@ public sealed class DefaultAppSetup : IAppSetup
         await hubClient.Install.AddOrUpdateApps
         (
             new AddOrUpdateAppsRequest
-            {
-                VersionName = versionName,
-                Apps = new[] { new AppDefinitionModel(template.AppKey) }
-            }
+            (
+                versionName: versionName,
+                appKeys: [template.AppKey]
+            )
         );
         var password = Guid.NewGuid().ToString();
         var systemUser = await hubClient.Install.AddSystemUser
         (
             new AddSystemUserRequest
-            {
-                AppKey = template.AppKey,
-                MachineName = Environment.MachineName,
-                Password = password
-            }
+            (
+                appKey: template.AppKey,
+                machineName: Environment.MachineName,
+                password: password
+            )
         );
         await systemUserCredentials.Update
         (
@@ -63,44 +63,14 @@ public sealed class DefaultAppSetup : IAppSetup
                 password
             )
         );
-        var request = new RegisterAppRequest
-        {
-            AppTemplate = ToClientTemplateModel(template.ToModel()),
-            VersionKey = versionKey
-        };
-        app = await hubClient.Install.RegisterApp(request);
+        app = await hubClient.Install.RegisterApp
+        (
+            new RegisterAppRequest
+            (
+                appTemplate: template.ToModel(),
+                versionKey: versionKey
+            )
+        );
         modKey = app.PublicKey;
-    }
-
-    private XTI_HubAppClient.AppApiTemplateModel ToClientTemplateModel(XTI_App.Api.AppApiTemplateModel model)
-    {
-        return new XTI_HubAppClient.AppApiTemplateModel
-        {
-            AppKey = model.AppKey,
-            GroupTemplates = model.GroupTemplates
-                .Select
-                (
-                    gt => new XTI_HubAppClient.AppApiGroupTemplateModel
-                    {
-                        Name = gt.Name,
-                        IsAnonymousAllowed = gt.IsAnonymousAllowed,
-                        ModCategory = gt.ModCategory,
-                        Roles = gt.Roles,
-                        ActionTemplates = gt.ActionTemplates
-                            .Select
-                            (
-                                at => new XTI_HubAppClient.AppApiActionTemplateModel
-                                {
-                                    Name = at.Name,
-                                    IsAnonymousAllowed = at.IsAnonymousAllowed,
-                                    Roles = at.Roles,
-                                    ResultType = at.ResultType
-                                }
-                            )
-                            .ToArray()
-                    }
-                )
-                .ToArray()
-        };
     }
 }

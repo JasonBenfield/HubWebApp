@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TypeScriptToolsVersion>4.4</TypeScriptToolsVersion>
@@ -11,11 +11,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.2.2">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.4.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.40-dev231104221906776" />
+		<PackageReference Include="XTI_WebApp.RCL" Version="1.8.40" />
+		<PackageReference Include="XTI_WebApp.Scheduled" Version="1.8.40" />
 	</ItemGroup>
 
 	<ItemGroup>

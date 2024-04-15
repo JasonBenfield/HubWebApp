@@ -1,4 +1,5 @@
 // Generated code
+import * as xti from "@jasonbenfield/sharedwebapp/Common";
 import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { EditUserFormView } from './EditUserFormView';
 
@@ -7,12 +8,10 @@ export class EditUserForm extends BaseForm {
 	
 	constructor(view: EditUserFormView) {
 		super('EditUserForm', view);
-		this.UserID.setCaption('User ID');
-		this.UserID.constraints.mustNotBeNull();
 		this.PersonName.setCaption('Person Name');
 		this.Email.setCaption('Email');
 	}
-	readonly UserID = this.addHiddenNumberFormGroup('UserID', this.view.UserID);
+	readonly UserID = this.addHiddenNumber('UserID', this.view.UserID);
 	readonly PersonName = this.addTextInputFormGroup('PersonName', this.view.PersonName);
 	readonly Email = this.addTextInputFormGroup('Email', this.view.Email);
 }

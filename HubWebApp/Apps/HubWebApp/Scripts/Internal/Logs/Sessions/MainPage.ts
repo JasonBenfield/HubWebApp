@@ -14,10 +14,10 @@ class MainPage extends HubPage {
         super(new MainPageView());
         this.panels = new SingleActivePanel();
         this.sessionQueryPanel = this.panels.add(
-            new SessionQueryPanel(this.defaultClient, this.view.sessionQueryPanel)
+            new SessionQueryPanel(this.hubClient, this.view.sessionQueryPanel)
         );
         this.mainMenuPanel = this.panels.add(
-            new MainMenuPanel(this.defaultClient, this.view.mainMenuPanel)
+            new MainMenuPanel(this.hubClient, this.view.mainMenuPanel)
         );
         this.sessionQueryPanel.refresh();
         this.activateSessionQueryPanel();

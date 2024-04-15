@@ -4,6 +4,7 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceResultType } from '../../../Lib/Http/ResourceResultType';
 import { ResourceComponentView } from "./ResourceComponentView";
+import { AppResource } from "../../../Lib/AppResource";
 
 export class ResourceComponent {
     private readonly alert: MessageAlert;
@@ -29,23 +30,23 @@ export class ResourceComponent {
     }
 
     async refresh() {
-        const resource = await this.getResource(this.resourceID);
-        this.resourceName.setText(resource.Name.DisplayText);
-        if (resource.IsAnonymousAllowed) {
+        const sourceResource = await this.getResource(this.resourceID);
+        const resource = new AppResource(sourceResource);
+        this.resourceName.setText(resource.name.displayText);
+        if (resource.isAnonymousAllowed) {
             this.view.showAnon();
         }
         else {
             this.view.hideAnon();
         }
-        const resultType = ResourceResultType.values.value(resource.ResultType.Value);
         let resultTypeText: string;
         if (
-            resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
+            resource.resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
         ) {
             resultTypeText = '';
         }
         else {
-            resultTypeText = resultType.DisplayText;
+            resultTypeText = resource.resultType.DisplayText;
         }
         this.resultType.setText(resultTypeText);
     }

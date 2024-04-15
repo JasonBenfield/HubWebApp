@@ -36,19 +36,6 @@ public sealed class EfAppContext : ISourceAppContext
         var roles = await appVersion.App.Roles();
         var roleModels = roles.Select(r => r.ToModel()).ToArray();
         var modCategories = await appVersion.App.ModCategories();
-        var modCategoryModels = new List<AppContextModifierCategoryModel>();
-        foreach (var modCategory in modCategories)
-        {
-            var modifiers = await modCategory.Modifiers();
-            modCategoryModels.Add
-            (
-                new AppContextModifierCategoryModel
-                (
-                    modCategory.ToModel(),
-                    modifiers.Select(m => m.ToModel()).ToArray()
-                )
-            );
-        }
         var resourceGroups = await appVersion.ResourceGroups();
         var resourceGroupModels = new List<AppContextResourceGroupModel>();
         foreach (var resourceGroup in resourceGroups)
@@ -84,8 +71,16 @@ public sealed class EfAppContext : ISourceAppContext
             appVersion.App.ToModel(),
             appVersion.Version.ToModel(),
             roleModels,
-            modCategoryModels.ToArray(),
+            modCategories.Select(mc => mc.ToModel()).ToArray(),
             resourceGroupModels.ToArray()
         );
+    }
+
+    public async Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey)
+    {
+        var app = await hubFactory.Apps.AppOrUnknown(defaultAppKey);
+        var modCategory = await app.ModCategory(category.ID);
+        var modifier = await modCategory.ModifierByModKey(modKey);
+        return modifier.ToModel();
     }
 }

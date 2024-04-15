@@ -6,19 +6,19 @@ namespace XTI_Admin;
 
 internal sealed class AddInstallationUserCommand : ICommand
 {
-    private readonly Scopes scopes;
+    private readonly IHubAdministration hubAdministration;
+    private readonly InstallationUserCredentials credentials;
 
-    public AddInstallationUserCommand(Scopes scopes)
+    public AddInstallationUserCommand(IHubAdministration hubAdministration, InstallationUserCredentials credentials)
     {
-        this.scopes = scopes;
+        this.hubAdministration = hubAdministration;
+        this.credentials = credentials;
     }
 
-    public async Task Execute()
+    public async Task Execute(CancellationToken ct)
     {
-        var hubAdministration = scopes.GetRequiredService<IHubAdministration>();
         var password = Guid.NewGuid().ToString();
-        var user = await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password);
-        var credentials = scopes.GetRequiredService<InstallationUserCredentials>();
+        var user = await hubAdministration.AddOrUpdateInstallationUser(Environment.MachineName, password, ct);
         await credentials.Update
         (
             new CredentialValue

@@ -6,24 +6,23 @@ import { ChangePasswordPanel } from './ChangePasswordPanel';
 import { MainPageView } from './MainPageView';
 import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
+import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
     private readonly changePasswordPanel: ChangePasswordPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
-        this.userPanel = this.panels.add(new UserPanel(this.defaultClient, this.view.userPanel));
-        this.userEditPanel = this.panels.add(new UserEditPanel(this.defaultClient, this.view.userEditPanel));
+        this.userPanel = this.panels.add(new UserPanel(this.hubClient, this.view.userPanel));
+        this.userEditPanel = this.panels.add(new UserEditPanel(this.hubClient, this.view.userEditPanel));
         this.changePasswordPanel = this.panels.add(
-            new ChangePasswordPanel(this.defaultClient, this.view.changePasswordPanel)
+            new ChangePasswordPanel(this.hubClient, this.view.changePasswordPanel)
         );
-        const userIDValue = Url.current().getQueryValue('UserID');
-        const userID = userIDValue ? Number(userIDValue) : 0;
+        const userID = Url.current().query.getNumberValue('UserID');
         if (userID) {
             this.userPanel.setUserID(userID);
             this.userEditPanel.setUserID(userID);
@@ -32,7 +31,7 @@ class MainPage extends HubPage {
             this.activateUserPanel();
         }
         else {
-            this.defaultClient.UserGroups.Index.open({}, '');
+            this.hubClient.UserGroups.Index.open({}, '');
         }
     }
 
@@ -40,7 +39,14 @@ class MainPage extends HubPage {
         this.panels.activate(this.userPanel);
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            const url = this.defaultClient.UserGroups.Index.getModifierUrl('', {});
+            const returnTo = Url.current().query.getValue('ReturnTo');
+            let url: UrlBuilder;
+            if (returnTo) {
+                url = this.hubClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });
+            }
+            else {
+                url = this.hubClient.UserGroups.Index.getModifierUrl('', {});
+            }
             new WebPage(url).open();
         }
         else if (result.editRequested) {
@@ -72,4 +78,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

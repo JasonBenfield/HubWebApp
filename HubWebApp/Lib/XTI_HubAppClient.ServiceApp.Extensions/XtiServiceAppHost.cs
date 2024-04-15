@@ -28,6 +28,10 @@ public static class XtiServiceAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
+                    services.AddConfigurationOptions<DefaultServiceAppOptions>();
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().HubClient);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().XtiToken);
+                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().DB);
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
@@ -45,11 +49,12 @@ public static class XtiServiceAppHost
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
+                    services.AddHubClientContext();
                     services.AddScoped<SystemUserXtiToken>();
-                    services.AddXtiTokenAccessor((sp, tokenAccessor) =>
+                    services.AddXtiTokenAccessorFactory((sp, tokenAccessorFactory) =>
                     {
-                        tokenAccessor.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
-                        tokenAccessor.UseToken<SystemUserXtiToken>();
+                        tokenAccessorFactory.AddToken(() => sp.GetRequiredService<SystemUserXtiToken>());
+                        tokenAccessorFactory.UseDefaultToken<SystemUserXtiToken>();
                     });
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());

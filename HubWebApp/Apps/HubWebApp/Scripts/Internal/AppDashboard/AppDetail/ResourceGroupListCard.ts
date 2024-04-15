@@ -2,17 +2,20 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { DefaultEvent } from "@jasonbenfield/sharedwebapp/Events";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
+type Events = { resourceGroupClicked: ResourceGroupListItem };
+
 export class ResourceGroupListCard {
     private readonly alert: MessageAlert;
     private readonly resourceGroups: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
-    private readonly _resourceGroupClicked = new DefaultEvent<ResourceGroupListItem>(this);
-    readonly resourceGroupClicked = this._resourceGroupClicked;
+    private readonly eventSource = new EventSource<Events>(this, { resourceGroupClicked: null });
+    readonly when = this.eventSource.when;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -21,15 +24,16 @@ export class ResourceGroupListCard {
         new TextComponent(view.titleHeader).setText('Resource Groups');
         this.alert = new CardAlert(view.alert).alert;
         this.resourceGroups = new ListGroup(view.resourceGroups);
-        this.resourceGroups.registerItemClicked(this.onResourceGroupClicked.bind(this));
+        this.resourceGroups.when.itemClicked.then(this.onResourceGroupClicked.bind(this));
     }
 
     private onResourceGroupClicked(resourceGroup: ResourceGroupListItem) {
-        this._resourceGroupClicked.invoke(resourceGroup);
+        this.eventSource.events.resourceGroupClicked.invoke(resourceGroup);
     }
 
     async refresh() {
-        const resourceGroups = await this.getResourceGroups();
+        const sourceResourceGroups = await this.getResourceGroups();
+        const resourceGroups = sourceResourceGroups.map(rg => new AppResourceGroup(rg));
         this.resourceGroups.setItems(
             resourceGroups,
             (sourceItem, listItem) =>

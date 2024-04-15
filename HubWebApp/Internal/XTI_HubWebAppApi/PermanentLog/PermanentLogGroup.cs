@@ -1,4 +1,5 @@
-﻿using XTI_TempLog.Abstractions;
+﻿using XTI_HubWebAppApi.Periodic;
+using XTI_TempLog.Abstractions;
 
 namespace XTI_HubWebAppApi.PermanentLog;
 
@@ -8,9 +9,7 @@ public sealed class PermanentLogGroup : AppApiGroupWrapper
         : base(source)
     {
         LogBatch = source.AddAction(nameof(LogBatch), () => sp.GetRequiredService<LogBatchAction>());
-        EndExpiredSessions = source.AddAction(nameof(EndExpiredSessions), () => sp.GetRequiredService<EndExpiredSessionsAction>());
     }
 
     public AppApiAction<LogBatchModel, EmptyActionResult> LogBatch { get; }
-    public AppApiAction<EmptyRequest, EmptyActionResult> EndExpiredSessions { get; }
 }
