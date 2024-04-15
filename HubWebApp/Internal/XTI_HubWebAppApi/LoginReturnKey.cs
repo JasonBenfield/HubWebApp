@@ -1,21 +1,26 @@
-﻿namespace XTI_HubWebAppApi;
+﻿using XTI_Core;
+
+namespace XTI_HubWebAppApi;
 
 public sealed class LoginReturnKey : ILoginReturnKey
 {
-    private readonly StoredObjectFactory storedObjectFactory;
+    private readonly HubFactory hubFactory;
+    private readonly IClock clock;
 
-    public LoginReturnKey(StoredObjectFactory storedObjectFactory)
+    public LoginReturnKey(HubFactory hubFactory, IClock clock)
     {
-        this.storedObjectFactory = storedObjectFactory;
+        this.hubFactory = hubFactory;
+        this.clock = clock;
     }
 
     public Task<string> Value(string returnUrl) =>
-        storedObjectFactory.CreateStoredObject(new StorageName("Login Return"))
-            .Store
-            (
-                generateKeyModel: GenerateKeyModel.SixDigit(),
-                data: new LoginReturnModel { ReturnUrl = returnUrl },
-                expireAfter: TimeSpan.FromDays(90),
-                isSlidingExpiration: true
-            );
+        hubFactory.StoredObjects.Store
+        (
+            new StorageName("Login Return"),
+            GenerateKeyModel.SixDigit(),
+            new LoginReturnModel { ReturnUrl = returnUrl },
+            clock,
+            TimeSpan.FromDays(90),
+            isSlidingExpiration: true
+        );
 }

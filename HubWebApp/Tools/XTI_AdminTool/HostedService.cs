@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Admin;
+using XTI_App.Secrets;
 using XTI_DB;
+using XTI_HubAppClient;
 using XTI_HubDB.EF;
+using XTI_WebAppClient;
 
 namespace XTI_AdminTool;
 

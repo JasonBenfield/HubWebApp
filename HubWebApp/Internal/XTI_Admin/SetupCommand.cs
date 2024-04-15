@@ -1,6 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 
 namespace XTI_Admin;
 
@@ -31,7 +31,7 @@ internal sealed class SetupCommand : ICommand
     {
         var slnDir = Environment.CurrentDirectory;
         using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
-        var appKeys = selectedAppKeys.Values
+        var appKeys = selectedAppKeys.Values()
             .Where(ak => !ak.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;

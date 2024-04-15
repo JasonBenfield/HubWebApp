@@ -1,7 +1,7 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Secrets;
 using XTI_Credentials;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 using XTI_Secrets;
 
 namespace XTI_Admin;
@@ -23,7 +23,7 @@ internal sealed class AddSystemUserCommand : ICommand
 
     public async Task Execute(CancellationToken ct)
     {
-        var appKeys = selectedAppKeys.Values
+        var appKeys = selectedAppKeys.Values()
             .Where(a => !a.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;

@@ -1,5 +1,5 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 using XTI_Processes;
 
 namespace XTI_Admin;
@@ -23,7 +23,7 @@ public sealed class BuildProcess
     {
         Console.WriteLine("Add or Update Apps");
         var version = await branchVersion.Value(ct);
-        var appKeys = selectedAppKeys.Values;
+        var appKeys = selectedAppKeys.Values();
         var versionName = versionNameAccessor.Value;
         await hubAdmin.AddOrUpdateApps(versionName, appKeys, ct);
         Console.WriteLine("Building Apps");

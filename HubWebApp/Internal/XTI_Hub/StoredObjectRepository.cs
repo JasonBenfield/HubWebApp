@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -13,10 +15,17 @@ public sealed class StoredObjectRepository
         this.factory = factory;
     }
 
-    public async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, string data, DateTimeOffset timeExpires, bool isSingleUse, TimeSpan expirationTimeSpan)
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, object data, IClock clock, TimeSpan expireAfter, bool isSlidingExpiration) =>
+        AddOrUpdate(storageName, new GeneratedKeyFactory().Create(generateKey), data, clock.Now().Add(expireAfter), false, isSlidingExpiration ? expireAfter : TimeSpan.Zero);
+
+    public Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, IClock clock, TimeSpan expireAfter) =>
+        AddOrUpdate(storageName, new GeneratedKeyFactory().Create(generateKey), data, clock.Now().Add(expireAfter), true, TimeSpan.Zero);
+
+    private async Task<string> AddOrUpdate(StorageName storageName, IGeneratedKey generatedStorageKey, object data, DateTimeOffset timeExpires, bool isSingleUse, TimeSpan expirationTimeSpan)
     {
+        var serializedData = data is string dataStr ? dataStr : XtiSerializer.Serialize(data);
         var storedObject = await factory.DB.StoredObjects.Retrieve()
-            .FirstOrDefaultAsync(so => so.StorageName == storageName.Value && so.Data == data);
+            .FirstOrDefaultAsync(so => so.StorageName == storageName.Value && so.Data == serializedData);
         if (storedObject == null)
         {
             var storageKey = generatedStorageKey.Value();
@@ -40,7 +49,7 @@ public sealed class StoredObjectRepository
             {
                 StorageName = storageName.Value,
                 StorageKey = storageKey,
-                Data = data,
+                Data = serializedData,
                 TimeExpires = timeExpires,
                 IsSingleUse = isSingleUse,
                 ExpirationTimeSpan = expirationTimeSpan.ToString()
@@ -67,7 +76,16 @@ public sealed class StoredObjectRepository
         factory.DB.StoredObjects.Retrieve()
             .AnyAsync(so => so.StorageName == storageName.Value && so.StorageKey == storageKey);
 
-    public async Task<string> StoredObject(StorageName storageName, string storageKey, DateTimeOffset now)
+    public Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now) where T : new() =>
+        StoredObject(storageName, storageKey, now, () => new T());
+
+    public async Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, Func<T> ifnull)
+    {
+        var serialized = await SerializedStoredObject(storageName, storageKey, now);
+        return string.IsNullOrWhiteSpace(serialized) ? ifnull() : XtiSerializer.Deserialize<T>(serialized, ifnull);
+    }
+
+    public async Task<string> SerializedStoredObject(StorageName storageName, string storageKey, DateTimeOffset now)
     {
         var storedObject = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync
@@ -78,13 +96,13 @@ public sealed class StoredObjectRepository
                     so.TimeExpires >= now
             );
         var data = storedObject?.Data ?? "";
-        if(storedObject != null)
+        if (storedObject != null)
         {
             if (storedObject.IsSingleUse)
             {
                 await factory.DB.StoredObjects.Delete(storedObject);
             }
-            else if(TimeSpan.TryParse(storedObject.ExpirationTimeSpan, out var expirationTimeSpan) && !expirationTimeSpan.Equals(TimeSpan.Zero))
+            else if (TimeSpan.TryParse(storedObject.ExpirationTimeSpan, out var expirationTimeSpan) && !expirationTimeSpan.Equals(TimeSpan.Zero))
             {
                 await factory.DB.StoredObjects.Update
                 (

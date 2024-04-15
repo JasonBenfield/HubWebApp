@@ -193,9 +193,11 @@ function Xti-UploadTempLog {
         [ValidateSet("Production", "Development", "Staging", "Test")]
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
         $EnvName,
-        $DestinationMachine = ""
+        $DestinationMachine = "",
+        [ValidateSet("Default", "DB", "HubClient")]
+        $HubAdministrationType = "Default"
     )
-    Xti-Admin -EnvName $EnvName -Command UploadTempLog -DestinationMachine "`"$($DestinationMachine)`""
+    Xti-Admin -EnvName $EnvName -Command UploadTempLog -DestinationMachine "`"$($DestinationMachine)`"" -HubAdministrationType $HubAdministrationType
 }
 
 function Xti-RestartApp {

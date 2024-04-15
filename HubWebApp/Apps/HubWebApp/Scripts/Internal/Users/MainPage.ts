@@ -61,7 +61,7 @@ class MainPage extends HubPage {
         this.panels.activate(this.userEditPanel);
         this.userEditPanel.refresh();
         const result = await this.userEditPanel.start();
-        if (result.canceled || result.saved) {
+        if (result.canceled) {
             this.activateUserPanel();
         }
         else if (result.saved) {

@@ -1,9 +1,16 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 
-namespace XTI_Hub.Abstractions;
+namespace XTI_Hub;
 
 public interface IHubAdministration
 {
+    Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, bool isSlidingExpiration, CancellationToken ct);
+
+    Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct);
+
+    Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct);
+
     Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys, CancellationToken ct);
 
     Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, CancellationToken ct);

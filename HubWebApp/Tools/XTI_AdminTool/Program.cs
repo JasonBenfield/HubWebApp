@@ -152,23 +152,16 @@ await Host.CreateDefaultBuilder(args)
                     ? HubAppClientVersion.Version(AppVersionKey.Current.DisplayText)
                     : HubAppClientVersion.Version(options.HubAppVersionKey);
             });
-            var existingTokenAccessor = services.FirstOrDefault(s => !s.IsKeyedService && s.ImplementationType == typeof(XtiTokenAccessor));
-            if (existingTokenAccessor != null)
-            {
-                services.Remove(existingTokenAccessor);
-            }
-            services.AddScoped
+            services.AddXtiTokenAccessorFactory
             (
-                sp =>
+                (sp, xtiTokenAccessorFactory) =>
                 {
                     var cache = sp.GetRequiredService<IMemoryCache>();
                     var xtiEnv = sp.GetRequiredService<XtiEnvironment>();
-                    var xtiTokenAccessorFactory = new XtiTokenAccessorFactory(cache);
                     xtiTokenAccessorFactory.SetDefaultIdentifier(xtiEnv.EnvironmentName);
                     xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<InstallationUserXtiToken>());
                     xtiTokenAccessorFactory.UseDefaultToken<InstallationUserXtiToken>();
                     xtiTokenAccessorFactory.AddToken(() => sp.GetRequiredService<AnonymousXtiToken>());
-                    return xtiTokenAccessorFactory;
                 }
             );
             services.AddScoped<IAdminTokenAccessor, AdminTokenAccessor>();
@@ -188,9 +181,7 @@ await Host.CreateDefaultBuilder(args)
                 var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
                 return config.Get<AdminToolOptions>()?.HubClient ?? new HubClientOptions();
             });
-            services.AddScoped<InstallationUserCredentials>();
-            services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());
-            services.AddScoped<InstallationUserXtiToken>();
+            services.AddInstallationUserXtiToken();
             services.AddScoped<EfHubAdministration>();
             services.AddScoped<HcHubAdministration>();
             services.AddScoped
@@ -201,8 +192,8 @@ await Host.CreateDefaultBuilder(args)
                     var hubAdministrationType = options.HubAdministrationType;
                     if (hubAdministrationType == HubAdministrationTypes.Default)
                     {
-                        var appKeys = sp.GetRequiredService<SelectedAppKeys>();
-                        if (appKeys.Values.Any(appKey => appKey.Equals(HubInfo.AppKey)))
+                        var appKeys = sp.GetRequiredService<SelectedAppKeys>().Values();
+                        if (appKeys.Any(appKey => appKey.Equals(HubInfo.AppKey)))
                         {
                             hubAdministrationType = HubAdministrationTypes.DB;
                         }
@@ -235,30 +226,6 @@ await Host.CreateDefaultBuilder(args)
                     return hubAdministration;
                 }
             );
-            services.AddScoped<EfStoredObjectDB>();
-            services.AddScoped<HcStoredObjectDB>();
-            services.AddScoped
-            (
-                sp =>
-                {
-                    IStoredObjectDB storedObjectDB;
-                    var hubDbType = sp.GetRequiredService<HubDbTypeAccessor>().Value;
-                    if (hubDbType == HubAdministrationTypes.DB)
-                    {
-                        storedObjectDB = sp.GetRequiredService<EfStoredObjectDB>();
-                    }
-                    else if (hubDbType == HubAdministrationTypes.HubClient)
-                    {
-                        storedObjectDB = sp.GetRequiredService<HcStoredObjectDB>();
-                    }
-                    else
-                    {
-                        throw new NotSupportedException($"'{hubDbType}' is not supported.");
-                    }
-                    return storedObjectDB;
-                }
-            );
-            services.AddScoped<StoredObjectFactory>();
             services.AddScoped<RemoteCommandService>();
             services.AddScoped
             (

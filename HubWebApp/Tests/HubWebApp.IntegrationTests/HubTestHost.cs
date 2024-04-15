@@ -49,8 +49,6 @@ internal sealed class HubTestHost
         builder.Services.AddScoped<AppApiFactory, HubAppApiFactory>();
         builder.Services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
         builder.Services.AddScoped<IHubAdministration, EfHubAdministration>();
-        builder.Services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
-        builder.Services.AddScoped<StoredObjectFactory>();
         builder.Services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         builder.Services.AddHubAppApiServices();
         if (configure != null)

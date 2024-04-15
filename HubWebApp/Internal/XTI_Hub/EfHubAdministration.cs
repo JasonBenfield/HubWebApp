@@ -1,7 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Hub.Abstractions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace XTI_Hub;
 
@@ -20,6 +19,29 @@ public sealed class EfHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generatedKey, object data, TimeSpan expiresAfter, bool isSlidingExpiration, CancellationToken ct) =>
+        hubFactory.StoredObjects.Store
+        (
+            storageName,
+            generatedKey,
+            data,
+            clock,
+            expiresAfter,
+            isSlidingExpiration
+        );
+
+    public Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct) =>
+        hubFactory.StoredObjects.StoreSingleUse
+        (
+            storageName,
+            generateKey,
+            data,
+            clock,
+            expireAfter
+        );
+
+    public Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct) =>
+        hubFactory.StoredObjects.SerializedStoredObject(storageName, storageKey, clock.Now());
     public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys, CancellationToken ct)
     {
         var apps = new List<AppModel>();
@@ -276,4 +298,5 @@ public sealed class EfHubAdministration : IHubAdministration
             await installConfig.Delete();
         }
     }
+
 }

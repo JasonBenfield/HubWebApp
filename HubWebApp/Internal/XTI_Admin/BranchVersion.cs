@@ -2,7 +2,7 @@
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 
 namespace XTI_Admin;
 

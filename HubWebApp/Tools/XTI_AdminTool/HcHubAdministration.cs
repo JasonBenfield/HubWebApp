@@ -1,4 +1,13 @@
-﻿namespace XTI_HubAppClient;
+﻿using System.Runtime.CompilerServices;
+using XTI_App.Abstractions;
+using XTI_Core;
+using XTI_Hub;
+using XTI_Hub.Abstractions;
+using XTI_HubAppClient;
+using XTI_HubAppClient.Extensions;
+using XTI_WebAppClient;
+
+namespace XTI_AdminTool;
 
 public sealed class HcHubAdministration : IHubAdministration
 {
@@ -137,4 +146,39 @@ public sealed class HcHubAdministration : IHubAdministration
 
     public Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct) =>
         hubClient.Install.DeleteInstallConfiguration(deleteRequest, ct);
+
+    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, bool isSlidingExpiration, CancellationToken ct) =>
+        hubClient.Storage.StoreObject
+        (
+            new StoreObjectRequest(storageName, XtiSerializer.Serialize(data), expireAfter, generateKey)
+            {
+                IsSlidingExpiration = isSlidingExpiration
+            },
+            ct
+        );
+
+    public Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct) =>
+        hubClient.Storage.StoreObject
+        (
+            new StoreObjectRequest(storageName, XtiSerializer.Serialize(data), expireAfter, generateKey)
+            {
+                IsSingleUse = true
+            },
+            ct
+        );
+
+    public async Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct)
+    {
+        string serialized;
+        hubClient.UseToken<AnonymousXtiToken>();
+        try
+        {
+            serialized = await hubClient.Storage.GetStoredObject(new GetStoredObjectRequest(storageName, storageKey), ct);
+        }
+        finally
+        {
+            hubClient.UseToken<InstallationUserXtiToken>();
+        }
+        return serialized;
+    }
 }

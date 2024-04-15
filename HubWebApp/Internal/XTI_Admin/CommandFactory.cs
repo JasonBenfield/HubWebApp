@@ -3,6 +3,7 @@ using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Git;
 using XTI_GitHub;
+using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_PermanentLog;
 using XTI_Secrets;
@@ -71,7 +72,7 @@ public sealed class CommandFactory
             (
                 this,
                 scopes.GetRequiredService<AdminOptions>(),
-                scopes.GetRequiredService<StoredObjectFactory>()
+                scopes.GetRequiredService<IHubAdministration>()
             );
         }
         else if (commandName == CommandNames.Build)

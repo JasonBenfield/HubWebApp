@@ -1,5 +1,5 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 using XTI_Secrets;
 
 namespace XTI_Admin;
@@ -23,7 +23,7 @@ internal sealed class AddAdminUserCommand : ICommand
     {
         if (string.IsNullOrWhiteSpace(options.UserName)) { throw new ArgumentException("UserName is required"); }
         if (string.IsNullOrWhiteSpace(options.Password)) { throw new ArgumentException("Password is required"); }
-        var appKeys = selectedAppKeys.Values;
+        var appKeys = selectedAppKeys.Values();
         foreach(var appKey in appKeys.Where(a => !a.Type.Equals(AppType.Values.Package)))
         {
             await hubAdmin.AddOrUpdateAdminUser
