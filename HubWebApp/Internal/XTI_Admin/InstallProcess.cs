@@ -155,6 +155,7 @@ public sealed class InstallProcess
                         else
                         {
                             var remoteOptions = options.Copy();
+                            remoteOptions.Command = CommandNames.Install;
                             remoteOptions.InstallerUserName = installerUserName;
                             remoteOptions.InstallerPassword = installerPassword;
                             remoteOptions.AppType = installConfig.AppKey.Type.DisplayText;
