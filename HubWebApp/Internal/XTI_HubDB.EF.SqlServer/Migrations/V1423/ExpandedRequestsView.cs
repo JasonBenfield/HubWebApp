@@ -3,7 +3,7 @@
 internal static class ExpandedRequestsView
 {
     public static readonly string Sql = """
-CREATE OR ALTER view ExpandedRequests as
+create or alter view ExpandedRequests as
 with 
 LogEntrySeverityCounts as
 (
@@ -26,9 +26,8 @@ select
 	dbo.TimeElapsedDisplayText(Requests.TimeStarted, Requests.TimeEnded) RequestTimeElapsed,
 	Requests.ActualCount,
 	cast(case when datepart(year,Requests.TimeEnded) < 9999 and errorCounts.ErrorCount is null then 1 else 0 end as bit) Succeeded, 
-	isnull(srcreq.SourceRequestID, 0) SourceRequestID,
-	case isnull(srcreq.SourceRequestID, 0) when 0 then 0 else 1 end HasSourceRequest,
-	srcreq.Path SourceRequestPath,
+	isnull(srcreq.SourceID, 0) SourceRequestID,
+	case isnull(srcreq.SourceID, 0) when 0 then 0 else 1 end HasSourceRequest,
 	isnull(criticalErrorCounts.LogEntryCount, 0) CriticalErrorCount,
 	isnull(accessDeniedCounts.LogEntryCount, 0) AccessDeniedCount,
 	isnull(appErrorCounts.LogEntryCount, 0) AppErrorCount,
@@ -43,9 +42,7 @@ select
 	users.ID UserID, 
 	users.UserName, 
 	users.Name UserPersonalName, users.Email, 
-	dbo.GetLocalDateTime(users.TimeAdded) TimeUserAdded, 
-	dbo.GetLocalDateTime(users.TimeLoggedIn) TimeUserLoggedIn, 
-	dbo.GetLocalDateTime(users.TimeDeactivated) TimeUserDeactivated,
+	dbo.GetLocalDateTime(users.TimeAdded) TimeUserAdded,
 	UserGroups.ID UserGroupID, UserGroups.GroupName UserGroupName, UserGroups.DisplayText UserGroupDisplayText,
 	inst.ID InstallationID, inst.Domain, inst.IsCurrent IsCurrentInstallation, inst.Status InstallationStatusValue, dbo.InstallationStatusDisplayText(inst.Status) InstallationStatus, 
 	dbo.GetLocalDateTime(inst.TimeAdded) TimeInstallationAdded,
