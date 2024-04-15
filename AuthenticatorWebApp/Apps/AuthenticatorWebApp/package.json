@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jasonbenfield/sharedwebapp": "^1.9.25",
+    "@jasonbenfield/sharedwebapp": "^1.9.27",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
@@ -29,7 +29,7 @@
     "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "webpack": "^5.89.0",
+    "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   }
 }

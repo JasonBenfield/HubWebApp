@@ -21,9 +21,6 @@ internal sealed class ConfigureInstallCommand : ICommand
             "Default" :
             adminOptions.InstallConfigurationName;
         var appKey = adminOptions.AppKey();
-        var installSequence = adminOptions.InstallSequence <= 0 ?
-            10 :
-            adminOptions.InstallSequence;
         return hubAdmin.ConfigureInstall
         (
             new ConfigureInstallRequest
@@ -33,7 +30,7 @@ internal sealed class ConfigureInstallCommand : ICommand
                 configurationName: configName,
                 appKey: appKey,
                 templateName: adminOptions.InstallTemplateName,
-                installSequence: installSequence
+                installSequence: adminOptions.InstallSequence
             ),
             ct
         );

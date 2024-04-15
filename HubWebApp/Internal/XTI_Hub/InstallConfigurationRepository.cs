@@ -23,14 +23,23 @@ public sealed class InstallConfigurationRepository
 
     public async Task<InstallConfiguration> AddOrUpdateConfiguration
     (
-        string repoOwner, 
-        string repoName, 
+        string repoOwner,
+        string repoName,
         string configurationName,
         AppKey appKey,
         InstallConfigurationTemplate template,
         int installSequence
     )
     {
+        if (installSequence == 0)
+        {
+            installSequence = await hubFactory.DB.InstallConfigurations.Retrieve()
+                .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName)
+                .OrderByDescending(c => c.InstallSequence)
+                .Select(c => c.InstallSequence)
+                .FirstOrDefaultAsync();
+            installSequence++;
+        }
         InstallConfiguration installConfiguration;
         var config = await hubFactory.DB.InstallConfigurations.Retrieve()
             .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && c.AppName == appKey.Name && c.AppType == appKey.Type.Value)

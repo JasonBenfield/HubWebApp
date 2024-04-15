@@ -59,7 +59,7 @@ public sealed class BuildProcess
         );
         if (Directory.Exists(apiGeneratorPath))
         {
-            Console.WriteLine("Generating API");
+            Console.WriteLine($"Generating API for {appKey.Format}");
             var result = await new DotnetRunProcess(apiGeneratorPath)
                 .WriteOutputToConsole()
                 .AddConfigOptions
@@ -125,7 +125,7 @@ public sealed class BuildProcess
         var webpackConfigPath = Path.Combine(projectDir, "webpack.config.js");
         if (File.Exists(webpackConfigPath))
         {
-            Console.WriteLine("Running webpack");
+            Console.WriteLine($"Running webpack for {appKey.Format()}");
             var webpackProcess = new WinProcess("webpack");
             var result = await new CmdProcess(webpackProcess)
                 .SetWorkingDirectory(projectDir)
