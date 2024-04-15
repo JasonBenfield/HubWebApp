@@ -48,8 +48,6 @@ public static class HubWebAppExtensions
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
         services.AddScoped<IHubAdministration, EfHubAdministration>();
-        services.AddScoped<IStoredObjectDB, EfStoredObjectDB>();
-        services.AddScoped<StoredObjectFactory>();
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddScoped<IMenuDefinitionBuilder, HubMenuDefinitionBuilder>();
         services.AddScoped<AuthenticationFactory>();

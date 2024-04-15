@@ -48,7 +48,7 @@ internal sealed class PublishLibCommand : ICommand
             versionKeyFromCurrentBranch.Value() : 
             AppVersionKey.Current;
         var slnDir = Environment.CurrentDirectory;
-        var appKeys = selectedAppKeys.Values;
+        var appKeys = selectedAppKeys.Values();
         foreach(var appKey in appKeys)
         {
             var projectDir = Path.Combine(slnDir, new AppDirectoryName(appKey).Value);

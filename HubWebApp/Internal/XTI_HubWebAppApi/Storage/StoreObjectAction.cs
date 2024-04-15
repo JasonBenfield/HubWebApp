@@ -1,33 +1,41 @@
-﻿namespace XTI_HubWebAppApi.Storage;
+﻿using XTI_Core;
+
+namespace XTI_HubWebAppApi.Storage;
 
 internal sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
 {
-    private readonly StoredObjectFactory storedObjectFactory;
+    private readonly HubFactory hubFactory;
+    private readonly IClock clock;
 
-    public StoreObjectAction(StoredObjectFactory storedObjectFactory)
+    public StoreObjectAction(HubFactory hubFactory, IClock clock)
     {
-        this.storedObjectFactory = storedObjectFactory;
+        this.hubFactory = hubFactory;
+        this.clock = clock;
     }
 
     public async Task<string> Execute(StoreObjectRequest storeRequest, CancellationToken stoppingToken)
     {
-        var storedObject = storedObjectFactory.CreateStoredObject(new StorageName(storeRequest.StorageName));
+        var storageName = new StorageName(storeRequest.StorageName);
         string storageKey;
         if (storeRequest.IsSingleUse)
         {
-            storageKey = await storedObject.StoreSingleUse
+            storageKey = await hubFactory.StoredObjects.StoreSingleUse
             (
+                storageName,
                 storeRequest.GenerateKey,
                 storeRequest.Data,
+                clock,
                 storeRequest.ExpireAfter
             );
         }
         else
         {
-            storageKey = await storedObject.Store
+            storageKey = await hubFactory.StoredObjects.Store
             (
+                storageName,
                 storeRequest.GenerateKey,
                 storeRequest.Data,
+                clock,
                 storeRequest.ExpireAfter,
                 storeRequest.IsSlidingExpiration
             );

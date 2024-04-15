@@ -7,26 +7,26 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
     private readonly HubWebAppOptions options;
-    private readonly IStoredObjectDB storedObjectDB;
+    private readonly HubFactory hubFactory;
+    private readonly IClock clock;
 
-    public LoginAction(Authentication auth, IAnonClient anonClient, HubWebAppOptions options, IStoredObjectDB storedObjectDB)
+    public LoginAction(Authentication auth, IAnonClient anonClient, HubWebAppOptions options, HubFactory hubFactory, IClock clock)
     {
         this.auth = auth;
         this.anonClient = anonClient;
         this.options = options;
-        this.storedObjectDB = storedObjectDB;
+        this.hubFactory = hubFactory;
+        this.clock = clock;
     }
 
     public async Task<WebRedirectResult> Execute(AuthenticatedLoginRequest loginRequest, CancellationToken stoppingToken)
     {
-        var serializedAuthenticated = await storedObjectDB.Value
+        var authenticated = await hubFactory.StoredObjects.StoredObject<AuthenticatedModel>
         (
             new StorageName("XTI Authenticated"),
-            loginRequest.AuthKey
+            loginRequest.AuthKey,
+            clock.Now()
         );
-        var authenticated = string.IsNullOrWhiteSpace(serializedAuthenticated) ?
-            new() :
-            XtiSerializer.Deserialize<AuthenticatedModel>(serializedAuthenticated);
         if (string.IsNullOrWhiteSpace(authenticated.UserName))
         {
             throw new Exception($"AuthKey '{loginRequest.AuthKey}' is not valid");
@@ -38,10 +38,12 @@ internal sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedi
         await auth.Authenticate(new AppUserName(authenticated.UserName));
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var serializedLoginReturn = await storedObjectDB.Value(new StorageName("Login Return"), loginRequest.ReturnKey);
-        var loginReturn = string.IsNullOrWhiteSpace(serializedLoginReturn) ?
-            new() :
-            XtiSerializer.Deserialize<LoginReturnModel>(serializedLoginReturn);
+        var loginReturn = await hubFactory.StoredObjects.StoredObject<LoginReturnModel>
+        (
+            new StorageName("Login Return"), 
+            loginRequest.ReturnKey,
+            clock.Now()
+        );
         var returnUrl = string.IsNullOrWhiteSpace(loginReturn.ReturnUrl) ?
             options.Login.DefaultReturnUrl :
             loginReturn.ReturnUrl;

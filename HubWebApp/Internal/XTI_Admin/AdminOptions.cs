@@ -9,16 +9,19 @@ public sealed class AdminOptions
     public string AppName { get; set; } = "";
     public string AppType { get; set; } = "";
     public string HubAppVersionKey { get; set; } = "";
+    public string VersionName { get; set; } = "";
     public string VersionKey { get; set; } = "";
     public string VersionNumber { get; set; } = "";
     public string RepoOwner { get; set; } = "";
     public string RepoName { get; set; } = "";
     public string InstallConfigurationName { get; set; } = "";
     public string InstallTemplateName { get; set; } = "";
-    public int InstallSequence { get; set; } 
+    public int InstallSequence { get; set; }
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
+    public string InstallerUserName { get; set; } = "";
+    public string InstallerPassword { get; set; } = "";
     public string RemoteOptionsKey { get; set; } = "";
     public InstallationSources InstallationSource { get; set; } = InstallationSources.Default;
     public string VersionType { get; set; } = "";
@@ -31,9 +34,9 @@ public sealed class AdminOptions
     public string CredentialKey { get; set; } = "";
 
     public AppKey AppKey() =>
-        string.IsNullOrWhiteSpace(AppName)
-        ? XTI_App.Abstractions.AppKey.Unknown
-        : new AppKey(new AppName(AppName), XTI_App.Abstractions.AppType.Values.Value(AppType));
+        string.IsNullOrWhiteSpace(AppName) ?
+            XTI_App.Abstractions.AppKey.Unknown :
+            new AppKey(new AppName(AppName), XTI_App.Abstractions.AppType.Values.Value(AppType));
 
     public InstallationSources GetInstallationSource(XtiEnvironment xtiEnv)
     {
@@ -75,7 +78,10 @@ public sealed class AdminOptions
             InstallTemplateName = InstallTemplateName,
             InstallSequence = InstallSequence,
             SiteName = SiteName,
+            InstallerUserName = InstallerUserName,
+            InstallerPassword = InstallerPassword,
             StartIssue = StartIssue,
+            VersionName = VersionName,
             VersionKey = VersionKey,
             VersionNumber = VersionNumber,
             VersionType = VersionType
@@ -103,7 +109,10 @@ public sealed class AdminOptions
         InstallTemplateName = options.InstallTemplateName;
         InstallSequence = options.InstallSequence;
         SiteName = options.SiteName;
+        InstallerUserName = options.InstallerUserName;
+        InstallerPassword = options.InstallerPassword;
         StartIssue = options.StartIssue;
+        VersionName = options.VersionName;
         VersionKey = options.VersionKey;
         VersionNumber = options.VersionNumber;
         VersionType = options.VersionType;

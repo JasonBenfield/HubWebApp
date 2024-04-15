@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -9,20 +8,23 @@ public sealed class SlnFolder
 
     public SlnFolder(string folderPath)
     {
-        foreach (var folder in Directory.GetDirectories(folderPath))
+        if(folderPath.Contains("\\src\\", StringComparison.OrdinalIgnoreCase))
         {
-            var appKey = GetAppKey(folder);
-            if (appKey != null)
+            foreach (var folder in Directory.GetDirectories(folderPath))
             {
-                appKeys.Add(appKey);
+                var appKey = GetAppKey(folder);
+                if (appKey != null)
+                {
+                    appKeys.Add(appKey);
+                }
             }
-        }
-        if (!appKeys.Any())
-        {
-            var appKey = GetAppKey(folderPath);
-            if (appKey != null)
+            if (!appKeys.Any())
             {
-                appKeys.Add(appKey);
+                var appKey = GetAppKey(folderPath);
+                if (appKey != null)
+                {
+                    appKeys.Add(appKey);
+                }
             }
         }
     }

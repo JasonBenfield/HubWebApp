@@ -1,6 +1,6 @@
 ﻿using XTI_App.Secrets;
 using XTI_Credentials;
-using XTI_Hub.Abstractions;
+using XTI_Hub;
 
 namespace XTI_Admin;
 

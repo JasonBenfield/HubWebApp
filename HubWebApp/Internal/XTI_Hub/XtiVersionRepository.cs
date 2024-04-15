@@ -106,12 +106,11 @@ public sealed class XtiVersionRepository
     {
         var validVersionTypes = new List<AppVersionType>
         (
-            new[]
-            {
+            [
                 AppVersionType.Values.Major,
                 AppVersionType.Values.Minor,
                 AppVersionType.Values.Patch
-            }
+            ]
         );
         if (!validVersionTypes.Contains(type))
         {
@@ -269,6 +268,10 @@ public sealed class XtiVersionRepository
                 )
                 .FirstOrDefaultAsync();
         }
+        else if (versionKey.IsBlank())
+        {
+            record = null;
+        }
         else
         {
             record = await factory.DB
@@ -301,6 +304,10 @@ public sealed class XtiVersionRepository
                         v.Status == AppVersionStatus.Values.Current.Value
                 )
                 .FirstOrDefaultAsync();
+        }
+        else if (versionKey.IsBlank())
+        {
+            record = null;
         }
         else
         {
@@ -392,7 +399,7 @@ public sealed class XtiVersionRepository
         {
             await factory.DB.Versions.Update
             (
-                versionToArchive, 
+                versionToArchive,
                 v => v.Status = AppVersionStatus.Values.Old.Value
             );
         }

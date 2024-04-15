@@ -6,14 +6,14 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
 {
     private readonly UnverifiedUser unverifiedUser;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
-    private readonly StoredObjectFactory storedObjectFactory;
+    private readonly HubFactory hubFactory;
     private readonly IClock clock;
 
-    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, StoredObjectFactory storedObjectFactory, IClock clock)
+    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, HubFactory hubFactory, IClock clock)
     {
         this.unverifiedUser = unverifiedUser;
         this.hashedPasswordFactory = hashedPasswordFactory;
-        this.storedObjectFactory = storedObjectFactory;
+        this.hubFactory = hubFactory;
         this.clock = clock;
     }
 
@@ -24,12 +24,13 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
         var hashedPassword = hashedPasswordFactory.Create(password);
         var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword);
         await user.LoggedIn(clock.Now());
-        var storedObject = storedObjectFactory.CreateStoredObject(new StorageName("XTI Authenticated"));
         var authID = Guid.NewGuid().ToString("N");
-        var authKey = await storedObject.Store
+        var authKey = await hubFactory.StoredObjects.Store
         (
-            generateKeyModel: GenerateKeyModel.SixDigit(),
+            storageName: new StorageName("XTI Authenticated"),
+            generateKey: GenerateKeyModel.SixDigit(),
             data: new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
+            clock: clock,
             expireAfter: TimeSpan.FromMinutes(15),
             isSlidingExpiration: false
         );
