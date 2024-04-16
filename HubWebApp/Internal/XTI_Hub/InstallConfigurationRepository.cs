@@ -42,7 +42,7 @@ public sealed class InstallConfigurationRepository
         }
         InstallConfiguration installConfiguration;
         var config = await hubFactory.DB.InstallConfigurations.Retrieve()
-            .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && c.AppName == appKey.Name && c.AppType == appKey.Type.Value)
+            .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && (c.AppName == appKey.Name.DisplayText || c.AppName == appKey.Name.Value) && c.AppType == appKey.Type.Value)
             .FirstOrDefaultAsync();
         if (config == null)
         {
@@ -70,7 +70,7 @@ public sealed class InstallConfigurationRepository
     internal async Task<InstallConfiguration> ConfigurationOrDefault(string repoOwner, string repoName, string configurationName, AppKey appKey)
     {
         var config = await hubFactory.DB.InstallConfigurations.Retrieve()
-            .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && c.AppName == appKey.Name && c.AppType == appKey.Type.Value)
+            .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && (c.AppName == appKey.Name.Value || c.AppName == appKey.Name.DisplayText) && c.AppType == appKey.Type.Value)
             .FirstOrDefaultAsync();
         return new InstallConfiguration(hubFactory, config ?? new());
     }
