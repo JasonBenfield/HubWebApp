@@ -12,25 +12,20 @@
         [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $DestinationMachine = "",
         [switch] $NoInstall,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-		$Domain = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-		$SiteName = "",
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         $HubAppVersionKey = "",
         [ValidateSet("Default", "GitHub", "Folder")]
-        $InstallationSource = "Default"
+        $InstallationSource = "Default",
+        $InstallConfigurationName = ""
     )
     ThrowIfNotSolutionDir
     $Command = "PublishAndInstall"
     if($NoInstall){
         $Command = "Publish"
     }
-    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
+    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
 }
 
 function Xti-Build {
@@ -87,21 +82,16 @@ function Xti-Install {
         $RepoName,
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $VersionNumber,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $DestinationMachine = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-		$Domain = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-		$SiteName = "",
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         [ValidateSet("Default", "GitHub", "Folder")]
         $InstallationSource = "Default",
+        $InstallConfigurationName = "",
         $HubAppVersionKey = "",
         $Release = ""
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -DestinationMachine "`"$($DestinationMachine)`"" -Domain "`"$($Domain)`"" -SiteName "`"$($SiteName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -Release "`"$($Release)`""
+    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -Release "`"$($Release)`""
 }
 
 function Xti-PublishLib {
