@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-    <PackageReference Include="XTI_App.Api" Version="1.8.41" />
+    <PackageReference Include="XTI_App.Api" Version="1.8.42" />
   </ItemGroup>
 
   <ItemGroup>

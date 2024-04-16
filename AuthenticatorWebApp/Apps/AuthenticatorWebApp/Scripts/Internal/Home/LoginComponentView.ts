@@ -23,14 +23,9 @@ export class LoginComponentView extends BlockView {
         this.addCssName("container");
         this.verifyLoginForm.addOffscreenSubmit();
         this.verifyLoginForm.addContent();
-        new DelayedAction(() => {
-            this.verifyLoginForm.UserName.input.setFocus();
-        }, 100).execute();
         this.loginButton = commandBlock.addView(ButtonCommandView);
         this.loginButton.setContext(ContextualClass.primary);
         this.loginButton.setText('Login');
         this.loginButton.icon.solidStyle('sign-in-alt');
     }
-
-    setFocusOnUserName() { this.verifyLoginForm.UserName.input.setFocus(); }
 }

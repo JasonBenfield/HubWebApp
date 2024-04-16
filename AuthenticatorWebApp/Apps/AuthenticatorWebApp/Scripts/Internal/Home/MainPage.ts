@@ -1,5 +1,4 @@
-﻿import { AppClients } from '../AppClients';
-import { AuthenticatorPage } from '../AuthenticatorPage';
+﻿import { AuthenticatorPage } from '../AuthenticatorPage';
 import { LoginComponent } from './LoginComponent';
 import { MainPageView } from './MainPageView';
 
@@ -8,8 +7,7 @@ class MainPage extends AuthenticatorPage {
 
     constructor() {
         super(new MainPageView());
-        const hubClient = new AppClients(this.view.modalError).Hub();
-        new LoginComponent(hubClient, this.view.loginComponent);
+        new LoginComponent(this.hubClient, this.view.loginComponent);
     }
 }
 new MainPage();

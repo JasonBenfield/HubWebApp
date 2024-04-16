@@ -25,7 +25,10 @@ public static class Extensions
                 options.UseSqlServer
                 (
                     connectionString.Value(),
-                    b => b.MigrationsAssembly("XTI_HubDB.EF.SqlServer")
+                    b =>
+                    {
+                        b.MigrationsAssembly("XTI_HubDB.EF.SqlServer");
+                    }
                 );
                 if (xtiEnv.IsDevelopmentOrTest())
                 {

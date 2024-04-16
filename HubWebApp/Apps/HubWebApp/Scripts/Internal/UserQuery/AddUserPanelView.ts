@@ -23,8 +23,8 @@ export class AddUserPanelView extends GridView {
         this.addUserForm = mainContent.addView(AddUserFormView);
         this.addUserForm.addOffscreenSubmit();
         this.addUserForm.addContent();
-        this.addUserForm.UserName.input.setAutocompleteOff();
-        this.addUserForm.Password.input.setAutocompleteNewPassword();
+        this.addUserForm.UserName.inputView.setAutocompleteOff();
+        this.addUserForm.Password.inputView.setAutocompleteNewPassword();
         this.alert = mainContent.addView(MessageAlertView);
         const toolbar = HubTheme.instance.commandToolbar.toolbar(
             this.addCell().addView(ToolbarView)
@@ -36,9 +36,5 @@ export class AddUserPanelView extends GridView {
         this.saveButton = HubTheme.instance.commandToolbar.saveButton(
             toolbar.columnEnd.addView(ButtonCommandView)
         );
-    }
-
-    setFocus() {
-        this.addUserForm.UserName.input.setFocus();
     }
 }
