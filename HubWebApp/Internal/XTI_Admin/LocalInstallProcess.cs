@@ -30,12 +30,6 @@ public sealed class LocalInstallProcess
 
     public async Task Run(AdminInstallOptions adminInstOptions, IPublishedAssets publishedAssets, CancellationToken ct)
     {
-        var installerCreds = new CredentialValue
-        (
-            adminInstOptions.InstallerUserName,
-            adminInstOptions.InstallerPassword
-        );
-        await credentials.Update(installerCreds);
         var appKey = adminInstOptions.AppKey;
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !adminInstOptions.VersionKey.Equals(AppVersionKey.None))

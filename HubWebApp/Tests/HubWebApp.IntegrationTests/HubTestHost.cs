@@ -1,14 +1,17 @@
 ﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using HubWebApp.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Core.Fakes;
 using XTI_Hub.Abstractions;
+using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi.PermanentLog;
 using XTI_WebApp.Abstractions;
+using XTI_WebApp.Api;
 
 namespace HubWebApp.IntegrationTests;
 
@@ -38,6 +41,8 @@ internal sealed class HubTestHost
         builder.Services.AddScoped<EfUserContext>();
         builder.Services.AddScoped<IUserContext, CachedUserContext>();
         builder.Services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<EfUserContext>());
+        builder.Services.AddConfigurationOptions<DefaultWebAppOptions>();
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<DefaultWebAppOptions>().DB);
         builder.Services.AddHubDbContextForSqlServer();
         builder.Services.AddScoped<HubFactory>();
         builder.Services.AddScoped<PermanentLog>();

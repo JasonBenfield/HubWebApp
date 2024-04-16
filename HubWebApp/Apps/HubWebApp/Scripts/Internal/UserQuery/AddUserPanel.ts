@@ -48,7 +48,7 @@ export class AddUserPanel implements IPanel {
 
     activate() {
         this.view.show();
-        this.view.setFocus();
+        this.addUserForm.UserName.setFocus();
     }
 
     deactivate() { this.view.hide(); }

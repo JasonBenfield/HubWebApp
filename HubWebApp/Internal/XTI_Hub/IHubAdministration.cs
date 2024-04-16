@@ -5,8 +5,6 @@ namespace XTI_Hub;
 
 public interface IHubAdministration
 {
-    Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, bool isSlidingExpiration, CancellationToken ct);
-
     Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct);
 
     Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct);

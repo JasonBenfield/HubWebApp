@@ -1,4 +1,6 @@
-﻿using XTI_App.Abstractions;
+﻿using System.Net;
+using XTI_App.Abstractions;
+using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
 using XTI_GitHub;
@@ -19,8 +21,9 @@ public sealed class InstallProcess
     private readonly PublishedAssetsFactory publishedAssetsFactory;
     private readonly RemoteCommandService remoteCommandService;
     private readonly LocalInstallProcess localInstallProcess;
+    private readonly InstallationUserCredentials installerCredentials;
 
-    public InstallProcess(AdminOptions options, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, XtiEnvironment xtiEnv, XtiGitHubRepository gitHubRepo, IHubAdministration hubAdministration, GitRepoInfo gitRepoInfo, PublishedAssetsFactory publishedAssetsFactory, RemoteCommandService remoteCommandService, LocalInstallProcess localInstallProcess)
+    public InstallProcess(AdminOptions options, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, XtiEnvironment xtiEnv, XtiGitHubRepository gitHubRepo, IHubAdministration hubAdministration, GitRepoInfo gitRepoInfo, PublishedAssetsFactory publishedAssetsFactory, RemoteCommandService remoteCommandService, LocalInstallProcess localInstallProcess, InstallationUserCredentials installerCredentials)
     {
         this.options = options;
         this.selectedAppKeys = selectedAppKeys;
@@ -32,6 +35,7 @@ public sealed class InstallProcess
         this.publishedAssetsFactory = publishedAssetsFactory;
         this.remoteCommandService = remoteCommandService;
         this.localInstallProcess = localInstallProcess;
+        this.installerCredentials = installerCredentials;
     }
 
     public async Task Run(CancellationToken ct)
@@ -122,6 +126,7 @@ public sealed class InstallProcess
                             GetLocalMachineName() :
                             installConfig.Config.Template.DestinationMachineName;
                         var installerCreds = await GetInstallerCredentials(hubAdministration, installMachineName, ct);
+                        await installerCredentials.Update(installerCreds);
                         var installerUserName = installerCreds.UserName;
                         var installerPassword = installerCreds.Password;
                         if (isLocal)
@@ -194,13 +199,18 @@ public sealed class InstallProcess
             if (appKeys.Length != 1)
             {
                 Console.WriteLine($"selectedAppKeys: {string.Join(", ", appKeys.Select(a => a.Format()))}");
-                Console.WriteLine($"Remote Options: {XtiSerializer.Serialize(options)}");
                 throw new Exception("Expected single app key");
             }
             var appKey = appKeys[0];
             var installMachineName = GetLocalMachineName();
             var versionName = versionNameAccessor.Value;
             using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
+            var installerCreds = new CredentialValue
+            (
+                options.InstallerUserName,
+                options.InstallerPassword
+            );
+            await installerCredentials.Update(installerCreds);
             var instResult = await NewInstallation
             (
                 appKey,

@@ -19,17 +19,6 @@ public sealed class EfHubAdministration : IHubAdministration
         this.clock = clock;
     }
 
-    public Task<string> Store(StorageName storageName, GenerateKeyModel generatedKey, object data, TimeSpan expiresAfter, bool isSlidingExpiration, CancellationToken ct) =>
-        hubFactory.StoredObjects.Store
-        (
-            storageName,
-            generatedKey,
-            data,
-            clock,
-            expiresAfter,
-            isSlidingExpiration
-        );
-
     public Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct) =>
         hubFactory.StoredObjects.StoreSingleUse
         (

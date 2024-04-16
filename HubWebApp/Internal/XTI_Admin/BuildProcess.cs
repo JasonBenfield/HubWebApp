@@ -59,7 +59,7 @@ public sealed class BuildProcess
         );
         if (Directory.Exists(apiGeneratorPath))
         {
-            Console.WriteLine($"Generating API for {appKey.Format}");
+            Console.WriteLine($"Generating API for {appKey.Format()}");
             var result = await new DotnetRunProcess(apiGeneratorPath)
                 .WriteOutputToConsole()
                 .AddConfigOptions

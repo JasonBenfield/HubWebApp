@@ -28,7 +28,7 @@ public sealed class RemoteCommandService
         (
             new RemoteOptionsStorageName().Value,
             GenerateKeyModel.SixDigit(),
-            XtiSerializer.Serialize(commandOptions),
+            commandOptions,
             TimeSpan.FromMinutes(30),
             default
         );

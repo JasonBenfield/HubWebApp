@@ -1,9 +1,9 @@
-﻿import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
-import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
-import { HubAppClient } from "@hub/Http/HubAppClient";
-import { PostToLogin } from "@hub/PostToLogin";
+﻿import { HubAppClient } from "@hub/Http/HubAppClient";
 import { VerifyLoginForm } from "@hub/Http/VerifyLoginForm";
+import { PostToLogin } from "@hub/PostToLogin";
+import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
+import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { LoginComponentView } from "./LoginComponentView";
 
 export class LoginResult {
@@ -24,6 +24,10 @@ export class LoginComponent {
         this.verifyLoginForm.handleSubmit(this.onSubmit.bind(this));
         this.alert = new MessageAlert(view.alert);
         this.loginCommand.add(view.loginButton);
+        new DelayedAction(
+            () => this.verifyLoginForm.UserName.setFocus(),
+            100
+        ).execute();
     }
 
     private onSubmit() {

@@ -147,16 +147,6 @@ public sealed class HcHubAdministration : IHubAdministration
     public Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct) =>
         hubClient.Install.DeleteInstallConfiguration(deleteRequest, ct);
 
-    public Task<string> Store(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, bool isSlidingExpiration, CancellationToken ct) =>
-        hubClient.Storage.StoreObject
-        (
-            new StoreObjectRequest(storageName, XtiSerializer.Serialize(data), expireAfter, generateKey)
-            {
-                IsSlidingExpiration = isSlidingExpiration
-            },
-            ct
-        );
-
     public Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct) =>
         hubClient.Storage.StoreObject
         (
