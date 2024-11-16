@@ -22,13 +22,22 @@ public sealed class AppRequestRepository
         return factory.CreateRequest(entity ?? throw new Exception($"Request not found with ID {id}"));
     }
 
+    public async Task<AppRequest> RequestOrDefault(string requestKey)
+    {
+        var entity = await factory.DB.Requests.Retrieve()
+            .Where(r => r.RequestKey == requestKey)
+            .FirstOrDefaultAsync();
+        return factory.CreateRequest(entity ?? new());
+    }
+
     internal async Task<AppRequest> AddOrUpdate
     (
         AppSession session,
         string requestKey,
         Installation installation,
         string path,
-        DateTimeOffset timeRequested,
+        DateTimeOffset timeStarted,
+        DateTimeOffset timeEnded,
         int actualCount,
         string sourceRequestKey
     )
@@ -65,8 +74,8 @@ public sealed class AppRequestRepository
                 resource,
                 modifier,
                 path,
-                timeRequested,
-                DateTimeOffset.MaxValue,
+                timeStarted,
+                timeEnded,
                 actualCount
             );
         }
@@ -84,7 +93,14 @@ public sealed class AppRequestRepository
                         r.ResourceID = resource.ID;
                         r.ModifierID = modifier.ID;
                         r.Path = path;
-                        r.TimeStarted = timeRequested;
+                        if (timeStarted < r.TimeStarted)
+                        {
+                            r.TimeStarted = timeStarted;
+                        }
+                        if (timeEnded.Year < 9999)
+                        {
+                            r.TimeEnded = timeEnded;
+                        }
                         r.ActualCount = actualCount;
                     }
                 );
@@ -92,7 +108,7 @@ public sealed class AppRequestRepository
         var request = factory.CreateRequest(record);
         if (!string.IsNullOrWhiteSpace(sourceRequestKey))
         {
-            var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeRequested);
+            var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeStarted);
             await AddSourceLinkIfNotExists(request, sourceRequest);
         }
         return request;
@@ -110,17 +126,21 @@ public sealed class AppRequestRepository
             var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown);
             var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown);
             var modifier = await app.DefaultModifier();
+            if (string.IsNullOrWhiteSpace(requestKey))
+            {
+                requestKey = new GeneratedKey().Value();
+            }
             requestEntity = await Add
             (
                 session,
-                string.IsNullOrWhiteSpace(requestKey) ? new GeneratedKey().Value() : requestKey,
+                requestKey,
                 installation,
                 resource,
                 modifier,
-                "",
-                now,
-                now,
-                1
+                path: "",
+                timeStarted: now,
+                timeEnded: now,
+                actualCount: 1
             );
         }
         return factory.CreateRequest(requestEntity);
@@ -214,7 +234,7 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await requestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources);
         return requests;
     }
 
@@ -240,7 +260,7 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await requestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources);
         return requests;
     }
 
@@ -266,11 +286,11 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await requestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources);
         return requests;
     }
 
-    private Task<AppRequestExpandedModel[]> requestsWithResources(int howMany, IQueryable<ResourceWithGroupRecord> resources)
+    private Task<AppRequestExpandedModel[]> RequestsWithResources(int howMany, IQueryable<ResourceWithGroupRecord> resources)
     {
         return factory.DB
             .Requests
@@ -282,12 +302,12 @@ public sealed class AppRequestRepository
                 res => res.ResourceID,
                 (req, res) => new
                 {
-                    ID = req.ID,
-                    SessionID = req.SessionID,
-                    GroupName = res.GroupName,
-                    ActionName = res.ActionName,
-                    TimeStarted = req.TimeStarted,
-                    TimeEnded = req.TimeEnded
+                    req.ID,
+                    req.SessionID,
+                    res.GroupName,
+                    res.ActionName,
+                    req.TimeStarted,
+                    req.TimeEnded
                 }
             )
             .Join
@@ -312,12 +332,12 @@ public sealed class AppRequestRepository
                 s => s.SessionID,
                 (req, s) => new
                 {
-                    ID = req.ID,
-                    UserName = s.UserName,
-                    GroupName = req.GroupName,
-                    ActionName = req.ActionName,
-                    TimeStarted = req.TimeStarted,
-                    TimeEnded = req.TimeEnded
+                    req.ID,
+                    s.UserName,
+                    req.GroupName,
+                    req.ActionName,
+                    req.TimeStarted,
+                    req.TimeEnded
                 }
             )
             .OrderByDescending(r => r.TimeStarted)

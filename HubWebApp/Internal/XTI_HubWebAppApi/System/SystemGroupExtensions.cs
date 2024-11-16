@@ -10,6 +10,7 @@ internal static class SystemGroupExtensions
         services.AddScoped<GetAppContextAction>();
         services.AddScoped<GetModifierAction>();
         services.AddScoped<GetUserRolesAction>();
+        services.AddScoped<GetUserByUserNameAction>();
         services.AddScoped<GetUserOrAnonAction>();
         services.AddScoped<GetUsersWithAnyRoleAction>();
         services.AddScoped<GetUserAuthenticatorsAction>();

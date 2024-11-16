@@ -4,16 +4,16 @@ namespace XTI_HubWebAppApi.PermanentLog;
 
 public sealed class LogBatchAction : AppAction<LogBatchModel, EmptyActionResult>
 {
-    private readonly PermanentLog permanentLog;
+    private readonly EfPermanentLog permanentLog;
 
-    public LogBatchAction(PermanentLog permanentLog)
+    public LogBatchAction(EfPermanentLog permanentLog)
     {
         this.permanentLog = permanentLog;
     }
 
     public async Task<EmptyActionResult> Execute(LogBatchModel model, CancellationToken stoppingToken)
     {
-        await permanentLog.LogBatch(model);
+        await permanentLog.LogBatch(model, stoppingToken);
         return new EmptyActionResult();
     }
 }

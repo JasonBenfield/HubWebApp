@@ -5,18 +5,18 @@ namespace XTI_SupportServiceAppApi.PermanentLog;
 
 internal sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly ITempLogs tempLogs;
+    private readonly TempLog tempLog;
     private readonly IClock clock;
 
-    public RetryAction(ITempLogs tempLogs, IClock clock)
+    public RetryAction(TempLog tempLog, IClock clock)
     {
-        this.tempLogs = tempLogs;
+        this.tempLog = tempLog;
         this.clock = clock;
     }
 
     public Task<bool> IsOptional()
     {
-        var filesInProgress = getFilesInProgress();
+        var filesInProgress = GetFilesInProgress();
         var isOptional = !filesInProgress.Any();
         return Task.FromResult(isOptional);
     }
@@ -25,7 +25,7 @@ internal sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
 
     public Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var filesInProgress = getFilesInProgress();
+        var filesInProgress = GetFilesInProgress();
         foreach (var file in filesInProgress)
         {
             file.WithNewName(file.Name.Remove(file.Name.Length - processingExtension.Length));
@@ -33,10 +33,9 @@ internal sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
         return Task.FromResult(new EmptyActionResult());
     }
 
-    private IEnumerable<ITempLogFile> getFilesInProgress()
+    private ITempLogFile[] GetFilesInProgress()
     {
         var modifiedBefore = clock.Now().AddMinutes(-1);
-        var logs = tempLogs.Logs();
-        return logs.SelectMany(l => l.ProcessingFiles(modifiedBefore)).ToArray();
+        return tempLog.Files(modifiedBefore);
     }
 }

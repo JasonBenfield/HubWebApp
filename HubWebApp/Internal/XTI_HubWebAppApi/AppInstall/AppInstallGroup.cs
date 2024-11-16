@@ -13,7 +13,7 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
         (
             nameof(AddOrUpdateApps),
             () => sp.GetRequiredService<AddOrUpdateAppsAction>(),
-                () => sp.GetRequiredService<AddOrUpdateAppsValidation>()
+            () => sp.GetRequiredService<AddOrUpdateAppsValidation>()
         );
         AddOrUpdateVersions = source.AddAction
         (

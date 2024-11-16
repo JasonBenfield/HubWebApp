@@ -17,6 +17,8 @@ public sealed class WebUserContext : ISourceUserContext
 
     public Task<AppUserModel> User(AppUserName userName) => userContext.User(userName);
 
+    public Task<AppUserModel> UserOrAnon(AppUserName userName) => userContext.UserOrAnon(userName);
+
     public Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier) =>
         userContext.UserRoles(user, modifier);
 }

@@ -10,6 +10,8 @@ using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
 using XTI_TempLog;
+using XTI_TempLog.Abstractions;
+using XTI_TempLog.Extensions;
 
 namespace XTI_HubAppClient.ServiceApp.Extensions;
 
@@ -28,10 +30,6 @@ public static class XtiServiceAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
-                    services.AddConfigurationOptions<DefaultServiceAppOptions>();
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().HubClient);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().XtiToken);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().DB);
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
@@ -59,6 +57,7 @@ public static class XtiServiceAppHost
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddScoped<IAppApiUser, AppApiSuperUser>();
+                    services.AddTempLogWriterHostedService();
                 }
             );
         return builder;

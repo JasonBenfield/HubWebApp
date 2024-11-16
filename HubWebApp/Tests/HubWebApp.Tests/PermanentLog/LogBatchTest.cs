@@ -1,12 +1,9 @@
 ﻿using XTI_Core;
-using XTI_Hub.Abstractions;
-using XTI_HubWebAppApi.AppInstall;
-using XTI_HubWebAppApi.AppPublish;
 using XTI_TempLog.Abstractions;
 
 namespace HubWebApp.Tests;
 
-internal sealed class PermanentLogTest
+internal sealed class LogBatchTest
 {
     [Test]
     public async Task ShouldStartSessionOnPermanentLog()
@@ -200,7 +197,7 @@ internal sealed class PermanentLogTest
             {
                 LogEntries = new[]
                 {
-                    new LogEntryModel
+                    new LogEntryModelV1
                     {
                         EventKey = generateKey(),
                         RequestKey = requestKey,

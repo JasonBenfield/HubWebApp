@@ -4,7 +4,7 @@ using XTI_WebAppClient;
 
 namespace XTI_HubAppClient.WebApp.Extensions;
 
-internal sealed class AuthCookieXtiToken : IXtiToken
+public sealed class AuthCookieXtiToken : IXtiToken
 {
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly XtiClaims xtiClaims;
@@ -19,7 +19,9 @@ internal sealed class AuthCookieXtiToken : IXtiToken
 
     public Task<string> Value()
     {
-        var token = httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "token")?.Value ?? "";
+        var token = httpContextAccessor.HttpContext?.User.Claims
+            .FirstOrDefault(c => c.Type == "token")?.Value ?? 
+            "";
         return Task.FromResult(token);
     }
 }

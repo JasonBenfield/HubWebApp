@@ -2,4 +2,5 @@
 
 public sealed class SupportServiceAppOptions
 {
+    public string PermanentLogType { get; set; } = "";
 }

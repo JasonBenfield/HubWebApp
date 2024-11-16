@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Secrets;
-using XTI_TempLog.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebAppClient;
 
@@ -27,7 +26,6 @@ public static class HubClientExtensions
         services.AddScoped(sp => sp.GetRequiredService<HubAppClientFactory>().Create());
         services.AddScoped<SystemHubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
-        services.AddScoped<IPermanentLogClient, PermanentLogClient>();
     }
 
     public static void AddHubClientContext(this IServiceCollection services)

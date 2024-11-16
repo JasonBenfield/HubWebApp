@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Description>Console App Extensions using $(XtiAppName) $(XtiVersion)</Description>
@@ -9,9 +9,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.42" />
-		<PackageReference Include="XTI_App.Hosting" Version="1.8.42" />
-		<PackageReference Include="XTI_ConsoleApp" Version="1.8.42" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.43-dev241116182821633" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.43-dev241116182821633" />
+		<PackageReference Include="XTI_ConsoleApp" Version="1.8.43-dev241116182821633" />
 	</ItemGroup>
 
 	<ItemGroup>

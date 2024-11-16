@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Description>App Client Extensions using $(XtiAppName) $(XtiVersion)</Description>
@@ -9,8 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Secrets" Version="1.8.42" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.21" />
+		<PackageReference Include="XTI_App.Secrets" Version="1.8.43-dev241116182821633" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.22-dev241112213612939" />
 	</ItemGroup>
 
 	<ItemGroup>

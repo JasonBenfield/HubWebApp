@@ -1,44 +1,92 @@
-﻿using XTI_Core;
+﻿using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_TempLog.Abstractions;
 
-namespace XTI_HubWebAppApi.PermanentLog;
+namespace XTI_Hub;
 
-public sealed class PermanentLog
+public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
 {
     private readonly HubFactory hubFactory;
     private readonly IClock clock;
 
-    public PermanentLog(HubFactory hubFactory, IClock clock)
+    public EfPermanentLog(HubFactory hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;
     }
 
-    public async Task LogBatch(LogBatchModel model)
+    public async Task LogBatch(LogBatchModel batch, CancellationToken ct)
     {
-        foreach (var startSession in model.StartSessions)
+        foreach (var startSession in batch.StartSessions)
         {
             await StartSession(startSession);
         }
-        foreach (var authSession in model.AuthenticateSessions)
+        foreach (var authSession in batch.AuthenticateSessions)
         {
             await AuthenticateSession(authSession);
         }
-        foreach (var startRequest in model.StartRequests)
+        foreach (var startRequest in batch.StartRequests)
         {
             await StartRequest(startRequest);
         }
-        foreach (var logEvent in model.LogEntries)
+        foreach (var logEvent in batch.LogEntries)
         {
             await LogEvent(logEvent);
         }
-        foreach (var endRequest in model.EndRequests)
+        foreach (var endRequest in batch.EndRequests)
         {
             await EndRequest(endRequest);
         }
-        foreach (var endSession in model.EndSessions)
+        foreach (var endSession in batch.EndSessions)
         {
             await EndSession(endSession);
+        }
+    }
+
+    public async Task LogSessionDetails(TempLogSessionDetailModel[] sessionDetails, CancellationToken ct)
+    {
+        foreach (var sessionDetailRequest in sessionDetails)
+        {
+            var user = await hubFactory.Users.UserOrAnon(new AppUserName(sessionDetailRequest.Session.UserName));
+            var session = await hubFactory.Sessions.AddOrUpdate
+            (
+                sessionKey: sessionDetailRequest.Session.SessionKey,
+                user: user,
+                timeStarted: sessionDetailRequest.Session.TimeStarted,
+                timeEnded: sessionDetailRequest.Session.TimeEnded,
+                requesterKey: sessionDetailRequest.Session.RequesterKey,
+                userAgent: sessionDetailRequest.Session.UserAgent,
+                remoteAddress: sessionDetailRequest.Session.RemoteAddress
+            );
+            foreach (var requestDetail in sessionDetailRequest.RequestDetails)
+            {
+                var installation = await hubFactory.Installations.InstallationOrDefault(requestDetail.Request.InstallationID);
+                var request = await session.LogRequest
+                (
+                    requestKey: requestDetail.Request.RequestKey,
+                    installation: installation,
+                    path: requestDetail.Request.Path,
+                    timeStarted: requestDetail.Request.TimeStarted,
+                    timeEnded: requestDetail.Request.TimeEnded,
+                    actualCount: requestDetail.Request.ActualCount,
+                    sourceRequestKey: requestDetail.Request.SourceRequestKey
+                );
+                foreach (var logEntry in requestDetail.LogEntries)
+                {
+                    await request.LogEvent
+                    (
+                        logEntryKey: logEntry.EventKey,
+                        severity: AppEventSeverity.Values.Value(logEntry.Severity),
+                        timeOccurred: logEntry.TimeOccurred,
+                        caption: logEntry.Caption,
+                        message: logEntry.Message,
+                        detail: logEntry.Detail,
+                        actualCount: logEntry.ActualCount,
+                        sourceLogEntryKey: logEntry.ParentEventKey,
+                        category: logEntry.Category
+                    );
+                }
+            }
         }
     }
 
@@ -52,6 +100,7 @@ public sealed class PermanentLog
                 startSession.SessionKey,
                 user,
                 startSession.TimeStarted,
+                DateTimeOffset.MaxValue,
                 startSession.RequesterKey,
                 startSession.UserAgent,
                 startSession.RemoteAddress
@@ -89,6 +138,7 @@ public sealed class PermanentLog
                 installation,
                 startRequest.Path,
                 startRequest.TimeStarted,
+                DateTimeOffset.MaxValue,
                 startRequest.ActualCount,
                 startRequest.SourceRequestKey
             );
@@ -99,7 +149,7 @@ public sealed class PermanentLog
         }
     }
 
-    private async Task LogEvent(LogEntryModel model)
+    private async Task LogEvent(LogEntryModelV1 model)
     {
         try
         {
@@ -140,7 +190,7 @@ public sealed class PermanentLog
     private Task HandleError(Exception ex) =>
         logEvent
         (
-            new LogEntryModel
+            new LogEntryModelV1
             {
                 Caption = "Error Updating Permanent Log",
                 Message = ex.Message,
@@ -150,7 +200,7 @@ public sealed class PermanentLog
             }
         );
 
-    private async Task logEvent(LogEntryModel model)
+    private async Task logEvent(LogEntryModelV1 model)
     {
         var request = await hubFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now());
         var severity = AppEventSeverity.Values.Value(model.Severity);

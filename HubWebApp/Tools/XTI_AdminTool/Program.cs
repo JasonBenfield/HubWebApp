@@ -25,6 +25,7 @@ using XTI_HubAppClient.Extensions;
 using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
 using XTI_PermanentLog;
+using XTI_PermanentLog.Implementations;
 using XTI_Secrets;
 using XTI_Secrets.Extensions;
 using XTI_Secrets.Files;
@@ -121,12 +122,13 @@ await Host.CreateDefaultBuilder(args)
             );
             services.AddScoped(sp => new SlnFolder(slnDir));
             services.AddScoped<SelectedAppKeys>();
-            services.AddScoped<ITempLogs>(sp =>
+            services.AddScoped<ITempLogsV1>(sp =>
             {
                 var dataProtector = sp.GetDataProtector("XTI_TempLog");
                 var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
-                return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
+                return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
             });
+
             services.AddScoped(sp =>
             {
                 var xtiFolder = sp.GetRequiredService<XtiFolder>();
@@ -165,13 +167,52 @@ await Host.CreateDefaultBuilder(args)
                 }
             );
             services.AddScoped<IAdminTokenAccessor, AdminTokenAccessor>();
-            services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+            services.AddScoped<EfPermanentLog>();
+            services.AddScoped<HcPermanentLog>();
+            services.AddScoped
+            (
+                sp =>
+                {
+                    IPermanentLog permanentLog;
+                    var dbTypeAccessor = sp.GetRequiredService<HubDbTypeAccessor>();
+                    var dbType = dbTypeAccessor.Value;
+                    if(dbType == HubAdministrationTypes.DB)
+                    {
+                        permanentLog = sp.GetRequiredService<EfPermanentLog>();
+                    }
+                    else
+                    {
+                        permanentLog = sp.GetRequiredService<HcPermanentLog>();
+                    }
+                    return permanentLog;
+                }
+            );
+            services.AddScoped
+            (
+                sp => new TempToPermanentLogV1
+                (
+                    sp.GetRequiredService<ITempLogsV1>(),
+                    sp.GetRequiredService<IPermanentLog>(),
+                    sp.GetRequiredService<IClock>(),
+                    0
+                )
+            );
+            services.AddScoped<TempLog>(sp =>
+            {
+                var dataProtector = sp.GetDataProtector("XTI_TempLog");
+                var xtiFolder = sp.GetRequiredService<XtiFolder>();
+                return new DiskTempLog
+                (
+                    dataProtector, 
+                    xtiFolder.AppDataFolder().WithSubFolder("TempLogs").Path()
+                );
+            });
             services.AddScoped
             (
                 sp => new TempToPermanentLog
                 (
-                    sp.GetRequiredService<ITempLogs>(),
-                    sp.GetRequiredService<IPermanentLogClient>(),
+                    sp.GetRequiredService<TempLog>(),
+                    sp.GetRequiredService<IPermanentLog>(),
                     sp.GetRequiredService<IClock>(),
                     0
                 )

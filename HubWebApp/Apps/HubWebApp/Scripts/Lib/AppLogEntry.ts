@@ -10,6 +10,7 @@ export class AppLogEntry {
     readonly message: string;
     readonly detail: string;
     readonly category: string;
+    readonly actualCount: number;
 
     constructor(readonly source: IAppLogEntryModel) {
         this.id = source.ID;
@@ -20,5 +21,6 @@ export class AppLogEntry {
         this.message = source.Message;
         this.detail = source.Detail;
         this.category = source.Category;
+        this.actualCount = source.ActualCount;
     }
 }

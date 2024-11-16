@@ -69,6 +69,7 @@ public sealed class AppSessionRepository
             sessionKey,
             user,
             now,
+            DateTimeOffset.MaxValue,
             requesterKey,
             "",
             ""
@@ -92,29 +93,29 @@ public sealed class AppSessionRepository
             .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
-    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = await GetSession(sessionKey);
         if (record == null)
         {
-            record = await Add(sessionKey, user, timeStarted, requesterKey, userAgent, remoteAddress);
+            record = await Add(sessionKey, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress);
         }
         else
         {
-            await Update(record, user, timeStarted, requesterKey, userAgent, remoteAddress);
+            await Update(record, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress);
         }
         return factory.CreateSession(record);
     }
 
-    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
+    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress)
     {
         var record = new AppSessionEntity
         {
             SessionKey = sessionKey,
             UserID = user.ID,
-            TimeStarted = timeStarted,
             RequesterKey = requesterKey ?? "",
-            TimeEnded = DateTimeOffset.MaxValue,
+            TimeStarted = timeStarted,
+            TimeEnded = timeEnded,
             UserAgent = userAgent ?? "",
             RemoteAddress = remoteAddress ?? ""
         };
@@ -122,16 +123,26 @@ public sealed class AppSessionRepository
         return record;
     }
 
-    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, string requesterKey, string userAgent, string remoteAddress)
-        => factory.DB
+    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress) =>
+        factory.DB
             .Sessions
             .Update
             (
                 record,
                 r =>
                 {
-                    r.UserID = user.ID;
-                    r.TimeStarted = timeStarted;
+                    if (!user.IsUserName(new AppUserName()) && !user.IsUserName(AppUserName.Anon))
+                    {
+                        r.UserID = user.ID;
+                    }
+                    if(timeStarted < r.TimeStarted)
+                    {
+                        r.TimeStarted = timeStarted;
+                    }
+                    if(timeEnded.Year < 9999)
+                    {
+                        r.TimeEnded = timeEnded;
+                    }
                     r.RequesterKey = requesterKey;
                     r.UserAgent = userAgent ?? "";
                     r.RemoteAddress = remoteAddress ?? "";

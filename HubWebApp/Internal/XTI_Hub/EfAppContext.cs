@@ -6,18 +6,13 @@ namespace XTI_Hub;
 public sealed class EfAppContext : ISourceAppContext
 {
     private readonly HubFactory hubFactory;
-    private readonly AppKey defaultAppKey;
+    private readonly AppKey appKey;
     private readonly AppVersionKey defaultVersionKey;
 
-    public EfAppContext(HubFactory hubFactory)
-        : this(hubFactory, AppKey.Unknown, AppVersionKey.None)
-    {
-    }
-
-    public EfAppContext(HubFactory hubFactory, AppKey defaultAppKey, AppVersionKey defaultVersionKey)
+    public EfAppContext(HubFactory hubFactory, AppKey appKey, AppVersionKey defaultVersionKey)
     {
         this.hubFactory = hubFactory;
-        this.defaultAppKey = defaultAppKey;
+        this.appKey = appKey;
         this.defaultVersionKey = defaultVersionKey;
     }
 
@@ -25,7 +20,7 @@ public sealed class EfAppContext : ISourceAppContext
 
     public async Task<AppContextModel> App(AppVersionKey versionKey)
     {
-        var app = await hubFactory.Apps.AppOrUnknown(defaultAppKey);
+        var app = await hubFactory.Apps.AppOrUnknown(appKey);
         var appVersion = await app.Version(versionKey);
         var appContextModel = await App(appVersion);
         return appContextModel;
@@ -66,19 +61,21 @@ public sealed class EfAppContext : ISourceAppContext
                 )
             );
         }
+        var defaultModifier = await appVersion.App.DefaultModifier();
         return new AppContextModel
         (
             appVersion.App.ToModel(),
             appVersion.Version.ToModel(),
             roleModels,
             modCategories.Select(mc => mc.ToModel()).ToArray(),
-            resourceGroupModels.ToArray()
+            resourceGroupModels.ToArray(),
+            defaultModifier.ToModel()
         );
     }
 
     public async Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey)
     {
-        var app = await hubFactory.Apps.AppOrUnknown(defaultAppKey);
+        var app = await hubFactory.Apps.AppOrUnknown(appKey);
         var modCategory = await app.ModCategory(category.ID);
         var modifier = await modCategory.ModifierByModKey(modKey);
         return modifier.ToModel();

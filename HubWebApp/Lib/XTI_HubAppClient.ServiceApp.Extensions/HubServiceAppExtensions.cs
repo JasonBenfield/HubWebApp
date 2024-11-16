@@ -2,7 +2,6 @@
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Hosting;
-using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
 using XTI_TempLog;
 using XTI_WebApp.Abstractions;

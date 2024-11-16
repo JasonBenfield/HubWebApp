@@ -27,6 +27,11 @@ public sealed class SystemGroup : AppApiGroupWrapper
             nameof(AddOrUpdateModifierByModKey),
             () => sp.GetRequiredService<AddOrUpdateModifierByModKeyAction>()
         );
+        GetUserByUserName = source.AddAction
+        (
+            nameof(GetUserByUserName),
+            () => sp.GetRequiredService<GetUserByUserNameAction>()
+        );
         GetUserOrAnon = source.AddAction
         (
             nameof(GetUserOrAnon),
@@ -68,6 +73,7 @@ public sealed class SystemGroup : AppApiGroupWrapper
 
     public AppApiAction<GetAppContextRequest, AppContextModel> GetAppContext { get; }
     public AppApiAction<GetModifierRequest, ModifierModel> GetModifier { get; }
+    public AppApiAction<AppUserNameRequest, AppUserModel> GetUserByUserName { get; }
     public AppApiAction<AppUserNameRequest, AppUserModel> GetUserOrAnon { get; }
     public AppApiAction<GetUserRolesRequest, AppRoleModel[]> GetUserRoles { get; }
     public AppApiAction<AppUserIDRequest, UserAuthenticatorModel[]> GetUserAuthenticators { get; }

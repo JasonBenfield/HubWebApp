@@ -5,10 +5,8 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_Core.Extensions;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
-using XTI_HubWebAppApi.PermanentLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
@@ -35,7 +33,7 @@ public static class HubWebAppExtensions
         );
         services.AddHubDbContextForSqlServer();
         services.AddScoped<HubFactory>();
-        services.AddScoped<PermanentLog>();
+        services.AddScoped<EfPermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
         services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();
         services.AddScoped<EfAppContext>();
@@ -98,6 +96,18 @@ public static class HubWebAppExtensions
                 throttledLogs.Throttle(api.PermanentLog.LogBatch)
                     .Requests().ForOneHour()
                     .Exceptions().For(5).Minutes();
+                throttledLogs.Throttle(api.PermanentLog.LogSessionDetails)
+                    .Requests().ForOneHour()
+                    .Exceptions().For(5).Minutes();
+                throttledLogs.Throttle(api.User.GetMenuLinks)
+                    .Requests().ForOneHour()
+                    .Exceptions().For(5).Minutes();
+                throttledLogs.Throttle(api.System.GetUserOrAnon)
+                    .Requests().For(5).Minutes();
+                throttledLogs.Throttle(api.System.GetUserRoles)
+                    .Requests().For(5).Minutes();
+                throttledLogs.Throttle(api.System.GetModifier)
+                    .Requests().For(5).Minutes();
             }
         );
     }

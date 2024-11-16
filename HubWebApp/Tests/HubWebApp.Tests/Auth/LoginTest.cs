@@ -118,7 +118,7 @@ internal sealed class LoginTest
         var loginResult = await tester.Execute(model);
         var returnKey = await LoginReturnKey(tester, "./Home");
         await Login(tester, loginResult, returnKey);
-        var tempLog = tester.Services.GetRequiredService<TempLog>();
+        var tempLog = tester.Services.GetRequiredService<TempLogV1>();
         var clock = tester.Services.GetRequiredService<IClock>();
         var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
         Assert.That(authSessionFiles.Length, Is.EqualTo(1), "Should authenticate session");

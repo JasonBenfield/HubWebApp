@@ -9,7 +9,9 @@ public sealed class PermanentLogGroup : AppApiGroupWrapper
         : base(source)
     {
         LogBatch = source.AddAction(nameof(LogBatch), () => sp.GetRequiredService<LogBatchAction>());
+        LogSessionDetails = source.AddAction(nameof(LogSessionDetails), () => sp.GetRequiredService<LogSessionDetailsAction>());
     }
 
     public AppApiAction<LogBatchModel, EmptyActionResult> LogBatch { get; }
+    public AppApiAction<LogSessionDetailsRequest, EmptyActionResult> LogSessionDetails { get; }
 }

@@ -11,11 +11,16 @@ export class PermanentLogGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'PermanentLog');
 		this.LogBatchAction = this.createAction<ILogBatchModel,IEmptyActionResult>('LogBatch', 'Log Batch');
+		this.LogSessionDetailsAction = this.createAction<ILogSessionDetailsRequest,IEmptyActionResult>('LogSessionDetails', 'Log Session Details');
 	}
 	
 	readonly LogBatchAction: AppClientAction<ILogBatchModel,IEmptyActionResult>;
+	readonly LogSessionDetailsAction: AppClientAction<ILogSessionDetailsRequest,IEmptyActionResult>;
 	
 	LogBatch(model: ILogBatchModel, errorOptions?: IActionErrorOptions) {
 		return this.LogBatchAction.execute(model, errorOptions || {});
+	}
+	LogSessionDetails(model: ILogSessionDetailsRequest, errorOptions?: IActionErrorOptions) {
+		return this.LogSessionDetailsAction.execute(model, errorOptions || {});
 	}
 }

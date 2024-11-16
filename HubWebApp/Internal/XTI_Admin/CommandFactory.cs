@@ -181,7 +181,8 @@ public sealed class CommandFactory
             command = new DecryptTempLogCommand
             (
                 scopes.GetRequiredService<IClock>(),
-                scopes.GetRequiredService<ITempLogs>(),
+                scopes.GetRequiredService<ITempLogsV1>(),
+                scopes.GetRequiredService<TempLog>(),
                 scopes.GetRequiredService<XtiFolder>()
             );
         }
@@ -190,6 +191,7 @@ public sealed class CommandFactory
             command = new UploadTempLogCommand
             (
                 scopes.GetRequiredService<TempToPermanentLog>(),
+                scopes.GetRequiredService<TempToPermanentLogV1>(),
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<RemoteCommandService>()
             );

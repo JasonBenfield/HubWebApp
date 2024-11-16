@@ -56,7 +56,7 @@ public static class FakeExtensions
         );
         services.AddScoped<AppRegistration>();
         services.AddScoped<IHubAdministration, EfHubAdministration>();
-        services.AddScoped<PermanentLog>();
+        services.AddScoped<EfPermanentLog>();
         services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
         services.AddScoped<IUserCacheManagement, FakeUserCacheManagement>();
         services.AddScoped<AuthenticationFactory>();

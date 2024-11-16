@@ -22,11 +22,11 @@ internal sealed class GetDefaultOptionsAction : AppAction<EmptyRequest, string>
         }
         else if (appModel.AppKey.IsAppType(AppType.Values.ConsoleApp))
         {
-            defaultOptions = XtiSerializer.Serialize(new DefaultConsoleAppOptions());
+            defaultOptions = XtiSerializer.Serialize(new DefaultAppOptions());
         }
         else if (appModel.AppKey.IsAppType(AppType.Values.ServiceApp))
         {
-            defaultOptions = XtiSerializer.Serialize(new DefaultServiceAppOptions());
+            defaultOptions = XtiSerializer.Serialize(new DefaultAppOptions());
         }
         else
         {

@@ -14,4 +14,10 @@ public sealed partial class PermanentLogController : Controller
     {
         return api.Group("PermanentLog").Action<LogBatchModel, EmptyActionResult>("LogBatch").Execute(model, ct);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> LogSessionDetails([FromBody] LogSessionDetailsRequest model, CancellationToken ct)
+    {
+        return api.Group("PermanentLog").Action<LogSessionDetailsRequest, EmptyActionResult>("LogSessionDetails").Execute(model, ct);
+    }
 }

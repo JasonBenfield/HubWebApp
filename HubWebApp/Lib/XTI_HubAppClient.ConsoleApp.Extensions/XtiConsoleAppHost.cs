@@ -10,6 +10,8 @@ using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
 using XTI_TempLog;
+using XTI_TempLog.Abstractions;
+using XTI_TempLog.Extensions;
 
 namespace XTI_HubAppClient.ConsoleApp.Extensions;
 
@@ -44,10 +46,6 @@ public sealed class XtiConsoleAppHost
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddHostedService<AppAgendaHostedService>();
-                    services.AddConfigurationOptions<DefaultConsoleAppOptions>();
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().HubClient);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().XtiToken);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultConsoleAppOptions>().DB);
                     services.AddHubClientServices();
                     services.AddHubClientContext();
                     services.AddScoped<SystemUserXtiToken>();
@@ -59,6 +57,7 @@ public sealed class XtiConsoleAppHost
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddScoped<IAppApiUser, AppApiSuperUser>();
+                    services.AddTempLogWriterHostedService();
                 }
             );
         return builder;

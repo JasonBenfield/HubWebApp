@@ -19,7 +19,7 @@ public sealed class App
 
     public string SerializedDefaultOptions { get => app.SerializedDefaultOptions; }
 
-    public bool AppKeyEquals(AppKey appKey) => appKey.Equals(ToAppKey());
+    public bool AppKeyEquals(AppKey appKey) => appKey.Equals(GetAppKey());
 
     internal Task<ModifierCategory> AddOrUpdateModCategory(ModifierCategoryName name) =>
         factory.ModCategories.AddOrUpdate(this, name);
@@ -147,7 +147,7 @@ public sealed class App
 
     public AppModel ToModel()
     {
-        var key = ToAppKey();
+        var key = GetAppKey();
         return new AppModel
         (
             ID: ID,
@@ -159,8 +159,8 @@ public sealed class App
         );
     }
 
-    public override string ToString() => $"{nameof(App)} {ID}: {ToAppKey().Format()}";
+    public override string ToString() => $"{nameof(App)} {ID}: {GetAppKey().Format()}";
 
-    private AppKey ToAppKey() => 
+    public AppKey GetAppKey() => 
         new AppKey(new AppName(app.DisplayText), AppType.Values.Value(app.Type));
 }
