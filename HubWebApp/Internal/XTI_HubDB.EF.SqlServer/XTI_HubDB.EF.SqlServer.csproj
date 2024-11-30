@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-    <PackageReference Include="XTI_Core.Extensions" Version="1.10.22-dev241112213612939" />
+    <PackageReference Include="XTI_Core.Extensions" Version="1.10.25" />
   </ItemGroup>
 
   <ItemGroup>

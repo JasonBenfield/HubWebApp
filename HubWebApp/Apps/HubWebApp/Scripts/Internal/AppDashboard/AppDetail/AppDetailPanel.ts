@@ -1,6 +1,11 @@
 ﻿import { Awaitable } from '@jasonbenfield/sharedwebapp/Awaitable';
+import { CardAlert } from '@jasonbenfield/sharedwebapp/Components/CardAlert';
 import { Command } from '@jasonbenfield/sharedwebapp/Components/Command';
+import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
+import { IMessageAlert } from '@jasonbenfield/sharedwebapp/Components/Types';
+import { AppResourceGroup } from '../../../Lib/AppResourceGroup';
 import { HubAppClient } from '../../../Lib/Http/HubAppClient';
+import { ModifierCategory } from '../../../Lib/ModifierCategory';
 import { ResourceGroupListItem } from '../ResourceGroupListItem';
 import { AppComponent } from './AppComponent';
 import { AppDetailPanelView } from './AppDetailPanelView';
@@ -9,11 +14,6 @@ import { ModifierCategoryListCard } from './ModifierCategoryListCard';
 import { MostRecentErrorEventListCard } from './MostRecentErrorEventListCard';
 import { MostRecentRequestListCard } from './MostRecentRequestListCard';
 import { ResourceGroupListCard } from './ResourceGroupListCard';
-import { ModifierCategory } from '../../../Lib/ModifierCategory';
-import { AppResourceGroup } from '../../../Lib/AppResourceGroup';
-import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
-import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
-import { CardAlert } from '@jasonbenfield/sharedwebapp/Components/CardAlert';
 
 interface IResult {
     backRequested?: {};
@@ -51,9 +51,9 @@ class Result {
 export class AppDetailPanel implements IPanel {
     private readonly app: AppComponent;
     private readonly currentVersion: CurrentVersionComponent;
-    private readonly appOptionsAlert: MessageAlert;
+    private readonly appOptionsAlert: IMessageAlert;
     private readonly appOptionsTextComponent: TextComponent;
-    private readonly optionsAlert: MessageAlert;
+    private readonly optionsAlert: IMessageAlert;
     private readonly optionsTextComponent: TextComponent;
     private readonly resourceGroupListCard: ResourceGroupListCard;
     private readonly modifierCategoryListCard: ModifierCategoryListCard;
@@ -70,9 +70,9 @@ export class AppDetailPanel implements IPanel {
     ) {
         this.app = new AppComponent(hubClient, view.app);
         this.currentVersion = new CurrentVersionComponent(hubClient, view.currentVersion);
-        this.appOptionsAlert = new CardAlert(view.appOptionsAlertView).alert;
+        this.appOptionsAlert = new CardAlert(view.appOptionsAlertView);
         this.appOptionsTextComponent = new TextComponent(view.appOptionsTextView);
-        this.optionsAlert = new CardAlert(view.optionsAlertView).alert;
+        this.optionsAlert = new CardAlert(view.optionsAlertView);
         this.optionsTextComponent = new TextComponent(view.optionsTextView);
         this.resourceGroupListCard = new ResourceGroupListCard(hubClient, view.resourceGroupListCard);
         this.resourceGroupListCard.when.resourceGroupClicked.then(

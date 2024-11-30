@@ -5,22 +5,26 @@ public sealed class PermanentLogGroup : AppApiGroupWrapper
     public PermanentLogGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
-        MoveToPermanent = source.AddAction
-        (
-            nameof(MoveToPermanent), () => sp.GetRequiredService<MoveToPermanentAction>()
-        );
-        MoveToPermanentV1 = source.AddAction
-        (
-            nameof(MoveToPermanentV1), () => sp.GetRequiredService<MoveToPermanentV1Action>()
-        );
-        Retry = source.AddAction
-        (
-            nameof(Retry), () => sp.GetRequiredService<RetryAction>()
-        );
-        RetryV1 = source.AddAction
-        (
-            nameof(RetryV1), () => sp.GetRequiredService<RetryV1Action>()
-        );
+        MoveToPermanent = source.AddAction<EmptyRequest, EmptyActionResult>()
+            .Named(nameof(MoveToPermanent))
+            .WithExecution<MoveToPermanentAction>()
+            .ThrottleRequestLogging().ForOneHour()
+            .ThrottleExceptionLogging().For(5).Minutes()
+            .Build();
+        MoveToPermanentV1 = source.AddAction<EmptyRequest, EmptyActionResult>()
+            .Named(nameof(MoveToPermanentV1))
+            .WithExecution<MoveToPermanentV1Action>()
+            .ThrottleRequestLogging().ForOneHour()
+            .ThrottleExceptionLogging().For(5).Minutes()
+            .Build();
+        Retry = source.AddAction<EmptyRequest, EmptyActionResult>()
+            .Named(nameof(Retry))
+            .WithExecution<RetryAction>()
+            .Build();
+        RetryV1 = source.AddAction<EmptyRequest, EmptyActionResult>()
+            .Named(nameof(RetryV1))
+            .WithExecution<RetryV1Action>()
+            .Build();
     }
 
     public AppApiAction<EmptyRequest, EmptyActionResult> MoveToPermanent { get; }

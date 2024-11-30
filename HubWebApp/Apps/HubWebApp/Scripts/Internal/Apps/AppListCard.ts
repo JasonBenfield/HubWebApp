@@ -1,18 +1,18 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
-import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { App } from "../../Lib/App";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCardView } from "./AppListCardView";
 import { AppListItem } from "./AppListItem";
 import { AppListItemView } from "./AppListItemView";
-import { App } from "../../Lib/App";
 
 type Events = { appSelected: App };
 
 export class AppListCard {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly apps: ListGroup<AppListItem, AppListItemView>;
     private readonly eventSource = new EventSource<Events>(this, { appSelected: null });
     readonly when = this.eventSource.when;
@@ -22,7 +22,7 @@ export class AppListCard {
         private readonly view: AppListCardView
     ) {
         new TextComponent(this.view.titleHeader).setText('Apps');
-        this.alert = new CardAlert(this.view.alert).alert;
+        this.alert = new CardAlert(this.view.alert);
         this.apps = new ListGroup(this.view.apps);
         this.apps.when.itemClicked.then(this.onAppSelected.bind(this))
     }

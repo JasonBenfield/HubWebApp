@@ -22,6 +22,7 @@ public static class XtiWebAppHost
         builder.Services.AddSingleton(_ => appKey);
         builder.Services.AddResponseCaching();
         builder.Services.AddAppServices();
+        AppExtensions.AddThrottledLog(builder.Services, (api, b) => { });
         builder.Services.AddFileSecretCredentials(xtiEnv);
         builder.Services.AddHubClientServices();
         builder.Services.AddHubClientContext();

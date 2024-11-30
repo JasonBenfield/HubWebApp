@@ -214,7 +214,11 @@ public sealed class AppUser
     {
         var appModel = app.ToModel();
         Modifier modifier;
-        if (appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
+        if 
+        (
+            appModel.AppKey.IsUnknown() || 
+            appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
+        )
         {
             modifier = await hubApp.DefaultModifier();
         }

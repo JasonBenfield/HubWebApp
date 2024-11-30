@@ -1,11 +1,11 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
-import { AppUser } from "../../Lib/AppUser";
 
 type Events = {
     editRequested: number;
@@ -14,7 +14,7 @@ type Events = {
 
 export class UserComponent {
     private userID: number;
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly userNameFormGroup: FormGroupText;
     private readonly fullNameFormGroup: FormGroupText;
     private readonly emailFormGroup: FormGroupText;
@@ -35,7 +35,7 @@ export class UserComponent {
         private readonly hubClient: HubAppClient,
         private readonly view: UserComponentView
     ) {
-        this.alert = new CardAlert(this.view.alertView).alert;
+        this.alert = new CardAlert(this.view.alertView);
         this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
         this.userNameFormGroup.setCaption('User Name');
         this.fullNameFormGroup = new FormGroupText(view.fullNameFormGroupView);

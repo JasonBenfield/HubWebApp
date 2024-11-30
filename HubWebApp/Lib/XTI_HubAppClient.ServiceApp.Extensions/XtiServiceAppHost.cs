@@ -30,6 +30,7 @@ public static class XtiServiceAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
+                    AppExtensions.AddThrottledLog(services, (api, b) => { });
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
@@ -39,12 +40,11 @@ public static class XtiServiceAppHost
                         return xtiFolder.AppDataFolder(appKey);
                     });
                     services.AddSingleton<CurrentSession>();
-                    services.AddScoped<ActionRunnerXtiPathAccessor>();
-                    services.AddScoped<IXtiPathAccessor>(sp => sp.GetRequiredService<ActionRunnerXtiPathAccessor>());
                     services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
                     services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
+                    services.AddTempLogWriterHostedService();
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
                     services.AddHubClientContext();
@@ -57,7 +57,6 @@ public static class XtiServiceAppHost
                     services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<HcAppContext>());
                     services.AddScoped<ISourceUserContext>(sp => sp.GetRequiredService<HcUserContext>());
                     services.AddScoped<IAppApiUser, AppApiSuperUser>();
-                    services.AddTempLogWriterHostedService();
                 }
             );
         return builder;

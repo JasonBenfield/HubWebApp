@@ -11,9 +11,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_GitHub" Version="1.2.23" />
-		<PackageReference Include="XTI_Git" Version="1.2.23" />
-		<PackageReference Include="XTI_Core.Extensions" Version="1.10.22-dev241112213612939" />
+		<PackageReference Include="XTI_GitHub" Version="1.2.24-dev241126103926227" />
+		<PackageReference Include="XTI_Git" Version="1.2.24-dev241126103926227" />
+		<PackageReference Include="XTI_Core.Extensions" Version="1.10.25" />
 	</ItemGroup>
 
 	<ItemGroup>

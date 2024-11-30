@@ -5,16 +5,46 @@ public sealed class AppInquiryGroup : AppApiGroupWrapper
     public AppInquiryGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
-        Index = source.AddAction(nameof(Index), () => sp.GetRequiredService<IndexAction>());
-        GetApp = source.AddAction(nameof(GetApp), () => sp.GetRequiredService<GetAppAction>());
-        GetResourceGroups = source.AddAction(nameof(GetResourceGroups), () => sp.GetRequiredService<GetResourceGroupsAction>());
-        GetRoles = source.AddAction(nameof(GetRoles), () => sp.GetRequiredService<GetRolesAction>());
-        GetMostRecentRequests = source.AddAction(nameof(GetMostRecentRequests), () => sp.GetRequiredService<GetMostRecentRequestsAction>());
-        GetMostRecentErrorEvents = source.AddAction(nameof(GetMostRecentErrorEvents), () => sp.GetRequiredService<GetMostRecentErrorEventsAction>());
-        GetModifierCategories = source.AddAction(nameof(GetModifierCategories), () => sp.GetRequiredService<GetModifierCategoriesAction>());
-        GetDefaultModifier = source.AddAction(nameof(GetDefaultModifier), () => sp.GetRequiredService<GetDefaultModifierAction>());
-        GetDefaultOptions = source.AddAction(nameof(GetDefaultOptions), () => sp.GetRequiredService<GetDefaultOptionsAction>());
-        GetDefaultAppOptions = source.AddAction(nameof(GetDefaultAppOptions), () => sp.GetRequiredService<GetDefaultAppOptionsAction>());
+        Index = source.AddAction<EmptyRequest, WebViewResult>()
+            .Named(nameof(Index))
+            .WithExecution<IndexAction>()
+            .Build();
+        GetApp = source.AddAction<EmptyRequest, AppModel>()
+            .Named(nameof(GetApp))
+            .WithExecution<GetAppAction>()
+            .Build();
+        GetResourceGroups = source.AddAction<EmptyRequest, ResourceGroupModel[]>()
+            .Named(nameof(GetResourceGroups))
+            .WithExecution<GetResourceGroupsAction>()
+            .Build();
+        GetRoles = source.AddAction<EmptyRequest, AppRoleModel[]>()
+            .Named(nameof(GetRoles))
+            .WithExecution<GetRolesAction>()
+            .Build();
+        GetMostRecentRequests = source.AddAction<int, AppRequestExpandedModel[]>()
+            .Named(nameof(GetMostRecentRequests))
+            .WithExecution<GetMostRecentRequestsAction>()
+            .Build();
+        GetMostRecentErrorEvents = source.AddAction<int, AppLogEntryModel[]>()
+            .Named(nameof(GetMostRecentErrorEvents))
+            .WithExecution<GetMostRecentErrorEventsAction>()
+            .Build();
+        GetModifierCategories = source.AddAction<EmptyRequest, ModifierCategoryModel[]>()
+            .Named(nameof(GetModifierCategories))
+            .WithExecution<GetModifierCategoriesAction>()
+            .Build();
+        GetDefaultModifier = source.AddAction<EmptyRequest, ModifierModel>()
+            .Named(nameof(GetDefaultModifier))
+            .WithExecution<GetDefaultModifierAction>()
+            .Build();
+        GetDefaultOptions = source.AddAction<EmptyRequest, string>()
+            .Named(nameof(GetDefaultOptions))
+            .WithExecution<GetDefaultOptionsAction>()
+            .Build();
+        GetDefaultAppOptions = source.AddAction<EmptyRequest, string>()
+            .Named(nameof(GetDefaultAppOptions))
+            .WithExecution<GetDefaultAppOptionsAction>()
+            .Build();
     }
 
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }

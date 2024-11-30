@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
@@ -40,8 +41,21 @@ public static class HubWebAppExtensions
         services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<EfAppContext>());
         services.AddScoped<AppFromPath>();
         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-        services.AddScoped<AccessForAuthenticate, JwtAccess>();
-        services.AddScoped<AccessForLogin, CookieAccess>();
+        services.AddScoped<JwtAccess>();
+        services.AddKeyedScoped<IAccess>
+        (
+            "Authenticate", 
+            (sp, key) => sp.GetRequiredService<JwtAccess>()
+        );
+        services.AddKeyedScoped<IAccess>
+        (
+            "Login",
+            (sp, key) => new CookieAccess
+            (
+                sp.GetRequiredService<IHttpContextAccessor>(),
+                sp.GetRequiredService<JwtAccess>()
+            )
+        );
         services.AddSingleton(_ => HubInfo.AppKey);
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
@@ -93,21 +107,9 @@ public static class HubWebAppExtensions
         (
             (api, throttledLogs) =>
             {
-                throttledLogs.Throttle(api.PermanentLog.LogBatch)
-                    .Requests().ForOneHour()
-                    .Exceptions().For(5).Minutes();
-                throttledLogs.Throttle(api.PermanentLog.LogSessionDetails)
-                    .Requests().ForOneHour()
-                    .Exceptions().For(5).Minutes();
                 throttledLogs.Throttle(api.User.GetMenuLinks)
                     .Requests().ForOneHour()
                     .Exceptions().For(5).Minutes();
-                throttledLogs.Throttle(api.System.GetUserOrAnon)
-                    .Requests().For(5).Minutes();
-                throttledLogs.Throttle(api.System.GetUserRoles)
-                    .Requests().For(5).Minutes();
-                throttledLogs.Throttle(api.System.GetModifier)
-                    .Requests().For(5).Minutes();
             }
         );
     }

@@ -97,6 +97,7 @@ await Host.CreateDefaultBuilder(args)
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
+            services.AddSingleton<IAppClientSessionKey, EmptyAppClientSessionKey>();
             services.AddSingleton<IAppClientRequestKey, EmptyAppClientRequestKey>();
             services.AddScoped(sp =>
             {

@@ -1,20 +1,21 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { AppLogEntry } from "../../../Lib/AppLogEntry";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { EventListItem } from "../EventListItem";
 import { EventListItemView } from "../EventListItemView";
 import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCardView";
-import { AppLogEntry } from "../../../Lib/AppLogEntry";
 
 export class MostRecentErrorEventListCard {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly errorEvents: ListGroup<EventListItem, EventListItemView>;
 
     constructor(private readonly hubApi: HubAppClient, view: MostRecentErrorEventListCardView) {
         new TextComponent(view.titleHeader).setText('Most Recent Errors');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
+        this.alert.disableAutoScrollIntoView();
         this.errorEvents = new ListGroup(view.errorEvents);
     }
 

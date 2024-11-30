@@ -28,8 +28,8 @@ internal sealed class CopyToInstallDirProcess
             .NoJobSummary()
             .NoProgressDisplayed()
             .MultiThreaded(DefaultRobocopyThreads.Value)
-            .NumberOfRetries(1)
-            .WaitTimeBetweenRetries(1);
+            .NumberOfRetries(5)
+            .WaitTimeBetweenRetries(5);
         if (purge)
         {
             process.Purge();

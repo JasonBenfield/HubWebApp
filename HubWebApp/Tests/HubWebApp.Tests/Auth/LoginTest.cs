@@ -114,19 +114,15 @@ internal sealed class LoginTest
     public async Task ShouldAuthenticateTempLogSession()
     {
         var tester = await Setup();
-        var model = CreateLoginModel();
-        var loginResult = await tester.Execute(model);
+        var loginRequest = CreateLoginModel();
+        var loginResult = await tester.Execute(loginRequest);
         var returnKey = await LoginReturnKey(tester, "./Home");
         await Login(tester, loginResult, returnKey);
-        var tempLog = tester.Services.GetRequiredService<TempLogV1>();
-        var clock = tester.Services.GetRequiredService<IClock>();
-        var authSessionFiles = tempLog.AuthSessionFiles(clock.Now().AddMinutes(1)).ToArray();
-        Assert.That(authSessionFiles.Length, Is.EqualTo(1), "Should authenticate session");
-        var serializedAuthSession = await authSessionFiles[0].Read();
-        var authSession = XtiSerializer.Deserialize<AuthenticateSessionModel>(serializedAuthSession);
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await appFactory.Users.UserByUserName(new AppUserName(model.UserName.Value() ?? ""));
-        Assert.That(authSession.UserName, Is.EqualTo(user.ToModel().UserName.Value), "Should authenticate session");
+        var tempLog = tester.Services.GetRequiredService<TempLog>();
+        var sessionDetails = await GetSessionDetails(tester.Services);
+        Assert.That(sessionDetails.Length, Is.EqualTo(1), "Should authenticate session");
+        var sessionDetail = sessionDetails.First();
+        Assert.That(sessionDetail.Session.SessionKey.UserName, Is.EqualTo("xartogg"), "Should authenticate session");
     }
 
     [Test]
@@ -152,7 +148,7 @@ internal sealed class LoginTest
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
-            User = new FakeHttpUser().Create("", user)
+            User = new FakeHttpUser().Create(new(), user)
         };
         var loginResult = await tester.Execute(model);
         await Login(tester, loginResult, returnKey);
@@ -185,8 +181,8 @@ internal sealed class LoginTest
         (
             new AuthenticatedLoginRequest
             (
-                authKey: loginResult.AuthKey, 
-                authID: loginResult.AuthID, 
+                authKey: loginResult.AuthKey,
+                authID: loginResult.AuthID,
                 returnKey: returnKey
             )
         );
@@ -236,4 +232,21 @@ internal sealed class LoginTest
         form.Password.SetValue("Password12345");
         return form;
     }
+
+    private static async Task<TempLogSessionDetailModel[]> GetSessionDetails(IServiceProvider sp)
+    {
+        var tempLogRepo = sp.GetRequiredService<TempLogRepository>();
+        await tempLogRepo.WriteToLocalStorage();
+        var clock = sp.GetRequiredService<IClock>();
+        var tempLog = sp.GetRequiredService<TempLog>();
+        var logFiles = tempLog.Files(clock.Now().AddSeconds(1), 100);
+        var sessionDetails = new List<TempLogSessionDetailModel>();
+        foreach (var logFile in logFiles)
+        {
+            var fileSessionDetails = await logFile.Read();
+            sessionDetails.AddRange(fileSessionDetails);
+        }
+        return sessionDetails.ToArray();
+    }
+
 }

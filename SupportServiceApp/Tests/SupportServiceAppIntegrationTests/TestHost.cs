@@ -38,8 +38,6 @@ internal sealed class TestHost
             return xtiFolder.AppDataFolder(appKey);
         });
         host.Services.AddSingleton<CurrentSession>();
-        host.Services.AddScoped<ActionRunnerXtiPathAccessor>();
-        host.Services.AddScoped<IXtiPathAccessor>(sp => sp.GetRequiredService<ActionRunnerXtiPathAccessor>());
         host.Services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
         host.Services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
         host.Services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();

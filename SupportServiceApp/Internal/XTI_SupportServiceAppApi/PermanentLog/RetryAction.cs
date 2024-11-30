@@ -36,6 +36,6 @@ internal sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
     private ITempLogFile[] GetFilesInProgress()
     {
         var modifiedBefore = clock.Now().AddMinutes(-1);
-        return tempLog.Files(modifiedBefore);
+        return tempLog.FilesInProgress(modifiedBefore);
     }
 }

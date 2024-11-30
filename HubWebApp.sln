@@ -119,14 +119,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowershellForXti", "Powersh
 		HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{13AF31FF-4BA9-4A56-9050-55669E456DBF}"
-	ProjectSection(SolutionItems) = preProject
-		SupportServiceApp\install.Development.private.json = SupportServiceApp\install.Development.private.json
-		SupportServiceApp\install.Production.private.json = SupportServiceApp\install.Production.private.json
-		SupportServiceApp\install.Staging.private.json = SupportServiceApp\install.Staging.private.json
-		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubAppClientTest", "HubWebApp\Tests\HubAppClientTest\HubAppClientTest.csproj", "{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_WebAppInstallation", "Internal\XTI_WebAppInstallation\XTI_WebAppInstallation.csproj", "{3577ADC7-1843-4A5F-98C0-8C8F8283495B}"
@@ -364,7 +356,6 @@ Global
 		{5BF9532D-3013-4C81-B90C-00CA7A31B563} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
 		{23386590-35E2-4038-BE9A-BF9EC3E93D3B} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
 		{7F983166-B9FC-4852-A179-1BE159F4E46F} = {23386590-35E2-4038-BE9A-BF9EC3E93D3B}
-		{13AF31FF-4BA9-4A56-9050-55669E456DBF} = {C5292EEC-32E7-4850-BAB7-B777F69D9445}
 		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 		{3577ADC7-1843-4A5F-98C0-8C8F8283495B} = {CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}
 		{238FFE26-E851-47E3-9AB1-BEF4D37FFC33} = {CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}

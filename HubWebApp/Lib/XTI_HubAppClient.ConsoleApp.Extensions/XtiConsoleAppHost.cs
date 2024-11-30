@@ -30,6 +30,7 @@ public sealed class XtiConsoleAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
+                    AppExtensions.AddThrottledLog(services, (api, b) => { });
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
@@ -39,8 +40,6 @@ public sealed class XtiConsoleAppHost
                         return xtiFolder.AppDataFolder(appKey);
                     });
                     services.AddSingleton<CurrentSession>();
-                    services.AddScoped<ActionRunnerXtiPathAccessor>();
-                    services.AddScoped<IXtiPathAccessor>(sp => sp.GetRequiredService<ActionRunnerXtiPathAccessor>());
                     services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
                     services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();

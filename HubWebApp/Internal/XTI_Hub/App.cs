@@ -148,7 +148,7 @@ public sealed class App
     public AppModel ToModel()
     {
         var key = GetAppKey();
-        return new AppModel
+        return new
         (
             ID: ID,
             AppKey: key,
@@ -161,6 +161,6 @@ public sealed class App
 
     public override string ToString() => $"{nameof(App)} {ID}: {GetAppKey().Format()}";
 
-    public AppKey GetAppKey() => 
+    public AppKey GetAppKey() =>
         new AppKey(new AppName(app.DisplayText), AppType.Values.Value(app.Type));
 }

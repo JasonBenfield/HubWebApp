@@ -17,10 +17,10 @@ public static class HubServiceAppExtensions
         where TAppApi : IAppApi =>
         AppExtensions.AddThrottledLog(services, action);
 
-    public static ThrottledPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
         AppExtensions.Throttle(builder, action);
 
-    public static ThrottledPathBuilder AndThrottle(this ThrottledPathBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder AndThrottle(this ThrottledLogPathBuilder builder, IAppApiAction action) =>
         AppExtensions.AndThrottle(builder, action);
 
     public static void AddAppClientDomainSelector(this IServiceCollection services, Action<IServiceProvider, AppClientDomainSelector> configure) =>

@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_Core;
+using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubAppClient.ServiceApp.Extensions;
+using XTI_HubDB.Extensions;
 using XTI_PermanentLog;
 using XTI_PermanentLog.Implementations;
 using XTI_Schedule;
 using XTI_SupportServiceAppApi;
 using XTI_TempLog;
 using XTI_TempLog.Extensions;
-using XTI_HubDB.Extensions;
 
 var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
     .ConfigureServices((hostContext, services) =>
@@ -23,10 +23,10 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
         services.AddScoped<ITempLogsV1>(sp =>
         {
             var dataProtector = sp.GetDataProtector("XTI_TempLog");
-            var appKey = sp.GetRequiredService<AppKey>();
             var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
             return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
         });
+        services.AddConfigurationOptions<SupportServiceAppOptions>();
         services.AddHubDbContextForSqlServer();
         services.AddScoped<HubFactory>();
         services.AddScoped<EfPermanentLog>();
@@ -118,21 +118,11 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
                 );
             }
         );
-        services.AddThrottledLog<SupportAppApi>
-        (
-            (api, throttledLogs) =>
-            {
-                throttledLogs.Throttle(api.PermanentLog.MoveToPermanent)
-                    .Requests().ForOneHour()
-                    .Exceptions().For(5).Minutes();
-                throttledLogs.Throttle(api.PermanentLog.MoveToPermanentV1)
-                    .Requests().ForOneHour()
-                    .Exceptions().For(5).Minutes();
-            }
-        );
     });
 if (args.Length <= 0 || !args[0].Equals("RunAsConsole", StringComparison.OrdinalIgnoreCase))
 {
     hostBuilder.UseWindowsService();
 }
-await hostBuilder.Build().RunAsync();
+var host = hostBuilder.Build();
+var options = host.Services.GetRequiredService<DefaultAppOptions>();
+await host.RunAsync();

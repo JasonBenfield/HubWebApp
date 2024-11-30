@@ -3,18 +3,17 @@
 public sealed class AppFromPath
 {
     private readonly HubFactory factory;
-    private readonly IXtiPathAccessor pathAccessor;
+    private readonly IModifierKeyAccessor modifierKeyAccessor;
 
-    public AppFromPath(HubFactory factory, IXtiPathAccessor pathAccessor)
+    public AppFromPath(HubFactory factory, IModifierKeyAccessor modifierKeyAccessor)
     {
         this.factory = factory;
-        this.pathAccessor = pathAccessor;
+        this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
     public async Task<App> Value()
     {
-        var path = pathAccessor.Value();
-        var modKey = path.Modifier;
+        var modKey = modifierKeyAccessor.Value();
         if (modKey.Equals(ModifierKey.Default))
         {
             throw new Exception(AppErrors.ModifierIsRequired);

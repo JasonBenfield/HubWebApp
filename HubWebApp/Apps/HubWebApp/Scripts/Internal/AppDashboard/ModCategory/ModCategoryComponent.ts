@@ -1,13 +1,13 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
-import { ModCategoryComponentView } from "./ModCategoryComponentView";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
+import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
 export class ModCategoryComponent {
     private modCategoryID: number;
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly modCategoryName: TextComponent;
 
     constructor(
@@ -15,7 +15,7 @@ export class ModCategoryComponent {
         view: ModCategoryComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Category');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.modCategoryName = new TextComponent(view.modCategoryName);
     }
 

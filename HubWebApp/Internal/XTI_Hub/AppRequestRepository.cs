@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -63,6 +64,7 @@ public sealed class AppRequestRepository
         var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action);
         var modCategory = await resourceGroup.ModCategory();
         var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier);
+        var truncatedPath = new TruncatedText(path, 100).Value;
         var record = await GetRequestEntityByKey(requestKey);
         if (record == null)
         {
@@ -73,7 +75,7 @@ public sealed class AppRequestRepository
                 installation,
                 resource,
                 modifier,
-                path,
+                truncatedPath,
                 timeStarted,
                 timeEnded,
                 actualCount
@@ -92,7 +94,7 @@ public sealed class AppRequestRepository
                         r.InstallationID = installation.ID;
                         r.ResourceID = resource.ID;
                         r.ModifierID = modifier.ID;
-                        r.Path = path;
+                        r.Path = truncatedPath;
                         if (timeStarted < r.TimeStarted)
                         {
                             r.TimeStarted = timeStarted;

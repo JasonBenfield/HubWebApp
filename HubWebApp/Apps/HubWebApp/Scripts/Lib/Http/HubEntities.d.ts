@@ -230,13 +230,16 @@ interface ITempLogSessionDetailModel {
 	RequestDetails: ITempLogRequestDetailModel[];
 }
 interface ITempLogSessionModel {
-	SessionKey: string;
-	UserName: string;
+	SessionKey: ISessionKey;
 	RequesterKey: string;
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	RemoteAddress: string;
 	UserAgent: string;
+}
+interface ISessionKey {
+	ID: string;
+	UserName: string;
 }
 interface ITempLogRequestDetailModel {
 	Request: ITempLogRequestModel;
@@ -250,6 +253,8 @@ interface ITempLogRequestModel {
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ActualCount: number;
+	RequestData: string;
+	ResultData: string;
 }
 interface ILogEntryModel {
 	EventKey: string;

@@ -1,18 +1,18 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
+import { AppResource } from "../../../Lib/AppResource";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceListCardView } from "./ResourceListCardView";
 import { ResourceListItem } from "./ResourceListItem";
 import { ResourceListItemView } from "./ResourceListItemView";
-import { AppResource } from "../../../Lib/AppResource";
 
 type Events = { resourceSelected: AppResource };
 
 export class ResourceListCard {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly resources: ListGroup<ResourceListItem, ResourceListItemView>;
     private readonly eventSource = new EventSource<Events>(this, { resourceSelected: null });
     readonly when = this.eventSource.when;
@@ -23,7 +23,7 @@ export class ResourceListCard {
         view: ResourceListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Resources');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.resources = new ListGroup(view.resources);
         this.resources.when.itemClicked.then(this.onItemSelected.bind(this));
     }

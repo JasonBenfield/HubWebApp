@@ -31,13 +31,13 @@ public static class HubWebAppExtensions
         DefaultWebAppExtensions.UseXtiDefaults(app);
 
     public static void AddThrottledLog<TAppApi>(this IServiceCollection services, Action<TAppApi, ThrottledLogsBuilder> action)
-    where TAppApi : IAppApi =>
-    AppExtensions.AddThrottledLog(services, action);
+        where TAppApi : IAppApi =>
+        AppExtensions.AddThrottledLog(services, action);
 
-    public static ThrottledPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
         AppExtensions.Throttle(builder, action);
 
-    public static ThrottledPathBuilder AndThrottle(this ThrottledPathBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder AndThrottle(this ThrottledLogPathBuilder builder, IAppApiAction action) =>
         AppExtensions.AndThrottle(builder, action);
 
     public static void AddAppClients(this IServiceCollection services, Action<IServiceProvider, AppClients> configure)

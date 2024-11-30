@@ -20,12 +20,11 @@ internal sealed class LogSessionDetailsTest
             (
                 session: new TempLogSessionModel
                 {
-                    UserName = "test.user",
+                    SessionKey = new SessionKey(sessionKey, "test.user"),
                     TimeStarted = clock.Now(),
                     TimeEnded = timeEnded,
                     UserAgent = "Opera",
                     RemoteAddress = "127.0.0.1",
-                    SessionKey = sessionKey,
                     RequesterKey = requesterKey
                 },
                 requestDetails: []
@@ -99,9 +98,9 @@ internal sealed class LogSessionDetailsTest
     {
         var sp = await Setup();
         var session1 = CreateSession(sp);
-        session1.UserName = "test.user";
+        session1.SessionKey = session1.SessionKey with { UserName = "test.user" };
         var session2 = CreateSession(sp, session1.SessionKey);
-        session2.UserName = AppUserName.Anon.Value;
+        session1.SessionKey = session1.SessionKey with { UserName = AppUserName.Anon.Value };
         await LogSessionDetails
         (
             sp,
@@ -474,7 +473,7 @@ internal sealed class LogSessionDetailsTest
             )
         );
         var sourceRequestDetail = await GetRequestDetail(sp, request2.RequestKey);
-        Assert.That(placeholderRequestDetail.Request.Path, Is.EqualTo("/Fake/Current/Request2"), "Should add placeholder for source request");
+        Assert.That(sourceRequestDetail.Request.Path, Is.EqualTo("/Fake/Current/Request2"), "Should add placeholder for source request");
         var requestDetail = await GetRequestDetail(sp, request1.RequestKey);
         Assert.That(requestDetail.SourceRequestID, Is.EqualTo(sourceRequestDetail.Request.ID), "Should add placeholder for source request");
     }
@@ -658,11 +657,11 @@ internal sealed class LogSessionDetailsTest
         return sessionDetails.ToArray();
     }
 
-    private static async Task<AppSessionDetailModel> GetSessionDetail(IServiceProvider sp, string sessionKey)
+    private static async Task<AppSessionDetailModel> GetSessionDetail(IServiceProvider sp, SessionKey sessionKey)
     {
         var clock = sp.GetRequiredService<IClock>();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var session = await hubFactory.Sessions.Session(sessionKey);
+        var session = await hubFactory.Sessions.Session(sessionKey.ID);
         var sessionDetail = await GetSessionDetail(sp, session);
         return sessionDetail;
     }
@@ -786,17 +785,21 @@ internal sealed class LogSessionDetailsTest
         return tester.Execute(new(sessionDetails));
     }
 
-    private static TempLogSessionModel CreateSession(IServiceProvider sp, string sessionKey = "")
+    private static TempLogSessionModel CreateSession(IServiceProvider sp) =>
+        CreateSession(sp, new());
+
+    private static TempLogSessionModel CreateSession(IServiceProvider sp, SessionKey sessionKey)
     {
         var clock = sp.GetRequiredService<IClock>();
         return new TempLogSessionModel
         {
-            UserName = "test.user",
+            SessionKey = sessionKey.IsEmpty() ?
+                new SessionKey(GenerateKey(), "test.user") :
+                sessionKey,
             TimeStarted = clock.Now(),
             TimeEnded = clock.Now().AddHours(1),
             UserAgent = "Opera",
             RemoteAddress = "127.0.0.1",
-            SessionKey = string.IsNullOrWhiteSpace(sessionKey) ? GenerateKey() : sessionKey,
             RequesterKey = GenerateKey()
         };
     }

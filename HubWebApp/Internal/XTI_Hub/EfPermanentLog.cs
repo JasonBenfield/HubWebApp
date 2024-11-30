@@ -47,10 +47,10 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
     {
         foreach (var sessionDetailRequest in sessionDetails)
         {
-            var user = await hubFactory.Users.UserOrAnon(new AppUserName(sessionDetailRequest.Session.UserName));
+            var user = await hubFactory.Users.UserOrAnon(new AppUserName(sessionDetailRequest.Session.SessionKey.UserName));
             var session = await hubFactory.Sessions.AddOrUpdate
             (
-                sessionKey: sessionDetailRequest.Session.SessionKey,
+                sessionKey: sessionDetailRequest.Session.SessionKey.ID,
                 user: user,
                 timeStarted: sessionDetailRequest.Session.TimeStarted,
                 timeEnded: sessionDetailRequest.Session.TimeEnded,

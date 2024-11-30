@@ -9,6 +9,7 @@ using XTI_Hub;
 using XTI_HubWebAppApi;
 using XTI_Schedule;
 using XTI_Secrets.Extensions;
+using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
 using XTI_WebApp.Scheduled;
 

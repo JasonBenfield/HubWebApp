@@ -10,6 +10,7 @@ import { ModCategoryButtonListItemView } from "./ModCategoryButtonListItemView";
 import { ModCategoryListItem } from "./ModCategoryListItem";
 import { SelectModCategoryPanelView } from "./SelectModCategoryPanelView";
 import { ModifierCategory } from "../../Lib/ModifierCategory";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 
 interface IResult {
     back?: boolean;
@@ -45,7 +46,7 @@ class Result {
 
 export class SelectModCategoryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly modCategories: ListGroup<ModCategoryListItem, ModCategoryButtonListItemView>;
 
     constructor(
@@ -53,7 +54,7 @@ export class SelectModCategoryPanel implements IPanel {
         private readonly view: SelectModCategoryPanelView
     ) {
         new TextComponent(this.view.titleHeader).setText('Modifier Categories');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.modCategories = new ListGroup(view.modCategories);
         this.modCategories.when.itemClicked.then(this.onModCategoryClicked.bind(this));
         new Command(this.onDefaultModifierClicked.bind(this)).add(view.defaultModButton);
