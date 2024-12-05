@@ -92,6 +92,9 @@ public sealed class AppRequest
                 }
             );
 
+    public string RequestData { get => record.RequestData; }
+    public string ResultData { get => record.ResultData; }
+
     public AppRequestModel ToModel() =>
         new
         (

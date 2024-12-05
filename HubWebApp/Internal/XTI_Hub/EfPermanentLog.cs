@@ -69,7 +69,9 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                     timeStarted: requestDetail.Request.TimeStarted,
                     timeEnded: requestDetail.Request.TimeEnded,
                     actualCount: requestDetail.Request.ActualCount,
-                    sourceRequestKey: requestDetail.Request.SourceRequestKey
+                    sourceRequestKey: requestDetail.Request.SourceRequestKey,
+                    requestData: requestDetail.Request.RequestData,
+                    resultData: requestDetail.Request.ResultData
                 );
                 foreach (var logEntry in requestDetail.LogEntries)
                 {
@@ -140,7 +142,9 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                 startRequest.TimeStarted,
                 DateTimeOffset.MaxValue,
                 startRequest.ActualCount,
-                startRequest.SourceRequestKey
+                startRequest.SourceRequestKey,
+                requestData: "",
+                resultData: ""
             );
         }
         catch (Exception ex)

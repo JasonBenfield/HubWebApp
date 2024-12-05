@@ -11,7 +11,7 @@ namespace XTI_HubAppClient.ServiceApp.Extensions;
 public static class HubServiceAppExtensions
 {
     public static void AddAppAgenda(this IServiceCollection services, Action<IServiceProvider, AppAgendaBuilder> build) =>
-    AppAgendaExtensions.AddAppAgenda(services, build);
+        AppAgendaExtensions.AddAppAgenda(services, build);
 
     public static void AddThrottledLog<TAppApi>(this IServiceCollection services, Action<TAppApi, ThrottledLogsBuilder> action)
         where TAppApi : IAppApi =>

@@ -42,6 +42,8 @@ export class ODataExpandedLogEntryColumnViewsBuilder {
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
 	readonly SourceID = new ODataColumnViewBuilder();
+	readonly RequestData = new ODataColumnViewBuilder();
+	readonly ResultData = new ODataColumnViewBuilder();
 }
 
 export class ODataExpandedLogEntryColumnsBuilder {
@@ -112,6 +114,10 @@ export class ODataExpandedLogEntryColumnsBuilder {
 		this.IsCurrentInstallation.setDisplayText('Is Current Installation');
 		this.SourceID = new ODataColumnBuilder('SourceID', new SourceType('Int32'), views.SourceID);
 		this.SourceID.setDisplayText('Source ID');
+		this.RequestData = new ODataColumnBuilder('RequestData', new SourceType('String'), views.RequestData);
+		this.RequestData.setDisplayText('Request Data');
+		this.ResultData = new ODataColumnBuilder('ResultData', new SourceType('String'), views.ResultData);
+		this.ResultData.setDisplayText('Result Data');
 	}
 	readonly EventID: ODataColumnBuilder;
 	readonly TimeOccurred: ODataColumnBuilder;
@@ -149,6 +155,8 @@ export class ODataExpandedLogEntryColumnsBuilder {
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
 	readonly SourceID: ODataColumnBuilder;
+	readonly RequestData: ODataColumnBuilder;
+	readonly ResultData: ODataColumnBuilder;
 	
 	build() {
 		return {
@@ -187,7 +195,9 @@ export class ODataExpandedLogEntryColumnsBuilder {
 			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
 			IsCurrentInstallation: this.IsCurrentInstallation.build(),
-			SourceID: this.SourceID.build()
+			SourceID: this.SourceID.build(),
+			RequestData: this.RequestData.build(),
+			ResultData: this.ResultData.build()
 		} as ODataColumns<IExpandedLogEntry>;
 	}
 }

@@ -686,6 +686,8 @@ interface IAppRequestDetailModel {
 	User: IAppUserModel;
 	SourceRequestID: number;
 	TargetRequestIDs: number[];
+	RequestData: string;
+	ResultData: string;
 }
 interface IAppSessionDetailModel {
 	Session: IAppSessionModel;
@@ -762,6 +764,8 @@ interface IExpandedRequest {
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 	SourceRequestID: number;
+	RequestData: string;
+	ResultData: string;
 }
 interface IExpandedLogEntry {
 	EventID: number;
@@ -800,6 +804,8 @@ interface IExpandedLogEntry {
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 	SourceID: number;
+	RequestData: string;
+	ResultData: string;
 }
 interface IUserRoleIDRequest {
 	UserRoleID: number;

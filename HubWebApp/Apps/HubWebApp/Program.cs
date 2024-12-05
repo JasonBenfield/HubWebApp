@@ -14,54 +14,14 @@ using XTI_WebApp.Extensions;
 using XTI_WebApp.Scheduled;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.UseXtiConfiguration(builder.Environment, HubInfo.AppKey.Name.DisplayText, HubInfo.AppKey.Type.DisplayText, args);
+var appKey = HubInfo.AppKey;
+builder.Configuration.UseXtiConfiguration(builder.Environment, appKey.Name.DisplayText, appKey.Type.DisplayText, args);
 builder.Services.AddResponseCaching();
 var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
 builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
 builder.Services.AddFileSecretCredentials(xtiEnv);
 builder.Services.AddServicesForHub();
-builder.Services.AddScheduledWebServices
-(
-    (sp, agenda) =>
-    {
-        agenda.AddScheduled<HubAppApi>
-        (
-            (api, agendaItem) =>
-            {
-                agendaItem.Action(api.Periodic.DeleteExpiredStoredObjects)
-                    .Interval(TimeSpan.FromHours(1))
-                    .AddSchedule
-                    (
-                        Schedule.EveryDay().At(TimeRange.AllDay())
-                    );
-            }
-        );
-        agenda.AddScheduled<HubAppApi>
-        (
-            (api, agendaItem) =>
-            {
-                agendaItem.Action(api.Periodic.EndExpiredSessions)
-                    .Interval(TimeSpan.FromHours(1))
-                    .AddSchedule
-                    (
-                        Schedule.EveryDay().At(TimeRange.AllDay())
-                    );
-            }
-        );
-        agenda.AddScheduled<HubAppApi>
-        (
-            (api, agendaItem) =>
-            {
-                agendaItem.Action(api.Periodic.PurgeLogs)
-                    .Interval(TimeSpan.FromHours(7))
-                    .AddSchedule
-                    (
-                        Schedule.EveryDay().At(TimeRange.AllDay())
-                    );
-            }
-        );
-    }
-);
+builder.Services.AddScheduledWebServices((sp, agenda) => { });
 builder.Services
     .AddMvc()
     .AddOData(options =>

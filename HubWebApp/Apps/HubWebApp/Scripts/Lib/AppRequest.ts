@@ -18,8 +18,4 @@ export class AppRequest {
 		this.timeEnded = source.TimeEnded;
 		this.actualCount = source.ActualCount;
 	}
-
-	formatTimeRange() {
-
-	}
 }

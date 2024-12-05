@@ -29,7 +29,9 @@ public sealed class AppSession
         DateTimeOffset timeStarted,
         DateTimeOffset timeEnded,
         int actualCount,
-        string sourceRequestKey
+        string sourceRequestKey,
+        string requestData,
+        string resultData
     ) => factory.Requests.AddOrUpdate
         (
             this,
@@ -39,7 +41,9 @@ public sealed class AppSession
             timeStarted,
             timeEnded,
             actualCount,
-            sourceRequestKey
+            sourceRequestKey,
+            requestData,
+            resultData
         );
 
     public Task Authenticate(AppUser user) =>

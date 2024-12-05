@@ -1,4 +1,7 @@
-﻿namespace XTI_SupportServiceAppApi.Installations;
+﻿using XTI_Core;
+using XTI_Schedule;
+
+namespace XTI_SupportServiceAppApi.Installations;
 
 public sealed class InstallationsGroup : AppApiGroupWrapper
 {
@@ -8,6 +11,12 @@ public sealed class InstallationsGroup : AppApiGroupWrapper
         Delete = source.AddAction<EmptyRequest, EmptyActionResult>()
             .Named(nameof(Delete))
             .WithExecution<DeleteAction>()
+            .RunContinuously()
+                .Interval(TimeSpan.FromHours(1))
+                .AddSchedule
+                (
+                    Schedule.EveryDay().At(TimeRange.AllDay())
+                )
             .Build();
     }
 

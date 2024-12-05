@@ -51,7 +51,9 @@ internal sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMo
             UserGroup: userGroup.ToModel(),
             User: user.ToModel(),
             SourceRequestID: sourceRequest.ToModel().ID,
-            TargetRequestIDs: targetRequestIDs
+            TargetRequestIDs: targetRequestIDs,
+            RequestData: request.RequestData,
+            ResultData: request.ResultData
         );
         return detail;
     }

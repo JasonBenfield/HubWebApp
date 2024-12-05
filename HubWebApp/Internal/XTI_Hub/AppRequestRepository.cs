@@ -40,7 +40,9 @@ public sealed class AppRequestRepository
         DateTimeOffset timeStarted,
         DateTimeOffset timeEnded,
         int actualCount,
-        string sourceRequestKey
+        string sourceRequestKey,
+        string requestData,
+        string resultData
     )
     {
         XtiPath xtiPath;
@@ -65,6 +67,8 @@ public sealed class AppRequestRepository
         var modCategory = await resourceGroup.ModCategory();
         var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier);
         var truncatedPath = new TruncatedText(path, 100).Value;
+        requestData = new TruncatedText(requestData, 5000).Value;
+        resultData = new TruncatedText(resultData, 5000).Value;
         var record = await GetRequestEntityByKey(requestKey);
         if (record == null)
         {
@@ -78,7 +82,9 @@ public sealed class AppRequestRepository
                 truncatedPath,
                 timeStarted,
                 timeEnded,
-                actualCount
+                actualCount,
+                requestData,
+                resultData
             );
         }
         else
@@ -104,6 +110,8 @@ public sealed class AppRequestRepository
                             r.TimeEnded = timeEnded;
                         }
                         r.ActualCount = actualCount;
+                        r.RequestData = requestData;
+                        r.ResultData = resultData;
                     }
                 );
         }
@@ -142,7 +150,9 @@ public sealed class AppRequestRepository
                 path: "",
                 timeStarted: now,
                 timeEnded: now,
-                actualCount: 1
+                actualCount: 1,
+                requestData: "",
+                resultData: ""
             );
         }
         return factory.CreateRequest(requestEntity);
@@ -169,7 +179,20 @@ public sealed class AppRequestRepository
     private Task<AppRequestEntity?> GetRequestEntityByKey(string requestKey) =>
         factory.DB.Requests.Retrieve().FirstOrDefaultAsync(r => r.RequestKey == requestKey);
 
-    private async Task<AppRequestEntity> Add(AppSession session, string requestKey, Installation installation, Resource resource, Modifier modifier, string path, DateTimeOffset timeStarted, DateTimeOffset timeEnded, int actualCount)
+    private async Task<AppRequestEntity> Add
+    (
+        AppSession session, 
+        string requestKey, 
+        Installation installation, 
+        Resource resource, 
+        Modifier modifier, 
+        string path, 
+        DateTimeOffset timeStarted, 
+        DateTimeOffset timeEnded, 
+        int actualCount,
+        string requestData,
+        string resultData
+    )
     {
         var record = new AppRequestEntity
         {
@@ -181,7 +204,9 @@ public sealed class AppRequestRepository
             Path = path ?? "",
             TimeStarted = timeStarted,
             TimeEnded = timeEnded,
-            ActualCount = actualCount
+            ActualCount = actualCount,
+            RequestData = requestData,
+            ResultData = resultData
         };
         await factory.DB.Requests.Create(record);
         return record;

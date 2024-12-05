@@ -45,6 +45,7 @@ public static class XtiServiceAppHost
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
                     services.AddTempLogWriterHostedService();
+                    services.AddAppAgenda((sp, a) => { });
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
                     services.AddHubClientContext();

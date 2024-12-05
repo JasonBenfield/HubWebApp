@@ -17,7 +17,7 @@ public sealed class AuthCookieXtiToken : IXtiToken
 
     public Task<string> UserName() => Task.FromResult(xtiClaims.UserName().Value);
 
-    public Task<string> Value()
+    public Task<string> Value(CancellationToken ct)
     {
         var token = httpContextAccessor.HttpContext?.User.Claims
             .FirstOrDefault(c => c.Type == "token")?.Value ?? 

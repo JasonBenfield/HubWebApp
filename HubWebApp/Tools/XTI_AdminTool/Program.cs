@@ -73,14 +73,14 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped<ISecretCredentialsFactory>(sp =>
             {
                 var xtiFolder = sp.GetRequiredService<XtiFolder>();
-                var dataProtector = sp.GetDataProtector(new[] { "XTI_Secrets" });
+                var dataProtector = sp.GetDataProtector(["XTI_Secrets"]);
                 return new FileSecretCredentialsFactory(xtiFolder, dataProtector);
             });
             services.AddScoped(sp => (SecretCredentialsFactory)sp.GetRequiredService<ISecretCredentialsFactory>());
             services.AddScoped<ISharedSecretCredentialsFactory>(sp =>
             {
                 var xtiFolder = sp.GetRequiredService<XtiFolder>();
-                var dataProtector = sp.GetDataProtector(new[] { "XTI_Secrets" });
+                var dataProtector = sp.GetDataProtector(["XTI_Secrets"]);
                 return new SharedFileSecretCredentialsFactory(xtiFolder, dataProtector);
             });
             services.AddMemoryCache();
@@ -89,6 +89,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddSingleton<IClock, UtcClock>();
             services.AddHubDbContextForSqlServer(ServiceLifetime.Scoped);
             services.AddConfigurationOptions<AdminToolOptions>();
+            services.AddSingleton<AppClientOptions>();
             services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>
             {

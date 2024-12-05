@@ -30,15 +30,37 @@ public sealed class TempToPermanentLog
             var filesToProcess = new List<ITempLogFile>();
             foreach(var logFile in logFiles)
             {
-                var renamedFile = logFile.WithNewName($"{logFile.Name}.processing");
-                filesToProcess.Add(renamedFile);
-                var fileSessionDetails = await renamedFile.Read();
-                sessionDetails.AddRange(fileSessionDetails);
+                ITempLogFile renamedFile;
+                try
+                {
+                    renamedFile = logFile.WithNewName($"{logFile.Name}.processing");
+                    filesToProcess.Add(renamedFile);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Error renaming file '{logFile.Name}'.", ex);
+                }
+                try
+                {
+                    var fileSessionDetails = await renamedFile.Read();
+                    sessionDetails.AddRange(fileSessionDetails);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Error reading file '{logFile.Name}'.", ex);
+                }
             }
             await permanentLog.LogSessionDetails(sessionDetails.ToArray(), default);
             foreach(var fileToProcess in filesToProcess)
             {
-                fileToProcess.Delete();
+                try
+                {
+                    fileToProcess.Delete();
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Error deleting file '{fileToProcess.Name}'.", ex);
+                }
             }
             logFiles = tempLog.Files(modifiedBefore, 1000);
             i++;

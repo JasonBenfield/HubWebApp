@@ -44,6 +44,7 @@ public sealed class XtiConsoleAppHost
                     services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
+                    services.AddAppAgenda((sp, a) => { });
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
                     services.AddHubClientContext();

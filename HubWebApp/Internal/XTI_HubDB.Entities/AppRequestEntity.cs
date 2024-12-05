@@ -12,4 +12,6 @@ public sealed class AppRequestEntity
     public DateTimeOffset TimeStarted { get; set; } = DateTimeOffset.MinValue;
     public DateTimeOffset TimeEnded { get; set; } = DateTimeOffset.MaxValue;
     public int ActualCount { get; set; } = 1;
+    public string RequestData { get; set; } = "";
+    public string ResultData { get; set; } = "";
 }
