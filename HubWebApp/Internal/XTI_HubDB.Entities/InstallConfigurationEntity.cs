@@ -1,5 +1,4 @@
-﻿
-namespace XTI_HubDB.Entities;
+﻿namespace XTI_HubDB.Entities;
 
 public sealed class InstallConfigurationEntity
 {

@@ -7,7 +7,7 @@ using XTI_WebApp.Api;
 
 namespace HubWebApp.Extensions;
 
-public sealed class JwtAccess : AccessForAuthenticate
+public sealed class JwtAccess : IAccess
 {
     private readonly DefaultWebAppOptions options;
 
@@ -16,7 +16,7 @@ public sealed class JwtAccess : AccessForAuthenticate
         this.options = options;
     }
 
-    protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)
+    public Task<string> GenerateToken(IEnumerable<Claim> claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(options.XtiAuthentication.JwtSecret);

@@ -2,13 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
-using XTI_HubAppClient.Extensions;
 using XTI_App.Extensions;
-using XTI_Core.Extensions;
 using XTI_Core;
+using XTI_Core.Extensions;
+using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
-using XTI_WebApp.Api;
 using XTI_WebApp.Abstractions;
+using XTI_WebApp.Api;
 
 namespace XTI_HubAppClient.WebApp.Extensions;
 
@@ -22,6 +22,7 @@ public static class XtiWebAppHost
         builder.Services.AddSingleton(_ => appKey);
         builder.Services.AddResponseCaching();
         builder.Services.AddAppServices();
+        AppExtensions.AddThrottledLog(builder.Services, (api, b) => { });
         builder.Services.AddFileSecretCredentials(xtiEnv);
         builder.Services.AddHubClientServices();
         builder.Services.AddHubClientContext();
@@ -35,6 +36,7 @@ public static class XtiWebAppHost
             tokenAccessorFactory.AddToken(() => sp.GetRequiredService<AuthCookieXtiToken>());
         });
         XTI_WebApp.Extensions.DefaultWebAppExtensions.AddDefaultWebAppServices(builder.Services);
+        builder.Services.AddScheduledWebServices((sp, agenda) => { });
         builder.Services.AddScoped<IUserProfileUrl, HcUserProfileUrl>();
         builder.Services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         builder.Services.AddScoped<LoginUrl>();

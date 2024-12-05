@@ -1,16 +1,16 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { Modifier } from "../../../Lib/Modifier";
 import { ModifierListCardView } from "./ModifierListCardView";
 import { ModifierListItem } from "./ModifierListItem";
 import { ModifierListItemView } from "./ModifierListItemView";
-import { Modifier } from "../../../Lib/Modifier";
 
 export class ModifierListCard {
     private modCategoryID: number;
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly modifiers: ListGroup<ModifierListItem, ModifierListItemView>;
 
     constructor(
@@ -18,7 +18,7 @@ export class ModifierListCard {
         view: ModifierListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Modifiers');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.modifiers = new ListGroup(view.modifiers);
     }
 

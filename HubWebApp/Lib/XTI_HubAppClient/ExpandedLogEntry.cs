@@ -38,4 +38,6 @@ public sealed partial class ExpandedLogEntry
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }
     public int SourceID { get; set; }
+    public string RequestData { get; set; } = "";
+    public string ResultData { get; set; } = "";
 }

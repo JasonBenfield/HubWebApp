@@ -1,22 +1,20 @@
-﻿namespace XTI_SupportServiceAppApi;
+﻿using XTI_Core;
+
+namespace XTI_SupportServiceAppApi;
 
 public sealed partial class SupportAppApi : AppApiWrapper
 {
-    public SupportAppApi
-    (
-        IAppApiUser user,
-        string serializedDefaultOptions,
-        IServiceProvider sp
-    )
+    public SupportAppApi(IAppApiUser user, IServiceProvider sp)
         : base
         (
             new AppApi
             (
+                sp,
                 SupportInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()
                     .WithAllowed(AppRoleName.Admin),
-                serializedDefaultOptions
+                XtiSerializer.Serialize(new SupportServiceAppOptions())
             )
         )
     {

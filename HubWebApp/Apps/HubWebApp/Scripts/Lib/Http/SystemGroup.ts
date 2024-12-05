@@ -14,6 +14,7 @@ export class SystemGroup extends AppClientGroup {
 		this.GetModifierAction = this.createAction<IGetModifierRequest,IModifierModel>('GetModifier', 'Get Modifier');
 		this.AddOrUpdateModifierByTargetKeyAction = this.createAction<ISystemAddOrUpdateModifierByTargetKeyRequest,IModifierModel>('AddOrUpdateModifierByTargetKey', 'Add Or Update Modifier By Target Key');
 		this.AddOrUpdateModifierByModKeyAction = this.createAction<ISystemAddOrUpdateModifierByModKeyRequest,IModifierModel>('AddOrUpdateModifierByModKey', 'Add Or Update Modifier By Mod Key');
+		this.GetUserByUserNameAction = this.createAction<IAppUserNameRequest,IAppUserModel>('GetUserByUserName', 'Get User By User Name');
 		this.GetUserOrAnonAction = this.createAction<IAppUserNameRequest,IAppUserModel>('GetUserOrAnon', 'Get User Or Anon');
 		this.GetUserRolesAction = this.createAction<IGetUserRolesRequest,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
 		this.GetUserAuthenticatorsAction = this.createAction<IAppUserIDRequest,IUserAuthenticatorModel[]>('GetUserAuthenticators', 'Get User Authenticators');
@@ -27,6 +28,7 @@ export class SystemGroup extends AppClientGroup {
 	readonly GetModifierAction: AppClientAction<IGetModifierRequest,IModifierModel>;
 	readonly AddOrUpdateModifierByTargetKeyAction: AppClientAction<ISystemAddOrUpdateModifierByTargetKeyRequest,IModifierModel>;
 	readonly AddOrUpdateModifierByModKeyAction: AppClientAction<ISystemAddOrUpdateModifierByModKeyRequest,IModifierModel>;
+	readonly GetUserByUserNameAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
 	readonly GetUserOrAnonAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
 	readonly GetUserRolesAction: AppClientAction<IGetUserRolesRequest,IAppRoleModel[]>;
 	readonly GetUserAuthenticatorsAction: AppClientAction<IAppUserIDRequest,IUserAuthenticatorModel[]>;
@@ -46,6 +48,9 @@ export class SystemGroup extends AppClientGroup {
 	}
 	AddOrUpdateModifierByModKey(model: ISystemAddOrUpdateModifierByModKeyRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddOrUpdateModifierByModKeyAction.execute(model, errorOptions || {});
+	}
+	GetUserByUserName(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserByUserNameAction.execute(model, errorOptions || {});
 	}
 	GetUserOrAnon(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserOrAnonAction.execute(model, errorOptions || {});

@@ -27,6 +27,12 @@ public sealed class EfUserContext : ISourceUserContext
         return user.ToModel();
     }
 
+    public async Task<AppUserModel> UserOrAnon(AppUserName userName)
+    {
+        var user = await hubFactory.Users.UserOrAnon(userName);
+        return user.ToModel();
+    }
+
     public async Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier)
     {
         var appUser = await hubFactory.Users.User(user.ID);

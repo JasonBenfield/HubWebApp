@@ -1,6 +1,4 @@
-﻿using XTI_HubWebAppApi.Auth;
-
-namespace XTI_HubWebAppApi;
+﻿namespace XTI_HubWebAppApi;
 
 public sealed partial class HubAppApi : WebAppApiWrapper
 {
@@ -14,6 +12,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         (
             new AppApi
             (
+                sp,
                 HubInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()

@@ -25,7 +25,7 @@ public sealed class LogEntry
         hubFactory.LogEntries.TargetLogEntryOrDefault(record.ID);
 
     public AppLogEntryModel ToModel() =>
-        new AppLogEntryModel
+        new
         (
             ID: record.ID,
             RequestID: record.RequestID,
@@ -34,7 +34,8 @@ public sealed class LogEntry
             Caption: record.Caption,
             Message: record.Message,
             Detail: record.Detail,
-            Category: record.Category
+            Category: record.Category,
+            ActualCount: record.ActualCount
         );
 
     private AppEventSeverity Severity() => AppEventSeverity.Values.Value(record.Severity);

@@ -17,7 +17,7 @@ namespace XTIHubDB.EF.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -93,6 +93,13 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("RequestData")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
+
                     b.Property<string>("RequestKey")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -100,6 +107,13 @@ namespace XTIHubDB.EF.SqlServer.Migrations
 
                     b.Property<int>("ResourceID")
                         .HasColumnType("int");
+
+                    b.Property<string>("ResultData")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
 
                     b.Property<int>("SessionID")
                         .HasColumnType("int");
@@ -478,6 +492,10 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RequestData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RequestID")
                         .HasColumnType("int");
 
@@ -496,6 +514,10 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResourceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultData")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -613,6 +635,10 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RequestData")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RequestTimeElapsed")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -628,6 +654,10 @@ namespace XTIHubDB.EF.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResourceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResultData")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

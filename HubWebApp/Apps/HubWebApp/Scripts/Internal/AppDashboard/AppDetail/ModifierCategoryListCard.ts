@@ -1,18 +1,18 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
 import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { ModifierCategoryListItem } from "./ModifierCategoryListItem";
 import { ModifierCategoryListItemView } from "./ModifierCategoryListItemView";
-import { ModifierCategory } from "../../../Lib/ModifierCategory";
 
 type Events = { modCategorySelected: ModifierCategory };
 
 export class ModifierCategoryListCard {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly modCategories: ListGroup<ModifierCategoryListItem, ModifierCategoryListItemView>;
     private readonly eventSource = new EventSource<Events>(this, { modCategorySelected: null });
     readonly when = this.eventSource.when;
@@ -22,7 +22,8 @@ export class ModifierCategoryListCard {
         view: ModifierCategoryListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Categories');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
+        this.alert.disableAutoScrollIntoView();
         this.modCategories = new ListGroup(view.modCategories);
         this.modCategories.when.itemClicked.then(this.onItemSelected.bind(this));
     }

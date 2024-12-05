@@ -8,11 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
+using XTI_App.Hosting;
 using XTI_Core;
 using XTI_HubAppClient.Extensions;
 using XTI_TempLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Extensions;
+using XTI_WebApp.Scheduled;
 
 namespace XTI_HubAppClient.WebApp.Extensions;
 
@@ -31,14 +33,17 @@ public static class HubWebAppExtensions
         DefaultWebAppExtensions.UseXtiDefaults(app);
 
     public static void AddThrottledLog<TAppApi>(this IServiceCollection services, Action<TAppApi, ThrottledLogsBuilder> action)
-    where TAppApi : IAppApi =>
-    AppExtensions.AddThrottledLog(services, action);
+        where TAppApi : IAppApi =>
+        AppExtensions.AddThrottledLog(services, action);
 
-    public static ThrottledPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder Throttle(this ThrottledLogsBuilder builder, IAppApiAction action) =>
         AppExtensions.Throttle(builder, action);
 
-    public static ThrottledPathBuilder AndThrottle(this ThrottledPathBuilder builder, IAppApiAction action) =>
+    public static ThrottledLogPathBuilder AndThrottle(this ThrottledLogPathBuilder builder, IAppApiAction action) =>
         AppExtensions.AndThrottle(builder, action);
+
+    public static void AddScheduledWebServices(this IServiceCollection services, Action<IServiceProvider, AppAgendaBuilder> build) =>
+        ScheduledExtensions.AddScheduledWebServices(services, build);
 
     public static void AddAppClients(this IServiceCollection services, Action<IServiceProvider, AppClients> configure)
     {

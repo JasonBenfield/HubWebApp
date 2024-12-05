@@ -3,7 +3,7 @@ using XTI_HubWebAppApi;
 
 namespace HubWebApp.Fakes;
 
-public sealed class FakeAccessForAuthenticate : AccessForAuthenticate
+public sealed class FakeAccessForAuthenticate : IAccess
 {
     public FakeAccessForAuthenticate()
     {
@@ -13,7 +13,7 @@ public sealed class FakeAccessForAuthenticate : AccessForAuthenticate
     public string Token { get; }
     public IEnumerable<Claim> Claims { get; private set; } = Enumerable.Empty<Claim>();
 
-    protected override Task<string> _GenerateToken(IEnumerable<Claim> claims)
+    public Task<string> GenerateToken(IEnumerable<Claim> claims)
     {
         Claims = claims;
         return Task.FromResult(Token);

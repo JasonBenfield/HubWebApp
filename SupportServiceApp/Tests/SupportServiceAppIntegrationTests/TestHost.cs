@@ -9,9 +9,11 @@ using XTI_App.Hosting;
 using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
+using XTI_Hub;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_PermanentLog;
+using XTI_PermanentLog.Implementations;
 using XTI_Secrets.Extensions;
 using XTI_SupportServiceAppApi;
 using XTI_TempLog;
@@ -36,8 +38,6 @@ internal sealed class TestHost
             return xtiFolder.AppDataFolder(appKey);
         });
         host.Services.AddSingleton<CurrentSession>();
-        host.Services.AddScoped<ActionRunnerXtiPathAccessor>();
-        host.Services.AddScoped<IXtiPathAccessor>(sp => sp.GetRequiredService<ActionRunnerXtiPathAccessor>());
         host.Services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
         host.Services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
         host.Services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
@@ -62,16 +62,35 @@ internal sealed class TestHost
         host.Services.AddSupportAppApiServices();
         host.Services.AddScoped<AppApiFactory, SupportAppApiFactory>();
         host.Services.AddScoped(sp => (SupportAppApi)sp.GetRequiredService<IAppApi>());
-        host.Services.AddScoped<ITempLogs>(sp =>
+        host.Services.AddScoped<ITempLogsV1>(sp =>
         {
             var dataProtector = sp.GetDataProtector("XTI_TempLog");
             var hostEnv = sp.GetRequiredService<IHostEnvironment>();
             var appKey = sp.GetRequiredService<AppKey>();
             var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
-            return new DiskTempLogs(dataProtector, appDataFolder.Path(), "TempLogs");
+            return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
         });
-        host.Services.AddScoped<IPermanentLogClient, PermanentLogClient>();
+        host.Services.AddScoped<EfPermanentLog>();
+        host.Services.AddScoped<HcPermanentLog>();
+        host.Services.AddScoped
+        (
+            sp =>
+            {
+                IPermanentLog permanentLog;
+                var options = sp.GetRequiredService<SupportServiceAppOptions>();
+                if (options.PermanentLogType == "DB")
+                {
+                    permanentLog = sp.GetRequiredService<EfPermanentLog>();
+                }
+                else
+                {
+                    permanentLog = sp.GetRequiredService<HcPermanentLog>();
+                }
+                return permanentLog;
+            }
+        );
         host.Services.AddScoped<TempToPermanentLog>();
+        host.Services.AddScoped<TempToPermanentLogV1>();
         host.Services.AddFileSecretCredentials(xtiEnv);
         host.Services.AddScoped<InstallationUserCredentials>();
         host.Services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());

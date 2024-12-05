@@ -11,13 +11,19 @@ public sealed record AppLogEntryModel
     string Caption,
     string Message,
     string Detail,
-    string Category
+    string Category,
+    int ActualCount
 )
 {
     public AppLogEntryModel()
-        : this(0, 0, DateTimeOffset.MaxValue, AppEventSeverity.Values.GetDefault(), "", "", "", "")
+        : this(0, 0, DateTimeOffset.MaxValue, AppEventSeverity.Values.GetDefault(), "", "", "", "", 0)
     {
     }
 
     public bool IsFound() => ID > 0;
+
+    public bool IsPlaceholder() => 
+        Caption.Equals("Placeholder") &&
+        Message.Equals("Placeholder") &&
+        Detail.Equals("Placeholder");
 }

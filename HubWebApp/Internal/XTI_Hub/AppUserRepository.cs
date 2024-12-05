@@ -110,6 +110,10 @@ public sealed class AppUserRepository
 
     public async Task<AppUser> UserOrAnon(AppUserName userName)
     {
+        if (userName.IsBlank())
+        {
+            userName = AppUserName.Anon;
+        }
         var record = await GetUser(userName);
         if (record == null && !userName.IsAnon())
         {

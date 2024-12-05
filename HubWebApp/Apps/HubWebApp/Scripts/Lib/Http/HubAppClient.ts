@@ -37,7 +37,7 @@ export class HubAppClient extends AppClient {
 		super(
 			events, 
 			'Hub', 
-			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1428' : 'Current'
+			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1429' : 'Current'
 		);
 		this.CurrentUser = this.addGroup((evts, resourceUrl) => new CurrentUserGroup(evts, resourceUrl));
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));

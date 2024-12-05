@@ -1,18 +1,18 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
-import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
+import { AppRole } from "../../Lib/AppRole";
+import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { Modifier } from "../../Lib/Modifier";
 import { AddRolePanelView } from "./AddRolePanelView";
 import { AppUserOptions } from "./AppUserOptions";
 import { RoleButtonListItemView } from "./RoleButtonListItemView";
 import { RoleListItem } from "./RoleListItem";
-import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { AppRole } from "../../Lib/AppRole";
-import { AppUser } from "../../Lib/AppUser";
-import { Modifier } from "../../Lib/Modifier";
 
 interface IResult {
     back?: boolean;
@@ -34,7 +34,7 @@ class Result {
 
 export class AddRolePanel implements IPanel {
     private readonly awaitable: Awaitable<Result>;
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly roles: ListGroup<RoleListItem, RoleButtonListItemView>;
     private user: AppUser;
     private modifier: Modifier;
@@ -46,7 +46,7 @@ export class AddRolePanel implements IPanel {
     ) {
         new TextComponent(view.titleHeader).setText('Select Role');
         this.awaitable = new Awaitable();
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.roles = new ListGroup(view.roles);
         this.roles.when.itemClicked.then(this.onRoleClicked.bind(this));
         new Command(this.back.bind(this)).add(view.backButton);

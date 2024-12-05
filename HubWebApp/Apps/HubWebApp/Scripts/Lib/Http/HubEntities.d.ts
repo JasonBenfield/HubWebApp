@@ -87,12 +87,12 @@ interface IModifierKey {
 }
 interface IAppRequestModel {
 	ID: number;
-	SessionID: number;
 	Path: string;
 	ResourceID: number;
 	ModifierID: number;
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ActualCount: number;
 }
 interface IGetPendingDeletesRequest {
 	MachineNames: string[];
@@ -176,7 +176,7 @@ interface IUserOrAnonByAuthenticatorRequest {
 interface ILogBatchModel {
 	StartSessions: IStartSessionModel[];
 	StartRequests: IStartRequestModel[];
-	LogEntries: ILogEntryModel[];
+	LogEntries: ILogEntryModelV1[];
 	EndRequests: IEndRequestModel[];
 	AuthenticateSessions: IAuthenticateSessionModel[];
 	EndSessions: IEndSessionModel[];
@@ -198,7 +198,7 @@ interface IStartRequestModel {
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ActualCount: number;
 }
-interface ILogEntryModel {
+interface ILogEntryModelV1 {
 	EventKey: string;
 	RequestKey: string;
 	Severity: number;
@@ -221,6 +221,51 @@ interface IAuthenticateSessionModel {
 interface IEndSessionModel {
 	SessionKey: string;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface ILogSessionDetailsRequest {
+	SessionDetails: ITempLogSessionDetailModel[];
+}
+interface ITempLogSessionDetailModel {
+	Session: ITempLogSessionModel;
+	RequestDetails: ITempLogRequestDetailModel[];
+}
+interface ITempLogSessionModel {
+	SessionKey: ISessionKey;
+	RequesterKey: string;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	RemoteAddress: string;
+	UserAgent: string;
+}
+interface ISessionKey {
+	ID: string;
+	UserName: string;
+}
+interface ITempLogRequestDetailModel {
+	Request: ITempLogRequestModel;
+	LogEntries: ILogEntryModel[];
+}
+interface ITempLogRequestModel {
+	RequestKey: string;
+	SourceRequestKey: string;
+	Path: string;
+	InstallationID: number;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ActualCount: number;
+	RequestData: string;
+	ResultData: string;
+}
+interface ILogEntryModel {
+	EventKey: string;
+	Severity: number;
+	TimeOccurred: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	Caption: string;
+	Message: string;
+	Detail: string;
+	ActualCount: number;
+	ParentEventKey: string;
+	Category: string;
 }
 interface IAppDomainModel {
 	AppKey: IAppKey;
@@ -263,6 +308,7 @@ interface IAppLogEntryModel {
 	Message: string;
 	Detail: string;
 	Category: string;
+	ActualCount: number;
 }
 interface IModifierCategoryModel {
 	ID: number;
@@ -529,6 +575,7 @@ interface IAppContextModel {
 	Roles: IAppRoleModel[];
 	ModCategories: IModifierCategoryModel[];
 	ResourceGroups: IAppContextResourceGroupModel[];
+	DefaultModifier: IModifierModel;
 }
 interface IAppContextResourceGroupModel {
 	ResourceGroup: IResourceGroupModel;
@@ -619,6 +666,8 @@ interface IAppSessionModel {
 	ID: number;
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	SessionKey: string;
+	RequesterKey: string;
 	RemoteAddress: string;
 	UserAgent: string;
 }
@@ -637,6 +686,8 @@ interface IAppRequestDetailModel {
 	User: IAppUserModel;
 	SourceRequestID: number;
 	TargetRequestIDs: number[];
+	RequestData: string;
+	ResultData: string;
 }
 interface IAppSessionDetailModel {
 	Session: IAppSessionModel;
@@ -713,6 +764,8 @@ interface IExpandedRequest {
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 	SourceRequestID: number;
+	RequestData: string;
+	ResultData: string;
 }
 interface IExpandedLogEntry {
 	EventID: number;
@@ -751,6 +804,8 @@ interface IExpandedLogEntry {
 	InstallLocation: string;
 	IsCurrentInstallation: boolean;
 	SourceID: number;
+	RequestData: string;
+	ResultData: string;
 }
 interface IUserRoleIDRequest {
 	UserRoleID: number;

@@ -4,10 +4,8 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Fakes;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
-using XTI_HubWebAppApi.PermanentLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Fakes;
 
@@ -43,9 +41,9 @@ public static class FakeExtensions
         services.AddScoped<IAppSetup>(sp => sp.GetRequiredService<HubAppSetup>());
         services.AddScoped(_ => HubInfo.AppKey);
         services.AddScoped<FakeAccessForAuthenticate>();
-        services.AddScoped<AccessForAuthenticate>(sp => sp.GetRequiredService<FakeAccessForAuthenticate>());
+        services.AddKeyedScoped<IAccess>("Authenticate", (sp, key) => sp.GetRequiredService<FakeAccessForAuthenticate>());
         services.AddScoped<FakeAccessForLogin>();
-        services.AddScoped<AccessForLogin>(sp => sp.GetRequiredService<FakeAccessForLogin>());
+        services.AddKeyedScoped<IAccess>("Login", (sp, key) => sp.GetRequiredService<FakeAccessForLogin>());
         services.AddScoped
         (
             sp => new DefaultFakeSetup
@@ -56,7 +54,7 @@ public static class FakeExtensions
         );
         services.AddScoped<AppRegistration>();
         services.AddScoped<IHubAdministration, EfHubAdministration>();
-        services.AddScoped<PermanentLog>();
+        services.AddScoped<EfPermanentLog>();
         services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
         services.AddScoped<IUserCacheManagement, FakeUserCacheManagement>();
         services.AddScoped<AuthenticationFactory>();

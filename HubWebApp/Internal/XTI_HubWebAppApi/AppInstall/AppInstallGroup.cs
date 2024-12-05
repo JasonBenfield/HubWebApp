@@ -5,86 +5,77 @@ public sealed class AppInstallGroup : AppApiGroupWrapper
     public AppInstallGroup(AppApiGroup source, IServiceProvider sp)
         : base(source)
     {
-        RegisterApp = source.AddAction
-        (
-            nameof(RegisterApp), () => sp.GetRequiredService<RegisterAppAction>()
-        );
-        AddOrUpdateApps = source.AddAction
-        (
-            nameof(AddOrUpdateApps),
-            () => sp.GetRequiredService<AddOrUpdateAppsAction>(),
-                () => sp.GetRequiredService<AddOrUpdateAppsValidation>()
-        );
-        AddOrUpdateVersions = source.AddAction
-        (
-            nameof(AddOrUpdateVersions), () => sp.GetRequiredService<AddOrUpdateVersionsAction>()
-        );
-        GetVersion = source.AddAction
-        (
-            nameof(GetVersion), () => sp.GetRequiredService<GetVersionAction>()
-        );
-        GetVersions = source.AddAction
-        (
-            nameof(GetVersions), () => sp.GetRequiredService<GetVersionsAction>()
-        );
-        AddSystemUser = source.AddAction
-        (
-            nameof(AddSystemUser),
-            () => sp.GetRequiredService<AddSystemUserAction>(),
-            () => sp.GetRequiredService<AddSystemUserValidation>()
-        );
-        AddAdminUser = source.AddAction
-        (
-            nameof(AddAdminUser),
-            () => sp.GetRequiredService<AddAdminUserAction>()
-        );
-        AddInstallationUser = source.AddAction
-        (
-            nameof(AddInstallationUser),
-            () => sp.GetRequiredService<AddInstallationUserAction>()
-        );
-        BeginInstallation = source.AddAction
-        (
-            nameof(BeginInstallation), () => sp.GetRequiredService<BeginInstallationAction>()
-        );
-        ConfigureInstallTemplate = source.AddAction
-        (
-            nameof(ConfigureInstallTemplate),
-            () => sp.GetRequiredService<ConfigureInstallTemplateAction>(),
-            () => sp.GetRequiredService<ConfigureInstallTemplateValidation>()
-        );
-        ConfigureInstall = source.AddAction
-        (
-            nameof(ConfigureInstall),
-            () => sp.GetRequiredService<ConfigureInstallAction>(),
-            () => sp.GetRequiredService<ConfigureInstallValidation>()
-        );
-        DeleteInstallConfiguration = source.AddAction
-        (
-            nameof(DeleteInstallConfiguration),
-            () => sp.GetRequiredService<DeleteInstallConfigurationAction>(),
-            () => sp.GetRequiredService<DeleteInstallConfigurationValidation>()
-        );
-        GetInstallConfigurations = source.AddAction
-        (
-            nameof(GetInstallConfigurations),
-            () => sp.GetRequiredService<GetInstallConfigurationsAction>(),
-            () => sp.GetRequiredService<GetInstallConfigurationsValidation>()
-        );
-        Installed = source.AddAction
-        (
-            nameof(Installed), () => sp.GetRequiredService<InstalledAction>()
-        );
-        NewInstallation = source.AddAction
-        (
-            nameof(NewInstallation),
-            () => sp.GetRequiredService<NewInstallationAction>(),
-            () => sp.GetRequiredService<NewInstallationValidation>()
-        );
-        SetUserAccess = source.AddAction
-        (
-            nameof(SetUserAccess), () => sp.GetRequiredService<SetUserAccessAction>()
-        );
+        RegisterApp = source.AddAction<RegisterAppRequest, AppModel>()
+            .Named(nameof(RegisterApp))
+            .WithExecution<RegisterAppAction>()
+            .Build();
+        AddOrUpdateApps = source.AddAction<AddOrUpdateAppsRequest, AppModel[]>()
+            .Named(nameof(AddOrUpdateApps))
+            .WithExecution<AddOrUpdateAppsAction>()
+            .WithValidation<AddOrUpdateAppsValidation>()
+            .Build();
+        AddOrUpdateVersions = source.AddAction<AddOrUpdateVersionsRequest, EmptyActionResult>()
+            .Named(nameof(AddOrUpdateVersions))
+            .WithExecution<AddOrUpdateVersionsAction>()
+            .Build();
+        GetVersion = source.AddAction<GetVersionRequest, XtiVersionModel>()
+            .Named(nameof(GetVersion))
+            .WithExecution<GetVersionAction>()
+            .Build();
+        GetVersions = source.AddAction<GetVersionsRequest, XtiVersionModel[]>()
+            .Named(nameof(GetVersions))
+            .WithExecution<GetVersionsAction>()
+            .Build();
+        AddSystemUser = source.AddAction<AddSystemUserRequest, AppUserModel>()
+            .Named(nameof(AddSystemUser))
+            .WithExecution<AddSystemUserAction>()
+            .WithValidation<AddSystemUserValidation>()
+            .Build();
+        AddAdminUser = source.AddAction<AddAdminUserRequest, AppUserModel>()
+            .Named(nameof(AddAdminUser))
+            .WithExecution<AddAdminUserAction>()
+            .Build();
+        AddInstallationUser = source.AddAction<AddInstallationUserRequest, AppUserModel>()
+            .Named(nameof(AddInstallationUser))
+            .WithExecution<AddInstallationUserAction>()
+            .Build();
+        BeginInstallation = source.AddAction<GetInstallationRequest, EmptyActionResult>()
+            .Named(nameof(BeginInstallation))
+            .WithExecution<BeginInstallationAction>()
+            .Build();
+        ConfigureInstallTemplate = source.AddAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>()
+            .Named(nameof(ConfigureInstallTemplate))
+            .WithExecution<ConfigureInstallTemplateAction>()
+            .WithValidation<ConfigureInstallTemplateValidation>()
+            .Build();
+        ConfigureInstall = source.AddAction<ConfigureInstallRequest, InstallConfigurationModel>()
+            .Named(nameof(ConfigureInstall))
+            .WithExecution<ConfigureInstallAction>()
+            .WithValidation<ConfigureInstallValidation>()
+            .Build();
+        DeleteInstallConfiguration = source.AddAction<DeleteInstallConfigurationRequest, EmptyActionResult>()
+            .Named(nameof(DeleteInstallConfiguration))
+            .WithExecution<DeleteInstallConfigurationAction>()
+            .WithValidation<DeleteInstallConfigurationValidation>()
+            .Build();
+        GetInstallConfigurations = source.AddAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]>()
+            .Named(nameof(GetInstallConfigurations))
+            .WithExecution<GetInstallConfigurationsAction>()
+            .WithValidation<GetInstallConfigurationsValidation>()
+            .Build();
+        Installed = source.AddAction<GetInstallationRequest, EmptyActionResult>()
+            .Named(nameof(Installed))
+            .WithExecution<InstalledAction>()
+            .Build();
+        NewInstallation = source.AddAction<NewInstallationRequest, NewInstallationResult>()
+            .Named(nameof(NewInstallation))
+            .WithExecution<NewInstallationAction>()
+            .WithValidation<NewInstallationValidation>()
+            .Build();
+        SetUserAccess = source.AddAction<SetUserAccessRequest, EmptyActionResult>()
+            .Named(nameof(SetUserAccess))
+            .WithExecution<SetUserAccessAction>()
+            .Build();
     }
 
     public AppApiAction<GetInstallationRequest, EmptyActionResult> BeginInstallation { get; }

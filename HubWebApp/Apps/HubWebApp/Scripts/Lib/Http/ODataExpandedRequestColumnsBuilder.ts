@@ -42,6 +42,8 @@ export class ODataExpandedRequestColumnViewsBuilder {
 	readonly InstallLocation = new ODataColumnViewBuilder();
 	readonly IsCurrentInstallation = new ODataColumnViewBuilder();
 	readonly SourceRequestID = new ODataColumnViewBuilder();
+	readonly RequestData = new ODataColumnViewBuilder();
+	readonly ResultData = new ODataColumnViewBuilder();
 }
 
 export class ODataExpandedRequestColumnsBuilder {
@@ -116,6 +118,10 @@ export class ODataExpandedRequestColumnsBuilder {
 		this.IsCurrentInstallation.setDisplayText('Is Current Installation');
 		this.SourceRequestID = new ODataColumnBuilder('SourceRequestID', new SourceType('Int32'), views.SourceRequestID);
 		this.SourceRequestID.setDisplayText('Source Request ID');
+		this.RequestData = new ODataColumnBuilder('RequestData', new SourceType('String'), views.RequestData);
+		this.RequestData.setDisplayText('Request Data');
+		this.ResultData = new ODataColumnBuilder('ResultData', new SourceType('String'), views.ResultData);
+		this.ResultData.setDisplayText('Result Data');
 	}
 	readonly RequestID: ODataColumnBuilder;
 	readonly Path: ODataColumnBuilder;
@@ -153,6 +159,8 @@ export class ODataExpandedRequestColumnsBuilder {
 	readonly InstallLocation: ODataColumnBuilder;
 	readonly IsCurrentInstallation: ODataColumnBuilder;
 	readonly SourceRequestID: ODataColumnBuilder;
+	readonly RequestData: ODataColumnBuilder;
+	readonly ResultData: ODataColumnBuilder;
 	
 	build() {
 		return {
@@ -191,7 +199,9 @@ export class ODataExpandedRequestColumnsBuilder {
 			InstallationID: this.InstallationID.build(),
 			InstallLocation: this.InstallLocation.build(),
 			IsCurrentInstallation: this.IsCurrentInstallation.build(),
-			SourceRequestID: this.SourceRequestID.build()
+			SourceRequestID: this.SourceRequestID.build(),
+			RequestData: this.RequestData.build(),
+			ResultData: this.ResultData.build()
 		} as ODataColumns<IExpandedRequest>;
 	}
 }

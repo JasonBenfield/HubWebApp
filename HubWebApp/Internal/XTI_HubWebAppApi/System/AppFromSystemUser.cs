@@ -20,7 +20,8 @@ public sealed class AppFromSystemUser
             var appVersion = await installation.AppVersion();
             var userName = await currentUserName.Value();
             var systemUserName = SystemUserName.Parse(userName);
-            var appContext = new EfAppContext(hubFactory);
+            var appContextFactory = new EfAppContextFactory(hubFactory);
+            var appContext = appContextFactory.Create(appVersion.App.GetAppKey());
             appContextModel = await appContext.App(appVersion);
             if (!appContextModel.App.AppKey.Equals(systemUserName.AppKey))
             {

@@ -11,7 +11,7 @@ public sealed class AppSession
     internal AppSession(HubFactory factory, AppSessionEntity record)
     {
         this.factory = factory;
-        this.record = record ?? new AppSessionEntity();
+        this.record = record;
         ID = this.record.ID;
     }
 
@@ -26,18 +26,24 @@ public sealed class AppSession
         string requestKey,
         Installation installation,
         string path,
-        DateTimeOffset timeRequested,
+        DateTimeOffset timeStarted,
+        DateTimeOffset timeEnded,
         int actualCount,
-        string sourceRequestKey
+        string sourceRequestKey,
+        string requestData,
+        string resultData
     ) => factory.Requests.AddOrUpdate
         (
             this,
             requestKey,
             installation,
             path,
-            timeRequested,
+            timeStarted,
+            timeEnded,
             actualCount,
-            sourceRequestKey
+            sourceRequestKey,
+            requestData,
+            resultData
         );
 
     public Task Authenticate(AppUser user) =>
@@ -72,11 +78,13 @@ public sealed class AppSession
     public Task<AppUser> User() => factory.Users.User(record.UserID);
 
     public AppSessionModel ToModel() =>
-        new AppSessionModel
+        new 
         (
             ID: record.ID,
             TimeStarted: record.TimeStarted,
             TimeEnded: record.TimeEnded,
+            SessionKey: record.SessionKey,
+            RequesterKey: record.RequesterKey,
             RemoteAddress: record.RemoteAddress,
             UserAgent: record.UserAgent
         );

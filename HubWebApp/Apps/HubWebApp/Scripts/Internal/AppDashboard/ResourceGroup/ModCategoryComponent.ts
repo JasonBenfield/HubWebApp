@@ -6,11 +6,12 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 
 type Events = { clicked: ModifierCategory };
 
 export class ModCategoryComponent {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly modCategoryName: TextComponent;
     private readonly eventSource = new EventSource<Events>(this, { clicked: null });
     readonly when = this.eventSource.when;
@@ -23,7 +24,7 @@ export class ModCategoryComponent {
         private readonly view: ModCategoryComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Modifier Category');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.modCategoryName = new TextComponent(view.modCategoryName);
         new ListGroup(view.listGroup).when.itemClicked.then(this.onClicked.bind(this));
     }

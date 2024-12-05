@@ -100,6 +100,10 @@ public sealed class LogEntryRepository
         string category
     )
     {
+        caption = new TruncatedText(caption, 1000).Value;
+        message = new TruncatedText(message, 5000).Value;
+        detail = new TruncatedText(detail, 32000).Value;
+        category = new TruncatedText(category, 500).Value;
         var logEntryEntity = await GetLogEntryByKey(logEntryKey);
         if (logEntryEntity == null)
         {

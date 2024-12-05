@@ -68,12 +68,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HubWebApp", "HubWebApp", "{CFDC37D7-E77E-430E-9943-5B9268042C50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SupportServiceApp", "SupportServiceApp", "{C5292EEC-32E7-4850-BAB7-B777F69D9445}"
-	ProjectSection(SolutionItems) = preProject
-		SupportServiceApp\install.Development.private.json = SupportServiceApp\install.Development.private.json
-		SupportServiceApp\install.Production.private.json = SupportServiceApp\install.Production.private.json
-		SupportServiceApp\install.Staging.private.json = SupportServiceApp\install.Staging.private.json
-		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{3F1AC81B-209F-407C-9CEC-8A521B5C6FE9}"
 EndProject
@@ -125,30 +119,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowershellForXti", "Powersh
 		HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1 = HubWebApp\Powershell\PowershellForXti\Xti-Version.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{1B2999CB-2AE6-496A-BA68-822D5F516CE9}"
-	ProjectSection(SolutionItems) = preProject
-		AuthenticatorWebApp\install.Development.private.json = AuthenticatorWebApp\install.Development.private.json
-		AuthenticatorWebApp\install.Production.private.json = AuthenticatorWebApp\install.Production.private.json
-		AuthenticatorWebApp\install.Staging.private.json = AuthenticatorWebApp\install.Staging.private.json
-		AuthenticatorWebApp\install.Test.private.json = AuthenticatorWebApp\install.Test.private.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{C3F16C45-2CEA-41BF-9E50-8C848BB7D428}"
-	ProjectSection(SolutionItems) = preProject
-		HubWebApp\install.Development.private.json = HubWebApp\install.Development.private.json
-		HubWebApp\install.Production.private.json = HubWebApp\install.Production.private.json
-		HubWebApp\install.Staging.private.json = HubWebApp\install.Staging.private.json
-		HubWebApp\install.Test.private.json = HubWebApp\install.Test.private.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InstallOptions", "InstallOptions", "{13AF31FF-4BA9-4A56-9050-55669E456DBF}"
-	ProjectSection(SolutionItems) = preProject
-		SupportServiceApp\install.Development.private.json = SupportServiceApp\install.Development.private.json
-		SupportServiceApp\install.Production.private.json = SupportServiceApp\install.Production.private.json
-		SupportServiceApp\install.Staging.private.json = SupportServiceApp\install.Staging.private.json
-		SupportServiceApp\install.Test.private.json = SupportServiceApp\install.Test.private.json
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubAppClientTest", "HubWebApp\Tests\HubAppClientTest\HubAppClientTest.csproj", "{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_WebAppInstallation", "Internal\XTI_WebAppInstallation\XTI_WebAppInstallation.csproj", "{3577ADC7-1843-4A5F-98C0-8C8F8283495B}"
@@ -162,6 +132,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubDbTool", "HubWebApp\Internal\HubDbTool\HubDbTool.csproj", "{85905D48-2538-403D-87E1-BF30C17AA8FE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AdminService", "HubWebApp\Tools\XTI_AdminService\XTI_AdminService.csproj", "{28E6D996-4372-4FB5-8462-40C52932A545}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XTI_PermanentLog.Implementations", "Internal\XTI_PermanentLog.Implementations\XTI_PermanentLog.Implementations.csproj", "{A42F2367-0C26-4B18-91A4-79E3987406DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -329,6 +301,10 @@ Global
 		{28E6D996-4372-4FB5-8462-40C52932A545}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28E6D996-4372-4FB5-8462-40C52932A545}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28E6D996-4372-4FB5-8462-40C52932A545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42F2367-0C26-4B18-91A4-79E3987406DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42F2367-0C26-4B18-91A4-79E3987406DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42F2367-0C26-4B18-91A4-79E3987406DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42F2367-0C26-4B18-91A4-79E3987406DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -380,9 +356,6 @@ Global
 		{5BF9532D-3013-4C81-B90C-00CA7A31B563} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
 		{23386590-35E2-4038-BE9A-BF9EC3E93D3B} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
 		{7F983166-B9FC-4852-A179-1BE159F4E46F} = {23386590-35E2-4038-BE9A-BF9EC3E93D3B}
-		{1B2999CB-2AE6-496A-BA68-822D5F516CE9} = {1830917B-6B6B-4EE8-BDB0-5FBE54E18B26}
-		{C3F16C45-2CEA-41BF-9E50-8C848BB7D428} = {CFDC37D7-E77E-430E-9943-5B9268042C50}
-		{13AF31FF-4BA9-4A56-9050-55669E456DBF} = {C5292EEC-32E7-4850-BAB7-B777F69D9445}
 		{8686ACBC-FD33-4A95-B9A8-CDAA9F0A785B} = {F015D250-F4FB-4904-93F2-15604A00F3FF}
 		{3577ADC7-1843-4A5F-98C0-8C8F8283495B} = {CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}
 		{238FFE26-E851-47E3-9AB1-BEF4D37FFC33} = {CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}
@@ -390,6 +363,7 @@ Global
 		{8A37DCC8-14EB-4B3A-BE7D-00A5022A3213} = {3D238F2B-9573-43BD-8498-38D174ECFDED}
 		{85905D48-2538-403D-87E1-BF30C17AA8FE} = {F6E913C7-749F-4515-8A50-415A5C0BDAE7}
 		{28E6D996-4372-4FB5-8462-40C52932A545} = {0EC7B552-1958-47D8-8730-FC9601B23AE5}
+		{A42F2367-0C26-4B18-91A4-79E3987406DE} = {CF18C379-D3BA-4D89-BC31-0A0A4C87D61A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B2D5BDD-06CA-46B4-989B-9CA31B0DC192}

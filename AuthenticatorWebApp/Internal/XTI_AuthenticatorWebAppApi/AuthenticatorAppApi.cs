@@ -12,6 +12,7 @@ public sealed partial class AuthenticatorAppApi : WebAppApiWrapper
         (
             new AppApi
             (
+                sp,
                 AuthenticatorInfo.AppKey,
                 user,
                 ResourceAccess.AllowAuthenticated()

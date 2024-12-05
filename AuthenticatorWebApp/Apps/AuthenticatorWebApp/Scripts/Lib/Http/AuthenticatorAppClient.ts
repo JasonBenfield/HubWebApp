@@ -11,7 +11,7 @@ export class AuthenticatorAppClient extends AppClient {
 		super(
 			events, 
 			'Authenticator', 
-			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1428' : 'Current'
+			pageContext.EnvironmentName === 'Production' || pageContext.EnvironmentName === 'Staging' ? 'V1429' : 'Current'
 		);
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 	}

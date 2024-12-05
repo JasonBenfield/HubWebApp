@@ -10,6 +10,8 @@ using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
 using XTI_Secrets.Extensions;
 using XTI_TempLog;
+using XTI_TempLog.Abstractions;
+using XTI_TempLog.Extensions;
 
 namespace XTI_HubAppClient.ServiceApp.Extensions;
 
@@ -28,10 +30,7 @@ public static class XtiServiceAppHost
                 {
                     services.AddSingleton(_ => appKey);
                     services.AddAppServices();
-                    services.AddConfigurationOptions<DefaultServiceAppOptions>();
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().HubClient);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().XtiToken);
-                    services.AddSingleton(sp => sp.GetRequiredService<DefaultServiceAppOptions>().DB);
+                    AppExtensions.AddThrottledLog(services, (api, b) => { });
                     var xtiEnv = XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName);
                     services.AddFileSecretCredentials(xtiEnv);
                     services.AddScoped(sp =>
@@ -41,12 +40,12 @@ public static class XtiServiceAppHost
                         return xtiFolder.AppDataFolder(appKey);
                     });
                     services.AddSingleton<CurrentSession>();
-                    services.AddScoped<ActionRunnerXtiPathAccessor>();
-                    services.AddScoped<IXtiPathAccessor>(sp => sp.GetRequiredService<ActionRunnerXtiPathAccessor>());
                     services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
                     services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();
                     services.AddSingleton<ICurrentUserName, SystemCurrentUserName>();
                     services.AddSingleton<IAppEnvironmentContext, AppEnvironmentContext>();
+                    services.AddTempLogWriterHostedService();
+                    services.AddAppAgenda((sp, a) => { });
                     services.AddHostedService<AppAgendaHostedService>();
                     services.AddHubClientServices();
                     services.AddHubClientContext();

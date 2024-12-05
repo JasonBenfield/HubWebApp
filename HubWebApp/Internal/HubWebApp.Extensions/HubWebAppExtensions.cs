@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_Core.Extensions;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
-using XTI_HubWebAppApi.PermanentLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
@@ -35,15 +34,28 @@ public static class HubWebAppExtensions
         );
         services.AddHubDbContextForSqlServer();
         services.AddScoped<HubFactory>();
-        services.AddScoped<PermanentLog>();
+        services.AddScoped<EfPermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
         services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();
         services.AddScoped<EfAppContext>();
         services.AddScoped<ISourceAppContext>(sp => sp.GetRequiredService<EfAppContext>());
         services.AddScoped<AppFromPath>();
         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-        services.AddScoped<AccessForAuthenticate, JwtAccess>();
-        services.AddScoped<AccessForLogin, CookieAccess>();
+        services.AddScoped<JwtAccess>();
+        services.AddKeyedScoped<IAccess>
+        (
+            "Authenticate", 
+            (sp, key) => sp.GetRequiredService<JwtAccess>()
+        );
+        services.AddKeyedScoped<IAccess>
+        (
+            "Login",
+            (sp, key) => new CookieAccess
+            (
+                sp.GetRequiredService<IHttpContextAccessor>(),
+                sp.GetRequiredService<JwtAccess>()
+            )
+        );
         services.AddSingleton(_ => HubInfo.AppKey);
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
@@ -95,7 +107,7 @@ public static class HubWebAppExtensions
         (
             (api, throttledLogs) =>
             {
-                throttledLogs.Throttle(api.PermanentLog.LogBatch)
+                throttledLogs.Throttle(api.User.GetMenuLinks)
                     .Requests().ForOneHour()
                     .Exceptions().For(5).Minutes();
             }

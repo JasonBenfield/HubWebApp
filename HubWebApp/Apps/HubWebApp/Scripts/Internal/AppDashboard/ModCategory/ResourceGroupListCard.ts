@@ -1,7 +1,7 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
@@ -15,7 +15,7 @@ export class ResourceGroupListCard {
     private readonly eventSource = new EventSource<Events>(this, { resourceGroupSelected: null });
     readonly when = this.eventSource.when;
 
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly requests: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
 
     private modCategoryID: number;
@@ -25,7 +25,7 @@ export class ResourceGroupListCard {
         view: ResourceGroupListCardView
     ) {
         new TextComponent(view.titleHeader).setText('Resource Groups');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.requests = new ListGroup(view.requests);
         this.requests.when.itemClicked.then(this.onItemSelected.bind(this));
     }

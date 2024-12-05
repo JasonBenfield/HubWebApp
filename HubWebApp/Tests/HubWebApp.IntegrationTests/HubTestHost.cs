@@ -1,15 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using HubWebApp.Extensions;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Core.Fakes;
-using XTI_Hub.Abstractions;
-using XTI_HubDB.EF;
 using XTI_HubDB.Extensions;
-using XTI_HubWebAppApi.PermanentLog;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 
@@ -30,8 +27,6 @@ internal sealed class HubTestHost
         builder.Services.AddSingleton<IClock>(sp => sp.GetRequiredService<FakeClock>());
         builder.Services.AddScoped<IAppApiUser, AppApiSuperUser>();
         builder.Services.AddSingleton(_ => AppVersionKey.Current);
-        builder.Services.AddSingleton(_ => new FakeXtiPathAccessor(new XtiPath(HubInfo.AppKey)));
-        builder.Services.AddSingleton<IXtiPathAccessor>(sp => sp.GetRequiredService<FakeXtiPathAccessor>());
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<FakeCurrentUserName>();
         builder.Services.AddScoped<ICurrentUserName>(sp => sp.GetRequiredService<FakeCurrentUserName>());
@@ -45,11 +40,24 @@ internal sealed class HubTestHost
         builder.Services.AddSingleton(sp => sp.GetRequiredService<DefaultWebAppOptions>().DB);
         builder.Services.AddHubDbContextForSqlServer();
         builder.Services.AddScoped<HubFactory>();
-        builder.Services.AddScoped<PermanentLog>();
+        builder.Services.AddScoped<EfPermanentLog>();
         builder.Services.AddScoped<AppFromPath>();
         builder.Services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-        builder.Services.AddScoped<AccessForAuthenticate, JwtAccess>();
-        builder.Services.AddScoped<AccessForLogin, CookieAccess>();
+        builder.Services.AddScoped<JwtAccess>();
+        builder.Services.AddKeyedScoped<IAccess>
+        (
+            "Authenticate",
+            (sp, key) => sp.GetRequiredService<JwtAccess>()
+        );
+        builder.Services.AddKeyedScoped<IAccess>
+        (
+            "Login",
+            (sp, key) => new CookieAccess
+            (
+                sp.GetRequiredService<IHttpContextAccessor>(),
+                sp.GetRequiredService<JwtAccess>()
+            )
+        );
         builder.Services.AddSingleton(_ => HubInfo.AppKey);
         builder.Services.AddScoped<AppApiFactory, HubAppApiFactory>();
         builder.Services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());

@@ -1,20 +1,20 @@
 ﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { TextListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserAuthenticatorListCardView } from "./UserAuthenticatorListCardView";
 
 export class UserAuthenticatorListCard extends BasicComponent {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly userAuthenticators: ListGroup<TextComponent, TextListGroupItemView>;
     private userID: number;
 
     constructor(private readonly hubClient: HubAppClient, protected readonly view: UserAuthenticatorListCardView) {
         super(view);
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.userAuthenticators = new ListGroup(view.userAuthenticators);
     }
 

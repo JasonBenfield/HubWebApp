@@ -1,13 +1,13 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { AppResource } from "../../../Lib/AppResource";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceResultType } from '../../../Lib/Http/ResourceResultType';
 import { ResourceComponentView } from "./ResourceComponentView";
-import { AppResource } from "../../../Lib/AppResource";
 
 export class ResourceComponent {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private resourceID: number;
     private readonly resourceName: TextComponent;
     private readonly resultType: TextComponent;
@@ -17,7 +17,7 @@ export class ResourceComponent {
         private readonly view: ResourceComponentView
     ) {
         new TextComponent(view.titleHeader).setText('Resource');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.resourceName = new TextComponent(view.resourceName);
         this.resultType = new TextComponent(view.resultType);
     }

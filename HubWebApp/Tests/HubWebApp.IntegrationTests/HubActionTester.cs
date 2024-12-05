@@ -62,9 +62,9 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         httpContextAccessor.HttpContext.Request.Path = $"/{actionForSuperUser.Path.Group.DisplayText}/{actionForSuperUser.Path.Action.DisplayText}{modKeyPath}".Replace(" ", "");
         var appKey = Services.GetRequiredService<AppKey>();
         var userContext = Services.GetRequiredService<ISourceUserContext>();
-        var pathAccessor = Services.GetRequiredService<FakeXtiPathAccessor>();
-        var path = actionForSuperUser.Path.WithModifier(modKey ?? ModifierKey.Default);
-        pathAccessor.SetPath(path);
+        var modifierKeyAccessor = Services.GetRequiredService<FakeModifierKeyAccessor>();
+        modifierKeyAccessor.SetValue(modKey);
+        var path = actionForSuperUser.Path.WithModifier(modKey);
         httpContextAccessor.HttpContext.Request.PathBase = $"/{path.App}/{path.Version.Value}";
         httpContextAccessor.HttpContext.Request.Path = $"/{path.Group.Value}/{path.Action.Value}/";
         if (!path.Modifier.Equals(ModifierKey.Default))
@@ -73,7 +73,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         }
         var currentUserName = Services.GetRequiredService<ICurrentUserName>();
         var currentUserAccess = new CurrentUserAccess(userContext, appContext, currentUserName);
-        var apiUser = new AppApiUser(currentUserAccess, pathAccessor);
+        var apiUser = new AppApiUser(currentUserAccess, modifierKeyAccessor);
         var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
         var action = getAction(hubApi);
         var result = await action.Invoke(model);

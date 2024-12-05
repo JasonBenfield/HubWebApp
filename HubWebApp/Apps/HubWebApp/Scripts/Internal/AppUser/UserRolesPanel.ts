@@ -2,18 +2,18 @@
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
+import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { Modifier } from "../../Lib/Modifier";
+import { ModifierCategory } from "../../Lib/ModifierCategory";
+import { UserAccess } from "../../Lib/UserAccess";
 import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 import { UserRolesPanelView } from "./UserRolesPanelView";
-import { Modifier } from "../../Lib/Modifier";
-import { ModifierCategory } from "../../Lib/ModifierCategory";
-import { AppUser } from "../../Lib/AppUser";
-import { UserAccess } from "../../Lib/UserAccess";
 
 interface Results {
     addRequested?: boolean;
@@ -41,7 +41,7 @@ export class UserRolesPanel implements IPanel {
     private readonly personName: TextComponent;
     private readonly categoryName: TextComponent;
     private readonly modifierDisplayText: TextComponent;
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly userRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
     private readonly awaitable: Awaitable<Result>;
     private user: AppUser;
@@ -62,7 +62,7 @@ export class UserRolesPanel implements IPanel {
         this.personName = new TextComponent(view.personName);
         this.categoryName = new TextComponent(view.categoryName);
         this.modifierDisplayText = new TextComponent(view.modifierDisplayText);
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.userRoles = new ListGroup(view.userRoles);
         view.handleUserRoleDeleteClicked(this.onDeleteRoleClicked.bind(this));
         this.awaitable = new Awaitable();

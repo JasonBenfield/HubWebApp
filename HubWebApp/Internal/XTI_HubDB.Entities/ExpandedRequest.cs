@@ -38,4 +38,6 @@ public sealed class ExpandedRequest
     public string InstallLocation { get; set; } = "";
     public bool IsCurrentInstallation { get; set; }
     public int SourceRequestID { get; set; }
+    public string RequestData { get; set; } = "";
+    public string ResultData { get; set; } = "";
 }

@@ -3,18 +3,17 @@
 public sealed class UserGroupFromPath
 {
     private readonly HubFactory factory;
-    private readonly IXtiPathAccessor pathAccessor;
+    private readonly IModifierKeyAccessor modifierKeyAccessor;
 
-    public UserGroupFromPath(HubFactory factory, IXtiPathAccessor pathAccessor)
+    public UserGroupFromPath(HubFactory factory, IModifierKeyAccessor modifierKeyAccessor)
     {
         this.factory = factory;
-        this.pathAccessor = pathAccessor;
+        this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
     public async Task<AppUserGroup> Value()
     {
-        var path = pathAccessor.Value();
-        var modKey = path.Modifier;
+        var modKey = modifierKeyAccessor.Value();
         if (modKey.Equals(ModifierKey.Default))
         {
             throw new Exception(AppErrors.ModifierIsRequired);

@@ -1,16 +1,16 @@
 ﻿import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
-import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { AppRole } from "../../../Lib/AppRole";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { IRoleAccessItem } from "../../IRoleAccessItem";
 import { ResourceAccessCardView } from "../ResourceAccessCardView";
 import { RoleAccessListItem } from "../RoleAccessListItem";
 import { RoleAccessListItemView } from "../RoleAccessListItemView";
-import { IRoleAccessItem } from "../../IRoleAccessItem";
-import { AppRole } from "../../../Lib/AppRole";
 
 export class ResourceGroupAccessCard {
-    private readonly alert: MessageAlert;
+    private readonly alert: IMessageAlert;
     private readonly accessItems: ListGroup<RoleAccessListItem, RoleAccessListItemView>;
 
     private groupID: number;
@@ -20,7 +20,7 @@ export class ResourceGroupAccessCard {
         view: ResourceAccessCardView
     ) {
         new TextComponent(view.titleHeader).setText('Allowed Roles');
-        this.alert = new CardAlert(view.alert).alert;
+        this.alert = new CardAlert(view.alert);
         this.accessItems = new ListGroup(view.accessItems);
     }
 

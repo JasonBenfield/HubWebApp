@@ -34,6 +34,12 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppUserModel>> GetUserByUserName([FromBody] AppUserNameRequest model, CancellationToken ct)
+    {
+        return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserByUserName").Execute(model, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
     {
         return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);

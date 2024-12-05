@@ -92,16 +92,19 @@ public sealed class AppRequest
                 }
             );
 
+    public string RequestData { get => record.RequestData; }
+    public string ResultData { get => record.ResultData; }
+
     public AppRequestModel ToModel() =>
-        new AppRequestModel
+        new
         (
             ID: ID,
-            SessionID: record.SessionID,
             Path: record.Path,
             ResourceID: record.ResourceID,
             ModifierID: record.ModifierID,
             TimeStarted: record.TimeStarted,
-            TimeEnded: record.TimeEnded
+            TimeEnded: record.TimeEnded,
+            ActualCount: record.ActualCount
         );
 
     public override string ToString() => $"{nameof(AppRequest)} {ID}";
