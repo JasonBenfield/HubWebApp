@@ -10,14 +10,14 @@ public sealed partial class PermanentLogController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> LogBatch([FromBody] LogBatchModel model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> LogBatch([FromBody] LogBatchModel requestData, CancellationToken ct)
     {
-        return api.Group("PermanentLog").Action<LogBatchModel, EmptyActionResult>("LogBatch").Execute(model, ct);
+        return api.PermanentLog.LogBatch.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> LogSessionDetails([FromBody] LogSessionDetailsRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> LogSessionDetails([FromBody] LogSessionDetailsRequest requestData, CancellationToken ct)
     {
-        return api.Group("PermanentLog").Action<LogSessionDetailsRequest, EmptyActionResult>("LogSessionDetails").Execute(model, ct);
+        return api.PermanentLog.LogSessionDetails.Execute(requestData, ct);
     }
 }

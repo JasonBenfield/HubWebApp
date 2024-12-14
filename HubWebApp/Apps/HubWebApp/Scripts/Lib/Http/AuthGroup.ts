@@ -11,21 +11,21 @@ import { VerifyLoginForm } from "./VerifyLoginForm";
 export class AuthGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Auth');
-		this.VerifyLoginAction = this.createAction<VerifyLoginForm,IAuthenticatedLoginResult>('VerifyLogin', 'Verify Login');
-		this.VerifyLoginForm = this.createView<IEmptyRequest>('VerifyLoginForm');
 		this.Login = this.createView<IAuthenticatedLoginRequest>('Login');
 		this.LoginReturnKeyAction = this.createAction<ILoginReturnModel,string>('LoginReturnKey', 'Login Return Key');
+		this.VerifyLoginAction = this.createAction<VerifyLoginForm,IAuthenticatedLoginResult>('VerifyLogin', 'Verify Login');
+		this.VerifyLoginForm = this.createView<IEmptyRequest>('VerifyLoginForm');
 	}
 	
-	readonly VerifyLoginAction: AppClientAction<VerifyLoginForm,IAuthenticatedLoginResult>;
-	readonly VerifyLoginForm: AppClientView<IEmptyRequest>;
 	readonly Login: AppClientView<IAuthenticatedLoginRequest>;
 	readonly LoginReturnKeyAction: AppClientAction<ILoginReturnModel,string>;
+	readonly VerifyLoginAction: AppClientAction<VerifyLoginForm,IAuthenticatedLoginResult>;
+	readonly VerifyLoginForm: AppClientView<IEmptyRequest>;
 	
-	VerifyLogin(model: VerifyLoginForm, errorOptions?: IActionErrorOptions) {
-		return this.VerifyLoginAction.execute(model, errorOptions || {});
-	}
 	LoginReturnKey(model: ILoginReturnModel, errorOptions?: IActionErrorOptions) {
 		return this.LoginReturnKeyAction.execute(model, errorOptions || {});
+	}
+	VerifyLogin(model: VerifyLoginForm, errorOptions?: IActionErrorOptions) {
+		return this.VerifyLoginAction.execute(model, errorOptions || {});
 	}
 }

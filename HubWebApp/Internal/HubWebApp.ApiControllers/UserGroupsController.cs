@@ -9,33 +9,39 @@ public sealed partial class UserGroupsController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(CancellationToken ct)
+    [HttpPost]
+    public Task<ResultContainer<AppUserGroupModel>> AddUserGroupIfNotExists([FromBody] AddUserGroupIfNotExistsRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("UserGroups").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
-        return View(result.Data!.ViewName);
-    }
-
-    public async Task<IActionResult> UserQuery(UserGroupKey model, CancellationToken ct)
-    {
-        var result = await api.Group("UserGroups").Action<UserGroupKey, WebViewResult>("UserQuery").Execute(model, ct);
-        return View(result.Data!.ViewName);
+        return api.UserGroups.AddUserGroupIfNotExists.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserGroupModel>> AddUserGroupIfNotExists([FromBody] AddUserGroupIfNotExistsRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserDetailModel>> GetUserDetailOrAnon([FromBody] AppUserNameRequest requestData, CancellationToken ct)
     {
-        return api.Group("UserGroups").Action<AddUserGroupIfNotExistsRequest, AppUserGroupModel>("AddUserGroupIfNotExists").Execute(model, ct);
+        return api.UserGroups.GetUserDetailOrAnon.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserGroupModel>> GetUserGroupForUser([FromBody] AppUserIDRequest requestData, CancellationToken ct)
+    {
+        return api.UserGroups.GetUserGroupForUser.Execute(requestData, ct);
     }
 
     [HttpPost]
     public Task<ResultContainer<AppUserGroupModel[]>> GetUserGroups(CancellationToken ct)
     {
-        return api.Group("UserGroups").Action<EmptyRequest, AppUserGroupModel[]>("GetUserGroups").Execute(new EmptyRequest(), ct);
+        return api.UserGroups.GetUserGroups.Execute(new EmptyRequest(), ct);
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppUserDetailModel>> GetUserDetailOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
+    public async Task<IActionResult> Index(CancellationToken ct)
     {
-        return api.Group("UserGroups").Action<AppUserNameRequest, AppUserDetailModel>("GetUserDetailOrAnon").Execute(model, ct);
+        var result = await api.UserGroups.Index.Execute(new EmptyRequest(), ct);
+        return View(result.Data!.ViewName);
+    }
+
+    public async Task<IActionResult> UserQuery(UserGroupKey requestData, CancellationToken ct)
+    {
+        var result = await api.UserGroups.UserQuery.Execute(requestData, ct);
+        return View(result.Data!.ViewName);
     }
 }

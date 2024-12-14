@@ -4,7 +4,7 @@ namespace HubWebApp.ApiControllers;
 [Route("odata/LogEntryQuery")]
 public sealed partial class LogEntryQueryController : XtiODataController<LogEntryQueryRequest, ExpandedLogEntry>
 {
-    public LogEntryQueryController(HubAppApi api) : base(api.Group("LogEntryQuery"))
+    public LogEntryQueryController(HubAppApi api) : base(api.LogEntryQuery)
     {
     }
 }

@@ -10,26 +10,26 @@ public sealed partial class CurrentUserController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangeCurrentUserPasswordForm model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangeCurrentUserPasswordForm requestData, CancellationToken ct)
     {
-        return api.Group("CurrentUser").Action<ChangeCurrentUserPasswordForm, EmptyActionResult>("ChangePassword").Execute(model, ct);
+        return api.CurrentUser.ChangePassword.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> EditUser([FromBody] EditCurrentUserForm model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> EditUser([FromBody] EditCurrentUserForm requestData, CancellationToken ct)
     {
-        return api.Group("CurrentUser").Action<EditCurrentUserForm, AppUserModel>("EditUser").Execute(model, ct);
+        return api.CurrentUser.EditUser.Execute(requestData, ct);
     }
 
     [HttpPost]
     public Task<ResultContainer<AppUserModel>> GetUser(CancellationToken ct)
     {
-        return api.Group("CurrentUser").Action<EmptyRequest, AppUserModel>("GetUser").Execute(new EmptyRequest(), ct);
+        return api.CurrentUser.GetUser.Execute(new EmptyRequest(), ct);
     }
 
     public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var result = await api.Group("CurrentUser").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
+        var result = await api.CurrentUser.Index.Execute(new EmptyRequest(), ct);
         return View(result.Data!.ViewName);
     }
 }

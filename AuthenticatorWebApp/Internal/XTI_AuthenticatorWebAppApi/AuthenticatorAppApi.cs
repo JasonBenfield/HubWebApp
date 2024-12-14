@@ -15,8 +15,6 @@ public sealed partial class AuthenticatorAppApi : WebAppApiWrapper
                 sp,
                 AuthenticatorInfo.AppKey,
                 user,
-                ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(AppRoleName.Admin),
                 serializedDefaultOptions
             ),
             sp

@@ -9,33 +9,33 @@ public sealed partial class UsersController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(UsersIndexRequest model, CancellationToken ct)
+    [HttpPost]
+    public Task<ResultContainer<AppUserModel>> AddOrUpdateUser([FromBody] AddOrUpdateUserRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("Users").Action<UsersIndexRequest, WebViewResult>("Index").Execute(model, ct);
-        return View(result.Data!.ViewName);
+        return api.Users.AddOrUpdateUser.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppUserModel>> AddUser([FromBody] AddUserForm requestData, CancellationToken ct)
+    {
+        return api.Users.AddUser.Execute(requestData, ct);
     }
 
     [HttpPost]
     public Task<ResultContainer<AppUserGroupModel>> GetUserGroup(CancellationToken ct)
     {
-        return api.Group("Users").Action<EmptyRequest, AppUserGroupModel>("GetUserGroup").Execute(new EmptyRequest(), ct);
+        return api.Users.GetUserGroup.Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]
     public Task<ResultContainer<AppUserModel[]>> GetUsers(CancellationToken ct)
     {
-        return api.Group("Users").Action<EmptyRequest, AppUserModel[]>("GetUsers").Execute(new EmptyRequest(), ct);
+        return api.Users.GetUsers.Execute(new EmptyRequest(), ct);
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppUserModel>> AddOrUpdateUser([FromBody] AddOrUpdateUserRequest model, CancellationToken ct)
+    public async Task<IActionResult> Index(UsersIndexRequest requestData, CancellationToken ct)
     {
-        return api.Group("Users").Action<AddOrUpdateUserRequest, AppUserModel>("AddOrUpdateUser").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<AppUserModel>> AddUser([FromBody] AddUserForm model, CancellationToken ct)
-    {
-        return api.Group("Users").Action<AddUserForm, AppUserModel>("AddUser").Execute(model, ct);
+        var result = await api.Users.Index.Execute(requestData, ct);
+        return View(result.Data!.ViewName);
     }
 }

@@ -10,8 +10,8 @@ public sealed partial class VersionController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string model, CancellationToken ct)
+    public Task<ResultContainer<XtiVersionModel>> GetVersion([FromBody] string requestData, CancellationToken ct)
     {
-        return api.Group("Version").Action<string, XtiVersionModel>("GetVersion").Execute(model, ct);
+        return api.Version.GetVersion.Execute(requestData, ct);
     }
 }

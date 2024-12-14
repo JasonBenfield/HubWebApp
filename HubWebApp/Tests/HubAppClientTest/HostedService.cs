@@ -40,7 +40,7 @@ internal sealed class HostedService : IHostedService
                 default
             );
             Console.WriteLine($"logEntries: {XtiSerializer.Serialize(logEntries)}");
-            var userAccess = await hubClient.AppUser.GetExplicitUserAccess
+            var userAccess = await hubClient.AppUserInquiry.GetExplicitUserAccess
             (
                 "XTI",
                 new UserModifierKey

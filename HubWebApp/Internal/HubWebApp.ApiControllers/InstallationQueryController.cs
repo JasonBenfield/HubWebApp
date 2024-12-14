@@ -4,7 +4,7 @@ namespace HubWebApp.ApiControllers;
 [Route("odata/InstallationQuery")]
 public sealed partial class InstallationQueryController : XtiODataController<InstallationQueryRequest, ExpandedInstallation>
 {
-    public InstallationQueryController(HubAppApi api) : base(api.Group("InstallationQuery"))
+    public InstallationQueryController(HubAppApi api) : base(api.InstallationQuery)
     {
     }
 }

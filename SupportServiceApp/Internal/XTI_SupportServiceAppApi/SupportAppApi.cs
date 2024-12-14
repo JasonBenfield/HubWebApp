@@ -12,8 +12,6 @@ public sealed partial class SupportAppApi : AppApiWrapper
                 sp,
                 SupportInfo.AppKey,
                 user,
-                ResourceAccess.AllowAuthenticated()
-                    .WithAllowed(AppRoleName.Admin),
                 XtiSerializer.Serialize(new SupportServiceAppOptions())
             )
         )

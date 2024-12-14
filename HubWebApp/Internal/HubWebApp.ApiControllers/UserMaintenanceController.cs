@@ -10,32 +10,33 @@ public sealed partial class UserMaintenanceController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> DeactivateUser([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangePasswordForm requestData, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<int, AppUserModel>("DeactivateUser").Execute(model, ct);
+        return api.UserMaintenance.ChangePassword.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> ReactivateUser([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> DeactivateUser([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<int, AppUserModel>("ReactivateUser").Execute(model, ct);
+        return api.UserMaintenance.DeactivateUser.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> EditUser([FromBody] EditUserForm requestData, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<EditUserForm, EmptyActionResult>("EditUser").Execute(model, ct);
+        return api.UserMaintenance.EditUser.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> ChangePassword([FromBody] ChangePasswordForm model, CancellationToken ct)
+    public async Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<ChangePasswordForm, EmptyActionResult>("ChangePassword").Execute(model, ct);
+        var result = await api.UserMaintenance.GetUserForEdit.Execute(requestData, ct);
+        return result!;
     }
 
     [HttpPost]
-    public Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> ReactivateUser([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("UserMaintenance").Action<int, IDictionary<string, object>>("GetUserForEdit").Execute(model, ct);
+        return api.UserMaintenance.ReactivateUser.Execute(requestData, ct);
     }
 }

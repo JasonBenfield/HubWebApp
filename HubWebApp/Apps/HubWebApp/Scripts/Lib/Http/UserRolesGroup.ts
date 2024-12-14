@@ -11,14 +11,14 @@ export class UserRolesGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'UserRoles');
 		this.DeleteUserRoleAction = this.createAction<IUserRoleIDRequest,IEmptyActionResult>('DeleteUserRole', 'Delete User Role');
-		this.Index = this.createView<IUserRoleQueryRequest>('Index');
 		this.GetUserRoleDetailAction = this.createAction<IUserRoleIDRequest,IUserRoleDetailModel>('GetUserRoleDetail', 'Get User Role Detail');
+		this.Index = this.createView<IUserRoleQueryRequest>('Index');
 		this.UserRole = this.createView<IUserRoleIDRequest>('UserRole');
 	}
 	
 	readonly DeleteUserRoleAction: AppClientAction<IUserRoleIDRequest,IEmptyActionResult>;
-	readonly Index: AppClientView<IUserRoleQueryRequest>;
 	readonly GetUserRoleDetailAction: AppClientAction<IUserRoleIDRequest,IUserRoleDetailModel>;
+	readonly Index: AppClientView<IUserRoleQueryRequest>;
 	readonly UserRole: AppClientView<IUserRoleIDRequest>;
 	
 	DeleteUserRole(model: IUserRoleIDRequest, errorOptions?: IActionErrorOptions) {

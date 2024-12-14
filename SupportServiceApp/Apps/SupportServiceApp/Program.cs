@@ -56,5 +56,4 @@ if (args.Length <= 0 || !args[0].Equals("RunAsConsole", StringComparison.Ordinal
     hostBuilder.UseWindowsService();
 }
 var host = hostBuilder.Build();
-var options = host.Services.GetRequiredService<DefaultAppOptions>();
 await host.RunAsync();

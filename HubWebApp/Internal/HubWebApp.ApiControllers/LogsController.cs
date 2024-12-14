@@ -9,63 +9,63 @@ public sealed partial class LogsController : Controller
         this.api = api;
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppLogEntryModel>> GetLogEntryOrDefaultByKey([FromBody] string model, CancellationToken ct)
+    public async Task<IActionResult> AppRequestsView(AppRequestQueryRequest requestData, CancellationToken ct)
     {
-        return api.Group("Logs").Action<string, AppLogEntryModel>("GetLogEntryOrDefaultByKey").Execute(model, ct);
+        var result = await api.Logs.AppRequestsView.Execute(requestData, ct);
+        return View(result.Data!.ViewName);
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppLogEntryDetailModel>> GetLogEntryDetail([FromBody] int model, CancellationToken ct)
+    public async Task<IActionResult> AppRequestView(AppRequestRequest requestData, CancellationToken ct)
     {
-        return api.Group("Logs").Action<int, AppLogEntryDetailModel>("GetLogEntryDetail").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<AppRequestDetailModel>> GetRequestDetail([FromBody] int model, CancellationToken ct)
-    {
-        return api.Group("Logs").Action<int, AppRequestDetailModel>("GetRequestDetail").Execute(model, ct);
+        var result = await api.Logs.AppRequestView.Execute(requestData, ct);
+        return View(result.Data!.ViewName);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppSessionDetailModel>> GetSessionDetail([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<AppLogEntryDetailModel>> GetLogEntryDetail([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("Logs").Action<int, AppSessionDetailModel>("GetSessionDetail").Execute(model, ct);
+        return api.Logs.GetLogEntryDetail.Execute(requestData, ct);
     }
 
-    public async Task<IActionResult> Sessions(CancellationToken ct)
+    [HttpPost]
+    public Task<ResultContainer<AppLogEntryModel>> GetLogEntryOrDefaultByKey([FromBody] string requestData, CancellationToken ct)
     {
-        var result = await api.Group("Logs").Action<EmptyRequest, WebViewResult>("Sessions").Execute(new EmptyRequest(), ct);
+        return api.Logs.GetLogEntryOrDefaultByKey.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppRequestDetailModel>> GetRequestDetail([FromBody] int requestData, CancellationToken ct)
+    {
+        return api.Logs.GetRequestDetail.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppSessionDetailModel>> GetSessionDetail([FromBody] int requestData, CancellationToken ct)
+    {
+        return api.Logs.GetSessionDetail.Execute(requestData, ct);
+    }
+
+    public async Task<IActionResult> LogEntriesView(LogEntryQueryRequest requestData, CancellationToken ct)
+    {
+        var result = await api.Logs.LogEntriesView.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> Session(SessionViewRequest model, CancellationToken ct)
+    public async Task<IActionResult> LogEntryView(LogEntryRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("Logs").Action<SessionViewRequest, WebViewResult>("Session").Execute(model, ct);
+        var result = await api.Logs.LogEntryView.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> AppRequests(AppRequestQueryRequest model, CancellationToken ct)
+    public async Task<IActionResult> SessionsView(CancellationToken ct)
     {
-        var result = await api.Group("Logs").Action<AppRequestQueryRequest, WebViewResult>("AppRequests").Execute(model, ct);
+        var result = await api.Logs.SessionsView.Execute(new EmptyRequest(), ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> AppRequest(AppRequestRequest model, CancellationToken ct)
+    public async Task<IActionResult> SessionView(SessionViewRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("Logs").Action<AppRequestRequest, WebViewResult>("AppRequest").Execute(model, ct);
-        return View(result.Data!.ViewName);
-    }
-
-    public async Task<IActionResult> LogEntry(LogEntryRequest model, CancellationToken ct)
-    {
-        var result = await api.Group("Logs").Action<LogEntryRequest, WebViewResult>("LogEntry").Execute(model, ct);
-        return View(result.Data!.ViewName);
-    }
-
-    public async Task<IActionResult> LogEntries(LogEntryQueryRequest model, CancellationToken ct)
-    {
-        var result = await api.Group("Logs").Action<LogEntryQueryRequest, WebViewResult>("LogEntries").Execute(model, ct);
+        var result = await api.Logs.SessionView.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 }
