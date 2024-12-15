@@ -148,7 +148,7 @@ internal sealed class GetUserAccessTest
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.AppUser.GetExplicitUserAccess);
+        return HubActionTester.Create(services, hubApi => hubApi.AppUserInquiry.GetExplicitUserAccess);
     }
 
     private async Task<AppUserModel> AddUser(IHubActionTester tester, string userName)

@@ -144,7 +144,7 @@ internal sealed class DenyAccessTest
 
     private async Task<UserAccessModel> GetExplicitUserAccess(IHubActionTester sourceTester, AppUserModel user, ModifierModel modifier)
     {
-        var tester = sourceTester.Create(hubApi => hubApi.AppUser.GetExplicitUserAccess);
+        var tester = sourceTester.Create(hubApi => hubApi.AppUserInquiry.GetExplicitUserAccess);
         await tester.LoginAsAdmin();
         var app = await sourceTester.HubApp();
         var generalUserGroupModifier = await sourceTester.GeneralUserGroupModifier();

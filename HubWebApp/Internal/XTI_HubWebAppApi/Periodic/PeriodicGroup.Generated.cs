@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Periodic;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Periodic;
 public sealed partial class PeriodicGroup : AppApiGroupWrapper
 {

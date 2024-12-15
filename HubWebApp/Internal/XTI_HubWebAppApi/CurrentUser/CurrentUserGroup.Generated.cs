@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.CurrentUser;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.CurrentUser;
 public sealed partial class CurrentUserGroup : AppApiGroupWrapper
 {

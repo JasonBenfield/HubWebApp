@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.UserGroups;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.UserGroups;
 public sealed partial class UserGroupsGroup : AppApiGroupWrapper
 {

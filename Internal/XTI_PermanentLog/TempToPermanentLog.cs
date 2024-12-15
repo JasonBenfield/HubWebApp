@@ -36,18 +36,18 @@ public sealed class TempToPermanentLog
                     renamedFile = logFile.WithNewName($"{logFile.Name}.processing");
                     filesToProcess.Add(renamedFile);
                 }
-                catch(Exception ex)
+                catch
                 {
-                    throw new Exception($"Error renaming file '{logFile.Name}'.", ex);
+                    continue;
                 }
                 try
                 {
                     var fileSessionDetails = await renamedFile.Read();
                     sessionDetails.AddRange(fileSessionDetails);
                 }
-                catch(Exception ex)
+                catch
                 {
-                    throw new Exception($"Error reading file '{logFile.Name}'.", ex);
+                    filesToProcess.Remove(renamedFile);
                 }
             }
             await permanentLog.LogSessionDetails(sessionDetails.ToArray(), default);
@@ -57,9 +57,8 @@ public sealed class TempToPermanentLog
                 {
                     fileToProcess.Delete();
                 }
-                catch(Exception ex)
+                catch
                 {
-                    throw new Exception($"Error deleting file '{fileToProcess.Name}'.", ex);
                 }
             }
             logFiles = tempLog.Files(modifiedBefore, 1000);

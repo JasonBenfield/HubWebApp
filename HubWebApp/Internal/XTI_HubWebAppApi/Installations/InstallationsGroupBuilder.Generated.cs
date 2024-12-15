@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Installations;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Installations;
 public sealed partial class InstallationsGroupBuilder
 {
@@ -13,7 +14,7 @@ public sealed partial class InstallationsGroupBuilder
         GetInstallationDetail = source.AddAction<int, InstallationDetailModel>("GetInstallationDetail").WithExecution<GetInstallationDetailAction>();
         GetPendingDeletes = source.AddAction<GetPendingDeletesRequest, AppVersionInstallationModel[]>("GetPendingDeletes").WithExecution<GetPendingDeletesAction>();
         Index = source.AddAction<InstallationQueryRequest, WebViewResult>("Index").WithExecution<IndexAction>();
-        InstallationView = source.AddAction<InstallationViewRequest, WebViewResult>("InstallationView").WithExecution<InstallationViewAction>();
+        Installation = source.AddAction<InstallationViewRequest, WebViewResult>("Installation").WithExecution<InstallationPage>();
         RequestDelete = source.AddAction<GetInstallationRequest, EmptyActionResult>("RequestDelete").WithExecution<RequestDeleteAction>();
         Configure();
     }
@@ -24,7 +25,7 @@ public sealed partial class InstallationsGroupBuilder
     public AppApiActionBuilder<int, InstallationDetailModel> GetInstallationDetail { get; }
     public AppApiActionBuilder<GetPendingDeletesRequest, AppVersionInstallationModel[]> GetPendingDeletes { get; }
     public AppApiActionBuilder<InstallationQueryRequest, WebViewResult> Index { get; }
-    public AppApiActionBuilder<InstallationViewRequest, WebViewResult> InstallationView { get; }
+    public AppApiActionBuilder<InstallationViewRequest, WebViewResult> Installation { get; }
     public AppApiActionBuilder<GetInstallationRequest, EmptyActionResult> RequestDelete { get; }
 
     public InstallationsGroup Build() => new InstallationsGroup(source, this);

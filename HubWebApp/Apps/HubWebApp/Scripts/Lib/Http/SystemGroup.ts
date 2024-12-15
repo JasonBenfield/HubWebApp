@@ -14,28 +14,28 @@ export class SystemGroup extends AppClientGroup {
 		this.AddOrUpdateModifierByTargetKeyAction = this.createAction<ISystemAddOrUpdateModifierByTargetKeyRequest,IModifierModel>('AddOrUpdateModifierByTargetKey', 'Add Or Update Modifier By Target Key');
 		this.GetAppContextAction = this.createAction<IGetAppContextRequest,IAppContextModel>('GetAppContext', 'Get App Context');
 		this.GetModifierAction = this.createAction<IGetModifierRequest,IModifierModel>('GetModifier', 'Get Modifier');
+		this.GetStoredObjectAction = this.createAction<IGetStoredObjectRequest,string>('GetStoredObject', 'Get Stored Object');
 		this.GetUserAuthenticatorsAction = this.createAction<IAppUserIDRequest,IUserAuthenticatorModel[]>('GetUserAuthenticators', 'Get User Authenticators');
 		this.GetUserByUserNameAction = this.createAction<IAppUserNameRequest,IAppUserModel>('GetUserByUserName', 'Get User By User Name');
 		this.GetUserOrAnonAction = this.createAction<IAppUserNameRequest,IAppUserModel>('GetUserOrAnon', 'Get User Or Anon');
 		this.GetUserRolesAction = this.createAction<IGetUserRolesRequest,IAppRoleModel[]>('GetUserRoles', 'Get User Roles');
 		this.GetUsersWithAnyRoleAction = this.createAction<ISystemGetUsersWithAnyRoleRequest,IAppUserModel[]>('GetUsersWithAnyRole', 'Get Users With Any Role');
-		this.SystemGetStoredObjectAction = this.createAction<IGetStoredObjectRequest,string>('SystemGetStoredObject', 'System Get Stored Object');
-		this.SystemSetUserAccessAction = this.createAction<ISystemSetUserAccessRequest,IEmptyActionResult>('SystemSetUserAccess', 'System Set User Access');
-		this.SystemStoreObjectAction = this.createAction<IStoreObjectRequest,string>('SystemStoreObject', 'System Store Object');
+		this.SetUserAccessAction = this.createAction<ISystemSetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
+		this.StoreObjectAction = this.createAction<IStoreObjectRequest,string>('StoreObject', 'Store Object');
 	}
 	
 	readonly AddOrUpdateModifierByModKeyAction: AppClientAction<ISystemAddOrUpdateModifierByModKeyRequest,IModifierModel>;
 	readonly AddOrUpdateModifierByTargetKeyAction: AppClientAction<ISystemAddOrUpdateModifierByTargetKeyRequest,IModifierModel>;
 	readonly GetAppContextAction: AppClientAction<IGetAppContextRequest,IAppContextModel>;
 	readonly GetModifierAction: AppClientAction<IGetModifierRequest,IModifierModel>;
+	readonly GetStoredObjectAction: AppClientAction<IGetStoredObjectRequest,string>;
 	readonly GetUserAuthenticatorsAction: AppClientAction<IAppUserIDRequest,IUserAuthenticatorModel[]>;
 	readonly GetUserByUserNameAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
 	readonly GetUserOrAnonAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
 	readonly GetUserRolesAction: AppClientAction<IGetUserRolesRequest,IAppRoleModel[]>;
 	readonly GetUsersWithAnyRoleAction: AppClientAction<ISystemGetUsersWithAnyRoleRequest,IAppUserModel[]>;
-	readonly SystemGetStoredObjectAction: AppClientAction<IGetStoredObjectRequest,string>;
-	readonly SystemSetUserAccessAction: AppClientAction<ISystemSetUserAccessRequest,IEmptyActionResult>;
-	readonly SystemStoreObjectAction: AppClientAction<IStoreObjectRequest,string>;
+	readonly SetUserAccessAction: AppClientAction<ISystemSetUserAccessRequest,IEmptyActionResult>;
+	readonly StoreObjectAction: AppClientAction<IStoreObjectRequest,string>;
 	
 	AddOrUpdateModifierByModKey(model: ISystemAddOrUpdateModifierByModKeyRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddOrUpdateModifierByModKeyAction.execute(model, errorOptions || {});
@@ -48,6 +48,9 @@ export class SystemGroup extends AppClientGroup {
 	}
 	GetModifier(model: IGetModifierRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetModifierAction.execute(model, errorOptions || {});
+	}
+	GetStoredObject(model: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetStoredObjectAction.execute(model, errorOptions || {});
 	}
 	GetUserAuthenticators(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUserAuthenticatorsAction.execute(model, errorOptions || {});
@@ -64,13 +67,10 @@ export class SystemGroup extends AppClientGroup {
 	GetUsersWithAnyRole(model: ISystemGetUsersWithAnyRoleRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetUsersWithAnyRoleAction.execute(model, errorOptions || {});
 	}
-	SystemGetStoredObject(model: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.SystemGetStoredObjectAction.execute(model, errorOptions || {});
+	SetUserAccess(model: ISystemSetUserAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.SetUserAccessAction.execute(model, errorOptions || {});
 	}
-	SystemSetUserAccess(model: ISystemSetUserAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.SystemSetUserAccessAction.execute(model, errorOptions || {});
-	}
-	SystemStoreObject(model: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.SystemStoreObjectAction.execute(model, errorOptions || {});
+	StoreObject(model: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.StoreObjectAction.execute(model, errorOptions || {});
 	}
 }

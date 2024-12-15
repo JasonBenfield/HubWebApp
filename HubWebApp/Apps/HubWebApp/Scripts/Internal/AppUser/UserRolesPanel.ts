@@ -152,7 +152,7 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Loading',
             async () => {
-                const sourceUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                const sourceUserAccess = await this.hubClient.AppUserInquiry.GetExplicitUserAccess({
                     UserID: this.user.id,
                     ModifierID: this.modifier.id
                 });
@@ -161,7 +161,7 @@ export class UserRolesPanel implements IPanel {
                     defaultUserAccess = userAccess;
                 }
                 else {
-                    const sourceDefaultUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                    const sourceDefaultUserAccess = await this.hubClient.AppUserInquiry.GetExplicitUserAccess({
                         UserID: this.user.id,
                         ModifierID: this.defaultModifier.id
                     });

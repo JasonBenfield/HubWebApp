@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.ResourceGroupInquiry;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.ResourceGroupInquiry;
 public sealed partial class ResourceGroupInquiryGroup : AppApiGroupWrapper
 {

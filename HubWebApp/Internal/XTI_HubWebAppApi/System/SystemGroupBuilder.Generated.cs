@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.System;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.System;
 public sealed partial class SystemGroupBuilder
 {
@@ -12,14 +13,14 @@ public sealed partial class SystemGroupBuilder
         AddOrUpdateModifierByTargetKey = source.AddAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").WithExecution<AddOrUpdateModifierByTargetKeyAction>();
         GetAppContext = source.AddAction<GetAppContextRequest, AppContextModel>("GetAppContext").WithExecution<GetAppContextAction>();
         GetModifier = source.AddAction<GetModifierRequest, ModifierModel>("GetModifier").WithExecution<GetModifierAction>();
-        GetStoredObject = source.AddAction<GetStoredObjectRequest, string>("GetStoredObject").WithExecution<GetStoredObjectAction>();
+        GetStoredObject = source.AddAction<GetStoredObjectRequest, string>("GetStoredObject").WithExecution<GetStoredObjectAction>().WithValidation<GetStoredObjectValidation>();
         GetUserAuthenticators = source.AddAction<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators").WithExecution<GetUserAuthenticatorsAction>();
         GetUserByUserName = source.AddAction<AppUserNameRequest, AppUserModel>("GetUserByUserName").WithExecution<GetUserByUserNameAction>();
         GetUserOrAnon = source.AddAction<AppUserNameRequest, AppUserModel>("GetUserOrAnon").WithExecution<GetUserOrAnonAction>();
         GetUserRoles = source.AddAction<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").WithExecution<GetUserRolesAction>();
         GetUsersWithAnyRole = source.AddAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>("GetUsersWithAnyRole").WithExecution<GetUsersWithAnyRoleAction>();
-        StoreObject = source.AddAction<StoreObjectRequest, string>("StoreObject").WithExecution<StoreObjectAction>();
-        SystemSetUserAccess = source.AddAction<SystemSetUserAccessRequest, EmptyActionResult>("SystemSetUserAccess").WithExecution<SystemSetUserAccessAction>();
+        SetUserAccess = source.AddAction<SystemSetUserAccessRequest, EmptyActionResult>("SetUserAccess").WithExecution<SetUserAccessAction>();
+        StoreObject = source.AddAction<StoreObjectRequest, string>("StoreObject").WithExecution<StoreObjectAction>().WithValidation<StoreObjectValidation>();
         Configure();
     }
 
@@ -34,8 +35,8 @@ public sealed partial class SystemGroupBuilder
     public AppApiActionBuilder<AppUserNameRequest, AppUserModel> GetUserOrAnon { get; }
     public AppApiActionBuilder<GetUserRolesRequest, AppRoleModel[]> GetUserRoles { get; }
     public AppApiActionBuilder<SystemGetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
+    public AppApiActionBuilder<SystemSetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
     public AppApiActionBuilder<StoreObjectRequest, string> StoreObject { get; }
-    public AppApiActionBuilder<SystemSetUserAccessRequest, EmptyActionResult> SystemSetUserAccess { get; }
 
     public SystemGroup Build() => new SystemGroup(source, this);
 }

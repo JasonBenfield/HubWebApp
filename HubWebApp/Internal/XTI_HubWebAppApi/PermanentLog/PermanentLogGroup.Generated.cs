@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.PermanentLog;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.PermanentLog;
 public sealed partial class PermanentLogGroup : AppApiGroupWrapper
 {

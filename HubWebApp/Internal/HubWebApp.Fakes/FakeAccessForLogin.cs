@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using XTI_HubWebAppApi;
+using XTI_HubWebAppApiActions;
 
 namespace HubWebApp.Fakes;
 

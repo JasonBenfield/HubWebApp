@@ -28,10 +28,9 @@ public sealed partial class UserMaintenanceController : Controller
     }
 
     [HttpPost]
-    public async Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int requestData, CancellationToken ct)
+    public Task<ResultContainer<IDictionary<string, object>>> GetUserForEdit([FromBody] int requestData, CancellationToken ct)
     {
-        var result = await api.UserMaintenance.GetUserForEdit.Execute(requestData, ct);
-        return result!;
+        return api.UserMaintenance.GetUserForEdit.Execute(requestData, ct);
     }
 
     [HttpPost]

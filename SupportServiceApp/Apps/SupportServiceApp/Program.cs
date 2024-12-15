@@ -9,12 +9,11 @@ using XTI_HubAppClient.ServiceApp.Extensions;
 using XTI_HubDB.Extensions;
 using XTI_PermanentLog;
 using XTI_PermanentLog.Implementations;
-using XTI_Schedule;
 using XTI_SupportServiceAppApi;
 using XTI_TempLog;
 using XTI_TempLog.Extensions;
 
-var hostBuilder = XtiServiceAppHost.CreateDefault(SupportInfo.AppKey, args)
+var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
     .ConfigureServices((hostContext, services) =>
     {
         services.AddSupportAppApiServices();

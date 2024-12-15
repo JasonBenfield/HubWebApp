@@ -5,6 +5,7 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Hosting;
 using XTI_App.Secrets;
+using XTI_ConsoleApp;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_HubAppClient.Extensions;
@@ -39,6 +40,7 @@ public sealed class XtiConsoleAppHost
                         var appKey = sp.GetRequiredService<AppKey>();
                         return xtiFolder.AppDataFolder(appKey);
                     });
+                    services.AddScoped<StopApplicationAction>();
                     services.AddSingleton<CurrentSession>();
                     services.AddScoped<IActionRunnerFactory, ActionRunnerFactory>();
                     services.AddSingleton<ISystemUserCredentials, SystemUserCredentials>();

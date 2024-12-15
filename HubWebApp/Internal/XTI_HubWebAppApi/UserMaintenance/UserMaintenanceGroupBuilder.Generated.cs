@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.UserMaintenance;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.UserMaintenance;
 public sealed partial class UserMaintenanceGroupBuilder
 {
@@ -11,7 +12,7 @@ public sealed partial class UserMaintenanceGroupBuilder
         ChangePassword = source.AddAction<ChangePasswordForm, EmptyActionResult>("ChangePassword").WithExecution<ChangePasswordAction>();
         DeactivateUser = source.AddAction<int, AppUserModel>("DeactivateUser").WithExecution<DeactivateUserAction>();
         EditUser = source.AddAction<EditUserForm, EmptyActionResult>("EditUser").WithExecution<EditUserAction>();
-        GetUserForEdit = source.AddAction<int, IDictionary<string, object?>>("GetUserForEdit").WithExecution<GetUserForEditAction>();
+        GetUserForEdit = source.AddAction<int, IDictionary<string, object>>("GetUserForEdit").WithExecution<GetUserForEditAction>();
         ReactivateUser = source.AddAction<int, AppUserModel>("ReactivateUser").WithExecution<ReactivateUserAction>();
         Configure();
     }
@@ -20,7 +21,7 @@ public sealed partial class UserMaintenanceGroupBuilder
     public AppApiActionBuilder<ChangePasswordForm, EmptyActionResult> ChangePassword { get; }
     public AppApiActionBuilder<int, AppUserModel> DeactivateUser { get; }
     public AppApiActionBuilder<EditUserForm, EmptyActionResult> EditUser { get; }
-    public AppApiActionBuilder<int, IDictionary<string, object?>> GetUserForEdit { get; }
+    public AppApiActionBuilder<int, IDictionary<string, object>> GetUserForEdit { get; }
     public AppApiActionBuilder<int, AppUserModel> ReactivateUser { get; }
 
     public UserMaintenanceGroup Build() => new UserMaintenanceGroup(source, this);

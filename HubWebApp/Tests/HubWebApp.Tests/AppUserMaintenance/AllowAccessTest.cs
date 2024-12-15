@@ -117,7 +117,7 @@ internal sealed class AllowAccessTest
 
     private async Task<UserAccessModel> GetUserRoles(IHubActionTester tester, ModifierModel userModifier, AppUserModel user)
     {
-        var getRolesTester = tester.Create(hubApi => hubApi.AppUser.GetExplicitUserAccess);
+        var getRolesTester = tester.Create(hubApi => hubApi.AppUserInquiry.GetExplicitUserAccess);
         await getRolesTester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
         var userAccess = await getRolesTester.Execute

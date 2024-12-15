@@ -2,7 +2,7 @@
 namespace XTI_HubWebAppApi;
 public static partial class HubApiExtensions
 {
-    public static void AddHubApiServices(this IServiceCollection services)
+    public static void AddHubAppApiServices(this IServiceCollection services)
     {
         services.AddAppServices();
         services.AddAppsServices();

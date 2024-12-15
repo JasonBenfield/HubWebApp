@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.UserInquiry;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.UserInquiry;
 public sealed partial class UserInquiryGroup : AppApiGroupWrapper
 {

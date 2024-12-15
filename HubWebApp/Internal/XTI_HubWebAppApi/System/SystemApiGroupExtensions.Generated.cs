@@ -11,12 +11,14 @@ internal static partial class SystemApiGroupExtensions
         services.AddScoped<GetAppContextAction>();
         services.AddScoped<GetModifierAction>();
         services.AddScoped<GetStoredObjectAction>();
+        services.AddScoped<GetStoredObjectValidation>();
         services.AddScoped<GetUserAuthenticatorsAction>();
         services.AddScoped<GetUserByUserNameAction>();
         services.AddScoped<GetUserOrAnonAction>();
         services.AddScoped<GetUserRolesAction>();
         services.AddScoped<GetUsersWithAnyRoleAction>();
+        services.AddScoped<SetUserAccessAction>();
         services.AddScoped<StoreObjectAction>();
-        services.AddScoped<SystemSetUserAccessAction>();
+        services.AddScoped<StoreObjectValidation>();
     }
 }

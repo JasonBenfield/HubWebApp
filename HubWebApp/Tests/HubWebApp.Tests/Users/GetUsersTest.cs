@@ -1,6 +1,4 @@
-﻿using XTI_HubWebAppApi.UserList;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 internal sealed class GetUsersTest
 {

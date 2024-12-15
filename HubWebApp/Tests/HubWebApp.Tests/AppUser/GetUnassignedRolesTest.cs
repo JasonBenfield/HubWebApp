@@ -99,7 +99,7 @@ internal sealed class GetUnassignedRolesTest
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.AppUser.GetExplicitlyUnassignedRoles);
+        return HubActionTester.Create(services, hubApi => hubApi.AppUserInquiry.GetExplicitlyUnassignedRoles);
     }
 
     private async Task<AppUserModel> AddUser(IHubActionTester tester, string userName)

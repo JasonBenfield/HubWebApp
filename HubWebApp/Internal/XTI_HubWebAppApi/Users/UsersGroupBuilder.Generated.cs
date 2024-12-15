@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.UserList;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Users;
 public sealed partial class UsersGroupBuilder
 {

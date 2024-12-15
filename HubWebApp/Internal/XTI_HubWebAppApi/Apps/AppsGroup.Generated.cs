@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.AppList;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Apps;
 public sealed partial class AppsGroup : AppApiGroupWrapper
 {

@@ -10,6 +10,7 @@ public sealed partial class StorageController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest requestData, CancellationToken ct)
     {
         return api.Storage.GetStoredObject.Execute(requestData, ct);

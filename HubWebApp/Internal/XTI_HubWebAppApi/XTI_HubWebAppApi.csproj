@@ -7,19 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AppUser\**" />
-    <Compile Remove="ResourceGroup\**" />
-    <Compile Remove="Resource\**" />
-    <EmbeddedResource Remove="AppUser\**" />
-    <EmbeddedResource Remove="ResourceGroup\**" />
-    <EmbeddedResource Remove="Resource\**" />
-    <None Remove="AppUser\**" />
-    <None Remove="ResourceGroup\**" />
-    <None Remove="Resource\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="XTI_ApiGeneratorTask" Version="1.3.37-dev241214171423920" />
+    <PackageReference Include="XTI_ApiGeneratorTask" Version="1.3.37-dev241214221858836" />
   </ItemGroup>
 
   <ItemGroup>

@@ -39,9 +39,9 @@ public sealed partial class InstallationsController : Controller
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> InstallationView(InstallationViewRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> Installation(InstallationViewRequest requestData, CancellationToken ct)
     {
-        var result = await api.Installations.InstallationView.Execute(requestData, ct);
+        var result = await api.Installations.Installation.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 

@@ -38,7 +38,7 @@ export class ResourceGroupComponent {
     private getResourceGroup(groupID: number) {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ResourceGroup.GetResourceGroup({
+            () => this.hubClient.ResourceGroupInquiry.GetResourceGroup({
                 VersionKey: 'Current',
                 GroupID: groupID
             })

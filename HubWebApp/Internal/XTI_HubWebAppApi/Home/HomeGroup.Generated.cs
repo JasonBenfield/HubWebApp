@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Home;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Home;
 public sealed partial class HomeGroup : AppApiGroupWrapper
 {

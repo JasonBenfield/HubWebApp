@@ -59,7 +59,7 @@ export class UserPanel implements IPanel {
     }
 
     private onAppSelected(app: App) {
-        const url = this.hubClient.AppUser.Index.getModifierUrl(
+        const url = this.hubClient.AppUserInquiry.Index.getModifierUrl(
             app.getModifier(),
             { App: app.publicKey.displayText, UserID: this.userID }
         );

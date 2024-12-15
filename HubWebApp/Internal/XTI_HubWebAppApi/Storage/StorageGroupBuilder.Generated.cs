@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Storage;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Storage;
 public sealed partial class StorageGroupBuilder
 {

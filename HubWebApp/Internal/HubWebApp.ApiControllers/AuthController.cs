@@ -16,6 +16,7 @@ public sealed partial class AuthController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel requestData, CancellationToken ct)
     {
         return api.Auth.LoginReturnKey.Execute(requestData, ct);

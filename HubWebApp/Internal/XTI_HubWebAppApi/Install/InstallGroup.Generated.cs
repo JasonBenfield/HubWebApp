@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.AppInstall;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Install;
 public sealed partial class InstallGroup : AppApiGroupWrapper
 {

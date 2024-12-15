@@ -9,15 +9,15 @@ public sealed partial class LogsController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> AppRequestsView(AppRequestQueryRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> AppRequest(AppRequestRequest requestData, CancellationToken ct)
     {
-        var result = await api.Logs.AppRequestsView.Execute(requestData, ct);
+        var result = await api.Logs.AppRequest.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> AppRequestView(AppRequestRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> AppRequests(AppRequestQueryRequest requestData, CancellationToken ct)
     {
-        var result = await api.Logs.AppRequestView.Execute(requestData, ct);
+        var result = await api.Logs.AppRequests.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
@@ -45,27 +45,27 @@ public sealed partial class LogsController : Controller
         return api.Logs.GetSessionDetail.Execute(requestData, ct);
     }
 
-    public async Task<IActionResult> LogEntriesView(LogEntryQueryRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> LogEntries(LogEntryQueryRequest requestData, CancellationToken ct)
     {
-        var result = await api.Logs.LogEntriesView.Execute(requestData, ct);
+        var result = await api.Logs.LogEntries.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> LogEntryView(LogEntryRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> LogEntry(LogEntryRequest requestData, CancellationToken ct)
     {
-        var result = await api.Logs.LogEntryView.Execute(requestData, ct);
+        var result = await api.Logs.LogEntry.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> SessionsView(CancellationToken ct)
+    public async Task<IActionResult> Session(SessionViewRequest requestData, CancellationToken ct)
     {
-        var result = await api.Logs.SessionsView.Execute(new EmptyRequest(), ct);
+        var result = await api.Logs.Session.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> SessionView(SessionViewRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> Sessions(CancellationToken ct)
     {
-        var result = await api.Logs.SessionView.Execute(requestData, ct);
+        var result = await api.Logs.Sessions.Execute(new EmptyRequest(), ct);
         return View(result.Data!.ViewName);
     }
 }

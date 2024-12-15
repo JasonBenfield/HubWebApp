@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Auth;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Auth;
 public sealed partial class AuthGroup : AppApiGroupWrapper
 {

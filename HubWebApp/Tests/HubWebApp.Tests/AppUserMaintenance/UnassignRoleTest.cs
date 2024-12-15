@@ -135,7 +135,7 @@ internal sealed class UnassignRoleTest
 
     private async Task<AppRoleModel[]> GetExplicitlyAssignedRoles(IHubActionTester sourceTester, AppUserModel user)
     {
-        var tester = sourceTester.Create(hubApi => hubApi.AppUser.GetExplicitUserAccess);
+        var tester = sourceTester.Create(hubApi => hubApi.AppUserInquiry.GetExplicitUserAccess);
         await tester.LoginAsAdmin();
         var app = await sourceTester.HubApp();
         var defaultModifier = await app.DefaultModifier();

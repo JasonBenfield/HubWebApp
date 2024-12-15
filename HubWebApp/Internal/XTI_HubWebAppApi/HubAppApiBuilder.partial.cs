@@ -15,6 +15,7 @@ partial class HubAppApiBuilder
                 template.ExcludeValueTemplates(IsValueTemplateExcluded);
             }
         );
+        UserQuery.ResetAccess();
     }
 
     private static bool IsValueTemplateExcluded(ValueTemplate template, ApiCodeGenerators codeGenerator)

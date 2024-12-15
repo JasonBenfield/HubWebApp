@@ -1,17 +1,17 @@
 ﻿namespace XTI_HubWebAppApiActions.System;
 
-public sealed class SystemStorageName
+internal sealed class SystemStorageName
 {
     private readonly ICurrentUserName currentUserName;
     private readonly string storageName;
 
-    public SystemStorageName(ICurrentUserName currentUserName, string storageName)
+    internal SystemStorageName(ICurrentUserName currentUserName, string storageName)
     {
         this.currentUserName = currentUserName;
         this.storageName = storageName;
     }
 
-    public async Task<StorageName> Value()
+    internal async Task<StorageName> Value()
     {
         var userName = await currentUserName.Value();
         var systemUserName = SystemUserName.Parse(userName);

@@ -45,7 +45,7 @@ export class AppListCard {
             (app, listItem) =>
                 new AppListItem(
                     app,
-                    this.hubClient.AppUser.Index.getUrl(
+                    this.hubClient.AppUserInquiry.Index.getUrl(
                         { App: app.publicKey.displayText, UserID: this.userID }
                     ).toString(),
                     listItem

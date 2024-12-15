@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.AppUserMaintenance;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.AppUserMaintenance;
 public sealed partial class AppUserMaintenanceGroup : AppApiGroupWrapper
 {

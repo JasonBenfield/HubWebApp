@@ -122,7 +122,7 @@ internal sealed class AssignRoleTest
 
     private async Task<AppRoleModel[]> GetAssignedRoles(IHubActionTester tester, ModifierModel userModifier, AppUserModel user)
     {
-        var getRolesTester = tester.Create(hubApi => hubApi.AppUser.GetAssignedRoles);
+        var getRolesTester = tester.Create(hubApi => hubApi.AppUserInquiry.GetAssignedRoles);
         await getRolesTester.LoginAsAdmin();
         var modifier = await tester.GeneralUserGroupModifier();
         var assignedRoles = await getRolesTester.Execute

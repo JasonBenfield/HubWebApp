@@ -15,7 +15,7 @@ export class InstallationsGroup extends AppClientGroup {
 		this.GetInstallationDetailAction = this.createAction<number,IInstallationDetailModel>('GetInstallationDetail', 'Get Installation Detail');
 		this.GetPendingDeletesAction = this.createAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>('GetPendingDeletes', 'Get Pending Deletes');
 		this.Index = this.createView<IInstallationQueryRequest>('Index');
-		this.InstallationView = this.createView<IInstallationViewRequest>('InstallationView');
+		this.Installation = this.createView<IInstallationViewRequest>('Installation');
 		this.RequestDeleteAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('RequestDelete', 'Request Delete');
 	}
 	
@@ -24,7 +24,7 @@ export class InstallationsGroup extends AppClientGroup {
 	readonly GetInstallationDetailAction: AppClientAction<number,IInstallationDetailModel>;
 	readonly GetPendingDeletesAction: AppClientAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>;
 	readonly Index: AppClientView<IInstallationQueryRequest>;
-	readonly InstallationView: AppClientView<IInstallationViewRequest>;
+	readonly Installation: AppClientView<IInstallationViewRequest>;
 	readonly RequestDeleteAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
 	
 	BeginDelete(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {

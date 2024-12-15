@@ -34,6 +34,12 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest requestData, CancellationToken ct)
+    {
+        return api.System.GetStoredObject.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest requestData, CancellationToken ct)
     {
         return api.System.GetUserAuthenticators.Execute(requestData, ct);
@@ -64,20 +70,14 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> SystemGetStoredObject([FromBody] GetStoredObjectRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> SetUserAccess([FromBody] SystemSetUserAccessRequest requestData, CancellationToken ct)
     {
-        return api.System.SystemGetStoredObject.Execute(requestData, ct);
+        return api.System.SetUserAccess.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> SystemSetUserAccess([FromBody] SystemSetUserAccessRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest requestData, CancellationToken ct)
     {
-        return api.System.SystemSetUserAccess.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<string>> SystemStoreObject([FromBody] StoreObjectRequest requestData, CancellationToken ct)
-    {
-        return api.System.SystemStoreObject.Execute(requestData, ct);
+        return api.System.StoreObject.Execute(requestData, ct);
     }
 }

@@ -28,10 +28,11 @@ using XTI_HubWebAppApi.Version;
 using XTI_ODataQuery.Api;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi;
 public sealed partial class HubAppApi : WebAppApiWrapper
 {
-    internal HubAppApi(AppApi source, IServiceProvider sp, HubAppApiBuilder builder) : base(source, sp)
+    internal HubAppApi(AppApi source, HubAppApiBuilder builder) : base(source)
     {
         App = builder.App.Build();
         Apps = builder.Apps.Build();

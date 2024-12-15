@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.System;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.System;
 public sealed partial class SystemGroup : AppApiGroupWrapper
 {
@@ -16,8 +17,8 @@ public sealed partial class SystemGroup : AppApiGroupWrapper
         GetUserOrAnon = builder.GetUserOrAnon.Build();
         GetUserRoles = builder.GetUserRoles.Build();
         GetUsersWithAnyRole = builder.GetUsersWithAnyRole.Build();
+        SetUserAccess = builder.SetUserAccess.Build();
         StoreObject = builder.StoreObject.Build();
-        SystemSetUserAccess = builder.SystemSetUserAccess.Build();
         Configure();
     }
 
@@ -32,6 +33,6 @@ public sealed partial class SystemGroup : AppApiGroupWrapper
     public AppApiAction<AppUserNameRequest, AppUserModel> GetUserOrAnon { get; }
     public AppApiAction<GetUserRolesRequest, AppRoleModel[]> GetUserRoles { get; }
     public AppApiAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]> GetUsersWithAnyRole { get; }
+    public AppApiAction<SystemSetUserAccessRequest, EmptyActionResult> SetUserAccess { get; }
     public AppApiAction<StoreObjectRequest, string> StoreObject { get; }
-    public AppApiAction<SystemSetUserAccessRequest, EmptyActionResult> SystemSetUserAccess { get; }
 }

@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.ExternalAuth;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.ExternalAuth;
 public sealed partial class ExternalAuthGroupBuilder
 {

@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.Authenticators;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Authenticators;
 public sealed partial class AuthenticatorsGroup : AppApiGroupWrapper
 {

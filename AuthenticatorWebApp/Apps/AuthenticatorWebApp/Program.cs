@@ -5,7 +5,7 @@ using XTI_Core;
 using XTI_AuthenticatorWebAppApi;
 using XTI_App.Api;
 
-var builder = XtiWebAppHost.CreateDefault(AuthenticatorInfo.AppKey, args);
+var builder = XtiWebAppHost.CreateDefault(AuthenticatorAppKey.Value, args);
 var xtiEnv = XtiEnvironment.Parse(builder.Environment.EnvironmentName);
 builder.Services.ConfigureXtiCookieAndTokenAuthentication(xtiEnv, builder.Configuration);
 builder.Services.AddScoped<AppApiFactory, AuthenticatorAppApiFactory>();

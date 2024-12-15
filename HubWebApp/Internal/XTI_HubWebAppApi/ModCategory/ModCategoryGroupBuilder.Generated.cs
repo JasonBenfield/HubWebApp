@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.ModCategoryInquiry;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.ModCategory;
 public sealed partial class ModCategoryGroupBuilder
 {

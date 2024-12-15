@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.VersionInquiry;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Version;
 public sealed partial class VersionGroup : AppApiGroupWrapper
 {

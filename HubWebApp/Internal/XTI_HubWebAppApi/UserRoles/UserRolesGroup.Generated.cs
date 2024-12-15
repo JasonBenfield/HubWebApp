@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.UserRoles;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.UserRoles;
 public sealed partial class UserRolesGroup : AppApiGroupWrapper
 {

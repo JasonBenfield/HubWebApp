@@ -353,13 +353,13 @@ interface IInstallationQueryRequest {
 interface IInstallationViewRequest {
 	InstallationID: number;
 }
+interface IAppRequestRequest {
+	RequestID: number;
+}
 interface IAppRequestQueryRequest {
 	SessionID: number;
 	InstallationID: number;
 	SourceRequestID: number;
-}
-interface IAppRequestRequest {
-	RequestID: number;
 }
 interface IAppLogEntryDetailModel {
 	LogEntry: IAppLogEntryModel;

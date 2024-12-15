@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApiActions.UserMaintenance;
 
-public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, object?>>
+public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, object>>
 {
     private readonly UserGroupFromPath userGroupFromPath;
 
@@ -9,7 +9,7 @@ public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, ob
         this.userGroupFromPath = userGroupFromPath;
     }
 
-    public async Task<IDictionary<string, object?>> Execute(int userID, CancellationToken stoppingToken)
+    public async Task<IDictionary<string, object>> Execute(int userID, CancellationToken stoppingToken)
     {
         var userGroup = await userGroupFromPath.Value();
         var user = await userGroup.User(userID);

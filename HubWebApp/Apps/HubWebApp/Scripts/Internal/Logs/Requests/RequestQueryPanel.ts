@@ -28,7 +28,7 @@ export class RequestQueryPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly odataComponent: ODataComponent<IExpandedRequest>;
 
-    constructor(private readonly hubClient: HubAppClient, private readonly view: RequestQueryPanelView) {
+    constructor(hubClient: HubAppClient, private readonly view: RequestQueryPanelView) {
         const columns = new ODataExpandedRequestColumnsBuilder(this.view.columns);
         const options = new ODataComponentOptionsBuilder<IExpandedRequest>('hub_requests', columns);
         columns.RequestID.require();
@@ -58,7 +58,7 @@ export class RequestQueryPanel implements IPanel {
             orderby: true
         });
         options.setDefaultODataClient(
-            hubClient.RequestQuery,
+            hubClient.AppRequestQuery,
             {
                 args: {
                     SessionID: sessionID,

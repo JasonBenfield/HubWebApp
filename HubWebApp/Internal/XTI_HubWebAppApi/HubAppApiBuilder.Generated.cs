@@ -28,6 +28,7 @@ using XTI_HubWebAppApi.Version;
 using XTI_ODataQuery.Api;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi;
 public sealed partial class HubAppApiBuilder
 {
@@ -64,12 +65,12 @@ public sealed partial class HubAppApiBuilder
         UserRoles = new UserRolesGroupBuilder(source.AddGroup("UserRoles"));
         Users = new UsersGroupBuilder(source.AddGroup("Users"));
         Version = new VersionGroupBuilder(source.AddGroup("Version"));
-        InstallationQuery = new ODataGroupBuilder<InstallationQueryRequest, ExpandedInstallation>(source.AddGroup("InstallationQuery"));
-        AppRequestQuery = new ODataGroupBuilder<AppRequestQueryRequest, ExpandedRequest>(source.AddGroup("AppRequestQuery"));
-        LogEntryQuery = new ODataGroupBuilder<LogEntryQueryRequest, ExpandedLogEntry>(source.AddGroup("LogEntryQuery"));
-        SessionQuery = new ODataGroupBuilder<EmptyRequest, ExpandedSession>(source.AddGroup("SessionQuery"));
-        UserQuery = new ODataGroupBuilder<UserGroupKey, ExpandedUser>(source.AddGroup("UserQuery"));
-        UserRoleQuery = new ODataGroupBuilder<UserRoleQueryRequest, ExpandedUserRole>(source.AddGroup("UserRoleQuery"));
+        InstallationQuery = new ODataGroupBuilder<InstallationQueryRequest, ExpandedInstallation>(source.AddGroup("InstallationQuery")).WithQuery<XTI_HubWebAppApiActions.Installations.InstallationQueryAction>();
+        AppRequestQuery = new ODataGroupBuilder<AppRequestQueryRequest, ExpandedRequest>(source.AddGroup("AppRequestQuery")).WithQuery<XTI_HubWebAppApiActions.Logs.AppRequestQueryAction>();
+        LogEntryQuery = new ODataGroupBuilder<LogEntryQueryRequest, ExpandedLogEntry>(source.AddGroup("LogEntryQuery")).WithQuery<XTI_HubWebAppApiActions.Logs.LogEntryQueryAction>();
+        SessionQuery = new ODataGroupBuilder<EmptyRequest, ExpandedSession>(source.AddGroup("SessionQuery")).WithQuery<XTI_HubWebAppApiActions.Logs.SessionQueryAction>();
+        UserQuery = new ODataGroupBuilder<UserGroupKey, ExpandedUser>(source.AddGroup("UserQuery")).WithQuery<XTI_HubWebAppApiActions.UserGroups.UserQueryAction>();
+        UserRoleQuery = new ODataGroupBuilder<UserRoleQueryRequest, ExpandedUserRole>(source.AddGroup("UserRoleQuery")).WithQuery<XTI_HubWebAppApiActions.UserRoles.UserRoleQueryAction>();
         Configure();
     }
 
@@ -108,5 +109,5 @@ public sealed partial class HubAppApiBuilder
     public ODataGroupBuilder<UserGroupKey, ExpandedUser> UserQuery { get; }
     public ODataGroupBuilder<UserRoleQueryRequest, ExpandedUserRole> UserRoleQuery { get; }
 
-    public HubAppApi Build() => new HubAppApi(source, sp, this);
+    public HubAppApi Build() => new HubAppApi(source, this);
 }

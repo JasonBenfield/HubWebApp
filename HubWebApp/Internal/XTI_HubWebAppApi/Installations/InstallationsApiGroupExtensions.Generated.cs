@@ -11,7 +11,7 @@ internal static partial class InstallationsApiGroupExtensions
         services.AddScoped<GetInstallationDetailAction>();
         services.AddScoped<GetPendingDeletesAction>();
         services.AddScoped<IndexAction>();
-        services.AddScoped<InstallationViewAction>();
+        services.AddScoped<InstallationPage>();
         services.AddScoped<RequestDeleteAction>();
     }
 }

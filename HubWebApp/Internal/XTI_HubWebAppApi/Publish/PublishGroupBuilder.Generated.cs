@@ -1,6 +1,7 @@
 using XTI_HubWebAppApiActions.AppPublish;
 
 // Generated Code
+#nullable enable
 namespace XTI_HubWebAppApi.Publish;
 public sealed partial class PublishGroupBuilder
 {

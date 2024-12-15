@@ -1,4 +1,6 @@
-﻿namespace HubWebApp.Tests;
+﻿using XTI_HubWebAppApiActions;
+
+namespace HubWebApp.Tests;
 
 internal static class AccessAssertions
 {
