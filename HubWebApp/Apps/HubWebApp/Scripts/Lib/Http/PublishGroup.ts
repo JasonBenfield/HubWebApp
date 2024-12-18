@@ -21,16 +21,16 @@ export class PublishGroup extends AppClientGroup {
 	readonly GetVersionsAction: AppClientAction<IAppKeyRequest,IXtiVersionModel[]>;
 	readonly NewVersionAction: AppClientAction<INewVersionRequest,IXtiVersionModel>;
 	
-	BeginPublish(model: IPublishVersionRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginPublishAction.execute(model, errorOptions || {});
+	BeginPublish(requestData: IPublishVersionRequest, errorOptions?: IActionErrorOptions) {
+		return this.BeginPublishAction.execute(requestData, errorOptions || {});
 	}
-	EndPublish(model: IPublishVersionRequest, errorOptions?: IActionErrorOptions) {
-		return this.EndPublishAction.execute(model, errorOptions || {});
+	EndPublish(requestData: IPublishVersionRequest, errorOptions?: IActionErrorOptions) {
+		return this.EndPublishAction.execute(requestData, errorOptions || {});
 	}
-	GetVersions(model: IAppKeyRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetVersionsAction.execute(model, errorOptions || {});
+	GetVersions(requestData: IAppKeyRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionsAction.execute(requestData, errorOptions || {});
 	}
-	NewVersion(model: INewVersionRequest, errorOptions?: IActionErrorOptions) {
-		return this.NewVersionAction.execute(model, errorOptions || {});
+	NewVersion(requestData: INewVersionRequest, errorOptions?: IActionErrorOptions) {
+		return this.NewVersionAction.execute(requestData, errorOptions || {});
 	}
 }

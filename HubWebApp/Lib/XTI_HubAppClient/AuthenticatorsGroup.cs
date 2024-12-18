@@ -9,9 +9,9 @@ public sealed partial class AuthenticatorsGroup : AppClientGroup
 
     public AuthenticatorsGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> MoveAuthenticator(MoveAuthenticatorRequest model, CancellationToken ct = default) => Actions.MoveAuthenticator.Post("", model, ct);
-    public Task<AuthenticatorModel> RegisterAuthenticator(RegisterAuthenticatorRequest model, CancellationToken ct = default) => Actions.RegisterAuthenticator.Post("", model, ct);
-    public Task<AuthenticatorModel> RegisterUserAuthenticator(RegisterUserAuthenticatorRequest model, CancellationToken ct = default) => Actions.RegisterUserAuthenticator.Post("", model, ct);
-    public Task<AppUserModel> UserOrAnonByAuthenticator(UserOrAnonByAuthenticatorRequest model, CancellationToken ct = default) => Actions.UserOrAnonByAuthenticator.Post("", model, ct);
+    public Task<EmptyActionResult> MoveAuthenticator(MoveAuthenticatorRequest requestData, CancellationToken ct = default) => Actions.MoveAuthenticator.Post("", requestData, ct);
+    public Task<AuthenticatorModel> RegisterAuthenticator(RegisterAuthenticatorRequest requestData, CancellationToken ct = default) => Actions.RegisterAuthenticator.Post("", requestData, ct);
+    public Task<AuthenticatorModel> RegisterUserAuthenticator(RegisterUserAuthenticatorRequest requestData, CancellationToken ct = default) => Actions.RegisterUserAuthenticator.Post("", requestData, ct);
+    public Task<AppUserModel> UserOrAnonByAuthenticator(UserOrAnonByAuthenticatorRequest requestData, CancellationToken ct = default) => Actions.UserOrAnonByAuthenticator.Post("", requestData, ct);
     public sealed record AuthenticatorsGroupActions(AppClientPostAction<MoveAuthenticatorRequest, EmptyActionResult> MoveAuthenticator, AppClientPostAction<RegisterAuthenticatorRequest, AuthenticatorModel> RegisterAuthenticator, AppClientPostAction<RegisterUserAuthenticatorRequest, AuthenticatorModel> RegisterUserAuthenticator, AppClientPostAction<UserOrAnonByAuthenticatorRequest, AppUserModel> UserOrAnonByAuthenticator);
 }

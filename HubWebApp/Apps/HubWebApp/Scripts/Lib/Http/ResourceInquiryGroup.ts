@@ -21,16 +21,16 @@ export class ResourceInquiryGroup extends AppClientGroup {
 	readonly GetResourceAction: AppClientAction<IGetResourceRequest,IResourceModel>;
 	readonly GetRoleAccessAction: AppClientAction<IGetResourceRoleAccessRequest,IAppRoleModel[]>;
 	
-	GetMostRecentErrorEvents(model: IGetResourceLogRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+	GetMostRecentErrorEvents(requestData: IGetResourceLogRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentErrorEventsAction.execute(requestData, errorOptions || {});
 	}
-	GetMostRecentRequests(model: IGetResourceLogRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+	GetMostRecentRequests(requestData: IGetResourceLogRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentRequestsAction.execute(requestData, errorOptions || {});
 	}
-	GetResource(model: IGetResourceRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetResourceAction.execute(model, errorOptions || {});
+	GetResource(requestData: IGetResourceRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetResourceAction.execute(requestData, errorOptions || {});
 	}
-	GetRoleAccess(model: IGetResourceRoleAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetRoleAccessAction.execute(model, errorOptions || {});
+	GetRoleAccess(requestData: IGetResourceRoleAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetRoleAccessAction.execute(requestData, errorOptions || {});
 	}
 }

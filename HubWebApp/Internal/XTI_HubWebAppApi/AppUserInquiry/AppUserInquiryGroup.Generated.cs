@@ -18,5 +18,5 @@ public sealed partial class AppUserInquiryGroup : AppApiGroupWrapper
     public AppApiAction<UserModifierKey, AppRoleModel[]> GetAssignedRoles { get; }
     public AppApiAction<UserModifierKey, AppRoleModel[]> GetExplicitlyUnassignedRoles { get; }
     public AppApiAction<UserModifierKey, UserAccessModel> GetExplicitUserAccess { get; }
-    public AppApiAction<GetAppUserRequest, WebViewResult> Index { get; }
+    public AppApiAction<AppUserIndexRequest, WebViewResult> Index { get; }
 }

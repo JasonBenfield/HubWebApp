@@ -99,7 +99,11 @@ public static class HubWebAppExtensions
                 var appClients = new AppClients(cache, appClientDomains);
                 var appKey = sp.GetRequiredService<AppKey>();
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
-                appClients.AddAppVersion(appKey.Name.DisplayText, versionKey.DisplayText);
+                appClients.AddAppVersion
+                (
+                    appKey.Name.DisplayText.Replace(" ", ""), 
+                    versionKey.DisplayText
+                );
                 return appClients;
             }
         );

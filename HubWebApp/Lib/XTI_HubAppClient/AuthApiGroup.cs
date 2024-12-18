@@ -9,6 +9,6 @@ public sealed partial class AuthApiGroup : AppClientGroup
 
     public AuthApiGroupActions Actions { get; }
 
-    public Task<LoginResult> Authenticate(AuthenticateRequest model, CancellationToken ct = default) => Actions.Authenticate.Post("", model, ct);
+    public Task<LoginResult> Authenticate(AuthenticateRequest requestData, CancellationToken ct = default) => Actions.Authenticate.Post("", requestData, ct);
     public sealed record AuthApiGroupActions(AppClientPostAction<AuthenticateRequest, LoginResult> Authenticate);
 }

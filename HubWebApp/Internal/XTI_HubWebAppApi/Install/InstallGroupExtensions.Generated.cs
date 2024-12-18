@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.AppInstall;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class InstallApiGroupExtensions
+internal static partial class InstallGroupExtensions
 {
     internal static void AddInstallServices(this IServiceCollection services)
     {

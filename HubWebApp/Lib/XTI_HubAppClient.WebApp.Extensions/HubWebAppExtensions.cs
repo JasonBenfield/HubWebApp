@@ -63,7 +63,11 @@ public static class HubWebAppExtensions
                 appClients.AddAppVersion("Hub", hubVersion.Value);
                 var appKey = sp.GetRequiredService<AppKey>();
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
-                appClients.AddAppVersion(appKey.Name.DisplayText, versionKey.DisplayText);
+                appClients.AddAppVersion
+                (
+                    appKey.Name.DisplayText.Replace(" ", ""),
+                    versionKey.DisplayText
+                );
                 configure(sp, appClients);
                 return appClients;
             }

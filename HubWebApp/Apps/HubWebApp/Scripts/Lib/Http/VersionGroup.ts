@@ -15,7 +15,7 @@ export class VersionGroup extends AppClientGroup {
 	
 	readonly GetVersionAction: AppClientAction<string,IXtiVersionModel>;
 	
-	GetVersion(model: string, errorOptions?: IActionErrorOptions) {
-		return this.GetVersionAction.execute(model, errorOptions || {});
+	GetVersion(requestData: string, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionAction.execute(requestData, errorOptions || {});
 	}
 }

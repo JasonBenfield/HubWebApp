@@ -25,14 +25,14 @@ export class UserGroupsGroup extends AppClientGroup {
 	readonly Index: AppClientView<IEmptyRequest>;
 	readonly UserQuery: AppClientView<IUserGroupKey>;
 	
-	AddUserGroupIfNotExists(model: IAddUserGroupIfNotExistsRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddUserGroupIfNotExistsAction.execute(model, errorOptions || {});
+	AddUserGroupIfNotExists(requestData: IAddUserGroupIfNotExistsRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddUserGroupIfNotExistsAction.execute(requestData, errorOptions || {});
 	}
-	GetUserDetailOrAnon(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserDetailOrAnonAction.execute(model, errorOptions || {});
+	GetUserDetailOrAnon(requestData: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserDetailOrAnonAction.execute(requestData, errorOptions || {});
 	}
-	GetUserGroupForUser(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserGroupForUserAction.execute(model, errorOptions || {});
+	GetUserGroupForUser(requestData: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserGroupForUserAction.execute(requestData, errorOptions || {});
 	}
 	GetUserGroups(errorOptions?: IActionErrorOptions) {
 		return this.GetUserGroupsAction.execute({}, errorOptions || {});

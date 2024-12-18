@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.ResourceInquiry;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class ResourceInquiryApiGroupExtensions
+internal static partial class ResourceInquiryGroupExtensions
 {
     internal static void AddResourceInquiryServices(this IServiceCollection services)
     {

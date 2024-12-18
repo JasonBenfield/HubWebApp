@@ -21,16 +21,16 @@ export class AppUserMaintenanceGroup extends AppClientGroup {
 	readonly DenyAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
 	readonly UnassignRoleAction: AppClientAction<IUserRoleRequest,IEmptyActionResult>;
 	
-	AllowAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.AllowAccessAction.execute(model, errorOptions || {});
+	AllowAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.AllowAccessAction.execute(requestData, errorOptions || {});
 	}
-	AssignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
-		return this.AssignRoleAction.execute(model, errorOptions || {});
+	AssignRole(requestData: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
+		return this.AssignRoleAction.execute(requestData, errorOptions || {});
 	}
-	DenyAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.DenyAccessAction.execute(model, errorOptions || {});
+	DenyAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.DenyAccessAction.execute(requestData, errorOptions || {});
 	}
-	UnassignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
-		return this.UnassignRoleAction.execute(model, errorOptions || {});
+	UnassignRole(requestData: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
+		return this.UnassignRoleAction.execute(requestData, errorOptions || {});
 	}
 }

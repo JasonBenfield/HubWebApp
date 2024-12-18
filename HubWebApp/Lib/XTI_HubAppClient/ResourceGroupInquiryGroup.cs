@@ -9,11 +9,11 @@ public sealed partial class ResourceGroupInquiryGroup : AppClientGroup
 
     public ResourceGroupInquiryGroupActions Actions { get; }
 
-    public Task<ModifierCategoryModel> GetModCategory(string modifier, GetResourceGroupModCategoryRequest model, CancellationToken ct = default) => Actions.GetModCategory.Post(modifier, model, ct);
-    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceGroupLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, model, ct);
-    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceGroupLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, model, ct);
-    public Task<ResourceGroupModel> GetResourceGroup(string modifier, GetResourceGroupRequest model, CancellationToken ct = default) => Actions.GetResourceGroup.Post(modifier, model, ct);
-    public Task<ResourceModel[]> GetResources(string modifier, GetResourcesRequest model, CancellationToken ct = default) => Actions.GetResources.Post(modifier, model, ct);
-    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceGroupRoleAccessRequest model, CancellationToken ct = default) => Actions.GetRoleAccess.Post(modifier, model, ct);
+    public Task<ModifierCategoryModel> GetModCategory(string modifier, GetResourceGroupModCategoryRequest requestData, CancellationToken ct = default) => Actions.GetModCategory.Post(modifier, requestData, ct);
+    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceGroupLogRequest requestData, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, requestData, ct);
+    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceGroupLogRequest requestData, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, requestData, ct);
+    public Task<ResourceGroupModel> GetResourceGroup(string modifier, GetResourceGroupRequest requestData, CancellationToken ct = default) => Actions.GetResourceGroup.Post(modifier, requestData, ct);
+    public Task<ResourceModel[]> GetResources(string modifier, GetResourcesRequest requestData, CancellationToken ct = default) => Actions.GetResources.Post(modifier, requestData, ct);
+    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceGroupRoleAccessRequest requestData, CancellationToken ct = default) => Actions.GetRoleAccess.Post(modifier, requestData, ct);
     public sealed record ResourceGroupInquiryGroupActions(AppClientPostAction<GetResourceGroupModCategoryRequest, ModifierCategoryModel> GetModCategory, AppClientPostAction<GetResourceGroupLogRequest, AppLogEntryModel[]> GetMostRecentErrorEvents, AppClientPostAction<GetResourceGroupLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests, AppClientPostAction<GetResourceGroupRequest, ResourceGroupModel> GetResourceGroup, AppClientPostAction<GetResourcesRequest, ResourceModel[]> GetResources, AppClientPostAction<GetResourceGroupRoleAccessRequest, AppRoleModel[]> GetRoleAccess);
 }

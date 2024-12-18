@@ -27,7 +27,7 @@ public sealed partial class AppUserInquiryController : Controller
         return api.AppUserInquiry.GetExplicitUserAccess.Execute(requestData, ct);
     }
 
-    public async Task<IActionResult> Index(GetAppUserRequest requestData, CancellationToken ct)
+    public async Task<IActionResult> Index(AppUserIndexRequest requestData, CancellationToken ct)
     {
         var result = await api.AppUserInquiry.Index.Execute(requestData, ct);
         return View(result.Data!.ViewName);

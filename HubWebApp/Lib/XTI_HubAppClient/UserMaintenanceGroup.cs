@@ -9,10 +9,10 @@ public sealed partial class UserMaintenanceGroup : AppClientGroup
 
     public UserMaintenanceGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> ChangePassword(string modifier, ChangePasswordForm model, CancellationToken ct = default) => Actions.ChangePassword.Post(modifier, model, ct);
-    public Task<AppUserModel> DeactivateUser(string modifier, int model, CancellationToken ct = default) => Actions.DeactivateUser.Post(modifier, model, ct);
-    public Task<EmptyActionResult> EditUser(string modifier, EditUserForm model, CancellationToken ct = default) => Actions.EditUser.Post(modifier, model, ct);
-    public Task<IDictionary<string, object>> GetUserForEdit(string modifier, int model, CancellationToken ct = default) => Actions.GetUserForEdit.Post(modifier, model, ct);
-    public Task<AppUserModel> ReactivateUser(string modifier, int model, CancellationToken ct = default) => Actions.ReactivateUser.Post(modifier, model, ct);
+    public Task<EmptyActionResult> ChangePassword(string modifier, ChangePasswordForm requestData, CancellationToken ct = default) => Actions.ChangePassword.Post(modifier, requestData, ct);
+    public Task<AppUserModel> DeactivateUser(string modifier, int requestData, CancellationToken ct = default) => Actions.DeactivateUser.Post(modifier, requestData, ct);
+    public Task<EmptyActionResult> EditUser(string modifier, EditUserForm requestData, CancellationToken ct = default) => Actions.EditUser.Post(modifier, requestData, ct);
+    public Task<IDictionary<string, object>> GetUserForEdit(string modifier, int requestData, CancellationToken ct = default) => Actions.GetUserForEdit.Post(modifier, requestData, ct);
+    public Task<AppUserModel> ReactivateUser(string modifier, int requestData, CancellationToken ct = default) => Actions.ReactivateUser.Post(modifier, requestData, ct);
     public sealed record UserMaintenanceGroupActions(AppClientPostAction<ChangePasswordForm, EmptyActionResult> ChangePassword, AppClientPostAction<int, AppUserModel> DeactivateUser, AppClientPostAction<EditUserForm, EmptyActionResult> EditUser, AppClientPostAction<int, IDictionary<string, object>> GetUserForEdit, AppClientPostAction<int, AppUserModel> ReactivateUser);
 }

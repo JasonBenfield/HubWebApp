@@ -12,7 +12,7 @@ public sealed partial class AppUserInquiryGroupBuilder
         GetAssignedRoles = source.AddAction<UserModifierKey, AppRoleModel[]>("GetAssignedRoles").WithExecution<GetAssignedRolesAction>();
         GetExplicitlyUnassignedRoles = source.AddAction<UserModifierKey, AppRoleModel[]>("GetExplicitlyUnassignedRoles").WithExecution<GetExplicitlyUnassignedRolesAction>();
         GetExplicitUserAccess = source.AddAction<UserModifierKey, UserAccessModel>("GetExplicitUserAccess").WithExecution<GetExplicitUserAccessAction>();
-        Index = source.AddAction<GetAppUserRequest, WebViewResult>("Index").WithExecution<IndexAction>();
+        Index = source.AddAction<AppUserIndexRequest, WebViewResult>("Index").WithExecution<IndexAction>();
         Configure();
     }
 
@@ -20,7 +20,7 @@ public sealed partial class AppUserInquiryGroupBuilder
     public AppApiActionBuilder<UserModifierKey, AppRoleModel[]> GetAssignedRoles { get; }
     public AppApiActionBuilder<UserModifierKey, AppRoleModel[]> GetExplicitlyUnassignedRoles { get; }
     public AppApiActionBuilder<UserModifierKey, UserAccessModel> GetExplicitUserAccess { get; }
-    public AppApiActionBuilder<GetAppUserRequest, WebViewResult> Index { get; }
+    public AppApiActionBuilder<AppUserIndexRequest, WebViewResult> Index { get; }
 
     public AppUserInquiryGroup Build() => new AppUserInquiryGroup(source, this);
 }

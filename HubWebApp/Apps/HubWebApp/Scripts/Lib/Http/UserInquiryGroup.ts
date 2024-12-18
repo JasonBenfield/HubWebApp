@@ -21,14 +21,14 @@ export class UserInquiryGroup extends AppClientGroup {
 	readonly GetUserOrAnonAction: AppClientAction<IAppUserNameRequest,IAppUserModel>;
 	readonly GetUsersAction: AppClientAction<IEmptyRequest,IAppUserModel[]>;
 	
-	GetUser(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserAction.execute(model, errorOptions || {});
+	GetUser(requestData: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserAction.execute(requestData, errorOptions || {});
 	}
-	GetUserAuthenticators(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserAuthenticatorsAction.execute(model, errorOptions || {});
+	GetUserAuthenticators(requestData: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserAuthenticatorsAction.execute(requestData, errorOptions || {});
 	}
-	GetUserOrAnon(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserOrAnonAction.execute(model, errorOptions || {});
+	GetUserOrAnon(requestData: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserOrAnonAction.execute(requestData, errorOptions || {});
 	}
 	GetUsers(errorOptions?: IActionErrorOptions) {
 		return this.GetUsersAction.execute({}, errorOptions || {});

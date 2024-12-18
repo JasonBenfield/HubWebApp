@@ -2,7 +2,7 @@ using XTI_SupportServiceAppApi.PermanentLog;
 
 // Generated Code
 namespace XTI_SupportServiceAppApi;
-internal static partial class PermanentLogApiGroupExtensions
+internal static partial class PermanentLogGroupExtensions
 {
     internal static void AddPermanentLogServices(this IServiceCollection services)
     {

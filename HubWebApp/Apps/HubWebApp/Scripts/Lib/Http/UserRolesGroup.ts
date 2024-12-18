@@ -21,10 +21,10 @@ export class UserRolesGroup extends AppClientGroup {
 	readonly Index: AppClientView<IUserRoleQueryRequest>;
 	readonly UserRole: AppClientView<IUserRoleIDRequest>;
 	
-	DeleteUserRole(model: IUserRoleIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.DeleteUserRoleAction.execute(model, errorOptions || {});
+	DeleteUserRole(requestData: IUserRoleIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.DeleteUserRoleAction.execute(requestData, errorOptions || {});
 	}
-	GetUserRoleDetail(model: IUserRoleIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserRoleDetailAction.execute(model, errorOptions || {});
+	GetUserRoleDetail(requestData: IUserRoleIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserRoleDetailAction.execute(requestData, errorOptions || {});
 	}
 }

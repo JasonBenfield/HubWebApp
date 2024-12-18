@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.UserRoles;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class UserRolesApiGroupExtensions
+internal static partial class UserRolesGroupExtensions
 {
     internal static void AddUserRolesServices(this IServiceCollection services)
     {

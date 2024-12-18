@@ -9,9 +9,9 @@ public sealed partial class UserInquiryGroup : AppClientGroup
 
     public UserInquiryGroupActions Actions { get; }
 
-    public Task<AppUserModel> GetUser(string modifier, AppUserIDRequest model, CancellationToken ct = default) => Actions.GetUser.Post(modifier, model, ct);
-    public Task<UserAuthenticatorModel[]> GetUserAuthenticators(string modifier, AppUserIDRequest model, CancellationToken ct = default) => Actions.GetUserAuthenticators.Post(modifier, model, ct);
-    public Task<AppUserModel> GetUserOrAnon(string modifier, AppUserNameRequest model, CancellationToken ct = default) => Actions.GetUserOrAnon.Post(modifier, model, ct);
+    public Task<AppUserModel> GetUser(string modifier, AppUserIDRequest requestData, CancellationToken ct = default) => Actions.GetUser.Post(modifier, requestData, ct);
+    public Task<UserAuthenticatorModel[]> GetUserAuthenticators(string modifier, AppUserIDRequest requestData, CancellationToken ct = default) => Actions.GetUserAuthenticators.Post(modifier, requestData, ct);
+    public Task<AppUserModel> GetUserOrAnon(string modifier, AppUserNameRequest requestData, CancellationToken ct = default) => Actions.GetUserOrAnon.Post(modifier, requestData, ct);
     public Task<AppUserModel[]> GetUsers(string modifier, CancellationToken ct = default) => Actions.GetUsers.Post(modifier, new EmptyRequest(), ct);
     public sealed record UserInquiryGroupActions(AppClientPostAction<AppUserIDRequest, AppUserModel> GetUser, AppClientPostAction<AppUserIDRequest, UserAuthenticatorModel[]> GetUserAuthenticators, AppClientPostAction<AppUserNameRequest, AppUserModel> GetUserOrAnon, AppClientPostAction<EmptyRequest, AppUserModel[]> GetUsers);
 }

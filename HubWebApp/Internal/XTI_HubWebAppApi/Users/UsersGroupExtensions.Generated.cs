@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.UserList;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class UsersApiGroupExtensions
+internal static partial class UsersGroupExtensions
 {
     internal static void AddUsersServices(this IServiceCollection services)
     {

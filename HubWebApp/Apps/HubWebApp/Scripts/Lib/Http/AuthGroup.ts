@@ -22,10 +22,10 @@ export class AuthGroup extends AppClientGroup {
 	readonly VerifyLoginAction: AppClientAction<VerifyLoginForm,IAuthenticatedLoginResult>;
 	readonly VerifyLoginForm: AppClientView<IEmptyRequest>;
 	
-	LoginReturnKey(model: ILoginReturnModel, errorOptions?: IActionErrorOptions) {
-		return this.LoginReturnKeyAction.execute(model, errorOptions || {});
+	LoginReturnKey(requestData: ILoginReturnModel, errorOptions?: IActionErrorOptions) {
+		return this.LoginReturnKeyAction.execute(requestData, errorOptions || {});
 	}
-	VerifyLogin(model: VerifyLoginForm, errorOptions?: IActionErrorOptions) {
-		return this.VerifyLoginAction.execute(model, errorOptions || {});
+	VerifyLogin(requestData: VerifyLoginForm, errorOptions?: IActionErrorOptions) {
+		return this.VerifyLoginAction.execute(requestData, errorOptions || {});
 	}
 }

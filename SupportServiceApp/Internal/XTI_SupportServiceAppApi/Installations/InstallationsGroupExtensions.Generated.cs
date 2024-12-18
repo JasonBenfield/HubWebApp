@@ -2,7 +2,7 @@ using XTI_SupportServiceAppApi.Installations;
 
 // Generated Code
 namespace XTI_SupportServiceAppApi;
-internal static partial class InstallationsApiGroupExtensions
+internal static partial class InstallationsGroupExtensions
 {
     internal static void AddInstallationsServices(this IServiceCollection services)
     {

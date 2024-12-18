@@ -15,7 +15,7 @@ export class ExternalAuthGroup extends AppClientGroup {
 	
 	readonly ExternalAuthKeyAction: AppClientAction<IExternalAuthKeyModel,IAuthenticatedLoginResult>;
 	
-	ExternalAuthKey(model: IExternalAuthKeyModel, errorOptions?: IActionErrorOptions) {
-		return this.ExternalAuthKeyAction.execute(model, errorOptions || {});
+	ExternalAuthKey(requestData: IExternalAuthKeyModel, errorOptions?: IActionErrorOptions) {
+		return this.ExternalAuthKeyAction.execute(requestData, errorOptions || {});
 	}
 }

@@ -24,11 +24,11 @@ export class UsersGroup extends AppClientGroup {
 	readonly GetUsersAction: AppClientAction<IEmptyRequest,IAppUserModel[]>;
 	readonly Index: AppClientView<IUsersIndexRequest>;
 	
-	AddOrUpdateUser(model: IAddOrUpdateUserRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddOrUpdateUserAction.execute(model, errorOptions || {});
+	AddOrUpdateUser(requestData: IAddOrUpdateUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateUserAction.execute(requestData, errorOptions || {});
 	}
-	AddUser(model: AddUserForm, errorOptions?: IActionErrorOptions) {
-		return this.AddUserAction.execute(model, errorOptions || {});
+	AddUser(requestData: AddUserForm, errorOptions?: IActionErrorOptions) {
+		return this.AddUserAction.execute(requestData, errorOptions || {});
 	}
 	GetUserGroup(errorOptions?: IActionErrorOptions) {
 		return this.GetUserGroupAction.execute({}, errorOptions || {});

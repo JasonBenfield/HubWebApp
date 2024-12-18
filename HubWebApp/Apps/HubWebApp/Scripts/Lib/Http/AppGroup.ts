@@ -48,11 +48,11 @@ export class AppGroup extends AppClientGroup {
 	GetModifierCategories(errorOptions?: IActionErrorOptions) {
 		return this.GetModifierCategoriesAction.execute({}, errorOptions || {});
 	}
-	GetMostRecentErrorEvents(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+	GetMostRecentErrorEvents(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentErrorEventsAction.execute(requestData, errorOptions || {});
 	}
-	GetMostRecentRequests(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+	GetMostRecentRequests(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentRequestsAction.execute(requestData, errorOptions || {});
 	}
 	GetResourceGroups(errorOptions?: IActionErrorOptions) {
 		return this.GetResourceGroupsAction.execute({}, errorOptions || {});

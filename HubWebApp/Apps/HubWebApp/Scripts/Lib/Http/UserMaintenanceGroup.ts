@@ -25,19 +25,19 @@ export class UserMaintenanceGroup extends AppClientGroup {
 	readonly GetUserForEditAction: AppClientAction<number,Record<string,object>>;
 	readonly ReactivateUserAction: AppClientAction<number,IAppUserModel>;
 	
-	ChangePassword(model: ChangePasswordForm, errorOptions?: IActionErrorOptions) {
-		return this.ChangePasswordAction.execute(model, errorOptions || {});
+	ChangePassword(requestData: ChangePasswordForm, errorOptions?: IActionErrorOptions) {
+		return this.ChangePasswordAction.execute(requestData, errorOptions || {});
 	}
-	DeactivateUser(model: number, errorOptions?: IActionErrorOptions) {
-		return this.DeactivateUserAction.execute(model, errorOptions || {});
+	DeactivateUser(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.DeactivateUserAction.execute(requestData, errorOptions || {});
 	}
-	EditUser(model: EditUserForm, errorOptions?: IActionErrorOptions) {
-		return this.EditUserAction.execute(model, errorOptions || {});
+	EditUser(requestData: EditUserForm, errorOptions?: IActionErrorOptions) {
+		return this.EditUserAction.execute(requestData, errorOptions || {});
 	}
-	GetUserForEdit(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetUserForEditAction.execute(model, errorOptions || {});
+	GetUserForEdit(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetUserForEditAction.execute(requestData, errorOptions || {});
 	}
-	ReactivateUser(model: number, errorOptions?: IActionErrorOptions) {
-		return this.ReactivateUserAction.execute(model, errorOptions || {});
+	ReactivateUser(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.ReactivateUserAction.execute(requestData, errorOptions || {});
 	}
 }

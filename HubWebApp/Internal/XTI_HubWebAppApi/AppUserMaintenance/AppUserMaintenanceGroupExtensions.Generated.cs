@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.AppUserMaintenance;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class AppUserMaintenanceApiGroupExtensions
+internal static partial class AppUserMaintenanceGroupExtensions
 {
     internal static void AddAppUserMaintenanceServices(this IServiceCollection services)
     {

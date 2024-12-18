@@ -33,16 +33,16 @@ export class LogsGroup extends AppClientGroup {
 	readonly Session: AppClientView<ISessionViewRequest>;
 	readonly Sessions: AppClientView<IEmptyRequest>;
 	
-	GetLogEntryDetail(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetLogEntryDetailAction.execute(model, errorOptions || {});
+	GetLogEntryDetail(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetLogEntryDetailAction.execute(requestData, errorOptions || {});
 	}
-	GetLogEntryOrDefaultByKey(model: string, errorOptions?: IActionErrorOptions) {
-		return this.GetLogEntryOrDefaultByKeyAction.execute(model, errorOptions || {});
+	GetLogEntryOrDefaultByKey(requestData: string, errorOptions?: IActionErrorOptions) {
+		return this.GetLogEntryOrDefaultByKeyAction.execute(requestData, errorOptions || {});
 	}
-	GetRequestDetail(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetRequestDetailAction.execute(model, errorOptions || {});
+	GetRequestDetail(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetRequestDetailAction.execute(requestData, errorOptions || {});
 	}
-	GetSessionDetail(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetSessionDetailAction.execute(model, errorOptions || {});
+	GetSessionDetail(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetSessionDetailAction.execute(requestData, errorOptions || {});
 	}
 }

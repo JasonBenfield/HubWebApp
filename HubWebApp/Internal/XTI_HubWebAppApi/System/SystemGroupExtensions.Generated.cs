@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.System;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class SystemApiGroupExtensions
+internal static partial class SystemGroupExtensions
 {
     internal static void AddSystemServices(this IServiceCollection services)
     {

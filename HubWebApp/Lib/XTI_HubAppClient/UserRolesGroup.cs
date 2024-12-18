@@ -9,7 +9,7 @@ public sealed partial class UserRolesGroup : AppClientGroup
 
     public UserRolesGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> DeleteUserRole(UserRoleIDRequest model, CancellationToken ct = default) => Actions.DeleteUserRole.Post("", model, ct);
-    public Task<UserRoleDetailModel> GetUserRoleDetail(UserRoleIDRequest model, CancellationToken ct = default) => Actions.GetUserRoleDetail.Post("", model, ct);
+    public Task<EmptyActionResult> DeleteUserRole(UserRoleIDRequest requestData, CancellationToken ct = default) => Actions.DeleteUserRole.Post("", requestData, ct);
+    public Task<UserRoleDetailModel> GetUserRoleDetail(UserRoleIDRequest requestData, CancellationToken ct = default) => Actions.GetUserRoleDetail.Post("", requestData, ct);
     public sealed record UserRolesGroupActions(AppClientPostAction<UserRoleIDRequest, EmptyActionResult> DeleteUserRole, AppClientPostAction<UserRoleIDRequest, UserRoleDetailModel> GetUserRoleDetail, AppClientGetAction<UserRoleQueryRequest> Index, AppClientGetAction<UserRoleIDRequest> UserRole);
 }

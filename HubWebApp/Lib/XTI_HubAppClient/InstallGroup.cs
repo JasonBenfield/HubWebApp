@@ -9,21 +9,21 @@ public sealed partial class InstallGroup : AppClientGroup
 
     public InstallGroupActions Actions { get; }
 
-    public Task<AppUserModel> AddAdminUser(AddAdminUserRequest model, CancellationToken ct = default) => Actions.AddAdminUser.Post("", model, ct);
-    public Task<AppUserModel> AddInstallationUser(AddInstallationUserRequest model, CancellationToken ct = default) => Actions.AddInstallationUser.Post("", model, ct);
-    public Task<AppModel[]> AddOrUpdateApps(AddOrUpdateAppsRequest model, CancellationToken ct = default) => Actions.AddOrUpdateApps.Post("", model, ct);
-    public Task<EmptyActionResult> AddOrUpdateVersions(AddOrUpdateVersionsRequest model, CancellationToken ct = default) => Actions.AddOrUpdateVersions.Post("", model, ct);
-    public Task<AppUserModel> AddSystemUser(AddSystemUserRequest model, CancellationToken ct = default) => Actions.AddSystemUser.Post("", model, ct);
-    public Task<EmptyActionResult> BeginInstallation(GetInstallationRequest model, CancellationToken ct = default) => Actions.BeginInstallation.Post("", model, ct);
-    public Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest model, CancellationToken ct = default) => Actions.ConfigureInstall.Post("", model, ct);
-    public Task<InstallConfigurationTemplateModel> ConfigureInstallTemplate(ConfigureInstallTemplateRequest model, CancellationToken ct = default) => Actions.ConfigureInstallTemplate.Post("", model, ct);
-    public Task<EmptyActionResult> DeleteInstallConfiguration(DeleteInstallConfigurationRequest model, CancellationToken ct = default) => Actions.DeleteInstallConfiguration.Post("", model, ct);
-    public Task<InstallConfigurationModel[]> GetInstallConfigurations(GetInstallConfigurationsRequest model, CancellationToken ct = default) => Actions.GetInstallConfigurations.Post("", model, ct);
-    public Task<XtiVersionModel> GetVersion(GetVersionRequest model, CancellationToken ct = default) => Actions.GetVersion.Post("", model, ct);
-    public Task<XtiVersionModel[]> GetVersions(GetVersionsRequest model, CancellationToken ct = default) => Actions.GetVersions.Post("", model, ct);
-    public Task<EmptyActionResult> Installed(GetInstallationRequest model, CancellationToken ct = default) => Actions.Installed.Post("", model, ct);
-    public Task<NewInstallationResult> NewInstallation(NewInstallationRequest model, CancellationToken ct = default) => Actions.NewInstallation.Post("", model, ct);
-    public Task<AppModel> RegisterApp(RegisterAppRequest model, CancellationToken ct = default) => Actions.RegisterApp.Post("", model, ct);
-    public Task<EmptyActionResult> SetUserAccess(SetUserAccessRequest model, CancellationToken ct = default) => Actions.SetUserAccess.Post("", model, ct);
+    public Task<AppUserModel> AddAdminUser(AddAdminUserRequest requestData, CancellationToken ct = default) => Actions.AddAdminUser.Post("", requestData, ct);
+    public Task<AppUserModel> AddInstallationUser(AddInstallationUserRequest requestData, CancellationToken ct = default) => Actions.AddInstallationUser.Post("", requestData, ct);
+    public Task<AppModel[]> AddOrUpdateApps(AddOrUpdateAppsRequest requestData, CancellationToken ct = default) => Actions.AddOrUpdateApps.Post("", requestData, ct);
+    public Task<EmptyActionResult> AddOrUpdateVersions(AddOrUpdateVersionsRequest requestData, CancellationToken ct = default) => Actions.AddOrUpdateVersions.Post("", requestData, ct);
+    public Task<AppUserModel> AddSystemUser(AddSystemUserRequest requestData, CancellationToken ct = default) => Actions.AddSystemUser.Post("", requestData, ct);
+    public Task<EmptyActionResult> BeginInstallation(GetInstallationRequest requestData, CancellationToken ct = default) => Actions.BeginInstallation.Post("", requestData, ct);
+    public Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest requestData, CancellationToken ct = default) => Actions.ConfigureInstall.Post("", requestData, ct);
+    public Task<InstallConfigurationTemplateModel> ConfigureInstallTemplate(ConfigureInstallTemplateRequest requestData, CancellationToken ct = default) => Actions.ConfigureInstallTemplate.Post("", requestData, ct);
+    public Task<EmptyActionResult> DeleteInstallConfiguration(DeleteInstallConfigurationRequest requestData, CancellationToken ct = default) => Actions.DeleteInstallConfiguration.Post("", requestData, ct);
+    public Task<InstallConfigurationModel[]> GetInstallConfigurations(GetInstallConfigurationsRequest requestData, CancellationToken ct = default) => Actions.GetInstallConfigurations.Post("", requestData, ct);
+    public Task<XtiVersionModel> GetVersion(GetVersionRequest requestData, CancellationToken ct = default) => Actions.GetVersion.Post("", requestData, ct);
+    public Task<XtiVersionModel[]> GetVersions(GetVersionsRequest requestData, CancellationToken ct = default) => Actions.GetVersions.Post("", requestData, ct);
+    public Task<EmptyActionResult> Installed(GetInstallationRequest requestData, CancellationToken ct = default) => Actions.Installed.Post("", requestData, ct);
+    public Task<NewInstallationResult> NewInstallation(NewInstallationRequest requestData, CancellationToken ct = default) => Actions.NewInstallation.Post("", requestData, ct);
+    public Task<AppModel> RegisterApp(RegisterAppRequest requestData, CancellationToken ct = default) => Actions.RegisterApp.Post("", requestData, ct);
+    public Task<EmptyActionResult> SetUserAccess(SetUserAccessRequest requestData, CancellationToken ct = default) => Actions.SetUserAccess.Post("", requestData, ct);
     public sealed record InstallGroupActions(AppClientPostAction<AddAdminUserRequest, AppUserModel> AddAdminUser, AppClientPostAction<AddInstallationUserRequest, AppUserModel> AddInstallationUser, AppClientPostAction<AddOrUpdateAppsRequest, AppModel[]> AddOrUpdateApps, AppClientPostAction<AddOrUpdateVersionsRequest, EmptyActionResult> AddOrUpdateVersions, AppClientPostAction<AddSystemUserRequest, AppUserModel> AddSystemUser, AppClientPostAction<GetInstallationRequest, EmptyActionResult> BeginInstallation, AppClientPostAction<ConfigureInstallRequest, InstallConfigurationModel> ConfigureInstall, AppClientPostAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel> ConfigureInstallTemplate, AppClientPostAction<DeleteInstallConfigurationRequest, EmptyActionResult> DeleteInstallConfiguration, AppClientPostAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]> GetInstallConfigurations, AppClientPostAction<GetVersionRequest, XtiVersionModel> GetVersion, AppClientPostAction<GetVersionsRequest, XtiVersionModel[]> GetVersions, AppClientPostAction<GetInstallationRequest, EmptyActionResult> Installed, AppClientPostAction<NewInstallationRequest, NewInstallationResult> NewInstallation, AppClientPostAction<RegisterAppRequest, AppModel> RegisterApp, AppClientPostAction<SetUserAccessRequest, EmptyActionResult> SetUserAccess);
 }

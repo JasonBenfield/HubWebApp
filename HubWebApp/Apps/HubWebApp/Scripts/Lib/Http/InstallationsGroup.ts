@@ -27,19 +27,19 @@ export class InstallationsGroup extends AppClientGroup {
 	readonly Installation: AppClientView<IInstallationViewRequest>;
 	readonly RequestDeleteAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
 	
-	BeginDelete(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginDeleteAction.execute(model, errorOptions || {});
+	BeginDelete(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.BeginDeleteAction.execute(requestData, errorOptions || {});
 	}
-	Deleted(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.DeletedAction.execute(model, errorOptions || {});
+	Deleted(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.DeletedAction.execute(requestData, errorOptions || {});
 	}
-	GetInstallationDetail(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetInstallationDetailAction.execute(model, errorOptions || {});
+	GetInstallationDetail(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetInstallationDetailAction.execute(requestData, errorOptions || {});
 	}
-	GetPendingDeletes(model: IGetPendingDeletesRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetPendingDeletesAction.execute(model, errorOptions || {});
+	GetPendingDeletes(requestData: IGetPendingDeletesRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetPendingDeletesAction.execute(requestData, errorOptions || {});
 	}
-	RequestDelete(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.RequestDeleteAction.execute(model, errorOptions || {});
+	RequestDelete(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.RequestDeleteAction.execute(requestData, errorOptions || {});
 	}
 }

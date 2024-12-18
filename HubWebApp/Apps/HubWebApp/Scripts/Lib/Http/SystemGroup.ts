@@ -37,40 +37,40 @@ export class SystemGroup extends AppClientGroup {
 	readonly SetUserAccessAction: AppClientAction<ISystemSetUserAccessRequest,IEmptyActionResult>;
 	readonly StoreObjectAction: AppClientAction<IStoreObjectRequest,string>;
 	
-	AddOrUpdateModifierByModKey(model: ISystemAddOrUpdateModifierByModKeyRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddOrUpdateModifierByModKeyAction.execute(model, errorOptions || {});
+	AddOrUpdateModifierByModKey(requestData: ISystemAddOrUpdateModifierByModKeyRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateModifierByModKeyAction.execute(requestData, errorOptions || {});
 	}
-	AddOrUpdateModifierByTargetKey(model: ISystemAddOrUpdateModifierByTargetKeyRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddOrUpdateModifierByTargetKeyAction.execute(model, errorOptions || {});
+	AddOrUpdateModifierByTargetKey(requestData: ISystemAddOrUpdateModifierByTargetKeyRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateModifierByTargetKeyAction.execute(requestData, errorOptions || {});
 	}
-	GetAppContext(model: IGetAppContextRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetAppContextAction.execute(model, errorOptions || {});
+	GetAppContext(requestData: IGetAppContextRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetAppContextAction.execute(requestData, errorOptions || {});
 	}
-	GetModifier(model: IGetModifierRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetModifierAction.execute(model, errorOptions || {});
+	GetModifier(requestData: IGetModifierRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetModifierAction.execute(requestData, errorOptions || {});
 	}
-	GetStoredObject(model: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetStoredObjectAction.execute(model, errorOptions || {});
+	GetStoredObject(requestData: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetStoredObjectAction.execute(requestData, errorOptions || {});
 	}
-	GetUserAuthenticators(model: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserAuthenticatorsAction.execute(model, errorOptions || {});
+	GetUserAuthenticators(requestData: IAppUserIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserAuthenticatorsAction.execute(requestData, errorOptions || {});
 	}
-	GetUserByUserName(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserByUserNameAction.execute(model, errorOptions || {});
+	GetUserByUserName(requestData: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserByUserNameAction.execute(requestData, errorOptions || {});
 	}
-	GetUserOrAnon(model: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserOrAnonAction.execute(model, errorOptions || {});
+	GetUserOrAnon(requestData: IAppUserNameRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserOrAnonAction.execute(requestData, errorOptions || {});
 	}
-	GetUserRoles(model: IGetUserRolesRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUserRolesAction.execute(model, errorOptions || {});
+	GetUserRoles(requestData: IGetUserRolesRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUserRolesAction.execute(requestData, errorOptions || {});
 	}
-	GetUsersWithAnyRole(model: ISystemGetUsersWithAnyRoleRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetUsersWithAnyRoleAction.execute(model, errorOptions || {});
+	GetUsersWithAnyRole(requestData: ISystemGetUsersWithAnyRoleRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetUsersWithAnyRoleAction.execute(requestData, errorOptions || {});
 	}
-	SetUserAccess(model: ISystemSetUserAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.SetUserAccessAction.execute(model, errorOptions || {});
+	SetUserAccess(requestData: ISystemSetUserAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.SetUserAccessAction.execute(requestData, errorOptions || {});
 	}
-	StoreObject(model: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.StoreObjectAction.execute(model, errorOptions || {});
+	StoreObject(requestData: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.StoreObjectAction.execute(requestData, errorOptions || {});
 	}
 }

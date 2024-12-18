@@ -17,10 +17,10 @@ export class StorageGroup extends AppClientGroup {
 	readonly GetStoredObjectAction: AppClientAction<IGetStoredObjectRequest,string>;
 	readonly StoreObjectAction: AppClientAction<IStoreObjectRequest,string>;
 	
-	GetStoredObject(model: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetStoredObjectAction.execute(model, errorOptions || {});
+	GetStoredObject(requestData: IGetStoredObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetStoredObjectAction.execute(requestData, errorOptions || {});
 	}
-	StoreObject(model: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
-		return this.StoreObjectAction.execute(model, errorOptions || {});
+	StoreObject(requestData: IStoreObjectRequest, errorOptions?: IActionErrorOptions) {
+		return this.StoreObjectAction.execute(requestData, errorOptions || {});
 	}
 }

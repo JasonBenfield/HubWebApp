@@ -25,22 +25,22 @@ export class ResourceGroupInquiryGroup extends AppClientGroup {
 	readonly GetResourcesAction: AppClientAction<IGetResourcesRequest,IResourceModel[]>;
 	readonly GetRoleAccessAction: AppClientAction<IGetResourceGroupRoleAccessRequest,IAppRoleModel[]>;
 	
-	GetModCategory(model: IGetResourceGroupModCategoryRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetModCategoryAction.execute(model, errorOptions || {});
+	GetModCategory(requestData: IGetResourceGroupModCategoryRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetModCategoryAction.execute(requestData, errorOptions || {});
 	}
-	GetMostRecentErrorEvents(model: IGetResourceGroupLogRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentErrorEventsAction.execute(model, errorOptions || {});
+	GetMostRecentErrorEvents(requestData: IGetResourceGroupLogRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentErrorEventsAction.execute(requestData, errorOptions || {});
 	}
-	GetMostRecentRequests(model: IGetResourceGroupLogRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetMostRecentRequestsAction.execute(model, errorOptions || {});
+	GetMostRecentRequests(requestData: IGetResourceGroupLogRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetMostRecentRequestsAction.execute(requestData, errorOptions || {});
 	}
-	GetResourceGroup(model: IGetResourceGroupRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetResourceGroupAction.execute(model, errorOptions || {});
+	GetResourceGroup(requestData: IGetResourceGroupRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetResourceGroupAction.execute(requestData, errorOptions || {});
 	}
-	GetResources(model: IGetResourcesRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetResourcesAction.execute(model, errorOptions || {});
+	GetResources(requestData: IGetResourcesRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetResourcesAction.execute(requestData, errorOptions || {});
 	}
-	GetRoleAccess(model: IGetResourceGroupRoleAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetRoleAccessAction.execute(model, errorOptions || {});
+	GetRoleAccess(requestData: IGetResourceGroupRoleAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetRoleAccessAction.execute(requestData, errorOptions || {});
 	}
 }

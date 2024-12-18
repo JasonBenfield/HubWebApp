@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.Auth;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class AuthApiGroupExtensions
+internal static partial class AuthGroupExtensions
 {
     internal static void AddAuthServices(this IServiceCollection services)
     {

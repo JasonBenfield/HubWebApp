@@ -9,9 +9,9 @@ public sealed partial class ResourceInquiryGroup : AppClientGroup
 
     public ResourceInquiryGroupActions Actions { get; }
 
-    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, model, ct);
-    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceLogRequest model, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, model, ct);
-    public Task<ResourceModel> GetResource(string modifier, GetResourceRequest model, CancellationToken ct = default) => Actions.GetResource.Post(modifier, model, ct);
-    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceRoleAccessRequest model, CancellationToken ct = default) => Actions.GetRoleAccess.Post(modifier, model, ct);
+    public Task<AppLogEntryModel[]> GetMostRecentErrorEvents(string modifier, GetResourceLogRequest requestData, CancellationToken ct = default) => Actions.GetMostRecentErrorEvents.Post(modifier, requestData, ct);
+    public Task<AppRequestExpandedModel[]> GetMostRecentRequests(string modifier, GetResourceLogRequest requestData, CancellationToken ct = default) => Actions.GetMostRecentRequests.Post(modifier, requestData, ct);
+    public Task<ResourceModel> GetResource(string modifier, GetResourceRequest requestData, CancellationToken ct = default) => Actions.GetResource.Post(modifier, requestData, ct);
+    public Task<AppRoleModel[]> GetRoleAccess(string modifier, GetResourceRoleAccessRequest requestData, CancellationToken ct = default) => Actions.GetRoleAccess.Post(modifier, requestData, ct);
     public sealed record ResourceInquiryGroupActions(AppClientPostAction<GetResourceLogRequest, AppLogEntryModel[]> GetMostRecentErrorEvents, AppClientPostAction<GetResourceLogRequest, AppRequestExpandedModel[]> GetMostRecentRequests, AppClientPostAction<GetResourceRequest, ResourceModel> GetResource, AppClientPostAction<GetResourceRoleAccessRequest, AppRoleModel[]> GetRoleAccess);
 }

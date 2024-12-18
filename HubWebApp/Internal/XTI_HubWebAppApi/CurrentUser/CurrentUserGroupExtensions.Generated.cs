@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.CurrentUser;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class CurrentUserApiGroupExtensions
+internal static partial class CurrentUserGroupExtensions
 {
     internal static void AddCurrentUserServices(this IServiceCollection services)
     {

@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.AppInquiry;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class AppApiGroupExtensions
+internal static partial class AppGroupExtensions
 {
     internal static void AddAppServices(this IServiceCollection services)
     {

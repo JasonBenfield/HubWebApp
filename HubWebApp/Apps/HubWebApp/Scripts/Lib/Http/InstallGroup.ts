@@ -45,52 +45,52 @@ export class InstallGroup extends AppClientGroup {
 	readonly RegisterAppAction: AppClientAction<IRegisterAppRequest,IAppModel>;
 	readonly SetUserAccessAction: AppClientAction<ISetUserAccessRequest,IEmptyActionResult>;
 	
-	AddAdminUser(model: IAddAdminUserRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddAdminUserAction.execute(model, errorOptions || {});
+	AddAdminUser(requestData: IAddAdminUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddAdminUserAction.execute(requestData, errorOptions || {});
 	}
-	AddInstallationUser(model: IAddInstallationUserRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddInstallationUserAction.execute(model, errorOptions || {});
+	AddInstallationUser(requestData: IAddInstallationUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddInstallationUserAction.execute(requestData, errorOptions || {});
 	}
-	AddOrUpdateApps(model: IAddOrUpdateAppsRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddOrUpdateAppsAction.execute(model, errorOptions || {});
+	AddOrUpdateApps(requestData: IAddOrUpdateAppsRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateAppsAction.execute(requestData, errorOptions || {});
 	}
-	AddOrUpdateVersions(model: IAddOrUpdateVersionsRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddOrUpdateVersionsAction.execute(model, errorOptions || {});
+	AddOrUpdateVersions(requestData: IAddOrUpdateVersionsRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddOrUpdateVersionsAction.execute(requestData, errorOptions || {});
 	}
-	AddSystemUser(model: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddSystemUserAction.execute(model, errorOptions || {});
+	AddSystemUser(requestData: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddSystemUserAction.execute(requestData, errorOptions || {});
 	}
-	BeginInstallation(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginInstallationAction.execute(model, errorOptions || {});
+	BeginInstallation(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.BeginInstallationAction.execute(requestData, errorOptions || {});
 	}
-	ConfigureInstall(model: IConfigureInstallRequest, errorOptions?: IActionErrorOptions) {
-		return this.ConfigureInstallAction.execute(model, errorOptions || {});
+	ConfigureInstall(requestData: IConfigureInstallRequest, errorOptions?: IActionErrorOptions) {
+		return this.ConfigureInstallAction.execute(requestData, errorOptions || {});
 	}
-	ConfigureInstallTemplate(model: IConfigureInstallTemplateRequest, errorOptions?: IActionErrorOptions) {
-		return this.ConfigureInstallTemplateAction.execute(model, errorOptions || {});
+	ConfigureInstallTemplate(requestData: IConfigureInstallTemplateRequest, errorOptions?: IActionErrorOptions) {
+		return this.ConfigureInstallTemplateAction.execute(requestData, errorOptions || {});
 	}
-	DeleteInstallConfiguration(model: IDeleteInstallConfigurationRequest, errorOptions?: IActionErrorOptions) {
-		return this.DeleteInstallConfigurationAction.execute(model, errorOptions || {});
+	DeleteInstallConfiguration(requestData: IDeleteInstallConfigurationRequest, errorOptions?: IActionErrorOptions) {
+		return this.DeleteInstallConfigurationAction.execute(requestData, errorOptions || {});
 	}
-	GetInstallConfigurations(model: IGetInstallConfigurationsRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetInstallConfigurationsAction.execute(model, errorOptions || {});
+	GetInstallConfigurations(requestData: IGetInstallConfigurationsRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetInstallConfigurationsAction.execute(requestData, errorOptions || {});
 	}
-	GetVersion(model: IGetVersionRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetVersionAction.execute(model, errorOptions || {});
+	GetVersion(requestData: IGetVersionRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionAction.execute(requestData, errorOptions || {});
 	}
-	GetVersions(model: IGetVersionsRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetVersionsAction.execute(model, errorOptions || {});
+	GetVersions(requestData: IGetVersionsRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetVersionsAction.execute(requestData, errorOptions || {});
 	}
-	Installed(model: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.InstalledAction.execute(model, errorOptions || {});
+	Installed(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.InstalledAction.execute(requestData, errorOptions || {});
 	}
-	NewInstallation(model: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.NewInstallationAction.execute(model, errorOptions || {});
+	NewInstallation(requestData: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
+		return this.NewInstallationAction.execute(requestData, errorOptions || {});
 	}
-	RegisterApp(model: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
-		return this.RegisterAppAction.execute(model, errorOptions || {});
+	RegisterApp(requestData: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
+		return this.RegisterAppAction.execute(requestData, errorOptions || {});
 	}
-	SetUserAccess(model: ISetUserAccessRequest, errorOptions?: IActionErrorOptions) {
-		return this.SetUserAccessAction.execute(model, errorOptions || {});
+	SetUserAccess(requestData: ISetUserAccessRequest, errorOptions?: IActionErrorOptions) {
+		return this.SetUserAccessAction.execute(requestData, errorOptions || {});
 	}
 }

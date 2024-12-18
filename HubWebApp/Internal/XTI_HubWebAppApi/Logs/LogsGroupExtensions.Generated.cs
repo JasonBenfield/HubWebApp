@@ -2,7 +2,7 @@ using XTI_HubWebAppApiActions.Logs;
 
 // Generated Code
 namespace XTI_HubWebAppApi;
-internal static partial class LogsApiGroupExtensions
+internal static partial class LogsGroupExtensions
 {
     internal static void AddLogsServices(this IServiceCollection services)
     {

@@ -2,21 +2,17 @@
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
-import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { App } from "../../Lib/App";
 import { AppType } from '../../Lib/Http/AppType';
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCardView } from "../Apps/AppListCardView";
 import { AppListItem } from "../Apps/AppListItem";
 import { AppListItemView } from "../Apps/AppListItemView";
-
-type Events = { appSelected: App };
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 
 export class AppListCard {
     private readonly alert: IMessageAlert;
     private readonly apps: ListGroup<AppListItem, AppListItemView>;
-    private readonly eventSource = new EventSource<Events>(this, { appSelected: null });
-    readonly when = this.eventSource.when;
     private userID: number;
 
     constructor(
@@ -26,27 +22,27 @@ export class AppListCard {
         new TextComponent(this.view.titleHeader).setText('Apps');
         this.alert = new CardAlert(this.view.alert);
         this.apps = new ListGroup(this.view.apps);
-        this.apps.when.itemClicked.then(this.onAppSelected.bind(this))
     }
 
     setUserID(userID: number) {
         this.userID = userID;
     }
 
-    private onAppSelected(listItem: AppListItem) {
-        this.eventSource.events.appSelected.invoke(listItem.app);
-    }
-
     async refresh() {
         const apps = await this.getApps();
         const webApps = apps.filter(app => app.appKey.type.equals(AppType.values.WebApp));
+        const returnTo = Url.current().query.getValue("ReturnTo");
         this.apps.setItems(
             webApps,
             (app, listItem) =>
                 new AppListItem(
                     app,
                     this.hubClient.AppUserInquiry.Index.getUrl(
-                        { App: app.publicKey.displayText, UserID: this.userID }
+                        {
+                            App: app.publicKey.displayText,
+                            UserID: this.userID,
+                            ReturnTo: returnTo ? returnTo : null
+                        }
                     ).toString(),
                     listItem
                 )

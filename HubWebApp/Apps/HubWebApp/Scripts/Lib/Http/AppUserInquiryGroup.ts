@@ -13,21 +13,21 @@ export class AppUserInquiryGroup extends AppClientGroup {
 		this.GetAssignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetAssignedRoles', 'Get Assigned Roles');
 		this.GetExplicitlyUnassignedRolesAction = this.createAction<IUserModifierKey,IAppRoleModel[]>('GetExplicitlyUnassignedRoles', 'Get Explicitly Unassigned Roles');
 		this.GetExplicitUserAccessAction = this.createAction<IUserModifierKey,IUserAccessModel>('GetExplicitUserAccess', 'Get Explicit User Access');
-		this.Index = this.createView<IGetAppUserRequest>('Index');
+		this.Index = this.createView<IAppUserIndexRequest>('Index');
 	}
 	
 	readonly GetAssignedRolesAction: AppClientAction<IUserModifierKey,IAppRoleModel[]>;
 	readonly GetExplicitlyUnassignedRolesAction: AppClientAction<IUserModifierKey,IAppRoleModel[]>;
 	readonly GetExplicitUserAccessAction: AppClientAction<IUserModifierKey,IUserAccessModel>;
-	readonly Index: AppClientView<IGetAppUserRequest>;
+	readonly Index: AppClientView<IAppUserIndexRequest>;
 	
-	GetAssignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.GetAssignedRolesAction.execute(model, errorOptions || {});
+	GetAssignedRoles(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetAssignedRolesAction.execute(requestData, errorOptions || {});
 	}
-	GetExplicitlyUnassignedRoles(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.GetExplicitlyUnassignedRolesAction.execute(model, errorOptions || {});
+	GetExplicitlyUnassignedRoles(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetExplicitlyUnassignedRolesAction.execute(requestData, errorOptions || {});
 	}
-	GetExplicitUserAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.GetExplicitUserAccessAction.execute(model, errorOptions || {});
+	GetExplicitUserAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.GetExplicitUserAccessAction.execute(requestData, errorOptions || {});
 	}
 }

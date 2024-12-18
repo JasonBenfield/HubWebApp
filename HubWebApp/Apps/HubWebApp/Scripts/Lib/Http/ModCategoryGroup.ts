@@ -19,13 +19,13 @@ export class ModCategoryGroup extends AppClientGroup {
 	readonly GetModifiersAction: AppClientAction<number,IModifierModel[]>;
 	readonly GetResourceGroupsAction: AppClientAction<number,IResourceGroupModel[]>;
 	
-	GetModCategory(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetModCategoryAction.execute(model, errorOptions || {});
+	GetModCategory(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetModCategoryAction.execute(requestData, errorOptions || {});
 	}
-	GetModifiers(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetModifiersAction.execute(model, errorOptions || {});
+	GetModifiers(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetModifiersAction.execute(requestData, errorOptions || {});
 	}
-	GetResourceGroups(model: number, errorOptions?: IActionErrorOptions) {
-		return this.GetResourceGroupsAction.execute(model, errorOptions || {});
+	GetResourceGroups(requestData: number, errorOptions?: IActionErrorOptions) {
+		return this.GetResourceGroupsAction.execute(requestData, errorOptions || {});
 	}
 }

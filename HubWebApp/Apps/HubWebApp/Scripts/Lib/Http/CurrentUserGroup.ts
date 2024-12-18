@@ -23,11 +23,11 @@ export class CurrentUserGroup extends AppClientGroup {
 	readonly GetUserAction: AppClientAction<IEmptyRequest,IAppUserModel>;
 	readonly Index: AppClientView<IEmptyRequest>;
 	
-	ChangePassword(model: ChangeCurrentUserPasswordForm, errorOptions?: IActionErrorOptions) {
-		return this.ChangePasswordAction.execute(model, errorOptions || {});
+	ChangePassword(requestData: ChangeCurrentUserPasswordForm, errorOptions?: IActionErrorOptions) {
+		return this.ChangePasswordAction.execute(requestData, errorOptions || {});
 	}
-	EditUser(model: EditCurrentUserForm, errorOptions?: IActionErrorOptions) {
-		return this.EditUserAction.execute(model, errorOptions || {});
+	EditUser(requestData: EditCurrentUserForm, errorOptions?: IActionErrorOptions) {
+		return this.EditUserAction.execute(requestData, errorOptions || {});
 	}
 	GetUser(errorOptions?: IActionErrorOptions) {
 		return this.GetUserAction.execute({}, errorOptions || {});

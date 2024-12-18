@@ -92,9 +92,10 @@ interface IUserAccessModel {
 	HasAccess: boolean;
 	AssignedRoles: IAppRoleModel[];
 }
-interface IGetAppUserRequest {
+interface IAppUserIndexRequest {
 	App: string;
 	UserID: number;
+	ReturnTo: string;
 }
 interface IUserRoleRequest {
 	UserID: number;
