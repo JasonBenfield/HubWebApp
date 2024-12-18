@@ -9,21 +9,21 @@ public sealed partial class AppsController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(CancellationToken ct)
+    [HttpPost]
+    public Task<ResultContainer<AppDomainModel[]>> GetAppDomains(CancellationToken ct)
     {
-        var result = await api.Group("Apps").Action<EmptyRequest, WebViewResult>("Index").Execute(new EmptyRequest(), ct);
-        return View(result.Data!.ViewName);
+        return api.Apps.GetAppDomains.Execute(new EmptyRequest(), ct);
     }
 
     [HttpPost]
     public Task<ResultContainer<AppModel[]>> GetApps(CancellationToken ct)
     {
-        return api.Group("Apps").Action<EmptyRequest, AppModel[]>("GetApps").Execute(new EmptyRequest(), ct);
+        return api.Apps.GetApps.Execute(new EmptyRequest(), ct);
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppDomainModel[]>> GetAppDomains(CancellationToken ct)
+    public async Task<IActionResult> Index(CancellationToken ct)
     {
-        return api.Group("Apps").Action<EmptyRequest, AppDomainModel[]>("GetAppDomains").Execute(new EmptyRequest(), ct);
+        var result = await api.Apps.Index.Execute(new EmptyRequest(), ct);
+        return View(result.Data!.ViewName);
     }
 }

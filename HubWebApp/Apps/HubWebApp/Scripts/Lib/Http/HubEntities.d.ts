@@ -1,72 +1,5 @@
 // Generated code
 
-interface ILinkModel {
-	LinkName: string;
-	DisplayText: string;
-	Url: string;
-	IsAuthenticationRequired: boolean;
-}
-interface IAppUserModel {
-	ID: number;
-	UserName: IAppUserName;
-	Name: IPersonName;
-	Email: string;
-	TimeDeactivated: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-}
-interface IAppUserName {
-	Value: string;
-	DisplayText: string;
-}
-interface IPersonName {
-	Value: string;
-	DisplayText: string;
-}
-interface IInstallationQueryRequest {
-	QueryType: number;
-}
-interface IInstallationViewRequest {
-	InstallationID: number;
-}
-interface IInstallationDetailModel {
-	InstallLocation: IInstallLocationModel;
-	Installation: IInstallationModel;
-	Version: IXtiVersionModel;
-	App: IAppModel;
-	MostRecentRequest: IAppRequestModel;
-}
-interface IInstallLocationModel {
-	ID: number;
-	QualifiedMachineName: string;
-}
-interface IInstallationModel {
-	ID: number;
-	Status: IInstallStatus;
-	IsCurrent: boolean;
-	Domain: string;
-	SiteName: string;
-}
-interface IXtiVersionModel {
-	ID: number;
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
-	VersionNumber: IAppVersionNumber;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-}
-interface IAppVersionName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppVersionKey {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppVersionNumber {
-	Major: number;
-	Minor: number;
-	Patch: number;
-}
 interface IAppModel {
 	ID: number;
 	AppKey: IAppKey;
@@ -81,53 +14,93 @@ interface IAppName {
 	Value: string;
 	DisplayText: string;
 }
+interface IAppVersionName {
+	Value: string;
+	DisplayText: string;
+}
 interface IModifierKey {
 	Value: string;
 	DisplayText: string;
 }
-interface IAppRequestModel {
+interface IModifierModel {
 	ID: number;
-	Path: string;
-	ResourceID: number;
-	ModifierID: number;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	CategoryID: number;
+	ModKey: IModifierKey;
+	TargetKey: string;
+	DisplayText: string;
+}
+interface IModifierCategoryModel {
+	ID: number;
+	Name: IModifierCategoryName;
+}
+interface IModifierCategoryName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppLogEntryModel {
+	ID: number;
+	RequestID: number;
+	TimeOccurred: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	Severity: IAppEventSeverity;
+	Caption: string;
+	Message: string;
+	Detail: string;
+	Category: string;
 	ActualCount: number;
 }
-interface IGetPendingDeletesRequest {
-	MachineNames: string[];
+interface IAppRequestExpandedModel {
+	ID: number;
+	UserName: string;
+	GroupName: string;
+	ActionName: string;
+	ResultType: IResourceResultType;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 }
-interface IAppVersionInstallationModel {
-	App: IAppModel;
-	Version: IXtiVersionModel;
-	Installation: IInstallationModel;
+interface IResourceGroupModel {
+	ID: number;
+	ModCategoryID: number;
+	Name: IResourceGroupName;
+	IsAnonymousAllowed: boolean;
 }
-interface IGetInstallationRequest {
-	InstallationID: number;
+interface IResourceGroupName {
+	Value: string;
+	DisplayText: string;
 }
-interface IExpandedInstallation {
-	InstallationID: number;
-	IsCurrent: boolean;
-	InstallationStatus: string;
-	TimeInstallationAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	QualifiedMachineName: string;
+interface IAppRoleModel {
+	ID: number;
+	Name: IAppRoleName;
+}
+interface IAppRoleName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppDomainModel {
+	AppKey: IAppKey;
+	VersionKey: IAppVersionKey;
 	Domain: string;
-	AppID: number;
-	AppKey: string;
-	AppName: string;
-	AppType: string;
-	VersionName: string;
-	VersionRelease: string;
-	VersionKey: string;
-	VersionStatus: string;
-	VersionType: string;
-	LastRequestTime: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	LastRequestDaysAgo: number;
-	RequestCount: number;
 }
-interface IAuthenticatedLoginResult {
-	AuthKey: string;
-	AuthID: string;
+interface IAppVersionKey {
+	Value: string;
+	DisplayText: string;
+}
+interface IUserModifierKey {
+	UserID: number;
+	ModifierID: number;
+}
+interface IUserAccessModel {
+	HasAccess: boolean;
+	AssignedRoles: IAppRoleModel[];
+}
+interface IAppUserIndexRequest {
+	App: string;
+	UserID: number;
+	ReturnTo: string;
+}
+interface IUserRoleRequest {
+	UserID: number;
+	ModifierID: number;
+	RoleID: number;
 }
 interface IAuthenticatedLoginRequest {
 	AuthKey: string;
@@ -137,16 +110,16 @@ interface IAuthenticatedLoginRequest {
 interface ILoginReturnModel {
 	ReturnUrl: string;
 }
+interface IAuthenticatedLoginResult {
+	AuthKey: string;
+	AuthID: string;
+}
 interface IAuthenticateRequest {
 	UserName: string;
 	Password: string;
 }
 interface ILoginResult {
 	Token: string;
-}
-interface IExternalAuthKeyModel {
-	AuthenticatorKey: string;
-	ExternalUserKey: string;
 }
 interface IMoveAuthenticatorRequest {
 	AuthenticatorKey: string;
@@ -172,6 +145,296 @@ interface IRegisterUserAuthenticatorRequest {
 interface IUserOrAnonByAuthenticatorRequest {
 	AuthenticatorKey: string;
 	ExternalUserKey: string;
+}
+interface IAppUserModel {
+	ID: number;
+	UserName: IAppUserName;
+	Name: IPersonName;
+	Email: string;
+	TimeDeactivated: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface IAppUserName {
+	Value: string;
+	DisplayText: string;
+}
+interface IPersonName {
+	Value: string;
+	DisplayText: string;
+}
+interface IExternalAuthKeyModel {
+	AuthenticatorKey: string;
+	ExternalUserKey: string;
+}
+interface IAddAdminUserRequest {
+	AppKey: IAppKeyRequest;
+	UserName: string;
+	Password: string;
+}
+interface IAppKeyRequest {
+	AppName: string;
+	AppType: number;
+}
+interface IAddInstallationUserRequest {
+	MachineName: string;
+	Password: string;
+}
+interface IAddOrUpdateAppsRequest {
+	VersionName: string;
+	AppKeys: IAppKeyRequest[];
+}
+interface IAddOrUpdateVersionsRequest {
+	AppKeys: IAppKeyRequest[];
+	Versions: IAddVersionRequest[];
+}
+interface IAddVersionRequest {
+	VersionName: string;
+	VersionKey: string;
+	VersionType: number;
+	VersionStatus: number;
+	VersionNumber: IAppVersionNumberRequest;
+}
+interface IAppVersionNumberRequest {
+	Major: number;
+	Minor: number;
+	Patch: number;
+}
+interface IAddSystemUserRequest {
+	AppKey: IAppKeyRequest;
+	MachineName: string;
+	Password: string;
+}
+interface IGetInstallationRequest {
+	InstallationID: number;
+}
+interface IConfigureInstallRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKeyRequest;
+	TemplateName: string;
+	InstallSequence: number;
+}
+interface IInstallConfigurationModel {
+	ID: number;
+	ConfigurationName: string;
+	AppKey: IAppKey;
+	Template: IInstallConfigurationTemplateModel;
+	InstallSequence: number;
+}
+interface IInstallConfigurationTemplateModel {
+	ID: number;
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface IConfigureInstallTemplateRequest {
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface IDeleteInstallConfigurationRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKeyRequest;
+}
+interface IGetInstallConfigurationsRequest {
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+}
+interface IGetVersionRequest {
+	VersionName: string;
+	VersionKey: string;
+}
+interface IXtiVersionModel {
+	ID: number;
+	VersionName: IAppVersionName;
+	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
+}
+interface IGetVersionsRequest {
+	VersionName: string;
+}
+interface INewInstallationRequest {
+	VersionName: string;
+	AppKey: IAppKeyRequest;
+	QualifiedMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface INewInstallationResult {
+	CurrentInstallationID: number;
+	VersionInstallationID: number;
+}
+interface IRegisterAppRequest {
+	VersionKey: IAppVersionKey;
+	AppTemplate: IAppApiTemplateModel;
+}
+interface IAppApiTemplateModel {
+	AppKey: IAppKey;
+	SerializedDefaultOptions: string;
+	GroupTemplates: IAppApiGroupTemplateModel[];
+}
+interface IAppApiGroupTemplateModel {
+	Name: IResourceGroupName;
+	ModCategory: IModifierCategoryName;
+	IsAnonymousAllowed: boolean;
+	Roles: IAppRoleName[];
+	ActionTemplates: IAppApiActionTemplateModel[];
+}
+interface IAppApiActionTemplateModel {
+	Name: IResourceName;
+	IsAnonymousAllowed: boolean;
+	Roles: IAppRoleName[];
+	ResultType: IResourceResultType;
+}
+interface IResourceName {
+	Value: string;
+	DisplayText: string;
+}
+interface ISetUserAccessRequest {
+	UserName: string;
+	RoleAssignments: ISetUserAccessRoleRequest[];
+}
+interface ISetUserAccessRoleRequest {
+	AppKey: IAppKeyRequest;
+	ModCategoryName: string;
+	ModKey: string;
+	RoleNames: string[];
+}
+interface IInstallationDetailModel {
+	InstallLocation: IInstallLocationModel;
+	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+	MostRecentRequest: IAppRequestModel;
+}
+interface IInstallLocationModel {
+	ID: number;
+	QualifiedMachineName: string;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+	SiteName: string;
+}
+interface IAppRequestModel {
+	ID: number;
+	Path: string;
+	ResourceID: number;
+	ModifierID: number;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ActualCount: number;
+}
+interface IGetPendingDeletesRequest {
+	MachineNames: string[];
+}
+interface IAppVersionInstallationModel {
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	Installation: IInstallationModel;
+}
+interface IInstallationQueryRequest {
+	QueryType: number;
+}
+interface IInstallationViewRequest {
+	InstallationID: number;
+}
+interface IAppRequestRequest {
+	RequestID: number;
+}
+interface IAppRequestQueryRequest {
+	SessionID: number;
+	InstallationID: number;
+	SourceRequestID: number;
+}
+interface IAppLogEntryDetailModel {
+	LogEntry: IAppLogEntryModel;
+	Request: IAppRequestModel;
+	ResourceGroup: IResourceGroupModel;
+	Resource: IResourceModel;
+	ModCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
+	InstallLocation: IInstallLocationModel;
+	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+	SourceLogEntryID: number;
+	TargetLogEntryID: number;
+}
+interface IResourceModel {
+	ID: number;
+	Name: IResourceName;
+	IsAnonymousAllowed: boolean;
+	ResultType: IResourceResultType;
+}
+interface IAppSessionModel {
+	ID: number;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	SessionKey: string;
+	RequesterKey: string;
+	RemoteAddress: string;
+	UserAgent: string;
+}
+interface IAppUserGroupModel {
+	ID: number;
+	GroupName: IAppUserGroupName;
+	PublicKey: IModifierKey;
+}
+interface IAppUserGroupName {
+	Value: string;
+	DisplayText: string;
+}
+interface IAppRequestDetailModel {
+	Request: IAppRequestModel;
+	ResourceGroup: IResourceGroupModel;
+	Resource: IResourceModel;
+	ModCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
+	InstallLocation: IInstallLocationModel;
+	Installation: IInstallationModel;
+	Version: IXtiVersionModel;
+	App: IAppModel;
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+	SourceRequestID: number;
+	TargetRequestIDs: number[];
+	RequestData: string;
+	ResultData: string;
+}
+interface IAppSessionDetailModel {
+	Session: IAppSessionModel;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+}
+interface ILogEntryQueryRequest {
+	RequestID: number;
+	InstallationID: number;
+}
+interface ILogEntryRequest {
+	LogEntryID: number;
+}
+interface ISessionViewRequest {
+	SessionID: number;
 }
 interface ILogBatchModel {
 	StartSessions: IStartSessionModel[];
@@ -267,220 +530,13 @@ interface ILogEntryModel {
 	ParentEventKey: string;
 	Category: string;
 }
-interface IAppDomainModel {
-	AppKey: IAppKey;
-	VersionKey: IAppVersionKey;
-	Domain: string;
-}
-interface IResourceGroupModel {
-	ID: number;
-	ModCategoryID: number;
-	Name: IResourceGroupName;
-	IsAnonymousAllowed: boolean;
-}
-interface IResourceGroupName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppRoleModel {
-	ID: number;
-	Name: IAppRoleName;
-}
-interface IAppRoleName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAppRequestExpandedModel {
-	ID: number;
-	UserName: string;
-	GroupName: string;
-	ActionName: string;
-	ResultType: IResourceResultType;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-}
-interface IAppLogEntryModel {
-	ID: number;
-	RequestID: number;
-	TimeOccurred: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	Severity: IAppEventSeverity;
-	Caption: string;
-	Message: string;
-	Detail: string;
-	Category: string;
-	ActualCount: number;
-}
-interface IModifierCategoryModel {
-	ID: number;
-	Name: IModifierCategoryName;
-}
-interface IModifierCategoryName {
-	Value: string;
-	DisplayText: string;
-}
-interface IModifierModel {
-	ID: number;
-	CategoryID: number;
-	ModKey: IModifierKey;
-	TargetKey: string;
-	DisplayText: string;
-}
-interface IRegisterAppRequest {
-	VersionKey: IAppVersionKey;
-	AppTemplate: IAppApiTemplateModel;
-}
-interface IAppApiTemplateModel {
-	AppKey: IAppKey;
-	SerializedDefaultOptions: string;
-	GroupTemplates: IAppApiGroupTemplateModel[];
-}
-interface IAppApiGroupTemplateModel {
-	Name: IResourceGroupName;
-	ModCategory: IModifierCategoryName;
-	IsAnonymousAllowed: boolean;
-	Roles: IAppRoleName[];
-	ActionTemplates: IAppApiActionTemplateModel[];
-}
-interface IAppApiActionTemplateModel {
-	Name: IResourceName;
-	IsAnonymousAllowed: boolean;
-	Roles: IAppRoleName[];
-	ResultType: IResourceResultType;
-}
-interface IResourceName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAddOrUpdateAppsRequest {
-	VersionName: string;
-	AppKeys: IAppKeyRequest[];
-}
-interface IAppKeyRequest {
-	AppName: string;
-	AppType: number;
-}
-interface IAddOrUpdateVersionsRequest {
-	AppKeys: IAppKeyRequest[];
-	Versions: IAddVersionRequest[];
-}
-interface IAddVersionRequest {
-	VersionName: string;
-	VersionKey: string;
-	VersionType: number;
-	VersionStatus: number;
-	VersionNumber: IAppVersionNumberRequest;
-}
-interface IAppVersionNumberRequest {
-	Major: number;
-	Minor: number;
-	Patch: number;
-}
-interface IGetVersionRequest {
-	VersionName: string;
-	VersionKey: string;
-}
-interface IGetVersionsRequest {
-	VersionName: string;
-}
-interface IAddSystemUserRequest {
-	AppKey: IAppKeyRequest;
-	MachineName: string;
-	Password: string;
-}
-interface IAddAdminUserRequest {
-	AppKey: IAppKeyRequest;
-	UserName: string;
-	Password: string;
-}
-interface IAddInstallationUserRequest {
-	MachineName: string;
-	Password: string;
-}
-interface IConfigureInstallTemplateRequest {
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
-interface IInstallConfigurationTemplateModel {
-	ID: number;
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
-interface IConfigureInstallRequest {
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-	AppKey: IAppKeyRequest;
-	TemplateName: string;
-	InstallSequence: number;
-}
-interface IInstallConfigurationModel {
-	ID: number;
-	ConfigurationName: string;
-	AppKey: IAppKey;
-	Template: IInstallConfigurationTemplateModel;
-	InstallSequence: number;
-}
-interface IDeleteInstallConfigurationRequest {
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-	AppKey: IAppKeyRequest;
-}
-interface IGetInstallConfigurationsRequest {
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-}
-interface INewInstallationRequest {
-	VersionName: string;
-	AppKey: IAppKeyRequest;
-	QualifiedMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
-interface INewInstallationResult {
-	CurrentInstallationID: number;
-	VersionInstallationID: number;
-}
-interface ISetUserAccessRequest {
-	UserName: string;
-	RoleAssignments: ISetUserAccessRoleRequest[];
-}
-interface ISetUserAccessRoleRequest {
-	AppKey: IAppKeyRequest;
-	ModCategoryName: string;
-	ModKey: string;
-	RoleNames: string[];
-}
-interface INewVersionRequest {
-	VersionName: string;
-	VersionType: number;
-}
 interface IPublishVersionRequest {
 	VersionName: string;
 	VersionKey: string;
 }
-interface IGetResourceGroupRequest {
-	VersionKey: string;
-	GroupID: number;
-}
-interface IGetResourcesRequest {
-	VersionKey: string;
-	GroupID: number;
-}
-interface IResourceModel {
-	ID: number;
-	Name: IResourceName;
-	IsAnonymousAllowed: boolean;
-	ResultType: IResourceResultType;
-}
-interface IGetResourceGroupRoleAccessRequest {
-	VersionKey: string;
-	GroupID: number;
+interface INewVersionRequest {
+	VersionName: string;
+	VersionType: number;
 }
 interface IGetResourceGroupModCategoryRequest {
 	VersionKey: string;
@@ -491,6 +547,23 @@ interface IGetResourceGroupLogRequest {
 	GroupID: number;
 	HowMany: number;
 }
+interface IGetResourceGroupRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourcesRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourceGroupRoleAccessRequest {
+	VersionKey: string;
+	GroupID: number;
+}
+interface IGetResourceLogRequest {
+	VersionKey: string;
+	ResourceID: number;
+	HowMany: number;
+}
 interface IGetResourceRequest {
 	VersionKey: string;
 	ResourceID: number;
@@ -499,56 +572,9 @@ interface IGetResourceRoleAccessRequest {
 	VersionKey: string;
 	ResourceID: number;
 }
-interface IGetResourceLogRequest {
-	VersionKey: string;
-	ResourceID: number;
-	HowMany: number;
-}
-interface IUsersIndexRequest {
-	UserID: number;
-	ReturnTo: string;
-}
-interface IAppUserGroupModel {
-	ID: number;
-	GroupName: IAppUserGroupName;
-	PublicKey: IModifierKey;
-}
-interface IAppUserGroupName {
-	Value: string;
-	DisplayText: string;
-}
-interface IAddOrUpdateUserRequest {
-	UserName: string;
-	Password: string;
-	PersonName: string;
-	Email: string;
-}
-interface IAppUserIDRequest {
-	UserID: number;
-}
-interface IAppUserNameRequest {
-	UserName: string;
-}
-interface IUserAuthenticatorModel {
-	Authenticator: IAuthenticatorModel;
-	ExternalUserID: string;
-}
-interface IGetAppUserRequest {
-	App: string;
-	UserID: number;
-}
-interface IUserModifierKey {
-	UserID: number;
-	ModifierID: number;
-}
-interface IUserAccessModel {
-	HasAccess: boolean;
-	AssignedRoles: IAppRoleModel[];
-}
-interface IUserRoleRequest {
-	UserID: number;
-	ModifierID: number;
-	RoleID: number;
+interface IGetStoredObjectRequest {
+	StorageName: string;
+	StorageKey: string;
 }
 interface IStoreObjectRequest {
 	StorageName: string;
@@ -562,9 +588,19 @@ interface IGenerateKeyModel {
 	KeyType: IGeneratedKeyType;
 	Value: string;
 }
-interface IGetStoredObjectRequest {
-	StorageName: string;
-	StorageKey: string;
+interface ISystemAddOrUpdateModifierByModKeyRequest {
+	InstallationID: number;
+	ModCategoryName: string;
+	ModKey: string;
+	TargetKey: string;
+	TargetDisplayText: string;
+}
+interface ISystemAddOrUpdateModifierByTargetKeyRequest {
+	InstallationID: number;
+	ModCategoryName: string;
+	GenerateModKey: IGenerateKeyModel;
+	TargetKey: string;
+	TargetDisplayText: string;
 }
 interface IGetAppContextRequest {
 	InstallationID: number;
@@ -590,19 +626,15 @@ interface IGetModifierRequest {
 	CategoryID: number;
 	ModKey: string;
 }
-interface ISystemAddOrUpdateModifierByTargetKeyRequest {
-	InstallationID: number;
-	ModCategoryName: string;
-	GenerateModKey: IGenerateKeyModel;
-	TargetKey: string;
-	TargetDisplayText: string;
+interface IAppUserIDRequest {
+	UserID: number;
 }
-interface ISystemAddOrUpdateModifierByModKeyRequest {
-	InstallationID: number;
-	ModCategoryName: string;
-	ModKey: string;
-	TargetKey: string;
-	TargetDisplayText: string;
+interface IUserAuthenticatorModel {
+	Authenticator: IAuthenticatorModel;
+	ExternalUserID: string;
+}
+interface IAppUserNameRequest {
+	UserName: string;
 }
 interface IGetUserRolesRequest {
 	UserID: number;
@@ -624,9 +656,6 @@ interface ISystemSetUserAccessRoleRequest {
 	ModKey: string;
 	RoleNames: string[];
 }
-interface IUserGroupKey {
-	UserGroupName: string;
-}
 interface IAddUserGroupIfNotExistsRequest {
 	GroupName: string;
 }
@@ -634,97 +663,52 @@ interface IAppUserDetailModel {
 	User: IAppUserModel;
 	UserGroup: IAppUserGroupModel;
 }
-interface IExpandedUser {
-	UserID: number;
+interface IUserGroupKey {
+	UserGroupName: string;
+}
+interface IUserRoleIDRequest {
+	UserRoleID: number;
+}
+interface IUserRoleDetailModel {
+	ID: number;
+	UserGroup: IAppUserGroupModel;
+	User: IAppUserModel;
+	App: IAppModel;
+	Role: IAppRoleModel;
+	ModCategory: IModifierCategoryModel;
+	Modifier: IModifierModel;
+}
+interface IUserRoleQueryRequest {
+	AppID: number;
+}
+interface IAddOrUpdateUserRequest {
 	UserName: string;
+	Password: string;
 	PersonName: string;
 	Email: string;
-	TimeUserAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	UserGroupID: number;
-	UserGroupName: string;
-	TimeUserDeactivated: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	IsActive: boolean;
 }
-interface IAppLogEntryDetailModel {
-	LogEntry: IAppLogEntryModel;
-	Request: IAppRequestModel;
-	ResourceGroup: IResourceGroupModel;
-	Resource: IResourceModel;
-	ModCategory: IModifierCategoryModel;
-	Modifier: IModifierModel;
-	InstallLocation: IInstallLocationModel;
-	Installation: IInstallationModel;
-	Version: IXtiVersionModel;
-	App: IAppModel;
-	Session: IAppSessionModel;
-	UserGroup: IAppUserGroupModel;
-	User: IAppUserModel;
-	SourceLogEntryID: number;
-	TargetLogEntryID: number;
-}
-interface IAppSessionModel {
-	ID: number;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	SessionKey: string;
-	RequesterKey: string;
-	RemoteAddress: string;
-	UserAgent: string;
-}
-interface IAppRequestDetailModel {
-	Request: IAppRequestModel;
-	ResourceGroup: IResourceGroupModel;
-	Resource: IResourceModel;
-	ModCategory: IModifierCategoryModel;
-	Modifier: IModifierModel;
-	InstallLocation: IInstallLocationModel;
-	Installation: IInstallationModel;
-	Version: IXtiVersionModel;
-	App: IAppModel;
-	Session: IAppSessionModel;
-	UserGroup: IAppUserGroupModel;
-	User: IAppUserModel;
-	SourceRequestID: number;
-	TargetRequestIDs: number[];
-	RequestData: string;
-	ResultData: string;
-}
-interface IAppSessionDetailModel {
-	Session: IAppSessionModel;
-	UserGroup: IAppUserGroupModel;
-	User: IAppUserModel;
-}
-interface ISessionViewRequest {
-	SessionID: number;
-}
-interface IAppRequestQueryRequest {
-	SessionID: number;
-	InstallationID: number;
-	SourceRequestID: number;
-}
-interface IAppRequestRequest {
-	RequestID: number;
-}
-interface ILogEntryRequest {
-	LogEntryID: number;
-}
-interface ILogEntryQueryRequest {
-	RequestID: number;
-	InstallationID: number;
-}
-interface IExpandedSession {
-	SessionID: number;
+interface IUsersIndexRequest {
 	UserID: number;
-	UserName: string;
-	UserGroupID: number;
-	UserGroupName: string;
-	UserGroupDisplayText: string;
-	RemoteAddress: string;
-	UserAgent: string;
-	TimeSessionStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeSessionEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeElapsed: string;
+	ReturnTo: string;
+}
+interface IExpandedInstallation {
+	InstallationID: number;
+	IsCurrent: boolean;
+	InstallationStatus: string;
+	TimeInstallationAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	QualifiedMachineName: string;
+	Domain: string;
+	AppID: number;
+	AppKey: string;
+	AppName: string;
+	AppType: string;
+	VersionName: string;
+	VersionRelease: string;
+	VersionKey: string;
+	VersionStatus: string;
+	VersionType: string;
 	LastRequestTime: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	LastRequestDaysAgo: number;
 	RequestCount: number;
 }
 interface IExpandedRequest {
@@ -807,20 +791,31 @@ interface IExpandedLogEntry {
 	RequestData: string;
 	ResultData: string;
 }
-interface IUserRoleIDRequest {
-	UserRoleID: number;
+interface IExpandedSession {
+	SessionID: number;
+	UserID: number;
+	UserName: string;
+	UserGroupID: number;
+	UserGroupName: string;
+	UserGroupDisplayText: string;
+	RemoteAddress: string;
+	UserAgent: string;
+	TimeSessionStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeSessionEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeElapsed: string;
+	LastRequestTime: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	RequestCount: number;
 }
-interface IUserRoleQueryRequest {
-	AppID: number;
-}
-interface IUserRoleDetailModel {
-	ID: number;
-	UserGroup: IAppUserGroupModel;
-	User: IAppUserModel;
-	App: IAppModel;
-	Role: IAppRoleModel;
-	ModCategory: IModifierCategoryModel;
-	Modifier: IModifierModel;
+interface IExpandedUser {
+	UserID: number;
+	UserName: string;
+	PersonName: string;
+	Email: string;
+	TimeUserAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	UserGroupID: number;
+	UserGroupName: string;
+	TimeUserDeactivated: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	IsActive: boolean;
 }
 interface IExpandedUserRole {
 	UserRoleID: number;
@@ -837,11 +832,21 @@ interface IExpandedUserRole {
 	ModCategoryID: number;
 	ModifierID: number;
 }
-interface IInstallationQueryType {
+interface ILinkModel {
+	LinkName: string;
+	DisplayText: string;
+	Url: string;
+	IsAuthenticationRequired: boolean;
+}
+interface IAppType {
 	Value: number;
 	DisplayText: string;
 }
-interface IInstallStatus {
+interface IAppEventSeverity {
+	Value: number;
+	DisplayText: string;
+}
+interface IResourceResultType {
 	Value: number;
 	DisplayText: string;
 }
@@ -853,15 +858,11 @@ interface IAppVersionStatus {
 	Value: number;
 	DisplayText: string;
 }
-interface IAppType {
+interface IInstallStatus {
 	Value: number;
 	DisplayText: string;
 }
-interface IResourceResultType {
-	Value: number;
-	DisplayText: string;
-}
-interface IAppEventSeverity {
+interface IInstallationQueryType {
 	Value: number;
 	DisplayText: string;
 }

@@ -28,7 +28,7 @@ internal sealed class TestHost
     {
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", xtiEnv.EnvironmentName);
         var host = new XtiHostBuilder(xtiEnv);
-        host.Services.AddSingleton(_ => SupportInfo.AppKey);
+        host.Services.AddSingleton(_ => SupportAppKey.Value);
         host.Services.AddAppServices();
         host.Services.AddFileSecretCredentials(xtiEnv);
         host.Services.AddScoped(sp =>

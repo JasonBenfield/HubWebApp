@@ -1,4 +1,4 @@
-﻿using XTI_HubWebAppApi;
+﻿using XTI_HubWebAppApiActions;
 using XTI_WebAppClient;
 
 namespace HubWebApp.Extensions;

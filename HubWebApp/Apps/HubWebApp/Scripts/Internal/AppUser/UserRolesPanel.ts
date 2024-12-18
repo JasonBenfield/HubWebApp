@@ -14,6 +14,7 @@ import { AppUserOptions } from "./AppUserOptions";
 import { UserRoleListItem } from "./UserRoleListItem";
 import { UserRoleListItemView } from "./UserRoleListItemView";
 import { UserRolesPanelView } from "./UserRolesPanelView";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
 
 interface Results {
     addRequested?: boolean;
@@ -79,7 +80,11 @@ export class UserRolesPanel implements IPanel {
     }
 
     private back() {
-        this.hubClient.Users.Index.open({ UserID: this.user.id, ReturnTo: '' });
+        const returnTo = Url.current().query.getValue("ReturnTo");
+        this.hubClient.Users.Index.open({
+            UserID: this.user.id,
+            ReturnTo: returnTo ? returnTo : null
+        });
     }
 
     private requestAdd() {
@@ -152,7 +157,7 @@ export class UserRolesPanel implements IPanel {
         await this.alert.infoAction(
             'Loading',
             async () => {
-                const sourceUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                const sourceUserAccess = await this.hubClient.AppUserInquiry.GetExplicitUserAccess({
                     UserID: this.user.id,
                     ModifierID: this.modifier.id
                 });
@@ -161,7 +166,7 @@ export class UserRolesPanel implements IPanel {
                     defaultUserAccess = userAccess;
                 }
                 else {
-                    const sourceDefaultUserAccess = await this.hubClient.AppUser.GetExplicitUserAccess({
+                    const sourceDefaultUserAccess = await this.hubClient.AppUserInquiry.GetExplicitUserAccess({
                         UserID: this.user.id,
                         ModifierID: this.defaultModifier.id
                     });

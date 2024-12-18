@@ -51,7 +51,7 @@ export class ResourceListCard {
     private getResources() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ResourceGroup.GetResources({
+            () => this.hubClient.ResourceGroupInquiry.GetResources({
                 VersionKey: 'Current',
                 GroupID: this.groupID
             })

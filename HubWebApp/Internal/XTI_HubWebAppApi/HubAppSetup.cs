@@ -1,6 +1,4 @@
-﻿using XTI_Hub;
-
-namespace XTI_HubWebAppApi;
+﻿namespace XTI_HubWebAppApi;
 
 public sealed class HubAppSetup : IAppSetup
 {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
@@ -7,14 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Api" Version="1.8.47" />
+		<PackageReference Include="XTI_ApiGeneratorTask" Version="1.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
-	  <ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
-	  <ProjectReference Include="..\..\..\Internal\XTI_ServiceAppInstallation\XTI_ServiceAppInstallation.csproj" />
-	  <ProjectReference Include="..\..\..\Internal\XTI_WebAppInstallation\XTI_WebAppInstallation.csproj" />
+		<ProjectReference Include="..\XTI_SupportServiceAppApiActions\XTI_SupportServiceAppApiActions.csproj" />
 	</ItemGroup>
 
 </Project>

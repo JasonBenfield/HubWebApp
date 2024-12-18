@@ -10,74 +10,74 @@ public sealed partial class SystemController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppContextModel>> GetAppContext([FromBody] GetAppContextRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByModKey([FromBody] SystemAddOrUpdateModifierByModKeyRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<GetAppContextRequest, AppContextModel>("GetAppContext").Execute(model, ct);
+        return api.System.AddOrUpdateModifierByModKey.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModifierRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByTargetKey([FromBody] SystemAddOrUpdateModifierByTargetKeyRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<GetModifierRequest, ModifierModel>("GetModifier").Execute(model, ct);
+        return api.System.AddOrUpdateModifierByTargetKey.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByTargetKey([FromBody] SystemAddOrUpdateModifierByTargetKeyRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppContextModel>> GetAppContext([FromBody] GetAppContextRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey").Execute(model, ct);
+        return api.System.GetAppContext.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel>> AddOrUpdateModifierByModKey([FromBody] SystemAddOrUpdateModifierByModKeyRequest model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel>> GetModifier([FromBody] GetModifierRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<SystemAddOrUpdateModifierByModKeyRequest, ModifierModel>("AddOrUpdateModifierByModKey").Execute(model, ct);
+        return api.System.GetModifier.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUserByUserName([FromBody] AppUserNameRequest model, CancellationToken ct)
+    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserByUserName").Execute(model, ct);
+        return api.System.GetStoredObject.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest model, CancellationToken ct)
+    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<AppUserNameRequest, AppUserModel>("GetUserOrAnon").Execute(model, ct);
+        return api.System.GetUserAuthenticators.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUserByUserName([FromBody] AppUserNameRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles").Execute(model, ct);
+        return api.System.GetUserByUserName.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserAuthenticatorModel[]>> GetUserAuthenticators([FromBody] AppUserIDRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> GetUserOrAnon([FromBody] AppUserNameRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators").Execute(model, ct);
+        return api.System.GetUserOrAnon.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel[]>> GetUsersWithAnyRole([FromBody] SystemGetUsersWithAnyRoleRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppRoleModel[]>> GetUserRoles([FromBody] GetUserRolesRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>("GetUsersWithAnyRole").Execute(model, ct);
+        return api.System.GetUserRoles.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel[]>> GetUsersWithAnyRole([FromBody] SystemGetUsersWithAnyRoleRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<StoreObjectRequest, string>("StoreObject").Execute(model, ct);
+        return api.System.GetUsersWithAnyRole.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> SetUserAccess([FromBody] SystemSetUserAccessRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<GetStoredObjectRequest, string>("GetStoredObject").Execute(model, ct);
+        return api.System.SetUserAccess.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> SetUserAccess([FromBody] SystemSetUserAccessRequest model, CancellationToken ct)
+    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest requestData, CancellationToken ct)
     {
-        return api.Group("System").Action<SystemSetUserAccessRequest, EmptyActionResult>("SetUserAccess").Execute(model, ct);
+        return api.System.StoreObject.Execute(requestData, ct);
     }
 }

@@ -9,7 +9,7 @@ public sealed partial class PermanentLogGroup : AppClientGroup
 
     public PermanentLogGroupActions Actions { get; }
 
-    public Task<EmptyActionResult> LogBatch(LogBatchModel model, CancellationToken ct = default) => Actions.LogBatch.Post("", model, ct);
-    public Task<EmptyActionResult> LogSessionDetails(LogSessionDetailsRequest model, CancellationToken ct = default) => Actions.LogSessionDetails.Post("", model, ct);
+    public Task<EmptyActionResult> LogBatch(LogBatchModel requestData, CancellationToken ct = default) => Actions.LogBatch.Post("", requestData, ct);
+    public Task<EmptyActionResult> LogSessionDetails(LogSessionDetailsRequest requestData, CancellationToken ct = default) => Actions.LogSessionDetails.Post("", requestData, ct);
     public sealed record PermanentLogGroupActions(AppClientPostAction<LogBatchModel, EmptyActionResult> LogBatch, AppClientPostAction<LogSessionDetailsRequest, EmptyActionResult> LogSessionDetails);
 }

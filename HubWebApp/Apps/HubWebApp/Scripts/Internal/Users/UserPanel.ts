@@ -52,18 +52,9 @@ export class UserPanel implements IPanel {
             this.view.appListCard
         );
         this.backCommand.add(view.backButton);
-        this.appListCard.when.appSelected.then(this.onAppSelected.bind(this));
         this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubClient, view.userAuthenticatorListCard);
         this.userComponent.when.editRequested.then(this.onEditRequested.bind(this));
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));
-    }
-
-    private onAppSelected(app: App) {
-        const url = this.hubClient.AppUser.Index.getModifierUrl(
-            app.getModifier(),
-            { App: app.publicKey.displayText, UserID: this.userID }
-        );
-        new WebPage(url).open();
     }
 
     private onEditRequested(userID: number) {

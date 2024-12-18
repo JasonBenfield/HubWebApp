@@ -4,7 +4,7 @@ namespace HubWebApp.ApiControllers;
 [Route("odata/UserRoleQuery")]
 public sealed partial class UserRoleQueryController : XtiODataController<UserRoleQueryRequest, ExpandedUserRole>
 {
-    public UserRoleQueryController(HubAppApi api) : base(api.Group("UserRoleQuery"))
+    public UserRoleQueryController(HubAppApi api) : base(api.UserRoleQuery)
     {
     }
 }

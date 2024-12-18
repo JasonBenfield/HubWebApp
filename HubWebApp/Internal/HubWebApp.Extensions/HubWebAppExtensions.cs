@@ -8,6 +8,7 @@ using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
+using XTI_HubWebAppApiActions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
@@ -98,7 +99,11 @@ public static class HubWebAppExtensions
                 var appClients = new AppClients(cache, appClientDomains);
                 var appKey = sp.GetRequiredService<AppKey>();
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
-                appClients.AddAppVersion(appKey.Name.DisplayText, versionKey.DisplayText);
+                appClients.AddAppVersion
+                (
+                    appKey.Name.DisplayText.Replace(" ", ""), 
+                    versionKey.DisplayText
+                );
                 return appClients;
             }
         );

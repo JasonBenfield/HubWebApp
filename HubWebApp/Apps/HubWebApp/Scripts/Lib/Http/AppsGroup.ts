@@ -10,19 +10,19 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class AppsGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Apps');
-		this.Index = this.createView<IEmptyRequest>('Index');
-		this.GetAppsAction = this.createAction<IEmptyRequest,IAppModel[]>('GetApps', 'Get Apps');
 		this.GetAppDomainsAction = this.createAction<IEmptyRequest,IAppDomainModel[]>('GetAppDomains', 'Get App Domains');
+		this.GetAppsAction = this.createAction<IEmptyRequest,IAppModel[]>('GetApps', 'Get Apps');
+		this.Index = this.createView<IEmptyRequest>('Index');
 	}
 	
-	readonly Index: AppClientView<IEmptyRequest>;
-	readonly GetAppsAction: AppClientAction<IEmptyRequest,IAppModel[]>;
 	readonly GetAppDomainsAction: AppClientAction<IEmptyRequest,IAppDomainModel[]>;
+	readonly GetAppsAction: AppClientAction<IEmptyRequest,IAppModel[]>;
+	readonly Index: AppClientView<IEmptyRequest>;
 	
-	GetApps(errorOptions?: IActionErrorOptions) {
-		return this.GetAppsAction.execute({}, errorOptions || {});
-	}
 	GetAppDomains(errorOptions?: IActionErrorOptions) {
 		return this.GetAppDomainsAction.execute({}, errorOptions || {});
+	}
+	GetApps(errorOptions?: IActionErrorOptions) {
+		return this.GetAppsAction.execute({}, errorOptions || {});
 	}
 }

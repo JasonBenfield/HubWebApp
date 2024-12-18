@@ -42,7 +42,7 @@ export class MostRecentRequestListCard {
     private getRequests() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.Resource.GetMostRecentRequests({
+            () => this.hubClient.ResourceInquiry.GetMostRecentRequests({
                 VersionKey: 'Current',
                 ResourceID: this.resourceID,
                 HowMany: 10

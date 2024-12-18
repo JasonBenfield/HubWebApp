@@ -4,12 +4,12 @@ public sealed partial class StorageGroup : AppClientGroup
 {
     public StorageGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Storage")
     {
-        Actions = new StorageGroupActions(StoreObject: CreatePostAction<StoreObjectRequest, string>("StoreObject"), GetStoredObject: CreatePostAction<GetStoredObjectRequest, string>("GetStoredObject"));
+        Actions = new StorageGroupActions(GetStoredObject: CreatePostAction<GetStoredObjectRequest, string>("GetStoredObject"), StoreObject: CreatePostAction<StoreObjectRequest, string>("StoreObject"));
     }
 
     public StorageGroupActions Actions { get; }
 
-    public Task<string> StoreObject(StoreObjectRequest model, CancellationToken ct = default) => Actions.StoreObject.Post("", model, ct);
-    public Task<string> GetStoredObject(GetStoredObjectRequest model, CancellationToken ct = default) => Actions.GetStoredObject.Post("", model, ct);
-    public sealed record StorageGroupActions(AppClientPostAction<StoreObjectRequest, string> StoreObject, AppClientPostAction<GetStoredObjectRequest, string> GetStoredObject);
+    public Task<string> GetStoredObject(GetStoredObjectRequest requestData, CancellationToken ct = default) => Actions.GetStoredObject.Post("", requestData, ct);
+    public Task<string> StoreObject(StoreObjectRequest requestData, CancellationToken ct = default) => Actions.StoreObject.Post("", requestData, ct);
+    public sealed record StorageGroupActions(AppClientPostAction<GetStoredObjectRequest, string> GetStoredObject, AppClientPostAction<StoreObjectRequest, string> StoreObject);
 }

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="XTI_App.Api" Version="1.8.48" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
+		<ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
+		<ProjectReference Include="..\..\..\Internal\XTI_ServiceAppInstallation\XTI_ServiceAppInstallation.csproj" />
+		<ProjectReference Include="..\..\..\Internal\XTI_WebAppInstallation\XTI_WebAppInstallation.csproj" />
+	</ItemGroup>
+
+</Project>

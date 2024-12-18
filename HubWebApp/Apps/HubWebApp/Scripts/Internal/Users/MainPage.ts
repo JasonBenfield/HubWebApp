@@ -39,13 +39,13 @@ class MainPage extends HubPage {
         this.panels.activate(this.userPanel);
         const result = await this.userPanel.start();
         if (result.backRequested) {
-            const returnTo = Url.current().query.getValue('ReturnTo');
+            const returnTo = Url.current().query.getValue("ReturnTo");
             let url: UrlBuilder;
             if (returnTo) {
-                url = this.hubClient.UserGroups.UserQuery.getModifierUrl('', { UserGroupName: returnTo });
+                url = this.hubClient.UserGroups.UserQuery.getModifierUrl("", { UserGroupName: returnTo });
             }
             else {
-                url = this.hubClient.UserGroups.Index.getModifierUrl('', {});
+                url = this.hubClient.UserGroups.Index.getModifierUrl("", {});
             }
             new WebPage(url).open();
         }

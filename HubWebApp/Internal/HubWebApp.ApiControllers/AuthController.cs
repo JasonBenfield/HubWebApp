@@ -9,29 +9,29 @@ public sealed partial class AuthController : Controller
         this.api = api;
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AuthenticatedLoginResult>> VerifyLogin([FromBody] VerifyLoginForm model, CancellationToken ct)
+    public async Task<IActionResult> Login(AuthenticatedLoginRequest requestData, CancellationToken ct)
     {
-        return api.Group("Auth").Action<VerifyLoginForm, AuthenticatedLoginResult>("VerifyLogin").Execute(model, ct);
-    }
-
-    [ResponseCache(CacheProfileName = "Default")]
-    public async Task<IActionResult> VerifyLoginForm(CancellationToken ct)
-    {
-        var result = await api.Group("Auth").Action<EmptyRequest, WebPartialViewResult>("VerifyLoginForm").Execute(new EmptyRequest(), ct);
-        return PartialView(result.Data!.ViewName);
-    }
-
-    public async Task<IActionResult> Login(AuthenticatedLoginRequest model, CancellationToken ct)
-    {
-        var result = await api.Group("Auth").Action<AuthenticatedLoginRequest, WebRedirectResult>("Login").Execute(model, ct);
+        var result = await api.Auth.Login.Execute(requestData, ct);
         return Redirect(result.Data!.Url);
     }
 
     [HttpPost]
     [Authorize]
-    public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel model, CancellationToken ct)
+    public Task<ResultContainer<string>> LoginReturnKey([FromBody] LoginReturnModel requestData, CancellationToken ct)
     {
-        return api.Group("Auth").Action<LoginReturnModel, string>("LoginReturnKey").Execute(model, ct);
+        return api.Auth.LoginReturnKey.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AuthenticatedLoginResult>> VerifyLogin([FromBody] VerifyLoginForm requestData, CancellationToken ct)
+    {
+        return api.Auth.VerifyLogin.Execute(requestData, ct);
+    }
+
+    [ResponseCache(CacheProfileName = "Default")]
+    public async Task<IActionResult> VerifyLoginForm(CancellationToken ct)
+    {
+        var result = await api.Auth.VerifyLoginForm.Execute(new EmptyRequest(), ct);
+        return PartialView(result.Data!.ViewName);
     }
 }

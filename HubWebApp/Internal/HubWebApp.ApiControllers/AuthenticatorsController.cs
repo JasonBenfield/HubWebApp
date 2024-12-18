@@ -10,26 +10,26 @@ public sealed partial class AuthenticatorsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> MoveAuthenticator([FromBody] MoveAuthenticatorRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> MoveAuthenticator([FromBody] MoveAuthenticatorRequest requestData, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<MoveAuthenticatorRequest, EmptyActionResult>("MoveAuthenticator").Execute(model, ct);
+        return api.Authenticators.MoveAuthenticator.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AuthenticatorModel>> RegisterAuthenticator([FromBody] RegisterAuthenticatorRequest model, CancellationToken ct)
+    public Task<ResultContainer<AuthenticatorModel>> RegisterAuthenticator([FromBody] RegisterAuthenticatorRequest requestData, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<RegisterAuthenticatorRequest, AuthenticatorModel>("RegisterAuthenticator").Execute(model, ct);
+        return api.Authenticators.RegisterAuthenticator.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AuthenticatorModel>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest model, CancellationToken ct)
+    public Task<ResultContainer<AuthenticatorModel>> RegisterUserAuthenticator([FromBody] RegisterUserAuthenticatorRequest requestData, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<RegisterUserAuthenticatorRequest, AuthenticatorModel>("RegisterUserAuthenticator").Execute(model, ct);
+        return api.Authenticators.RegisterUserAuthenticator.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppUserModel>> UserOrAnonByAuthenticator([FromBody] UserOrAnonByAuthenticatorRequest model, CancellationToken ct)
+    public Task<ResultContainer<AppUserModel>> UserOrAnonByAuthenticator([FromBody] UserOrAnonByAuthenticatorRequest requestData, CancellationToken ct)
     {
-        return api.Group("Authenticators").Action<UserOrAnonByAuthenticatorRequest, AppUserModel>("UserOrAnonByAuthenticator").Execute(model, ct);
+        return api.Authenticators.UserOrAnonByAuthenticator.Execute(requestData, ct);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using XTI_Core.Fakes;
-using XTI_WebApp.Abstractions;
+using XTI_HubWebAppApiActions;
 
 namespace HubWebApp.Tests;
 

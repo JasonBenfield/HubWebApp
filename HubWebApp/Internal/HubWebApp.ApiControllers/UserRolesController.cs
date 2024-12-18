@@ -10,26 +10,26 @@ public sealed partial class UserRolesController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> DeleteUserRole([FromBody] UserRoleIDRequest model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> DeleteUserRole([FromBody] UserRoleIDRequest requestData, CancellationToken ct)
     {
-        return api.Group("UserRoles").Action<UserRoleIDRequest, EmptyActionResult>("DeleteUserRole").Execute(model, ct);
-    }
-
-    public async Task<IActionResult> Index(UserRoleQueryRequest model, CancellationToken ct)
-    {
-        var result = await api.Group("UserRoles").Action<UserRoleQueryRequest, WebViewResult>("Index").Execute(model, ct);
-        return View(result.Data!.ViewName);
+        return api.UserRoles.DeleteUserRole.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<UserRoleDetailModel>> GetUserRoleDetail([FromBody] UserRoleIDRequest model, CancellationToken ct)
+    public Task<ResultContainer<UserRoleDetailModel>> GetUserRoleDetail([FromBody] UserRoleIDRequest requestData, CancellationToken ct)
     {
-        return api.Group("UserRoles").Action<UserRoleIDRequest, UserRoleDetailModel>("GetUserRoleDetail").Execute(model, ct);
+        return api.UserRoles.GetUserRoleDetail.Execute(requestData, ct);
     }
 
-    public async Task<IActionResult> UserRole(UserRoleIDRequest model, CancellationToken ct)
+    public async Task<IActionResult> Index(UserRoleQueryRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("UserRoles").Action<UserRoleIDRequest, WebViewResult>("UserRole").Execute(model, ct);
+        var result = await api.UserRoles.Index.Execute(requestData, ct);
+        return View(result.Data!.ViewName);
+    }
+
+    public async Task<IActionResult> UserRole(UserRoleIDRequest requestData, CancellationToken ct)
+    {
+        var result = await api.UserRoles.UserRole.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 }

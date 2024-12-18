@@ -43,7 +43,7 @@ export class MostRecentErrorEventListCard {
     private getErrorEvents() {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ResourceGroup.GetMostRecentErrorEvents({
+            () => this.hubClient.ResourceGroupInquiry.GetMostRecentErrorEvents({
                 VersionKey: 'Current',
                 GroupID: this.groupID,
                 HowMany: 10

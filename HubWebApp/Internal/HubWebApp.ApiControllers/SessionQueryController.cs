@@ -4,7 +4,7 @@ namespace HubWebApp.ApiControllers;
 [Route("odata/SessionQuery")]
 public sealed partial class SessionQueryController : XtiODataController<EmptyRequest, ExpandedSession>
 {
-    public SessionQueryController(HubAppApi api) : base(api.Group("SessionQuery"))
+    public SessionQueryController(HubAppApi api) : base(api.SessionQuery)
     {
     }
 }

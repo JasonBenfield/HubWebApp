@@ -43,7 +43,7 @@ export class ResourceGroupAccessCard {
     private async getRoleAccessItems() {
         const sourceAllowedRoles = await this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ResourceGroup.GetRoleAccess({
+            () => this.hubClient.ResourceGroupInquiry.GetRoleAccess({
                 VersionKey: 'Current',
                 GroupID: this.groupID
             })

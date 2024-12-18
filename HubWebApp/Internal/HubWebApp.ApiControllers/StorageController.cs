@@ -10,15 +10,15 @@ public sealed partial class StorageController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest model, CancellationToken ct)
+    [AllowAnonymous]
+    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest requestData, CancellationToken ct)
     {
-        return api.Group("Storage").Action<StoreObjectRequest, string>("StoreObject").Execute(model, ct);
+        return api.Storage.GetStoredObject.Execute(requestData, ct);
     }
 
     [HttpPost]
-    [AllowAnonymous]
-    public Task<ResultContainer<string>> GetStoredObject([FromBody] GetStoredObjectRequest model, CancellationToken ct)
+    public Task<ResultContainer<string>> StoreObject([FromBody] StoreObjectRequest requestData, CancellationToken ct)
     {
-        return api.Group("Storage").Action<GetStoredObjectRequest, string>("GetStoredObject").Execute(model, ct);
+        return api.Storage.StoreObject.Execute(requestData, ct);
     }
 }

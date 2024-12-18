@@ -21,16 +21,16 @@ export class AuthenticatorsGroup extends AppClientGroup {
 	readonly RegisterUserAuthenticatorAction: AppClientAction<IRegisterUserAuthenticatorRequest,IAuthenticatorModel>;
 	readonly UserOrAnonByAuthenticatorAction: AppClientAction<IUserOrAnonByAuthenticatorRequest,IAppUserModel>;
 	
-	MoveAuthenticator(model: IMoveAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
-		return this.MoveAuthenticatorAction.execute(model, errorOptions || {});
+	MoveAuthenticator(requestData: IMoveAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
+		return this.MoveAuthenticatorAction.execute(requestData, errorOptions || {});
 	}
-	RegisterAuthenticator(model: IRegisterAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
-		return this.RegisterAuthenticatorAction.execute(model, errorOptions || {});
+	RegisterAuthenticator(requestData: IRegisterAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
+		return this.RegisterAuthenticatorAction.execute(requestData, errorOptions || {});
 	}
-	RegisterUserAuthenticator(model: IRegisterUserAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
-		return this.RegisterUserAuthenticatorAction.execute(model, errorOptions || {});
+	RegisterUserAuthenticator(requestData: IRegisterUserAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
+		return this.RegisterUserAuthenticatorAction.execute(requestData, errorOptions || {});
 	}
-	UserOrAnonByAuthenticator(model: IUserOrAnonByAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
-		return this.UserOrAnonByAuthenticatorAction.execute(model, errorOptions || {});
+	UserOrAnonByAuthenticator(requestData: IUserOrAnonByAuthenticatorRequest, errorOptions?: IActionErrorOptions) {
+		return this.UserOrAnonByAuthenticatorAction.execute(requestData, errorOptions || {});
 	}
 }

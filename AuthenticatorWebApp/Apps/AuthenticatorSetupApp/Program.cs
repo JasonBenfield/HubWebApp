@@ -6,7 +6,7 @@ using XTI_App.Api;
 using XTI_AppSetupApp.Extensions;
 using XTI_AuthenticatorWebAppApi;
 
-await XtiSetupAppHost.CreateDefault(AuthenticatorInfo.AppKey, args)
+await XtiSetupAppHost.CreateDefault(AuthenticatorAppKey.Value, args)
     .ConfigureServices((hostContext, services) =>
     {
         services.AddSingleton(_ => AppVersionKey.Current);

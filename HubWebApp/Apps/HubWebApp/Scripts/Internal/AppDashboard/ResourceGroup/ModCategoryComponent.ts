@@ -48,7 +48,7 @@ export class ModCategoryComponent {
     private getModCategory(groupID: number) {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.ResourceGroup.GetModCategory({
+            () => this.hubClient.ResourceGroupInquiry.GetModCategory({
                 VersionKey: 'Current',
                 GroupID: groupID
             })

@@ -9,45 +9,45 @@ public sealed partial class InstallationsController : Controller
         this.api = api;
     }
 
-    public async Task<IActionResult> Index(InstallationQueryRequest model, CancellationToken ct)
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> BeginDelete([FromBody] GetInstallationRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("Installations").Action<InstallationQueryRequest, WebViewResult>("Index").Execute(model, ct);
+        return api.Installations.BeginDelete.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> Deleted([FromBody] GetInstallationRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.Deleted.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int requestData, CancellationToken ct)
+    {
+        return api.Installations.GetInstallationDetail.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppVersionInstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.GetPendingDeletes.Execute(requestData, ct);
+    }
+
+    public async Task<IActionResult> Index(InstallationQueryRequest requestData, CancellationToken ct)
+    {
+        var result = await api.Installations.Index.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
-    public async Task<IActionResult> Installation(InstallationViewRequest model, CancellationToken ct)
+    public async Task<IActionResult> Installation(InstallationViewRequest requestData, CancellationToken ct)
     {
-        var result = await api.Group("Installations").Action<InstallationViewRequest, WebViewResult>("Installation").Execute(model, ct);
+        var result = await api.Installations.Installation.Execute(requestData, ct);
         return View(result.Data!.ViewName);
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> RequestDelete([FromBody] GetInstallationRequest requestData, CancellationToken ct)
     {
-        return api.Group("Installations").Action<int, InstallationDetailModel>("GetInstallationDetail").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<AppVersionInstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest model, CancellationToken ct)
-    {
-        return api.Group("Installations").Action<GetPendingDeletesRequest, AppVersionInstallationModel[]>("GetPendingDeletes").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RequestDelete([FromBody] GetInstallationRequest model, CancellationToken ct)
-    {
-        return api.Group("Installations").Action<GetInstallationRequest, EmptyActionResult>("RequestDelete").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> BeginDelete([FromBody] GetInstallationRequest model, CancellationToken ct)
-    {
-        return api.Group("Installations").Action<GetInstallationRequest, EmptyActionResult>("BeginDelete").Execute(model, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> Deleted([FromBody] GetInstallationRequest model, CancellationToken ct)
-    {
-        return api.Group("Installations").Action<GetInstallationRequest, EmptyActionResult>("Deleted").Execute(model, ct);
+        return api.Installations.RequestDelete.Execute(requestData, ct);
     }
 }

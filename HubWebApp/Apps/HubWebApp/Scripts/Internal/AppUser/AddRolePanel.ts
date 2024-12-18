@@ -92,7 +92,7 @@ export class AddRolePanel implements IPanel {
     private async delayedStart() {
         const sourceRoles = await this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.AppUser.GetExplicitlyUnassignedRoles({
+            () => this.hubClient.AppUserInquiry.GetExplicitlyUnassignedRoles({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id
             })

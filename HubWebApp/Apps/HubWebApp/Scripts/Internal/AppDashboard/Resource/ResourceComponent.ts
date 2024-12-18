@@ -54,7 +54,7 @@ export class ResourceComponent {
     private getResource(resourceID: number) {
         return this.alert.infoAction(
             'Loading...',
-            () => this.hubClient.Resource.GetResource({
+            () => this.hubClient.ResourceInquiry.GetResource({
                 VersionKey: 'Current',
                 ResourceID: resourceID
             })

@@ -15,7 +15,7 @@ export class AuthApiGroup extends AppClientGroup {
 	
 	readonly AuthenticateAction: AppClientAction<IAuthenticateRequest,ILoginResult>;
 	
-	Authenticate(model: IAuthenticateRequest, errorOptions?: IActionErrorOptions) {
-		return this.AuthenticateAction.execute(model, errorOptions || {});
+	Authenticate(requestData: IAuthenticateRequest, errorOptions?: IActionErrorOptions) {
+		return this.AuthenticateAction.execute(requestData, errorOptions || {});
 	}
 }

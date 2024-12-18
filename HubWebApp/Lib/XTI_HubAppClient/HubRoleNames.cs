@@ -8,17 +8,17 @@ public sealed partial class HubRoleNames
     }
 
     public string Admin { get; } = "Admin";
-    public string ManageUserCache { get; } = "Manage User Cache";
-    public string InstallationManager { get; } = "Installation Manager";
-    public string System { get; } = "System";
-    public string Authenticator { get; } = "Authenticator";
-    public string PermanentLog { get; } = "Permanent Log";
     public string EditApp { get; } = "Edit App";
     public string ViewApp { get; } = "View App";
-    public string ViewUser { get; } = "View User";
-    public string AddUser { get; } = "Add User";
     public string EditUser { get; } = "Edit User";
+    public string ViewUser { get; } = "View User";
+    public string System { get; } = "System";
+    public string Authenticator { get; } = "Authenticator";
+    public string InstallationManager { get; } = "Installation Manager";
+    public string ViewLog { get; } = "View Log";
+    public string PermanentLog { get; } = "Permanent Log";
     public string AddStoredObject { get; } = "Add Stored Object";
     public string AddUserGroup { get; } = "Add User Group";
-    public string ViewLog { get; } = "View Log";
+    public string AddUser { get; } = "Add User";
+    public string ManageUserCache { get; } = "Manage User Cache";
 }

@@ -9,6 +9,6 @@ public sealed partial class VersionGroup : AppClientGroup
 
     public VersionGroupActions Actions { get; }
 
-    public Task<XtiVersionModel> GetVersion(string modifier, string model, CancellationToken ct = default) => Actions.GetVersion.Post(modifier, model, ct);
+    public Task<XtiVersionModel> GetVersion(string modifier, string requestData, CancellationToken ct = default) => Actions.GetVersion.Post(modifier, requestData, ct);
     public sealed record VersionGroupActions(AppClientPostAction<string, XtiVersionModel> GetVersion);
 }

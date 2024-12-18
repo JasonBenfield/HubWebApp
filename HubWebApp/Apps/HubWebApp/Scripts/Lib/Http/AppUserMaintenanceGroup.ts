@@ -10,27 +10,27 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class AppUserMaintenanceGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'AppUserMaintenance');
-		this.AssignRoleAction = this.createAction<IUserRoleRequest,number>('AssignRole', 'Assign Role');
-		this.UnassignRoleAction = this.createAction<IUserRoleRequest,IEmptyActionResult>('UnassignRole', 'Unassign Role');
-		this.DenyAccessAction = this.createAction<IUserModifierKey,IEmptyActionResult>('DenyAccess', 'Deny Access');
 		this.AllowAccessAction = this.createAction<IUserModifierKey,IEmptyActionResult>('AllowAccess', 'Allow Access');
+		this.AssignRoleAction = this.createAction<IUserRoleRequest,number>('AssignRole', 'Assign Role');
+		this.DenyAccessAction = this.createAction<IUserModifierKey,IEmptyActionResult>('DenyAccess', 'Deny Access');
+		this.UnassignRoleAction = this.createAction<IUserRoleRequest,IEmptyActionResult>('UnassignRole', 'Unassign Role');
 	}
 	
-	readonly AssignRoleAction: AppClientAction<IUserRoleRequest,number>;
-	readonly UnassignRoleAction: AppClientAction<IUserRoleRequest,IEmptyActionResult>;
-	readonly DenyAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
 	readonly AllowAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
+	readonly AssignRoleAction: AppClientAction<IUserRoleRequest,number>;
+	readonly DenyAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
+	readonly UnassignRoleAction: AppClientAction<IUserRoleRequest,IEmptyActionResult>;
 	
-	AssignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
-		return this.AssignRoleAction.execute(model, errorOptions || {});
+	AllowAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.AllowAccessAction.execute(requestData, errorOptions || {});
 	}
-	UnassignRole(model: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
-		return this.UnassignRoleAction.execute(model, errorOptions || {});
+	AssignRole(requestData: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
+		return this.AssignRoleAction.execute(requestData, errorOptions || {});
 	}
-	DenyAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.DenyAccessAction.execute(model, errorOptions || {});
+	DenyAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
+		return this.DenyAccessAction.execute(requestData, errorOptions || {});
 	}
-	AllowAccess(model: IUserModifierKey, errorOptions?: IActionErrorOptions) {
-		return this.AllowAccessAction.execute(model, errorOptions || {});
+	UnassignRole(requestData: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
+		return this.UnassignRoleAction.execute(requestData, errorOptions || {});
 	}
 }

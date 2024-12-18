@@ -17,10 +17,10 @@ export class PermanentLogGroup extends AppClientGroup {
 	readonly LogBatchAction: AppClientAction<ILogBatchModel,IEmptyActionResult>;
 	readonly LogSessionDetailsAction: AppClientAction<ILogSessionDetailsRequest,IEmptyActionResult>;
 	
-	LogBatch(model: ILogBatchModel, errorOptions?: IActionErrorOptions) {
-		return this.LogBatchAction.execute(model, errorOptions || {});
+	LogBatch(requestData: ILogBatchModel, errorOptions?: IActionErrorOptions) {
+		return this.LogBatchAction.execute(requestData, errorOptions || {});
 	}
-	LogSessionDetails(model: ILogSessionDetailsRequest, errorOptions?: IActionErrorOptions) {
-		return this.LogSessionDetailsAction.execute(model, errorOptions || {});
+	LogSessionDetails(requestData: ILogSessionDetailsRequest, errorOptions?: IActionErrorOptions) {
+		return this.LogSessionDetailsAction.execute(requestData, errorOptions || {});
 	}
 }

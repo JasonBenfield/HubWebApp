@@ -9,20 +9,20 @@ public sealed partial class EdmModelBuilder
     public EdmModelBuilder()
     {
         InstallationQuery = odataBuilder.EntitySet<ExpandedInstallation>("InstallationQuery");
-        UserQuery = odataBuilder.EntitySet<ExpandedUser>("UserQuery");
-        SessionQuery = odataBuilder.EntitySet<ExpandedSession>("SessionQuery");
-        RequestQuery = odataBuilder.EntitySet<ExpandedRequest>("RequestQuery");
+        AppRequestQuery = odataBuilder.EntitySet<ExpandedRequest>("AppRequestQuery");
         LogEntryQuery = odataBuilder.EntitySet<ExpandedLogEntry>("LogEntryQuery");
+        SessionQuery = odataBuilder.EntitySet<ExpandedSession>("SessionQuery");
+        UserQuery = odataBuilder.EntitySet<ExpandedUser>("UserQuery");
         UserRoleQuery = odataBuilder.EntitySet<ExpandedUserRole>("UserRoleQuery");
         init();
     }
 
     partial void init();
     public EntitySetConfiguration<ExpandedInstallation> InstallationQuery { get; }
-    public EntitySetConfiguration<ExpandedUser> UserQuery { get; }
-    public EntitySetConfiguration<ExpandedSession> SessionQuery { get; }
-    public EntitySetConfiguration<ExpandedRequest> RequestQuery { get; }
+    public EntitySetConfiguration<ExpandedRequest> AppRequestQuery { get; }
     public EntitySetConfiguration<ExpandedLogEntry> LogEntryQuery { get; }
+    public EntitySetConfiguration<ExpandedSession> SessionQuery { get; }
+    public EntitySetConfiguration<ExpandedUser> UserQuery { get; }
     public EntitySetConfiguration<ExpandedUserRole> UserRoleQuery { get; }
 
     public IEdmModel GetEdmModel() => odataBuilder.GetEdmModel();

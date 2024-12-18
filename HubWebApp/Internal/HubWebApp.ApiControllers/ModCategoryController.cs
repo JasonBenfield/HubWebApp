@@ -10,20 +10,20 @@ public sealed partial class ModCategoryController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<ModifierCategoryModel>> GetModCategory([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ModifierCategoryModel>("GetModCategory").Execute(model, ct);
+        return api.ModCategory.GetModCategory.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ModifierModel[]>> GetModifiers([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<ModifierModel[]>> GetModifiers([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ModifierModel[]>("GetModifiers").Execute(model, ct);
+        return api.ModCategory.GetModifiers.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<ResourceGroupModel[]>> GetResourceGroups([FromBody] int model, CancellationToken ct)
+    public Task<ResultContainer<ResourceGroupModel[]>> GetResourceGroups([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Group("ModCategory").Action<int, ResourceGroupModel[]>("GetResourceGroups").Execute(model, ct);
+        return api.ModCategory.GetResourceGroups.Execute(requestData, ct);
     }
 }
