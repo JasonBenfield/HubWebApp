@@ -5,8 +5,10 @@ public sealed partial class AppUserMaintenanceGroup : AppClientGroup
     public AppUserMaintenanceGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "AppUserMaintenance")
     {
         Actions = new AppUserMaintenanceGroupActions(AllowAccess: CreatePostAction<UserModifierKey, EmptyActionResult>("AllowAccess"), AssignRole: CreatePostAction<UserRoleRequest, int>("AssignRole"), DenyAccess: CreatePostAction<UserModifierKey, EmptyActionResult>("DenyAccess"), UnassignRole: CreatePostAction<UserRoleRequest, EmptyActionResult>("UnassignRole"));
+        Configure();
     }
 
+    partial void Configure();
     public AppUserMaintenanceGroupActions Actions { get; }
 
     public Task<EmptyActionResult> AllowAccess(string modifier, UserModifierKey requestData, CancellationToken ct = default) => Actions.AllowAccess.Post(modifier, requestData, ct);

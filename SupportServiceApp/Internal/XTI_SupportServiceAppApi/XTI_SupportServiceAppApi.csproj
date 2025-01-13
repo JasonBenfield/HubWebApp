@@ -7,10 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_ApiGeneratorTask" Version="1.4.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\XTI_SupportServiceAppApiActions\XTI_SupportServiceAppApiActions.csproj" />
 	</ItemGroup>
 

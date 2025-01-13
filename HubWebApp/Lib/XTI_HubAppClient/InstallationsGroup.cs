@@ -5,8 +5,10 @@ public sealed partial class InstallationsGroup : AppClientGroup
     public InstallationsGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Installations")
     {
         Actions = new InstallationsGroupActions(BeginDelete: CreatePostAction<GetInstallationRequest, EmptyActionResult>("BeginDelete"), Deleted: CreatePostAction<GetInstallationRequest, EmptyActionResult>("Deleted"), GetInstallationDetail: CreatePostAction<int, InstallationDetailModel>("GetInstallationDetail"), GetPendingDeletes: CreatePostAction<GetPendingDeletesRequest, AppVersionInstallationModel[]>("GetPendingDeletes"), Index: CreateGetAction<InstallationQueryRequest>("Index"), Installation: CreateGetAction<InstallationViewRequest>("Installation"), RequestDelete: CreatePostAction<GetInstallationRequest, EmptyActionResult>("RequestDelete"));
+        Configure();
     }
 
+    partial void Configure();
     public InstallationsGroupActions Actions { get; }
 
     public Task<EmptyActionResult> BeginDelete(GetInstallationRequest requestData, CancellationToken ct = default) => Actions.BeginDelete.Post("", requestData, ct);

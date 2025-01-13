@@ -5,8 +5,10 @@ public sealed partial class LogsGroup : AppClientGroup
     public LogsGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Logs")
     {
         Actions = new LogsGroupActions(AppRequest: CreateGetAction<AppRequestRequest>("AppRequest"), AppRequests: CreateGetAction<AppRequestQueryRequest>("AppRequests"), GetLogEntryDetail: CreatePostAction<int, AppLogEntryDetailModel>("GetLogEntryDetail"), GetLogEntryOrDefaultByKey: CreatePostAction<string, AppLogEntryModel>("GetLogEntryOrDefaultByKey"), GetRequestDetail: CreatePostAction<int, AppRequestDetailModel>("GetRequestDetail"), GetSessionDetail: CreatePostAction<int, AppSessionDetailModel>("GetSessionDetail"), LogEntries: CreateGetAction<LogEntryQueryRequest>("LogEntries"), LogEntry: CreateGetAction<LogEntryRequest>("LogEntry"), Session: CreateGetAction<SessionViewRequest>("Session"), Sessions: CreateGetAction<EmptyRequest>("Sessions"));
+        Configure();
     }
 
+    partial void Configure();
     public LogsGroupActions Actions { get; }
 
     public Task<AppLogEntryDetailModel> GetLogEntryDetail(int requestData, CancellationToken ct = default) => Actions.GetLogEntryDetail.Post("", requestData, ct);

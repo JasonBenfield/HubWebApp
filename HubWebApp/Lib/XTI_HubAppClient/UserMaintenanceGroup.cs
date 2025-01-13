@@ -5,8 +5,10 @@ public sealed partial class UserMaintenanceGroup : AppClientGroup
     public UserMaintenanceGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "UserMaintenance")
     {
         Actions = new UserMaintenanceGroupActions(ChangePassword: CreatePostAction<ChangePasswordForm, EmptyActionResult>("ChangePassword"), DeactivateUser: CreatePostAction<int, AppUserModel>("DeactivateUser"), EditUser: CreatePostAction<EditUserForm, EmptyActionResult>("EditUser"), GetUserForEdit: CreatePostAction<int, IDictionary<string, object>>("GetUserForEdit"), ReactivateUser: CreatePostAction<int, AppUserModel>("ReactivateUser"));
+        Configure();
     }
 
+    partial void Configure();
     public UserMaintenanceGroupActions Actions { get; }
 
     public Task<EmptyActionResult> ChangePassword(string modifier, ChangePasswordForm requestData, CancellationToken ct = default) => Actions.ChangePassword.Post(modifier, requestData, ct);

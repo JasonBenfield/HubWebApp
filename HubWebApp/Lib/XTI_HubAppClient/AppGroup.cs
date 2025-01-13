@@ -5,8 +5,10 @@ public sealed partial class AppGroup : AppClientGroup
     public AppGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "App")
     {
         Actions = new AppGroupActions(GetApp: CreatePostAction<EmptyRequest, AppModel>("GetApp"), GetDefaultAppOptions: CreatePostAction<EmptyRequest, string>("GetDefaultAppOptions"), GetDefaultModifier: CreatePostAction<EmptyRequest, ModifierModel>("GetDefaultModifier"), GetDefaultOptions: CreatePostAction<EmptyRequest, string>("GetDefaultOptions"), GetModifierCategories: CreatePostAction<EmptyRequest, ModifierCategoryModel[]>("GetModifierCategories"), GetMostRecentErrorEvents: CreatePostAction<int, AppLogEntryModel[]>("GetMostRecentErrorEvents"), GetMostRecentRequests: CreatePostAction<int, AppRequestExpandedModel[]>("GetMostRecentRequests"), GetResourceGroups: CreatePostAction<EmptyRequest, ResourceGroupModel[]>("GetResourceGroups"), GetRoles: CreatePostAction<EmptyRequest, AppRoleModel[]>("GetRoles"), Index: CreateGetAction<EmptyRequest>("Index"));
+        Configure();
     }
 
+    partial void Configure();
     public AppGroupActions Actions { get; }
 
     public Task<AppModel> GetApp(string modifier, CancellationToken ct = default) => Actions.GetApp.Post(modifier, new EmptyRequest(), ct);

@@ -2,7 +2,7 @@
 namespace XTI_HubAppClient;
 public sealed partial class HubAppClient : AppClient
 {
-    public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessorFactory xtiTokenAccessorFactory, AppClientUrl clientUrl, AppClientOptions options, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessorFactory, clientUrl, options, "Hub", version.Value)
+    public HubAppClient(IHttpClientFactory httpClientFactory, XtiTokenAccessorFactory xtiTokenAccessorFactory, AppClientUrl clientUrl, IAppClientSessionKey sessionKey, IAppClientRequestKey requestKey, HubAppClientVersion version) : base(httpClientFactory, xtiTokenAccessorFactory, clientUrl, sessionKey, requestKey, "Hub", version.Value)
     {
         App = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppGroup(_clientFactory, _tokenAccessor, _url, _options));
         Apps = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AppsGroup(_clientFactory, _tokenAccessor, _url, _options));
@@ -37,8 +37,10 @@ public sealed partial class HubAppClient : AppClient
         SessionQuery = CreateODataGroup<EmptyRequest, ExpandedSession>("SessionQuery");
         UserQuery = CreateODataGroup<UserGroupKey, ExpandedUser>("UserQuery");
         UserRoleQuery = CreateODataGroup<UserRoleQueryRequest, ExpandedUserRole>("UserRoleQuery");
+        Configure();
     }
 
+    partial void Configure();
     public HubRoleNames RoleNames { get; } = HubRoleNames.Instance;
     public string AppName { get; } = "Hub";
     public AppGroup App { get; }

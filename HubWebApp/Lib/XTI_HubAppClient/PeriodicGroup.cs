@@ -5,8 +5,10 @@ public sealed partial class PeriodicGroup : AppClientGroup
     public PeriodicGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Periodic")
     {
         Actions = new PeriodicGroupActions(DeactivateUsers: CreatePostAction<EmptyRequest, EmptyActionResult>("DeactivateUsers"), DeleteExpiredStoredObjects: CreatePostAction<EmptyRequest, EmptyActionResult>("DeleteExpiredStoredObjects"), EndExpiredSessions: CreatePostAction<EmptyRequest, EmptyActionResult>("EndExpiredSessions"), PurgeLogs: CreatePostAction<EmptyRequest, EmptyActionResult>("PurgeLogs"));
+        Configure();
     }
 
+    partial void Configure();
     public PeriodicGroupActions Actions { get; }
 
     public Task<EmptyActionResult> DeactivateUsers(CancellationToken ct = default) => Actions.DeactivateUsers.Post("", new EmptyRequest(), ct);

@@ -1,61 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="XTI_App.Extensions" Version="1.8.52" />
-    <PackageReference Include="XTI_ODataQuery.Api" Version="1.8.52" />
-    <PackageReference Include="XTI_WebApp.Api" Version="1.8.52" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\XTI_Hub\XTI_Hub.csproj" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Compile Update="AppErrors.Designer.cs">
-      <DependentUpon>AppErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Auth\AuthErrors.Designer.cs">
-      <DependentUpon>AuthErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Storage\StorageErrors.Designer.cs">
-      <DependentUpon>StorageErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="UserErrors.Designer.cs">
-      <DependentUpon>UserErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <EmbeddedResource Update="AppErrors.resx">
-      <LastGenOutput>AppErrors.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Auth\AuthErrors.resx">
-      <LastGenOutput>AuthErrors.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Storage\StorageErrors.resx">
-      <LastGenOutput>StorageErrors.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="UserErrors.resx">
-      <LastGenOutput>UserErrors.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.53-dev250111160851036" />
+		<PackageReference Include="XTI_ODataQuery.Api" Version="1.8.53-dev250111160851036" />
+		<PackageReference Include="XTI_WebApp.Api" Version="1.8.53-dev250111160851036" />
+		<PackageReference Include="XTI_ApiGeneratorTask" Version="1.4.1-dev250112085954187" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\XTI_Hub\XTI_Hub.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="AppErrors.Designer.cs">
+			<DependentUpon>AppErrors.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="Auth\AuthErrors.Designer.cs">
+			<DependentUpon>AuthErrors.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="Storage\StorageErrors.Designer.cs">
+			<DependentUpon>StorageErrors.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+		<Compile Update="UserErrors.Designer.cs">
+			<DependentUpon>UserErrors.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="AppErrors.resx">
+			<LastGenOutput>AppErrors.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Auth\AuthErrors.resx">
+			<LastGenOutput>AuthErrors.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Storage\StorageErrors.resx">
+			<LastGenOutput>StorageErrors.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="UserErrors.resx">
+			<LastGenOutput>UserErrors.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
 
 </Project>

@@ -5,8 +5,10 @@ public sealed partial class AppsGroup : AppClientGroup
     public AppsGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Apps")
     {
         Actions = new AppsGroupActions(GetAppDomains: CreatePostAction<EmptyRequest, AppDomainModel[]>("GetAppDomains"), GetApps: CreatePostAction<EmptyRequest, AppModel[]>("GetApps"), Index: CreateGetAction<EmptyRequest>("Index"));
+        Configure();
     }
 
+    partial void Configure();
     public AppsGroupActions Actions { get; }
 
     public Task<AppDomainModel[]> GetAppDomains(CancellationToken ct = default) => Actions.GetAppDomains.Post("", new EmptyRequest(), ct);

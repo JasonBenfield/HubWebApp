@@ -5,8 +5,10 @@ public sealed partial class SystemGroup : AppClientGroup
     public SystemGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "System")
     {
         Actions = new SystemGroupActions(AddOrUpdateModifierByModKey: CreatePostAction<SystemAddOrUpdateModifierByModKeyRequest, ModifierModel>("AddOrUpdateModifierByModKey"), AddOrUpdateModifierByTargetKey: CreatePostAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>("AddOrUpdateModifierByTargetKey"), GetAppContext: CreatePostAction<GetAppContextRequest, AppContextModel>("GetAppContext"), GetModifier: CreatePostAction<GetModifierRequest, ModifierModel>("GetModifier"), GetStoredObject: CreatePostAction<GetStoredObjectRequest, string>("GetStoredObject"), GetUserAuthenticators: CreatePostAction<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators"), GetUserByUserName: CreatePostAction<AppUserNameRequest, AppUserModel>("GetUserByUserName"), GetUserOrAnon: CreatePostAction<AppUserNameRequest, AppUserModel>("GetUserOrAnon"), GetUserRoles: CreatePostAction<GetUserRolesRequest, AppRoleModel[]>("GetUserRoles"), GetUsersWithAnyRole: CreatePostAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>("GetUsersWithAnyRole"), SetUserAccess: CreatePostAction<SystemSetUserAccessRequest, EmptyActionResult>("SetUserAccess"), StoreObject: CreatePostAction<StoreObjectRequest, string>("StoreObject"));
+        Configure();
     }
 
+    partial void Configure();
     public SystemGroupActions Actions { get; }
 
     public Task<ModifierModel> AddOrUpdateModifierByModKey(SystemAddOrUpdateModifierByModKeyRequest requestData, CancellationToken ct = default) => Actions.AddOrUpdateModifierByModKey.Post("", requestData, ct);

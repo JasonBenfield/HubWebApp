@@ -5,8 +5,10 @@ public sealed partial class UserInquiryGroup : AppClientGroup
     public UserInquiryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "UserInquiry")
     {
         Actions = new UserInquiryGroupActions(GetUser: CreatePostAction<AppUserIDRequest, AppUserModel>("GetUser"), GetUserAuthenticators: CreatePostAction<AppUserIDRequest, UserAuthenticatorModel[]>("GetUserAuthenticators"), GetUserOrAnon: CreatePostAction<AppUserNameRequest, AppUserModel>("GetUserOrAnon"), GetUsers: CreatePostAction<EmptyRequest, AppUserModel[]>("GetUsers"));
+        Configure();
     }
 
+    partial void Configure();
     public UserInquiryGroupActions Actions { get; }
 
     public Task<AppUserModel> GetUser(string modifier, AppUserIDRequest requestData, CancellationToken ct = default) => Actions.GetUser.Post(modifier, requestData, ct);
