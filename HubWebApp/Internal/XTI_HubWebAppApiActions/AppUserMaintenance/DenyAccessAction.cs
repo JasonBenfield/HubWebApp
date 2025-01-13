@@ -15,9 +15,9 @@ public sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionRes
         this.userCacheManagement = userCacheManagement;
     }
 
-    public async Task<EmptyActionResult> Execute(UserModifierKey model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(UserModifierKey denyRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(model.ModifierID);
+        var modifier = await hubFactory.Modifiers.Modifier(denyRequest.ModifierID);
         var app = await modifier.App();
         var permission = await currentUser.GetPermissionsToApp(app);
         if (!permission.CanView)
@@ -26,7 +26,7 @@ public sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionRes
         }
         var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
+        var user = await userGroup.User(denyRequest.UserID);
         var existingRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
         foreach(var role in existingRoles)
         {

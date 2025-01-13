@@ -214,9 +214,9 @@ public sealed class AppUser
     {
         var appModel = app.ToModel();
         Modifier modifier;
-        if 
+        if
         (
-            appModel.AppKey.IsUnknown() || 
+            appModel.AppKey.IsUnknown() ||
             appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
         )
         {
@@ -248,6 +248,16 @@ public sealed class AppUser
     }
 
     public Task<AppUserGroup> UserGroup() => factory.UserGroups.UserGroup(record.GroupID);
+
+    public Task EditUserGroup(AppUserGroup userGroup) =>
+        factory.DB.Users.Update
+        (
+            record,
+            u =>
+            {
+                u.GroupID = userGroup.ID;
+            }
+        );
 
     public async Task<AppUserGroupPermission[]> GetUserGroupPermissions()
     {

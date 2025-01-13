@@ -34,7 +34,7 @@ export class UserGroupsPanel implements IPanel {
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserGroupsPanelView) {
         this.alert = new MessageAlert(view.alert);
-        this.userGroups = new ListGroup(view.userGroups);
+        this.userGroups = new ListGroup(view.userGroupListView);
         this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
         this.refreshCommand.add(view.refreshButton);
         this.refreshCommand.animateIconWhenInProgress('spin');

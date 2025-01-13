@@ -26,8 +26,8 @@ public sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
             .Where
             (
                 ug =>
-                    string.IsNullOrWhiteSpace(model.UserGroupName)
-                    || ug.GroupName.Equals(model.UserGroupName)
+                    string.IsNullOrWhiteSpace(model.UserGroupName) || 
+                    ug.GroupName.Equals(model.UserGroupName)
             )
             .Select(ug => ug.ID)
             .ToArray();

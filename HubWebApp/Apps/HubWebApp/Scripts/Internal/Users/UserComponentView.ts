@@ -16,11 +16,13 @@ export class UserComponentView extends CardView {
     readonly userNameFormGroupView: FormGroupTextView;
     readonly fullNameFormGroupView: FormGroupTextView;
     readonly emailFormGroupView: FormGroupTextView;
+    readonly userGroupFormGroupView: FormGroupTextView;
     readonly timeDeactivatedFormGroupView: FormGroupTextView;
     readonly editButton: ButtonCommandView;
     readonly changePasswordButton: ButtonCommandView;
     readonly deactivateButton: ButtonCommandView;
     readonly reactivateButton: ButtonCommandView;
+    readonly editUserGroupButton: ButtonCommandView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -28,9 +30,9 @@ export class UserComponentView extends CardView {
         const headerRow = this.addCardHeader().addView(RowView);
         headerRow.addColumn()
             .addView(TextSpanView)
-            .configure(ts => ts.setText('User'));
+            .configure(ts => ts.setText("User"));
         this.editButton = headerRow.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
+            .configure(c => c.setColumnCss(ColumnCss.xs("auto")))
             .addView(ButtonCommandView)
             .configure(b => HubTheme.instance.cardHeader.editButton(b));
         this.alertView = this.addCardAlert();
@@ -39,18 +41,22 @@ export class UserComponentView extends CardView {
         this.userNameFormGroupView = formGroupGrid.addFormGroupTextView();
         this.fullNameFormGroupView = formGroupGrid.addFormGroupTextView();
         this.emailFormGroupView = formGroupGrid.addFormGroupTextView();
+        this.userGroupFormGroupView = formGroupGrid.addFormGroupTextView();
         this.timeDeactivatedFormGroupView = formGroupGrid.addFormGroupTextView();
 
         const buttonContainer = body.addView(ButtonContainerView);
         this.changePasswordButton = buttonContainer.addButtonCommand();
-        this.changePasswordButton.icon.solidStyle('lock');
-        this.changePasswordButton.setText('Change Password');
+        this.changePasswordButton.icon.solidStyle("lock");
+        this.changePasswordButton.setText("Change Password");
+        this.editUserGroupButton = buttonContainer.addButtonCommand();
+        this.editUserGroupButton.icon.solidStyle("edit");
+        this.editUserGroupButton.setText("Change User Group");
         this.deactivateButton = buttonContainer.addButtonCommand();
-        this.deactivateButton.icon.solidStyle('times');
+        this.deactivateButton.icon.solidStyle("times");
         this.deactivateButton.useOutlineStyle(ContextualClass.danger);
-        this.deactivateButton.setText('Deactivate');
+        this.deactivateButton.setText("Deactivate");
         this.reactivateButton = buttonContainer.addButtonCommand();
-        this.reactivateButton.icon.solidStyle('check');
-        this.reactivateButton.setText('Reactivate');
+        this.reactivateButton.icon.solidStyle("check");
+        this.reactivateButton.setText("Reactivate");
     }
 }

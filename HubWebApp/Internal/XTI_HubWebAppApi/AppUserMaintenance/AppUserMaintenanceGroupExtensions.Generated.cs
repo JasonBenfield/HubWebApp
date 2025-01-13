@@ -9,6 +9,8 @@ internal static partial class AppUserMaintenanceGroupExtensions
         services.AddScoped<AllowAccessAction>();
         services.AddScoped<AssignRoleAction>();
         services.AddScoped<DenyAccessAction>();
+        services.AddScoped<EditUserGroupAction>();
+        services.AddScoped<EditUserGroupValidation>();
         services.AddScoped<UnassignRoleAction>();
     }
 }

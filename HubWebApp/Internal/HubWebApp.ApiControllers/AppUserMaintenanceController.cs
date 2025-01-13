@@ -28,6 +28,12 @@ public sealed partial class AppUserMaintenanceController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> EditUserGroup([FromBody] EditUserGroupRequest requestData, CancellationToken ct)
+    {
+        return api.AppUserMaintenance.EditUserGroup.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> UnassignRole([FromBody] UserRoleRequest requestData, CancellationToken ct)
     {
         return api.AppUserMaintenance.UnassignRole.Execute(requestData, ct);

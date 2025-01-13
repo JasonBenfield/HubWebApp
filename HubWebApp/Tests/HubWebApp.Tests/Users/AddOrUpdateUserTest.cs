@@ -11,7 +11,7 @@ internal sealed class AddOrUpdateUserTest
     public async Task ShouldThrowError_WhenModifierIsBlank()
     {
         var tester = await setup();
-        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(createModel());
+        await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(CreateAddRequest());
     }
 
     [Test]
@@ -22,7 +22,7 @@ internal sealed class AddOrUpdateUserTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                createModel(),
+                CreateAddRequest(),
                 modifier,
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.AddUser
@@ -34,7 +34,7 @@ internal sealed class AddOrUpdateUserTest
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
+        var model = CreateAddRequest();
         model.UserName = "";
         var modifier = await tester.GeneralUserGroupModifier();
         var ex = Assert.ThrowsAsync<ValidationFailedException>
@@ -54,7 +54,7 @@ internal sealed class AddOrUpdateUserTest
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
+        var model = CreateAddRequest();
         model.Password = "";
         var modifier = await tester.GeneralUserGroupModifier();
         var ex = Assert.ThrowsAsync<ValidationFailedException>
@@ -74,7 +74,7 @@ internal sealed class AddOrUpdateUserTest
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
+        var model = CreateAddRequest();
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(model, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
@@ -87,7 +87,7 @@ internal sealed class AddOrUpdateUserTest
     {
         var tester = await setup();
         await tester.LoginAsAdmin();
-        var model = createModel();
+        var model = CreateAddRequest();
         var modifier = await tester.GeneralUserGroupModifier();
         var userModel = await tester.Execute(model, modifier);
         var hubDbContext = tester.Services.GetRequiredService<HubDbContext>();
@@ -102,12 +102,10 @@ internal sealed class AddOrUpdateUserTest
         return HubActionTester.Create(services, hubApi => hubApi.Users.AddOrUpdateUser);
     }
 
-    private AddOrUpdateUserRequest createModel()
-    {
-        return new AddOrUpdateUserRequest
+    private AddOrUpdateUserRequest CreateAddRequest() =>
+        new AddOrUpdateUserRequest
         {
             UserName = "test.user",
             Password = "Password12345;"
         };
-    }
 }

@@ -15,18 +15,18 @@ public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
         this.userCacheManagement = userCacheManagement;
     }
 
-    public async Task<int> Execute(UserRoleRequest model, CancellationToken stoppingToken)
+    public async Task<int> Execute(UserRoleRequest assignRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(model.ModifierID);
+        var modifier = await hubFactory.Modifiers.Modifier(assignRequest.ModifierID);
         var app = await modifier.App();
         var permission = await currentUser.GetPermissionsToApp(app);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var role = await app.Role(model.RoleID);
+        var role = await app.Role(assignRequest.RoleID);
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
+        var user = await userGroup.User(assignRequest.UserID);
         await user.Modifier(modifier).AssignRole(role);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return role.ToModel().ID;
