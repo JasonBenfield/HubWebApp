@@ -15,9 +15,9 @@ public sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionR
         this.userCacheManagement = userCacheManagement;
     }
 
-    public async Task<EmptyActionResult> Execute(UserRoleRequest model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(UserRoleRequest unassignRequest, CancellationToken stoppingToken)
     {
-        var modifier = await factory.Modifiers.Modifier(model.ModifierID);
+        var modifier = await factory.Modifiers.Modifier(unassignRequest.ModifierID);
         var app = await modifier.App();
         var permission = await currentUser.GetPermissionsToApp(app);
         if (!permission.CanView)
@@ -25,8 +25,8 @@ public sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionR
             throw new AccessDeniedException("Access denied to this user");
         }
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
-        var role = await app.Role(model.RoleID);
+        var user = await userGroup.User(unassignRequest.UserID);
+        var role = await app.Role(unassignRequest.RoleID);
         await user.Modifier(modifier).UnassignRole(role);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();

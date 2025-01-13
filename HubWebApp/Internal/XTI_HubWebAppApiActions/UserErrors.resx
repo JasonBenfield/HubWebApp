@@ -120,6 +120,12 @@
   <data name="PasswordIsRequired" xml:space="preserve">
     <value>Password is Required</value>
   </data>
+  <data name="UserGroupIDIsRequired" xml:space="preserve">
+    <value>User Group ID is required.</value>
+  </data>
+  <data name="UserIDIsRequired" xml:space="preserve">
+    <value>User ID is required.</value>
+  </data>
   <data name="UserNameIsRequired" xml:space="preserve">
     <value>User Name is Required</value>
   </data>

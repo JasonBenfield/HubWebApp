@@ -1,17 +1,16 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCard } from "./AppListCard";
+import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
 import { UserComponent } from "./UserComponent";
 import { UserPanelView } from "./UserPanelView";
-import { UserAuthenticatorListCard } from "./UserAuthenticatorListCard";
-import { App } from "../../Lib/App";
 
 interface IResults {
     backRequested?: boolean;
     editRequested?: { userID: number; };
     changePasswordRequested?: { userID: number };
+    editUserGroupRequested?: { userID: number };
 }
 
 class Result {
@@ -25,6 +24,10 @@ class Result {
         return new Result({ changePasswordRequested: { userID: userID } });
     }
 
+    static editUserGroupRequested(userID: number) {
+        return new Result({ editUserGroupRequested: { userID: userID } });
+    }
+
     private constructor(private readonly results: IResults) { }
 
     get backRequested() { return this.results.backRequested; }
@@ -32,13 +35,14 @@ class Result {
     get editRequested() { return this.results.editRequested; }
 
     get changePasswordRequested() { return this.results.changePasswordRequested; }
+
+    get editUserGroupRequested() { return this.results.editUserGroupRequested; }
 }
 
 export class UserPanel implements IPanel {
     private readonly userComponent: UserComponent;
     private readonly userAuthenticatorListCard: UserAuthenticatorListCard;
     private readonly appListCard: AppListCard;
-    private userID: number;
     private readonly awaitable = new Awaitable<Result>();
     private readonly backCommand = new Command(this.back.bind(this));
 
@@ -55,6 +59,7 @@ export class UserPanel implements IPanel {
         this.userAuthenticatorListCard = new UserAuthenticatorListCard(hubClient, view.userAuthenticatorListCard);
         this.userComponent.when.editRequested.then(this.onEditRequested.bind(this));
         this.userComponent.when.changePasswordRequested.then(this.onChangePasswordRequested.bind(this));
+        this.userComponent.when.editUserGroupRequested.then(this.onEditUserGroupRequested.bind(this));
     }
 
     private onEditRequested(userID: number) {
@@ -69,8 +74,13 @@ export class UserPanel implements IPanel {
         );
     }
 
+    private onEditUserGroupRequested(userID: number) {
+        this.awaitable.resolve(
+            Result.editUserGroupRequested(userID)
+        );
+    }
+
     setUserID(userID: number) {
-        this.userID = userID;
         this.userComponent.setUserID(userID);
         this.userAuthenticatorListCard.setUserID(userID);
         this.appListCard.setUserID(userID);

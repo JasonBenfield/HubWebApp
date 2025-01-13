@@ -15,9 +15,9 @@ public sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyActionRe
         this.userCacheManagement = userCacheManagement;
     }
 
-    public async Task<EmptyActionResult> Execute(UserModifierKey model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(UserModifierKey allowRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(model.ModifierID);
+        var modifier = await hubFactory.Modifiers.Modifier(allowRequest.ModifierID);
         var app = await modifier.App();
         var permission = await currentUser.GetPermissionsToApp(app);
         if (!permission.CanView)
@@ -26,7 +26,7 @@ public sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyActionRe
         }
         var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
         var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
+        var user = await userGroup.User(allowRequest.UserID);
         await user.Modifier(modifier).UnassignRole(denyAccessRole);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();

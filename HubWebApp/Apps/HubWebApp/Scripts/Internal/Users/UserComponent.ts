@@ -6,10 +6,12 @@ import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
+import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 
 type Events = {
     editRequested: number;
     changePasswordRequested: number;
+    editUserGroupRequested: number;
 }
 
 export class UserComponent {
@@ -18,15 +20,18 @@ export class UserComponent {
     private readonly userNameFormGroup: FormGroupText;
     private readonly fullNameFormGroup: FormGroupText;
     private readonly emailFormGroup: FormGroupText;
+    private readonly userGroupFormGroup: FormGroupText;
     private readonly timeDeactivatedFormGroup: FormGroupText;
     private readonly editCommand: Command;
     private readonly changePasswordCommand: Command;
     private readonly deactivateCommand: AsyncCommand;
     private readonly reactivateCommand: AsyncCommand;
+    private readonly editUserGroupCommand: Command;
 
     private readonly eventSource = new EventSource<Events>(this, {
         editRequested: null as number,
-        changePasswordRequested: null as number
+        changePasswordRequested: null as number,
+        editUserGroupRequested: null as number
     });
     readonly when = this.eventSource.when;
     private canEdit: boolean = null;
@@ -37,13 +42,15 @@ export class UserComponent {
     ) {
         this.alert = new CardAlert(this.view.alertView);
         this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
-        this.userNameFormGroup.setCaption('User Name');
+        this.userNameFormGroup.setCaption("User Name");
         this.fullNameFormGroup = new FormGroupText(view.fullNameFormGroupView);
-        this.fullNameFormGroup.setCaption('Name');
+        this.fullNameFormGroup.setCaption("Name");
         this.emailFormGroup = new FormGroupText(view.emailFormGroupView);
-        this.emailFormGroup.setCaption('Email');
+        this.emailFormGroup.setCaption("Email");
+        this.userGroupFormGroup = new FormGroupText(view.userGroupFormGroupView);
+        this.userGroupFormGroup.setCaption("User Group");
         this.timeDeactivatedFormGroup = new FormGroupText(view.timeDeactivatedFormGroupView);
-        this.timeDeactivatedFormGroup.setCaption('Time Deactivated');
+        this.timeDeactivatedFormGroup.setCaption("Time Deactivated");
         this.editCommand = new Command(this.requestEdit.bind(this));
         this.editCommand.add(this.view.editButton);
         this.editCommand.hide();
@@ -56,6 +63,9 @@ export class UserComponent {
         this.reactivateCommand = new AsyncCommand(this.reactivate.bind(this));
         this.reactivateCommand.add(view.reactivateButton);
         this.reactivateCommand.hide();
+        this.editUserGroupCommand = new Command(this.requestEditUserGroup.bind(this));
+        this.editUserGroupCommand.add(view.editUserGroupButton);
+        this.editUserGroupCommand.hide();
     }
 
     setUserID(userID: number) {
@@ -70,10 +80,14 @@ export class UserComponent {
         this.eventSource.events.changePasswordRequested.invoke(this.userID);
     }
 
+    private requestEditUserGroup() {
+        this.eventSource.events.editUserGroupRequested.invoke(this.userID);
+    }
+
     private async deactivate() {
         this.reset();
         const sourceUser = await this.alert.infoAction(
-            'Deactivating...',
+            "Deactivating...",
             () => this.hubClient.UserMaintenance.DeactivateUser(this.userID)
         );
         this.loadUser(new AppUser(sourceUser));
@@ -82,7 +96,7 @@ export class UserComponent {
     private async reactivate() {
         this.reset();
         const sourceUser = await this.alert.infoAction(
-            'Reactivating...',
+            "Reactivating...",
             () => this.hubClient.UserMaintenance.ReactivateUser(this.userID)
         );
         this.loadUser(new AppUser(sourceUser));
@@ -102,22 +116,26 @@ export class UserComponent {
 
     private reset() {
         this.emailFormGroup.hide();
+        this.userGroupFormGroup.hide();
         this.timeDeactivatedFormGroup.hide();
         this.editCommand.hide();
         this.changePasswordCommand.hide();
         this.deactivateCommand.hide();
         this.reactivateCommand.hide();
+        this.editUserGroupCommand.hide();
     }
 
     private loadUser(user: AppUser) {
         this.userNameFormGroup.setValue(user.userName.displayText);
         this.fullNameFormGroup.setValue(user.name.displayText);
+        this.userGroupFormGroup.setValue(XtiUrl.current().path.modifier);
+        this.userGroupFormGroup.show();
         this.emailFormGroup.setValue(user.email);
         if (user.email) {
             this.emailFormGroup.show();
         }
         if (user.isActive) {
-            this.timeDeactivatedFormGroup.setValue('');
+            this.timeDeactivatedFormGroup.setValue("");
         }
         else {
             this.timeDeactivatedFormGroup.setValue(user.timeDeactivated.format());
@@ -128,6 +146,7 @@ export class UserComponent {
                 this.editCommand.show();
                 this.changePasswordCommand.show();
                 this.deactivateCommand.show();
+                this.editUserGroupCommand.show();
             }
             else {
                 this.reactivateCommand.show();
@@ -137,7 +156,7 @@ export class UserComponent {
 
     private getUser(userID: number) {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserInquiry.GetUser({ UserID: userID })
         );
     }

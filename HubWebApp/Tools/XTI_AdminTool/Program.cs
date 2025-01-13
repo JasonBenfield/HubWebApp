@@ -8,7 +8,6 @@ using XTI_AdminTool;
 using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
-using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_DB;
@@ -19,7 +18,6 @@ using XTI_Git.Secrets;
 using XTI_GitHub;
 using XTI_GitHub.Web;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_HubDB.EF;
@@ -30,10 +28,9 @@ using XTI_Secrets;
 using XTI_Secrets.Extensions;
 using XTI_Secrets.Files;
 using XTI_TempLog;
-using XTI_TempLog.Abstractions;
 using XTI_TempLog.Extensions;
 using XTI_WebAppClient;
-              
+
 await Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration
     (
@@ -89,7 +86,6 @@ await Host.CreateDefaultBuilder(args)
             services.AddSingleton<IClock, UtcClock>();
             services.AddHubDbContextForSqlServer(ServiceLifetime.Scoped);
             services.AddConfigurationOptions<AdminToolOptions>();
-            services.AddSingleton<AppClientOptions>();
             services.AddScoped<DbAdmin<HubDbContext>>();
             services.AddScoped(sp =>
             {
@@ -98,8 +94,6 @@ await Host.CreateDefaultBuilder(args)
             });
             services.AddScoped<HubFactory>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-            services.AddSingleton<IAppClientSessionKey, EmptyAppClientSessionKey>();
-            services.AddSingleton<IAppClientRequestKey, EmptyAppClientRequestKey>();
             services.AddScoped(sp =>
             {
                 var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
@@ -152,9 +146,9 @@ await Host.CreateDefaultBuilder(args)
             {
                 var scopes = sp.GetRequiredService<Scopes>();
                 var options = scopes.GetRequiredService<AdminOptions>();
-                return string.IsNullOrWhiteSpace(options.HubAppVersionKey)
-                    ? HubAppClientVersion.Version(AppVersionKey.Current.DisplayText)
-                    : HubAppClientVersion.Version(options.HubAppVersionKey);
+                return string.IsNullOrWhiteSpace(options.HubAppVersionKey) ? 
+                    HubAppClientVersion.Version(AppVersionKey.Current.DisplayText) : 
+                    HubAppClientVersion.Version(options.HubAppVersionKey);
             });
             services.AddXtiTokenAccessorFactory
             (

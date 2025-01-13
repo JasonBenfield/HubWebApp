@@ -70,6 +70,24 @@ namespace XTI_HubWebAppApiActions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Group ID is required..
+        /// </summary>
+        public static string UserGroupIDIsRequired {
+            get {
+                return ResourceManager.GetString("UserGroupIDIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User ID is required..
+        /// </summary>
+        public static string UserIDIsRequired {
+            get {
+                return ResourceManager.GetString("UserIDIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Name is Required.
         /// </summary>
         public static string UserNameIsRequired {
