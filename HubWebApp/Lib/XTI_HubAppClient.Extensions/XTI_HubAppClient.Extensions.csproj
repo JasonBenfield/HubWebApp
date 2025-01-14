@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_App.Secrets" Version="1.8.53-dev250111160851036" />
+		<PackageReference Include="XTI_App.Secrets" Version="1.8.53" />
 		<PackageReference Include="XTI_Core.Extensions" Version="1.10.25" />
 	</ItemGroup>
 
