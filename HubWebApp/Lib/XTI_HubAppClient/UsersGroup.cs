@@ -5,8 +5,10 @@ public sealed partial class UsersGroup : AppClientGroup
     public UsersGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Users")
     {
         Actions = new UsersGroupActions(AddOrUpdateUser: CreatePostAction<AddOrUpdateUserRequest, AppUserModel>("AddOrUpdateUser"), AddUser: CreatePostAction<AddUserForm, AppUserModel>("AddUser"), GetUserGroup: CreatePostAction<EmptyRequest, AppUserGroupModel>("GetUserGroup"), GetUsers: CreatePostAction<EmptyRequest, AppUserModel[]>("GetUsers"), Index: CreateGetAction<UsersIndexRequest>("Index"));
+        Configure();
     }
 
+    partial void Configure();
     public UsersGroupActions Actions { get; }
 
     public Task<AppUserModel> AddOrUpdateUser(string modifier, AddOrUpdateUserRequest requestData, CancellationToken ct = default) => Actions.AddOrUpdateUser.Post(modifier, requestData, ct);

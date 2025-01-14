@@ -70,7 +70,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         ShouldThrowError_WhenAccessIsDenied(() => Task.FromResult(model), rolesToKeep, modifier, allowedRoles);
 
     public Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, ModifierModel modifier, params AppRoleName[] allowedRoles) =>
-        ShouldThrowError_WhenAccessIsDenied(createModel, new AppRoleName[0], modifier, allowedRoles);
+        ShouldThrowError_WhenAccessIsDenied(createModel, [], modifier, allowedRoles);
 
     public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] allowedRoles)
     {
@@ -98,7 +98,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         {
             var model = await createModel();
             var loggedInUser = await tester.Login();
-            await SetUserRoles(loggedInUser, new AppRoleName[0], modifier, roleName);
+            await SetUserRoles(loggedInUser, [], modifier, roleName);
             Assert.ThrowsAsync<AccessDeniedException>
             (
                 () => tester.Execute(model, modKey),
@@ -107,7 +107,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         }
         var denyAccessModel = await createModel();
         var denyAccessLoggedInUser = await tester.Login();
-        await SetUserRoles(denyAccessLoggedInUser, new AppRoleName[0], modifier, AppRoleName.DenyAccess);
+        await SetUserRoles(denyAccessLoggedInUser, [], modifier, AppRoleName.DenyAccess);
         Assert.ThrowsAsync<AccessDeniedException>
         (
             () => tester.Execute(denyAccessModel, modKey),

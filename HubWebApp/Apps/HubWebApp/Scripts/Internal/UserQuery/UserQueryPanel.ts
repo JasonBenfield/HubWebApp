@@ -40,7 +40,7 @@ export class UserQueryPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedUser>;
-    private readonly queryArgs = { args: <IUserGroupKey>{ UserGroupName: '' } };
+    private readonly queryArgs = { args: <IUserGroupKey>{ UserGroupName: "" } };
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserQueryPanelView) {
         this.alert = new MessageAlert(this.view.alert);
@@ -49,8 +49,8 @@ export class UserQueryPanel implements IPanel {
         columns.UserID.require();
         columns.UserGroupName.require();
         columns.IsActive.require();
-        columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? 'Yes' : 'No' });
-        const options = new ODataComponentOptionsBuilder<IExpandedUser>('hub_users', columns);
+        columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? "Yes" : "No" });
+        const options = new ODataComponentOptionsBuilder<IExpandedUser>("hub_users", columns);
         options.setCreateDataRow(
             (rowIndex, columns, record: Queryable<IExpandedRequest>, view: LinkGridRowView) =>
                 new UserDataRow(hubClient, rowIndex, columns, record, view)
@@ -64,7 +64,7 @@ export class UserQueryPanel implements IPanel {
         options.setDefaultODataClient(this.hubClient.UserQuery, this.queryArgs);
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().query.getNumberValue('page');
+        const page = Url.current().query.getNumberValue("page");
         if (page) {
             this.odataComponent.setCurrentPage(page);
         }
@@ -75,18 +75,18 @@ export class UserQueryPanel implements IPanel {
     }
 
     private onRefreshed(args: ODataRefreshedEventArgs) {
-        const page = args.page > 1 ? args.page.toString() : '';
+        const page = args.page > 1 ? args.page.toString() : "";
         const url = UrlBuilder.current();
-        const queryPageValue = url.query.getNumberValue('page');
-        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        const queryPageValue = url.query.getNumberValue("page");
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : "";
         if (page !== queryPage) {
             if (page) {
-                url.replaceQuery('page', page);
+                url.replaceQuery("page", page);
             }
             else {
-                url.removeQuery('page');
+                url.removeQuery("page");
             }
-            history.replaceState({}, '', url.value());
+            history.replaceState({}, "", url.value());
         }
     }
 
@@ -121,8 +121,8 @@ export class UserQueryPanel implements IPanel {
             userGroups,
             (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
-                const listItemGroupName = ug ? ug.groupName.displayText : '';
-                if (this.queryArgs.args.UserGroupName === listItemGroupName) {
+                const listItemGroupName = ug ? ug.publicKey.displayText.toLowerCase() : "";
+                if (this.queryArgs.args.UserGroupName.replace(/\s+/g, '').toLowerCase() === listItemGroupName) {
                     listItem.makeActive();
                 }
                 return listItem;
@@ -133,7 +133,7 @@ export class UserQueryPanel implements IPanel {
 
     private getUserGroups() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserGroups.GetUserGroups()
         );
     }

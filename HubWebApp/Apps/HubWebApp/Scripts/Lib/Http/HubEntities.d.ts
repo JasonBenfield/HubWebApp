@@ -102,6 +102,10 @@ interface IUserRoleRequest {
 	ModifierID: number;
 	RoleID: number;
 }
+interface IEditUserGroupRequest {
+	UserID: number;
+	UserGroupID: number;
+}
 interface IAuthenticatedLoginRequest {
 	AuthKey: string;
 	AuthID: string;

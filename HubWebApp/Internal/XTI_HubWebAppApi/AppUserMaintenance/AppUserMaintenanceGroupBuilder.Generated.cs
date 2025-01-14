@@ -12,6 +12,7 @@ public sealed partial class AppUserMaintenanceGroupBuilder
         AllowAccess = source.AddAction<UserModifierKey, EmptyActionResult>("AllowAccess").WithExecution<AllowAccessAction>();
         AssignRole = source.AddAction<UserRoleRequest, int>("AssignRole").WithExecution<AssignRoleAction>();
         DenyAccess = source.AddAction<UserModifierKey, EmptyActionResult>("DenyAccess").WithExecution<DenyAccessAction>();
+        EditUserGroup = source.AddAction<EditUserGroupRequest, EmptyActionResult>("EditUserGroup").WithExecution<EditUserGroupAction>().WithValidation<EditUserGroupValidation>();
         UnassignRole = source.AddAction<UserRoleRequest, EmptyActionResult>("UnassignRole").WithExecution<UnassignRoleAction>();
         Configure();
     }
@@ -20,6 +21,7 @@ public sealed partial class AppUserMaintenanceGroupBuilder
     public AppApiActionBuilder<UserModifierKey, EmptyActionResult> AllowAccess { get; }
     public AppApiActionBuilder<UserRoleRequest, int> AssignRole { get; }
     public AppApiActionBuilder<UserModifierKey, EmptyActionResult> DenyAccess { get; }
+    public AppApiActionBuilder<EditUserGroupRequest, EmptyActionResult> EditUserGroup { get; }
     public AppApiActionBuilder<UserRoleRequest, EmptyActionResult> UnassignRole { get; }
 
     public AppUserMaintenanceGroup Build() => new AppUserMaintenanceGroup(source, this);

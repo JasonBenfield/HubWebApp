@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_HubDB.Entities;
-using XTI_HubWebAppApi.UserGroups;
 
 namespace HubWebApp.Tests;
 

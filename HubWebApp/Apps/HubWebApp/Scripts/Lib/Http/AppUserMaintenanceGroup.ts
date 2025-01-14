@@ -13,12 +13,14 @@ export class AppUserMaintenanceGroup extends AppClientGroup {
 		this.AllowAccessAction = this.createAction<IUserModifierKey,IEmptyActionResult>('AllowAccess', 'Allow Access');
 		this.AssignRoleAction = this.createAction<IUserRoleRequest,number>('AssignRole', 'Assign Role');
 		this.DenyAccessAction = this.createAction<IUserModifierKey,IEmptyActionResult>('DenyAccess', 'Deny Access');
+		this.EditUserGroupAction = this.createAction<IEditUserGroupRequest,IEmptyActionResult>('EditUserGroup', 'Edit User Group');
 		this.UnassignRoleAction = this.createAction<IUserRoleRequest,IEmptyActionResult>('UnassignRole', 'Unassign Role');
 	}
 	
 	readonly AllowAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
 	readonly AssignRoleAction: AppClientAction<IUserRoleRequest,number>;
 	readonly DenyAccessAction: AppClientAction<IUserModifierKey,IEmptyActionResult>;
+	readonly EditUserGroupAction: AppClientAction<IEditUserGroupRequest,IEmptyActionResult>;
 	readonly UnassignRoleAction: AppClientAction<IUserRoleRequest,IEmptyActionResult>;
 	
 	AllowAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
@@ -29,6 +31,9 @@ export class AppUserMaintenanceGroup extends AppClientGroup {
 	}
 	DenyAccess(requestData: IUserModifierKey, errorOptions?: IActionErrorOptions) {
 		return this.DenyAccessAction.execute(requestData, errorOptions || {});
+	}
+	EditUserGroup(requestData: IEditUserGroupRequest, errorOptions?: IActionErrorOptions) {
+		return this.EditUserGroupAction.execute(requestData, errorOptions || {});
 	}
 	UnassignRole(requestData: IUserRoleRequest, errorOptions?: IActionErrorOptions) {
 		return this.UnassignRoleAction.execute(requestData, errorOptions || {});

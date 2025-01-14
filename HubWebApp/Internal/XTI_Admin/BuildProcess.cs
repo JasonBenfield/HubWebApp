@@ -1,6 +1,7 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Hub;
 using XTI_Processes;
+using XTI_TempLog.Abstractions;
 
 namespace XTI_Admin;
 
@@ -37,7 +38,16 @@ public sealed class BuildProcess
             }
             if (appKey.IsAppType(AppType.Values.WebApp))
             {
-                await RunApiGenerator(appKey, version.VersionKey);
+                var apiGeneratorPath = Path.Combine
+                (
+                    Environment.CurrentDirectory,
+                    "Apps",
+                    $"{GetAppName(appKey)}ApiGeneratorApp"
+                );
+                if (Directory.Exists(apiGeneratorPath))
+                {
+                    await RunApiGenerator(apiGeneratorPath, appKey, version.VersionKey);
+                }
             }
             if (appKey.IsAnyAppType(AppType.Values.WebApp, AppType.Values.WebPackage))
             {
@@ -46,37 +56,24 @@ public sealed class BuildProcess
             }
             Environment.CurrentDirectory = slnDir;
         }
-        await RunDotnetBuild();
+        await RunDotnetBuild(version.VersionKey);
     }
 
-    private async Task RunApiGenerator(AppKey appKey, AppVersionKey versionKey)
+    private async Task RunApiGenerator(string apiGeneratorPath, AppKey appKey, AppVersionKey versionKey)
     {
-        var apiGeneratorPath = Path.Combine
-        (
-            Environment.CurrentDirectory,
-            "Apps",
-            $"{GetAppName(appKey)}ApiGeneratorApp"
-        );
-        if (Directory.Exists(apiGeneratorPath))
-        {
-            Console.WriteLine($"Generating API for {appKey.Format()}");
-            var result = await new DotnetRunProcess(apiGeneratorPath)
-                .WriteOutputToConsole()
-                .AddConfigOptions
-                (
-                    new
-                    {
-                        DefaultVersion = versionKey.Value
-                    },
-                    "Output"
-                )
-                .Run();
-            result.EnsureExitCodeIsZero();
-        }
-        else
-        {
-            Console.WriteLine($"API Generator app not found at '{apiGeneratorPath}'.");
-        }
+        Console.WriteLine($"Generating API for {appKey.Format()}");
+        var result = await new DotnetRunProcess(apiGeneratorPath)
+            .WriteOutputToConsole()
+            .AddConfigOptions
+            (
+                new
+                {
+                    DefaultVersion = versionKey.Value
+                },
+                "Output"
+            )
+            .Run();
+        result.EnsureExitCodeIsZero();
     }
 
     private async Task RunTsc(AppKey appKey)
@@ -139,28 +136,28 @@ public sealed class BuildProcess
         }
     }
 
-    private async Task RunDotnetBuild()
+    private async Task RunDotnetBuild(AppVersionKey versionKey)
     {
         Console.WriteLine("Running dotnet build");
         var result = await new WinProcess("dotnet")
-              .WriteOutputToConsole()
-              .UseArgumentNameDelimiter("")
-              .AddArgument("build")
-              .UseArgumentNameDelimiter("-")
-              .UseArgumentValueDelimiter("=")
-              .AddArgument("p:TypeScriptCompileBlocked", "true")
-              .Run();
+            .WriteOutputToConsole()
+            .UseArgumentNameDelimiter("")
+            .AddArgument("build")
+            .UseArgumentNameDelimiter("-")
+            .UseArgumentValueDelimiter("=")
+            .AddArgument("p:TypeScriptCompileBlocked", "true")
+            .AddArgument("p:XtiVersion", new Quoted(versionKey.DisplayText))
+            .Run();
         result.EnsureExitCodeIsZero();
     }
 
-    private string GetWebAppDir(AppKey appKey)
-        => Path.Combine
+    private string GetWebAppDir(AppKey appKey) =>
+        Path.Combine
         (
             Environment.CurrentDirectory,
             "Apps",
             new AppDirectoryName(appKey).Value
         );
 
-    private string GetAppName(AppKey appKey)
-        => appKey.Name.DisplayText.Replace(" ", "");
+    private string GetAppName(AppKey appKey) => appKey.Name.DisplayText.Replace(" ", "");
 }

@@ -4,9 +4,9 @@ namespace HubWebApp.Tests;
 
 internal static class HubActionTester
 {
-    public static HubActionTester<TModel, TResult> Create<TModel, TResult>(IServiceProvider services, Func<HubAppApi, AppApiAction<TModel, TResult>> getAction)
+    public static HubActionTester<TRequest, TResult> Create<TRequest, TResult>(IServiceProvider services, Func<HubAppApi, AppApiAction<TRequest, TResult>> getAction)
     {
-        return new HubActionTester<TModel, TResult>(services, getAction);
+        return new HubActionTester<TRequest, TResult>(services, getAction);
     }
 }
 
@@ -19,14 +19,14 @@ internal interface IHubActionTester
     Task<ModifierModel> GeneralUserGroupModifier();
 }
 
-internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
+internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
 {
-    private readonly Func<HubAppApi, AppApiAction<TModel, TResult>> getAction;
+    private readonly Func<HubAppApi, AppApiAction<TRequest, TResult>> getAction;
 
     public HubActionTester
     (
         IServiceProvider services,
-        Func<HubAppApi, AppApiAction<TModel, TResult>> getAction
+        Func<HubAppApi, AppApiAction<TRequest, TResult>> getAction
     )
     {
         Services = services;
@@ -68,7 +68,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
     }
 
     public Task<AppUser> Login(ModifierModel modifier, params AppRoleName[]? roleNames) =>
-        Login(new AppRoleName[0], modifier, roleNames);
+        Login([], modifier, roleNames);
 
     public async Task<AppUser> Login
     (
@@ -96,7 +96,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
             await user.AssignRole(role);
         }
         var efModifier = await factory.Modifiers.Modifier(modifier.ID);
-        foreach (var roleName in roleNames ?? new AppRoleName[0])
+        foreach (var roleName in roleNames ?? [])
         {
             var role = await hubApp.Role(roleName);
             await user.Modifier(efModifier).AssignRole(role);
@@ -169,13 +169,13 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         return hubAppModifier.ToModel();
     }
 
-    public Task<TResult> Execute(TModel model) =>
-        Execute(model, ModifierKey.Default);
+    public Task<TResult> Execute(TRequest requestData) =>
+        Execute(requestData, ModifierKey.Default);
 
-    public Task<TResult> Execute(TModel model, ModifierModel modifier) =>
-        Execute(model, modifier.ModKey);
+    public Task<TResult> Execute(TRequest requestData, ModifierModel modifier) =>
+        Execute(requestData, modifier.ModKey);
 
-    public async Task<TResult> Execute(TModel model, ModifierKey modKey)
+    public async Task<TResult> Execute(TRequest requestData, ModifierKey modKey)
     {
         var appContext = Services.GetRequiredService<IAppContext>();
         var httpContextAccessor = Services.GetRequiredService<IHttpContextAccessor>();
@@ -208,7 +208,7 @@ internal sealed class HubActionTester<TModel, TResult> : IHubActionTester
         var apiUser = new AppApiUser(currentUserAccess, pathAccessor);
         var hubApi = (HubAppApi)appApiFactory.Create(apiUser);
         var action = getAction(hubApi);
-        var result = await action.Invoke(model);
+        var result = await action.Invoke(requestData);
         return result;
     }
 }

@@ -1,26 +1,24 @@
-﻿import { BasicComponent } from "@jasonbenfield/sharedwebapp/Components/BasicComponent";
-import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
-import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+﻿import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
-import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppUserGroup } from "../../Lib/AppUserGroup";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
 
-export class UserGroupListItem extends BasicComponent {
-    constructor(hubClient: HubAppClient, userGroup: AppUserGroup, protected readonly view: TextLinkListGroupItemView) {
+export class UserGroupListItem extends TextLinkComponent {
+    constructor(hubClient: HubAppClient, readonly userGroup: AppUserGroup, protected readonly view: TextLinkListGroupItemView) {
         super(view);
         if (userGroup === null) {
-            new LinkComponent(view).setHref(
-                hubClient.UserGroups.UserQuery.getUrl({ UserGroupName: '' })
+            this.setHref(
+                hubClient.UserGroups.UserQuery.getUrl({ UserGroupName: null })
             );
-            new TextComponent(view).setText('All');
+            this.setText("All");
         }
         else {
-            new LinkComponent(view).setHref(
+            this.setHref(
                 hubClient.UserGroups.UserQuery.getUrl({
                     UserGroupName: userGroup.getModifier()
                 })
             );
-            new TextComponent(view).setText(userGroup.groupName.displayText);
+            this.setText(userGroup.groupName.displayText);
         }
     }
 

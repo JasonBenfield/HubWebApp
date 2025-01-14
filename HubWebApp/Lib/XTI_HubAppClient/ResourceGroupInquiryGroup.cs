@@ -5,8 +5,10 @@ public sealed partial class ResourceGroupInquiryGroup : AppClientGroup
     public ResourceGroupInquiryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "ResourceGroupInquiry")
     {
         Actions = new ResourceGroupInquiryGroupActions(GetModCategory: CreatePostAction<GetResourceGroupModCategoryRequest, ModifierCategoryModel>("GetModCategory"), GetMostRecentErrorEvents: CreatePostAction<GetResourceGroupLogRequest, AppLogEntryModel[]>("GetMostRecentErrorEvents"), GetMostRecentRequests: CreatePostAction<GetResourceGroupLogRequest, AppRequestExpandedModel[]>("GetMostRecentRequests"), GetResourceGroup: CreatePostAction<GetResourceGroupRequest, ResourceGroupModel>("GetResourceGroup"), GetResources: CreatePostAction<GetResourcesRequest, ResourceModel[]>("GetResources"), GetRoleAccess: CreatePostAction<GetResourceGroupRoleAccessRequest, AppRoleModel[]>("GetRoleAccess"));
+        Configure();
     }
 
+    partial void Configure();
     public ResourceGroupInquiryGroupActions Actions { get; }
 
     public Task<ModifierCategoryModel> GetModCategory(string modifier, GetResourceGroupModCategoryRequest requestData, CancellationToken ct = default) => Actions.GetModCategory.Post(modifier, requestData, ct);

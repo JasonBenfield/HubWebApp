@@ -5,8 +5,10 @@ public sealed partial class AuthGroup : AppClientGroup
     public AuthGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Auth")
     {
         Actions = new AuthGroupActions(Login: CreateGetAction<AuthenticatedLoginRequest>("Login"), LoginReturnKey: CreatePostAction<LoginReturnModel, string>("LoginReturnKey"), VerifyLogin: CreatePostAction<VerifyLoginForm, AuthenticatedLoginResult>("VerifyLogin"), VerifyLoginForm: CreateGetAction<EmptyRequest>("VerifyLoginForm"));
+        Configure();
     }
 
+    partial void Configure();
     public AuthGroupActions Actions { get; }
 
     public Task<string> LoginReturnKey(LoginReturnModel requestData, CancellationToken ct = default) => Actions.LoginReturnKey.Post("", requestData, ct);

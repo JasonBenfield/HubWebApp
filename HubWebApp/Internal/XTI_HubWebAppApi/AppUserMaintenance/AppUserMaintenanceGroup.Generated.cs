@@ -10,6 +10,7 @@ public sealed partial class AppUserMaintenanceGroup : AppApiGroupWrapper
         AllowAccess = builder.AllowAccess.Build();
         AssignRole = builder.AssignRole.Build();
         DenyAccess = builder.DenyAccess.Build();
+        EditUserGroup = builder.EditUserGroup.Build();
         UnassignRole = builder.UnassignRole.Build();
         Configure();
     }
@@ -18,5 +19,6 @@ public sealed partial class AppUserMaintenanceGroup : AppApiGroupWrapper
     public AppApiAction<UserModifierKey, EmptyActionResult> AllowAccess { get; }
     public AppApiAction<UserRoleRequest, int> AssignRole { get; }
     public AppApiAction<UserModifierKey, EmptyActionResult> DenyAccess { get; }
+    public AppApiAction<EditUserGroupRequest, EmptyActionResult> EditUserGroup { get; }
     public AppApiAction<UserRoleRequest, EmptyActionResult> UnassignRole { get; }
 }

@@ -5,8 +5,10 @@ public sealed partial class PublishGroup : AppClientGroup
     public PublishGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Publish")
     {
         Actions = new PublishGroupActions(BeginPublish: CreatePostAction<PublishVersionRequest, XtiVersionModel>("BeginPublish"), EndPublish: CreatePostAction<PublishVersionRequest, XtiVersionModel>("EndPublish"), GetVersions: CreatePostAction<AppKeyRequest, XtiVersionModel[]>("GetVersions"), NewVersion: CreatePostAction<NewVersionRequest, XtiVersionModel>("NewVersion"));
+        Configure();
     }
 
+    partial void Configure();
     public PublishGroupActions Actions { get; }
 
     public Task<XtiVersionModel> BeginPublish(PublishVersionRequest requestData, CancellationToken ct = default) => Actions.BeginPublish.Post("", requestData, ct);

@@ -5,8 +5,10 @@ public sealed partial class ModCategoryGroup : AppClientGroup
     public ModCategoryGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "ModCategory")
     {
         Actions = new ModCategoryGroupActions(GetModCategory: CreatePostAction<int, ModifierCategoryModel>("GetModCategory"), GetModifiers: CreatePostAction<int, ModifierModel[]>("GetModifiers"), GetResourceGroups: CreatePostAction<int, ResourceGroupModel[]>("GetResourceGroups"));
+        Configure();
     }
 
+    partial void Configure();
     public ModCategoryGroupActions Actions { get; }
 
     public Task<ModifierCategoryModel> GetModCategory(string modifier, int requestData, CancellationToken ct = default) => Actions.GetModCategory.Post(modifier, requestData, ct);

@@ -5,8 +5,10 @@ public sealed partial class CurrentUserGroup : AppClientGroup
     public CurrentUserGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "CurrentUser")
     {
         Actions = new CurrentUserGroupActions(ChangePassword: CreatePostAction<ChangeCurrentUserPasswordForm, EmptyActionResult>("ChangePassword"), EditUser: CreatePostAction<EditCurrentUserForm, AppUserModel>("EditUser"), GetUser: CreatePostAction<EmptyRequest, AppUserModel>("GetUser"), Index: CreateGetAction<EmptyRequest>("Index"));
+        Configure();
     }
 
+    partial void Configure();
     public CurrentUserGroupActions Actions { get; }
 
     public Task<EmptyActionResult> ChangePassword(ChangeCurrentUserPasswordForm requestData, CancellationToken ct = default) => Actions.ChangePassword.Post("", requestData, ct);

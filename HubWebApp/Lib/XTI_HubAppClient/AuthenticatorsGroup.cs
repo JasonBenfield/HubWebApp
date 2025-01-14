@@ -5,8 +5,10 @@ public sealed partial class AuthenticatorsGroup : AppClientGroup
     public AuthenticatorsGroup(IHttpClientFactory httpClientFactory, XtiTokenAccessor xtiTokenAccessor, AppClientUrl clientUrl, AppClientOptions options) : base(httpClientFactory, xtiTokenAccessor, clientUrl, options, "Authenticators")
     {
         Actions = new AuthenticatorsGroupActions(MoveAuthenticator: CreatePostAction<MoveAuthenticatorRequest, EmptyActionResult>("MoveAuthenticator"), RegisterAuthenticator: CreatePostAction<RegisterAuthenticatorRequest, AuthenticatorModel>("RegisterAuthenticator"), RegisterUserAuthenticator: CreatePostAction<RegisterUserAuthenticatorRequest, AuthenticatorModel>("RegisterUserAuthenticator"), UserOrAnonByAuthenticator: CreatePostAction<UserOrAnonByAuthenticatorRequest, AppUserModel>("UserOrAnonByAuthenticator"));
+        Configure();
     }
 
+    partial void Configure();
     public AuthenticatorsGroupActions Actions { get; }
 
     public Task<EmptyActionResult> MoveAuthenticator(MoveAuthenticatorRequest requestData, CancellationToken ct = default) => Actions.MoveAuthenticator.Post("", requestData, ct);

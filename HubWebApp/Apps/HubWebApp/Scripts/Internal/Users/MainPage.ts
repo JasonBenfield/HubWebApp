@@ -7,12 +7,14 @@ import { MainPageView } from './MainPageView';
 import { UserEditPanel } from './UserEditPanel';
 import { UserPanel } from './UserPanel';
 import { UrlBuilder } from '@jasonbenfield/sharedwebapp/UrlBuilder';
+import { EditUserGroupPanel } from './EditUserGroupPanel';
 
 class MainPage extends HubPage {
     private readonly panels: SingleActivePanel;
     private readonly userPanel: UserPanel;
     private readonly userEditPanel: UserEditPanel;
     private readonly changePasswordPanel: ChangePasswordPanel;
+    private readonly editUserGroupPanel: EditUserGroupPanel;
 
     constructor(protected readonly view: MainPageView) {
         super(view);
@@ -22,11 +24,15 @@ class MainPage extends HubPage {
         this.changePasswordPanel = this.panels.add(
             new ChangePasswordPanel(this.hubClient, this.view.changePasswordPanel)
         );
-        const userID = Url.current().query.getNumberValue('UserID');
+        this.editUserGroupPanel = this.panels.add(
+            new EditUserGroupPanel(this.hubClient, view.editUserGroupPanel)
+        );
+        const userID = Url.current().query.getNumberValue("UserID");
         if (userID) {
             this.userPanel.setUserID(userID);
             this.userEditPanel.setUserID(userID);
             this.changePasswordPanel.setUserID(userID);
+            this.editUserGroupPanel.setUserID(userID);
             this.userPanel.refresh();
             this.activateUserPanel();
         }
@@ -55,6 +61,10 @@ class MainPage extends HubPage {
         else if (result.changePasswordRequested) {
             this.activateChangePasswordPanel();
         }
+        else if (result.editUserGroupRequested) {
+            this.editUserGroupPanel.refresh();
+            this.activateEditUserGroupPanel();
+        }
     }
 
     private async activateUserEditPanel() {
@@ -75,6 +85,24 @@ class MainPage extends HubPage {
         const result = await this.changePasswordPanel.start();
         if (result.done) {
             this.activateUserPanel();
+        }
+    }
+
+    private async activateEditUserGroupPanel() {
+        this.panels.activate(this.editUserGroupPanel);
+        const result = await this.editUserGroupPanel.start();
+        if (result.backRequested) {
+            this.activateUserPanel();
+        }
+        else if (result.userGroupChanged) {
+            const returnTo = Url.current().query.getValue("ReturnTo");
+            this.hubClient.Users.Index.open(
+                {
+                    UserID: result.userGroupChanged.userID,
+                    ReturnTo: returnTo
+                },
+                result.userGroupChanged.userGroup.publicKey.displayText
+            );
         }
     }
 }

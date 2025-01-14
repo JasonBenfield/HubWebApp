@@ -21,9 +21,7 @@ public static class HubClientExtensions
         }
         services.AddScoped<IAppClientDomain>(sp => sp.GetRequiredService<AppClientDomainSelector>());
         services.AddScoped<AppClientUrl>();
-        services.AddSingleton<HubAppClientVersion>();
-        services.AddScoped<HubAppClientFactory>();
-        services.AddScoped(sp => sp.GetRequiredService<HubAppClientFactory>().Create());
+        services.AddHubAppClient();
         services.AddScoped<SystemHubAppClient>();
         services.AddScoped<IAuthClient>(sp => sp.GetRequiredService<HubAppClient>());
     }
