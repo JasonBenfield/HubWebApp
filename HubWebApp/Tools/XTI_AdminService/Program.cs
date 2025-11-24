@@ -1,42 +1,22 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting.WindowsServices;
+﻿using XTI_AdminService;
 using XTI_Core;
 using XTI_Core.Extensions;
-using XTI_AdminService;
 
 #pragma warning disable CA1416 // Validate platform compatibility
-var host = WebHost.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration
-    (
-        (hostContext, configuration) =>
-        {
-            configuration.UseXtiConfiguration(hostContext.HostingEnvironment, "", "", args);
-        }
-    )
-    .ConfigureServices
-    (
-        (hostContext, services) =>
-        {
-            services.AddSingleton(_ => XtiEnvironment.Parse(hostContext.HostingEnvironment.EnvironmentName));
-            services.AddSingleton<AdminToolRunner>();
-        }
-    )
-    .UseUrls("http://*:61862")
-    .Configure(app =>
-    {
-        app.Run((context) =>
-        {
-            var runner = context.RequestServices.GetRequiredService<AdminToolRunner>();
-            return runner.Run(context);
-        });
-    })
-    .Build();
-if (args.Length > 0 && args[0].Equals("mode=console", StringComparison.OrdinalIgnoreCase))
+var hostBuilder = WebApplication.CreateBuilder(args);
+hostBuilder.Configuration.UseXtiConfiguration(hostBuilder.Environment, "", "", args);
+hostBuilder.Services.AddSingleton(_ => XtiEnvironment.Parse(hostBuilder.Environment.EnvironmentName));
+hostBuilder.Services.AddSingleton<AdminToolRunner>();
+hostBuilder.Services.AddWindowsService();
+if (args.Length == 0 || args[0].Equals("mode=console", StringComparison.OrdinalIgnoreCase))
 {
-    host.Run();
+    hostBuilder.Host.UseWindowsService();
 }
-else
+var app = hostBuilder.Build();
+app.Run((context) =>
 {
-    host.RunAsService();
-}
+    var runner = context.RequestServices.GetRequiredService<AdminToolRunner>();
+    return runner.Run(context);
+});
+await app.RunAsync("http://*:61862");
 #pragma warning restore CA1416 // Validate platform compatibility
