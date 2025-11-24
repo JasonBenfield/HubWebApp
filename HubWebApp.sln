@@ -34,6 +34,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubWebApp.EndToEndTests", "HubWebApp\Tests\HubWebApp.EndToEndTests\HubWebApp.EndToEndTests.csproj", "{D61A3BF0-9C52-4C97-ADD6-171FB8665C0D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_HubAppClient", "HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj", "{085D0A81-8A19-4082-BF55-145F960374D1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65D5008A-0A79-4B9B-9F5B-57B1551BCC70} = {65D5008A-0A79-4B9B-9F5B-57B1551BCC70}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HubSetupApp", "HubWebApp\Apps\HubSetupApp\HubSetupApp.csproj", "{F51E0FAB-B3E0-4BD3-A5F4-CDEBE47CE706}"
 EndProject
@@ -96,6 +99,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{63FA7D19-DC2A-4275-B17D-F74D4CE11607}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTI_AuthenticatorAppClient", "AuthenticatorWebApp\Lib\XTI_AuthenticatorAppClient\XTI_AuthenticatorAppClient.csproj", "{2B7D1315-976B-4AEE-B380-1A7489A382E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{370ED141-7727-4E26-A6D6-130276C7758F} = {370ED141-7727-4E26-A6D6-130276C7758F}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticatorSetupApp", "AuthenticatorWebApp\Apps\AuthenticatorSetupApp\AuthenticatorSetupApp.csproj", "{C1570A7F-BB7E-4B11-A99A-8F71D479128E}"
 EndProject

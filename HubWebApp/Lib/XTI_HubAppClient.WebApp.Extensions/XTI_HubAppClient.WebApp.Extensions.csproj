@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Description>Web App Extensions using $(XtiAppName) $(XtiVersion)</Description>
@@ -9,8 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.53" />
-		<PackageReference Include="XTI_WebApp.Scheduled" Version="1.8.53" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.54-dev251122161951096" />
+		<PackageReference Include="XTI_WebApp.Scheduled" Version="1.8.54-dev251122161951096" />
 	</ItemGroup>
 
 	<ItemGroup>

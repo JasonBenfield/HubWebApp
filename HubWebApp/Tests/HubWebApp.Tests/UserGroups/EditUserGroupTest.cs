@@ -36,7 +36,7 @@ internal sealed class EditUserGroupTest
                     var editRequest = new EditUserGroupRequest
                     (
                         userID: user.ID,
-                        userGroupID: group2.ID
+                        userGroupID: group1.ID
                     );
                     userIndex++;
                     return editRequest;
