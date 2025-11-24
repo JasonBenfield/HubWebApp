@@ -7,9 +7,9 @@ export class AppSessionDetail {
 	readonly userGroup: AppUserGroup;
 	readonly user: AppUser;
 
-	constructor(source: IAppSessionDetailModel) {
-		this.session = new AppSession(source.Session);
-		this.userGroup = new AppUserGroup(source.UserGroup);
-		this.user = new AppUser(source.User);
+	constructor(source?: IAppSessionDetailModel) {
+		this.session = new AppSession(source && source.Session);
+		this.userGroup = new AppUserGroup(source && source.UserGroup);
+		this.user = new AppUser(source && source.User);
     }
 }

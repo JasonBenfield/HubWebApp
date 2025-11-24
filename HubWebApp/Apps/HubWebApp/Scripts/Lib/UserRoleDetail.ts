@@ -6,21 +6,21 @@ import { Modifier } from "./Modifier";
 import { ModifierCategory } from "./ModifierCategory";
 
 export class UserRoleDetail {
-	readonly id: number;
-	readonly userGroup: AppUserGroup;
-	readonly user: AppUser;
-	readonly app: App;
-	readonly role: AppRole;
-	readonly modCategory: ModifierCategory;
-	readonly modifier: Modifier;
+    readonly id: number;
+    readonly userGroup: AppUserGroup;
+    readonly user: AppUser;
+    readonly app: App;
+    readonly role: AppRole;
+    readonly modCategory: ModifierCategory;
+    readonly modifier: Modifier;
 
-	constructor(readonly source: IUserRoleDetailModel) {
-		this.id = source.ID;
-		this.userGroup = new AppUserGroup(source.UserGroup);
-		this.user = new AppUser(source.User);
-		this.app = new App(source.App);
-		this.role = new AppRole(source.Role);
-		this.modCategory = new ModifierCategory(source.ModCategory);
-		this.modifier = new Modifier(source.Modifier);
+    constructor(source?: IUserRoleDetailModel) {
+        this.id = source ? source.ID : 0;
+        this.userGroup = new AppUserGroup(source && source.UserGroup);
+        this.user = new AppUser(source && source.User);
+        this.app = new App(source && source.App);
+        this.role = new AppRole(source && source.Role);
+        this.modCategory = new ModifierCategory(source && source.ModCategory);
+        this.modifier = new Modifier(source && source.Modifier);
     }
 }

@@ -29,22 +29,22 @@ export class AppRequestDetail {
     readonly requestData: string;
     readonly resultData: string;
 
-    constructor(source: IAppRequestDetailModel) {
-        this.request = new AppRequest(source.Request);
-        this.resourceGroup = new AppResourceGroup(source.ResourceGroup);
-        this.resource = new AppResource(source.Resource);
-        this.modCategory = new ModifierCategory(source.ModCategory);
-        this.modifier = new Modifier(source.Modifier);
-        this.installLocation = new InstallLocation(source.InstallLocation);
-        this.installation = new Installation(source.Installation);
-        this.version = new XtiVersion(source.Version);
-        this.app = new App(source.App);
-        this.session = new AppSession(source.Session);
-        this.userGroup = new AppUserGroup(source.UserGroup);
-        this.user = new AppUser(source.User);
-        this.sourceRequestID = source.SourceRequestID;
-        this.targetRequestIDs = source.TargetRequestIDs;
-        this.requestData = source.RequestData;
-        this.resultData = source.ResultData;
+    constructor(source?: IAppRequestDetailModel) {
+        this.request = new AppRequest(source && source.Request);
+        this.resourceGroup = new AppResourceGroup(source && source.ResourceGroup);
+        this.resource = new AppResource(source && source.Resource);
+        this.modCategory = new ModifierCategory(source && source.ModCategory);
+        this.modifier = new Modifier(source && source.Modifier);
+        this.installLocation = new InstallLocation(source && source.InstallLocation);
+        this.installation = new Installation(source && source.Installation);
+        this.version = new XtiVersion(source && source.Version);
+        this.app = new App(source && source.App);
+        this.session = new AppSession(source && source.Session);
+        this.userGroup = new AppUserGroup(source && source.UserGroup);
+        this.user = new AppUser(source && source.User);
+        this.sourceRequestID = source ? source.SourceRequestID : 0;
+        this.targetRequestIDs = source ? source.TargetRequestIDs : [];
+        this.requestData = source ? source.RequestData : "";
+        this.resultData = source ? source.ResultData : "";
     }
 }

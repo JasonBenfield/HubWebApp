@@ -5,9 +5,9 @@ export class AppKey {
     readonly name: AppName;
     readonly type: AppType;
 
-    constructor(source: IAppKey) {
-        this.name = new AppName(source.Name);
-        this.type = AppType.values.value(source.Type);
+    constructor(source?: IAppKey) {
+        this.name = new AppName(source && source.Name);
+        this.type = source ? AppType.values.value(source.Type) : AppType.values.NotFound;
     }
 
     format() {

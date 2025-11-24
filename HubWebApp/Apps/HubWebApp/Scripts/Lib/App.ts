@@ -8,11 +8,11 @@ export class App {
 	readonly versionName: AppVersionName;
 	readonly publicKey: ModifierKey;
 
-    constructor(readonly source: IAppModel) {
-		this.id = source.ID;
-		this.appKey = new AppKey(source.AppKey);
-		this.versionName = new AppVersionName(source.VersionName);
-		this.publicKey = new ModifierKey(source.PublicKey);
+    constructor(source?: IAppModel) {
+		this.id = source ? source.ID : 0;
+		this.appKey = new AppKey(source && source.AppKey);
+		this.versionName = new AppVersionName(source && source.VersionName);
+		this.publicKey = new ModifierKey(source && source.PublicKey);
 	}
 
 	getModifier() {

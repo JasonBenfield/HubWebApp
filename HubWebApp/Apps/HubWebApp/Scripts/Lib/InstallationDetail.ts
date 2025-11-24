@@ -11,11 +11,11 @@ export class InstallationDetail {
 	readonly app: App;
 	readonly mostRecentRequest: AppRequest;
 
-	constructor(source: IInstallationDetailModel) {
-		this.installLocation = new InstallLocation(source.InstallLocation);
-		this.installation = new Installation(source.Installation);
-		this.version = new XtiVersion(source.Version);
-		this.app = new App(source.App);
-		this.mostRecentRequest = new AppRequest(source.MostRecentRequest);
+	constructor(source?: IInstallationDetailModel) {
+		this.installLocation = new InstallLocation(source && source.InstallLocation);
+		this.installation = new Installation(source && source.Installation);
+		this.version = new XtiVersion(source && source.Version);
+		this.app = new App(source && source.App);
+		this.mostRecentRequest = new AppRequest(source && source.MostRecentRequest);
     }
 }

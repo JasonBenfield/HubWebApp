@@ -12,15 +12,15 @@ export class AppLogEntry {
     readonly category: string;
     readonly actualCount: number;
 
-    constructor(readonly source: IAppLogEntryModel) {
-        this.id = source.ID;
-        this.requestID = source.RequestID;
-        this.timeOccurred = source.TimeOccurred;
-        this.severity = AppEventSeverity.values.value(source.Severity);
-        this.caption = source.Caption;
-        this.message = source.Message;
-        this.detail = source.Detail;
-        this.category = source.Category;
-        this.actualCount = source.ActualCount;
+    constructor(readonly source?: IAppLogEntryModel) {
+        this.id = source ? source.ID : 0;
+        this.requestID = source ? source.RequestID : 0;
+        this.timeOccurred = source ? source.TimeOccurred : DateTimeOffset.max();
+        this.severity = source ? AppEventSeverity.values.value(source.Severity) : AppEventSeverity.values.NotSet;
+        this.caption = source ? source.Caption : "";
+        this.message = source ? source.Message : "";
+        this.detail = source ? source.Detail : "";
+        this.category = source ? source.Category : "";
+        this.actualCount = source ? source.ActualCount : 0;
     }
 }
