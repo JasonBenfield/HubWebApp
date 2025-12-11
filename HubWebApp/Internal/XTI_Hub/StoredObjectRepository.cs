@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
@@ -76,16 +75,16 @@ public sealed class StoredObjectRepository
         factory.DB.StoredObjects.Retrieve()
             .AnyAsync(so => so.StorageName == storageName.Value && so.StorageKey == storageKey);
 
-    public Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now) where T : new() =>
-        StoredObject(storageName, storageKey, now, () => new T());
+    public Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds) where T : new() =>
+        StoredObject(storageName, storageKey, now, singleUseExpirationInSeconds, () => new T());
 
-    public async Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, Func<T> ifnull)
+    public async Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds, Func<T> ifnull)
     {
-        var serialized = await SerializedStoredObject(storageName, storageKey, now);
+        var serialized = await SerializedStoredObject(storageName, storageKey, now, singleUseExpirationInSeconds);
         return string.IsNullOrWhiteSpace(serialized) ? ifnull() : XtiSerializer.Deserialize<T>(serialized, ifnull);
     }
 
-    public async Task<string> SerializedStoredObject(StorageName storageName, string storageKey, DateTimeOffset now)
+    public async Task<string> SerializedStoredObject(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds)
     {
         var storedObject = await factory.DB.StoredObjects.Retrieve()
             .FirstOrDefaultAsync
@@ -100,7 +99,25 @@ public sealed class StoredObjectRepository
         {
             if (storedObject.IsSingleUse)
             {
-                await factory.DB.StoredObjects.Delete(storedObject);
+                if(singleUseExpirationInSeconds <= 0)
+                {
+                    await factory.DB.StoredObjects.Delete(storedObject);
+                }
+                else
+                {
+                    var expirationTime = now.AddSeconds(singleUseExpirationInSeconds);
+                    if(storedObject.TimeExpires > expirationTime)
+                    {
+                        await factory.DB.StoredObjects.Update
+                        (
+                            storedObject,
+                            so =>
+                            {
+                                so.TimeExpires = expirationTime;
+                            }
+                        );
+                    }
+                }
             }
             else if (TimeSpan.TryParse(storedObject.ExpirationTimeSpan, out var expirationTimeSpan) && !expirationTimeSpan.Equals(TimeSpan.Zero))
             {

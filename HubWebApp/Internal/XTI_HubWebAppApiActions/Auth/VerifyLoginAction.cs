@@ -25,14 +25,13 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
         var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword);
         await user.LoggedIn(clock.Now());
         var authID = Guid.NewGuid().ToString("N");
-        var authKey = await hubFactory.StoredObjects.Store
+        var authKey = await hubFactory.StoredObjects.StoreSingleUse
         (
             storageName: new StorageName("XTI Authenticated"),
             generateKey: GenerateKeyModel.SixDigit(),
             data: new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
             clock: clock,
-            expireAfter: TimeSpan.FromMinutes(15),
-            isSlidingExpiration: false
+            expireAfter: TimeSpan.FromMinutes(15)
         );
         return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }

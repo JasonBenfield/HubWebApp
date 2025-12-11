@@ -30,7 +30,7 @@ public sealed class EfHubAdministration : IHubAdministration
         );
 
     public Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct) =>
-        hubFactory.StoredObjects.SerializedStoredObject(storageName, storageKey, clock.Now());
+        hubFactory.StoredObjects.SerializedStoredObject(storageName, storageKey, clock.Now(), 0);
     public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys, CancellationToken ct)
     {
         var apps = new List<AppModel>();
@@ -190,11 +190,13 @@ public sealed class EfHubAdministration : IHubAdministration
             getRequest.RepoName,
             getRequest.ConfigurationName
         );
-        var installConfigModels = await installConfigs
-            .ToAsyncEnumerable()
-            .SelectAwait(async c => await c.ToModel())
-            .ToArrayAsync();
-        return installConfigModels;
+        var installConfigModels = new List<InstallConfigurationModel>();
+        foreach (var installConfig in installConfigs)
+        {
+            var installConfigModel = await installConfig.ToModel();
+            installConfigModels.Add(installConfigModel);
+        }
+        return installConfigModels.ToArray();
     }
 
     public async Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest configRequest, CancellationToken ct)

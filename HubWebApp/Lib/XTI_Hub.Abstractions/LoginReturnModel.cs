@@ -2,5 +2,17 @@
 
 public sealed class LoginReturnModel
 {
-    public string ReturnUrl { get; set; } = "";
+    public LoginReturnModel()
+        : this("", "")
+    {
+    }
+
+    public LoginReturnModel(string requesterKey, string returnUrl)
+    {
+        RequesterKey = requesterKey;
+        ReturnUrl = returnUrl;
+    }
+
+    public string RequesterKey { get; set; }
+    public string ReturnUrl { get; set; }
 }

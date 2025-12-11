@@ -112,6 +112,7 @@ interface IAuthenticatedLoginRequest {
 	ReturnKey: string;
 }
 interface ILoginReturnModel {
+	RequesterKey: string;
 	ReturnUrl: string;
 }
 interface IAuthenticatedLoginResult {

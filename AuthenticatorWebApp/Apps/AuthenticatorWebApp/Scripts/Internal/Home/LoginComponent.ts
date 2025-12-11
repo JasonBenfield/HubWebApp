@@ -2,7 +2,7 @@
 import { VerifyLoginForm } from "@hub/Http/VerifyLoginForm";
 import { PostToLogin } from "@hub/PostToLogin";
 import { AsyncCommand } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { MessageAlert } from '@jasonbenfield/sharedwebapp/Components/MessageAlert';
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
 import { LoginComponentView } from "./LoginComponentView";
 
@@ -35,12 +35,12 @@ export class LoginComponent {
     }
 
     private async login() {
-        this.alert.info('Verifying login...');
+        this.alert.info("Verifying login...");
         try {
             const result = await this.verifyLoginForm.save(this.hubClient.Auth.VerifyLoginAction);
             if (result.succeeded()) {
                 const cred = this.getCredentials();
-                this.alert.info('Opening page...');
+                this.alert.info("Opening page...");
                 const loginResult = result.value;
                 new PostToLogin(this.hubClient).execute(cred, loginResult.AuthKey, loginResult.AuthID);
             }

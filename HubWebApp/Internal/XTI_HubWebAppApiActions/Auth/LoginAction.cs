@@ -25,7 +25,8 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
         (
             new StorageName("XTI Authenticated"),
             loginRequest.AuthKey,
-            clock.Now()
+            clock.Now(),
+            options.Storage.SingleUseExpirationInSeconds
         );
         if (string.IsNullOrWhiteSpace(authenticated.UserName))
         {
@@ -40,10 +41,18 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
         var loginReturn = await hubFactory.StoredObjects.StoredObject<LoginReturnModel>
         (
-            new StorageName("Login Return"), 
+            new StorageName("Login Return"),
             loginRequest.ReturnKey,
-            clock.Now()
+            clock.Now(),
+            options.Storage.SingleUseExpirationInSeconds
         );
+        var requesterKey = string.IsNullOrWhiteSpace(anonClient.RequesterKey) ?
+            Guid.NewGuid().ToString("N") :
+            anonClient.RequesterKey;
+        if (requesterKey != loginReturn.RequesterKey)
+        {
+            loginReturn = new();
+        }
         var returnUrl = string.IsNullOrWhiteSpace(loginReturn.ReturnUrl) ?
             options.Login.DefaultReturnUrl :
             loginReturn.ReturnUrl;

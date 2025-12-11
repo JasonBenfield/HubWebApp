@@ -13,12 +13,12 @@ public sealed class LoginReturnKey : ILoginReturnKey
         this.clock = clock;
     }
 
-    public Task<string> Value(string returnUrl) =>
+    public Task<string> Value(string requesterKey, string returnUrl) =>
         hubFactory.StoredObjects.Store
         (
             new StorageName("Login Return"),
-            GenerateKeyModel.SixDigit(),
-            new LoginReturnModel { ReturnUrl = returnUrl },
+            GenerateKeyModel.TenDigit(),
+            new LoginReturnModel(requesterKey, returnUrl),
             clock,
             TimeSpan.FromDays(90),
             isSlidingExpiration: true
