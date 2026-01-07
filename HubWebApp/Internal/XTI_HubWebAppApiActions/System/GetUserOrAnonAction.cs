@@ -11,7 +11,7 @@ public class GetUserOrAnonAction : AppAction<AppUserNameRequest, AppUserModel>
 
     public async Task<AppUserModel> Execute(AppUserNameRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.UserOrAnon(getRequest.ToAppUserName());
+        var user = await hubFactory.Users.UserOrAnon(getRequest.ToAppUserName(), stoppingToken);
         return user.ToModel();
     }
 }

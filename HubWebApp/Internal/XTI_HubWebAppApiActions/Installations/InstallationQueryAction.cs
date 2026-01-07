@@ -15,9 +15,9 @@ public sealed class InstallationQueryAction : QueryAction<InstallationQueryReque
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedInstallation>> Execute(ODataQueryOptions<ExpandedInstallation> options, InstallationQueryRequest model)
+    public async Task<IQueryable<ExpandedInstallation>> Execute(ODataQueryOptions<ExpandedInstallation> options, InstallationQueryRequest model, CancellationToken ct)
     {
-        var appPermissions = await currentUser.GetAppPermissions();
+        var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
             .Select(p => p.App.ToModel().ID)

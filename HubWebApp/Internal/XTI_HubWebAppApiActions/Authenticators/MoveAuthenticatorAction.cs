@@ -12,12 +12,12 @@ public sealed class MoveAuthenticatorAction : AppAction<MoveAuthenticatorRequest
     public async Task<EmptyActionResult> Execute(MoveAuthenticatorRequest moveRequest, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(moveRequest.AuthenticatorKey);
-        var sourceUser = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, moveRequest.ExternalUserKey);
+        var sourceUser = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, moveRequest.ExternalUserKey, stoppingToken);
         if (!sourceUser.IsUserName(AppUserName.Anon))
         {
             await sourceUser.DeleteAuthenticator(authenticatorKey, moveRequest.ExternalUserKey);
         }
-        var targetUser = await hubFactory.Users.User(moveRequest.TargetUserID);
+        var targetUser = await hubFactory.Users.User(moveRequest.TargetUserID, stoppingToken);
         await targetUser.AddAuthenticator(authenticatorKey, moveRequest.ExternalUserKey);
         return new EmptyActionResult();
     }

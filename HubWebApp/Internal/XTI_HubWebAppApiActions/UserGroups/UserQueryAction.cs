@@ -15,10 +15,10 @@ public sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedUser>> Execute(ODataQueryOptions<ExpandedUser> options, UserGroupKey model)
+    public async Task<IQueryable<ExpandedUser>> Execute(ODataQueryOptions<ExpandedUser> options, UserGroupKey model, CancellationToken ct)
     {
-        var user = await currentUser.Value();
-        var userPermissions = await user.GetUserGroupPermissions();
+        var user = await currentUser.Value(ct);
+        var userPermissions = await user.GetUserGroupPermissions(ct);
         var userGroupModels = userPermissions
             .Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel());

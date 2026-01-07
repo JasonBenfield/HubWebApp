@@ -87,7 +87,7 @@ internal sealed class MoveAuthenticatorTest
             modifier
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user.ToModel();
     }
 

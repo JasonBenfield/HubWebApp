@@ -11,7 +11,7 @@ public class GetUserByUserNameAction : AppAction<AppUserNameRequest, AppUserMode
 
     public async Task<AppUserModel> Execute(AppUserNameRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.UserByUserName(getRequest.ToAppUserName());
+        var user = await hubFactory.Users.UserByUserName(getRequest.ToAppUserName(), stoppingToken);
         return user.ToModel();
     }
 }

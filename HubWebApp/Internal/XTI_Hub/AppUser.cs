@@ -26,16 +26,16 @@ public sealed class AppUser
     public bool IsPasswordCorrect(IHashedPassword hashedPassword) =>
         hashedPassword.Equals(record.Password);
 
-    public async Task AssignRole(AppRole role)
+    public async Task AssignRole(AppRole role, CancellationToken ct)
     {
-        var app = await role.App();
-        var modifier = await app.DefaultModifier();
-        await Modifier(modifier).AssignRole(role);
+        var app = await role.App(ct);
+        var modifier = await app.DefaultModifier(ct);
+        await Modifier(modifier).AssignRole(role, ct);
     }
 
-    public async Task<AppUserModifier[]> Modifiers(App app)
+    public async Task<AppUserModifier[]> Modifiers(App app, CancellationToken ct)
     {
-        var modifiers = await app.Modifiers();
+        var modifiers = await app.Modifiers(ct);
         var userModifiers = new List<AppUserModifier>();
         foreach (var modifier in modifiers)
         {
@@ -178,11 +178,11 @@ public sealed class AppUser
             .ToArray();
     }
 
-    public async Task<AppPermission[]> GetAppPermissions()
+    public async Task<AppPermission[]> GetAppPermissions(CancellationToken ct)
     {
-        var apps = await factory.Apps.All();
+        var apps = await factory.Apps.All(ct);
         var hubApp = apps.First(a => a.AppKeyEquals(HubInfo.AppKey));
-        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
         var appPermissions = new List<AppPermission>();
         var appsWithPermissions = apps
             .Where
@@ -196,21 +196,21 @@ public sealed class AppUser
             );
         foreach (var app in appsWithPermissions)
         {
-            var permission = await GetAppPermission(hubApp, appsModCategory, app);
+            var permission = await GetAppPermission(hubApp, appsModCategory, app, ct);
             appPermissions.Add(permission);
         }
         return appPermissions.ToArray();
     }
 
-    public async Task<AppPermission> GetAppPermission(App app)
+    public async Task<AppPermission> GetAppPermission(App app, CancellationToken ct)
     {
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var permission = await GetAppPermission(hubApp, appsModCategory, app);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
+        var permission = await GetAppPermission(hubApp, appsModCategory, app, ct);
         return permission;
     }
 
-    private async Task<AppPermission> GetAppPermission(App hubApp, ModifierCategory appsModCategory, App app)
+    private async Task<AppPermission> GetAppPermission(App hubApp, ModifierCategory appsModCategory, App app, CancellationToken ct)
     {
         var appModel = app.ToModel();
         Modifier modifier;
@@ -220,13 +220,13 @@ public sealed class AppUser
             appModel.AppKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
         )
         {
-            modifier = await hubApp.DefaultModifier();
+            modifier = await hubApp.DefaultModifier(ct);
         }
         else
         {
-            modifier = await appsModCategory.ModifierByTargetID(appModel.ID);
+            modifier = await appsModCategory.ModifierByTargetID(appModel.ID, ct);
         }
-        var userRoles = await Modifier(modifier).AssignedRoles();
+        var userRoles = await Modifier(modifier).AssignedRoles(ct);
         var userRoleModels = userRoles.Select(ur => ur.ToModel());
         AppPermission permission;
         if (userRoleModels.Any(ur => ur.Name.Equals(AppRoleName.DenyAccess)))
@@ -247,46 +247,47 @@ public sealed class AppUser
         return permission;
     }
 
-    public Task<AppUserGroup> UserGroup() => factory.UserGroups.UserGroup(record.GroupID);
+    public Task<AppUserGroup> UserGroup(CancellationToken ct) => factory.UserGroups.UserGroup(record.GroupID, ct);
 
-    public Task EditUserGroup(AppUserGroup userGroup) =>
+    public Task EditUserGroup(AppUserGroup userGroup, CancellationToken ct) =>
         factory.DB.Users.Update
         (
             record,
             u =>
             {
                 u.GroupID = userGroup.ID;
-            }
+            },
+            ct
         );
 
-    public async Task<AppUserGroupPermission[]> GetUserGroupPermissions()
+    public async Task<AppUserGroupPermission[]> GetUserGroupPermissions(CancellationToken ct)
     {
-        var userGroups = await factory.UserGroups.UserGroups();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var userGroups = await factory.UserGroups.UserGroups(ct);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
         var userGroupPermissions = new List<AppUserGroupPermission>();
         foreach (var userGroup in userGroups)
         {
-            var userGroupPermission = await GetUserGroupPermission(userGroupsModCategory, userGroup);
+            var userGroupPermission = await GetUserGroupPermission(userGroupsModCategory, userGroup, ct);
             userGroupPermissions.Add(userGroupPermission);
         }
         return userGroupPermissions.ToArray();
     }
 
-    public async Task<AppUserGroupPermission> GetUserGroupPermission(AppUserGroup userGroup)
+    public async Task<AppUserGroupPermission> GetUserGroupPermission(AppUserGroup userGroup, CancellationToken ct)
     {
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
-        var permission = await GetUserGroupPermission(userGroupsModCategory, userGroup);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
+        var permission = await GetUserGroupPermission(userGroupsModCategory, userGroup, ct);
         return permission;
     }
 
-    private async Task<AppUserGroupPermission> GetUserGroupPermission(ModifierCategory userGroupsModCategory, AppUserGroup userGroup)
+    private async Task<AppUserGroupPermission> GetUserGroupPermission(ModifierCategory userGroupsModCategory, AppUserGroup userGroup, CancellationToken ct)
     {
         AppUserGroupPermission userGroupPermission;
         var userGroupModel = userGroup.ToModel();
-        var modifier = await userGroupsModCategory.AddOrUpdateModifier(userGroupModel.PublicKey, userGroupModel.ID, userGroupModel.GroupName.DisplayText);
-        var userRoles = await Modifier(modifier).AssignedRoles();
+        var modifier = await userGroupsModCategory.AddOrUpdateModifier(userGroupModel.PublicKey, userGroupModel.ID, userGroupModel.GroupName.DisplayText, ct);
+        var userRoles = await Modifier(modifier).AssignedRoles(ct);
         var userRoleModels = userRoles.Select(ur => ur.ToModel());
         if (userRoles.Any(ur => ur.IsDenyAccess()))
         {

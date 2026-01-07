@@ -11,8 +11,8 @@ public sealed class GetDefaultModifierAction : AppAction<EmptyRequest, ModifierM
 
     public async Task<ModifierModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var modifier = await app.DefaultModifier();
+        var app = await appFromPath.Value(stoppingToken);
+        var modifier = await app.DefaultModifier(stoppingToken);
         return modifier.ToModel();
     }
 }

@@ -42,7 +42,8 @@ public sealed class AppRequestRepository
         int actualCount,
         string sourceRequestKey,
         string requestData,
-        string resultData
+        string resultData,
+        CancellationToken ct
     )
     {
         XtiPath xtiPath;
@@ -64,8 +65,8 @@ public sealed class AppRequestRepository
         }
         var resourceGroup = await installation.ResourceGroupOrDefault(xtiPath.Group);
         var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action);
-        var modCategory = await resourceGroup.ModCategory();
-        var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier);
+        var modCategory = await resourceGroup.ModCategory(ct);
+        var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier, ct);
         var truncatedPath = new TruncatedText(path, 100).Value;
         requestData = new TruncatedText(requestData, 5000).Value;
         resultData = new TruncatedText(resultData, 5000).Value;
@@ -112,30 +113,31 @@ public sealed class AppRequestRepository
                         r.ActualCount = actualCount;
                         r.RequestData = requestData;
                         r.ResultData = resultData;
-                    }
+                    },
+                    ct
                 );
         }
         var request = factory.CreateRequest(record);
         if (!string.IsNullOrWhiteSpace(sourceRequestKey))
         {
-            var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeStarted);
+            var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeStarted, ct);
             await AddSourceLinkIfNotExists(request, sourceRequest);
         }
         return request;
     }
 
-    public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now)
+    public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now, CancellationToken ct)
     {
         var requestEntity = await GetRequestEntityByKey(requestKey);
         if (requestEntity == null)
         {
-            var session = await factory.Sessions.DefaultSession(now);
-            var app = await factory.Apps.App(AppKey.Unknown);
+            var session = await factory.Sessions.DefaultSession(now, ct);
+            var app = await factory.Apps.App(AppKey.Unknown, ct);
             var currentVersion = await app.CurrentVersion();
             var installation = await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
             var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown);
             var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown);
-            var modifier = await app.DefaultModifier();
+            var modifier = await app.DefaultModifier(ct);
             if (string.IsNullOrWhiteSpace(requestKey))
             {
                 requestKey = new GeneratedKey().Value();

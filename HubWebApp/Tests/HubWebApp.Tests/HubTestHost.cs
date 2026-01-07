@@ -23,7 +23,7 @@ internal sealed class HubTestHost
         }
         var sp = builder.Build().Scope();
         var initialSetup = sp.GetRequiredService<InitialSetup>();
-        await initialSetup.Run();
+        await initialSetup.Run(ct: default);
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
         await hubAdmin.AddOrUpdateApps
         (
@@ -47,11 +47,11 @@ internal sealed class HubTestHost
             default
         );
         var setup = sp.GetRequiredService<IAppSetup>();
-        await setup.Run(AppVersionKey.Current);
+        await setup.Run(AppVersionKey.Current, ct: default);
         var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();
-        await defaultFakeSetup.Run(AppVersionKey.Current);
+        await defaultFakeSetup.Run(AppVersionKey.Current, ct: default);
         var factory = sp.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var adminUser = await AddAdminUser(sp);
         var currentUserName = sp.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(adminUser.ToModel().UserName);
@@ -61,11 +61,11 @@ internal sealed class HubTestHost
     private async Task<AppUser> AddAdminUser(IServiceProvider services)
     {
         var factory = services.GetRequiredService<HubFactory>();
-        var userGroup = await factory.UserGroups.GetGeneral();
-        var adminUser = await userGroup.AddOrUpdate(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow);
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var adminRole = await hubApp.Role(HubInfo.Roles.Admin);
-        await adminUser.AssignRole(adminRole);
+        var userGroup = await factory.UserGroups.GetGeneral(ct: default);
+        var adminUser = await userGroup.AddOrUpdate(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow, ct: default);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
+        var adminRole = await hubApp.Role(HubInfo.Roles.Admin, ct: default);
+        await adminUser.AssignRole(adminRole, ct: default);
         return adminUser;
     }
 }

@@ -117,7 +117,7 @@ public sealed class InstallationRepository
             .Installations
             .Update(entity, inst => inst.Status = status.Value);
 
-    public async Task<Installation> InstallationOrDefault(int installationID)
+    public async Task<Installation> InstallationOrDefault(int installationID, CancellationToken ct)
     {
         var installation = await hubFactory.DB
             .Installations
@@ -128,7 +128,7 @@ public sealed class InstallationRepository
         if (installation == null)
         {
             var unknownLoc = await hubFactory.InstallLocations.UnknownLocation();
-            var unknownApp = await hubFactory.Apps.AppOrUnknown(AppKey.Unknown);
+            var unknownApp = await hubFactory.Apps.AppOrUnknown(AppKey.Unknown, ct);
             var currentVersion = await unknownApp.CurrentVersion();
             installation = await unknownLoc.CurrentInstallation(currentVersion);
         }

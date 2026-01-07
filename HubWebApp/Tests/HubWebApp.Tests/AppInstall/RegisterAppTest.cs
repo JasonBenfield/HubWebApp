@@ -41,7 +41,7 @@ public sealed class RegisterAppTest
             FakeInfo.Roles.Manager,
             FakeInfo.Roles.Viewer
         };
-        var appRoles = await app.Roles();
+        var appRoles = await app.Roles(ct: default);
         Assert.That(appRoles.Select(r => r.ToModel().Name), Is.EquivalentTo(roleNames), "Should add role names from app role names");
     }
 
@@ -53,7 +53,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await appFactory.Apps.App(AppKey.Unknown);
+        var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         Assert.That(app.ToModel().ID, Is.GreaterThan(0), "Should add unknown app");
     }
 
@@ -65,7 +65,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await appFactory.Apps.App(AppKey.Unknown);
+        var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
         Assert.That(group.ID, Is.GreaterThan(0), "Should add unknown resource group");
@@ -79,7 +79,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await appFactory.Apps.App(AppKey.Unknown);
+        var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         var version = await app.CurrentVersion();
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
         var resource = await group.ResourceByName(ResourceName.Unknown);
@@ -125,7 +125,7 @@ public sealed class RegisterAppTest
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups())
             .First(g => g.NameEquals(new ResourceGroupName("Employee")));
-        var allowedRoles = await employeeGroup.AllowedRoles();
+        var allowedRoles = await employeeGroup.AllowedRoles(ct: default);
         Assert.That
         (
             allowedRoles.Select(r => r.ToModel().Name),
@@ -164,7 +164,7 @@ public sealed class RegisterAppTest
         var version = await app.CurrentVersion();
         var employeeGroup = (await version.ResourceGroups()).First(g => g.NameEquals(new ResourceGroupName("Employee")));
         var addEmployeeAction = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
-        var allowedRoles = await addEmployeeAction.AllowedRoles();
+        var allowedRoles = await addEmployeeAction.AllowedRoles(ct: default);
         Assert.That
         (
             allowedRoles.Select(r => r.ToModel().Name),
@@ -181,7 +181,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var modCategory = await app.ModCategory(ModifierCategoryName.Default);
+        var modCategory = await app.ModCategory(ModifierCategoryName.Default, ct: default);
         Assert.That
         (
             modCategory.IsDefault(),
@@ -198,7 +198,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var category = await app.ModCategory(ModifierCategoryName.Default);
+        var category = await app.ModCategory(ModifierCategoryName.Default, ct: default);
         Assert.That(category.ID, Is.GreaterThan(0), "Should add default modifier to app");
     }
 
@@ -212,7 +212,7 @@ public sealed class RegisterAppTest
         var app = await GetApp(tester);
         var version = await app.CurrentVersion();
         var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
-        var modCategory = await employeeGroup.ModCategory();
+        var modCategory = await employeeGroup.ModCategory(ct: default);
         Assert.That(modCategory.ToModel().Name, Is.EqualTo(FakeInfo.ModCategories.Department));
     }
 
@@ -302,7 +302,7 @@ public sealed class RegisterAppTest
     private static async Task<App> GetApp(IHubActionTester tester)
     {
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await appFactory.Apps.App(FakeInfo.AppKey);
+        var app = await appFactory.Apps.App(FakeInfo.AppKey, ct: default);
         return app;
     }
 

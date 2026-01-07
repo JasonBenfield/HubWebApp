@@ -30,12 +30,12 @@ public sealed class Installation
 
     public Task Deleted() => hubFactory.Installations.Deleted(entity);
 
-    public async Task<AppVersion> AppVersion()
+    public async Task<AppVersion> AppVersion(CancellationToken ct)
     {
         var appVersionEntity = await hubFactory.DB.AppVersions.Retrieve()
             .Where(av => av.ID == entity.AppVersionID)
-            .FirstAsync();
-        var app = await hubFactory.Apps.App(appVersionEntity.AppID);
+            .FirstAsync(ct);
+        var app = await hubFactory.Apps.App(appVersionEntity.AppID, ct);
         var version = await hubFactory.Versions.Version(appVersionEntity.VersionID);
         return new AppVersion(hubFactory, app, version);
     }

@@ -14,7 +14,8 @@ public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppModel>
         var app = await new AppRegistration(appFactory).Run
         (
             model.AppTemplate,
-            model.VersionKey
+            model.VersionKey,
+            stoppingToken
         );
         return app;
     }

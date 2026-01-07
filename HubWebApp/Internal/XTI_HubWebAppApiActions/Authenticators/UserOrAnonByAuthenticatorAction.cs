@@ -12,7 +12,7 @@ public sealed class UserOrAnonByAuthenticatorAction : AppAction<UserOrAnonByAuth
     public async Task<AppUserModel> Execute(UserOrAnonByAuthenticatorRequest getRequest, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(getRequest.AuthenticatorKey);
-        var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, getRequest.ExternalUserKey);
+        var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, getRequest.ExternalUserKey, stoppingToken);
         return user.ToModel();
     }
 }

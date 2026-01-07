@@ -124,7 +124,7 @@ internal sealed class GetUserAccessTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
         var hubApp = await tester.HubApp();
-        var defaultModifier = await hubApp.DefaultModifier();
+        var defaultModifier = await hubApp.DefaultModifier(ct: default);
         var role = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.EditUser);
         var modCategory = await GetModCategory(tester, hubApp.ToModel(), HubInfo.ModCategories.Default);
         var modifier = await GetModifier(tester, hubApp.ToModel(), modCategory, ModifierKey.Default);

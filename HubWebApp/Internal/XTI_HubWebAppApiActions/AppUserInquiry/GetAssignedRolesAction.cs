@@ -15,16 +15,16 @@ public sealed class GetAssignedRolesAction : AppAction<UserModifierKey, AppRoleM
 
     public async Task<AppRoleModel[]> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
-        var modifier = await factory.Modifiers.Modifier(model.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(model.UserID, stoppingToken);
+        var modifier = await factory.Modifiers.Modifier(model.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var assignedRoles = await user.Modifier(modifier).AssignedRoles();
+        var assignedRoles = await user.Modifier(modifier).AssignedRoles(stoppingToken);
         return assignedRoles
             .Where(role => !role.IsDenyAccess())
             .Select(role => role.ToModel())

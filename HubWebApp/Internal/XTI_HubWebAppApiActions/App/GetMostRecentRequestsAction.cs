@@ -11,7 +11,7 @@ public sealed class GetMostRecentRequestsAction : AppAction<int, AppRequestExpan
 
     public async Task<AppRequestExpandedModel[]> Execute(int howMany, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var requests = await app.MostRecentRequests(howMany);
         return requests.ToArray();
     }

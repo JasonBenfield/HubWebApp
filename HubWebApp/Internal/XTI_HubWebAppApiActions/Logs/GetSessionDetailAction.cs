@@ -13,10 +13,10 @@ public sealed class GetSessionDetailAction : AppAction<int, AppSessionDetailMode
 
     public async Task<AppSessionDetailModel> Execute(int sessionID, CancellationToken stoppingToken)
     {
-        var session = await hubFactory.Sessions.Session(sessionID);
-        var user = await session.User();
-        var userGroup = await user.UserGroup();
-        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup);
+        var session = await hubFactory.Sessions.Session(sessionID, stoppingToken);
+        var user = await session.User(stoppingToken);
+        var userGroup = await user.UserGroup(stoppingToken);
+        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);
         if (!userGroupPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to user '{userGroup.ToModel().GroupName}'");

@@ -31,7 +31,8 @@ public sealed class AppSession
         int actualCount,
         string sourceRequestKey,
         string requestData,
-        string resultData
+        string resultData, 
+        CancellationToken ct
     ) => factory.Requests.AddOrUpdate
         (
             this,
@@ -43,10 +44,11 @@ public sealed class AppSession
             actualCount,
             sourceRequestKey,
             requestData,
-            resultData
+            resultData,
+            ct
         );
 
-    public Task Authenticate(AppUser user) =>
+    public Task Authenticate(AppUser user, CancellationToken ct) =>
         factory.DB
             .Sessions
             .Update
@@ -55,10 +57,11 @@ public sealed class AppSession
                 r =>
                 {
                     r.UserID = user.ID;
-                }
+                },
+                ct
             );
 
-    public Task End(DateTimeOffset timeEnded) =>
+    public Task End(DateTimeOffset timeEnded, CancellationToken ct) =>
         factory.DB
             .Sessions
             .Update
@@ -67,7 +70,8 @@ public sealed class AppSession
                 r =>
                 {
                     r.TimeEnded = timeEnded;
-                }
+                },
+                ct
             );
 
     public Task<AppRequest[]> Requests() => factory.Requests.RetrieveBySession(this);
@@ -75,7 +79,7 @@ public sealed class AppSession
     public Task<AppRequest[]> MostRecentRequests(int howMany) =>
         factory.Requests.RetrieveMostRecent(this, howMany);
 
-    public Task<AppUser> User() => factory.Users.User(record.UserID);
+    public Task<AppUser> User(CancellationToken ct) => factory.Users.User(record.UserID, ct);
 
     public AppSessionModel ToModel() =>
         new 

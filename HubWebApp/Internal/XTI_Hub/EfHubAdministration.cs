@@ -36,7 +36,7 @@ public sealed class EfHubAdministration : IHubAdministration
         var apps = new List<AppModel>();
         foreach (var appKey in appKeys)
         {
-            var app = await hubFactory.Apps.AddOrUpdate(versionName, appKey, clock.Now());
+            var app = await hubFactory.Apps.AddOrUpdate(versionName, appKey, clock.Now(), ct);
             apps.Add(app.ToModel());
         }
         return apps.ToArray();
@@ -81,7 +81,7 @@ public sealed class EfHubAdministration : IHubAdministration
             }
             foreach (var appKey in appKeys)
             {
-                var app = await hubFactory.Apps.App(appKey);
+                var app = await hubFactory.Apps.App(appKey, ct);
                 foreach (var version in versions)
                 {
                     await app.AddVersionIfNotFound(version);
@@ -107,7 +107,7 @@ public sealed class EfHubAdministration : IHubAdministration
     public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
     {
         var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
-        var app = await hubFactory.Apps.App(appKey);
+        var app = await hubFactory.Apps.App(appKey, ct);
         await app.AddVersionIfNotFound(version);
         var appVersion = version.App(app);
         var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName);
@@ -122,13 +122,13 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task BeginInstall(int installationID, CancellationToken ct)
     {
-        var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
+        var installation = await hubFactory.Installations.InstallationOrDefault(installationID, ct);
         await installation.BeginInstallation();
     }
 
     public async Task Installed(int installationID, CancellationToken ct)
     {
-        var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
+        var installation = await hubFactory.Installations.InstallationOrDefault(installationID, ct);
         await installation.Installed();
     }
 
@@ -136,7 +136,7 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = GetMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await hubFactory.Installers.AddOrUpdateInstaller(machineName, hashedPassword, clock.Now());
+        var installationUser = await hubFactory.Installers.AddOrUpdateInstaller(machineName, hashedPassword, clock.Now(), ct);
         return installationUser.ToModel();
     }
 
@@ -154,25 +154,26 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = GetMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(new SystemUserName(appKey, machineName), hashedPassword, clock.Now());
+        var installationUser = await hubFactory.SystemUsers.AddOrUpdateSystemUser(new SystemUserName(appKey, machineName), hashedPassword, clock.Now(), ct);
         return installationUser.ToModel();
     }
 
     public async Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password, CancellationToken ct)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var defaultUserGroup = await hubFactory.UserGroups.GetGeneral();
+        var defaultUserGroup = await hubFactory.UserGroups.GetGeneral(ct);
         var user = await defaultUserGroup.AddOrUpdate
         (
             userName,
             hashedPassword,
             new PersonName(userName.DisplayText),
             new EmailAddress(""),
-            clock.Now()
+            clock.Now(),
+            ct
         );
-        var app = await hubFactory.Apps.App(appKey);
-        var adminRole = await app.AddOrUpdateRole(AppRoleName.Admin);
-        await user.AssignRole(adminRole);
+        var app = await hubFactory.Apps.App(appKey, ct);
+        var adminRole = await app.AddOrUpdateRole(AppRoleName.Admin, ct);
+        await user.AssignRole(adminRole, ct);
         return user.ToModel();
     }
 

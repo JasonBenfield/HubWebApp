@@ -11,7 +11,7 @@ public sealed class GetResourceGroupsAction : AppAction<EmptyRequest, ResourceGr
 
     public async Task<ResourceGroupModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var version = await app.CurrentVersion();
         var resourceGroups = await version.ResourceGroups();
         return resourceGroups.Select(rg => rg.ToModel()).ToArray();

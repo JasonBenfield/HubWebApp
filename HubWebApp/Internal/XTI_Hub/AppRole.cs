@@ -19,15 +19,20 @@ public sealed class AppRole
 
     public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
 
-    internal Task Deactivate(DateTimeOffset timeDeactivated)
-        => UpdateTimeDeactivated(timeDeactivated);
+    internal Task Deactivate(DateTimeOffset timeDeactivated, CancellationToken ct)
+        => UpdateTimeDeactivated(timeDeactivated, ct);
 
-    internal Task Activate() => UpdateTimeDeactivated(DateTimeOffset.MaxValue);
+    internal Task Activate(CancellationToken ct) => UpdateTimeDeactivated(DateTimeOffset.MaxValue, ct);
 
-    private Task UpdateTimeDeactivated(DateTimeOffset timeDeactivated) => 
-        factory.DB.Roles.Update(record, r => r.TimeDeactivated = timeDeactivated);
+    private Task UpdateTimeDeactivated(DateTimeOffset timeDeactivated, CancellationToken ct) => 
+        factory.DB.Roles.Update
+        (
+            record, 
+            r => r.TimeDeactivated = timeDeactivated,
+            ct
+        );
 
-    public Task<App> App() => factory.Apps.App(record.AppID);
+    public Task<App> App(CancellationToken ct) => factory.Apps.App(record.AppID, ct);
 
     public bool IsDenyAccess() => NameEquals(AppRoleName.DenyAccess);
 

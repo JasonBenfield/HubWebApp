@@ -61,7 +61,7 @@ internal sealed class HostedService : IHostedService
                 var dbAdmin = scope.ServiceProvider.GetRequiredService<DbAdmin<HubDbContext>>();
                 await dbAdmin.Update();
                 var setup = scope.ServiceProvider.GetRequiredService<InitialSetup>();
-                await setup.Run();
+                await setup.Run(ct: default);
             }
             else
             {

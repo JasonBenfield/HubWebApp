@@ -15,9 +15,9 @@ public sealed class SessionQueryAction : QueryAction<EmptyRequest, ExpandedSessi
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedSession>> Execute(ODataQueryOptions<ExpandedSession> options, EmptyRequest model)
+    public async Task<IQueryable<ExpandedSession>> Execute(ODataQueryOptions<ExpandedSession> options, EmptyRequest model, CancellationToken ct)
     {
-        var userGroupPermissions = await currentUser.GetUserGroupPermissions();
+        var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel().ID)

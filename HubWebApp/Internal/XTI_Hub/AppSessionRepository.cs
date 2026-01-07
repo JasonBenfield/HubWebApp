@@ -14,56 +14,57 @@ public sealed class AppSessionRepository
         this.factory = factory;
     }
 
-    public async Task<AppSession> Session(string sessionKey)
+    public async Task<AppSession> Session(string sessionKey, CancellationToken ct)
     {
-        var record = await GetSession(sessionKey);
+        var record = await GetSession(sessionKey, ct);
         return factory.CreateSession(record ?? throw new Exception($"Session '{sessionKey}' not found"));
     }
 
-    public async Task<AppSession> Session(int id)
+    public async Task<AppSession> Session(int id, CancellationToken ct)
     {
         var record = await factory.DB.Sessions.Retrieve()
-            .FirstOrDefaultAsync(s => s.ID == id);
+            .FirstOrDefaultAsync(s => s.ID == id, ct);
         return factory.CreateSession(record ?? throw new Exception($"Session not found with ID {id}"));
     }
 
-    public async Task<AppSession> SessionOrPlaceHolder(string sessionKey, DateTimeOffset now)
+    public async Task<AppSession> SessionOrPlaceHolder(string sessionKey, DateTimeOffset now, CancellationToken ct)
     {
-        var record = await GetSession(sessionKey);
+        var record = await GetSession(sessionKey, ct);
         if (record == null)
         {
-            record = await AddPlaceHolderSession(sessionKey, new GeneratedKey().Value(), now);
+            record = await AddPlaceHolderSession(sessionKey, new GeneratedKey().Value(), now, ct);
         }
         return factory.CreateSession(record);
     }
 
-    private Task<AppSessionEntity?> GetSession(string sessionKey) =>
+    private Task<AppSessionEntity?> GetSession(string sessionKey, CancellationToken ct) =>
         factory.DB
             .Sessions
             .Retrieve()
-            .FirstOrDefaultAsync(s => s.SessionKey == sessionKey);
+            .FirstOrDefaultAsync(s => s.SessionKey == sessionKey, ct);
 
     private static readonly string defaultRequestKey = "default";
 
-    internal async Task<AppSession> DefaultSession(DateTimeOffset now)
+    internal async Task<AppSession> DefaultSession(DateTimeOffset now, CancellationToken ct)
     {
         var record = await factory.DB
             .Sessions
             .Retrieve()
             .FirstOrDefaultAsync
             (
-                r => r.RequesterKey == defaultRequestKey && r.TimeStarted >= now.Date
+                r => r.RequesterKey == defaultRequestKey && r.TimeStarted >= now.Date,
+                ct
             );
         if (record == null)
         {
-            record = await AddPlaceHolderSession(new GeneratedKey().Value(), defaultRequestKey, now);
+            record = await AddPlaceHolderSession(new GeneratedKey().Value(), defaultRequestKey, now, ct);
         }
         return factory.CreateSession(record);
     }
 
-    private async Task<AppSessionEntity> AddPlaceHolderSession(string sessionKey, string requesterKey, DateTimeOffset now)
+    private async Task<AppSessionEntity> AddPlaceHolderSession(string sessionKey, string requesterKey, DateTimeOffset now, CancellationToken ct)
     {
-        var user = await factory.Users.Anon();
+        var user = await factory.Users.Anon(ct);
         var record = await Add
         (
             sessionKey,
@@ -72,7 +73,8 @@ public sealed class AppSessionRepository
             DateTimeOffset.MaxValue,
             requesterKey,
             "",
-            ""
+            "",
+            ct
         );
         return record;
     }
@@ -93,21 +95,21 @@ public sealed class AppSessionRepository
             .Select(s => factory.CreateSession(s))
             .ToArrayAsync();
 
-    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress)
+    public async Task<AppSession> AddOrUpdate(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress, CancellationToken ct)
     {
-        var record = await GetSession(sessionKey);
+        var record = await GetSession(sessionKey, ct);
         if (record == null)
         {
-            record = await Add(sessionKey, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress);
+            record = await Add(sessionKey, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress, ct);
         }
         else
         {
-            await Update(record, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress);
+            await Update(record, user, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress, ct);
         }
         return factory.CreateSession(record);
     }
 
-    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress)
+    private async Task<AppSessionEntity> Add(string sessionKey, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress, CancellationToken ct)
     {
         var record = new AppSessionEntity
         {
@@ -119,11 +121,11 @@ public sealed class AppSessionRepository
             UserAgent = userAgent ?? "",
             RemoteAddress = remoteAddress ?? ""
         };
-        await factory.DB.Sessions.Create(record);
+        await factory.DB.Sessions.Create(record, ct);
         return record;
     }
 
-    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress) =>
+    public Task Update(AppSessionEntity record, AppUser user, DateTimeOffset timeStarted, DateTimeOffset timeEnded, string requesterKey, string userAgent, string remoteAddress, CancellationToken ct) =>
         factory.DB
             .Sessions
             .Update
@@ -146,7 +148,8 @@ public sealed class AppSessionRepository
                     r.RequesterKey = requesterKey;
                     r.UserAgent = userAgent ?? "";
                     r.RemoteAddress = remoteAddress ?? "";
-                }
+                },
+                ct
             );
 
     public async Task PurgeLogs(DateTimeOffset since)

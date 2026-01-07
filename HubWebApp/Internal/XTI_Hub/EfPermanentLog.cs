@@ -19,27 +19,27 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
     {
         foreach (var startSession in batch.StartSessions)
         {
-            await StartSession(startSession);
+            await StartSession(startSession, ct);
         }
         foreach (var authSession in batch.AuthenticateSessions)
         {
-            await AuthenticateSession(authSession);
+            await AuthenticateSession(authSession, ct);
         }
         foreach (var startRequest in batch.StartRequests)
         {
-            await StartRequest(startRequest);
+            await StartRequest(startRequest, ct);
         }
         foreach (var logEvent in batch.LogEntries)
         {
-            await LogEvent(logEvent);
+            await LogEvent(logEvent, ct);
         }
         foreach (var endRequest in batch.EndRequests)
         {
-            await EndRequest(endRequest);
+            await EndRequest(endRequest, ct);
         }
         foreach (var endSession in batch.EndSessions)
         {
-            await EndSession(endSession);
+            await EndSession(endSession, ct);
         }
     }
 
@@ -47,7 +47,7 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
     {
         foreach (var sessionDetailRequest in sessionDetails)
         {
-            var user = await hubFactory.Users.UserOrAnon(new AppUserName(sessionDetailRequest.Session.SessionKey.UserName));
+            var user = await hubFactory.Users.UserOrAnon(new AppUserName(sessionDetailRequest.Session.SessionKey.UserName), ct);
             var session = await hubFactory.Sessions.AddOrUpdate
             (
                 sessionKey: sessionDetailRequest.Session.SessionKey.ID,
@@ -56,11 +56,12 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                 timeEnded: sessionDetailRequest.Session.TimeEnded,
                 requesterKey: sessionDetailRequest.Session.RequesterKey,
                 userAgent: sessionDetailRequest.Session.UserAgent,
-                remoteAddress: sessionDetailRequest.Session.RemoteAddress
+                remoteAddress: sessionDetailRequest.Session.RemoteAddress,
+                ct: ct
             );
             foreach (var requestDetail in sessionDetailRequest.RequestDetails)
             {
-                var installation = await hubFactory.Installations.InstallationOrDefault(requestDetail.Request.InstallationID);
+                var installation = await hubFactory.Installations.InstallationOrDefault(requestDetail.Request.InstallationID, ct);
                 var request = await session.LogRequest
                 (
                     requestKey: requestDetail.Request.RequestKey,
@@ -71,7 +72,8 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                     actualCount: requestDetail.Request.ActualCount,
                     sourceRequestKey: requestDetail.Request.SourceRequestKey,
                     requestData: requestDetail.Request.RequestData,
-                    resultData: requestDetail.Request.ResultData
+                    resultData: requestDetail.Request.ResultData,
+                    ct: ct
                 );
                 foreach (var logEntry in requestDetail.LogEntries)
                 {
@@ -92,11 +94,11 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
         }
     }
 
-    private async Task StartSession(StartSessionModel startSession)
+    private async Task StartSession(StartSessionModel startSession, CancellationToken ct)
     {
         try
         {
-            var user = await hubFactory.Users.UserOrAnon(new AppUserName(startSession.UserName));
+            var user = await hubFactory.Users.UserOrAnon(new AppUserName(startSession.UserName), ct);
             var session = await hubFactory.Sessions.AddOrUpdate
             (
                 startSession.SessionKey,
@@ -105,35 +107,36 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                 DateTimeOffset.MaxValue,
                 startSession.RequesterKey,
                 startSession.UserAgent,
-                startSession.RemoteAddress
+                startSession.RemoteAddress,
+                ct
             );
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private async Task AuthenticateSession(AuthenticateSessionModel model)
+    private async Task AuthenticateSession(AuthenticateSessionModel model, CancellationToken ct)
     {
         try
         {
-            var session = await hubFactory.Sessions.SessionOrPlaceHolder(model.SessionKey, clock.Now());
-            var user = await hubFactory.Users.UserOrAnon(new AppUserName(model.UserName));
-            await session.Authenticate(user);
+            var session = await hubFactory.Sessions.SessionOrPlaceHolder(model.SessionKey, clock.Now(), ct);
+            var user = await hubFactory.Users.UserOrAnon(new AppUserName(model.UserName), ct);
+            await session.Authenticate(user, ct);
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private async Task StartRequest(StartRequestModel startRequest)
+    private async Task StartRequest(StartRequestModel startRequest, CancellationToken ct)
     {
         try
         {
-            var session = await hubFactory.Sessions.SessionOrPlaceHolder(startRequest.SessionKey, clock.Now());
-            var installation = await hubFactory.Installations.InstallationOrDefault(startRequest.InstallationID);
+            var session = await hubFactory.Sessions.SessionOrPlaceHolder(startRequest.SessionKey, clock.Now(), ct);
+            var installation = await hubFactory.Installations.InstallationOrDefault(startRequest.InstallationID, ct);
             var request = await session.LogRequest
             (
                 startRequest.RequestKey,
@@ -144,54 +147,55 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                 startRequest.ActualCount,
                 startRequest.SourceRequestKey,
                 requestData: "",
-                resultData: ""
+                resultData: "",
+                ct: ct
             );
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private async Task LogEvent(LogEntryModelV1 model)
+    private async Task LogEvent(LogEntryModelV1 model, CancellationToken ct)
     {
         try
         {
-            await logEvent(model);
+            await logEvent(model, ct);
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private async Task EndRequest(EndRequestModel model)
+    private async Task EndRequest(EndRequestModel model, CancellationToken ct)
     {
         try
         {
-            var request = await hubFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now());
-            await request.End(model.TimeEnded);
+            var request = await hubFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now(), ct);
+            await request.End(model.TimeEnded, ct);
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private async Task EndSession(EndSessionModel model)
+    private async Task EndSession(EndSessionModel model, CancellationToken ct)
     {
         try
         {
-            var session = await hubFactory.Sessions.SessionOrPlaceHolder(model.SessionKey, clock.Now());
-            await session.End(model.TimeEnded);
+            var session = await hubFactory.Sessions.SessionOrPlaceHolder(model.SessionKey, clock.Now(), ct);
+            await session.End(model.TimeEnded, ct);
         }
         catch (Exception ex)
         {
-            await HandleError(ex);
+            await HandleError(ex, ct);
         }
     }
 
-    private Task HandleError(Exception ex) =>
+    private Task HandleError(Exception ex, CancellationToken ct) =>
         logEvent
         (
             new LogEntryModelV1
@@ -201,12 +205,13 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                 Detail = ex.StackTrace ?? "",
                 Severity = AppEventSeverity.Values.AppError,
                 TimeOccurred = clock.Now()
-            }
+            },
+            ct
         );
 
-    private async Task logEvent(LogEntryModelV1 model)
+    private async Task logEvent(LogEntryModelV1 model, CancellationToken ct)
     {
-        var request = await hubFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now());
+        var request = await hubFactory.Requests.RequestOrPlaceHolder(model.RequestKey, clock.Now(), ct);
         var severity = AppEventSeverity.Values.Value(model.Severity);
         await request.LogEvent
         (

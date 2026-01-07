@@ -11,9 +11,9 @@ public sealed class GetModifiersAction : AppAction<int, ModifierModel[]>
 
     public async Task<ModifierModel[]> Execute(int modCategoryID, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var modCategory = await app.ModCategory(modCategoryID);
-        var modifiers = await modCategory.Modifiers();
+        var app = await appFromPath.Value(stoppingToken);
+        var modCategory = await app.ModCategory(modCategoryID, stoppingToken);
+        var modifiers = await modCategory.Modifiers(stoppingToken);
         return modifiers.Select(m => m.ToModel()).ToArray();
     }
 }

@@ -22,7 +22,8 @@ public sealed class AddInstallationUserAction : AppAction<AddInstallationUserReq
         (
             addRequest.MachineName,
             hashedPassword, 
-            clock.Now()
+            clock.Now(),
+            stoppingToken
         );
         return systemUser.ToModel();
     }

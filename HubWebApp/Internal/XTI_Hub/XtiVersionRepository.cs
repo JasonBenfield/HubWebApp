@@ -123,12 +123,12 @@ public sealed class XtiVersionRepository
         return factory.CreateVersion(entity);
     }
 
-    private async Task<XtiVersion> AddCurrentVersionToAppsIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys)
+    private async Task<XtiVersion> AddCurrentVersionToAppsIfNotFound(AppVersionName versionName, DateTimeOffset timeAdded, AppKey[] appKeys, CancellationToken ct)
     {
         var currentVersion = await AddCurrentVersionIfNotFound(versionName, timeAdded);
         foreach (var appKey in appKeys)
         {
-            var app = await factory.Apps.App(appKey);
+            var app = await factory.Apps.App(appKey, ct);
             await app.AddVersionIfNotFound(currentVersion);
         }
         return currentVersion;
@@ -221,12 +221,12 @@ public sealed class XtiVersionRepository
         return version.App(app);
     }
 
-    internal async Task<AppVersion> VersionByAppOrUnknown(App app, AppVersionKey versionKey)
+    internal async Task<AppVersion> VersionByAppOrUnknown(App app, AppVersionKey versionKey, CancellationToken ct)
     {
         var record = await GetVersionByApp(app, versionKey);
         if (record == null)
         {
-            var unknownApp = await factory.Apps.App(AppKey.Unknown);
+            var unknownApp = await factory.Apps.App(AppKey.Unknown, ct);
             record = await GetVersionByApp(unknownApp, AppVersionKey.Current);
             if (record == null)
             {
@@ -234,7 +234,8 @@ public sealed class XtiVersionRepository
                 (
                     AppVersionName.Unknown,
                     DateTimeOffset.Now,
-                    new[] { AppKey.Unknown }
+                    [AppKey.Unknown],
+                    ct
                 );
                 return unknownVersion.App(unknownApp);
             }

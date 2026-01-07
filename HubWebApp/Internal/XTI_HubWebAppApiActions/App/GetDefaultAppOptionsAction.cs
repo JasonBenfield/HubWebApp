@@ -11,7 +11,7 @@ public sealed class GetDefaultAppOptionsAction : AppAction<EmptyRequest, string>
 
     public async Task<string> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         return app.SerializedDefaultOptions;
     }
 }

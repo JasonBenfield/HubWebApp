@@ -16,7 +16,7 @@ public sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, Auth
     public async Task<AuthenticatedLoginResult> Execute(ExternalAuthKeyModel authRequest, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(authRequest.AuthenticatorKey);
-        var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, authRequest.ExternalUserKey);
+        var user = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, authRequest.ExternalUserKey, stoppingToken);
         if (user.IsUserName(AppUserName.Anon))
         {
             throw new ExternalUserNotFoundException(authenticatorKey, authRequest.ExternalUserKey);

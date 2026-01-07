@@ -9,13 +9,13 @@ public sealed class UnverifiedUser
         this.factory = factory;
     }
 
-    public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword)
+    public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword, CancellationToken ct)
     {
         AppUser user;
-        var userExists = await factory.Users.UserNameExists(userName);
+        var userExists = await factory.Users.UserNameExists(userName, ct);
         if (userExists && !userName.IsAnon())
         {
-            user = await factory.Users.UserByUserName(userName);
+            user = await factory.Users.UserByUserName(userName, ct);
             if (!user.IsPasswordCorrect(hashedPassword))
             {
                 throw new PasswordIncorrectException(userName.DisplayText);

@@ -12,17 +12,15 @@ public sealed class InstallerRepository
         this.factory = factory;
     }
 
-    public Task<AppUser[]> Installers() =>
-        factory.DB
-            .Users
-            .Retrieve()
+    public Task<AppUser[]> Installers(CancellationToken ct) =>
+        factory.DB.Users.Retrieve()
             .Where(u => u.UserName.StartsWith("xti_inst"))
             .Select(u => factory.User(u))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    public async Task<AppUser> AddOrUpdateInstaller(string machineName, IHashedPassword hashedPassword, DateTimeOffset now)
+    public async Task<AppUser> AddOrUpdateInstaller(string machineName, IHashedPassword hashedPassword, DateTimeOffset now, CancellationToken ct)
     {
-        var installer = await InstallerOrAnon(machineName);
+        var installer = await InstallerOrAnon(machineName, ct);
         if (installer.ToModel().UserName.Equals(new InstallerUserName(machineName).UserName))
         {
             await installer.ChangePassword(hashedPassword);
@@ -33,36 +31,39 @@ public sealed class InstallerRepository
             (
                 machineName,
                 hashedPassword,
-                now
+                now,
+                ct
             );
         }
-        var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
+        var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct);
         if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
-            var role = await hubApp.AddOrUpdateRole(HubInfo.Roles.Admin);
-            await installer.AssignRole(role);
+            var role = await hubApp.AddOrUpdateRole(HubInfo.Roles.Admin, ct);
+            await installer.AssignRole(role, ct);
         }
         return installer;
     }
 
-    public Task<AppUser> InstallerOrAnon(string machineName)
-        => factory.Users.UserOrAnon(new InstallerUserName(machineName).UserName);
+    public Task<AppUser> InstallerOrAnon(string machineName, CancellationToken ct)
+        => factory.Users.UserOrAnon(new InstallerUserName(machineName).UserName, ct);
 
     private async Task<AppUser> AddInstaller
     (
         string machineName,
         IHashedPassword password,
-        DateTimeOffset timeAdded
+        DateTimeOffset timeAdded,
+        CancellationToken ct
     )
     {
-        var xtiUserGroup = await factory.UserGroups.GetXti();
+        var xtiUserGroup = await factory.UserGroups.GetXti(ct);
         var user = await xtiUserGroup.AddOrUpdate
         (
             new InstallerUserName(machineName).UserName,
             password,
             new PersonName($"Installer {machineName}"),
             new EmailAddress(""),
-            timeAdded
+            timeAdded,
+            ct
         );
         return user;
     }

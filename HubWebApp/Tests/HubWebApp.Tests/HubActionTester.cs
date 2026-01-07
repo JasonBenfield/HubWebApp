@@ -54,7 +54,7 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     public async Task<AppUser> LoginAs(AppUserName userName)
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(userName);
+        var user = await factory.Users.UserByUserName(userName, ct: default);
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
         return user;
@@ -78,28 +78,29 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     )
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var userGroup = await factory.UserGroups.GetGeneral();
+        var userGroup = await factory.UserGroups.GetGeneral(ct: default);
         var user = await userGroup.AddOrUpdate
         (
             new AppUserName("loggedinUser"),
             new FakeHashedPassword(""),
             new PersonName("loggedin User"),
             new EmailAddress(""),
-            DateTimeOffset.Now
+            DateTimeOffset.Now,
+            ct: default
         );
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         foreach (var roleName in defaultRoleNames)
         {
-            var role = await hubApp.Role(roleName);
-            await user.AssignRole(role);
+            var role = await hubApp.Role(roleName, ct: default);
+            await user.AssignRole(role, ct: default);
         }
-        var efModifier = await factory.Modifiers.Modifier(modifier.ID);
+        var efModifier = await factory.Modifiers.Modifier(modifier.ID, ct: default);
         foreach (var roleName in roleNames ?? [])
         {
-            var role = await hubApp.Role(roleName);
-            await user.Modifier(efModifier).AssignRole(role);
+            var role = await hubApp.Role(roleName, ct: default);
+            await user.Modifier(efModifier).AssignRole(role, ct: default);
         }
         return user;
     }
@@ -107,13 +108,13 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     public Task<App> HubApp()
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        return factory.Apps.App(HubInfo.AppKey);
+        return factory.Apps.App(HubInfo.AppKey, ct: default);
     }
 
     public async Task<AppRole> AdminRole()
     {
         var app = await HubApp();
-        var role = await app.Role(AppRoleName.Admin);
+        var role = await app.Role(AppRoleName.Admin, ct: default);
         return role;
     }
 
@@ -123,15 +124,16 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     public async Task<ModifierModel> UserGroupModifier(AppUserGroupName name)
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var userGroup = await factory.UserGroups.UserGroup(name);
+        var userGroup = await factory.UserGroups.UserGroup(name, ct: default);
         var userGroupModel = userGroup.ToModel();
         var hubApp = await HubApp();
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct: default);
         var userGroupModifier = await userGroupsModCategory.AddOrUpdateModifier
         (
             userGroupModel.PublicKey,
             userGroupModel.ID.ToString(),
-            userGroupModel.GroupName.DisplayText
+            userGroupModel.GroupName.DisplayText,
+            ct: default
         );
         return userGroupModifier.ToModel();
     }
@@ -139,7 +141,7 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     public async Task<ModifierModel> DefaultModifier()
     {
         var hubApp = await HubApp();
-        var defaultModifier = await hubApp.DefaultModifier();
+        var defaultModifier = await hubApp.DefaultModifier(ct: default);
         return defaultModifier.ToModel();
     }
 
@@ -148,7 +150,7 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
     public async Task<ModifierModel> AppModifier(AppKey appKey)
     {
         var factory = Services.GetRequiredService<HubFactory>();
-        var app = await factory.Apps.App(appKey);
+        var app = await factory.Apps.App(appKey, ct: default);
         var appModel = app.ToModel();
         App hubApp;
         if (appKey.Equals(HubInfo.AppKey))
@@ -159,12 +161,13 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
         {
             hubApp = await HubApp();
         }
-        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
+        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct: default);
         var hubAppModifier = await appsModCategory.AddOrUpdateModifier
         (
             appModel.PublicKey,
             appModel.ID.ToString(),
-            appModel.AppKey.Format()
+            appModel.AppKey.Format(),
+            ct: default
         );
         return hubAppModifier.ToModel();
     }

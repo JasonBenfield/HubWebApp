@@ -4,7 +4,7 @@ namespace AuthenticatorSetupApp;
 
 internal sealed class AuthenticatorAppSetup : IAppSetup
 {
-    public Task Run(AppVersionKey versionKey)
+    public Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         return Task.CompletedTask;
     }

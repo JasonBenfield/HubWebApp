@@ -10,5 +10,5 @@ public sealed class GetUserAction : AppAction<EmptyRequest, AppUserModel>
     }
 
     public Task<AppUserModel> Execute(EmptyRequest model, CancellationToken stoppingToken) =>
-        userContext.User();
+        userContext.User(stoppingToken);
 }

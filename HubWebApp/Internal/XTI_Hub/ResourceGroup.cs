@@ -26,24 +26,26 @@ public sealed class ResourceGroup
     public Task<Resource> ResourceByName(ResourceName name) =>
         factory.Resources.ResourceByName(this, name);
 
-    public Task<Resource> ResourceOrDefault(ResourceName name) => 
+    public Task<Resource> ResourceOrDefault(ResourceName name) =>
         factory.Resources.ResourceOrDefault(this, name);
 
     public Task<Resource[]> Resources() => factory.Resources.Resources(this);
 
-    public async Task<IEnumerable<Modifier>> Modifiers()
+    public async Task<IEnumerable<Modifier>> Modifiers(CancellationToken ct)
     {
-        var modCategory = await factory.ModCategories.Category(record.ModCategoryID);
-        var modifiers = await modCategory.Modifiers();
+        var modCategory = await factory.ModCategories.Category(record.ModCategoryID, ct);
+        var modifiers = await modCategory.Modifiers(ct);
         return modifiers;
     }
 
-    public Task<ModifierCategory> ModCategory() => 
-        factory.ModCategories.Category(record.ModCategoryID);
+    public Task<ModifierCategory> ModCategory(CancellationToken ct) =>
+        factory.ModCategories.Category(record.ModCategoryID, ct);
 
-    public Task AllowAnonymous() => setIsAnonymousAllowed(true);
-    public Task DenyAnonymous() => setIsAnonymousAllowed(false);
-    private Task setIsAnonymousAllowed(bool isAllowed)
+    public Task AllowAnonymous(CancellationToken ct) => setIsAnonymousAllowed(true, ct);
+
+    public Task DenyAnonymous(CancellationToken ct) => setIsAnonymousAllowed(false, ct);
+
+    private Task setIsAnonymousAllowed(bool isAllowed, CancellationToken ct)
         => factory.DB
             .ResourceGroups
             .Update
@@ -52,29 +54,30 @@ public sealed class ResourceGroup
                 r =>
                 {
                     r.IsAnonymousAllowed = isAllowed;
-                }
+                },
+                ct
             );
 
-    public Task<AppRole[]> AllowedRoles()
-        => factory.Roles.AllowedRolesForResourceGroup(this);
+    public Task<AppRole[]> AllowedRoles(CancellationToken ct)
+        => factory.Roles.AllowedRolesForResourceGroup(this, ct);
 
-    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles)
-        => factory.DB.Transaction(() => setRoleAccess(allowedRoles));
+    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
+        => factory.DB.Transaction(() => setRoleAccess(allowedRoles, ct));
 
-    private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles)
+    private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
     {
-        await deleteExistingRoles(allowedRoles);
-        var existingAllowedRoles = await AllowedRoles();
+        await deleteExistingRoles(allowedRoles, ct);
+        var existingAllowedRoles = await AllowedRoles(ct);
         foreach (var allowedRole in allowedRoles)
         {
             if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID)))
             {
-                await addGroupRole(allowedRole, true);
+                await addGroupRole(allowedRole, true, ct);
             }
         }
     }
 
-    private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles)
+    private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
     {
         var allowedRoleIDs = allowedRoles.Select(r => r.ID);
         var rolesToDelete = await factory.DB
@@ -88,14 +91,14 @@ public sealed class ResourceGroup
                         !allowedRoleIDs.Contains(gr.RoleID) && gr.IsAllowed
                     )
             )
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         foreach (var groupRole in rolesToDelete)
         {
-            await factory.DB.ResourceGroupRoles.Delete(groupRole);
+            await factory.DB.ResourceGroupRoles.Delete(groupRole, ct);
         }
     }
 
-    private Task addGroupRole(AppRole role, bool isAllowed)
+    private Task addGroupRole(AppRole role, bool isAllowed, CancellationToken ct)
         => factory.DB
             .ResourceGroupRoles
             .Create
@@ -105,7 +108,8 @@ public sealed class ResourceGroup
                     GroupID = ID,
                     RoleID = role.ID,
                     IsAllowed = isAllowed
-                }
+                },
+                ct
             );
 
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)

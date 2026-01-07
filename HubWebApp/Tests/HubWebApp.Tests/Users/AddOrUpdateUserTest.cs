@@ -78,7 +78,7 @@ internal sealed class AddOrUpdateUserTest
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(model, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(model.UserName));
+        var user = await factory.Users.UserByUserName(new AppUserName(model.UserName), ct: default);
         Assert.That(user.ToModel().UserName, Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
     }
 

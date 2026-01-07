@@ -13,8 +13,8 @@ public sealed class EditUserAction : AppAction<EditCurrentUserForm, AppUserModel
 
     public async Task<AppUserModel> Execute(EditCurrentUserForm model, CancellationToken stoppingToken)
     {
-        var userModel = await userContext.User();
-        var user = await hubFactory.Users.User(userModel.ID);
+        var userModel = await userContext.User(stoppingToken);
+        var user = await hubFactory.Users.User(userModel.ID, stoppingToken);
         var name = new PersonName(model.PersonName.Value() ?? "");
         var email = new EmailAddress(model.Email.Value() ?? "");
         await user.Edit(name, email);

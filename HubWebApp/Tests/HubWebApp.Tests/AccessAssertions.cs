@@ -76,7 +76,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
     {
         var modKey = modifier.ModKey;
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
+        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct: default);
         foreach (var roleName in allowedRoles)
         {
             var model = await createModel();
@@ -89,7 +89,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
             );
         }
         var hubApp = await tester.HubApp();
-        var hubAppRoles = await hubApp.Roles();
+        var hubAppRoles = await hubApp.Roles(ct: default);
         var roles = hubAppRoles
             .Select(r => r.ToModel().Name)
             .Where(r => !r.Equals(AppRoleName.DenyAccess));
@@ -118,25 +118,25 @@ internal sealed class AppModifierAssertions<TModel, TResult>
     private async Task SetUserRoles(AppUser loggedInUser, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] roleNames)
     {
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
-        var efModifier = await app.Modifier(modifier.ID);
-        var userRoles = await loggedInUser.Modifier(efModifier).AssignedRoles();
+        var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct: default);
+        var efModifier = await app.Modifier(modifier.ID, ct: default);
+        var userRoles = await loggedInUser.Modifier(efModifier).AssignedRoles(ct: default);
         foreach (var userRole in userRoles)
         {
-            await loggedInUser.Modifier(efModifier).UnassignRole(userRole);
+            await loggedInUser.Modifier(efModifier).UnassignRole(userRole, ct: default);
         }
         foreach (var roleName in roleNames)
         {
-            var role = await app.Role(roleName);
-            await loggedInUser.Modifier(efModifier).AssignRole(role);
+            var role = await app.Role(roleName, ct: default);
+            await loggedInUser.Modifier(efModifier).AssignRole(role, ct: default);
         }
         if (rolesToKeep.Any())
         {
-            var defaultModifier = await app.DefaultModifier();
+            var defaultModifier = await app.DefaultModifier(ct: default);
             foreach (var roleName in rolesToKeep)
             {
-                var role = await app.Role(roleName);
-                await loggedInUser.Modifier(defaultModifier).AssignRole(role);
+                var role = await app.Role(roleName, ct: default);
+                await loggedInUser.Modifier(defaultModifier).AssignRole(role, ct: default);
             }
         }
     }

@@ -17,27 +17,29 @@ public sealed class AppUserGroup
 
     internal int ID { get => entity.ID; }
 
-    public Task<AppUser> User(int id) => factory.Users.User(this, id);
+    public Task<AppUser> User(int id, CancellationToken ct) => factory.Users.User(this, id, ct);
 
-    public Task<AppUser> UserOrAnon(AppUserName userName) => factory.Users.UserOrAnon(this, userName);
+    public Task<AppUser> UserOrAnon(AppUserName userName, CancellationToken ct) => factory.Users.UserOrAnon(this, userName, ct);
 
-    public Task<AppUser[]> Users() => factory.Users.Users(this);
+    public Task<AppUser[]> Users(CancellationToken ct) => factory.Users.Users(this, ct);
 
-    internal Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded) =>
-        factory.Users.AddAnonIfNotExists(this, timeAdded);
+    internal Task<AppUser> AddAnonIfNotExists(DateTimeOffset timeAdded, CancellationToken ct) =>
+        factory.Users.AddAnonIfNotExists(this, timeAdded, ct);
 
     public Task<AppUser> AddOrUpdate
     (
         AppUserName userName,
         IHashedPassword password,
-        DateTimeOffset timeAdded
+        DateTimeOffset timeAdded,
+        CancellationToken ct
     ) => AddOrUpdate
         (
             userName,
             password,
             new PersonName(userName.DisplayText),
             new EmailAddress(""),
-            timeAdded
+            timeAdded,
+            ct
         );
 
     public Task<AppUser> AddOrUpdate
@@ -46,8 +48,9 @@ public sealed class AppUserGroup
         IHashedPassword password,
         PersonName name,
         EmailAddress email,
-        DateTimeOffset timeAdded
-    ) => factory.Users.AddOrUpdate(this, userName, password, name, email, timeAdded);
+        DateTimeOffset timeAdded,
+        CancellationToken ct
+    ) => factory.Users.AddOrUpdate(this, userName, password, name, email, timeAdded, ct);
 
     public AppUserGroupModel ToModel() =>
         new AppUserGroupModel

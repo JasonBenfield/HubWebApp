@@ -653,8 +653,8 @@ internal sealed class LogSessionDetailsTest
         var sessionDetails = new List<AppSessionDetailModel>();
         foreach (var session in sessions)
         {
-            var user = await session.User();
-            var userGroup = await user.UserGroup();
+            var user = await session.User(ct: default);
+            var userGroup = await user.UserGroup(ct: default);
             var sessionDetail = await GetSessionDetail(sp, session);
             sessionDetails.Add(sessionDetail);
         }
@@ -665,7 +665,7 @@ internal sealed class LogSessionDetailsTest
     {
         var clock = sp.GetRequiredService<IClock>();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var session = await hubFactory.Sessions.Session(sessionKey.ID);
+        var session = await hubFactory.Sessions.Session(sessionKey.ID, ct: default);
         var sessionDetail = await GetSessionDetail(sp, session);
         return sessionDetail;
     }
@@ -673,7 +673,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppRequestDetailModel[]> GetRequestDetails(IServiceProvider sp, AppSessionDetailModel sessionDetail)
     {
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var session = await hubFactory.Sessions.Session(sessionDetail.Session.ID);
+        var session = await hubFactory.Sessions.Session(sessionDetail.Session.ID, ct: default);
         var requests = await session.Requests();
         var requestDetails = new List<AppRequestDetailModel>();
         foreach (var request in requests)
@@ -696,7 +696,7 @@ internal sealed class LogSessionDetailsTest
     {
         var clock = sp.GetRequiredService<IClock>();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var request = await hubFactory.Requests.RequestOrPlaceHolder(requestKey, clock.Now());
+        var request = await hubFactory.Requests.RequestOrPlaceHolder(requestKey, clock.Now(), ct: default);
         var logEntries = await request.Events();
         return logEntries.Select(le => le.ToModel()).ToArray();
     }
@@ -715,9 +715,9 @@ internal sealed class LogSessionDetailsTest
         var host = new HubTestHost();
         var sp = await host.Setup();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var userGroup = await hubFactory.UserGroups.GetGeneral();
-        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
-        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        var userGroup = await hubFactory.UserGroups.GetGeneral(ct: default);
+        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
+        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
         return sp;
     }
 

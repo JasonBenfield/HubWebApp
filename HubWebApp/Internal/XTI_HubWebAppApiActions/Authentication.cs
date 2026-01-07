@@ -31,11 +31,11 @@ public sealed class Authentication
         this.clock = clock;
     }
 
-    public async Task<LoginResult> Authenticate(string userNameText, string password)
+    public async Task<LoginResult> Authenticate(string userNameText, string password, CancellationToken ct)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
         var userName = new AppUserName(userNameText);
-        var user = await unverifiedUser.Verify(userName, hashedPassword);
+        var user = await unverifiedUser.Verify(userName, hashedPassword, ct);
         var result = await Authenticate(userName);
         await user.LoggedIn(clock.Now());
         return result;

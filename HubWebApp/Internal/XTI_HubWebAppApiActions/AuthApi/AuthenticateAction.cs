@@ -10,5 +10,5 @@ public sealed class AuthenticateAction : AppAction<AuthenticateRequest, LoginRes
     }
 
     public Task<LoginResult> Execute(AuthenticateRequest authRequest, CancellationToken stoppingToken) =>
-        auth.Authenticate(authRequest.UserName, authRequest.Password);
+        auth.Authenticate(authRequest.UserName, authRequest.Password, stoppingToken);
 }

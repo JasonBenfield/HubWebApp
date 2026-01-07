@@ -18,11 +18,11 @@ public sealed class Resource
 
     public int ID { get; }
 
-    public Task AllowAnonymous() => setIsAnonymousAllowed(true);
+    public Task AllowAnonymous(CancellationToken ct) => setIsAnonymousAllowed(true, ct);
 
-    public Task DenyAnonymous() => setIsAnonymousAllowed(false);
+    public Task DenyAnonymous(CancellationToken ct) => setIsAnonymousAllowed(false, ct);
 
-    private Task setIsAnonymousAllowed(bool isAllowed) =>
+    private Task setIsAnonymousAllowed(bool isAllowed, CancellationToken ct) =>
         factory.DB
             .Resources
             .Update
@@ -31,28 +31,29 @@ public sealed class Resource
                 r =>
                 {
                     r.IsAnonymousAllowed = isAllowed;
-                }
+                },
+                ct
             );
 
-    public Task<AppRole[]> AllowedRoles() => factory.Roles.AllowedRolesForResource(this);
+    public Task<AppRole[]> AllowedRoles(CancellationToken ct) => factory.Roles.AllowedRolesForResource(this, ct);
 
-    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles) =>
-        factory.DB.Transaction(() => setRoleAccess(allowedRoles));
+    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct) =>
+        factory.DB.Transaction(() => setRoleAccess(allowedRoles, ct));
 
-    private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles)
+    private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
     {
-        await deleteExistingRoles(allowedRoles);
-        var existingAllowedRoles = await AllowedRoles();
+        await deleteExistingRoles(allowedRoles, ct);
+        var existingAllowedRoles = await AllowedRoles(ct);
         foreach (var allowedRole in allowedRoles)
         {
             if (!existingAllowedRoles.Any(r => r.ID.Equals(allowedRole.ID)))
             {
-                await addResourceRole(allowedRole, true);
+                await addResourceRole(allowedRole, true, ct);
             }
         }
     }
 
-    private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles)
+    private async Task deleteExistingRoles(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
     {
         var allowedRoleIDs = allowedRoles.Select(r => r.ID);
         var rolesToDelete = await factory.DB
@@ -66,14 +67,14 @@ public sealed class Resource
                         !allowedRoleIDs.Contains(rr.RoleID) && rr.IsAllowed
                     )
             )
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         foreach (var resourceRole in rolesToDelete)
         {
-            await factory.DB.ResourceRoles.Delete(resourceRole);
+            await factory.DB.ResourceRoles.Delete(resourceRole, ct);
         }
     }
 
-    private Task addResourceRole(AppRole role, bool isAllowed) =>
+    private Task addResourceRole(AppRole role, bool isAllowed, CancellationToken ct) =>
         factory.DB
             .ResourceRoles
             .Create
@@ -83,7 +84,8 @@ public sealed class Resource
                     ResourceID = ID,
                     RoleID = role.ID,
                     IsAllowed = isAllowed
-                }
+                },
+                ct
             );
 
     public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>

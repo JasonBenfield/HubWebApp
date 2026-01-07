@@ -15,16 +15,16 @@ public sealed class GetExplicitUserAccessAction : AppAction<UserModifierKey, Use
 
     public async Task<UserAccessModel> Execute(UserModifierKey model, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(model.UserID);
-        var modifier = await factory.Modifiers.Modifier(model.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(model.UserID, stoppingToken);
+        var modifier = await factory.Modifiers.Modifier(model.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var roles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
+        var roles = await user.Modifier(modifier).ExplicitlyAssignedRoles(stoppingToken);
         var roleModels = roles
             .Where(r => !r.IsDenyAccess())
             .Select(r => r.ToModel())

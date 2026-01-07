@@ -19,9 +19,9 @@ public sealed class AddUserAction : AppAction<AddUserForm, AppUserModel>
 
     public async Task<AppUserModel> Execute(AddUserForm form, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
         var userName = new AppUserName(form.UserName.Value() ?? "");
-        var existingUser = await hubFactory.Users.UserOrAnon(userName);
+        var existingUser = await hubFactory.Users.UserOrAnon(userName, stoppingToken);
         if (existingUser.IsUserName(userName))
         {
             throw new AppException(string.Format(AppErrors.UserAlreadyExists, userName.DisplayText));
@@ -33,7 +33,8 @@ public sealed class AddUserAction : AppAction<AddUserForm, AppUserModel>
             hashedPassword,
             new PersonName(form.PersonName.Value() ?? ""),
             new EmailAddress(form.Email.Value() ?? ""),
-            clock.Now()
+            clock.Now(),
+            stoppingToken
         );
         return user.ToModel();
     }

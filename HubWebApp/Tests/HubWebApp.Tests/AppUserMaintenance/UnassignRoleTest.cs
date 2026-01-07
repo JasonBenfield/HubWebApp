@@ -9,7 +9,7 @@ internal sealed class UnassignRoleTest
         var userToEdit = await AddUser(tester, "userToEdit");
         var viewAppRole = await GetViewAppRole(tester);
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         await AssignRole(tester, userToEdit, defaultModifier.ToModel(), viewAppRole);
         var request = new UserRoleRequest
         (
@@ -27,7 +27,7 @@ internal sealed class UnassignRoleTest
         var userToEdit = await AddUser(tester, "userToEdit");
         var viewAppRole = await GetViewAppRole(tester);
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         await AssignRole(tester, userToEdit, defaultModifier.ToModel(), viewAppRole);
         var request = new UserRoleRequest
         (
@@ -54,7 +54,7 @@ internal sealed class UnassignRoleTest
         await tester.Login(HubInfo.Roles.EditUser);
         var userToEdit = await AddUser(tester, "userToEdit");
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var viewAppRole = await GetViewAppRole(tester);
         var model = CreateModel(userToEdit, viewAppRole);
         await AssignRole(tester, userToEdit, defaultModifier.ToModel(), viewAppRole);
@@ -86,7 +86,7 @@ internal sealed class UnassignRoleTest
     private static async Task<AppRoleModel> GetViewAppRole(IHubActionTester tester)
     {
         var app = await tester.HubApp();
-        var viewAppRole = await app.Role(HubInfo.Roles.ViewApp);
+        var viewAppRole = await app.Role(HubInfo.Roles.ViewApp, ct: default);
         return viewAppRole.ToModel();
     }
 
@@ -138,7 +138,7 @@ internal sealed class UnassignRoleTest
         var tester = sourceTester.Create(hubApi => hubApi.AppUserInquiry.GetExplicitUserAccess);
         await tester.LoginAsAdmin();
         var app = await sourceTester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var generalUserGroupModifier = await sourceTester.GeneralUserGroupModifier();
         var userAccess = await tester.Execute
         (

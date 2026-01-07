@@ -13,42 +13,42 @@ public sealed class AppUserGroupRepository
         this.factory = factory;
     }
 
-    public Task<AppUserGroup> GetXti() => UserGroup(AppUserGroupName.XTI);
+    public Task<AppUserGroup> GetXti(CancellationToken ct) => UserGroup(AppUserGroupName.XTI, ct);
 
-    public Task<AppUserGroup> GetGeneral() => UserGroup(AppUserGroupName.General);
+    public Task<AppUserGroup> GetGeneral(CancellationToken ct) => UserGroup(AppUserGroupName.General, ct);
 
-    public Task<AppUserGroup> UserGroup(int id) =>
+    public Task<AppUserGroup> UserGroup(int id, CancellationToken ct) =>
         factory.DB.UserGroups.Retrieve()
             .Where(ug => ug.ID == id)
             .Select(ug => new AppUserGroup(factory, ug))
-            .FirstAsync();
+            .FirstAsync(ct);
 
-    public Task<AppUserGroup> UserGroup(AppUserGroupName name) =>
+    public Task<AppUserGroup> UserGroup(AppUserGroupName name, CancellationToken ct) =>
         factory.DB.UserGroups.Retrieve()
             .Where(ug => ug.GroupName == name.Value)
             .Select(ug => new AppUserGroup(factory, ug))
-            .FirstAsync();
+            .FirstAsync(ct);
 
-    public Task<AppUserGroup[]> UserGroups() =>
+    public Task<AppUserGroup[]> UserGroups(CancellationToken ct) =>
         factory.DB.UserGroups.Retrieve()
             .Select(ug => new AppUserGroup(factory, ug))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal Task<AppUserGroup> AddXtiIfNotExists() => AddIfNotExists(AppUserGroupName.XTI);
+    internal Task<AppUserGroup> AddXtiIfNotExists(CancellationToken ct) => AddIfNotExists(AppUserGroupName.XTI, ct);
 
-    internal Task<AppUserGroup> AddGeneralIfNotExists() => AddIfNotExists(AppUserGroupName.General);
+    internal Task<AppUserGroup> AddGeneralIfNotExists(CancellationToken ct) => AddIfNotExists(AppUserGroupName.General, ct);
 
-    public async Task<AppUserGroup> AddIfNotExists(AppUserGroupName groupName)
+    public async Task<AppUserGroup> AddIfNotExists(AppUserGroupName groupName, CancellationToken ct)
     {
         AppUserGroup? userGroup = null;
         await factory.DB.Transaction
         (
-            async () => userGroup = await _AddIfNotExists(groupName)
+            async () => userGroup = await _AddIfNotExists(groupName, ct)
         );
         return userGroup ?? throw new ArgumentNullException(nameof(userGroup));
     }
 
-    private async Task<AppUserGroup> _AddIfNotExists(AppUserGroupName groupName)
+    private async Task<AppUserGroup> _AddIfNotExists(AppUserGroupName groupName, CancellationToken ct)
     {
         var entity = await factory.DB.UserGroups.Retrieve().FirstOrDefaultAsync(ug => ug.GroupName == groupName.Value);
         if (entity == null)
@@ -62,15 +62,16 @@ public sealed class AppUserGroupRepository
         }
         var userGroup = new AppUserGroup(factory, entity);
         var userGroupModel = userGroup.ToModel();
-        var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey);
+        var hubApp = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct);
         if (hubApp.AppKeyEquals(HubInfo.AppKey))
         {
-            var userGroupsModCategory = await hubApp.AddOrUpdateModCategory(HubInfo.ModCategories.UserGroups);
+            var userGroupsModCategory = await hubApp.AddOrUpdateModCategory(HubInfo.ModCategories.UserGroups, ct);
             await userGroupsModCategory.AddOrUpdateModifier
             (
                 userGroupModel.PublicKey,
                 userGroupModel.ID,
-                userGroupModel.GroupName.DisplayText
+                userGroupModel.GroupName.DisplayText,
+                ct
             );
         }
         return userGroup;

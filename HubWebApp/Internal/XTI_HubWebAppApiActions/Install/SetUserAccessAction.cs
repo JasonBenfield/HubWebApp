@@ -13,16 +13,16 @@ public sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyA
 
     public async Task<EmptyActionResult> Execute(SetUserAccessRequest model, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.UserByUserName(new AppUserName(model.UserName));
+        var user = await hubFactory.Users.UserByUserName(new AppUserName(model.UserName), stoppingToken);
         foreach (var assignment in model.RoleAssignments)
         {
-            var app = await hubFactory.Apps.App(assignment.AppKey.ToAppKey());
-            var modCategory = await app.ModCategory(new ModifierCategoryName(assignment.ModCategoryName));
-            var modifier = await modCategory.ModifierByModKey(new ModifierKey(assignment.ModKey));
+            var app = await hubFactory.Apps.App(assignment.AppKey.ToAppKey(), stoppingToken);
+            var modCategory = await app.ModCategory(new ModifierCategoryName(assignment.ModCategoryName), stoppingToken);
+            var modifier = await modCategory.ModifierByModKey(new ModifierKey(assignment.ModKey), stoppingToken);
             foreach (var roleName in assignment.RoleNames)
             {
-                var role = await app.Role(new AppRoleName(roleName));
-                await user.Modifier(modifier).AssignRole(role);
+                var role = await app.Role(new AppRoleName(roleName), stoppingToken);
+                await user.Modifier(modifier).AssignRole(role, stoppingToken);
             }
         }
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);

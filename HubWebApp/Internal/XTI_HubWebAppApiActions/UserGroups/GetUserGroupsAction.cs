@@ -11,8 +11,8 @@ public sealed class GetUserGroupsAction : AppAction<EmptyRequest, AppUserGroupMo
 
     public async Task<AppUserGroupModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var user = await currentUser.Value();
-        var permissions = await user.GetUserGroupPermissions();
+        var user = await currentUser.Value(stoppingToken);
+        var permissions = await user.GetUserGroupPermissions(stoppingToken);
         var userGroupModels = permissions.Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel())
             .OrderBy(ug => ug.GroupName.DisplayText)

@@ -19,29 +19,29 @@ public sealed class ModifierCategory
 
     public bool IsDefault() => ModifierCategoryName.Default.Equals(record.Name);
 
-    public Task<Modifier> AddDefaultModifierIfNotFound()
-        => factory.Modifiers.AddDefaultModifierIfNotFound(this);
+    public Task<Modifier> AddDefaultModifierIfNotFound(CancellationToken ct)
+        => factory.Modifiers.AddDefaultModifierIfNotFound(this, ct);
 
-    public Task<Modifier> AddOrUpdateModifier(IGeneratedKey generatedModKey, string targetKey, string displayText)
-        => factory.Modifiers.AddOrUpdateByTargetKey(this, generatedModKey, targetKey, displayText);
+    public Task<Modifier> AddOrUpdateModifier(IGeneratedKey generatedModKey, string targetKey, string displayText, CancellationToken ct)
+        => factory.Modifiers.AddOrUpdateByTargetKey(this, generatedModKey, targetKey, displayText, ct);
 
-    public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, int targetID, string displayText)
-        => AddOrUpdateModifier(modKey, targetID.ToString(), displayText);
+    public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, int targetID, string displayText, CancellationToken ct)
+        => AddOrUpdateModifier(modKey, targetID.ToString(), displayText, ct);
 
-    public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, string targetKey, string displayText)
-        => factory.Modifiers.AddOrUpdateByModKey(this, modKey, targetKey, displayText);
+    public Task<Modifier> AddOrUpdateModifier(ModifierKey modKey, string targetKey, string displayText, CancellationToken ct)
+        => factory.Modifiers.AddOrUpdateByModKey(this, modKey, targetKey, displayText, ct);
 
-    public Task<Modifier> ModifierByModKey(ModifierKey modKey) => factory.Modifiers.ModifierByModKey(this, modKey);
+    public Task<Modifier> ModifierByModKey(ModifierKey modKey, CancellationToken ct) => factory.Modifiers.ModifierByModKey(this, modKey, ct);
 
-    public Task<Modifier> ModifierByModKeyOrDefault(ModifierKey modKey) => factory.Modifiers.ModifierOrDefault(this, modKey);
+    public Task<Modifier> ModifierByModKeyOrDefault(ModifierKey modKey, CancellationToken ct) => factory.Modifiers.ModifierOrDefault(this, modKey, ct);
 
-    public Task<Modifier> ModifierByTargetID(int targetID) => ModifierByTargetKey(targetID.ToString());
+    public Task<Modifier> ModifierByTargetID(int targetID, CancellationToken ct) => ModifierByTargetKey(targetID.ToString(), ct);
 
-    public Task<Modifier> ModifierByTargetKey(string targetKey) => factory.Modifiers.ModifierByTargetKey(this, targetKey);
+    public Task<Modifier> ModifierByTargetKey(string targetKey, CancellationToken ct) => factory.Modifiers.ModifierByTargetKey(this, targetKey, ct);
 
-    public Task<App> App() => factory.Apps.App(record.AppID);
+    public Task<App> App(CancellationToken ct) => factory.Apps.App(record.AppID, ct);
 
-    public Task<Modifier[]> Modifiers() => factory.Modifiers.Modifiers(this);
+    public Task<Modifier[]> Modifiers(CancellationToken ct) => factory.Modifiers.Modifiers(this, ct);
 
     public Task<ResourceGroup[]> ResourceGroups(AppVersion appVersion) => factory.Groups.Groups(appVersion, this);
 

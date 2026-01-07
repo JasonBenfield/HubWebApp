@@ -11,8 +11,8 @@ public sealed class GetModCategoryAction : AppAction<int, ModifierCategoryModel>
 
     public async Task<ModifierCategoryModel> Execute(int categoryID, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var modCategory = await app.ModCategory(categoryID);
+        var app = await appFromPath.Value(stoppingToken);
+        var modCategory = await app.ModCategory(categoryID, stoppingToken);
         return modCategory.ToModel();
     }
 }

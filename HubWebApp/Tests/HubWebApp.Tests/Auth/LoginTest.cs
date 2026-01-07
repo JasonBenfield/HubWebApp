@@ -141,7 +141,7 @@ internal sealed class LoginTest
         currentUserName.SetUserName(AppUserName.Anon);
         var model = CreateLoginModel();
         var user = await tester.Services.GetRequiredService<ISourceUserContext>()
-            .User(new AppUserName(model.UserName.Value() ?? ""));
+            .User(new AppUserName(model.UserName.Value() ?? ""), ct: default);
         var httpContextAccessor = tester.Services.GetRequiredService<IHttpContextAccessor>();
         httpContextAccessor.HttpContext = new DefaultHttpContext
         {
@@ -150,13 +150,13 @@ internal sealed class LoginTest
         var loginResult = await tester.Execute(model);
         await Login(tester, loginResult, returnKey);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
-        var firstCachedUser = await userContext.User();
+        var firstCachedUser = await userContext.User(ct: default);
         var db = tester.Services.GetRequiredService<IHubDbContext>();
         var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
         loginResult = await tester.Execute(model);
         await Login(tester, loginResult, returnKey);
-        var secondCachedUser = await userContext.User();
+        var secondCachedUser = await userContext.User(ct: default);
         Assert.That(secondCachedUser.Name, Is.EqualTo(new PersonName("Changed Name")), "Should reset cache after login");
     }
 

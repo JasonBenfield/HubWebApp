@@ -12,7 +12,7 @@ public sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAuth
     public async Task<AuthenticatorModel> Execute(RegisterUserAuthenticatorRequest registerRequest, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(registerRequest.AuthenticatorKey);
-        var existingUser = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, registerRequest.ExternalUserKey);
+        var existingUser = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, registerRequest.ExternalUserKey, stoppingToken);
         if (!existingUser.IsUserName(AppUserName.Anon) && !existingUser.HasID(registerRequest.UserID))
         {
             throw new AppException
@@ -27,7 +27,7 @@ public sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAuth
                 $"User already exists with external user key '{registerRequest.ExternalUserKey}'"
             );
         }
-        var user = await hubFactory.Users.User(registerRequest.UserID);
+        var user = await hubFactory.Users.User(registerRequest.UserID, stoppingToken);
         var authenticator = await user.AddAuthenticator(authenticatorKey, registerRequest.ExternalUserKey);
         return authenticator;
     }

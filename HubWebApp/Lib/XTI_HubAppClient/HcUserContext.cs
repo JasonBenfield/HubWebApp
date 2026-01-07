@@ -13,28 +13,31 @@ public sealed class HcUserContext : ISourceUserContext
         this.currentUserName = currentUserName;
     }
 
-    public async Task<AppUserModel> User()
+    public async Task<AppUserModel> User(CancellationToken ct)
     {
         var userName = await currentUserName.Value();
-        var user = await User(userName);
+        var user = await User(userName, ct);
         return user;
     }
 
-    public Task<AppUserModel> User(AppUserName userName) =>
+    public Task<AppUserModel> User(AppUserName userName, CancellationToken ct) =>
         hubClient.System.GetUserByUserName
         (
-            new AppUserNameRequest(userName)
+            new AppUserNameRequest(userName),
+            ct
         );
 
-    public Task<AppUserModel> UserOrAnon(AppUserName userName) =>
+    public Task<AppUserModel> UserOrAnon(AppUserName userName, CancellationToken ct) =>
         hubClient.System.GetUserOrAnon
         (
-            new AppUserNameRequest(userName)
+            new AppUserNameRequest(userName),
+            ct
         );
 
-    public Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier) =>
+    public Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier, CancellationToken ct) =>
         hubClient.System.GetUserRoles
         (
-            new GetUserRolesRequest(user.ID, modifier.ID)
+            new GetUserRolesRequest(user.ID, modifier.ID),
+            ct
         );
 }

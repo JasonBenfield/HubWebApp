@@ -13,9 +13,9 @@ public sealed class GetUserDetailOrAnonAction : AppAction<AppUserNameRequest, Ap
 
     public async Task<AppUserDetailModel> Execute(AppUserNameRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.UserOrAnon(getRequest.ToAppUserName());
-        var userGroup = await user.UserGroup();
-        var userGroupPermissions = await currentUser.GetPermissionsToUserGroup(userGroup);
+        var user = await hubFactory.Users.UserOrAnon(getRequest.ToAppUserName(), stoppingToken);
+        var userGroup = await user.UserGroup(stoppingToken);
+        var userGroupPermissions = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);
         if (!userGroupPermissions.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");

@@ -11,9 +11,9 @@ public sealed class GetResourceGroupsAction : AppAction<int, ResourceGroupModel[
 
     public async Task<ResourceGroupModel[]> Execute(int categoryID, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var currentVersion = await app.CurrentVersion();
-        var modCategory = await app.ModCategory(categoryID);
+        var modCategory = await app.ModCategory(categoryID, stoppingToken);
         var resourceGroups = await modCategory.ResourceGroups(currentVersion);
         return resourceGroups.Select(rg => rg.ToModel()).ToArray();
     }

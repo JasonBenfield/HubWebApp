@@ -10,9 +10,9 @@ internal sealed class HubSetupTest
     {
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
+        await hubSetup.Run(AppVersionKey.Current, ct: default);
         var factory = sp.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         Assert.That(hubApp.ToModel().AppKey, Is.EqualTo(HubInfo.AppKey), "Should add hub app");
     }
 
@@ -21,11 +21,11 @@ internal sealed class HubSetupTest
     {
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
+        await hubSetup.Run(AppVersionKey.Current, ct: default);
         var factory = sp.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var modCategoryName = HubInfo.ModCategories.Apps;
-        var modCategory = await hubApp.ModCategory(modCategoryName);
+        var modCategory = await hubApp.ModCategory(modCategoryName, ct: default);
         Assert.That(modCategory.ToModel().Name, Is.EqualTo(modCategoryName), "Should add mod category for apps");
     }
 
@@ -34,13 +34,13 @@ internal sealed class HubSetupTest
     {
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
-        await hubSetup.Run(AppVersionKey.Current);
+        await hubSetup.Run(AppVersionKey.Current, ct: default);
         var factory = sp.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var modCategoryName = HubInfo.ModCategories.Apps;
-        var modCategory = await hubApp.ModCategory(modCategoryName);
-        var modifiers = await modCategory.Modifiers();
-        var apps = await factory.Apps.All();
+        var modCategory = await hubApp.ModCategory(modCategoryName, ct: default);
+        var modifiers = await modCategory.Modifiers(ct: default);
+        var apps = await factory.Apps.All(ct: default);
         var modIDs = modifiers.Select(m => m.ToModel().TargetKey);
         var appIDs = apps
             .Select(a => a.ToModel())
@@ -56,7 +56,7 @@ internal sealed class HubSetupTest
         builder.Services.AddFakesForHubWebApp();
         var sp = builder.Build().Scope();
         var initialSetup = sp.GetRequiredService<InitialSetup>();
-        await initialSetup.Run();
+        await initialSetup.Run(ct: default);
         var hubAdmin = sp.GetRequiredService<IHubAdministration>();
         await hubAdmin.AddOrUpdateApps
         (

@@ -11,11 +11,11 @@ public sealed class GetRoleAccessAction : AppAction<GetResourceGroupRoleAccessRe
 
     public async Task<AppRoleModel[]> Execute(GetResourceGroupRoleAccessRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
         var version = await app.Version(versionKey);
         var group = await version.ResourceGroup(model.GroupID);
-        var allowedRoles = await group.AllowedRoles();
+        var allowedRoles = await group.AllowedRoles(stoppingToken);
         var allowedRoleModels = allowedRoles.Select(ar => ar.ToModel()).ToArray();
         return allowedRoleModels;
     }

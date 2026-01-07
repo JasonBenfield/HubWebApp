@@ -11,8 +11,8 @@ public sealed class GetRolesAction : AppAction<EmptyRequest, AppRoleModel[]>
 
     public async Task<AppRoleModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
-        var roles = await app.Roles();
+        var app = await appFromPath.Value(stoppingToken);
+        var roles = await app.Roles(stoppingToken);
         return roles.Select(r => r.ToModel()).ToArray();
     }
 }

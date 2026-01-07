@@ -11,17 +11,17 @@ public sealed class AppFromPath
         this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
-    public async Task<App> Value()
+    public async Task<App> Value(CancellationToken ct)
     {
         var modKey = modifierKeyAccessor.Value();
         if (modKey.Equals(ModifierKey.Default))
         {
             throw new Exception(AppErrors.ModifierIsRequired);
         }
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var modifier = await modCategory.ModifierByModKey(modKey);
-        var app = await factory.Apps.App(modifier.TargetID());
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
+        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
+        var modifier = await modCategory.ModifierByModKey(modKey, ct);
+        var app = await factory.Apps.App(modifier.TargetID(), ct);
         return app;
     }
 }

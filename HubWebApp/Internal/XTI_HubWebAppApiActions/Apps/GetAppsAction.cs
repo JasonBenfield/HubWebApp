@@ -11,8 +11,8 @@ public sealed class GetAppsAction : AppAction<EmptyRequest, AppModel[]>
 
     public async Task<AppModel[]> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var user = await currentUser.Value();
-        var permissions = await user.GetAppPermissions();
+        var user = await currentUser.Value(stoppingToken);
+        var permissions = await user.GetAppPermissions(stoppingToken);
         var allowedApps = new List<AppModel>();
         foreach (var permission in permissions.Where(p => p.CanView))
         {

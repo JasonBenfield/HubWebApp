@@ -15,15 +15,15 @@ public sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest, 
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest queryRequest)
+    public async Task<IQueryable<ExpandedRequest>> Execute(ODataQueryOptions<ExpandedRequest> options, AppRequestQueryRequest queryRequest, CancellationToken ct)
     {
         db.SetTimeout(TimeSpan.FromMinutes(5));
-        var userGroupPermissions = await currentUser.GetUserGroupPermissions();
+        var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel().ID)
             .ToArray();
-        var appPermissions = await currentUser.GetAppPermissions();
+        var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
             .Select(p => p.App.ToModel().ID)

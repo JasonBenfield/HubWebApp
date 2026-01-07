@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core.Fakes;
 using XTI_HubDB.EF;
+using XTI_HubWebAppApiActions;
 using XTI_HubWebAppApiActions.Storage;
 
 namespace HubWebApp.Tests;
@@ -283,11 +284,13 @@ internal sealed class SystemStoreObjectTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
+        var options = sp.GetRequiredService<HubWebAppOptions>();
+        options.Storage.SingleUseExpirationInSeconds = 0;
         var tester = HubActionTester.Create(sp, hubApi => hubApi.System.StoreObject);
         var systemUser = await AddUser(tester, GetSystemUserName().DisplayText);
         var hubApp = await tester.HubApp();
-        var systemUserRole = await hubApp.Role(AppRoleName.System);
-        await systemUser.AssignRole(systemUserRole);
+        var systemUserRole = await hubApp.Role(AppRoleName.System, ct: default);
+        await systemUser.AssignRole(systemUserRole, ct: default);
         return tester;
     }
 
@@ -308,7 +311,7 @@ internal sealed class SystemStoreObjectTest
             new ModifierKey("General")
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }
 }

@@ -11,11 +11,11 @@ public sealed class GetModCategoryAction : AppAction<GetResourceGroupModCategory
 
     public async Task<ModifierCategoryModel> Execute(GetResourceGroupModCategoryRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
         var version = await app.Version(versionKey);
         var group = await version.ResourceGroup(model.GroupID);
-        var modCategory = await group.ModCategory();
+        var modCategory = await group.ModCategory(stoppingToken);
         return modCategory.ToModel();
     }
 }

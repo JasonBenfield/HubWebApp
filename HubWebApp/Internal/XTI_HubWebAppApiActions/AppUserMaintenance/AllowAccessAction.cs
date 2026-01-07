@@ -17,17 +17,17 @@ public sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyActionRe
 
     public async Task<EmptyActionResult> Execute(UserModifierKey allowRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(allowRequest.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var modifier = await hubFactory.Modifiers.Modifier(allowRequest.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(allowRequest.UserID);
-        await user.Modifier(modifier).UnassignRole(denyAccessRole);
+        var denyAccessRole = await app.Role(AppRoleName.DenyAccess, stoppingToken);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(allowRequest.UserID, stoppingToken);
+        await user.Modifier(modifier).UnassignRole(denyAccessRole, stoppingToken);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }

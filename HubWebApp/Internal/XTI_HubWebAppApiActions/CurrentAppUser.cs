@@ -11,45 +11,45 @@ public sealed class CurrentAppUser
         this.currentUserName = currentUserName;
     }
 
-    public async Task<AppUser> Value()
+    public async Task<AppUser> Value(CancellationToken ct)
     {
         var userName = await currentUserName.Value();
-        var user = await hubFactory.Users.UserByUserName(userName);
+        var user = await hubFactory.Users.UserByUserName(userName, ct);
         return user;
     }
 
-    public async Task<AppUserGroupPermission[]> GetUserGroupPermissions()
+    public async Task<AppUserGroupPermission[]> GetUserGroupPermissions(CancellationToken ct)
     {
-        var currentUser = await Value();
-        var userGroupPermissions = await currentUser.GetUserGroupPermissions();
+        var currentUser = await Value(ct);
+        var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         return userGroupPermissions;
     }
 
-    public async Task<AppUserGroupPermission> GetPermissionsToUser(AppUser user)
+    public async Task<AppUserGroupPermission> GetPermissionsToUser(AppUser user, CancellationToken ct)
     {
-        var userGroup = await user.UserGroup();
-        var permission = await GetPermissionsToUserGroup(userGroup);
+        var userGroup = await user.UserGroup(ct);
+        var permission = await GetPermissionsToUserGroup(userGroup, ct);
         return permission;
     }
 
-    public async Task<AppUserGroupPermission> GetPermissionsToUserGroup(AppUserGroup userGroup)
+    public async Task<AppUserGroupPermission> GetPermissionsToUserGroup(AppUserGroup userGroup, CancellationToken ct)
     {
-        var currentUser = await Value();
-        var userGroupPermission = await currentUser.GetUserGroupPermission(userGroup);
+        var currentUser = await Value(ct);
+        var userGroupPermission = await currentUser.GetUserGroupPermission(userGroup, ct);
         return userGroupPermission;
     }
 
-    public async Task<AppPermission[]> GetAppPermissions()
+    public async Task<AppPermission[]> GetAppPermissions(CancellationToken ct)
     {
-        var currentUser = await Value();
-        var appPermissions = await currentUser.GetAppPermissions();
+        var currentUser = await Value(ct);
+        var appPermissions = await currentUser.GetAppPermissions(ct);
         return appPermissions;
     }
 
-    public async Task<AppPermission> GetPermissionsToApp(App app)
+    public async Task<AppPermission> GetPermissionsToApp(App app, CancellationToken ct)
     {
-        var currentUser = await Value();
-        var appPermission = await currentUser.GetAppPermission(app);
+        var currentUser = await Value(ct);
+        var appPermission = await currentUser.GetAppPermission(app, ct);
         return appPermission;
     }
 }

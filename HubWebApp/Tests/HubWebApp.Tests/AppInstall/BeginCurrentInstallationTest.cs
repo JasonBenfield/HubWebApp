@@ -10,7 +10,7 @@ sealed class BeginCurrentInstallationTest
     {
         var tester = await Setup();
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var appVersion = await hubApp.CurrentVersion();
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";

@@ -9,7 +9,7 @@ internal sealed class GetLoggedInAppsTest
     {
         var sp = await Setup();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var user = await hubFactory.Users.UserOrAnon(new AppUserName("test.user"));
+        var user = await hubFactory.Users.UserOrAnon(new AppUserName("test.user"), ct: default);
         var loggedInApps = await user.GetLoggedInApps();
         loggedInApps.WriteToConsole();
     }

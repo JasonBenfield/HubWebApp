@@ -39,7 +39,7 @@ internal sealed class EditUserTest
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(form, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ToModel().ID)).ToModel();
+        var userModel = (await factory.Users.User(userToEdit.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo("Changed Name"), "Should update name");
     }
 
@@ -54,7 +54,7 @@ internal sealed class EditUserTest
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute( form, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ToModel().ID)).ToModel();
+        var userModel = (await factory.Users.User(userToEdit.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo("usertoedit"), "Should update name from user name when name is blank");
     }
 
@@ -69,7 +69,7 @@ internal sealed class EditUserTest
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(form, modifier);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var userModel = (await factory.Users.User(userToEdit.ToModel().ID)).ToModel();
+        var userModel = (await factory.Users.User(userToEdit.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Email, Is.EqualTo("changed@gmail.com"), "Should update email");
     }
 
@@ -95,7 +95,7 @@ internal sealed class EditUserTest
             modifier
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }
 

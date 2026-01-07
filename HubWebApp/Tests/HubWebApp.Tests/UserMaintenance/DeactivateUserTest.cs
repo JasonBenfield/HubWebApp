@@ -40,7 +40,7 @@ internal sealed class DeactivateUserTest
         var userToDeactivate = await AddUser(tester, "userToDeactivate");
         await tester.Execute(userToDeactivate.ToModel().ID, new ModifierKey("General"));
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var userModel = (await factory.Users.User(userToDeactivate.ToModel().ID)).ToModel();
+        var userModel = (await factory.Users.User(userToDeactivate.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.IsActive(), Is.False, "Should deactivate user");
     }
 
@@ -66,7 +66,7 @@ internal sealed class DeactivateUserTest
             modifier
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }
 }

@@ -25,12 +25,12 @@ public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActi
                 var mostRecentRequest = mostRecentRequests.First();
                 if (mostRecentRequest.HappendOnOrBefore(timeRange.End))
                 {
-                    await activeSession.End(clock.Now());
+                    await activeSession.End(clock.Now(), stoppingToken);
                 }
             }
             else
             {
-                await activeSession.End(clock.Now());
+                await activeSession.End(clock.Now(), stoppingToken);
             }
         }
         return new EmptyActionResult();

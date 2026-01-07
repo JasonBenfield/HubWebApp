@@ -13,7 +13,7 @@ public sealed class AppRoleRepository
         this.factory = factory;
     }
 
-    internal async Task<AppRole> AddOrUpdate(App app, AppRoleName name)
+    internal async Task<AppRole> AddOrUpdate(App app, AppRoleName name, CancellationToken ct)
     {
         var record = await rolesForApp(app)
             .FirstOrDefaultAsync(r => r.Name == name.Value);
@@ -25,37 +25,37 @@ public sealed class AppRoleRepository
                 Name = name.Value,
                 DisplayText = name.DisplayText
             };
-            await factory.DB.Roles.Create(record);
+            await factory.DB.Roles.Create(record, ct);
         }
         else
         {
-            await factory.DB.Roles.Update(record, r => r.DisplayText = name.DisplayText);
+            await factory.DB.Roles.Update(record, r => r.DisplayText = name.DisplayText, ct);
         }
         return factory.CreateRole(record);
     }
 
-    internal Task<AppRole[]> RolesForApp(App app, AppRoleName[] roleNames)
+    internal Task<AppRole[]> RolesForApp(App app, AppRoleName[] roleNames, CancellationToken ct)
     {
         var roleNameValues = roleNames.Select(rn => rn.Value).ToArray();
         return factory.DB.Roles.Retrieve()
             .Where(r => r.AppID == app.ID && roleNameValues.Contains(r.Name))
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    internal Task<AppRole[]> RolesForApp(App app) =>
+    internal Task<AppRole[]> RolesForApp(App app, CancellationToken ct) =>
         factory.DB.Roles.Retrieve()
             .Where(r => r.AppID == app.ID)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal async Task<AppRole> Role(int roleID)
+    internal async Task<AppRole> Role(int roleID, CancellationToken ct)
     {
         var record = await factory.DB.Roles.Retrieve()
             .Where(r => r.ID == roleID)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateRole
         (
             record
@@ -63,11 +63,11 @@ public sealed class AppRoleRepository
         );
     }
 
-    internal async Task<AppRole> Role(App app, int roleID)
+    internal async Task<AppRole> Role(App app, int roleID, CancellationToken ct)
     {
         var record = await rolesForApp(app)
             .Where(r => r.ID == roleID)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateRole
         (
             record
@@ -75,11 +75,11 @@ public sealed class AppRoleRepository
         );
     }
 
-    internal async Task<AppRole> Role(App app, AppRoleName roleName)
+    internal async Task<AppRole> Role(App app, AppRoleName roleName, CancellationToken ct)
     {
         var record = await rolesForApp(app)
             .Where(r => r.Name == roleName.Value)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateRole
         (
             record
@@ -92,13 +92,13 @@ public sealed class AppRoleRepository
             .Retrieve()
             .Where(r => r.AppID == app.ID);
 
-    internal Task<AppRole[]> AllowedRolesForResourceGroup(ResourceGroup group)
-        => rolesForResourceGroup(group, true);
+    internal Task<AppRole[]> AllowedRolesForResourceGroup(ResourceGroup group, CancellationToken ct)
+        => rolesForResourceGroup(group, true, ct);
 
-    internal Task<AppRole[]> DeniedRolesForResourceGroup(ResourceGroup group)
-        => rolesForResourceGroup(group, false);
+    internal Task<AppRole[]> DeniedRolesForResourceGroup(ResourceGroup group, CancellationToken ct)
+        => rolesForResourceGroup(group, false, ct);
 
-    private Task<AppRole[]> rolesForResourceGroup(ResourceGroup group, bool isAllowed)
+    private Task<AppRole[]> rolesForResourceGroup(ResourceGroup group, bool isAllowed, CancellationToken ct)
     {
         var roleIDs = factory.DB
             .ResourceGroupRoles
@@ -111,10 +111,10 @@ public sealed class AppRoleRepository
             .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    internal Task<AppRole[]> RolesNotAssignedToUser(AppUser user, Modifier modifier)
+    internal Task<AppRole[]> RolesNotAssignedToUser(AppUser user, Modifier modifier, CancellationToken ct)
     {
         var appID = getAppID(modifier);
         var roleIDs = userRoleIDs(user, modifier);
@@ -124,10 +124,10 @@ public sealed class AppRoleRepository
             .Where(r => appID.Contains(r.AppID) && !roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    internal Task<AppRole[]> RolesAssignedToUser(AppUser user, Modifier modifier)
+    internal Task<AppRole[]> RolesAssignedToUser(AppUser user, Modifier modifier, CancellationToken ct)
     {
         var appID = getAppID(modifier);
         var roleIDs = userRoleIDs(user, modifier);
@@ -137,7 +137,7 @@ public sealed class AppRoleRepository
             .Where(r => appID.Contains(r.AppID) && roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == 9999)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
     private IQueryable<int> getAppID(Modifier modifier)
@@ -162,13 +162,13 @@ public sealed class AppRoleRepository
             .Where(ur => ur.UserID == user.ID && ur.ModifierID == modifier.ID)
             .Select(ur => ur.RoleID);
 
-    internal Task<AppRole[]> AllowedRolesForResource(Resource resource)
-        => rolesForResource(resource, true);
+    internal Task<AppRole[]> AllowedRolesForResource(Resource resource, CancellationToken ct)
+        => rolesForResource(resource, true, ct);
 
-    internal Task<AppRole[]> DeniedRolesForResource(Resource resource)
-        => rolesForResource(resource, false);
+    internal Task<AppRole[]> DeniedRolesForResource(Resource resource, CancellationToken ct)
+        => rolesForResource(resource, false, ct);
 
-    private Task<AppRole[]> rolesForResource(Resource resource, bool isAllowed)
+    private Task<AppRole[]> rolesForResource(Resource resource, bool isAllowed, CancellationToken ct)
     {
         var roleIDs = factory.DB
             .ResourceRoles
@@ -181,6 +181,6 @@ public sealed class AppRoleRepository
             .Where(r => roleIDs.Contains(r.ID) && r.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year)
             .OrderBy(r => r.Name)
             .Select(r => factory.CreateRole(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 }

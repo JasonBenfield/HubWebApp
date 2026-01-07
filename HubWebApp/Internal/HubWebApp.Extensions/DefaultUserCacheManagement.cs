@@ -24,10 +24,10 @@ internal sealed class DefaultUserCacheManagement : IUserCacheManagement
     public async Task ClearCache(AppUserName userName, CancellationToken ct)
     {
         userContext.ClearCache(userName);
-        var user = await hubFactory.Users.UserOrAnon(userName);
+        var user = await hubFactory.Users.UserOrAnon(userName, ct);
         var installationID = await installationIDAccessor.Value();
-        var thisInstallation = await hubFactory.Installations.InstallationOrDefault(installationID);
-        var appVersion = await thisInstallation.AppVersion();
+        var thisInstallation = await hubFactory.Installations.InstallationOrDefault(installationID, ct);
+        var appVersion = await thisInstallation.AppVersion(ct);
         var thisInstallationModel = thisInstallation.ToModel();
         var thisAppName = appVersion.App.ToModel().AppKey.Name;
         var thisVersionKey = thisInstallationModel.IsCurrent 

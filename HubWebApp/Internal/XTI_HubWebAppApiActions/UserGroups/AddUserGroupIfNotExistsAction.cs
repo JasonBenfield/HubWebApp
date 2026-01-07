@@ -11,7 +11,7 @@ public sealed class AddUserGroupIfNotExistsAction : AppAction<AddUserGroupIfNotE
 
     public async Task<AppUserGroupModel> Execute(AddUserGroupIfNotExistsRequest model, CancellationToken ct)
     {
-        var userGroup = await hubFactory.UserGroups.AddIfNotExists(new AppUserGroupName(model.GroupName));
+        var userGroup = await hubFactory.UserGroups.AddIfNotExists(new AppUserGroupName(model.GroupName), ct);
         return userGroup.ToModel();
     }
 }

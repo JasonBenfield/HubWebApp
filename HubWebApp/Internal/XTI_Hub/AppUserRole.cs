@@ -15,12 +15,12 @@ public sealed class AppUserRole
 
     public int ID { get => userRole.ID; }
 
-    public Task<AppUser> User() => factory.Users.User(userRole.UserID);
+    public Task<AppUser> User(CancellationToken ct) => factory.Users.User(userRole.UserID, ct);
 
-    public Task<Modifier> Modifier() => factory.Modifiers.Modifier(userRole.ModifierID);
+    public Task<Modifier> Modifier(CancellationToken ct) => factory.Modifiers.Modifier(userRole.ModifierID, ct);
 
-    public Task<AppRole> Role() => factory.Roles.Role(userRole.RoleID);
+    public Task<AppRole> Role(CancellationToken ct) => factory.Roles.Role(userRole.RoleID, ct);
 
-    public Task Delete() =>
-        factory.DB.UserRoles.Delete(userRole);
+    public Task Delete(CancellationToken ct) =>
+        factory.DB.UserRoles.Delete(userRole, ct);
 }

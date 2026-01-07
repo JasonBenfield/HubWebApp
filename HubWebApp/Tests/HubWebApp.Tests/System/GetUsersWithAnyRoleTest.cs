@@ -38,7 +38,7 @@ internal sealed class GetUsersWithAnyRoleTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
         var viewUserRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewUser);
-        var defaultModifier = await hubApp.DefaultModifier();
+        var defaultModifier = await hubApp.DefaultModifier(ct: default);
         await AssignRole(tester, user, defaultModifier.ToModel(), viewUserRole);
         await tester.LoginAs(GetSystemUserName());
         var users = await tester.Execute
@@ -67,7 +67,7 @@ internal sealed class GetUsersWithAnyRoleTest
         var hubAppModifier = await tester.HubAppModifier();
         var user = await AddUser(tester, "someone");
         var viewUserRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewUser);
-        var defaultModifier = await hubApp.DefaultModifier();
+        var defaultModifier = await hubApp.DefaultModifier(ct: default);
         await AssignRole(tester, user, defaultModifier.ToModel(), viewUserRole);
         var viewAppRole = await GetRole(tester, hubApp.ToModel(), HubInfo.Roles.ViewApp);
         await AssignRole(tester, user, hubAppModifier, viewAppRole);
@@ -97,7 +97,7 @@ internal sealed class GetUsersWithAnyRoleTest
         var tester = HubActionTester.Create(sp, hubApi => hubApi.System.GetUsersWithAnyRole);
         var systemUser = await AddUser(tester, GetSystemUserName().DisplayText);
         var hubApp = await tester.HubApp();
-        var modifier = await hubApp.DefaultModifier();
+        var modifier = await hubApp.DefaultModifier(ct: default);
         var systemUserRole = await GetRole(tester, hubApp.ToModel(), AppRoleName.System);
         await AssignRole(tester, systemUser, modifier.ToModel(), systemUserRole);
         return tester;

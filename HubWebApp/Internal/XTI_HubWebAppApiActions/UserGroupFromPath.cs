@@ -11,17 +11,17 @@ public sealed class UserGroupFromPath
         this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
-    public async Task<AppUserGroup> Value()
+    public async Task<AppUserGroup> Value(CancellationToken ct)
     {
         var modKey = modifierKeyAccessor.Value();
         if (modKey.Equals(ModifierKey.Default))
         {
             throw new Exception(AppErrors.ModifierIsRequired);
         }
-        var hubApp = await factory.Apps.App(HubInfo.AppKey);
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
-        var modifier = await modCategory.ModifierByModKey(modKey);
-        var userGroup = await factory.UserGroups.UserGroup(modifier.TargetID());
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
+        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
+        var modifier = await modCategory.ModifierByModKey(modKey, ct);
+        var userGroup = await factory.UserGroups.UserGroup(modifier.TargetID(), ct);
         return userGroup;
     }
 }

@@ -9,11 +9,11 @@ public sealed class InitialSetup
         this.hubFactory = hubFactory;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken ct)
     {
-        await hubFactory.Apps.AddUnknownIfNotFound();
-        var xtiUserGroup = await hubFactory.UserGroups.AddXtiIfNotExists();
-        await xtiUserGroup.AddAnonIfNotExists(DateTimeOffset.Now);
-        await hubFactory.UserGroups.AddGeneralIfNotExists();
+        await hubFactory.Apps.AddUnknownIfNotFound(ct);
+        var xtiUserGroup = await hubFactory.UserGroups.AddXtiIfNotExists(ct);
+        await xtiUserGroup.AddAnonIfNotExists(DateTimeOffset.Now, ct);
+        await hubFactory.UserGroups.AddGeneralIfNotExists(ct);
     }
 }

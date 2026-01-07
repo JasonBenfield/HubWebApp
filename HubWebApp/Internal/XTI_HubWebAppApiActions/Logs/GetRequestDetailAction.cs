@@ -14,22 +14,22 @@ public sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMode
     public async Task<AppRequestDetailModel> Execute(int requestID, CancellationToken stoppingToken)
     {
         var request = await hubFactory.Requests.Request(requestID);
-        var installation = await request.Installation();
+        var installation = await request.Installation(stoppingToken);
         var installLocation = await installation.Location();
         var resource = await request.Resource();
         var resourceGroup = await resource.Group();
-        var modifier = await request.Modifier();
-        var modCategory = await modifier.Category();
-        var appVersion = await installation.AppVersion();
-        var session = await request.Session();
-        var user = await session.User();
-        var userGroup = await user.UserGroup();
-        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup);
+        var modifier = await request.Modifier(stoppingToken);
+        var modCategory = await modifier.Category(stoppingToken);
+        var appVersion = await installation.AppVersion(stoppingToken);
+        var session = await request.Session(stoppingToken);
+        var user = await session.User(stoppingToken);
+        var userGroup = await user.UserGroup(stoppingToken);
+        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);
         if (!userGroupPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to user '{userGroup.ToModel().GroupName}'");
         }
-        var appPermission = await currentUser.GetPermissionsToApp(appVersion.App);
+        var appPermission = await currentUser.GetPermissionsToApp(appVersion.App, stoppingToken);
         if (!appPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.54-dev251210221135509" />
+    <PackageReference Include="XTI_WebApp.Fakes" Version="1.8.54-dev260106230348719" />
   </ItemGroup>
 
   <ItemGroup>

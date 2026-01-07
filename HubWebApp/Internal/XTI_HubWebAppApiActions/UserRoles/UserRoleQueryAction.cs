@@ -15,14 +15,14 @@ public sealed class UserRoleQueryAction : QueryAction<UserRoleQueryRequest, Expa
         this.db = db;
     }
 
-    public async Task<IQueryable<ExpandedUserRole>> Execute(ODataQueryOptions<ExpandedUserRole> options, UserRoleQueryRequest queryRequest)
+    public async Task<IQueryable<ExpandedUserRole>> Execute(ODataQueryOptions<ExpandedUserRole> options, UserRoleQueryRequest queryRequest, CancellationToken ct)
     {
-        var userGroupPermissions = await currentUser.GetUserGroupPermissions();
+        var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
             .Select(p => p.UserGroup.ToModel().ID)
             .ToArray();
-        var appPermissions = await currentUser.GetAppPermissions();
+        var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
             .Select(p => p.App.ToModel().ID)

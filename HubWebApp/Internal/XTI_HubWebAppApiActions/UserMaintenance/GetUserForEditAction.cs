@@ -11,8 +11,8 @@ public sealed class GetUserForEditAction : AppAction<int, IDictionary<string, ob
 
     public async Task<IDictionary<string, object>> Execute(int userID, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(userID);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(userID, stoppingToken);
         var userModel = user.ToModel();
         var form = new EditUserForm();
         form.UserID.SetValue(userModel.ID);

@@ -17,7 +17,7 @@ public sealed class DeactivateUsersAction : AppAction<EmptyRequest, EmptyActionR
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var users = await hubFactory.Users.UsersLoggedInBefore(clock.Now().AddDays(-options.Login.DaysBeforeDeactivation));
+        var users = await hubFactory.Users.UsersLoggedInBefore(clock.Now().AddDays(-options.Login.DaysBeforeDeactivation), stoppingToken);
         foreach (var user in users)
         {
             await user.Deactivate(clock.Now());

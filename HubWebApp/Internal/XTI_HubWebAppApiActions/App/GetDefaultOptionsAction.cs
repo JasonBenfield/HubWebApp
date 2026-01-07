@@ -13,7 +13,7 @@ public sealed class GetDefaultOptionsAction : AppAction<EmptyRequest, string>
 
     public async Task<string> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var appModel = app.ToModel();
         string defaultOptions;
         if (appModel.AppKey.IsAppType(AppType.Values.WebApp))

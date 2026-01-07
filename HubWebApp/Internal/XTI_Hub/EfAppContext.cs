@@ -16,21 +16,21 @@ public sealed class EfAppContext : ISourceAppContext
         this.defaultVersionKey = defaultVersionKey;
     }
 
-    public Task<AppContextModel> App() => App(defaultVersionKey);
+    public Task<AppContextModel> App(CancellationToken ct) => App(defaultVersionKey, ct);
 
-    public async Task<AppContextModel> App(AppVersionKey versionKey)
+    public async Task<AppContextModel> App(AppVersionKey versionKey, CancellationToken ct)
     {
-        var app = await hubFactory.Apps.AppOrUnknown(appKey);
+        var app = await hubFactory.Apps.AppOrUnknown(appKey, ct);
         var appVersion = await app.Version(versionKey);
-        var appContextModel = await App(appVersion);
+        var appContextModel = await App(appVersion, ct);
         return appContextModel;
     }
 
-    public async Task<AppContextModel> App(AppVersion appVersion)
+    public async Task<AppContextModel> App(AppVersion appVersion, CancellationToken ct)
     {
-        var roles = await appVersion.App.Roles();
+        var roles = await appVersion.App.Roles(ct);
         var roleModels = roles.Select(r => r.ToModel()).ToArray();
-        var modCategories = await appVersion.App.ModCategories();
+        var modCategories = await appVersion.App.ModCategories(ct);
         var resourceGroups = await appVersion.ResourceGroups();
         var resourceGroupModels = new List<AppContextResourceGroupModel>();
         foreach (var resourceGroup in resourceGroups)
@@ -39,7 +39,7 @@ public sealed class EfAppContext : ISourceAppContext
             var resourceModels = new List<AppContextResourceModel>();
             foreach (var resource in resources)
             {
-                var allowedResourceRoles = await resource.AllowedRoles();
+                var allowedResourceRoles = await resource.AllowedRoles(ct);
                 resourceModels.Add
                 (
                     new AppContextResourceModel
@@ -49,7 +49,7 @@ public sealed class EfAppContext : ISourceAppContext
                     )
                 );
             }
-            var allowedGroupRoles = await resourceGroup.AllowedRoles();
+            var allowedGroupRoles = await resourceGroup.AllowedRoles(ct);
             resourceGroupModels.Add
             (
                 new AppContextResourceGroupModel
@@ -61,7 +61,7 @@ public sealed class EfAppContext : ISourceAppContext
                 )
             );
         }
-        var defaultModifier = await appVersion.App.DefaultModifier();
+        var defaultModifier = await appVersion.App.DefaultModifier(ct);
         return new AppContextModel
         (
             appVersion.App.ToModel(),
@@ -73,11 +73,11 @@ public sealed class EfAppContext : ISourceAppContext
         );
     }
 
-    public async Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey)
+    public async Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey, CancellationToken ct)
     {
-        var app = await hubFactory.Apps.AppOrUnknown(appKey);
-        var modCategory = await app.ModCategory(category.ID);
-        var modifier = await modCategory.ModifierByModKey(modKey);
+        var app = await hubFactory.Apps.AppOrUnknown(appKey, ct);
+        var modCategory = await app.ModCategory(category.ID, ct);
+        var modifier = await modCategory.ModifierByModKey(modKey, ct);
         return modifier.ToModel();
     }
 }

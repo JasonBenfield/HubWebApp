@@ -34,7 +34,7 @@ public sealed class DefaultAppSetup : IAppSetup
         get => modKey ?? throw new ArgumentNullException(nameof(modKey));
     }
 
-    public async Task Run(AppVersionKey versionKey)
+    public async Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         var template = apiFactory.CreateTemplate();
         await hubClient.Install.AddOrUpdateApps
@@ -43,7 +43,8 @@ public sealed class DefaultAppSetup : IAppSetup
             (
                 versionName: versionName,
                 appKeys: [template.AppKey]
-            )
+            ),
+            ct
         );
         var password = Guid.NewGuid().ToString();
         var systemUser = await hubClient.Install.AddSystemUser
@@ -53,7 +54,8 @@ public sealed class DefaultAppSetup : IAppSetup
                 appKey: template.AppKey,
                 machineName: Environment.MachineName,
                 password: password
-            )
+            ),
+            ct
         );
         await systemUserCredentials.Update
         (
@@ -69,7 +71,8 @@ public sealed class DefaultAppSetup : IAppSetup
             (
                 appTemplate: template.ToModel(),
                 versionKey: versionKey
-            )
+            ),
+            ct
         );
         modKey = app.PublicKey;
     }

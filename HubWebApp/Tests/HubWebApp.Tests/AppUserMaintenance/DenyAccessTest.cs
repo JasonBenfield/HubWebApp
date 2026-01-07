@@ -127,7 +127,7 @@ internal sealed class DenyAccessTest
         var assignRoleTester = tester.Create(hubApi => hubApi.AppUserMaintenance.AssignRole);
         await assignRoleTester.LoginAsAdmin();
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         var userRoleID = await assignRoleTester.Execute
         (

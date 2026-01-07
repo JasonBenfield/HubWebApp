@@ -15,8 +15,8 @@ public sealed class DeactivateUserAction : AppAction<int, AppUserModel>
 
     public async Task<AppUserModel> Execute(int userID, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(userID);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(userID, stoppingToken);
         var userModel = user.ToModel();
         if (!userModel.IsActive())
         {

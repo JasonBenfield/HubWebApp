@@ -14,30 +14,30 @@ public sealed class EfUserContext : ISourceUserContext
         this.currentUserName = currentUserName;
     }
 
-    public async Task<AppUserModel> User()
+    public async Task<AppUserModel> User(CancellationToken ct)
     {
         var userName = await currentUserName.Value();
-        var user = await User(userName);
+        var user = await User(userName, ct);
         return user;
     }
 
-    public async Task<AppUserModel> User(AppUserName userName)
+    public async Task<AppUserModel> User(AppUserName userName, CancellationToken ct)
     {
-        var user = await hubFactory.Users.UserByUserName(userName);
+        var user = await hubFactory.Users.UserByUserName(userName, ct);
         return user.ToModel();
     }
 
-    public async Task<AppUserModel> UserOrAnon(AppUserName userName)
+    public async Task<AppUserModel> UserOrAnon(AppUserName userName, CancellationToken ct)
     {
-        var user = await hubFactory.Users.UserOrAnon(userName);
+        var user = await hubFactory.Users.UserOrAnon(userName, ct);
         return user.ToModel();
     }
 
-    public async Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier)
+    public async Task<AppRoleModel[]> UserRoles(AppUserModel user, ModifierModel modifier, CancellationToken ct)
     {
-        var appUser = await hubFactory.Users.User(user.ID);
-        var appMod = await hubFactory.Modifiers.Modifier(modifier.ID);
-        var roles = await appUser.Modifier(appMod).AssignedRoles();
+        var appUser = await hubFactory.Users.User(user.ID, ct);
+        var appMod = await hubFactory.Modifiers.Modifier(modifier.ID, ct);
+        var roles = await appUser.Modifier(appMod).AssignedRoles(ct);
         return roles.Select(r => r.ToModel()).ToArray();
     }
 }

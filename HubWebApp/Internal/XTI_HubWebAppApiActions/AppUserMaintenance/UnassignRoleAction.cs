@@ -17,17 +17,17 @@ public sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionR
 
     public async Task<EmptyActionResult> Execute(UserRoleRequest unassignRequest, CancellationToken stoppingToken)
     {
-        var modifier = await factory.Modifiers.Modifier(unassignRequest.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var modifier = await factory.Modifiers.Modifier(unassignRequest.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(unassignRequest.UserID);
-        var role = await app.Role(unassignRequest.RoleID);
-        await user.Modifier(modifier).UnassignRole(role);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(unassignRequest.UserID, stoppingToken);
+        var role = await app.Role(unassignRequest.RoleID, stoppingToken);
+        await user.Modifier(modifier).UnassignRole(role, stoppingToken);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }

@@ -17,7 +17,7 @@ internal sealed class SetUserAccessTest
             )
         );
         var appContext = tester.Services.GetRequiredService<IAppContext>();
-        var app = await appContext.App();
+        var app = await appContext.App(ct: default);
         var modCategory = await GetModCategory(tester, app.App, ModifierCategoryName.Default);
         var modifier = await GetModifier(tester, app.App, modCategory, ModifierKey.Default);
         var roles = await GetUserRoles(tester, modifier, userModel);
@@ -48,7 +48,7 @@ internal sealed class SetUserAccessTest
             )
         );
         var appContext = tester.Services.GetRequiredService<IAppContext>();
-        var app = await appContext.App();
+        var app = await appContext.App(ct: default);
         var modCategory = await GetModCategory(tester, app.App, HubInfo.ModCategories.UserGroups);
         var modifier = await GetModifier(tester, app.App, modCategory, new ModifierKey("General"));
         var roles = await GetUserRoles(tester, modifier, userModel);

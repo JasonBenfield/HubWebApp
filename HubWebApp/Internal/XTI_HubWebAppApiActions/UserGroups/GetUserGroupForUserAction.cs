@@ -13,9 +13,9 @@ public sealed class GetUserGroupForUserAction : AppAction<AppUserIDRequest, AppU
 
     public async Task<AppUserGroupModel> Execute(AppUserIDRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.User(getRequest.UserID);
-        var userGroup = await user.UserGroup();
-        var userGroupPermissions = await currentUser.GetPermissionsToUserGroup(userGroup);
+        var user = await hubFactory.Users.User(getRequest.UserID, stoppingToken);
+        var userGroup = await user.UserGroup(stoppingToken);
+        var userGroupPermissions = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);
         if (!userGroupPermissions.CanView)
         {
             throw new AccessDeniedException("Access is denied to this user");

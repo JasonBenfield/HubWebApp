@@ -23,22 +23,25 @@ public sealed class Modifier
 
     public bool IsForCategory(ModifierCategory modCategory) => modCategory.ID == record.CategoryID;
 
-    public async Task<App> App()
+    public async Task<App> App(CancellationToken ct)
     {
-        var category = await factory.ModCategories.Category(record.CategoryID);
-        var app = await category.App();
+        var category = await factory.ModCategories.Category(record.CategoryID, ct);
+        var app = await category.App(ct);
         return app;
     }
 
-    public Task SetDisplayText(string displayText)
-    {
-        return factory.DB.Modifiers.Update(record, r =>
-        {
-            r.DisplayText = displayText;
-        });
-    }
+    public Task SetDisplayText(string displayText, CancellationToken ct) =>
+        factory.DB.Modifiers.Update
+        (
+            record, 
+            r =>
+            {
+                r.DisplayText = displayText;
+            },
+            ct
+        );
 
-    public async Task<Modifier> DefaultModifier()
+    public async Task<Modifier> DefaultModifier(CancellationToken ct)
     {
         Modifier? defaultModifier;
         if (IsDefault())
@@ -52,15 +55,15 @@ public sealed class Modifier
                 .Retrieve()
                 .Where(modCat => modCat.ID == record.CategoryID)
                 .Select(modCat => modCat.AppID)
-                .FirstAsync();
-            var app = await factory.Apps.App(appID);
-            defaultModifier = await app.DefaultModifier();
+                .FirstAsync(ct);
+            var app = await factory.Apps.App(appID, ct);
+            defaultModifier = await app.DefaultModifier(ct);
         }
         return defaultModifier;
     }
 
-    public Task<ModifierCategory> Category() =>
-        factory.ModCategories.Category(record.CategoryID);
+    public Task<ModifierCategory> Category(CancellationToken ct) =>
+        factory.ModCategories.Category(record.CategoryID, ct);
 
     public ModifierModel ToModel() => new ModifierModel
     {

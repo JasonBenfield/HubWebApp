@@ -8,7 +8,7 @@ internal sealed class AssignRoleTest
         var tester = await Setup();
         var userToEdit = await AddUser(tester, "userToEdit");
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var viewAppRole = await GetRole(tester, app.ToModel(), HubInfo.Roles.ViewApp);
         var model = CreateModel(userToEdit, defaultModifier.ToModel(), viewAppRole);
         await AccessAssertions.Create(tester).ShouldThrowError_WhenModifierIsBlank(model);
@@ -20,7 +20,7 @@ internal sealed class AssignRoleTest
         var tester = await Setup();
         var userToEdit = await AddUser(tester, "userToEdit");
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var viewAppRole = await GetRole(tester, app.ToModel(), HubInfo.Roles.ViewApp);
         var model = CreateModel(userToEdit, defaultModifier.ToModel(), viewAppRole);
         var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
@@ -43,7 +43,7 @@ internal sealed class AssignRoleTest
         var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await tester.Login([HubInfo.Roles.ViewApp], generalUserGroupModifier, HubInfo.Roles.EditUser);
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var viewAppRole = await GetRole(tester, app.ToModel(), HubInfo.Roles.ViewApp);
         var model = CreateModel(userToEdit, defaultModifier.ToModel(), viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();
@@ -64,7 +64,7 @@ internal sealed class AssignRoleTest
         await tester.Login(HubInfo.Roles.EditUser);
         var userToEdit = await AddUser(tester, "userToEdit");
         var app = await tester.HubApp();
-        var defaultModifier = await app.DefaultModifier();
+        var defaultModifier = await app.DefaultModifier(ct: default);
         var viewAppRole = await GetRole(tester, app.ToModel(), HubInfo.Roles.ViewApp);
         var model = CreateModel(userToEdit, defaultModifier.ToModel(), viewAppRole);
         var hubAppModifier = await tester.HubAppModifier();

@@ -14,24 +14,24 @@ public sealed class AppUserRepository
         this.factory = factory;
     }
 
-    public Task<AppUser[]> UsersLoggedInBefore(DateTimeOffset maxTime) =>
+    public Task<AppUser[]> UsersLoggedInBefore(DateTimeOffset maxTime, CancellationToken ct) =>
         factory.DB
             .Users
             .Retrieve()
             .Where(u => u.TimeLoggedIn < maxTime || (u.TimeLoggedIn.Year == 9999 && u.TimeAdded < maxTime))
             .Select(u => factory.User(u))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal Task<AppUser[]> Users(AppUserGroup userGroup) => 
+    internal Task<AppUser[]> Users(AppUserGroup userGroup, CancellationToken ct) =>
         factory.DB
             .Users
             .Retrieve()
             .Where(u => u.GroupID == userGroup.ID && u.TimeDeactivated.Year == 9999)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    public async Task<AppUser[]> UsersWithAnyRole(Modifier modifier, AppRole[] roles)
+    public async Task<AppUser[]> UsersWithAnyRole(Modifier modifier, AppRole[] roles, CancellationToken ct)
     {
         AppUser[] users;
         var roleIDs = roles.Select(r => r.ID).ToArray();
@@ -53,7 +53,7 @@ public sealed class AppUserRepository
                 .UserRoles.Retrieve()
                 .Where(ur => modifier.ID == ur.ModifierID)
                 .Select(ur => ur.UserID);
-            var defaultModifier = await modifier.DefaultModifier();
+            var defaultModifier = await modifier.DefaultModifier(ct);
             userIDs = factory.DB
                 .UserRoles.Retrieve()
                 .Where
@@ -73,66 +73,66 @@ public sealed class AppUserRepository
             .Where(u => userIDs.Contains(u.ID) && u.TimeDeactivated.Year == 9999)
             .OrderBy(u => u.UserName)
             .Select(u => factory.User(u))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return users;
     }
 
-    internal async Task<AppUser> User(AppUserGroup userGroup, int id)
+    internal async Task<AppUser> User(AppUserGroup userGroup, int id, CancellationToken ct)
     {
         var userRecord = await factory.DB
             .Users
             .Retrieve()
-            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.ID == id);
+            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.ID == id, ct);
         return factory.User(userRecord ?? throw new Exception($"User {id} not found"));
     }
 
-    internal async Task<AppUser> UserOrAnon(AppUserGroup userGroup, AppUserName userName)
+    internal async Task<AppUser> UserOrAnon(AppUserGroup userGroup, AppUserName userName, CancellationToken ct)
     {
         var userRecord = await factory.DB
             .Users
             .Retrieve()
-            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.UserName == userName.Value);
+            .FirstOrDefaultAsync(u => u.GroupID == userGroup.ID && u.UserName == userName.Value, ct);
         if (userRecord == null)
         {
-            userRecord = await GetUser(AppUserName.Anon);
+            userRecord = await GetUser(AppUserName.Anon, ct);
         }
         return factory.User(userRecord ?? throw new Exception("User not found"));
     }
 
-    public async Task<AppUser> User(int id)
+    public async Task<AppUser> User(int id, CancellationToken ct)
     {
         var userRecord = await factory.DB
             .Users
             .Retrieve()
-            .FirstOrDefaultAsync(u => u.ID == id);
+            .FirstOrDefaultAsync(u => u.ID == id, ct);
         return factory.User(userRecord ?? throw new Exception($"User {id} not found"));
     }
 
-    public async Task<AppUser> UserOrAnon(AppUserName userName)
+    public async Task<AppUser> UserOrAnon(AppUserName userName, CancellationToken ct)
     {
         if (userName.IsBlank())
         {
             userName = AppUserName.Anon;
         }
-        var record = await GetUser(userName);
+        var record = await GetUser(userName, ct);
         if (record == null && !userName.IsAnon())
         {
-            record = await GetUser(AppUserName.Anon);
+            record = await GetUser(AppUserName.Anon, ct);
         }
         return factory.User(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
-    public Task<AppUser> Anon() => UserByUserName(AppUserName.Anon);
+    public Task<AppUser> Anon(CancellationToken ct) => UserByUserName(AppUserName.Anon, ct);
 
-    public async Task<bool> UserNameExists(AppUserName userName)
+    public async Task<bool> UserNameExists(AppUserName userName, CancellationToken ct)
     {
-        var record = await GetUser(userName);
+        var record = await GetUser(userName, ct);
         return record != null;
     }
 
-    public async Task<AppUser> UserByUserName(AppUserName userName)
+    public async Task<AppUser> UserByUserName(AppUserName userName, CancellationToken ct)
     {
-        var record = await GetUser(userName);
+        var record = await GetUser(userName, ct);
         return factory.User
         (
             record
@@ -140,7 +140,7 @@ public sealed class AppUserRepository
         );
     }
 
-    public async Task<AppUser> UserOrAnonByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey)
+    public async Task<AppUser> UserOrAnonByExternalKey(AuthenticatorKey authenticatorKey, string externalUserKey, CancellationToken ct)
     {
         var authenticatorIDs = factory.DB
             .Authenticators.Retrieve()
@@ -158,24 +158,24 @@ public sealed class AppUserRepository
         var userEntity = await factory.DB
             .Users.Retrieve()
             .Where(u => userIDs.Contains(u.ID))
-            .FirstOrDefaultAsync();
-        if(userEntity == null)
+            .FirstOrDefaultAsync(ct);
+        if (userEntity == null)
         {
-            userEntity = await GetUser(AppUserName.Anon);
+            userEntity = await GetUser(AppUserName.Anon, ct);
         }
         return factory.User(userEntity ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey));
     }
 
-    private Task<AppUserEntity?> GetUser(AppUserName userName)
+    private Task<AppUserEntity?> GetUser(AppUserName userName, CancellationToken ct)
         => factory.DB
             .Users
             .Retrieve()
-            .FirstOrDefaultAsync(u => u.UserName == userName.Value);
+            .FirstOrDefaultAsync(u => u.UserName == userName.Value, ct);
 
-    internal async Task<AppUser> AddAnonIfNotExists(AppUserGroup userGroup, DateTimeOffset timeAdded)
+    internal async Task<AppUser> AddAnonIfNotExists(AppUserGroup userGroup, DateTimeOffset timeAdded, CancellationToken ct)
     {
         var userName = AppUserName.Anon;
-        var record = await GetUser(userName);
+        var record = await GetUser(userName, ct);
         if (record == null)
         {
             record = await AddUserEntity
@@ -185,7 +185,8 @@ public sealed class AppUserRepository
                 new SystemHashedPassword(),
                 new PersonName(""),
                 new EmailAddress(""),
-                timeAdded
+                timeAdded,
+                ct
             );
         }
         return factory.User(record);
@@ -205,13 +206,14 @@ public sealed class AppUserRepository
         IHashedPassword password,
         PersonName name,
         EmailAddress email,
-        DateTimeOffset timeAdded
+        DateTimeOffset timeAdded,
+        CancellationToken ct
     )
     {
-        var record = await GetUser(userName);
+        var record = await GetUser(userName, ct);
         if (record == null)
         {
-            record = await AddUserEntity(userGroup.ID, userName, password, name, email, timeAdded);
+            record = await AddUserEntity(userGroup.ID, userName, password, name, email, timeAdded, ct);
         }
         else
         {
@@ -224,13 +226,14 @@ public sealed class AppUserRepository
                     u.Password = password.Value();
                     u.Email = email.Value;
                     u.TimeDeactivated = DateTimeOffset.MaxValue;
-                }
+                },
+                ct
             );
         }
         return factory.User(record);
     }
 
-    private async Task<AppUserEntity> AddUserEntity(int userGroupID, AppUserName userName, IHashedPassword password, PersonName name, EmailAddress email, DateTimeOffset timeAdded)
+    private async Task<AppUserEntity> AddUserEntity(int userGroupID, AppUserName userName, IHashedPassword password, PersonName name, EmailAddress email, DateTimeOffset timeAdded, CancellationToken ct)
     {
         var newUser = new AppUserEntity
         {
@@ -242,7 +245,7 @@ public sealed class AppUserRepository
             TimeAdded = timeAdded,
             TimeDeactivated = DateTimeOffset.MaxValue
         };
-        await factory.DB.Users.Create(newUser);
+        await factory.DB.Users.Create(newUser, ct);
         return newUser;
     }
 }

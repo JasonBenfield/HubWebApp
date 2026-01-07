@@ -13,9 +13,9 @@ public sealed class AppRepository
         this.factory = factory;
     }
 
-    internal async Task AddUnknownIfNotFound()
+    internal async Task AddUnknownIfNotFound(CancellationToken ct)
     {
-        var app = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, DateTimeOffset.Now);
+        var app = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, DateTimeOffset.Now, ct);
         var version = await factory.Versions.AddIfNotFound
         (
             AppVersionName.Unknown,
@@ -28,20 +28,20 @@ public sealed class AppRepository
         await factory.Versions.AddVersionToAppIfNotFound(app, version);
         var currentVersion = await app.CurrentVersion();
         await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
-        var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default);
-        await defaultModCategory.AddDefaultModifierIfNotFound();
+        var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default, ct);
+        await defaultModCategory.AddDefaultModifierIfNotFound(ct);
         var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
         await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
     }
 
-    public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded)
+    public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded, CancellationToken ct)
     {
         App app;
         var title = appKey.Format();
-        var record = await GetAppByKey(appKey);
+        var record = await GetAppByKey(appKey, ct);
         if (record == null)
         {
-            app = await Add(versionName, appKey, title, timeAdded);
+            app = await Add(versionName, appKey, title, timeAdded, ct);
         }
         else
         {
@@ -53,7 +53,8 @@ public sealed class AppRepository
                     r.DisplayText = appKey.Name.DisplayText;
                     r.VersionName = versionName.Value;
                     r.Title = title.Trim();
-                }
+                },
+                ct
             );
             app = factory.CreateApp(record);
         }
@@ -62,23 +63,23 @@ public sealed class AppRepository
         return app;
     }
 
-    private async Task<App> Add(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded)
+    private async Task<App> Add(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
     {
         App? app = null;
         await factory.Transaction(async () =>
         {
-            var entity = await AddEntity(versionName, appKey, title, timeAdded);
+            var entity = await AddEntity(versionName, appKey, title, timeAdded, ct);
             app = factory.CreateApp(entity);
             if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
             {
-                var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default);
-                await defaultModCategory.AddDefaultModifierIfNotFound();
+                var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default, ct);
+                await defaultModCategory.AddDefaultModifierIfNotFound(ct);
             }
         });
         return app ?? throw new ArgumentNullException(nameof(app));
     }
 
-    private async Task<AppEntity> AddEntity(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded)
+    private async Task<AppEntity> AddEntity(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
     {
         var record = new AppEntity
         {
@@ -89,43 +90,43 @@ public sealed class AppRepository
             VersionName = versionName.Value,
             TimeAdded = timeAdded
         };
-        await factory.DB.Apps.Create(record);
+        await factory.DB.Apps.Create(record, ct);
         return record;
     }
 
-    public async Task<IEnumerable<App>> All()
+    public async Task<IEnumerable<App>> All(CancellationToken ct)
     {
         var records = await factory.DB.Apps.Retrieve()
             .OrderBy(a => a.DisplayText)
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return records.Select(r => factory.CreateApp(r));
     }
 
-    public async Task<App> App(int id)
+    public async Task<App> App(int id, CancellationToken ct)
     {
-        var record = await factory.DB.Apps.Retrieve().FirstOrDefaultAsync(a => a.ID == id);
+        var record = await factory.DB.Apps.Retrieve().FirstOrDefaultAsync(a => a.ID == id, ct);
         return factory.CreateApp(record ?? throw new Exception($"App {id} not found"));
     }
 
-    public async Task<App> App(AppKey appKey)
+    public async Task<App> App(AppKey appKey, CancellationToken ct)
     {
-        var record = await GetAppByKey(appKey);
+        var record = await GetAppByKey(appKey, ct);
         return factory.CreateApp
         (
             record ?? throw new ArgumentNullException($"App '{appKey.Name.DisplayText} {appKey.Type.DisplayText}' not found")
         );
     }
 
-    private Task<AppEntity?> GetAppByKey(AppKey appKey) =>
+    private Task<AppEntity?> GetAppByKey(AppKey appKey, CancellationToken ct) =>
         factory.DB.Apps.Retrieve()
-            .FirstOrDefaultAsync(a => a.Name == appKey.Name.Value && a.Type == appKey.Type.Value);
+            .FirstOrDefaultAsync(a => a.Name == appKey.Name.Value && a.Type == appKey.Type.Value, ct);
 
-    public async Task<App> AppOrUnknown(AppKey appKey)
+    public async Task<App> AppOrUnknown(AppKey appKey, CancellationToken ct)
     {
-        var record = await GetAppByKey(appKey);
+        var record = await GetAppByKey(appKey, ct);
         if (record == null && !appKey.Equals(AppKey.Unknown))
         {
-            record = await GetAppByKey(AppKey.Unknown);
+            record = await GetAppByKey(AppKey.Unknown, ct);
         }
         return factory.CreateApp
         (
@@ -133,7 +134,7 @@ public sealed class AppRepository
         );
     }
 
-    public Task<App[]> WebAppsWithOpenSessions(AppUser user)
+    public Task<App[]> WebAppsWithOpenSessions(AppUser user, CancellationToken ct)
     {
         var sessionIDs = factory.DB
             .Sessions
@@ -177,6 +178,6 @@ public sealed class AppRepository
             .Retrieve()
             .Where(a => a.Type == AppType.Values.WebApp && appIDs.Any(id => id == a.ID))
             .Select(a => factory.CreateApp(a))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 }

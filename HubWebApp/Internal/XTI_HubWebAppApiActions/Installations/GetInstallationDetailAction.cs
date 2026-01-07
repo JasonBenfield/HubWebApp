@@ -13,11 +13,11 @@ public sealed class GetInstallationDetailAction : AppAction<int, InstallationDet
 
     public async Task<InstallationDetailModel> Execute(int installationID, CancellationToken stoppingToken)
     {
-        var installation = await hubFactory.Installations.InstallationOrDefault(installationID);
+        var installation = await hubFactory.Installations.InstallationOrDefault(installationID, stoppingToken);
         var installLocation = await installation.Location();
         var requests = await installation.MostRecentRequests(1);
-        var appVersion = await installation.AppVersion();
-        var appPermission = await currentUser.GetPermissionsToApp(appVersion.App);
+        var appVersion = await installation.AppVersion(stoppingToken);
+        var appPermission = await currentUser.GetPermissionsToApp(appVersion.App, stoppingToken);
         if (!appPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");

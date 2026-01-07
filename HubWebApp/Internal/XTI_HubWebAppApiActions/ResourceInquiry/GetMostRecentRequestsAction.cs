@@ -11,7 +11,7 @@ public sealed class GetMostRecentRequestsAction : AppAction<GetResourceLogReques
 
     public async Task<AppRequestExpandedModel[]> Execute(GetResourceLogRequest model, CancellationToken stoppingToken)
     {
-        var app = await appFromPath.Value();
+        var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
         var version = await app.Version(versionKey);
         var resource = await version.Resource(model.ResourceID);

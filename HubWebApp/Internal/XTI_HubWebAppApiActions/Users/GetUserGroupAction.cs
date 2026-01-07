@@ -11,7 +11,7 @@ public sealed class GetUserGroupAction : AppAction<EmptyRequest, AppUserGroupMod
 
     public async Task<AppUserGroupModel> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
         return userGroup.ToModel();
     }
 }

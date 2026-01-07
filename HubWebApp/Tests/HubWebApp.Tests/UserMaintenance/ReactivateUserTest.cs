@@ -41,7 +41,7 @@ internal sealed class ReactivateUserTest
         await DeactivateUser(tester, userID);
         await tester.Execute(userID, new ModifierKey("General"));
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var userModel = (await factory.Users.User(userID)).ToModel();
+        var userModel = (await factory.Users.User(userID, ct: default)).ToModel();
         Assert.That(userModel.IsActive(), Is.True, "Should reactivate user");
     }
 
@@ -67,7 +67,7 @@ internal sealed class ReactivateUserTest
             modifier
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var user = await factory.Users.UserByUserName(new AppUserName(userName));
+        var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }
 

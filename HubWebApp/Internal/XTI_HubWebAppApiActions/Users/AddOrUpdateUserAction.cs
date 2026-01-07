@@ -17,7 +17,7 @@ public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, Ap
 
     public async Task<AppUserModel> Execute(AddOrUpdateUserRequest model, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
         var userName = new AppUserName(model.UserName);
         var hashedPassword = hashedPasswordFactory.Create(model.Password);
         var timeAdded = clock.Now();
@@ -27,7 +27,8 @@ public sealed class AddOrUpdateUserAction : AppAction<AddOrUpdateUserRequest, Ap
             hashedPassword,
             new PersonName(model.PersonName),
             new EmailAddress(model.Email),
-            timeAdded
+            timeAdded,
+            stoppingToken
         );
         return user.ToModel();
     }

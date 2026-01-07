@@ -105,9 +105,9 @@ internal sealed class AddUserGroupIfNotExistsTest
         };
         await tester.Execute(addRequest);
         var hubApp = await tester.HubApp();
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct: default);
         var modKey = new ModifierKey("Some Group");
-        var modifier = await userGroupsModCategory.ModifierByModKeyOrDefault(modKey);
+        var modifier = await userGroupsModCategory.ModifierByModKeyOrDefault(modKey, ct: default);
         Assert.That(modifier.ToModel().ModKey, Is.EqualTo(modKey), "Should add modifier for user group");
     }
 

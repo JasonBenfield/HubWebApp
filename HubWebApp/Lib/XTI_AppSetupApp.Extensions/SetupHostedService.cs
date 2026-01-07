@@ -25,12 +25,12 @@ public sealed class SetupHostedService : IHostedService
                 ? AppVersionKey.Current
                 : AppVersionKey.Parse(options.VersionKey);
             Console.WriteLine($"Running Default Setup for {appKey.Name.DisplayText} {appKey.Type.DisplayText} {versionKey.DisplayText}");
-            await defaultSetup.Run(versionKey);
+            await defaultSetup.Run(versionKey, cancellationToken);
             var additionalSetup = scope.ServiceProvider.GetService<IAppSetup>();
             if (additionalSetup != null)
             {
                 Console.WriteLine("Running Additional Setup");
-                await additionalSetup.Run(versionKey);
+                await additionalSetup.Run(versionKey, cancellationToken);
             }
         }
         catch(Exception ex)

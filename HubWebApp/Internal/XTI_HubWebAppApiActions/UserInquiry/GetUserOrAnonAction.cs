@@ -11,8 +11,8 @@ public class GetUserOrAnonAction : AppAction<AppUserNameRequest, AppUserModel>
 
     public async Task<AppUserModel> Execute(AppUserNameRequest getRequest, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.UserOrAnon(getRequest.ToAppUserName());
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.UserOrAnon(getRequest.ToAppUserName(), stoppingToken);
         return user.ToModel();
     }
 }

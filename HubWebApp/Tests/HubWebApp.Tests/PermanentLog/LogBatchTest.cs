@@ -13,7 +13,7 @@ internal sealed class LogBatchTest
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
         Assert.That(session.HasStarted(), Is.True, "Should start session on permanent log");
         Assert.That(session.HasEnded(), Is.False, "Should start session on permanent log");
     }
@@ -28,7 +28,7 @@ internal sealed class LogBatchTest
         var requestKey = generateKey();
         await startRequest(tester, sessionKey, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = await session.Requests();
         Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
     }
@@ -44,7 +44,7 @@ internal sealed class LogBatchTest
         await startRequest(tester, sessionKey, requestKey);
         await endRequest(tester, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = await session.Requests();
         Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
     }
@@ -61,7 +61,7 @@ internal sealed class LogBatchTest
         await endRequest(tester, requestKey);
         await endSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
         Assert.That(session.HasEnded(), Is.True, "Should end session on permanent log");
     }
 
@@ -74,8 +74,8 @@ internal sealed class LogBatchTest
         await startSession(tester, sessionKey);
         await authenticateSession(tester, sessionKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
-        var user = await session.User();
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
+        var user = await session.User(ct: default);
         Assert.That(user.ToModel().UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
     }
 
@@ -99,7 +99,7 @@ internal sealed class LogBatchTest
         }
         await logEvent(tester, requestKey, exception);
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var session = await factory.Sessions.Session(sessionKey);
+        var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = (await session.Requests()).ToArray();
         var events = (await requests[0].Events()).ToArray();
         Assert.That(events.Length, Is.EqualTo(1), "Should log event on permanent log");
@@ -267,9 +267,9 @@ internal sealed class LogBatchTest
         await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.CurrentInstallationID));
         var installationIDAccessor = sp.GetRequiredService<FakeInstallationIDAccessor>();
         installationIDAccessor.SetInstallationID(newInstResult.CurrentInstallationID);
-        var userGroup = await hubFactory.UserGroups.GetGeneral();
-        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now);
-        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now);
+        var userGroup = await hubFactory.UserGroups.GetGeneral(ct: default);
+        await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
+        await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
 
         return HubActionTester.Create(sp, hubApi => hubApi.PermanentLog.LogBatch);
     }

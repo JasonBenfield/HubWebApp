@@ -15,10 +15,10 @@ public sealed class FakeHubSetup : IAppSetup
         this.appContext = appContext;
     }
 
-    public async Task Run(AppVersionKey versionKey)
+    public async Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         var setup = new DefaultFakeSetup(apiFactory, appContext);
-        await setup.Run(versionKey);
+        await setup.Run(versionKey, ct);
         appContext.SetCurrentApp(setup.App);
     }
 }

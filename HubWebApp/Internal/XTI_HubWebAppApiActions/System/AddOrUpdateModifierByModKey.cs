@@ -13,11 +13,11 @@ public sealed class AddOrUpdateModifierByModKeyAction : AppAction<SystemAddOrUpd
 
     public async Task<ModifierModel> Execute(SystemAddOrUpdateModifierByModKeyRequest model, CancellationToken stoppingToken)
     {
-        var appContextModel = await appFromSystemUser.App(model.InstallationID);
-        var app = await hubFactory.Apps.App(appContextModel.App.ID);
-        var modCategory = await app.ModCategory(new ModifierCategoryName(model.ModCategoryName));
+        var appContextModel = await appFromSystemUser.App(model.InstallationID, stoppingToken);
+        var app = await hubFactory.Apps.App(appContextModel.App.ID, stoppingToken);
+        var modCategory = await app.ModCategory(new ModifierCategoryName(model.ModCategoryName), stoppingToken);
         var modKey = new ModifierKey(model.ModKey);
-        var modifier = await modCategory.AddOrUpdateModifier(modKey, model.TargetKey, model.TargetDisplayText);
+        var modifier = await modCategory.AddOrUpdateModifier(modKey, model.TargetKey, model.TargetDisplayText, stoppingToken);
         return modifier.ToModel();
     }
 }

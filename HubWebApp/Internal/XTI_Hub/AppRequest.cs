@@ -26,12 +26,12 @@ public sealed class AppRequest
 
     public Task<Resource> Resource() => factory.Resources.Resource(record.ResourceID);
 
-    public Task<Modifier> Modifier() => factory.Modifiers.Modifier(record.ModifierID);
+    public Task<Modifier> Modifier(CancellationToken ct) => factory.Modifiers.Modifier(record.ModifierID, ct);
 
-    public Task<Installation> Installation() =>
-        factory.Installations.InstallationOrDefault(record.InstallationID);
+    public Task<Installation> Installation(CancellationToken ct) =>
+        factory.Installations.InstallationOrDefault(record.InstallationID, ct);
 
-    public Task<AppSession> Session() => factory.Sessions.Session(record.SessionID);
+    public Task<AppSession> Session(CancellationToken ct) => factory.Sessions.Session(record.SessionID, ct);
 
     public bool HappendOnOrBefore(DateTimeOffset before)
     {
@@ -80,7 +80,7 @@ public sealed class AppRequest
             category
         );
 
-    public Task End(DateTimeOffset timeEnded)
+    public Task End(DateTimeOffset timeEnded, CancellationToken ct)
         => factory.DB
             .Requests
             .Update
@@ -89,7 +89,8 @@ public sealed class AppRequest
                 r =>
                 {
                     r.TimeEnded = timeEnded;
-                }
+                },
+                ct
             );
 
     public string RequestData { get => record.RequestData; }

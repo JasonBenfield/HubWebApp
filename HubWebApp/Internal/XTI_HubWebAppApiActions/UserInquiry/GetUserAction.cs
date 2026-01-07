@@ -11,8 +11,8 @@ public sealed class GetUserAction : AppAction<AppUserIDRequest, AppUserModel>
 
     public async Task<AppUserModel> Execute(AppUserIDRequest getRequest, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(getRequest.UserID);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(getRequest.UserID, stoppingToken);
         return user.ToModel();
     }
 }

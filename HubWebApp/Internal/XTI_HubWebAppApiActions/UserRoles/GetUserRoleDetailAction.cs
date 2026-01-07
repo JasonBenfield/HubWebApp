@@ -14,22 +14,22 @@ public sealed class GetUserRoleDetailAction : AppAction<UserRoleIDRequest, UserR
     public async Task<UserRoleDetailModel> Execute(UserRoleIDRequest getRequest, CancellationToken stoppingToken)
     {
         var userRole = await hubFactory.UserRoles.UserRole(getRequest.UserRoleID);
-        var user = await userRole.User();
-        var userGroup = await user.UserGroup();
-        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup);
+        var user = await userRole.User(stoppingToken);
+        var userGroup = await user.UserGroup(stoppingToken);
+        var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);
         if (!userGroupPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to user '{userGroup.ToModel().GroupName}'");
         }
-        var role = await userRole.Role();
-        var app = await role.App();
-        var appPermission = await currentUser.GetPermissionsToApp(app);
+        var role = await userRole.Role(stoppingToken);
+        var app = await role.App(stoppingToken);
+        var appPermission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!appPermission.CanView)
         {
             throw new AccessDeniedException($"Access denied to app '{app.ToModel().AppKey.Format()}'");
         }
-        var modifier = await userRole.Modifier();
-        var modCategory = await modifier.Category();
+        var modifier = await userRole.Modifier(stoppingToken);
+        var modCategory = await modifier.Category(stoppingToken);
         return new UserRoleDetailModel
         (
             userRole.ID, 

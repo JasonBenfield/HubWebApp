@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core.Fakes;
 using XTI_HubDB.EF;
+using XTI_HubWebAppApiActions;
 using XTI_HubWebAppApiActions.Storage;
 
 namespace HubWebApp.Tests;
@@ -367,6 +368,8 @@ internal sealed class StoreObjectTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
+        var options = sp.GetRequiredService<HubWebAppOptions>();
+        options.Storage.SingleUseExpirationInSeconds = 0;
         return HubActionTester.Create(sp, hubApi => hubApi.Storage.StoreObject);
     }
 }

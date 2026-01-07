@@ -14,7 +14,7 @@ internal sealed class SupportAppSetup : IAppSetup
         this.hubClient = hubClient;
     }
 
-    public async Task Run(AppVersionKey versionKey)
+    public async Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         var systemUserName = new SystemUserName(SupportAppKey.Value, Environment.MachineName);
         await hubClient.Install.SetUserAccess
@@ -28,7 +28,8 @@ internal sealed class SupportAppSetup : IAppSetup
                     new AppRoleName(hubClient.RoleNames.PermanentLog),
                     new AppRoleName(hubClient.RoleNames.InstallationManager)
                 )
-            )
+            ),
+            ct
         );
     }
 }

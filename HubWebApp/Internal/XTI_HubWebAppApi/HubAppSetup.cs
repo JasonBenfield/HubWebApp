@@ -11,20 +11,20 @@ public sealed class HubAppSetup : IAppSetup
         this.apiFactory = apiFactory;
     }
 
-    public async Task Run(AppVersionKey versionKey)
+    public async Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         var template = apiFactory.CreateTemplate();
         var registration = new AppRegistration(hubFactory);
-        await registration.Run(template.ToModel(), versionKey);
-        await AddAppModifiers();
-        await AddUserGroupModifiers();
+        await registration.Run(template.ToModel(), versionKey, ct);
+        await AddAppModifiers(ct);
+        await AddUserGroupModifiers(ct);
     }
 
-    private async Task AddAppModifiers()
+    private async Task AddAppModifiers(CancellationToken ct)
     {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
-        var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps);
-        var apps = await hubFactory.Apps.All();
+        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey, ct);
+        var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
+        var apps = await hubFactory.Apps.All(ct);
         var appModels = apps
             .Select(a => a.ToModel())
             .Where
@@ -38,16 +38,17 @@ public sealed class HubAppSetup : IAppSetup
             (
                 appModel.PublicKey,
                 appModel.ID,
-                appModel.AppKey.Format()
+                appModel.AppKey.Format(),
+                ct
             );
         }
     }
 
-    private async Task AddUserGroupModifiers()
+    private async Task AddUserGroupModifiers(CancellationToken ct)
     {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey);
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups);
-        var userGroups = await hubFactory.UserGroups.UserGroups();
+        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey, ct);
+        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
+        var userGroups = await hubFactory.UserGroups.UserGroups(ct);
         foreach (var userGroup in userGroups)
         {
             var userGroupModel = userGroup.ToModel();
@@ -55,7 +56,8 @@ public sealed class HubAppSetup : IAppSetup
             (
                 userGroupModel.PublicKey,
                 userGroupModel.ID,
-                userGroupModel.GroupName.DisplayText
+                userGroupModel.GroupName.DisplayText,
+                ct
             );
         }
     }

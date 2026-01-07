@@ -17,17 +17,17 @@ public sealed class AssignRoleAction : AppAction<UserRoleRequest, int>
 
     public async Task<int> Execute(UserRoleRequest assignRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(assignRequest.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var modifier = await hubFactory.Modifiers.Modifier(assignRequest.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var role = await app.Role(assignRequest.RoleID);
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(assignRequest.UserID);
-        await user.Modifier(modifier).AssignRole(role);
+        var role = await app.Role(assignRequest.RoleID, stoppingToken);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(assignRequest.UserID, stoppingToken);
+        await user.Modifier(modifier).AssignRole(role, stoppingToken);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return role.ToModel().ID;
     }

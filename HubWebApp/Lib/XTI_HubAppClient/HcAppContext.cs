@@ -13,7 +13,7 @@ public sealed class HcAppContext : ISourceAppContext
         this.installationIDAccessor = installationIDAccessor;
     }
 
-    public async Task<AppContextModel> App()
+    public async Task<AppContextModel> App(CancellationToken ct)
     {
         var installationID = await installationIDAccessor.Value();
         var appContextModel = await hubClient.System.GetAppContext
@@ -21,14 +21,16 @@ public sealed class HcAppContext : ISourceAppContext
             new GetAppContextRequest
             {
                 InstallationID = installationID
-            }
+            },
+            ct
         );
         return appContextModel;
     }
 
-    public Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey) =>
+    public Task<ModifierModel> Modifier(ModifierCategoryModel category, ModifierKey modKey, CancellationToken ct) =>
         hubClient.System.GetModifier
         (
-            new GetModifierRequest(category.ID, modKey)
+            new GetModifierRequest(category.ID, modKey),
+            ct
         );
 }

@@ -11,8 +11,8 @@ public sealed class GetModifierAction : AppAction<GetModifierRequest, ModifierMo
 
     public async Task<ModifierModel> Execute(GetModifierRequest getRequest, CancellationToken stoppingToken)
     {
-        var modCategory = await hubFactory.ModCategories.Category(getRequest.CategoryID);
-        var modifier = await modCategory.ModifierByModKey(new ModifierKey(getRequest.ModKey));
+        var modCategory = await hubFactory.ModCategories.Category(getRequest.CategoryID, stoppingToken);
+        var modifier = await modCategory.ModifierByModKey(new ModifierKey(getRequest.ModKey), stoppingToken);
         return modifier.ToModel();
     }
 }

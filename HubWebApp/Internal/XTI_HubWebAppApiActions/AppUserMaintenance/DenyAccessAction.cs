@@ -17,22 +17,22 @@ public sealed class DenyAccessAction : AppAction<UserModifierKey, EmptyActionRes
 
     public async Task<EmptyActionResult> Execute(UserModifierKey denyRequest, CancellationToken stoppingToken)
     {
-        var modifier = await hubFactory.Modifiers.Modifier(denyRequest.ModifierID);
-        var app = await modifier.App();
-        var permission = await currentUser.GetPermissionsToApp(app);
+        var modifier = await hubFactory.Modifiers.Modifier(denyRequest.ModifierID, stoppingToken);
+        var app = await modifier.App(stoppingToken);
+        var permission = await currentUser.GetPermissionsToApp(app, stoppingToken);
         if (!permission.CanView)
         {
             throw new AccessDeniedException("Access denied to this user");
         }
-        var denyAccessRole = await app.Role(AppRoleName.DenyAccess);
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(denyRequest.UserID);
-        var existingRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles();
+        var denyAccessRole = await app.Role(AppRoleName.DenyAccess, stoppingToken);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(denyRequest.UserID, stoppingToken);
+        var existingRoles = await user.Modifier(modifier).ExplicitlyAssignedRoles(stoppingToken);
         foreach(var role in existingRoles)
         {
-            await user.Modifier(modifier).UnassignRole(role);
+            await user.Modifier(modifier).UnassignRole(role, stoppingToken);
         }
-        await user.Modifier(modifier).AssignRole(denyAccessRole);
+        await user.Modifier(modifier).AssignRole(denyAccessRole, stoppingToken);
         await userCacheManagement.ClearCache(user.ToModel().UserName, stoppingToken);
         return new EmptyActionResult();
     }

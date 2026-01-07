@@ -11,9 +11,9 @@ public sealed class GetUserRolesAction : AppAction<GetUserRolesRequest, AppRoleM
 
     public async Task<AppRoleModel[]> Execute(GetUserRolesRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.User(getRequest.UserID);
-        var modifier = await hubFactory.Modifiers.Modifier(getRequest.ModifierID);
-        var roles = await user.Modifier(modifier).AssignedRoles();
+        var user = await hubFactory.Users.User(getRequest.UserID, stoppingToken);
+        var modifier = await hubFactory.Modifiers.Modifier(getRequest.ModifierID, stoppingToken);
+        var roles = await user.Modifier(modifier).AssignedRoles(stoppingToken);
         return roles.Select(r => r.ToModel()).ToArray();
     }
 }

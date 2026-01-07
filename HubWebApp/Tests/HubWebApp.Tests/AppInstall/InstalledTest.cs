@@ -112,7 +112,7 @@ sealed class InstalledTest
             new GetInstallationRequest(newInstResult2.CurrentInstallationID)
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID);
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
     }
 
@@ -156,14 +156,14 @@ sealed class InstalledTest
             new GetInstallationRequest(newInstResult2.CurrentInstallationID)
         );
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID);
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.InstallPending), "Should not delete previous current installation of a different app");
     }
 
     private Task<App> registerFakeApp(IHubActionTester tester)
     {
         var factory = tester.Services.GetRequiredService<HubFactory>();
-        return factory.Apps.AddOrUpdate(new AppVersionName("fake"), FakeInfo.AppKey, DateTimeOffset.Now);
+        return factory.Apps.AddOrUpdate(new AppVersionName("fake"), FakeInfo.AppKey, DateTimeOffset.Now, ct: default);
     }
 
     private async Task<HubActionTester<GetInstallationRequest, EmptyActionResult>> Setup()

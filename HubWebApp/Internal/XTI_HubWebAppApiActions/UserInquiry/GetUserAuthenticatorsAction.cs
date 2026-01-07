@@ -11,8 +11,8 @@ public sealed class GetUserAuthenticatorsAction : AppAction<AppUserIDRequest, Us
 
     public async Task<UserAuthenticatorModel[]> Execute(AppUserIDRequest getRequest, CancellationToken stoppingToken)
     {
-        var userGroup = await userGroupFromPath.Value();
-        var user = await userGroup.User(getRequest.UserID);
+        var userGroup = await userGroupFromPath.Value(stoppingToken);
+        var user = await userGroup.User(getRequest.UserID, stoppingToken);
         var authenticators = await user.Authenticators();
         return authenticators;
     }

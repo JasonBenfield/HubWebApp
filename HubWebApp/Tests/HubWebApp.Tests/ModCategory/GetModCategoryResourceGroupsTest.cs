@@ -8,7 +8,7 @@ sealed class GetModCategoryResourceGroupsTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         var app = await tester.HubApp();
-        var appsModCategory = await app.ModCategory(HubInfo.ModCategories.Apps);
+        var appsModCategory = await app.ModCategory(HubInfo.ModCategories.Apps, ct: default);
         var hubAppModifier = await tester.HubAppModifier();
         var resourceGroups = await tester.Execute(appsModCategory.ID, hubAppModifier.ModKey);
         Assert.That

@@ -27,9 +27,9 @@ public sealed class SetupHostedService : IHostedService
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
             await dbContext.Database.MigrateAsync();
-            await AddOrUpdateApp(scope);
-            await AddSystemUser(scope);
-            await RunSetup(scope);
+            await AddOrUpdateApp(scope, cancellationToken);
+            await AddSystemUser(scope, cancellationToken);
+            await RunSetup(scope, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -40,7 +40,7 @@ public sealed class SetupHostedService : IHostedService
         lifetime.StopApplication();
     }
 
-    private static Task AddOrUpdateApp(IServiceScope scope)
+    private static Task AddOrUpdateApp(IServiceScope scope, CancellationToken ct)
     {
         var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
@@ -49,11 +49,12 @@ public sealed class SetupHostedService : IHostedService
         (
             new AppVersionName(options.VersionName),
             HubInfo.AppKey,
-            clock.Now()
+            clock.Now(),
+            ct
         );
     }
 
-    private static async Task AddSystemUser(IServiceScope scope)
+    private static async Task AddSystemUser(IServiceScope scope, CancellationToken ct)
     {
         var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
         var hashedPasswordFactory = scope.ServiceProvider.GetRequiredService<IHashedPasswordFactory>();
@@ -63,7 +64,8 @@ public sealed class SetupHostedService : IHostedService
         (
             new SystemUserName(HubInfo.AppKey, Environment.MachineName),
             hashedPasswordFactory.Create(password),
-            clock.Now()
+            clock.Now(),
+            ct
         );
         var systemUserCredentials = scope.ServiceProvider.GetRequiredService<SystemUserCredentials>();
         await systemUserCredentials.Update
@@ -76,14 +78,14 @@ public sealed class SetupHostedService : IHostedService
         );
     }
 
-    private static async Task RunSetup(IServiceScope scope)
+    private static async Task RunSetup(IServiceScope scope, CancellationToken ct)
     {
         var hubSetup = scope.ServiceProvider.GetRequiredService<HubAppSetup>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
         var versionKey = string.IsNullOrWhiteSpace(options.VersionKey)
             ? AppVersionKey.Current
             : AppVersionKey.Parse(options.VersionKey);
-        await hubSetup.Run(versionKey);
+        await hubSetup.Run(versionKey, ct);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
