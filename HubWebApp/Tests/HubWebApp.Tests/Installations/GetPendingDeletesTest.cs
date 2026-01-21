@@ -38,7 +38,7 @@ internal sealed class GetPendingDeletesTest
         var tester = await Setup();
         const string machineName = "machine.example.com";
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         var newInstResult = await NewInstallation
         (
             tester, 
@@ -73,7 +73,7 @@ internal sealed class GetPendingDeletesTest
     private async Task<int> PrepareDeletePendingInstallation(HubActionTester<GetPendingDeletesRequest, AppVersionInstallationModel[]> tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         var newInstResult = await NewInstallation
         (
             tester,

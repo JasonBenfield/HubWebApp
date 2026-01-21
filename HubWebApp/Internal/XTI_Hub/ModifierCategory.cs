@@ -43,7 +43,7 @@ public sealed class ModifierCategory
 
     public Task<Modifier[]> Modifiers(CancellationToken ct) => factory.Modifiers.Modifiers(this, ct);
 
-    public Task<ResourceGroup[]> ResourceGroups(AppVersion appVersion) => factory.Groups.Groups(appVersion, this);
+    public Task<ResourceGroup[]> ResourceGroups(AppVersion appVersion, CancellationToken ct) => factory.Groups.Groups(appVersion, this, ct);
 
     public ModifierCategoryModel ToModel() => new ModifierCategoryModel
     {

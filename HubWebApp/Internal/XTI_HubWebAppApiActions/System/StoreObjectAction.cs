@@ -27,7 +27,8 @@ public sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
                 storeRequest.GenerateKey,
                 storeRequest.Data,
                 clock,
-                storeRequest.ExpireAfter
+                storeRequest.ExpireAfter,
+                stoppingToken
             );
         }
         else
@@ -39,7 +40,8 @@ public sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
                 storeRequest.Data,
                 clock,
                 storeRequest.ExpireAfter,
-                storeRequest.IsSlidingExpiration
+                storeRequest.IsSlidingExpiration,
+                stoppingToken
             );
         }
         return storageKey;

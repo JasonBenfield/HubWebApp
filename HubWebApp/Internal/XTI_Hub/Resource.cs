@@ -88,13 +88,13 @@ public sealed class Resource
                 ct
             );
 
-    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>
-        factory.Requests.MostRecentForResource(this, howMany);
+    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany, CancellationToken ct) =>
+        factory.Requests.MostRecentForResource(this, howMany, ct);
 
-    public Task<LogEntry[]> MostRecentErrorEvents(int howMany) =>
-        factory.LogEntries.MostRecentErrorsForResource(this, howMany);
+    public Task<LogEntry[]> MostRecentErrorEvents(int howMany, CancellationToken ct) =>
+        factory.LogEntries.MostRecentErrorsForResource(this, howMany, ct);
 
-    public Task<ResourceGroup> Group() => factory.Groups.Group(record.GroupID);
+    public Task<ResourceGroup> Group(CancellationToken ct) => factory.Groups.Group(record.GroupID, ct);
 
     public ResourceModel ToModel() =>
         new ResourceModel

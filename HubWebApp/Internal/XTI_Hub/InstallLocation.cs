@@ -1,5 +1,4 @@
-﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
+﻿using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -30,17 +29,17 @@ public sealed class InstallLocation
         return entity.QualifiedMachineName;
     }
 
-    public Task<bool> HasCurrentInstallation(AppVersion appVersion)
-        => hubFactory.Installations.HasCurrentInstallation(this, appVersion);
+    public Task<bool> HasCurrentInstallation(AppVersion appVersion, CancellationToken ct)
+        => hubFactory.Installations.HasCurrentInstallation(this, appVersion, ct);
 
-    public Task<Installation> CurrentInstallation(AppVersion appVersion)
-        => hubFactory.Installations.CurrentInstallation(this, appVersion);
+    public Task<Installation> CurrentInstallation(AppVersion appVersion, CancellationToken ct)
+        => hubFactory.Installations.CurrentInstallation(this, appVersion, ct);
 
-    public Task<Installation> NewCurrentInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
-        => hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded);
+    public Task<Installation> NewCurrentInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
+        => hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded, ct);
 
-    public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
-        => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded);
+    public Task<Installation> NewVersionInstallation(AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
+        => hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded, ct);
 
     public InstallLocationModel ToModel() => new InstallLocationModel(entity.ID, entity.QualifiedMachineName);
 

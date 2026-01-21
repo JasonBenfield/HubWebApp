@@ -14,7 +14,8 @@ public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionMo
         var version = await appFactory.Versions.VersionByName
         (
             model.ToAppVersionName(), 
-            model.ToAppVersionKey()
+            model.ToAppVersionKey(),
+            stoppingToken
         );
         return version.ToModel();
     }

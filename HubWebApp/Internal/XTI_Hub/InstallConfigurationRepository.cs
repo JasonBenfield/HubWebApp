@@ -13,11 +13,11 @@ public sealed class InstallConfigurationRepository
         this.hubFactory = hubFactory;
     }
 
-    public async Task<InstallConfiguration[]> Configurations(string repoOwner, string repoName, string configurationName)
+    public async Task<InstallConfiguration[]> Configurations(string repoOwner, string repoName, string configurationName, CancellationToken ct)
     {
         var configs = await hubFactory.DB.InstallConfigurations.Retrieve()
             .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && (configurationName == "" || c.ConfigurationName == configurationName))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return configs.Select(c => new InstallConfiguration(hubFactory, c)).ToArray();
     }
 
@@ -28,7 +28,8 @@ public sealed class InstallConfigurationRepository
         string configurationName,
         AppKey appKey,
         InstallConfigurationTemplate template,
-        int installSequence
+        int installSequence,
+        CancellationToken ct
     )
     {
         if (installSequence == 0)
@@ -37,13 +38,13 @@ public sealed class InstallConfigurationRepository
                 .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName)
                 .OrderByDescending(c => c.InstallSequence)
                 .Select(c => c.InstallSequence)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
             installSequence++;
         }
         InstallConfiguration installConfiguration;
         var config = await hubFactory.DB.InstallConfigurations.Retrieve()
             .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && (c.AppName == appKey.Name.DisplayText || c.AppName == appKey.Name.Value) && c.AppType == appKey.Type.Value)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         if (config == null)
         {
             config = new InstallConfigurationEntity
@@ -56,22 +57,22 @@ public sealed class InstallConfigurationRepository
                 TemplateID = template.ID,
                 InstallSequence = installSequence
             };
-            await hubFactory.DB.InstallConfigurations.Create(config);
+            await hubFactory.DB.InstallConfigurations.Create(config, ct);
             installConfiguration = new InstallConfiguration(hubFactory, config);
         }
         else
         {
             installConfiguration = new InstallConfiguration(hubFactory, config);
-            await installConfiguration.Update(template, installSequence);
+            await installConfiguration.Update(template, installSequence, ct);
         }
         return installConfiguration;
     }
 
-    internal async Task<InstallConfiguration> ConfigurationOrDefault(string repoOwner, string repoName, string configurationName, AppKey appKey)
+    internal async Task<InstallConfiguration> ConfigurationOrDefault(string repoOwner, string repoName, string configurationName, AppKey appKey, CancellationToken ct)
     {
         var config = await hubFactory.DB.InstallConfigurations.Retrieve()
             .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.ConfigurationName == configurationName && (c.AppName == appKey.Name.Value || c.AppName == appKey.Name.DisplayText) && c.AppType == appKey.Type.Value)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return new InstallConfiguration(hubFactory, config ?? new());
     }
 }

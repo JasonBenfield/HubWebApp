@@ -16,7 +16,7 @@ public sealed class EditUserAction : AppAction<EditUserForm, EmptyActionResult>
         var user = await userGroup.User(userID, stoppingToken);
         var name = new PersonName(model.PersonName.Value() ?? "");
         var email = new EmailAddress(model.Email.Value() ?? "");
-        await user.Edit(name, email);
+        await user.Edit(name, email, stoppingToken);
         return new EmptyActionResult();
     }
 }

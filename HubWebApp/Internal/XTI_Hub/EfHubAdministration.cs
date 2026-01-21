@@ -26,11 +26,12 @@ public sealed class EfHubAdministration : IHubAdministration
             generateKey,
             data,
             clock,
-            expireAfter
+            expireAfter,
+            ct
         );
 
     public Task<string> StoredObject(StorageName storageName, string storageKey, CancellationToken ct) =>
-        hubFactory.StoredObjects.SerializedStoredObject(storageName, storageKey, clock.Now(), 0);
+        hubFactory.StoredObjects.SerializedStoredObject(storageName, storageKey, clock.Now(), 0, ct);
     public async Task<AppModel[]> AddOrUpdateApps(AppVersionName versionName, AppKey[] appKeys, CancellationToken ct)
     {
         var apps = new List<AppModel>();
@@ -44,13 +45,13 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> Version(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
-        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey, ct);
         return version.ToModel();
     }
 
     public async Task<XtiVersionModel[]> Versions(AppVersionName versionName, CancellationToken ct)
     {
-        var versions = await hubFactory.Versions.VersionsByName(versionName);
+        var versions = await hubFactory.Versions.VersionsByName(versionName, ct);
         return versions.Select(v => v.ToModel()).ToArray();
     }
 
@@ -75,7 +76,8 @@ public sealed class EfHubAdministration : IHubAdministration
                     clock.Now(),
                     publishedVersion.ToAppVersionStatus(),
                     publishedVersion.ToAppVersionType(),
-                    publishedVersion.VersionNumber.ToAppVersionNumber()
+                    publishedVersion.VersionNumber.ToAppVersionNumber(),
+                    ct
                 );
                 versions.Add(version);
             }
@@ -84,7 +86,7 @@ public sealed class EfHubAdministration : IHubAdministration
                 var app = await hubFactory.Apps.App(appKey, ct);
                 foreach (var version in versions)
                 {
-                    await app.AddVersionIfNotFound(version);
+                    await app.AddVersionIfNotFound(version, ct);
                 }
             }
         }
@@ -92,30 +94,30 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
-        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
-        await version.Publishing();
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey, ct);
+        await version.Publishing(ct);
         return version.ToModel();
     }
 
     public async Task<XtiVersionModel> EndPublish(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
-        var version = await hubFactory.Versions.VersionByName(versionName, versionKey);
-        await version.Published();
+        var version = await hubFactory.Versions.VersionByName(versionName, versionKey, ct);
+        await version.Published(ct);
         return version.ToModel();
     }
 
     public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
     {
-        var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current);
+        var version = await hubFactory.Versions.VersionByName(versionName, AppVersionKey.Current, ct);
         var app = await hubFactory.Apps.App(appKey, ct);
-        await app.AddVersionIfNotFound(version);
+        await app.AddVersionIfNotFound(version, ct);
         var appVersion = version.App(app);
-        var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName);
-        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, siteName, clock.Now());
+        var installLocation = await hubFactory.InstallLocations.AddIfNotFound(machineName, ct);
+        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, siteName, clock.Now(), ct);
         Installation? versionInstallation = null;
         if (xtiEnv.IsProduction())
         {
-            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, siteName, clock.Now());
+            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, siteName, clock.Now(), ct);
         }
         return new NewInstallationResult(currentInstallation.ID, versionInstallation?.ID ?? 0);
     }
@@ -123,13 +125,13 @@ public sealed class EfHubAdministration : IHubAdministration
     public async Task BeginInstall(int installationID, CancellationToken ct)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(installationID, ct);
-        await installation.BeginInstallation();
+        await installation.BeginInstallation(ct);
     }
 
     public async Task Installed(int installationID, CancellationToken ct)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(installationID, ct);
-        await installation.Installed();
+        await installation.Installed(ct);
     }
 
     public async Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password, CancellationToken ct)
@@ -179,7 +181,7 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, CancellationToken ct)
     {
-        var version = await hubFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType);
+        var version = await hubFactory.Versions.StartNewVersion(versionName, clock.Now(), versionType, ct);
         return version.ToModel();
     }
 
@@ -189,12 +191,13 @@ public sealed class EfHubAdministration : IHubAdministration
         (
             getRequest.RepoOwner,
             getRequest.RepoName,
-            getRequest.ConfigurationName
+            getRequest.ConfigurationName,
+            ct
         );
         var installConfigModels = new List<InstallConfigurationModel>();
         foreach (var installConfig in installConfigs)
         {
-            var installConfigModel = await installConfig.ToModel();
+            var installConfigModel = await installConfig.ToModel(ct);
             installConfigModels.Add(installConfigModel);
         }
         return installConfigModels.ToArray();
@@ -226,7 +229,7 @@ public sealed class EfHubAdministration : IHubAdministration
         {
             throw new Exception("Template Name is required.");
         }
-        var template = await hubFactory.InstallConfigurationTemplates.Template(configRequest.TemplateName);
+        var template = await hubFactory.InstallConfigurationTemplates.Template(configRequest.TemplateName, ct);
         var installConfig = await hubFactory.InstallConfigurations.AddOrUpdateConfiguration
         (
             configRequest.RepoOwner,
@@ -234,9 +237,10 @@ public sealed class EfHubAdministration : IHubAdministration
             configRequest.ConfigurationName,
             configRequest.AppKey.ToAppKey(),
             template,
-            configRequest.InstallSequence
+            configRequest.InstallSequence,
+            ct
         );
-        var installConfigModel = await installConfig.ToModel();
+        var installConfigModel = await installConfig.ToModel(ct);
         return installConfigModel;
     }
 
@@ -251,7 +255,8 @@ public sealed class EfHubAdministration : IHubAdministration
             configRequest.TemplateName,
             configRequest.DestinationMachineName,
             configRequest.Domain,
-            configRequest.SiteName
+            configRequest.SiteName,
+            ct
         );
         return template.ToModel();
     }
@@ -283,11 +288,12 @@ public sealed class EfHubAdministration : IHubAdministration
             deleteRequest.RepoOwner,
             deleteRequest.RepoName,
             deleteRequest.ConfigurationName,
-            deleteRequest.AppKey.ToAppKey()
+            deleteRequest.AppKey.ToAppKey(),
+            ct
         );
         if (installConfig.IsFound())
         {
-            await installConfig.Delete();
+            await installConfig.Delete(ct);
         }
     }
 

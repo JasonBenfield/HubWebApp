@@ -12,7 +12,7 @@ public sealed class GetUserAuthenticatorsAction : AppAction<AppUserIDRequest, Us
     public async Task<UserAuthenticatorModel[]> Execute(AppUserIDRequest getRequest, CancellationToken stoppingToken)
     {
         var user = await hubFactory.Users.User(getRequest.UserID, stoppingToken);
-        var authenticators = await user.Authenticators();
+        var authenticators = await user.Authenticators(stoppingToken);
         return authenticators;
     }
 }

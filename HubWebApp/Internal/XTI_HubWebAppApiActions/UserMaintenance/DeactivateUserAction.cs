@@ -22,7 +22,7 @@ public sealed class DeactivateUserAction : AppAction<int, AppUserModel>
         {
             throw new Exception($"User '{userModel.UserName}' has already been deactivated");
         }
-        await user.Deactivate(clock.Now());
+        await user.Deactivate(clock.Now(), stoppingToken);
         return user.ToModel();
     }
 }

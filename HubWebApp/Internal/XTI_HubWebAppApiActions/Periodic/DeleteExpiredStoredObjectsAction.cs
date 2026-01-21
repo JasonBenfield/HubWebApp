@@ -16,7 +16,7 @@ public sealed class DeleteExpiredStoredObjectsAction : AppAction<EmptyRequest, E
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken stoppingToken)
     {
-        await hubFactory.StoredObjects.DeleteExpired(clock.Now());
+        await hubFactory.StoredObjects.DeleteExpired(clock.Now(), stoppingToken);
         return new EmptyActionResult();
     }
 }

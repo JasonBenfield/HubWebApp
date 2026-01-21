@@ -28,7 +28,7 @@ public sealed class RegisterUserAuthenticatorAction : AppAction<RegisterUserAuth
             );
         }
         var user = await hubFactory.Users.User(registerRequest.UserID, stoppingToken);
-        var authenticator = await user.AddAuthenticator(authenticatorKey, registerRequest.ExternalUserKey);
+        var authenticator = await user.AddAuthenticator(authenticatorKey, registerRequest.ExternalUserKey, stoppingToken);
         return authenticator;
     }
 }

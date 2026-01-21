@@ -22,7 +22,7 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        Assert.DoesNotThrowAsync(() => app.CurrentVersion());
+        Assert.DoesNotThrowAsync(() => app.CurrentVersion(ct: default));
     }
 
     [Test]
@@ -66,8 +66,8 @@ public sealed class RegisterAppTest
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
-        var version = await app.CurrentVersion();
-        var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
+        var version = await app.CurrentVersion(ct: default);
+        var group = await version.ResourceGroupByName(ResourceGroupName.Unknown, ct: default);
         Assert.That(group.ID, Is.GreaterThan(0), "Should add unknown resource group");
     }
 
@@ -80,9 +80,9 @@ public sealed class RegisterAppTest
         await tester.Execute(request);
         var appFactory = tester.Services.GetRequiredService<HubFactory>();
         var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
-        var version = await app.CurrentVersion();
-        var group = await version.ResourceGroupByName(ResourceGroupName.Unknown);
-        var resource = await group.ResourceByName(ResourceName.Unknown);
+        var version = await app.CurrentVersion(ct: default);
+        var group = await version.ResourceGroupByName(ResourceGroupName.Unknown, ct: default);
+        var resource = await group.ResourceByName(ResourceName.Unknown, ct: default);
         Assert.That(resource.ID, Is.GreaterThan(0), "Should add unknown resource");
     }
 
@@ -94,8 +94,8 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var groups = (await version.ResourceGroups()).ToArray();
+        var version = await app.CurrentVersion(ct: default);
+        var groups = (await version.ResourceGroups(ct: default)).ToArray();
         Assert.That
         (
             groups.Select(g => g.ToModel().Name),
@@ -122,8 +122,8 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var employeeGroup = (await version.ResourceGroups())
+        var version = await app.CurrentVersion(ct: default);
+        var employeeGroup = (await version.ResourceGroups(ct: default))
             .First(g => g.NameEquals(new ResourceGroupName("Employee")));
         var allowedRoles = await employeeGroup.AllowedRoles(ct: default);
         Assert.That
@@ -142,9 +142,9 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var group = await version.ResourceGroupByName(new ResourceGroupName("employee"));
-        var resources = (await group.Resources()).ToArray();
+        var version = await app.CurrentVersion(ct: default);
+        var group = await version.ResourceGroupByName(new ResourceGroupName("employee"), ct: default);
+        var resources = (await group.Resources(ct: default)).ToArray();
         Assert.That
         (
             resources.Select(r => r.ToModel().Name),
@@ -161,9 +161,9 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var employeeGroup = (await version.ResourceGroups()).First(g => g.NameEquals(new ResourceGroupName("Employee")));
-        var addEmployeeAction = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
+        var version = await app.CurrentVersion(ct: default);
+        var employeeGroup = (await version.ResourceGroups(ct: default)).First(g => g.NameEquals(new ResourceGroupName("Employee")));
+        var addEmployeeAction = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"), ct: default);
         var allowedRoles = await addEmployeeAction.AllowedRoles(ct: default);
         Assert.That
         (
@@ -210,8 +210,8 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
+        var version = await app.CurrentVersion(ct: default);
+        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"), ct: default);
         var modCategory = await employeeGroup.ModCategory(ct: default);
         Assert.That(modCategory.ToModel().Name, Is.EqualTo(FakeInfo.ModCategories.Department));
     }
@@ -224,8 +224,8 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
+        var version = await app.CurrentVersion(ct: default);
+        var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"), ct: default);
         var loginGroupModel = loginGroup.ToModel();
         Assert.That(loginGroupModel.IsAnonymousAllowed, Is.True, "Should allow anonymous");
     }
@@ -238,8 +238,8 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
+        var version = await app.CurrentVersion(ct: default);
+        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"), ct: default);
         var employeeGroupModel = employeeGroup.ToModel();
         Assert.That(employeeGroupModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }
@@ -252,9 +252,9 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"));
-        var resource = await loginGroup.ResourceByName(new ResourceName("Authenticate"));
+        var version = await app.CurrentVersion(ct: default);
+        var loginGroup = await version.ResourceGroupByName(new ResourceGroupName("Login"), ct: default);
+        var resource = await loginGroup.ResourceByName(new ResourceName("Authenticate"), ct: default);
         var resourceModel = resource.ToModel();
         Assert.That(resourceModel.IsAnonymousAllowed, Is.True, "Should allow anonymous");
     }
@@ -267,9 +267,9 @@ public sealed class RegisterAppTest
         var request = CreateRequest(tester);
         await tester.Execute(request);
         var app = await GetApp(tester);
-        var version = await app.CurrentVersion();
-        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"));
-        var resource = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"));
+        var version = await app.CurrentVersion(ct: default);
+        var employeeGroup = await version.ResourceGroupByName(new ResourceGroupName("Employee"), ct: default);
+        var resource = await employeeGroup.ResourceByName(new ResourceName("AddEmployee"), ct: default);
         var resourceModel = resource.ToModel();
         Assert.That(resourceModel.IsAnonymousAllowed, Is.False, "Should deny anonymous");
     }

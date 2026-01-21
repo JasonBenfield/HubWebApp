@@ -17,7 +17,7 @@ public sealed class ReactivateUserAction : AppAction<int, AppUserModel>
     {
         var userGroup = await userGroupFromPath.Value(stoppingToken);
         var user = await userGroup.User(userID, stoppingToken);
-        await user.Reactivate();
+        await user.Reactivate(stoppingToken);
         return user.ToModel();
     }
 }

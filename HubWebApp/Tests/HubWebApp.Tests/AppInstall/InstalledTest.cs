@@ -10,7 +10,7 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation
@@ -45,7 +45,7 @@ sealed class InstalledTest
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation
@@ -79,7 +79,7 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult1 = await NewInstallation
@@ -121,11 +121,11 @@ sealed class InstalledTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var fakeApp = await registerFakeApp(tester);
-        var fakeVersion = await fakeApp.CurrentVersion();
+        var fakeVersion = await fakeApp.CurrentVersion(ct: default);
         var newInstResult1 = await NewInstallation
         (
             tester,

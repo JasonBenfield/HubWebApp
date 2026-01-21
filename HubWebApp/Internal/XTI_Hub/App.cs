@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -67,16 +66,16 @@ public sealed class App
     public Task<AppRole> Role(AppRoleName roleName, CancellationToken ct) =>
         factory.Roles.Role(this, roleName, ct);
 
-    internal async Task<AppVersion> AddVersionIfNotFound(AppVersionKey versionKey)
+    internal async Task<AppVersion> AddVersionIfNotFound(AppVersionKey versionKey, CancellationToken ct)
     {
-        var version = await factory.Versions.VersionByName(new AppVersionName(app.VersionName), versionKey);
-        await AddVersionIfNotFound(version);
+        var version = await factory.Versions.VersionByName(new AppVersionName(app.VersionName), versionKey, ct);
+        await AddVersionIfNotFound(version, ct);
         return new AppVersion(factory, this, version);
     }
 
-    internal Task AddVersionIfNotFound(XtiVersion version) => factory.Versions.AddVersionToAppIfNotFound(this, version);
+    internal Task AddVersionIfNotFound(XtiVersion version, CancellationToken ct) => factory.Versions.AddVersionToAppIfNotFound(this, version, ct);
 
-    public Task<AppVersion> CurrentVersion() => factory.Versions.VersionByApp(this, AppVersionKey.Current);
+    public Task<AppVersion> CurrentVersion(CancellationToken ct) => factory.Versions.VersionByApp(this, AppVersionKey.Current, ct);
 
     public async Task SetRoles(IEnumerable<AppRoleName> roleNames, CancellationToken ct)
     {
@@ -126,24 +125,24 @@ public sealed class App
         }
     }
 
-    public Task<AppVersion> Version(AppVersionKey versionKey) => factory.Versions.VersionByApp(this, versionKey);
+    public Task<AppVersion> Version(AppVersionKey versionKey, CancellationToken ct) => factory.Versions.VersionByApp(this, versionKey, ct);
 
     public Task<AppVersion> VersionOrDefault(AppVersionKey versionKey, CancellationToken ct) =>
         factory.Versions.VersionByAppOrUnknown(this, versionKey, ct);
 
-    public Task<XtiVersion[]> Versions() => factory.Versions.VersionsByApp(this);
+    public Task<XtiVersion[]> Versions(CancellationToken ct) => factory.Versions.VersionsByApp(this, ct);
 
-    public async Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
+    public async Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany, CancellationToken ct)
     {
-        var version = await CurrentVersion();
-        var requests = await version.MostRecentRequests(howMany);
+        var version = await CurrentVersion(ct);
+        var requests = await version.MostRecentRequests(howMany, ct);
         return requests;
     }
 
-    public async Task<LogEntry[]> MostRecentErrorLogEntries(int howMany)
+    public async Task<LogEntry[]> MostRecentErrorLogEntries(int howMany, CancellationToken ct)
     {
-        var version = await CurrentVersion();
-        var requests = await version.MostRecentLoggedErrors(howMany);
+        var version = await CurrentVersion(ct);
+        var requests = await version.MostRecentLoggedErrors(howMany, ct);
         return requests;
     }
 

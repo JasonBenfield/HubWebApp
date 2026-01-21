@@ -13,9 +13,9 @@ public sealed class GetMostRecentErrorEventsAction : AppAction<GetResourceLogReq
     {
         var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
-        var version = await app.Version(versionKey);
-        var resource = await version.Resource(model.ResourceID);
-        var events = await resource.MostRecentErrorEvents(model.HowMany);
+        var version = await app.Version(versionKey, stoppingToken);
+        var resource = await version.Resource(model.ResourceID, stoppingToken);
+        var events = await resource.MostRecentErrorEvents(model.HowMany, stoppingToken);
         return events.Select(evt => evt.ToModel()).ToArray();
     }
 }

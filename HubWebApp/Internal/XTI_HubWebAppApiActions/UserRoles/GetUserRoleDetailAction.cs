@@ -13,7 +13,7 @@ public sealed class GetUserRoleDetailAction : AppAction<UserRoleIDRequest, UserR
 
     public async Task<UserRoleDetailModel> Execute(UserRoleIDRequest getRequest, CancellationToken stoppingToken)
     {
-        var userRole = await hubFactory.UserRoles.UserRole(getRequest.UserRoleID);
+        var userRole = await hubFactory.UserRoles.UserRole(getRequest.UserRoleID, stoppingToken);
         var user = await userRole.User(stoppingToken);
         var userGroup = await user.UserGroup(stoppingToken);
         var userGroupPermission = await currentUser.GetPermissionsToUserGroup(userGroup, stoppingToken);

@@ -23,7 +23,7 @@ public sealed class SystemUserRepository
         var systemUser = await SystemUserOrAnon(systemUserName, ct);
         if (systemUser.ToModel().UserName.Equals(systemUserName.UserName))
         {
-            await systemUser.ChangePassword(hashedPassword);
+            await systemUser.ChangePassword(hashedPassword, ct);
         }
         else
         {

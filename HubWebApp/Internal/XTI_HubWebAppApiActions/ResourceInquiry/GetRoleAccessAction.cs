@@ -13,8 +13,8 @@ public sealed class GetRoleAccessAction : AppAction<GetResourceRoleAccessRequest
     {
         var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(getRequest.VersionKey);
-        var version = await app.Version(versionKey);
-        var resource = await version.Resource(getRequest.ResourceID);
+        var version = await app.Version(versionKey, stoppingToken);
+        var resource = await version.Resource(getRequest.ResourceID, stoppingToken);
         var allowedRoles = await resource.AllowedRoles(stoppingToken);
         var allowedRoleModels = allowedRoles.Select(ar => ar.ToModel()).ToArray();
         return allowedRoleModels;

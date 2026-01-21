@@ -49,7 +49,7 @@ internal sealed class RequestDeleteTest
     private async Task<int> PrepareInstallation(HubActionTester<GetInstallationRequest, EmptyActionResult> tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         var newInstResult = await NewInstallation
         (
             tester, 

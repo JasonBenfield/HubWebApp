@@ -13,11 +13,11 @@ public sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMode
 
     public async Task<AppRequestDetailModel> Execute(int requestID, CancellationToken stoppingToken)
     {
-        var request = await hubFactory.Requests.Request(requestID);
+        var request = await hubFactory.Requests.Request(requestID, stoppingToken);
         var installation = await request.Installation(stoppingToken);
-        var installLocation = await installation.Location();
-        var resource = await request.Resource();
-        var resourceGroup = await resource.Group();
+        var installLocation = await installation.Location(stoppingToken);
+        var resource = await request.Resource(stoppingToken);
+        var resourceGroup = await resource.Group(stoppingToken);
         var modifier = await request.Modifier(stoppingToken);
         var modCategory = await modifier.Category(stoppingToken);
         var appVersion = await installation.AppVersion(stoppingToken);
@@ -34,8 +34,8 @@ public sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailMode
         {
             throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");
         }
-        var sourceRequest = await request.SourceRequestOrDefault();
-        var targetRequestIDs = await request.TargetRequestIDs();
+        var sourceRequest = await request.SourceRequestOrDefault(stoppingToken);
+        var targetRequestIDs = await request.TargetRequestIDs(stoppingToken);
         var detail = new AppRequestDetailModel
         (
             Request: request.ToModel(),

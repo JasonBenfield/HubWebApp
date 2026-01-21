@@ -26,7 +26,8 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
             new StorageName("XTI Authenticated"),
             loginRequest.AuthKey,
             clock.Now(),
-            options.Storage.SingleUseExpirationInSeconds
+            options.Storage.SingleUseExpirationInSeconds,
+            stoppingToken
         );
         if (string.IsNullOrWhiteSpace(authenticated.UserName))
         {
@@ -44,7 +45,8 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
             new StorageName("Login Return"),
             loginRequest.ReturnKey,
             clock.Now(),
-            options.Storage.SingleUseExpirationInSeconds
+            options.Storage.SingleUseExpirationInSeconds,
+            stoppingToken
         );
         var requesterKey = string.IsNullOrWhiteSpace(anonClient.RequesterKey) ?
             Guid.NewGuid().ToString("N") :

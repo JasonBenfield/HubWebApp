@@ -24,7 +24,8 @@ public sealed class LogEntryRepository
         string detail,
         int actualCount,
         string sourceLogEntryKey,
-        string category
+        string category,
+        CancellationToken ct
     )
     {
         var logEntryEntity = await factory.DB.Transaction
@@ -40,7 +41,8 @@ public sealed class LogEntryRepository
                 detail,
                 actualCount,
                 sourceLogEntryKey,
-                category
+                category,
+                ct
             )
         );
         return factory.CreateLogEntry(logEntryEntity);
@@ -57,7 +59,8 @@ public sealed class LogEntryRepository
         string detail,
         int actualCount,
         string sourceLogEntryKey,
-        string category
+        string category,
+        CancellationToken ct
     )
     {
         var logEntryEntity = await AddOrUpdateLogEntry
@@ -70,7 +73,8 @@ public sealed class LogEntryRepository
             message,
             detail,
             actualCount,
-            category
+            category,
+            ct
         );
         if (!string.IsNullOrWhiteSpace(sourceLogEntryKey))
         {
@@ -80,9 +84,10 @@ public sealed class LogEntryRepository
                 timeOccurred,
                 severity,
                 actualCount,
-                sourceLogEntryKey
+                sourceLogEntryKey,
+                ct
             );
-            await AddSourceLinkIfNotExists(logEntryEntity, sourceEntryEntity);
+            await AddSourceLinkIfNotExists(logEntryEntity, sourceEntryEntity, ct);
         }
         return logEntryEntity;
     }
@@ -97,14 +102,15 @@ public sealed class LogEntryRepository
         string message,
         string detail,
         int actualCount,
-        string category
+        string category,
+        CancellationToken ct
     )
     {
         caption = new TruncatedText(caption, 1000).Value;
         message = new TruncatedText(message, 5000).Value;
         detail = new TruncatedText(detail, 32000).Value;
         category = new TruncatedText(category, 500).Value;
-        var logEntryEntity = await GetLogEntryByKey(logEntryKey);
+        var logEntryEntity = await GetLogEntryByKey(logEntryKey, ct);
         if (logEntryEntity == null)
         {
             logEntryEntity = new LogEntryEntity
@@ -119,7 +125,7 @@ public sealed class LogEntryRepository
                 ActualCount = actualCount,
                 Category = category
             };
-            await factory.DB.LogEntries.Create(logEntryEntity);
+            await factory.DB.LogEntries.Create(logEntryEntity, ct);
         }
         else
         {
@@ -136,15 +142,16 @@ public sealed class LogEntryRepository
                     evt.Detail = detail;
                     evt.ActualCount = actualCount;
                     evt.Category = category;
-                }
+                },
+                ct
             );
         }
         return logEntryEntity;
     }
 
-    private async Task<LogEntryEntity> AddSourceLogEntryIfNotExists(AppRequest request, DateTimeOffset timeOccurred, AppEventSeverity severity, int actualCount, string sourceLogEntryKey)
+    private async Task<LogEntryEntity> AddSourceLogEntryIfNotExists(AppRequest request, DateTimeOffset timeOccurred, AppEventSeverity severity, int actualCount, string sourceLogEntryKey, CancellationToken ct)
     {
-        var sourceEntryEntity = await GetLogEntryByKey(sourceLogEntryKey);
+        var sourceEntryEntity = await GetLogEntryByKey(sourceLogEntryKey, ct);
         if (sourceEntryEntity == null)
         {
             sourceEntryEntity = new LogEntryEntity
@@ -158,16 +165,16 @@ public sealed class LogEntryRepository
                 Detail = "Placeholder",
                 ActualCount = actualCount
             };
-            await factory.DB.LogEntries.Create(sourceEntryEntity);
+            await factory.DB.LogEntries.Create(sourceEntryEntity, ct);
         }
         return sourceEntryEntity;
     }
 
-    private async Task AddSourceLinkIfNotExists(LogEntryEntity logEntryEntity, LogEntryEntity sourceEntryEntity)
+    private async Task AddSourceLinkIfNotExists(LogEntryEntity logEntryEntity, LogEntryEntity sourceEntryEntity, CancellationToken ct)
     {
         var linkExists = await factory.DB.SourceLogEntries.Retrieve()
             .Where(src => src.SourceID == sourceEntryEntity.ID && src.TargetID == logEntryEntity.ID)
-            .AnyAsync();
+            .AnyAsync(ct);
         if (!linkExists)
         {
             await factory.DB.SourceLogEntries.Create
@@ -176,32 +183,33 @@ public sealed class LogEntryRepository
                 {
                     SourceID = sourceEntryEntity.ID,
                     TargetID = logEntryEntity.ID
-                }
+                },
+                ct
             );
         }
     }
 
-    public async Task<LogEntry> LogEntryOrDefaultByKey(string eventKey)
+    public async Task<LogEntry> LogEntryOrDefaultByKey(string eventKey, CancellationToken ct)
     {
-        var entity = await GetLogEntryByKey(eventKey);
+        var entity = await GetLogEntryByKey(eventKey, ct);
         return factory.CreateLogEntry
         (
             entity ?? new LogEntryEntity()
         );
     }
 
-    public async Task<LogEntry> LogEntry(int id)
+    public async Task<LogEntry> LogEntry(int id, CancellationToken ct)
     {
         var entity = await factory.DB.LogEntries.Retrieve()
             .Where(e => e.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateLogEntry
         (
             entity ?? throw new Exception($"Log Entry not found with ID '{id}'")
         );
     }
 
-    internal async Task<LogEntry> SourceLogEntryOrDefault(int forTargetID)
+    internal async Task<LogEntry> SourceLogEntryOrDefault(int forTargetID, CancellationToken ct)
     {
         var sourceIDs = factory.DB.SourceLogEntries.Retrieve()
             .Where(src => src.TargetID == forTargetID)
@@ -209,11 +217,11 @@ public sealed class LogEntryRepository
         var entities = await factory.DB
             .LogEntries.Retrieve()
             .Where(e => sourceIDs.Contains(e.ID))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return factory.CreateLogEntry(entities.FirstOrDefault() ?? new());
     }
 
-    internal async Task<LogEntry> TargetLogEntryOrDefault(int forSourceID)
+    internal async Task<LogEntry> TargetLogEntryOrDefault(int forSourceID, CancellationToken ct)
     {
         var targetIDs = factory.DB.SourceLogEntries.Retrieve()
             .Where(src => src.SourceID == forSourceID)
@@ -221,22 +229,22 @@ public sealed class LogEntryRepository
         var entities = await factory.DB
             .LogEntries.Retrieve()
             .Where(e => targetIDs.Contains(e.ID))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return factory.CreateLogEntry(entities.FirstOrDefault() ?? new());
     }
 
-    private Task<LogEntryEntity?> GetLogEntryByKey(string eventKey) =>
+    private Task<LogEntryEntity?> GetLogEntryByKey(string eventKey, CancellationToken ct) =>
         factory.DB.LogEntries.Retrieve()
             .Where(e => e.EventKey == eventKey)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
-    internal Task<LogEntry[]> RetrieveByRequest(AppRequest request) =>
+    internal Task<LogEntry[]> RetrieveByRequest(AppRequest request, CancellationToken ct) =>
         factory.DB.LogEntries.Retrieve()
             .Where(e => e.RequestID == request.ID)
             .Select(e => factory.CreateLogEntry(e))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal Task<LogEntry[]> MostRecentLoggedErrorsForVersion(App app, XtiVersion version, int howMany)
+    internal Task<LogEntry[]> MostRecentLoggedErrorsForVersion(App app, XtiVersion version, int howMany, CancellationToken ct)
     {
         var appVersionID = factory.Versions.QueryAppVersionID(app, version);
         var requestIDs = factory.DB
@@ -260,10 +268,10 @@ public sealed class LogEntryRepository
             )
             .Where(rg => appVersionID.Contains(rg.AppVersionID))
             .Select(rg => rg.RequestID);
-        return MostRecentErrors(howMany, requestIDs);
+        return MostRecentErrors(howMany, requestIDs, ct);
     }
 
-    internal Task<LogEntry[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany)
+    internal Task<LogEntry[]> MostRecentErrorsForResourceGroup(ResourceGroup group, int howMany, CancellationToken ct)
     {
         var requestIDs = factory.DB
             .Requests
@@ -279,20 +287,20 @@ public sealed class LogEntryRepository
             )
             .Where(rg => rg.GroupID == group.ID)
             .Select(rg => rg.RequestID);
-        return MostRecentErrors(howMany, requestIDs);
+        return MostRecentErrors(howMany, requestIDs, ct);
     }
 
-    internal Task<LogEntry[]> MostRecentErrorsForResource(Resource resource, int howMany)
+    internal Task<LogEntry[]> MostRecentErrorsForResource(Resource resource, int howMany, CancellationToken ct)
     {
         var requestIDs = factory.DB
             .Requests
             .Retrieve()
             .Where(r => r.ResourceID == resource.ID)
             .Select(r => r.ResourceID);
-        return MostRecentErrors(howMany, requestIDs);
+        return MostRecentErrors(howMany, requestIDs, ct);
     }
 
-    private Task<LogEntry[]> MostRecentErrors(int howMany, IQueryable<int> requestIDs) =>
+    private Task<LogEntry[]> MostRecentErrors(int howMany, IQueryable<int> requestIDs, CancellationToken ct) =>
         factory.DB
             .LogEntries
             .Retrieve()
@@ -304,6 +312,6 @@ public sealed class LogEntryRepository
             .OrderByDescending(evt => evt.TimeOccurred)
             .Take(howMany)
             .Select(evt => factory.CreateLogEntry(evt))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
 }

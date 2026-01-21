@@ -87,7 +87,8 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
                         detail: logEntry.Detail,
                         actualCount: logEntry.ActualCount,
                         sourceLogEntryKey: logEntry.ParentEventKey,
-                        category: logEntry.Category
+                        category: logEntry.Category,
+                        ct: ct
                     );
                 }
             }
@@ -223,7 +224,8 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
             model.Detail,
             model.ActualCount,
             model.ParentEventKey,
-            model.Category
+            model.Category,
+            ct
         );
     }
 }

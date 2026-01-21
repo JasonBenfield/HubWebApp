@@ -12,7 +12,7 @@ public sealed class DeletedAction : AppAction<GetInstallationRequest, EmptyActio
     public async Task<EmptyActionResult> Execute(GetInstallationRequest model, CancellationToken stoppingToken)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(model.InstallationID, stoppingToken);
-        await installation.Deleted();
+        await installation.Deleted(stoppingToken);
         return new EmptyActionResult();
     }
 }

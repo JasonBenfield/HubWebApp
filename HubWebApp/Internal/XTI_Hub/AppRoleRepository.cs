@@ -162,11 +162,11 @@ public sealed class AppRoleRepository
             .Where(ur => ur.UserID == user.ID && ur.ModifierID == modifier.ID)
             .Select(ur => ur.RoleID);
 
-    internal Task<AppRole[]> AllowedRolesForResource(Resource resource, CancellationToken ct)
-        => rolesForResource(resource, true, ct);
+    internal Task<AppRole[]> AllowedRolesForResource(Resource resource, CancellationToken ct) => 
+        rolesForResource(resource, true, ct);
 
-    internal Task<AppRole[]> DeniedRolesForResource(Resource resource, CancellationToken ct)
-        => rolesForResource(resource, false, ct);
+    internal Task<AppRole[]> DeniedRolesForResource(Resource resource, CancellationToken ct) => 
+        rolesForResource(resource, false, ct);
 
     private Task<AppRole[]> rolesForResource(Resource resource, bool isAllowed, CancellationToken ct)
     {

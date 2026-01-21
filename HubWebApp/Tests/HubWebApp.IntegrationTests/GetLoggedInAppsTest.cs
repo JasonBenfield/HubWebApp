@@ -1,6 +1,4 @@
-﻿using XTI_Hub.Abstractions;
-
-namespace HubWebApp.IntegrationTests;
+﻿namespace HubWebApp.IntegrationTests;
 
 internal sealed class GetLoggedInAppsTest
 {
@@ -10,7 +8,7 @@ internal sealed class GetLoggedInAppsTest
         var sp = await Setup();
         var hubFactory = sp.GetRequiredService<HubFactory>();
         var user = await hubFactory.Users.UserOrAnon(new AppUserName("test.user"), ct: default);
-        var loggedInApps = await user.GetLoggedInApps();
+        var loggedInApps = await user.GetLoggedInApps(ct: default);
         loggedInApps.WriteToConsole();
     }
 

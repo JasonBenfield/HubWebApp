@@ -13,7 +13,7 @@ public sealed class GetUserAuthenticatorsAction : AppAction<AppUserIDRequest, Us
     {
         var userGroup = await userGroupFromPath.Value(stoppingToken);
         var user = await userGroup.User(getRequest.UserID, stoppingToken);
-        var authenticators = await user.Authenticators();
+        var authenticators = await user.Authenticators(stoppingToken);
         return authenticators;
     }
 }

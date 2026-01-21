@@ -20,7 +20,8 @@ public sealed class LoginReturnKeyAction : AppAction<LoginReturnModel, string>
         var returnKeyValue = await returnKey.Value
         (
             requesterKey: requesterKey,
-            returnUrl: requestData.ReturnUrl
+            returnUrl: requestData.ReturnUrl,
+            ct: stoppingToken
         );
         return returnKeyValue;
     }

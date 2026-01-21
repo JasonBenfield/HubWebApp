@@ -15,7 +15,7 @@ public sealed class PurgeLogsAction : AppAction<EmptyRequest, EmptyActionResult>
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken ct)
     {
-        await hubFactory.Sessions.PurgeLogs(clock.Now().AddDays(-90));
+        await hubFactory.Sessions.PurgeLogs(clock.Now().AddDays(-90), ct);
         return new EmptyActionResult();
     }
 }

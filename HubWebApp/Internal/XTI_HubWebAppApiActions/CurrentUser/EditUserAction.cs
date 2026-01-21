@@ -17,7 +17,7 @@ public sealed class EditUserAction : AppAction<EditCurrentUserForm, AppUserModel
         var user = await hubFactory.Users.User(userModel.ID, stoppingToken);
         var name = new PersonName(model.PersonName.Value() ?? "");
         var email = new EmailAddress(model.Email.Value() ?? "");
-        await user.Edit(name, email);
+        await user.Edit(name, email, stoppingToken);
         return user.ToModel();
     }
 }

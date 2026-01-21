@@ -20,7 +20,7 @@ public sealed class DeactivateUsersAction : AppAction<EmptyRequest, EmptyActionR
         var users = await hubFactory.Users.UsersLoggedInBefore(clock.Now().AddDays(-options.Login.DaysBeforeDeactivation), stoppingToken);
         foreach (var user in users)
         {
-            await user.Deactivate(clock.Now());
+            await user.Deactivate(clock.Now(), stoppingToken);
         }
         return new EmptyActionResult();
     }

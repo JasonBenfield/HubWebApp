@@ -74,10 +74,10 @@ public sealed class AppSession
                 ct
             );
 
-    public Task<AppRequest[]> Requests() => factory.Requests.RetrieveBySession(this);
+    public Task<AppRequest[]> Requests(CancellationToken ct) => factory.Requests.RetrieveBySession(this, ct);
 
-    public Task<AppRequest[]> MostRecentRequests(int howMany) =>
-        factory.Requests.RetrieveMostRecent(this, howMany);
+    public Task<AppRequest[]> MostRecentRequests(int howMany, CancellationToken ct) =>
+        factory.Requests.RetrieveMostRecent(this, howMany, ct);
 
     public Task<AppUser> User(CancellationToken ct) => factory.Users.User(record.UserID, ct);
 

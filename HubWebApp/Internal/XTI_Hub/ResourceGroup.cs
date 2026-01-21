@@ -20,16 +20,16 @@ public sealed class ResourceGroup
 
     public bool NameEquals(ResourceGroupName name) => Name().Equals(name);
 
-    public Task<Resource> AddOrUpdateResource(ResourceName name, ResourceResultType resultType) =>
-        factory.Resources.AddOrUpdate(this, name, resultType);
+    public Task<Resource> AddOrUpdateResource(ResourceName name, ResourceResultType resultType, CancellationToken ct) =>
+        factory.Resources.AddOrUpdate(this, name, resultType, ct);
 
-    public Task<Resource> ResourceByName(ResourceName name) =>
-        factory.Resources.ResourceByName(this, name);
+    public Task<Resource> ResourceByName(ResourceName name, CancellationToken ct) =>
+        factory.Resources.ResourceByName(this, name, ct);
 
-    public Task<Resource> ResourceOrDefault(ResourceName name) =>
-        factory.Resources.ResourceOrDefault(this, name);
+    public Task<Resource> ResourceOrDefault(ResourceName name, CancellationToken ct) =>
+        factory.Resources.ResourceOrDefault(this, name, ct);
 
-    public Task<Resource[]> Resources() => factory.Resources.Resources(this);
+    public Task<Resource[]> Resources(CancellationToken ct) => factory.Resources.Resources(this, ct);
 
     public async Task<IEnumerable<Modifier>> Modifiers(CancellationToken ct)
     {
@@ -58,11 +58,11 @@ public sealed class ResourceGroup
                 ct
             );
 
-    public Task<AppRole[]> AllowedRoles(CancellationToken ct)
-        => factory.Roles.AllowedRolesForResourceGroup(this, ct);
+    public Task<AppRole[]> AllowedRoles(CancellationToken ct) => 
+        factory.Roles.AllowedRolesForResourceGroup(this, ct);
 
-    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
-        => factory.DB.Transaction(() => setRoleAccess(allowedRoles, ct));
+    public Task SetRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct) => 
+        factory.DB.Transaction(() => setRoleAccess(allowedRoles, ct));
 
     private async Task setRoleAccess(IEnumerable<AppRole> allowedRoles, CancellationToken ct)
     {
@@ -112,11 +112,11 @@ public sealed class ResourceGroup
                 ct
             );
 
-    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany)
-        => factory.Requests.MostRecentForResourceGroup(this, howMany);
+    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany, CancellationToken ct) => 
+        factory.Requests.MostRecentForResourceGroup(this, howMany, ct);
 
-    public Task<LogEntry[]> MostRecentErrorEvents(int howMany)
-        => factory.LogEntries.MostRecentErrorsForResourceGroup(this, howMany);
+    public Task<LogEntry[]> MostRecentErrorEvents(int howMany, CancellationToken ct) => 
+        factory.LogEntries.MostRecentErrorsForResourceGroup(this, howMany, ct);
 
     public ResourceGroupModel ToModel()
         => new ResourceGroupModel

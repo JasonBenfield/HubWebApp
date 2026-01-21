@@ -13,7 +13,7 @@ public sealed class LoginReturnKey : ILoginReturnKey
         this.clock = clock;
     }
 
-    public Task<string> Value(string requesterKey, string returnUrl) =>
+    public Task<string> Value(string requesterKey, string returnUrl, CancellationToken ct) =>
         hubFactory.StoredObjects.Store
         (
             new StorageName("Login Return"),
@@ -21,6 +21,7 @@ public sealed class LoginReturnKey : ILoginReturnKey
             new LoginReturnModel(requesterKey, returnUrl),
             clock,
             TimeSpan.FromDays(90),
-            isSlidingExpiration: true
+            isSlidingExpiration: true,
+            ct: ct
         );
 }

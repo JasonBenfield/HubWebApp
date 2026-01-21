@@ -15,10 +15,10 @@ public sealed class MoveAuthenticatorAction : AppAction<MoveAuthenticatorRequest
         var sourceUser = await hubFactory.Users.UserOrAnonByExternalKey(authenticatorKey, moveRequest.ExternalUserKey, stoppingToken);
         if (!sourceUser.IsUserName(AppUserName.Anon))
         {
-            await sourceUser.DeleteAuthenticator(authenticatorKey, moveRequest.ExternalUserKey);
+            await sourceUser.DeleteAuthenticator(authenticatorKey, moveRequest.ExternalUserKey, stoppingToken);
         }
         var targetUser = await hubFactory.Users.User(moveRequest.TargetUserID, stoppingToken);
-        await targetUser.AddAuthenticator(authenticatorKey, moveRequest.ExternalUserKey);
+        await targetUser.AddAuthenticator(authenticatorKey, moveRequest.ExternalUserKey, stoppingToken);
         return new EmptyActionResult();
     }
 }

@@ -12,7 +12,7 @@ public sealed class GetVersionsAction : AppAction<AppKeyRequest, XtiVersionModel
     public async Task<XtiVersionModel[]> Execute(AppKeyRequest appKey, CancellationToken stoppingToken)
     {
         var app = await appFactory.Apps.App(appKey.ToAppKey(), stoppingToken);
-        var versions = await app.Versions();
+        var versions = await app.Versions(stoppingToken);
         var versionModels = versions.Select(v => v.ToModel()).ToArray();
         return versionModels;
     }

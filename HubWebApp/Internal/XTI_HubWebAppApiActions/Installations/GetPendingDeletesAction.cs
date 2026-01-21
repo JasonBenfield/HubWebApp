@@ -14,7 +14,7 @@ public sealed class GetPendingDeletesAction : AppAction<GetPendingDeletesRequest
         var appVersionInstallations = new List<AppVersionInstallationModel>();
         foreach(var machineName in getRequest.MachineNames)
         {
-            var installations = await hubFactory.Installations.GetPendingDeletes(machineName);
+            var installations = await hubFactory.Installations.GetPendingDeletes(machineName, stoppingToken);
             foreach (var installation in installations)
             {
                 var appVersion = await installation.AppVersion(stoppingToken);

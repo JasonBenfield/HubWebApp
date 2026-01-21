@@ -29,7 +29,7 @@ internal sealed class LogBatchTest
         await startRequest(tester, sessionKey, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
-        var requests = await session.Requests();
+        var requests = await session.Requests(ct: default);
         Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
     }
 
@@ -45,7 +45,7 @@ internal sealed class LogBatchTest
         await endRequest(tester, requestKey);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
-        var requests = await session.Requests();
+        var requests = await session.Requests(ct: default);
         Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
     }
 
@@ -100,8 +100,8 @@ internal sealed class LogBatchTest
         await logEvent(tester, requestKey, exception);
         var factory = tester.Services.GetRequiredService<HubFactory>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
-        var requests = (await session.Requests()).ToArray();
-        var events = (await requests[0].Events()).ToArray();
+        var requests = (await session.Requests(ct: default)).ToArray();
+        var events = (await requests[0].Events(ct: default)).ToArray();
         Assert.That(events.Length, Is.EqualTo(1), "Should log event on permanent log");
         var eventModel = events[0].ToModel();
         Assert.That(eventModel.Category, Is.EqualTo("Exception"));

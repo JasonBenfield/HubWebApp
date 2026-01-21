@@ -18,7 +18,7 @@ public sealed class ChangePasswordAction : AppAction<ChangeCurrentUserPasswordFo
         var userModel = await userContext.User(stoppingToken);
         var user = await hubFactory.Users.User(userModel.ID, stoppingToken);
         var hashedPassword = hashedPasswordFactory.Create(model.Password.Value() ?? "");
-        await user.ChangePassword(hashedPassword);
+        await user.ChangePassword(hashedPassword, stoppingToken);
         return new EmptyActionResult();
     }
 }

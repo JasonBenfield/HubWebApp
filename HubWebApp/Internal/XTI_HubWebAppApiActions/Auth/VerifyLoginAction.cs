@@ -23,7 +23,7 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
         var password = loginForm.Password.Value() ?? "";
         var hashedPassword = hashedPasswordFactory.Create(password);
         var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword, stoppingToken);
-        await user.LoggedIn(clock.Now());
+        await user.LoggedIn(clock.Now(), stoppingToken);
         var authID = Guid.NewGuid().ToString("N");
         var authKey = await hubFactory.StoredObjects.StoreSingleUse
         (
@@ -31,7 +31,8 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
             generateKey: GenerateKeyModel.SixDigit(),
             data: new AuthenticatedModel(userName: new AppUserName(userName), authID: authID),
             clock: clock,
-            expireAfter: TimeSpan.FromMinutes(15)
+            expireAfter: TimeSpan.FromMinutes(15),
+            ct: stoppingToken
         );
         return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }

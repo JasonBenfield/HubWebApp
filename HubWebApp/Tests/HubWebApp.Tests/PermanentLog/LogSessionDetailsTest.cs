@@ -648,7 +648,8 @@ internal sealed class LogSessionDetailsTest
         var hubFactory = sp.GetRequiredService<HubFactory>();
         var sessions = await hubFactory.Sessions.SessionsByTimeRange
         (
-            new DateTimeRange(clock.Now().AddDays(-1), clock.Now().AddDays(1))
+            new DateTimeRange(clock.Now().AddDays(-1), clock.Now().AddDays(1)),
+            ct: default
         );
         var sessionDetails = new List<AppSessionDetailModel>();
         foreach (var session in sessions)
@@ -674,7 +675,7 @@ internal sealed class LogSessionDetailsTest
     {
         var hubFactory = sp.GetRequiredService<HubFactory>();
         var session = await hubFactory.Sessions.Session(sessionDetail.Session.ID, ct: default);
-        var requests = await session.Requests();
+        var requests = await session.Requests(ct: default);
         var requestDetails = new List<AppRequestDetailModel>();
         foreach (var request in requests)
         {
@@ -687,7 +688,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppRequestDetailModel> GetRequestDetail(IServiceProvider sp, string requestKey)
     {
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var request = await hubFactory.Requests.RequestOrDefault(requestKey);
+        var request = await hubFactory.Requests.RequestOrDefault(requestKey, ct: default);
         var requestDetail = await GetRequestDetail(sp, request);
         return requestDetail;
     }
@@ -697,7 +698,7 @@ internal sealed class LogSessionDetailsTest
         var clock = sp.GetRequiredService<IClock>();
         var hubFactory = sp.GetRequiredService<HubFactory>();
         var request = await hubFactory.Requests.RequestOrPlaceHolder(requestKey, clock.Now(), ct: default);
-        var logEntries = await request.Events();
+        var logEntries = await request.Events(ct: default);
         return logEntries.Select(le => le.ToModel()).ToArray();
     }
 
@@ -705,7 +706,7 @@ internal sealed class LogSessionDetailsTest
     {
         var clock = sp.GetRequiredService<IClock>();
         var hubFactory = sp.GetRequiredService<HubFactory>();
-        var logEntry = await hubFactory.LogEntries.LogEntryOrDefaultByKey(logEntryKey);
+        var logEntry = await hubFactory.LogEntries.LogEntryOrDefaultByKey(logEntryKey, ct: default);
         var logEntryDetail = await GetLogEntryDetail(sp, logEntry);
         return logEntryDetail;
     }

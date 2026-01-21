@@ -21,7 +21,7 @@ public sealed class EfAppContext : ISourceAppContext
     public async Task<AppContextModel> App(AppVersionKey versionKey, CancellationToken ct)
     {
         var app = await hubFactory.Apps.AppOrUnknown(appKey, ct);
-        var appVersion = await app.Version(versionKey);
+        var appVersion = await app.Version(versionKey, ct);
         var appContextModel = await App(appVersion, ct);
         return appContextModel;
     }
@@ -31,11 +31,11 @@ public sealed class EfAppContext : ISourceAppContext
         var roles = await appVersion.App.Roles(ct);
         var roleModels = roles.Select(r => r.ToModel()).ToArray();
         var modCategories = await appVersion.App.ModCategories(ct);
-        var resourceGroups = await appVersion.ResourceGroups();
+        var resourceGroups = await appVersion.ResourceGroups(ct);
         var resourceGroupModels = new List<AppContextResourceGroupModel>();
         foreach (var resourceGroup in resourceGroups)
         {
-            var resources = await resourceGroup.Resources();
+            var resources = await resourceGroup.Resources(ct);
             var resourceModels = new List<AppContextResourceModel>();
             foreach (var resource in resources)
             {

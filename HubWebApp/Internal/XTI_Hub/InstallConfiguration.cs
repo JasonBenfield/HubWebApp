@@ -17,7 +17,7 @@ public sealed class InstallConfiguration
 
     public bool IsFound() => config.ID > 0;
 
-    internal Task Update(InstallConfigurationTemplate template, int installSequence) =>
+    internal Task Update(InstallConfigurationTemplate template, int installSequence, CancellationToken ct) =>
         hubFactory.DB.InstallConfigurations.Update
         (
             config,
@@ -25,15 +25,16 @@ public sealed class InstallConfiguration
             {
                 c.TemplateID = template.ID;
                 c.InstallSequence = installSequence;
-            }
+            },
+            ct
         );
 
-    internal Task Delete() =>
-        hubFactory.DB.InstallConfigurations.Delete(config);
+    internal Task Delete(CancellationToken ct) =>
+        hubFactory.DB.InstallConfigurations.Delete(config, ct);
 
-    public async Task<InstallConfigurationModel> ToModel()
+    public async Task<InstallConfigurationModel> ToModel(CancellationToken ct)
     {
-        var template = await hubFactory.InstallConfigurationTemplates.Template(config.TemplateID);
+        var template = await hubFactory.InstallConfigurationTemplates.Template(config.TemplateID, ct);
         return new
         (
             ID: config.ID,

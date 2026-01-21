@@ -47,16 +47,16 @@ public sealed class AppUser
     public AppUserModifier Modifier(Modifier modifier) =>
         new AppUserModifier(factory, this, modifier);
 
-    public Task ChangePassword(IHashedPassword password) =>
-        factory.DB.Users.Update(record, u => u.Password = password.Value());
+    public Task ChangePassword(IHashedPassword password, CancellationToken ct) =>
+        factory.DB.Users.Update(record, u => u.Password = password.Value(), ct);
 
-    public Task Deactivate(DateTimeOffset timeDeactivated) =>
-        factory.DB.Users.Update(record, u => u.TimeDeactivated = timeDeactivated);
+    public Task Deactivate(DateTimeOffset timeDeactivated, CancellationToken ct) =>
+        factory.DB.Users.Update(record, u => u.TimeDeactivated = timeDeactivated, ct);
 
-    public Task Reactivate() =>
-        factory.DB.Users.Update(record, u => u.TimeDeactivated = DateTimeOffset.MaxValue);
+    public Task Reactivate(CancellationToken ct) =>
+        factory.DB.Users.Update(record, u => u.TimeDeactivated = DateTimeOffset.MaxValue, ct);
 
-    public Task Edit(PersonName name, EmailAddress email)
+    public Task Edit(PersonName name, EmailAddress email, CancellationToken ct)
     {
         if (name.IsBlank())
         {
@@ -69,21 +69,22 @@ public sealed class AppUser
             {
                 u.Name = name.Value;
                 u.Email = email.Value;
-            }
+            },
+            ct
         );
     }
 
-    public async Task DeleteAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
+    public async Task DeleteAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey, CancellationToken ct)
     {
         var authenticatorIDs = QueryAuthenticatorIDs(authenticatorKey);
-        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs, externalUserKey);
+        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs, externalUserKey, ct);
         if (userAuthenticator != null)
         {
-            await factory.DB.UserAuthenticators.Delete(userAuthenticator);
+            await factory.DB.UserAuthenticators.Delete(userAuthenticator, ct);
         }
     }
 
-    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs, string externalUserKey) =>
+    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs, string externalUserKey, CancellationToken ct) =>
         factory.DB
             .UserAuthenticators.Retrieve()
             .Where
@@ -93,12 +94,12 @@ public sealed class AppUser
                     && ua.UserID == ID
                     && ua.ExternalUserKey == externalUserKey
             )
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
-    public async Task<AuthenticatorModel> AddAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey)
+    public async Task<AuthenticatorModel> AddAuthenticator(AuthenticatorKey authenticatorKey, string externalUserKey, CancellationToken ct)
     {
         var authenticatorIDs = QueryAuthenticatorIDs(authenticatorKey);
-        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs);
+        var userAuthenticator = await GetUserAuthenticator(authenticatorIDs, ct);
         int authenticatorID;
         if (userAuthenticator == null)
         {
@@ -109,7 +110,7 @@ public sealed class AppUser
                 UserID = ID,
                 ExternalUserKey = externalUserKey
             };
-            await factory.DB.UserAuthenticators.Create(userAuthenticator);
+            await factory.DB.UserAuthenticators.Create(userAuthenticator, ct);
         }
         else
         {
@@ -117,7 +118,8 @@ public sealed class AppUser
             await factory.DB.UserAuthenticators.Update
             (
                 userAuthenticator,
-                ua => ua.ExternalUserKey = externalUserKey
+                ua => ua.ExternalUserKey = externalUserKey,
+                ct
             );
         }
         return new AuthenticatorModel(authenticatorID, authenticatorKey);
@@ -129,7 +131,7 @@ public sealed class AppUser
             .Where(a => a.AuthenticatorKey == authenticatorKey.Value)
             .Select(a => a.ID);
 
-    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs) =>
+    private Task<UserAuthenticatorEntity?> GetUserAuthenticator(IQueryable<int> authenticatorIDs, CancellationToken ct) =>
         factory.DB
             .UserAuthenticators.Retrieve()
             .Where
@@ -138,9 +140,9 @@ public sealed class AppUser
                     authenticatorIDs.Contains(ua.AuthenticatorID)
                     && ua.UserID == ID
             )
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
 
-    public async Task<UserAuthenticatorModel[]> Authenticators()
+    public async Task<UserAuthenticatorModel[]> Authenticators(CancellationToken ct)
     {
         var joinedEntities = await factory.DB
             .UserAuthenticators.Retrieve()
@@ -161,7 +163,7 @@ public sealed class AppUser
                     ua.ExternalUserKey
                 }
             )
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return joinedEntities
             .Select
             (
@@ -307,7 +309,7 @@ public sealed class AppUser
         return userGroupPermission;
     }
 
-    public async Task<LoggedInAppModel[]> GetLoggedInApps()
+    public async Task<LoggedInAppModel[]> GetLoggedInApps(CancellationToken ct)
     {
         var userIDs = factory.DB.Users.Retrieve()
             .Where(u => u.UserName == new AppUserName(record.UserName).Value)
@@ -344,7 +346,7 @@ public sealed class AppUser
                 (joined, v) => new { joined.IsCurrent, joined.Domain, joined.AppDisplayText, v.VersionKey }
             )
             .Distinct()
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return loggedInApps
             .Select
             (
@@ -359,14 +361,15 @@ public sealed class AppUser
             .ToArray();
     }
 
-    public Task LoggedIn(DateTimeOffset timeLoggedIn) =>
+    public Task LoggedIn(DateTimeOffset timeLoggedIn, CancellationToken ct) =>
         factory.DB.Users.Update
         (
             record,
             u =>
             {
                 u.TimeLoggedIn = timeLoggedIn;
-            }
+            },
+            ct
         );
 
     public AppUserModel ToModel() =>

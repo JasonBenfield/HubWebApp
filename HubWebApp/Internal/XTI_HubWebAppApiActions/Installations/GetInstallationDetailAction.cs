@@ -14,8 +14,8 @@ public sealed class GetInstallationDetailAction : AppAction<int, InstallationDet
     public async Task<InstallationDetailModel> Execute(int installationID, CancellationToken stoppingToken)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(installationID, stoppingToken);
-        var installLocation = await installation.Location();
-        var requests = await installation.MostRecentRequests(1);
+        var installLocation = await installation.Location(stoppingToken);
+        var requests = await installation.MostRecentRequests(1, stoppingToken);
         var appVersion = await installation.AppVersion(stoppingToken);
         var appPermission = await currentUser.GetPermissionsToApp(appVersion.App, stoppingToken);
         if (!appPermission.CanView)

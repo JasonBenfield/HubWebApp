@@ -84,7 +84,7 @@ sealed class NewInstallationTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        await hubApp.CurrentVersion();
+        await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         (
@@ -125,7 +125,7 @@ sealed class NewInstallationTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var version = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         (
@@ -150,7 +150,7 @@ sealed class NewInstallationTest
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var version = await hubApp.CurrentVersion();
+        var version = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         (
@@ -176,7 +176,7 @@ sealed class NewInstallationTest
         Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", "Production");
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         var request = new NewInstallationRequest
         (

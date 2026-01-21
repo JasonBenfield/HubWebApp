@@ -13,9 +13,9 @@ public sealed class GetMostRecentRequestsAction : AppAction<GetResourceLogReques
     {
         var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
-        var version = await app.Version(versionKey);
-        var resource = await version.Resource(model.ResourceID);
-        var requests = await resource.MostRecentRequests(model.HowMany);
+        var version = await app.Version(versionKey, stoppingToken);
+        var resource = await version.Resource(model.ResourceID, stoppingToken);
+        var requests = await resource.MostRecentRequests(model.HowMany, stoppingToken);
         return requests.ToArray();
     }
 }

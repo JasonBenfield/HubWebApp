@@ -13,9 +13,9 @@ public sealed class GetResourcesAction : AppAction<GetResourcesRequest, Resource
     {
         var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
-        var version = await app.Version(versionKey);
-        var resourceGroup = await version.ResourceGroup(model.GroupID);
-        var resources = await resourceGroup.Resources();
+        var version = await app.Version(versionKey, stoppingToken);
+        var resourceGroup = await version.ResourceGroup(model.GroupID, stoppingToken);
+        var resources = await resourceGroup.Resources(stoppingToken);
         return resources.Select(r => r.ToModel()).ToArray();
     }
 }

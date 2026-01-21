@@ -50,8 +50,8 @@ public sealed class AppUserModifier
                     && ur.RoleID == role.ID
             );
 
-    public Task<AppRole[]> ExplicitlyUnassignedRoles(CancellationToken ct)
-        => factory.Roles.RolesNotAssignedToUser(appUser, Modifier, ct);
+    public Task<AppRole[]> ExplicitlyUnassignedRoles(CancellationToken ct) => 
+        factory.Roles.RolesNotAssignedToUser(appUser, Modifier, ct);
 
     public async Task<AppRole[]> AssignedRoles(CancellationToken ct)
     {
@@ -64,8 +64,8 @@ public sealed class AppUserModifier
         return roles;
     }
 
-    public Task<AppRole[]> ExplicitlyAssignedRoles(CancellationToken ct)
-        => factory.Roles.RolesAssignedToUser(appUser, Modifier, ct);
+    public Task<AppRole[]> ExplicitlyAssignedRoles(CancellationToken ct) => 
+        factory.Roles.RolesAssignedToUser(appUser, Modifier, ct);
 
 
 }

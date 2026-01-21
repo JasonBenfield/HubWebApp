@@ -23,7 +23,8 @@ public sealed class GetStoredObjectAction : AppAction<GetStoredObjectRequest, st
             storageName, 
             requestData.StorageKey, 
             clock.Now(), 
-            options.Storage.SingleUseExpirationInSeconds
+            options.Storage.SingleUseExpirationInSeconds,
+            stoppingToken
         );
         return data;
     }

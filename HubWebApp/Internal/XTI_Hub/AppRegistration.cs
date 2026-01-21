@@ -20,7 +20,7 @@ public sealed class AppRegistration
             .Union([AppRoleName.DenyAccess])
             .Distinct();
         await app.SetRoles(roleNames, ct);
-        var version = await app.AddVersionIfNotFound(versionKey);
+        var version = await app.AddVersionIfNotFound(versionKey, ct);
         foreach (var groupTemplate in template.GroupTemplates)
         {
             await UpdateResourceGroupFromTemplate(app, version, groupTemplate, ct);
@@ -33,7 +33,7 @@ public sealed class AppRegistration
     private static async Task UpdateResourceGroupFromTemplate(App app, AppVersion appVersion, AppApiGroupTemplateModel groupTemplate, CancellationToken ct)
     {
         var modCategory = await app.AddOrUpdateModCategory(groupTemplate.ModCategory, ct);
-        var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupTemplate.Name, modCategory);
+        var resourceGroup = await appVersion.AddOrUpdateResourceGroup(groupTemplate.Name, modCategory, ct);
         if (groupTemplate.IsAnonymousAllowed)
         {
             await resourceGroup.AllowAnonymous(ct);
@@ -52,7 +52,7 @@ public sealed class AppRegistration
 
     private static async Task UpdateResourceFromTemplate(App app, ResourceGroup resourceGroup, AppApiActionTemplateModel actionTemplate, CancellationToken ct)
     {
-        var resource = await resourceGroup.AddOrUpdateResource(actionTemplate.Name, actionTemplate.ResultType);
+        var resource = await resourceGroup.AddOrUpdateResource(actionTemplate.Name, actionTemplate.ResultType, ct);
         if (actionTemplate.IsAnonymousAllowed)
         {
             await resource.AllowAnonymous(ct);

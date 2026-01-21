@@ -23,15 +23,16 @@ public sealed class AppRepository
             DateTimeOffset.Now,
             AppVersionStatus.Values.Current,
             AppVersionType.Values.Major,
-            new AppVersionNumber(1, 0, 0)
+            new AppVersionNumber(1, 0, 0),
+            ct
         );
-        await factory.Versions.AddVersionToAppIfNotFound(app, version);
-        var currentVersion = await app.CurrentVersion();
-        await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
+        await factory.Versions.AddVersionToAppIfNotFound(app, version, ct);
+        var currentVersion = await app.CurrentVersion(ct);
+        await factory.InstallLocations.AddUnknownIfNotFound(currentVersion, ct);
         var defaultModCategory = await app.AddOrUpdateModCategory(ModifierCategoryName.Default, ct);
         await defaultModCategory.AddDefaultModifierIfNotFound(ct);
-        var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory);
-        await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None);
+        var group = await currentVersion.AddOrUpdateResourceGroup(ResourceGroupName.Unknown, defaultModCategory, ct);
+        await group.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None, ct);
     }
 
     public async Task<App> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded, CancellationToken ct)
@@ -58,8 +59,8 @@ public sealed class AppRepository
             );
             app = factory.CreateApp(record);
         }
-        var version = await factory.Versions.AddCurrentVersionIfNotFound(versionName, timeAdded);
-        await app.AddVersionIfNotFound(version);
+        var version = await factory.Versions.AddCurrentVersionIfNotFound(versionName, timeAdded, ct);
+        await app.AddVersionIfNotFound(version, ct);
         return app;
     }
 

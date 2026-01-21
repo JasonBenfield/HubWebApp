@@ -13,12 +13,12 @@ public sealed class AuthenticatorRepository
         this.hubFactory = hubFactory;
     }
 
-    public async Task<AuthenticatorModel> AddOrUpdate(AuthenticatorKey authenticatorKey)
+    public async Task<AuthenticatorModel> AddOrUpdate(AuthenticatorKey authenticatorKey, CancellationToken ct)
     {
         var authenticator = await hubFactory.DB
             .Authenticators.Retrieve()
             .Where(auth => auth.AuthenticatorKey == authenticatorKey.Value)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         if (authenticator == null)
         {
             authenticator = new AuthenticatorEntity
@@ -26,7 +26,7 @@ public sealed class AuthenticatorRepository
                 AuthenticatorKey = authenticatorKey.Value,
                 AuthenticatorName = authenticatorKey.DisplayText
             };
-            await hubFactory.DB.Authenticators.Create(authenticator);
+            await hubFactory.DB.Authenticators.Create(authenticator, ct);
         }
         return new AuthenticatorModel(authenticator.ID, new AuthenticatorKey(authenticatorKey.DisplayText));
     }

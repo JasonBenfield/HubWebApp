@@ -17,7 +17,7 @@ public sealed class ChangePasswordAction : AppAction<ChangePasswordForm, EmptyAc
         var userGroup = await userGroupFromPath.Value(stoppingToken);
         var user = await userGroup.User(userID, stoppingToken);
         var hashedPassword = hashedPasswordFactory.Create(model.Password.Value() ?? "");
-        await user.ChangePassword(hashedPassword);
+        await user.ChangePassword(hashedPassword, stoppingToken);
         return new EmptyActionResult();
     }
 }

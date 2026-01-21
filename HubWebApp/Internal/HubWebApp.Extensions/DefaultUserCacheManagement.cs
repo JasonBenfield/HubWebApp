@@ -33,7 +33,7 @@ internal sealed class DefaultUserCacheManagement : IUserCacheManagement
         var thisVersionKey = thisInstallationModel.IsCurrent 
             ? AppVersionKey.Current 
             : appVersion.Version.ToModel().VersionKey;
-        var loggedInApps = await user.GetLoggedInApps();
+        var loggedInApps = await user.GetLoggedInApps(ct);
         foreach(var loggedInApp in loggedInApps)
         {
             if 

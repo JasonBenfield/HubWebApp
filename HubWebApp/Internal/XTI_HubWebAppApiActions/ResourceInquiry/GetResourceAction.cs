@@ -13,8 +13,8 @@ public sealed class GetResourceAction : AppAction<GetResourceRequest, ResourceMo
     {
         var app = await appFromPath.Value(stoppingToken);
         var versionKey = AppVersionKey.Parse(model.VersionKey);
-        var version = await app.Version(versionKey);
-        var resource = await version.Resource(model.ResourceID);
+        var version = await app.Version(versionKey, stoppingToken);
+        var resource = await version.Resource(model.ResourceID, stoppingToken);
         return resource.ToModel();
     }
 }

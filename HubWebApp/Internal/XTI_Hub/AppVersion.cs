@@ -18,30 +18,30 @@ public sealed class AppVersion
 
     public XtiVersion Version { get; }
 
-    public Task<ResourceGroup> AddOrUpdateResourceGroup(ResourceGroupName name, ModifierCategory modCategory) =>
-        factory.Groups.AddOrUpdateResourceGroup(App, Version, name, modCategory);
+    public Task<ResourceGroup> AddOrUpdateResourceGroup(ResourceGroupName name, ModifierCategory modCategory, CancellationToken ct) =>
+        factory.Groups.AddOrUpdateResourceGroup(App, Version, name, modCategory, ct);
 
-    public Task<ResourceGroup[]> ResourceGroups() => factory.Groups.Groups(App, Version);
+    public Task<ResourceGroup[]> ResourceGroups(CancellationToken ct) => factory.Groups.Groups(App, Version, ct);
 
-    public Task<ResourceGroup> ResourceGroup(int id) =>
-        factory.Groups.GroupForVersion(App, Version, id);
+    public Task<ResourceGroup> ResourceGroup(int id, CancellationToken ct) =>
+        factory.Groups.GroupForVersion(App, Version, id, ct);
 
-    public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName name) =>
-        factory.Groups.GroupOrDefault(App, Version, name);
+    public Task<ResourceGroup> ResourceGroupOrDefault(ResourceGroupName name, CancellationToken ct) =>
+        factory.Groups.GroupOrDefault(App, Version, name, ct);
 
-    public Task<ResourceGroup> ResourceGroupByName(ResourceGroupName name) =>
-        factory.Groups.GroupByName(App, Version, name);
+    public Task<ResourceGroup> ResourceGroupByName(ResourceGroupName name, CancellationToken ct) =>
+        factory.Groups.GroupByName(App, Version, name, ct);
 
-    public Task<Resource> Resource(int id) =>
-        factory.Resources.ResourceForVersion(App, Version, id);
+    public Task<Resource> Resource(int id, CancellationToken ct) =>
+        factory.Resources.ResourceForVersion(App, Version, id, ct);
 
-    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany) =>
-        factory.Requests.MostRecentForVersion(App, Version, howMany);
+    public Task<AppRequestExpandedModel[]> MostRecentRequests(int howMany, CancellationToken ct) =>
+        factory.Requests.MostRecentForVersion(App, Version, howMany, ct);
 
-    public Task<LogEntry[]> MostRecentLoggedErrors(int howMany) =>
-        factory.LogEntries.MostRecentLoggedErrorsForVersion(App, Version, howMany);
+    public Task<LogEntry[]> MostRecentLoggedErrors(int howMany, CancellationToken ct) =>
+        factory.LogEntries.MostRecentLoggedErrorsForVersion(App, Version, howMany, ct);
 
-    internal Task<int> AppVersionID() => QueryAppVersionID().FirstAsync();
+    internal Task<int> AppVersionID(CancellationToken ct) => QueryAppVersionID().FirstAsync(ct);
 
     internal IQueryable<int> QueryAppVersionID() => factory.Versions.QueryAppVersionID(App, Version);
 }

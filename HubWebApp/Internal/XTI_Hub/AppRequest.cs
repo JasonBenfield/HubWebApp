@@ -24,7 +24,7 @@ public sealed class AppRequest
 
     public bool HasEnded() => record.TimeEnded < DateTimeOffset.MaxValue;
 
-    public Task<Resource> Resource() => factory.Resources.Resource(record.ResourceID);
+    public Task<Resource> Resource(CancellationToken ct) => factory.Resources.Resource(record.ResourceID, ct);
 
     public Task<Modifier> Modifier(CancellationToken ct) => factory.Modifiers.Modifier(record.ModifierID, ct);
 
@@ -47,13 +47,13 @@ public sealed class AppRequest
         return date <= before;
     }
 
-    public Task<LogEntry[]> Events() => factory.LogEntries.RetrieveByRequest(this);
+    public Task<LogEntry[]> Events(CancellationToken ct) => factory.LogEntries.RetrieveByRequest(this, ct);
 
-    public Task<AppRequest> SourceRequestOrDefault() =>
-        factory.Requests.SourceRequestOrDefault(record.ID);
+    public Task<AppRequest> SourceRequestOrDefault(CancellationToken ct) =>
+        factory.Requests.SourceRequestOrDefault(record.ID, ct);
 
-    public Task<int[]> TargetRequestIDs() =>
-        factory.Requests.TargetRequestIDs(record.ID);
+    public Task<int[]> TargetRequestIDs(CancellationToken ct) =>
+        factory.Requests.TargetRequestIDs(record.ID, ct);
 
     public Task<LogEntry> LogEvent
     (
@@ -65,7 +65,8 @@ public sealed class AppRequest
         string detail,
         int actualCount,
         string sourceLogEntryKey,
-        string category
+        string category,
+        CancellationToken ct
     ) => factory.LogEntries.LogEvent
         (
             this,
@@ -77,12 +78,12 @@ public sealed class AppRequest
             detail,
             actualCount,
             sourceLogEntryKey,
-            category
+            category,
+            ct
         );
 
-    public Task End(DateTimeOffset timeEnded, CancellationToken ct)
-        => factory.DB
-            .Requests
+    public Task End(DateTimeOffset timeEnded, CancellationToken ct) => 
+        factory.DB.Requests
             .Update
             (
                 record,

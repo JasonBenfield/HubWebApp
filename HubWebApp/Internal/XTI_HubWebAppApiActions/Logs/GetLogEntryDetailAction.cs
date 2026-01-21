@@ -13,12 +13,12 @@ public sealed class GetLogEntryDetailAction : AppAction<int, AppLogEntryDetailMo
 
     public async Task<AppLogEntryDetailModel> Execute(int logEntryID, CancellationToken stoppingToken)
     {
-        var logEntry = await hubFactory.LogEntries.LogEntry(logEntryID);
-        var request = await logEntry.Request();
+        var logEntry = await hubFactory.LogEntries.LogEntry(logEntryID, stoppingToken);
+        var request = await logEntry.Request(stoppingToken);
         var installation = await request.Installation(stoppingToken);
-        var installLocation = await installation.Location();
-        var resource = await request.Resource();
-        var resourceGroup = await resource.Group();
+        var installLocation = await installation.Location(stoppingToken);
+        var resource = await request.Resource(stoppingToken);
+        var resourceGroup = await resource.Group(stoppingToken);
         var modifier = await request.Modifier(stoppingToken);
         var modCategory = await modifier.Category(stoppingToken);
         var appVersion = await installation.AppVersion(stoppingToken);
@@ -35,8 +35,8 @@ public sealed class GetLogEntryDetailAction : AppAction<int, AppLogEntryDetailMo
         {
             throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");
         }
-        var sourceLogEntry = await logEntry.SourceLogEntryOrDefault();
-        var targetLogEntry = await logEntry.TargetLogEntryOrDefault();
+        var sourceLogEntry = await logEntry.SourceLogEntryOrDefault(stoppingToken);
+        var targetLogEntry = await logEntry.TargetLogEntryOrDefault(stoppingToken);
         var detail = new AppLogEntryDetailModel
         (
             LogEntry: logEntry.ToModel(),

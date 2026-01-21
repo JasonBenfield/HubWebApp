@@ -14,7 +14,7 @@ public sealed class InstallationRepository
         this.hubFactory = hubFactory;
     }
 
-    public Task<Installation[]> GetPendingDeletes(string machineName)
+    public Task<Installation[]> GetPendingDeletes(string machineName, CancellationToken ct)
     {
         var locationIDs = hubFactory.DB.InstallLocations.Retrieve()
             .Where(l => l.QualifiedMachineName == machineName.ToLower())
@@ -22,24 +22,24 @@ public sealed class InstallationRepository
         return hubFactory.DB.Installations.Retrieve()
             .Where(inst => locationIDs.Contains(inst.LocationID) && inst.Status == InstallStatus.Values.DeletePending)
             .Select(inst => new Installation(hubFactory, inst))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
+    internal async Task<Installation> NewCurrentInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
     {
-        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, true);
+        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, true, ct);
         return hubFactory.CreateInstallation(entity);
     }
 
-    internal async Task<Installation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded)
+    internal async Task<Installation> NewVersionInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
     {
-        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, false);
+        var entity = await NewInstallation(location, appVersion, domain, siteName, timeAdded, false, ct);
         return hubFactory.CreateInstallation(entity);
     }
 
-    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, bool isCurrent)
+    private async Task<InstallationEntity> NewInstallation(InstallLocation location, AppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, bool isCurrent, CancellationToken ct)
     {
-        var appVersionID = await appVersion.AppVersionID();
+        var appVersionID = await appVersion.AppVersionID(ct);
         var entity = new InstallationEntity
         {
             LocationID = location.ID,
@@ -50,20 +50,20 @@ public sealed class InstallationRepository
             Domain = domain,
             SiteName = siteName
         };
-        await hubFactory.DB.Installations.Create(entity);
+        await hubFactory.DB.Installations.Create(entity, ct);
         return entity;
     }
 
-    internal Task BeginInstallation(InstallationEntity entity) =>
-        SetInstallationStatus(entity, InstallStatus.Values.InstallStarted);
+    internal Task BeginInstallation(InstallationEntity entity, CancellationToken ct) =>
+        SetInstallationStatus(entity, InstallStatus.Values.InstallStarted, ct);
 
-    internal Task BeginDelete(InstallationEntity entity) =>
-        SetInstallationStatus(entity, InstallStatus.Values.DeleteStarted);
+    internal Task BeginDelete(InstallationEntity entity, CancellationToken ct) =>
+        SetInstallationStatus(entity, InstallStatus.Values.DeleteStarted, ct);
 
-    internal Task Deleted(InstallationEntity entity) =>
-        SetInstallationStatus(entity, InstallStatus.Values.Deleted);
+    internal Task Deleted(InstallationEntity entity, CancellationToken ct) =>
+        SetInstallationStatus(entity, InstallStatus.Values.Deleted, ct);
 
-    internal Task Installed(InstallationEntity entity) =>
+    internal Task Installed(InstallationEntity entity, CancellationToken ct) =>
         hubFactory.DB.Transaction
         (
             async () =>
@@ -103,19 +103,23 @@ public sealed class InstallationRepository
                 var previousInstallations = await query.ToArrayAsync();
                 foreach (var previousInst in previousInstallations)
                 {
-                    await SetInstallationStatus(previousInst, InstallStatus.Values.Deleted);
+                    await SetInstallationStatus(previousInst, InstallStatus.Values.Deleted, ct);
                 }
-                await SetInstallationStatus(entity, InstallStatus.Values.Installed);
+                await SetInstallationStatus(entity, InstallStatus.Values.Installed, ct);
             }
         );
 
-    internal Task RequestDelete(InstallationEntity entity) =>
-        SetInstallationStatus(entity, InstallStatus.Values.DeletePending);
+    internal Task RequestDelete(InstallationEntity entity, CancellationToken ct) =>
+        SetInstallationStatus(entity, InstallStatus.Values.DeletePending, ct);
 
-    private Task SetInstallationStatus(InstallationEntity entity, InstallStatus status) =>
-        hubFactory.DB
-            .Installations
-            .Update(entity, inst => inst.Status = status.Value);
+    private Task SetInstallationStatus(InstallationEntity entity, InstallStatus status, CancellationToken ct) =>
+        hubFactory.DB.Installations
+            .Update
+            (
+                entity, 
+                inst => inst.Status = status.Value, 
+                ct
+            );
 
     public async Task<Installation> InstallationOrDefault(int installationID, CancellationToken ct)
     {
@@ -124,22 +128,22 @@ public sealed class InstallationRepository
             .Retrieve()
             .Where(inst => inst.ID == installationID)
             .Select(inst => hubFactory.CreateInstallation(inst))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         if (installation == null)
         {
-            var unknownLoc = await hubFactory.InstallLocations.UnknownLocation();
+            var unknownLoc = await hubFactory.InstallLocations.UnknownLocation(ct);
             var unknownApp = await hubFactory.Apps.AppOrUnknown(AppKey.Unknown, ct);
-            var currentVersion = await unknownApp.CurrentVersion();
-            installation = await unknownLoc.CurrentInstallation(currentVersion);
+            var currentVersion = await unknownApp.CurrentVersion(ct);
+            installation = await unknownLoc.CurrentInstallation(currentVersion, ct);
         }
         return installation;
     }
 
-    internal Task<bool> HasCurrentInstallation(InstallLocation location, AppVersion appVersion)
-        => GetCurrentInstallation(location, appVersion).AnyAsync();
+    internal Task<bool> HasCurrentInstallation(InstallLocation location, AppVersion appVersion, CancellationToken ct) => 
+        GetCurrentInstallation(location, appVersion).AnyAsync(ct);
 
-    internal Task<Installation> CurrentInstallation(InstallLocation location, AppVersion appVersion)
-        => GetCurrentInstallation(location, appVersion).FirstAsync();
+    internal Task<Installation> CurrentInstallation(InstallLocation location, AppVersion appVersion, CancellationToken ct) => 
+        GetCurrentInstallation(location, appVersion).FirstAsync(ct);
 
     private IQueryable<Installation> GetCurrentInstallation(InstallLocation location, AppVersion appVersion)
     {
@@ -158,7 +162,7 @@ public sealed class InstallationRepository
             .Select(inst => hubFactory.CreateInstallation(inst));
     }
 
-    public async Task<AppDomainModel[]> AppDomains()
+    public async Task<AppDomainModel[]> AppDomains(CancellationToken ct)
     {
         var appDomainEntities = await hubFactory.DB
             .Installations
@@ -200,7 +204,7 @@ public sealed class InstallationRepository
                     Domain = grouped.Installation.Domain
                 }
             )
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return appDomainEntities
             .Select
             (

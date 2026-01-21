@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -20,9 +19,9 @@ public sealed class XtiVersion
 
     public AppVersionKey Key() => AppVersionKey.Parse(record.VersionKey);
 
-    public Task Publishing() => factory.Versions.Publishing(record);
+    public Task Publishing(CancellationToken ct) => factory.Versions.Publishing(record, ct);
 
-    public Task Published() => factory.Versions.Published(record);
+    public Task Published(CancellationToken ct) => factory.Versions.Published(record, ct);
 
     internal AppVersion App(App app) => new AppVersion(factory, app, this);
 

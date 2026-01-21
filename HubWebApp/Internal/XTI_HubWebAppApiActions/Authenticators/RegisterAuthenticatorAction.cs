@@ -12,7 +12,7 @@ public sealed class RegisterAuthenticatorAction : AppAction<RegisterAuthenticato
     public async Task<AuthenticatorModel> Execute(RegisterAuthenticatorRequest registerRequest, CancellationToken stoppingToken)
     {
         var authenticatorKey = new AuthenticatorKey(registerRequest.AuthenticatorName);
-        var authenticator = await hubFactory.Authenticators.AddOrUpdate(authenticatorKey);
+        var authenticator = await hubFactory.Authenticators.AddOrUpdate(authenticatorKey, stoppingToken);
         return authenticator;
     }
 }

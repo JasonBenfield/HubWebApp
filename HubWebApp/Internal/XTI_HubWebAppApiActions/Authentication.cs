@@ -37,7 +37,7 @@ public sealed class Authentication
         var userName = new AppUserName(userNameText);
         var user = await unverifiedUser.Verify(userName, hashedPassword, ct);
         var result = await Authenticate(userName);
-        await user.LoggedIn(clock.Now());
+        await user.LoggedIn(clock.Now(), ct);
         return result;
     }
 

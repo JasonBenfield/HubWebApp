@@ -21,7 +21,7 @@ public sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, Auth
         {
             throw new ExternalUserNotFoundException(authenticatorKey, authRequest.ExternalUserKey);
         }
-        await user.LoggedIn(clock.Now());
+        await user.LoggedIn(clock.Now(), stoppingToken);
         var authID = Guid.NewGuid().ToString("N");
         var authKey = await hubFactory.StoredObjects.Store
         (
@@ -30,7 +30,8 @@ public sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, Auth
             data: new AuthenticatedModel(userName: user.ToModel().UserName, authID: authID),
             clock: clock,
             expireAfter: TimeSpan.FromMinutes(15),
-            isSlidingExpiration: false
+            isSlidingExpiration: false,
+            ct: stoppingToken
         );
         return new AuthenticatedLoginResult(AuthKey: authKey, AuthID: authID);
     }

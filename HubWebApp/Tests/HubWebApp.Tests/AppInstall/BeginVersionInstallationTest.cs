@@ -10,7 +10,7 @@ sealed class BeginVersionInstallationTest
     {
         var tester = await Setup();
         var hubApp = await tester.HubApp();
-        var appVersion = await hubApp.CurrentVersion();
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation

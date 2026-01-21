@@ -23,7 +23,7 @@ public sealed class InstallerRepository
         var installer = await InstallerOrAnon(machineName, ct);
         if (installer.ToModel().UserName.Equals(new InstallerUserName(machineName).UserName))
         {
-            await installer.ChangePassword(hashedPassword);
+            await installer.ChangePassword(hashedPassword, ct);
         }
         else
         {
@@ -44,8 +44,8 @@ public sealed class InstallerRepository
         return installer;
     }
 
-    public Task<AppUser> InstallerOrAnon(string machineName, CancellationToken ct)
-        => factory.Users.UserOrAnon(new InstallerUserName(machineName).UserName, ct);
+    public Task<AppUser> InstallerOrAnon(string machineName, CancellationToken ct) => 
+        factory.Users.UserOrAnon(new InstallerUserName(machineName).UserName, ct);
 
     private async Task<AppUser> AddInstaller
     (

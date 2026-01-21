@@ -20,7 +20,8 @@ public sealed class InstallConfigurationTemplate
     (
         string destinationMachineName,
         string domain,
-        string siteName
+        string siteName,
+        CancellationToken ct
     ) =>
         hubFactory.DB.InstallConfigurationTemplates.Update
         (
@@ -30,7 +31,8 @@ public sealed class InstallConfigurationTemplate
                 t.DestinationMachineName = destinationMachineName;
                 t.Domain = domain;
                 t.SiteName = siteName;
-            }
+            },
+            ct
         );
 
     public InstallConfigurationTemplateModel ToModel() =>

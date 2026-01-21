@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_HubDB.Entities;
@@ -15,19 +14,19 @@ public sealed class AppRequestRepository
         this.factory = factory;
     }
 
-    public async Task<AppRequest> Request(int id)
+    public async Task<AppRequest> Request(int id, CancellationToken ct)
     {
         var entity = await factory.DB.Requests.Retrieve()
             .Where(r => r.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateRequest(entity ?? throw new Exception($"Request not found with ID {id}"));
     }
 
-    public async Task<AppRequest> RequestOrDefault(string requestKey)
+    public async Task<AppRequest> RequestOrDefault(string requestKey, CancellationToken ct)
     {
         var entity = await factory.DB.Requests.Retrieve()
             .Where(r => r.RequestKey == requestKey)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateRequest(entity ?? new());
     }
 
@@ -63,14 +62,14 @@ public sealed class AppRequestRepository
         {
             xtiPath = xtiPath.WithAction("Index");
         }
-        var resourceGroup = await installation.ResourceGroupOrDefault(xtiPath.Group);
-        var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action);
+        var resourceGroup = await installation.ResourceGroupOrDefault(xtiPath.Group, ct);
+        var resource = await resourceGroup.ResourceOrDefault(xtiPath.Action, ct);
         var modCategory = await resourceGroup.ModCategory(ct);
         var modifier = await modCategory.ModifierByModKeyOrDefault(xtiPath.Modifier, ct);
         var truncatedPath = new TruncatedText(path, 100).Value;
         requestData = new TruncatedText(requestData, 5000).Value;
         resultData = new TruncatedText(resultData, 5000).Value;
-        var record = await GetRequestEntityByKey(requestKey);
+        var record = await GetRequestEntityByKey(requestKey, ct);
         if (record == null)
         {
             record = await Add
@@ -85,7 +84,8 @@ public sealed class AppRequestRepository
                 timeEnded,
                 actualCount,
                 requestData,
-                resultData
+                resultData,
+                ct
             );
         }
         else
@@ -121,22 +121,22 @@ public sealed class AppRequestRepository
         if (!string.IsNullOrWhiteSpace(sourceRequestKey))
         {
             var sourceRequest = await RequestOrPlaceHolder(sourceRequestKey, timeStarted, ct);
-            await AddSourceLinkIfNotExists(request, sourceRequest);
+            await AddSourceLinkIfNotExists(request, sourceRequest, ct);
         }
         return request;
     }
 
     public async Task<AppRequest> RequestOrPlaceHolder(string requestKey, DateTimeOffset now, CancellationToken ct)
     {
-        var requestEntity = await GetRequestEntityByKey(requestKey);
+        var requestEntity = await GetRequestEntityByKey(requestKey, ct);
         if (requestEntity == null)
         {
             var session = await factory.Sessions.DefaultSession(now, ct);
             var app = await factory.Apps.App(AppKey.Unknown, ct);
-            var currentVersion = await app.CurrentVersion();
-            var installation = await factory.InstallLocations.AddUnknownIfNotFound(currentVersion);
-            var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown);
-            var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown);
+            var currentVersion = await app.CurrentVersion(ct);
+            var installation = await factory.InstallLocations.AddUnknownIfNotFound(currentVersion, ct);
+            var resourceGroup = await installation.ResourceGroupOrDefault(ResourceGroupName.Unknown, ct);
+            var resource = await resourceGroup.ResourceOrDefault(ResourceName.Unknown, ct);
             var modifier = await app.DefaultModifier(ct);
             if (string.IsNullOrWhiteSpace(requestKey))
             {
@@ -154,17 +154,18 @@ public sealed class AppRequestRepository
                 timeEnded: now,
                 actualCount: 1,
                 requestData: "",
-                resultData: ""
+                resultData: "",
+                ct: ct
             );
         }
         return factory.CreateRequest(requestEntity);
     }
 
-    private async Task AddSourceLinkIfNotExists(AppRequest request, AppRequest sourceRequest)
+    private async Task AddSourceLinkIfNotExists(AppRequest request, AppRequest sourceRequest, CancellationToken ct)
     {
         var linkExists = await factory.DB.SourceRequests.Retrieve()
             .Where(src => src.SourceID == sourceRequest.ID && src.TargetID == request.ID)
-            .AnyAsync();
+            .AnyAsync(ct);
         if (!linkExists)
         {
             await factory.DB.SourceRequests.Create
@@ -173,27 +174,29 @@ public sealed class AppRequestRepository
                 {
                     SourceID = sourceRequest.ID,
                     TargetID = request.ID
-                }
+                },
+                ct
             );
         }
     }
 
-    private Task<AppRequestEntity?> GetRequestEntityByKey(string requestKey) =>
-        factory.DB.Requests.Retrieve().FirstOrDefaultAsync(r => r.RequestKey == requestKey);
+    private Task<AppRequestEntity?> GetRequestEntityByKey(string requestKey, CancellationToken ct) =>
+        factory.DB.Requests.Retrieve().FirstOrDefaultAsync(r => r.RequestKey == requestKey, ct);
 
     private async Task<AppRequestEntity> Add
     (
-        AppSession session, 
-        string requestKey, 
-        Installation installation, 
-        Resource resource, 
-        Modifier modifier, 
-        string path, 
-        DateTimeOffset timeStarted, 
-        DateTimeOffset timeEnded, 
+        AppSession session,
+        string requestKey,
+        Installation installation,
+        Resource resource,
+        Modifier modifier,
+        string path,
+        DateTimeOffset timeStarted,
+        DateTimeOffset timeEnded,
         int actualCount,
         string requestData,
-        string resultData
+        string resultData,
+        CancellationToken ct
     )
     {
         var record = new AppRequestEntity
@@ -210,37 +213,35 @@ public sealed class AppRequestRepository
             RequestData = requestData,
             ResultData = resultData
         };
-        await factory.DB.Requests.Create(record);
+        await factory.DB.Requests.Create(record, ct);
         return record;
     }
 
-    internal Task<AppRequest[]> RetrieveBySession(AppSession session)
+    internal Task<AppRequest[]> RetrieveBySession(AppSession session, CancellationToken ct)
         => factory.DB.Requests
             .Retrieve()
             .Where(r => r.SessionID == session.ID)
             .Select(r => factory.CreateRequest(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal Task<AppRequest[]> RetrieveMostRecent(AppSession session, int howMany)
-    {
-        return factory.DB.Requests
+    internal Task<AppRequest[]> RetrieveMostRecent(AppSession session, int howMany, CancellationToken ct) =>
+        factory.DB.Requests
             .Retrieve()
             .Where(r => r.SessionID == session.ID)
             .OrderByDescending(r => r.TimeStarted)
             .Take(howMany)
             .Select(r => factory.CreateRequest(r))
-            .ToArrayAsync();
-    }
+            .ToArrayAsync(ct);
 
-    internal Task<AppRequest[]> MostRecentForInstallation(Installation installation, int howMany) =>
+    internal Task<AppRequest[]> MostRecentForInstallation(Installation installation, int howMany, CancellationToken ct) =>
         factory.DB.Requests.Retrieve()
             .Where(r => r.InstallationID == installation.ID)
             .OrderByDescending(r => r.TimeStarted)
             .Take(howMany)
             .Select(r => factory.CreateRequest(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal async Task<AppRequestExpandedModel[]> MostRecentForVersion(App app, XtiVersion version, int howMany)
+    internal async Task<AppRequestExpandedModel[]> MostRecentForVersion(App app, XtiVersion version, int howMany, CancellationToken ct)
     {
         var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
         var resources = factory.DB
@@ -263,11 +264,11 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await RequestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources, ct);
         return requests;
     }
 
-    internal async Task<AppRequestExpandedModel[]> MostRecentForResourceGroup(ResourceGroup group, int howMany)
+    internal async Task<AppRequestExpandedModel[]> MostRecentForResourceGroup(ResourceGroup group, int howMany, CancellationToken ct)
     {
         var resources = factory.DB
             .Resources
@@ -289,11 +290,11 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await RequestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources, ct);
         return requests;
     }
 
-    internal async Task<AppRequestExpandedModel[]> MostRecentForResource(Resource resource, int howMany)
+    internal async Task<AppRequestExpandedModel[]> MostRecentForResource(Resource resource, int howMany, CancellationToken ct)
     {
         var resources = factory.DB
             .Resources
@@ -315,11 +316,11 @@ public sealed class AppRequestRepository
                     ResultType = ResourceResultType.Values.Value(res.ResultType)
                 }
             );
-        var requests = await RequestsWithResources(howMany, resources);
+        var requests = await RequestsWithResources(howMany, resources, ct);
         return requests;
     }
 
-    private Task<AppRequestExpandedModel[]> RequestsWithResources(int howMany, IQueryable<ResourceWithGroupRecord> resources)
+    private Task<AppRequestExpandedModel[]> RequestsWithResources(int howMany, IQueryable<ResourceWithGroupRecord> resources, CancellationToken ct)
     {
         return factory.DB
             .Requests
@@ -383,10 +384,10 @@ public sealed class AppRequestRepository
                     TimeEnded = r.TimeEnded
                 }
             )
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    internal async Task<AppRequest> SourceRequestOrDefault(int forTargetID)
+    internal async Task<AppRequest> SourceRequestOrDefault(int forTargetID, CancellationToken ct)
     {
         var sourceIDs = factory.DB.SourceRequests.Retrieve()
             .Where(src => src.TargetID == forTargetID)
@@ -394,15 +395,15 @@ public sealed class AppRequestRepository
         var entities = await factory.DB
             .Requests.Retrieve()
             .Where(e => sourceIDs.Contains(e.ID))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
         return factory.CreateRequest(entities.FirstOrDefault() ?? new());
     }
 
-    internal Task<int[]> TargetRequestIDs(int forSourceID) =>
+    internal Task<int[]> TargetRequestIDs(int forSourceID, CancellationToken ct) =>
         factory.DB.SourceRequests.Retrieve()
             .Where(src => src.SourceID == forSourceID)
             .Select(src => src.TargetID)
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
     private sealed class ResourceWithGroupRecord
     {

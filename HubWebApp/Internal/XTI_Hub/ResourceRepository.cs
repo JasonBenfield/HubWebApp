@@ -13,19 +13,19 @@ public sealed class ResourceRepository
         this.factory = factory;
     }
 
-    internal async Task<Resource> Resource(int id)
+    internal async Task<Resource> Resource(int id, CancellationToken ct)
     {
         var entity = await factory.DB.Resources.Retrieve()
             .Where(r => r.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateResource(entity ?? throw new Exception($"Resource not found with ID {id}"));
     }
 
-    public async Task<Resource> AddOrUpdate(ResourceGroup group, ResourceName name, ResourceResultType resultType)
+    public async Task<Resource> AddOrUpdate(ResourceGroup group, ResourceName name, ResourceResultType resultType, CancellationToken ct)
     {
         var record = await factory.DB
             .Resources.Retrieve()
-            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value);
+            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value, ct);
         if (record == null)
         {
             record = new ResourceEntity
@@ -35,7 +35,7 @@ public sealed class ResourceRepository
                 DisplayText = name.DisplayText,
                 ResultType = resultType.Value
             };
-            await factory.DB.Resources.Create(record);
+            await factory.DB.Resources.Create(record, ct);
         }
         else
         {
@@ -48,13 +48,14 @@ public sealed class ResourceRepository
                     {
                         r.DisplayText = name.DisplayText;
                         r.ResultType = resultType.Value;
-                    }
+                    },
+                    ct
                 );
         }
         return factory.CreateResource(record);
     }
 
-    public Task<Resource[]> Resources(ResourceGroup group) => 
+    public Task<Resource[]> Resources(ResourceGroup group, CancellationToken ct) => 
         factory.DB
             .Resources
             .Retrieve()
@@ -62,28 +63,28 @@ public sealed class ResourceRepository
             .OrderBy(r => r.ResultType)
             .ThenBy(r => r.Name)
             .Select(r => factory.CreateResource(r))
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
-    internal async Task<Resource> ResourceOrDefault(ResourceGroup group, ResourceName name)
+    internal async Task<Resource> ResourceOrDefault(ResourceGroup group, ResourceName name, CancellationToken ct)
     {
-        var record = await GetResource(group, name);
+        var record = await GetResource(group, name, ct);
         if (record == null)
         {
-            record = await GetResource(group, ResourceName.Unknown);
+            record = await GetResource(group, ResourceName.Unknown, ct);
             if (record == null)
             {
                 record = await factory.DB
                     .Resources
                     .Retrieve()
-                   .FirstOrDefaultAsync(r => r.Name == ResourceName.Unknown.Value);
+                   .FirstOrDefaultAsync(r => r.Name == ResourceName.Unknown.Value, ct);
             }
         }
         return factory.CreateResource(record ?? throw new ArgumentNullException(nameof(record)));
     }
 
-    internal async Task<Resource> ResourceByName(ResourceGroup group, ResourceName name)
+    internal async Task<Resource> ResourceByName(ResourceGroup group, ResourceName name, CancellationToken ct)
     {
-        var record = await GetResource(group, name);
+        var record = await GetResource(group, name, ct);
         return factory.CreateResource
         (
             record ?? 
@@ -91,13 +92,13 @@ public sealed class ResourceRepository
         );
     }
 
-    private Task<ResourceEntity?> GetResource(ResourceGroup group, ResourceName name) =>
+    private Task<ResourceEntity?> GetResource(ResourceGroup group, ResourceName name, CancellationToken ct) =>
         factory.DB
             .Resources
             .Retrieve()
-            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value);
+            .FirstOrDefaultAsync(r => r.GroupID == group.ID && r.Name == name.Value, ct);
 
-    internal async Task<Resource> ResourceForVersion(App app, XtiVersion version, int id)
+    internal async Task<Resource> ResourceForVersion(App app, XtiVersion version, int id, CancellationToken ct)
     {
         var appVersionIDs = factory.Versions.QueryAppVersionID(app, version);
         var groupIDs = factory.DB
@@ -109,7 +110,7 @@ public sealed class ResourceRepository
             .Resources
             .Retrieve()
             .Where(r => groupIDs.Contains(r.GroupID) && r.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return factory.CreateResource(record ?? throw new Exception($"Resource {id} not found for version '{version.Key().DisplayText}"));
     }
 

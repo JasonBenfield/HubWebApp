@@ -11,7 +11,7 @@ public sealed class GetLogEntryOrDefaultByKeyAction : AppAction<string, AppLogEn
 
     public async Task<AppLogEntryModel> Execute(string logEntryKey, CancellationToken stoppingToken)
     {
-        var logEntry = await hubFactory.LogEntries.LogEntryOrDefaultByKey(logEntryKey);
+        var logEntry = await hubFactory.LogEntries.LogEntryOrDefaultByKey(logEntryKey, stoppingToken);
         return logEntry.ToModel();
     }
 }

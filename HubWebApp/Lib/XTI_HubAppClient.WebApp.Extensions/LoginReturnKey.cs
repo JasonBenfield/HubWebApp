@@ -12,9 +12,10 @@ internal sealed class LoginReturnKey : ILoginReturnKey
         this.hubClient = hubClient;
     }
 
-    public Task<string> Value(string requesterKey, string returnUrl) =>
+    public Task<string> Value(string requesterKey, string returnUrl, CancellationToken ct) =>
         hubClient.Auth.LoginReturnKey
         (
-            new LoginReturnModel(requesterKey: requesterKey, returnUrl: returnUrl)
+            new LoginReturnModel(requesterKey: requesterKey, returnUrl: returnUrl),
+            ct
         );
 }

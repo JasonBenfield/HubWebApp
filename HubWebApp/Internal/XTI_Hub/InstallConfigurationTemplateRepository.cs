@@ -18,13 +18,14 @@ public sealed class InstallConfigurationTemplateRepository
         string templateName,
         string destinationMachineName,
         string domain,
-        string siteName
+        string siteName,
+        CancellationToken ct
     )
     {
         InstallConfigurationTemplate installConfigurationTemplate;
         var templateEntity = await hubFactory.DB.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.TemplateName == templateName)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         if (templateEntity == null)
         {
             templateEntity = new InstallConfigurationTemplateEntity
@@ -34,22 +35,22 @@ public sealed class InstallConfigurationTemplateRepository
                 Domain = domain,
                 SiteName = siteName
             };
-            await hubFactory.DB.InstallConfigurationTemplates.Create(templateEntity);
+            await hubFactory.DB.InstallConfigurationTemplates.Create(templateEntity, ct);
             installConfigurationTemplate = new InstallConfigurationTemplate(hubFactory, templateEntity);
         }
         else
         {
             installConfigurationTemplate = new InstallConfigurationTemplate(hubFactory, templateEntity);
-            await installConfigurationTemplate.Update(destinationMachineName, domain, siteName);
+            await installConfigurationTemplate.Update(destinationMachineName, domain, siteName, ct);
         }
         return installConfigurationTemplate;
     }
 
-    internal async Task<InstallConfigurationTemplate> Template(int id)
+    internal async Task<InstallConfigurationTemplate> Template(int id, CancellationToken ct)
     {
         var template = await hubFactory.DB.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return new InstallConfigurationTemplate
         (
             hubFactory, 
@@ -57,11 +58,11 @@ public sealed class InstallConfigurationTemplateRepository
         );
     }
 
-    public async Task<InstallConfigurationTemplate> Template(string templateName)
+    public async Task<InstallConfigurationTemplate> Template(string templateName, CancellationToken ct)
     {
         var template = await hubFactory.DB.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.TemplateName == templateName)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return new InstallConfigurationTemplate
         (
             hubFactory,

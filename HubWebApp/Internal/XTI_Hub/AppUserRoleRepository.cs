@@ -11,11 +11,11 @@ public sealed class AppUserRoleRepository
         this.factory = factory;
     }
 
-    public async Task<AppUserRole> UserRole(int id)
+    public async Task<AppUserRole> UserRole(int id, CancellationToken ct)
     {
         var userRole = await factory.DB.UserRoles.Retrieve()
             .Where(ur => ur.ID == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
         return new AppUserRole(factory, userRole ?? throw new ArgumentException($"User Role {id} was not found."));
     }
 }

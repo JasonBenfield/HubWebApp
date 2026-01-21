@@ -15,14 +15,14 @@ public sealed class LogEntry
         this.record = record;
     }
 
-    public Task<AppRequest> Request() =>
-        hubFactory.Requests.Request(record.RequestID);
+    public Task<AppRequest> Request(CancellationToken ct) =>
+        hubFactory.Requests.Request(record.RequestID, ct);
 
-    public Task<LogEntry> SourceLogEntryOrDefault() =>
-        hubFactory.LogEntries.SourceLogEntryOrDefault(record.ID);
+    public Task<LogEntry> SourceLogEntryOrDefault(CancellationToken ct) =>
+        hubFactory.LogEntries.SourceLogEntryOrDefault(record.ID, ct);
 
-    public Task<LogEntry> TargetLogEntryOrDefault() =>
-        hubFactory.LogEntries.TargetLogEntryOrDefault(record.ID);
+    public Task<LogEntry> TargetLogEntryOrDefault(CancellationToken ct) =>
+        hubFactory.LogEntries.TargetLogEntryOrDefault(record.ID, ct);
 
     public AppLogEntryModel ToModel() =>
         new
