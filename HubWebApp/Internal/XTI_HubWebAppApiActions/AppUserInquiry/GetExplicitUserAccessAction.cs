@@ -3,10 +3,10 @@
 public sealed class GetExplicitUserAccessAction : AppAction<UserModifierKey, UserAccessModel>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
     private readonly CurrentAppUser currentUser;
 
-    public GetExplicitUserAccessAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser)
+    public GetExplicitUserAccessAction(UserGroupFromPath userGroupFromPath, EfHubDB factory, CurrentAppUser currentUser)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;

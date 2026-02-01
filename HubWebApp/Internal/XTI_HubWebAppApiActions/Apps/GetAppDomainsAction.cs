@@ -2,9 +2,9 @@
 
 public sealed class GetAppDomainsAction : AppAction<EmptyRequest, AppDomainModel[]>
 {
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
 
-    public GetAppDomainsAction(HubFactory factory)
+    public GetAppDomainsAction(EfHubDB factory)
     {
         this.factory = factory;
     }

@@ -50,7 +50,7 @@ internal sealed class HubTestHost
         await setup.Run(AppVersionKey.Current, ct: default);
         var defaultFakeSetup = sp.GetRequiredService<DefaultFakeSetup>();
         await defaultFakeSetup.Run(AppVersionKey.Current, ct: default);
-        var factory = sp.GetRequiredService<HubFactory>();
+        var factory = sp.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var adminUser = await AddAdminUser(sp);
         var currentUserName = sp.GetRequiredService<FakeCurrentUserName>();
@@ -58,9 +58,9 @@ internal sealed class HubTestHost
         return sp;
     }
 
-    private async Task<AppUser> AddAdminUser(IServiceProvider services)
+    private async Task<EfAppUser> AddAdminUser(IServiceProvider services)
     {
-        var factory = services.GetRequiredService<HubFactory>();
+        var factory = services.GetRequiredService<EfHubDB>();
         var userGroup = await factory.UserGroups.GetGeneral(ct: default);
         var adminUser = await userGroup.AddOrUpdate(new AppUserName("hubadmin"), new FakeHashedPassword("Password12345"), DateTime.UtcNow, ct: default);
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);

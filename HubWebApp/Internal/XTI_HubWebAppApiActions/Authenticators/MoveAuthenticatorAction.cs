@@ -2,9 +2,9 @@
 
 public sealed class MoveAuthenticatorAction : AppAction<MoveAuthenticatorRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public MoveAuthenticatorAction(HubFactory hubFactory)
+    public MoveAuthenticatorAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

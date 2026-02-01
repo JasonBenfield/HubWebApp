@@ -29,7 +29,7 @@ internal sealed class RegisterUserAuthenticatorTest
         var user = await AddUser(tester, "someone");
         var request = CreateRequest(user);
         await tester.Execute(request);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve()
             .ToArrayAsync();
         Assert.That(userAuthenticators.Length, Is.EqualTo(1), "Should add authenticator to user");
@@ -48,7 +48,7 @@ internal sealed class RegisterUserAuthenticatorTest
         var request = CreateRequest(user);
         await tester.Execute(request);
         await tester.Execute(request);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve().ToArrayAsync();
         Assert.That(userAuthenticators.Length, Is.EqualTo(1), "Should add authenticator to user only once");
     }
@@ -62,7 +62,7 @@ internal sealed class RegisterUserAuthenticatorTest
         await tester.Execute(request);
         request.ExternalUserKey = "external.id2";
         await tester.Execute(request);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userAuthenticators = await db.UserAuthenticators.Retrieve().ToArrayAsync();
         Assert.That
         (
@@ -84,14 +84,14 @@ internal sealed class RegisterUserAuthenticatorTest
         var ex = Assert.ThrowsAsync<AppException>(() => tester.Execute(request));
         Assert.That
         (
-            ex?.Message, 
+            ex?.Message,
             Is.EqualTo
             (
                 string.Format
                 (
-                    AppErrors.AuthenticatorExistsForDifferentUser, 
-                    authenticatorKey.DisplayText, 
-                    request.ExternalUserKey, 
+                    AppErrors.AuthenticatorExistsForDifferentUser,
+                    authenticatorKey.DisplayText,
+                    request.ExternalUserKey,
                     user1.ID
                 )
             )

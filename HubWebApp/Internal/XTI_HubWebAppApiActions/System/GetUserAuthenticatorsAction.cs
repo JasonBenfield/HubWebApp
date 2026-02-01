@@ -2,9 +2,9 @@
 
 public sealed class GetUserAuthenticatorsAction : AppAction<AppUserIDRequest, UserAuthenticatorModel[]>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUserAuthenticatorsAction(HubFactory hubFactory)
+    public GetUserAuthenticatorsAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

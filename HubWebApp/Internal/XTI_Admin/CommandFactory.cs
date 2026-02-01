@@ -191,7 +191,6 @@ public sealed class CommandFactory
             command = new UploadTempLogCommand
             (
                 scopes.GetRequiredService<TempToPermanentLog>(),
-                scopes.GetRequiredService<TempToPermanentLogV1>(),
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<RemoteCommandService>()
             );

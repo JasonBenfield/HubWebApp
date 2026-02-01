@@ -4,11 +4,11 @@ namespace XTI_HubWebAppApiActions.Periodic;
 
 public sealed class DeactivateUsersAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly HubWebAppOptions options;
     private readonly IClock clock;
 
-    public DeactivateUsersAction(HubFactory hubFactory, HubWebAppOptions options, IClock clock)
+    public DeactivateUsersAction(EfHubDB hubFactory, HubWebAppOptions options, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.options = options;

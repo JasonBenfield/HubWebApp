@@ -2,16 +2,16 @@
 
 public sealed class CurrentAppUser
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly ICurrentUserName currentUserName;
 
-    public CurrentAppUser(HubFactory hubFactory, ICurrentUserName currentUserName)
+    public CurrentAppUser(EfHubDB hubFactory, ICurrentUserName currentUserName)
     {
         this.hubFactory = hubFactory;
         this.currentUserName = currentUserName;
     }
 
-    public async Task<AppUser> Value(CancellationToken ct)
+    public async Task<EfAppUser> Value(CancellationToken ct)
     {
         var userName = await currentUserName.Value();
         var user = await hubFactory.Users.UserByUserName(userName, ct);
@@ -25,14 +25,14 @@ public sealed class CurrentAppUser
         return userGroupPermissions;
     }
 
-    public async Task<AppUserGroupPermission> GetPermissionsToUser(AppUser user, CancellationToken ct)
+    public async Task<AppUserGroupPermission> GetPermissionsToUser(EfAppUser user, CancellationToken ct)
     {
         var userGroup = await user.UserGroup(ct);
         var permission = await GetPermissionsToUserGroup(userGroup, ct);
         return permission;
     }
 
-    public async Task<AppUserGroupPermission> GetPermissionsToUserGroup(AppUserGroup userGroup, CancellationToken ct)
+    public async Task<AppUserGroupPermission> GetPermissionsToUserGroup(EfAppUserGroup userGroup, CancellationToken ct)
     {
         var currentUser = await Value(ct);
         var userGroupPermission = await currentUser.GetUserGroupPermission(userGroup, ct);
@@ -46,7 +46,7 @@ public sealed class CurrentAppUser
         return appPermissions;
     }
 
-    public async Task<AppPermission> GetPermissionsToApp(App app, CancellationToken ct)
+    public async Task<AppPermission> GetPermissionsToApp(EfApp app, CancellationToken ct)
     {
         var currentUser = await Value(ct);
         var appPermission = await currentUser.GetAppPermission(app, ct);

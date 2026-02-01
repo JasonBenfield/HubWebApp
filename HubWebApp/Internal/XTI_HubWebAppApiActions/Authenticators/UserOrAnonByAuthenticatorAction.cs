@@ -2,9 +2,9 @@
 
 public sealed class UserOrAnonByAuthenticatorAction : AppAction<UserOrAnonByAuthenticatorRequest, AppUserModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public UserOrAnonByAuthenticatorAction(HubFactory hubFactory)
+    public UserOrAnonByAuthenticatorAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

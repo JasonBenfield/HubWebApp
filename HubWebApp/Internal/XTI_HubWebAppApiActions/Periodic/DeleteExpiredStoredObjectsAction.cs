@@ -5,10 +5,10 @@ namespace XTI_HubWebAppApiActions.Periodic;
 
 public sealed class DeleteExpiredStoredObjectsAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public DeleteExpiredStoredObjectsAction(HubFactory hubFactory, IClock clock)
+    public DeleteExpiredStoredObjectsAction(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_HubDB.EF;
 using XTI_HubDB.Entities;
 using XTI_HubWebAppApiActions;
 
@@ -220,13 +219,13 @@ sealed class NewInstallationTest
 
     private static Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationEntity installation)
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         return db.AppVersions.Retrieve()
             .Where(av => av.ID == installation.AppVersionID)
             .FirstAsync();
     }
 
-    private static async Task<InstallationEntity> GetVersionInstallation(IHubActionTester tester, AppVersion appVersion)
+    private static async Task<InstallationEntity> GetVersionInstallation(IHubActionTester tester, EfAppVersion appVersion)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
         var appVersionID = db.AppVersions.Retrieve()

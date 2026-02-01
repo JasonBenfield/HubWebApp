@@ -2,9 +2,9 @@
 
 public sealed class AddUserGroupIfNotExistsAction : AppAction<AddUserGroupIfNotExistsRequest, AppUserGroupModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public AddUserGroupIfNotExistsAction(HubFactory hubFactory)
+    public AddUserGroupIfNotExistsAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

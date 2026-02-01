@@ -39,7 +39,7 @@ internal sealed class DeactivateUserTest
         await tester.Login(HubInfo.Roles.EditUser);
         var userToDeactivate = await AddUser(tester, "userToDeactivate");
         await tester.Execute(userToDeactivate.ToModel().ID, new ModifierKey("General"));
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var userModel = (await factory.Users.User(userToDeactivate.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.IsActive(), Is.False, "Should deactivate user");
     }
@@ -51,7 +51,7 @@ internal sealed class DeactivateUserTest
         return HubActionTester.Create(services, hubApi => hubApi.UserMaintenance.DeactivateUser);
     }
 
-    private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
+    private async Task<EfAppUser> AddUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
@@ -65,7 +65,7 @@ internal sealed class DeactivateUserTest
             },
             modifier
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }

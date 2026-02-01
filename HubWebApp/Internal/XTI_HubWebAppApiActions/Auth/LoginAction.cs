@@ -7,10 +7,10 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
     private readonly HubWebAppOptions options;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public LoginAction(AuthenticationFactory authFactory, IAnonClient anonClient, HubWebAppOptions options, HubFactory hubFactory, IClock clock)
+    public LoginAction(AuthenticationFactory authFactory, IAnonClient anonClient, HubWebAppOptions options, EfHubDB hubFactory, IClock clock)
     {
         auth = authFactory.CreateForLogin();
         this.anonClient = anonClient;

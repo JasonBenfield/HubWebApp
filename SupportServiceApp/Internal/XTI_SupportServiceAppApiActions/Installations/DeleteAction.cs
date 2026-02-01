@@ -1,9 +1,9 @@
-﻿using XTI_Core;
+﻿using System.Net.NetworkInformation;
+using XTI_App.Extensions;
+using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
-using XTI_WebAppInstallation;
-using XTI_App.Extensions;
-using XTI_ServiceAppInstallation;
+using XTI_Installation;
 
 namespace XTI_SupportServiceAppApi.Installations;
 
@@ -22,7 +22,7 @@ public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
 
     public async Task<EmptyActionResult> Execute(EmptyRequest model, CancellationToken ct)
     {
-        var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
+        var domain = IPGlobalProperties.GetIPGlobalProperties().DomainName;
         var machineNames = new List<string> { Environment.MachineName };
         if (!string.IsNullOrWhiteSpace(domain))
         {
@@ -30,7 +30,7 @@ public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
         }
         var pendingDeletes = await hubClient.Installations.GetPendingDeletes
         (
-            new GetPendingDeletesRequest(machineNames.ToArray()), 
+            new GetPendingDeletesRequest(machineNames.ToArray()),
             ct
         );
         foreach (var pendingDelete in pendingDeletes)

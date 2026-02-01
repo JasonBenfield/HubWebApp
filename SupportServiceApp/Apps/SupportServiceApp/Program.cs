@@ -27,7 +27,7 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
         });
         services.AddConfigurationOptions<SupportServiceAppOptions>();
         services.AddHubDbContextForSqlServer();
-        services.AddScoped<HubFactory>();
+        services.AddScoped<EfHubDB>();
         services.AddScoped<EfPermanentLog>();
         services.AddScoped<HcPermanentLog>();
         services.AddScoped
@@ -48,7 +48,6 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
             }
         );
         services.AddScoped<TempToPermanentLog>();
-        services.AddScoped<TempToPermanentLogV1>();
     });
 if (args.Length <= 0 || !args[0].Equals("RunAsConsole", StringComparison.OrdinalIgnoreCase))
 {

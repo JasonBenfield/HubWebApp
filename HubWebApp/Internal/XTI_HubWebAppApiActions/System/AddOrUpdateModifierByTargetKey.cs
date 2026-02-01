@@ -3,9 +3,9 @@
 public sealed class AddOrUpdateModifierByTargetKeyAction : AppAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>
 {
     private readonly AppFromSystemUser appFromSystemUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public AddOrUpdateModifierByTargetKeyAction(AppFromSystemUser appFromSystemUser, HubFactory hubFactory)
+    public AddOrUpdateModifierByTargetKeyAction(AppFromSystemUser appFromSystemUser, EfHubDB hubFactory)
     {
         this.appFromSystemUser = appFromSystemUser;
         this.hubFactory = hubFactory;

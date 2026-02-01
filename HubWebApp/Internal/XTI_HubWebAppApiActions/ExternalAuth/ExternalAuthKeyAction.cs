@@ -4,10 +4,10 @@ namespace XTI_HubWebAppApiActions.ExternalAuth;
 
 public sealed class ExternalAuthKeyAction : AppAction<ExternalAuthKeyModel, AuthenticatedLoginResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public ExternalAuthKeyAction(HubFactory hubFactory, IClock clock)
+    public ExternalAuthKeyAction(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;

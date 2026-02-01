@@ -3,9 +3,9 @@
 public sealed class GetLogEntryDetailAction : AppAction<int, AppLogEntryDetailModel>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetLogEntryDetailAction(CurrentAppUser currentUser, HubFactory hubFactory)
+    public GetLogEntryDetailAction(CurrentAppUser currentUser, EfHubDB hubFactory)
     {
         this.currentUser = currentUser;
         this.hubFactory = hubFactory;

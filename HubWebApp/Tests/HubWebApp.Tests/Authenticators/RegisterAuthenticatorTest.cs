@@ -25,20 +25,20 @@ internal sealed class RegisterAuthenticatorTest
         var tester = await Setup();
         await tester.LoginAsAdmin();
         await tester.Execute(new RegisterAuthenticatorRequest(authenticatorKey));
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var authenticators = await db.Authenticators
             .Retrieve()
             .ToArrayAsync();
         Assert.That
         (
             authenticators.Select(a => a.AuthenticatorKey),
-            Is.EqualTo(new[] { authenticatorKey.Value }),
+            Is.EqualTo([authenticatorKey.Value]),
             "Should add authenticator"
         );
         Assert.That
         (
             authenticators.Select(a => a.AuthenticatorName),
-            Is.EqualTo(new[] { authenticatorKey.DisplayText }),
+            Is.EqualTo([authenticatorKey.DisplayText]),
             "Should add authenticator"
         );
     }
@@ -50,7 +50,7 @@ internal sealed class RegisterAuthenticatorTest
         await tester.LoginAsAdmin();
         await tester.Execute(new RegisterAuthenticatorRequest(authenticatorKey));
         await tester.Execute(new RegisterAuthenticatorRequest(authenticatorKey));
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var authenticators = await db.Authenticators
             .Retrieve()
             .ToArrayAsync();

@@ -18,7 +18,7 @@ internal sealed class EditCurrentUserTest
         var form = CreateEditUserForm();
         form.PersonName.SetValue("Changed Name");
         await tester.Execute(form);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var userModel = (await factory.Users.User(loggedInUser.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo("Changed Name"), "Should update name");
     }
@@ -32,7 +32,7 @@ internal sealed class EditCurrentUserTest
         form.PersonName.SetValue("");
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute( form, modifier);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var userModel = (await factory.Users.User(loggedInUser.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Name, Is.EqualTo(loggedInUser.ToModel().UserName.Value), "Should update name from user name when name is blank");
     }
@@ -46,7 +46,7 @@ internal sealed class EditCurrentUserTest
         form.Email.SetValue("changed@gmail.com");
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(form, modifier);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var userModel = (await factory.Users.User(loggedInUser.ToModel().ID, ct: default)).ToModel();
         Assert.That(userModel.Email, Is.EqualTo("changed@gmail.com"), "Should update email");
     }

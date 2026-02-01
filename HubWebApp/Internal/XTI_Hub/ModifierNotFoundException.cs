@@ -7,7 +7,7 @@ namespace XTI_Hub
     {
         private static readonly string displayMessage = "Modifier not found";
 
-        public ModifierNotFoundException(int modifierID, App app)
+        public ModifierNotFoundException(int modifierID, EfApp app)
             :base
             (
                 $"Modifier {modifierID} not found for app '{app.ToModel().AppKey.Format()}'", 
@@ -16,7 +16,7 @@ namespace XTI_Hub
         {
         }
 
-        public ModifierNotFoundException(ModifierKey modKey, ModifierCategory category)
+        public ModifierNotFoundException(ModifierKey modKey, EfModifierCategory category)
             : base
             (
                 $"Modifier with mod key '{modKey.DisplayText}' not found for category '{category.ToModel().Name.DisplayText}'",
@@ -25,7 +25,7 @@ namespace XTI_Hub
         {
         }
 
-        public ModifierNotFoundException(string targetKey, ModifierCategory category)
+        public ModifierNotFoundException(string targetKey, EfModifierCategory category)
             : base
             (
                 $"Modifier with target key'{targetKey}' not found category '{category.ToModel().Name.DisplayText}'",

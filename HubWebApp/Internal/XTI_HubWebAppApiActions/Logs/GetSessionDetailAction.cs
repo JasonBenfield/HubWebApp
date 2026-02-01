@@ -3,9 +3,9 @@
 public sealed class GetSessionDetailAction : AppAction<int, AppSessionDetailModel>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetSessionDetailAction(CurrentAppUser currentUser, HubFactory hubFactory)
+    public GetSessionDetailAction(CurrentAppUser currentUser, EfHubDB hubFactory)
     {
         this.currentUser = currentUser;
         this.hubFactory = hubFactory;

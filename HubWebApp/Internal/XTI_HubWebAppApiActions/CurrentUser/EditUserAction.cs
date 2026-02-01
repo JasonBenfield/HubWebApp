@@ -3,9 +3,9 @@
 public sealed class EditUserAction : AppAction<EditCurrentUserForm, AppUserModel>
 {
     private readonly IUserContext userContext;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public EditUserAction(IUserContext userContext, HubFactory hubFactory)
+    public EditUserAction(IUserContext userContext, EfHubDB hubFactory)
     {
         this.userContext = userContext;
         this.hubFactory = hubFactory;

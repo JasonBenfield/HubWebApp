@@ -3,9 +3,9 @@
 public sealed class GetUserRoleDetailAction : AppAction<UserRoleIDRequest, UserRoleDetailModel>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUserRoleDetailAction(CurrentAppUser currentUser, HubFactory hubFactory)
+    public GetUserRoleDetailAction(CurrentAppUser currentUser, EfHubDB hubFactory)
     {
         this.currentUser = currentUser;
         this.hubFactory = hubFactory;

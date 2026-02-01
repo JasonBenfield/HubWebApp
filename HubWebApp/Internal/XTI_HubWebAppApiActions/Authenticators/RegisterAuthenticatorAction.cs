@@ -2,9 +2,9 @@
 
 public sealed class RegisterAuthenticatorAction : AppAction<RegisterAuthenticatorRequest, AuthenticatorModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public RegisterAuthenticatorAction(HubFactory hubFactory)
+    public RegisterAuthenticatorAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

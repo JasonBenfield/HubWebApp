@@ -2,19 +2,22 @@
 
 public sealed class HubAppSetup : IAppSetup
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB db;
     private readonly HubAppApiFactory apiFactory;
 
-    public HubAppSetup(HubFactory hubFactory, HubAppApiFactory apiFactory)
+    public HubAppSetup(EfHubDB db, HubAppApiFactory apiFactory)
     {
-        this.hubFactory = hubFactory;
+        this.db = db;
         this.apiFactory = apiFactory;
     }
 
-    public async Task Run(AppVersionKey versionKey, CancellationToken ct)
+    public Task Run(AppVersionKey versionKey, CancellationToken ct) =>
+        db.Transaction(() => RegisterApp(versionKey, ct));
+
+    private async Task RegisterApp(AppVersionKey versionKey, CancellationToken ct)
     {
         var template = apiFactory.CreateTemplate();
-        var registration = new AppRegistration(hubFactory);
+        var registration = new AppRegistration(db);
         await registration.Run(template.ToModel(), versionKey, ct);
         await AddAppModifiers(ct);
         await AddUserGroupModifiers(ct);
@@ -22,23 +25,24 @@ public sealed class HubAppSetup : IAppSetup
 
     private async Task AddAppModifiers(CancellationToken ct)
     {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey, ct);
-        var appModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
-        var apps = await hubFactory.Apps.All(ct);
-        var appModels = apps
+        var efHubApp = await db.Apps.App(HubInfo.AppKey, ct);
+        var efAppModCategory = await efHubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
+        var efApps = await db.Apps.All(ct);
+        var apps = efApps
             .Select(a => a.ToModel())
             .Where
             (
                 a => !a.AppKey.Equals(HubInfo.AppKey) &&
                     !a.AppKey.IsAnyAppType(AppType.Values.NotFound, AppType.Values.Package, AppType.Values.WebPackage)
-            );
-        foreach (var appModel in appModels)
+            )
+            .ToArray();
+        foreach (var app in apps)
         {
-            await appModCategory.AddOrUpdateModifier
+            await efAppModCategory.AddOrUpdateModifier
             (
-                appModel.PublicKey,
-                appModel.ID,
-                appModel.AppKey.Format(),
+                app.PublicKey,
+                app.ID,
+                app.AppKey.Format(),
                 ct
             );
         }
@@ -46,17 +50,17 @@ public sealed class HubAppSetup : IAppSetup
 
     private async Task AddUserGroupModifiers(CancellationToken ct)
     {
-        var hubApp = await hubFactory.Apps.App(HubInfo.AppKey, ct);
-        var userGroupsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
-        var userGroups = await hubFactory.UserGroups.UserGroups(ct);
-        foreach (var userGroup in userGroups)
+        var efHubApp = await db.Apps.App(HubInfo.AppKey, ct);
+        var efUserGroupsModCategory = await efHubApp.ModCategory(HubInfo.ModCategories.UserGroups, ct);
+        var efUserGroups = await db.UserGroups.UserGroups(ct);
+        foreach (var efUserGroup in efUserGroups)
         {
-            var userGroupModel = userGroup.ToModel();
-            await userGroupsModCategory.AddOrUpdateModifier
+            var userGroup = efUserGroup.ToModel();
+            await efUserGroupsModCategory.AddOrUpdateModifier
             (
-                userGroupModel.PublicKey,
-                userGroupModel.ID,
-                userGroupModel.GroupName.DisplayText,
+                userGroup.PublicKey,
+                userGroup.ID,
+                userGroup.GroupName.DisplayText,
                 ct
             );
         }

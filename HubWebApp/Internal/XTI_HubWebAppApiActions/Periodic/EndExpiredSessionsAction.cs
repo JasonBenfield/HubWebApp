@@ -4,10 +4,10 @@ namespace XTI_HubWebAppApiActions.Periodic;
 
 public sealed class EndExpiredSessionsAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly HubFactory appFactory;
+    private readonly EfHubDB appFactory;
     private readonly IClock clock;
 
-    public EndExpiredSessionsAction(HubFactory appFactory, IClock clock)
+    public EndExpiredSessionsAction(EfHubDB appFactory, IClock clock)
     {
         this.appFactory = appFactory;
         this.clock = clock;

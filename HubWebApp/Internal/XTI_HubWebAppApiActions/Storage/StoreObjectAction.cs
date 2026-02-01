@@ -4,10 +4,10 @@ namespace XTI_HubWebAppApiActions.Storage;
 
 public sealed class StoreObjectAction : AppAction<StoreObjectRequest, string>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public StoreObjectAction(HubFactory hubFactory, IClock clock)
+    public StoreObjectAction(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;

@@ -75,7 +75,7 @@ internal sealed class AppModifierAssertions<TModel, TResult>
     public async Task ShouldThrowError_WhenAccessIsDenied(Func<Task<TModel>> createModel, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] allowedRoles)
     {
         var modKey = modifier.ModKey;
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct: default);
         foreach (var roleName in allowedRoles)
         {
@@ -115,9 +115,9 @@ internal sealed class AppModifierAssertions<TModel, TResult>
         );
     }
 
-    private async Task SetUserRoles(AppUser loggedInUser, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] roleNames)
+    private async Task SetUserRoles(EfAppUser loggedInUser, AppRoleName[] rolesToKeep, ModifierModel modifier, params AppRoleName[] roleNames)
     {
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await factory.Apps.AppOrUnknown(HubInfo.AppKey, ct: default);
         var efModifier = await app.Modifier(modifier.ID, ct: default);
         var userRoles = await loggedInUser.Modifier(efModifier).AssignedRoles(ct: default);

@@ -20,8 +20,9 @@ using XTI_GitHub.Web;
 using XTI_Hub;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubDB.Extensions;
+using XTI_Installation;
 using XTI_PermanentLog;
 using XTI_PermanentLog.Implementations;
 using XTI_Secrets;
@@ -92,7 +93,7 @@ await Host.CreateDefaultBuilder(args)
                 var config = sp.GetRequiredKeyedService<IConfiguration>("XTI");
                 return config.Get<AdminToolOptions>()?.DB ?? new DbOptions();
             });
-            services.AddScoped<HubFactory>();
+            services.AddScoped<EfHubDB>();
             services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
             services.AddScoped(sp =>
             {
@@ -146,8 +147,8 @@ await Host.CreateDefaultBuilder(args)
             {
                 var scopes = sp.GetRequiredService<Scopes>();
                 var options = scopes.GetRequiredService<AdminOptions>();
-                return string.IsNullOrWhiteSpace(options.HubAppVersionKey) ? 
-                    HubAppClientVersion.Version(AppVersionKey.Current.DisplayText) : 
+                return string.IsNullOrWhiteSpace(options.HubAppVersionKey) ?
+                    HubAppClientVersion.Version(AppVersionKey.Current.DisplayText) :
                     HubAppClientVersion.Version(options.HubAppVersionKey);
             });
             services.AddXtiTokenAccessorFactory
@@ -172,7 +173,7 @@ await Host.CreateDefaultBuilder(args)
                     IPermanentLog permanentLog;
                     var dbTypeAccessor = sp.GetRequiredService<HubDbTypeAccessor>();
                     var dbType = dbTypeAccessor.Value;
-                    if(dbType == HubAdministrationTypes.DB)
+                    if (dbType == HubAdministrationTypes.DB)
                     {
                         permanentLog = sp.GetRequiredService<EfPermanentLog>();
                     }
@@ -183,23 +184,13 @@ await Host.CreateDefaultBuilder(args)
                     return permanentLog;
                 }
             );
-            services.AddScoped
-            (
-                sp => new TempToPermanentLogV1
-                (
-                    sp.GetRequiredService<ITempLogsV1>(),
-                    sp.GetRequiredService<IPermanentLog>(),
-                    sp.GetRequiredService<IClock>(),
-                    0
-                )
-            );
             services.AddScoped<TempLog>(sp =>
             {
                 var dataProtector = sp.GetDataProtector("XTI_TempLog");
                 var xtiFolder = sp.GetRequiredService<XtiFolder>();
                 return new DiskTempLog
                 (
-                    dataProtector, 
+                    dataProtector,
                     xtiFolder.AppDataFolder().WithSubFolder("TempLogs").Path()
                 );
             });
@@ -274,8 +265,7 @@ await Host.CreateDefaultBuilder(args)
             services.AddScoped<CurrentVersion>();
             services.AddScoped<VersionKeyFromCurrentBranch>();
             services.AddScoped<PublishLibProcess>();
-            services.AddScoped<InstallWebAppProcess>();
-            services.AddScoped<InstallServiceAppProcess>();
+            services.AddScoped<InstallAppProcessFactory>();
             services.AddScoped<LocalInstallProcess>();
             services.AddScoped<InstallProcess>();
             services.AddScoped<BranchVersion>();

@@ -3,10 +3,10 @@
 public sealed class GetAssignedRolesAction : AppAction<UserModifierKey, AppRoleModel[]>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
     private readonly CurrentAppUser currentUser;
 
-    public GetAssignedRolesAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser)
+    public GetAssignedRolesAction(UserGroupFromPath userGroupFromPath, EfHubDB factory, CurrentAppUser currentUser)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;

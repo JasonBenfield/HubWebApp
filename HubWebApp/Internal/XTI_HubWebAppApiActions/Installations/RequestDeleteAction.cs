@@ -2,9 +2,9 @@
 
 public sealed class RequestDeleteAction : AppAction<GetInstallationRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public RequestDeleteAction(HubFactory hubFactory)
+    public RequestDeleteAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

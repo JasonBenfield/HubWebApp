@@ -2,10 +2,10 @@
 
 public sealed class GetUserDetailOrAnonAction : AppAction<AppUserNameRequest, AppUserDetailModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly CurrentAppUser currentUser;
 
-    public GetUserDetailOrAnonAction(HubFactory hubFactory, CurrentAppUser currentUser)
+    public GetUserDetailOrAnonAction(EfHubDB hubFactory, CurrentAppUser currentUser)
     {
         this.hubFactory = hubFactory;
         this.currentUser = currentUser;

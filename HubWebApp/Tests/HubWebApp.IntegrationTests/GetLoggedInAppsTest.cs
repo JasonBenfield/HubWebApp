@@ -6,7 +6,7 @@ internal sealed class GetLoggedInAppsTest
     public async Task ShouldGetLoggedInApps()
     {
         var sp = await Setup();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var user = await hubFactory.Users.UserOrAnon(new AppUserName("test.user"), ct: default);
         var loggedInApps = await user.GetLoggedInApps(ct: default);
         loggedInApps.WriteToConsole();

@@ -2,9 +2,9 @@
 
 public sealed class GetVersionAction : AppAction<GetVersionRequest, XtiVersionModel>
 {
-    private readonly HubFactory appFactory;
+    private readonly EfHubDB appFactory;
 
-    public GetVersionAction(HubFactory appFactory)
+    public GetVersionAction(EfHubDB appFactory)
     {
         this.appFactory = appFactory;
     }

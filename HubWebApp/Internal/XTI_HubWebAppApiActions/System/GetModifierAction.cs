@@ -2,9 +2,9 @@
 
 public sealed class GetModifierAction : AppAction<GetModifierRequest, ModifierModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetModifierAction(HubFactory hubFactory)
+    public GetModifierAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

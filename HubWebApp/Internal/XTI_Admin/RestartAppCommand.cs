@@ -1,7 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_ServiceAppInstallation;
-using XTI_WebAppInstallation;
+using XTI_Installation;
 
 namespace XTI_Admin;
 
@@ -45,7 +44,7 @@ internal sealed class RestartAppCommand : ICommand
                                     {
                                         foreach (var specificVersionKey in versionKeyArr)
                                         {
-                                            await RestartWebApp(appKey, specificVersionKey);
+                                            await RestartWebApp(appKey, specificVersionKey, ct);
                                         }
                                     }
                                 );
@@ -57,14 +56,14 @@ internal sealed class RestartAppCommand : ICommand
                         {
                             foreach (var specificVersionKey in versionKeyArrays[0])
                             {
-                                await RestartWebApp(appKey, specificVersionKey);
+                                await RestartWebApp(appKey, specificVersionKey, ct);
                             }
                         }
                     }
                 }
                 else
                 {
-                    await RestartWebApp(appKey, versionKey);
+                    await RestartWebApp(appKey, versionKey, ct);
                 }
             }
             else if (appKey.IsAppType(AppType.Values.ServiceApp))
@@ -86,11 +85,11 @@ internal sealed class RestartAppCommand : ICommand
         }
     }
 
-    private async Task RestartWebApp(AppKey appKey, AppVersionKey versionKey)
+    private async Task RestartWebApp(AppKey appKey, AppVersionKey versionKey, CancellationToken ct)
     {
         var appOfflineFile = new AppOfflineFile(xtiFolder, appKey, versionKey);
         await appOfflineFile.Write();
-        await Task.Delay(TimeSpan.FromSeconds(5));
+        await Task.Delay(TimeSpan.FromSeconds(5), ct);
         appOfflineFile.Delete();
     }
 

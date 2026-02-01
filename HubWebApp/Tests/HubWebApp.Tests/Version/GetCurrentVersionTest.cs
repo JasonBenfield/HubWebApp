@@ -16,7 +16,7 @@ internal sealed class GetCurrentVersionTest
         var tester = await setup();
         await tester.LoginAsAdmin();
         var hubAppModifier = await tester.HubAppModifier();
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var currentVersion = await hubApp.CurrentVersion(ct: default);
         var currentVersionModel = await tester.Execute(AppVersionKey.Current.Value, hubAppModifier.ModKey);

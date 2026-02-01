@@ -2,9 +2,9 @@
 
 public class GetUserByUserNameAction : AppAction<AppUserNameRequest, AppUserModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUserByUserNameAction(HubFactory hubFactory)
+    public GetUserByUserNameAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

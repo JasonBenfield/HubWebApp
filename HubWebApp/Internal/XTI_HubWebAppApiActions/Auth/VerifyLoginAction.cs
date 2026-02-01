@@ -6,10 +6,10 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
 {
     private readonly UnverifiedUser unverifiedUser;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, HubFactory hubFactory, IClock clock)
+    public VerifyLoginAction(UnverifiedUser unverifiedUser, IHashedPasswordFactory hashedPasswordFactory, EfHubDB hubFactory, IClock clock)
     {
         this.unverifiedUser = unverifiedUser;
         this.hashedPasswordFactory = hashedPasswordFactory;

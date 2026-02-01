@@ -2,10 +2,10 @@
 
 public sealed class DeleteUserRoleAction : AppAction<UserRoleIDRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly CurrentAppUser currentUser;
 
-    public DeleteUserRoleAction(HubFactory hubFactory, CurrentAppUser currentUser)
+    public DeleteUserRoleAction(EfHubDB hubFactory, CurrentAppUser currentUser)
     {
         this.hubFactory = hubFactory;
         this.currentUser = currentUser;

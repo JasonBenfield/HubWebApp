@@ -12,7 +12,7 @@ internal sealed class LogBatchTest
         await tester.LoginAsAdmin();
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         Assert.That(session.HasStarted(), Is.True, "Should start session on permanent log");
         Assert.That(session.HasEnded(), Is.False, "Should start session on permanent log");
@@ -27,7 +27,7 @@ internal sealed class LogBatchTest
         await startSession(tester, sessionKey);
         var requestKey = generateKey();
         await startRequest(tester, sessionKey, requestKey);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = await session.Requests(ct: default);
         Assert.That(requests.Length, Is.EqualTo(1), "Should start request on permanent log");
@@ -43,7 +43,7 @@ internal sealed class LogBatchTest
         var requestKey = generateKey();
         await startRequest(tester, sessionKey, requestKey);
         await endRequest(tester, requestKey);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = await session.Requests(ct: default);
         Assert.That(requests[0].HasEnded(), Is.True, "Should end request on permanent log");
@@ -60,7 +60,7 @@ internal sealed class LogBatchTest
         await startRequest(tester, sessionKey, requestKey);
         await endRequest(tester, requestKey);
         await endSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         Assert.That(session.HasEnded(), Is.True, "Should end session on permanent log");
     }
@@ -73,7 +73,7 @@ internal sealed class LogBatchTest
         var sessionKey = generateKey();
         await startSession(tester, sessionKey);
         await authenticateSession(tester, sessionKey);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         var user = await session.User(ct: default);
         Assert.That(user.ToModel().UserName, Is.EqualTo("someone"), "Should authenticate session on permanent log");
@@ -98,7 +98,7 @@ internal sealed class LogBatchTest
             exception = ex;
         }
         await logEvent(tester, requestKey, exception);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var session = await factory.Sessions.Session(sessionKey, ct: default);
         var requests = (await session.Requests(ct: default)).ToArray();
         var events = (await requests[0].Events(ct: default)).ToArray();
@@ -217,7 +217,7 @@ internal sealed class LogBatchTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();

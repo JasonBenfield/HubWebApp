@@ -9,7 +9,7 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationStatusToInstallStarted()
     {
         var tester = await Setup();
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
@@ -113,7 +113,7 @@ sealed class BeginCurrentInstallationTest
 
     private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         return db.Installations.Retrieve()
             .Where(inst => inst.ID == installationID)
             .FirstAsync();
@@ -121,7 +121,7 @@ sealed class BeginCurrentInstallationTest
 
     private static Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationEntity installation)
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         return db.AppVersions.Retrieve()
             .Where(av => av.ID == installation.AppVersionID)
             .FirstAsync();

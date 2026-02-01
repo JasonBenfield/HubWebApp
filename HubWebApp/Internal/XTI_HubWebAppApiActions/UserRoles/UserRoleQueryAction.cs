@@ -7,9 +7,9 @@ namespace XTI_HubWebAppApiActions.UserRoles;
 public sealed class UserRoleQueryAction : QueryAction<UserRoleQueryRequest, ExpandedUserRole>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly IHubDbContext db;
+    private readonly EfHubDB db;
 
-    public UserRoleQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public UserRoleQueryAction(CurrentAppUser currentUser, EfHubDB db)
     {
         this.currentUser = currentUser;
         this.db = db;

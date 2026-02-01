@@ -5,6 +5,8 @@ namespace XTI_Hub.Abstractions;
 public sealed record InstallConfigurationModel
 (
     int ID,
+    string RepoOwner,
+    string RepoName,
     string ConfigurationName,
     AppKey AppKey,
     InstallConfigurationTemplateModel Template,
@@ -12,7 +14,7 @@ public sealed record InstallConfigurationModel
 )
 {
     public InstallConfigurationModel()
-        : this(0, "", new AppKey("", AppType.Values.GetDefault()), new(), 0)
+        : this(0, "", "", "", new(), new(), 0)
     {
     }
 

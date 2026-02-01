@@ -111,7 +111,7 @@ sealed class InstalledTest
         (
             new GetInstallationRequest(newInstResult2.CurrentInstallationID)
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
     }
@@ -155,14 +155,14 @@ sealed class InstalledTest
         (
             new GetInstallationRequest(newInstResult2.CurrentInstallationID)
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.InstallPending), "Should not delete previous current installation of a different app");
     }
 
-    private Task<App> registerFakeApp(IHubActionTester tester)
+    private Task<EfApp> registerFakeApp(IHubActionTester tester)
     {
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         return factory.Apps.AddOrUpdate(new AppVersionName("fake"), FakeInfo.AppKey, DateTimeOffset.Now, ct: default);
     }
 
@@ -187,7 +187,7 @@ sealed class InstalledTest
 
     private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         return db.Installations.Retrieve()
             .Where(inst => inst.ID == installationID)
             .FirstAsync();

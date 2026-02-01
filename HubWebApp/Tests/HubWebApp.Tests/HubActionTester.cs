@@ -14,7 +14,7 @@ internal interface IHubActionTester
 {
     IServiceProvider Services { get; }
     HubActionTester<TOtherModel, TOtherResult> Create<TOtherModel, TOtherResult>(Func<HubAppApi, AppApiAction<TOtherModel, TOtherResult>> getAction);
-    Task<App> HubApp();
+    Task<EfApp> HubApp();
     Task<ModifierModel> HubAppModifier();
     Task<ModifierModel> GeneralUserGroupModifier();
 }
@@ -49,35 +49,35 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
         currentUserName.SetUserName(AppUserName.Anon);
     }
 
-    public Task<AppUser> LoginAsAdmin() => LoginAs(new AppUserName("hubadmin"));
+    public Task<EfAppUser> LoginAsAdmin() => LoginAs(new AppUserName("hubadmin"));
 
-    public async Task<AppUser> LoginAs(AppUserName userName)
+    public async Task<EfAppUser> LoginAs(AppUserName userName)
     {
-        var factory = Services.GetRequiredService<HubFactory>();
+        var factory = Services.GetRequiredService<EfHubDB>();
         var user = await factory.Users.UserByUserName(userName, ct: default);
         var currentUserName = Services.GetRequiredService<FakeCurrentUserName>();
         currentUserName.SetUserName(user.ToModel().UserName);
         return user;
     }
 
-    public async Task<AppUser> Login(params AppRoleName[]? roleNames)
+    public async Task<EfAppUser> Login(params AppRoleName[]? roleNames)
     {
         var modifier = await DefaultModifier();
         var user = await Login(modifier, roleNames);
         return user;
     }
 
-    public Task<AppUser> Login(ModifierModel modifier, params AppRoleName[]? roleNames) =>
+    public Task<EfAppUser> Login(ModifierModel modifier, params AppRoleName[]? roleNames) =>
         Login([], modifier, roleNames);
 
-    public async Task<AppUser> Login
+    public async Task<EfAppUser> Login
     (
         AppRoleName[] defaultRoleNames, 
         ModifierModel modifier, 
         params AppRoleName[]? roleNames
     )
     {
-        var factory = Services.GetRequiredService<HubFactory>();
+        var factory = Services.GetRequiredService<EfHubDB>();
         var userGroup = await factory.UserGroups.GetGeneral(ct: default);
         var user = await userGroup.AddOrUpdate
         (
@@ -105,13 +105,13 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
         return user;
     }
 
-    public Task<App> HubApp()
+    public Task<EfApp> HubApp()
     {
-        var factory = Services.GetRequiredService<HubFactory>();
+        var factory = Services.GetRequiredService<EfHubDB>();
         return factory.Apps.App(HubInfo.AppKey, ct: default);
     }
 
-    public async Task<AppRole> AdminRole()
+    public async Task<EfAppRole> AdminRole()
     {
         var app = await HubApp();
         var role = await app.Role(AppRoleName.Admin, ct: default);
@@ -123,7 +123,7 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
 
     public async Task<ModifierModel> UserGroupModifier(AppUserGroupName name)
     {
-        var factory = Services.GetRequiredService<HubFactory>();
+        var factory = Services.GetRequiredService<EfHubDB>();
         var userGroup = await factory.UserGroups.UserGroup(name, ct: default);
         var userGroupModel = userGroup.ToModel();
         var hubApp = await HubApp();
@@ -149,10 +149,10 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
 
     public async Task<ModifierModel> AppModifier(AppKey appKey)
     {
-        var factory = Services.GetRequiredService<HubFactory>();
+        var factory = Services.GetRequiredService<EfHubDB>();
         var app = await factory.Apps.App(appKey, ct: default);
         var appModel = app.ToModel();
-        App hubApp;
+        EfApp hubApp;
         if (appKey.Equals(HubInfo.AppKey))
         {
             hubApp = app;

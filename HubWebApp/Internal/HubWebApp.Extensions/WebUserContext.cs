@@ -8,7 +8,7 @@ public sealed class WebUserContext : ISourceUserContext
 {
     private readonly EfUserContext userContext;
 
-    public WebUserContext(HubFactory hubFactory, ICurrentUserName currentUserName)
+    public WebUserContext(EfHubDB hubFactory, ICurrentUserName currentUserName)
     {
         userContext = new EfUserContext(hubFactory, currentUserName);
     }

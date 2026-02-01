@@ -3,9 +3,9 @@
 public sealed class GetInstallationDetailAction : AppAction<int, InstallationDetailModel>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetInstallationDetailAction(CurrentAppUser currentUser, HubFactory hubFactory)
+    public GetInstallationDetailAction(CurrentAppUser currentUser, EfHubDB hubFactory)
     {
         this.currentUser = currentUser;
         this.hubFactory = hubFactory;

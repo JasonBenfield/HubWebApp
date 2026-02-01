@@ -3,10 +3,10 @@
 public sealed class EditUserGroupAction : AppAction<EditUserGroupRequest, EmptyActionResult>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly CurrentAppUser currentUser;
 
-    public EditUserGroupAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser)
+    public EditUserGroupAction(UserGroupFromPath userGroupFromPath, EfHubDB hubFactory, CurrentAppUser currentUser)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;

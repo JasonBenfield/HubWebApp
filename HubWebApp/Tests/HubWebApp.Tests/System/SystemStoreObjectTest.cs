@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core.Fakes;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApiActions;
 using XTI_HubWebAppApiActions.Storage;
 
@@ -255,8 +255,8 @@ internal sealed class SystemStoreObjectTest
         await tester.LoginAs(GetSystemUserName());
         var request = new StoreObjectRequest
         (
-            new StorageName("something"), 
-            "Whatever", 
+            new StorageName("something"),
+            "Whatever",
             TimeSpan.FromMinutes(15)
         )
         .SingleUse();
@@ -297,7 +297,7 @@ internal sealed class SystemStoreObjectTest
     private static AppUserName GetSystemUserName() =>
         new SystemUserName(HubInfo.AppKey, Environment.MachineName).UserName;
 
-    private async Task<AppUser> AddUser(IHubActionTester tester, string userName)
+    private async Task<EfAppUser> AddUser(IHubActionTester tester, string userName)
     {
         var addUserTester = tester.Create(hubApi => hubApi.Users.AddOrUpdateUser);
         await addUserTester.LoginAsAdmin();
@@ -310,7 +310,7 @@ internal sealed class SystemStoreObjectTest
             },
             new ModifierKey("General")
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user;
     }

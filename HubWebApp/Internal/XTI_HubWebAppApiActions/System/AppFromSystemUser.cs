@@ -2,10 +2,10 @@
 
 public sealed class AppFromSystemUser
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly ICurrentUserName currentUserName;
 
-    public AppFromSystemUser(HubFactory hubFactory, ICurrentUserName currentUserName)
+    public AppFromSystemUser(EfHubDB hubFactory, ICurrentUserName currentUserName)
     {
         this.hubFactory = hubFactory;
         this.currentUserName = currentUserName;

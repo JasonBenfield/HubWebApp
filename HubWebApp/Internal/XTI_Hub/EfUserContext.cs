@@ -5,10 +5,10 @@ namespace XTI_Hub;
 
 public sealed class EfUserContext : ISourceUserContext
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly ICurrentUserName currentUserName;
 
-    public EfUserContext(HubFactory hubFactory, ICurrentUserName currentUserName)
+    public EfUserContext(EfHubDB hubFactory, ICurrentUserName currentUserName)
     {
         this.hubFactory = hubFactory;
         this.currentUserName = currentUserName;

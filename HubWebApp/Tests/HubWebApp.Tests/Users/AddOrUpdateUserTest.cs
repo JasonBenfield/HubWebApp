@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApiActions;
 
 namespace HubWebApp.Tests;
@@ -77,7 +77,7 @@ internal sealed class AddOrUpdateUserTest
         var model = CreateAddRequest();
         var modifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(model, modifier);
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var user = await factory.Users.UserByUserName(new AppUserName(model.UserName), ct: default);
         Assert.That(user.ToModel().UserName, Is.EqualTo(new AppUserName(model.UserName)), "Should add user with the given user name");
     }

@@ -3,11 +3,11 @@
 public sealed class AllowAccessAction : AppAction<UserModifierKey, EmptyActionResult>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly CurrentAppUser currentUser;
     private readonly IUserCacheManagement userCacheManagement;
 
-    public AllowAccessAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
+    public AllowAccessAction(UserGroupFromPath userGroupFromPath, EfHubDB hubFactory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;

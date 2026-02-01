@@ -5,7 +5,7 @@ using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_DB;
 using XTI_Hub;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubDB.Extensions;
 
 await Host.CreateDefaultBuilder(args)
@@ -20,7 +20,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddSingleton(sp => sp.GetRequiredService<HubDbToolOptions>().DB);
         services.AddHubDbContextForSqlServer();
         services.AddScoped<DbAdmin<HubDbContext>>();
-        services.AddScoped<HubFactory>();
+        services.AddScoped<EfHubDB>();
         services.AddScoped<InitialSetup>();
         services.AddHostedService<HostedService>();
     })

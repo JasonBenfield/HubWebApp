@@ -5,14 +5,12 @@ namespace XTI_Admin;
 internal sealed class UploadTempLogCommand : ICommand
 {
     private readonly TempToPermanentLog tempToPermanent;
-    private readonly TempToPermanentLogV1 tempToPermanentV1;
     private readonly AdminOptions options;
     private readonly RemoteCommandService remoteCommandService;
 
-    public UploadTempLogCommand(TempToPermanentLog tempToPermanent, TempToPermanentLogV1 tempToPermanentV1, AdminOptions options, RemoteCommandService remoteCommandService)
+    public UploadTempLogCommand(TempToPermanentLog tempToPermanent, AdminOptions options, RemoteCommandService remoteCommandService)
     {
         this.tempToPermanent = tempToPermanent;
-        this.tempToPermanentV1 = tempToPermanentV1;
         this.options = options;
         this.remoteCommandService = remoteCommandService;
     }
@@ -22,7 +20,6 @@ internal sealed class UploadTempLogCommand : ICommand
         if (string.IsNullOrWhiteSpace(options.DestinationMachine))
         {
             await tempToPermanent.Move();
-            await tempToPermanentV1.Move();
         }
         else
         {

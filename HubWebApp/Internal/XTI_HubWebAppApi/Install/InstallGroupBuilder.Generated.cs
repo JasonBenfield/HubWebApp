@@ -18,6 +18,7 @@ public sealed partial class InstallGroupBuilder
         ConfigureInstall = source.AddAction<ConfigureInstallRequest, InstallConfigurationModel>("ConfigureInstall").WithExecution<ConfigureInstallAction>().WithValidation<ConfigureInstallValidation>();
         ConfigureInstallTemplate = source.AddAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>("ConfigureInstallTemplate").WithExecution<ConfigureInstallTemplateAction>().WithValidation<ConfigureInstallTemplateValidation>();
         DeleteInstallConfiguration = source.AddAction<DeleteInstallConfigurationRequest, EmptyActionResult>("DeleteInstallConfiguration").WithExecution<DeleteInstallConfigurationAction>().WithValidation<DeleteInstallConfigurationValidation>();
+        GetInstallConfiguration = source.AddAction<InstallConfigurationIDRequest, InstallConfigurationModel>("GetInstallConfiguration").WithExecution<GetInstallConfigurationAction>();
         GetInstallConfigurations = source.AddAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]>("GetInstallConfigurations").WithExecution<GetInstallConfigurationsAction>().WithValidation<GetInstallConfigurationsValidation>();
         GetVersion = source.AddAction<GetVersionRequest, XtiVersionModel>("GetVersion").WithExecution<GetVersionAction>();
         GetVersions = source.AddAction<GetVersionsRequest, XtiVersionModel[]>("GetVersions").WithExecution<GetVersionsAction>();
@@ -38,6 +39,7 @@ public sealed partial class InstallGroupBuilder
     public AppApiActionBuilder<ConfigureInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
     public AppApiActionBuilder<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel> ConfigureInstallTemplate { get; }
     public AppApiActionBuilder<DeleteInstallConfigurationRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
+    public AppApiActionBuilder<InstallConfigurationIDRequest, InstallConfigurationModel> GetInstallConfiguration { get; }
     public AppApiActionBuilder<GetInstallConfigurationsRequest, InstallConfigurationModel[]> GetInstallConfigurations { get; }
     public AppApiActionBuilder<GetVersionRequest, XtiVersionModel> GetVersion { get; }
     public AppApiActionBuilder<GetVersionsRequest, XtiVersionModel[]> GetVersions { get; }

@@ -7,9 +7,9 @@ namespace XTI_HubWebAppApiActions.Logs;
 public sealed class SessionQueryAction : QueryAction<EmptyRequest, ExpandedSession>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly IHubDbContext db;
+    private readonly EfHubDB db;
 
-    public SessionQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public SessionQueryAction(CurrentAppUser currentUser, EfHubDB db)
     {
         this.currentUser = currentUser;
         this.db = db;

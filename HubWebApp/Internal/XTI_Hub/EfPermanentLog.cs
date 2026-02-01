@@ -6,10 +6,10 @@ namespace XTI_Hub;
 
 public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public EfPermanentLog(HubFactory hubFactory, IClock clock)
+    public EfPermanentLog(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;
@@ -51,7 +51,7 @@ public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
             var session = await hubFactory.Sessions.AddOrUpdate
             (
                 sessionKey: sessionDetailRequest.Session.SessionKey.ID,
-                user: user,
+                efUser: user,
                 timeStarted: sessionDetailRequest.Session.TimeStarted,
                 timeEnded: sessionDetailRequest.Session.TimeEnded,
                 requesterKey: sessionDetailRequest.Session.RequesterKey,

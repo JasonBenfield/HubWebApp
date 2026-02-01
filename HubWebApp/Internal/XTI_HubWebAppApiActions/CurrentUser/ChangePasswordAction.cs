@@ -3,10 +3,10 @@
 public sealed class ChangePasswordAction : AppAction<ChangeCurrentUserPasswordForm, EmptyActionResult>
 {
     private readonly IUserContext userContext;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
 
-    public ChangePasswordAction(IUserContext userContext, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory)
+    public ChangePasswordAction(IUserContext userContext, EfHubDB hubFactory, IHashedPasswordFactory hashedPasswordFactory)
     {
         this.userContext = userContext;
         this.hubFactory = hubFactory;

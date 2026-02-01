@@ -64,6 +64,12 @@ public sealed partial class InstallController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<InstallConfigurationModel>> GetInstallConfiguration([FromBody] InstallConfigurationIDRequest requestData, CancellationToken ct)
+    {
+        return api.Install.GetInstallConfiguration.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<InstallConfigurationModel[]>> GetInstallConfigurations([FromBody] GetInstallConfigurationsRequest requestData, CancellationToken ct)
     {
         return api.Install.GetInstallConfigurations.Execute(requestData, ct);

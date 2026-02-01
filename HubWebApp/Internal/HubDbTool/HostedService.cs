@@ -20,7 +20,7 @@ internal sealed class HostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var scope = sp.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<IHubDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<HubDbContext>();
         var options = scope.ServiceProvider.GetRequiredService<HubDbToolOptions>();
         var xtiEnv = scope.ServiceProvider.GetRequiredService<XtiEnvironment>();
         try

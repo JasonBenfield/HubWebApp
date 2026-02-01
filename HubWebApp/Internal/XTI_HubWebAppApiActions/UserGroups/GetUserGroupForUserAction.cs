@@ -2,10 +2,10 @@
 
 public sealed class GetUserGroupForUserAction : AppAction<AppUserIDRequest, AppUserGroupModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly CurrentAppUser currentUser;
 
-    public GetUserGroupForUserAction(HubFactory hubFactory, CurrentAppUser currentUser)
+    public GetUserGroupForUserAction(EfHubDB hubFactory, CurrentAppUser currentUser)
     {
         this.hubFactory = hubFactory;
         this.currentUser = currentUser;

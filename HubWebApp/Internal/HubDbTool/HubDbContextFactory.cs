@@ -3,8 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_Core;
 using XTI_Core.Extensions;
-using XTI_DB;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubDB.Extensions;
 
 namespace HubDbTool;

@@ -2,9 +2,9 @@
 
 public class GetUserOrAnonAction : AppAction<AppUserNameRequest, AppUserModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUserOrAnonAction(HubFactory hubFactory)
+    public GetUserOrAnonAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

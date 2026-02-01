@@ -52,7 +52,7 @@ public sealed class RegisterAppTest
         await tester.LoginAsAdmin();
         var request = CreateRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var appFactory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         Assert.That(app.ToModel().ID, Is.GreaterThan(0), "Should add unknown app");
     }
@@ -64,7 +64,7 @@ public sealed class RegisterAppTest
         await tester.LoginAsAdmin();
         var request = CreateRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var appFactory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         var version = await app.CurrentVersion(ct: default);
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown, ct: default);
@@ -78,7 +78,7 @@ public sealed class RegisterAppTest
         await tester.LoginAsAdmin();
         var request = CreateRequest(tester);
         await tester.Execute(request);
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var appFactory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await appFactory.Apps.App(AppKey.Unknown, ct: default);
         var version = await app.CurrentVersion(ct: default);
         var group = await version.ResourceGroupByName(ResourceGroupName.Unknown, ct: default);
@@ -299,9 +299,9 @@ public sealed class RegisterAppTest
         return HubActionTester.Create(sp, hubApi => hubApi.Install.RegisterApp);
     }
 
-    private static async Task<App> GetApp(IHubActionTester tester)
+    private static async Task<EfApp> GetApp(IHubActionTester tester)
     {
-        var appFactory = tester.Services.GetRequiredService<HubFactory>();
+        var appFactory = tester.Services.GetRequiredService<EfHubDB>();
         var app = await appFactory.Apps.App(FakeInfo.AppKey, ct: default);
         return app;
     }

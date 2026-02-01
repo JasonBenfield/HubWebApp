@@ -2,20 +2,24 @@
 
 public sealed class RegisterAppAction : AppAction<RegisterAppRequest, AppModel>
 {
-    private readonly HubFactory appFactory;
+    private readonly EfHubDB db;
 
-    public RegisterAppAction(HubFactory appFactory)
+    public RegisterAppAction(EfHubDB db)
     {
-        this.appFactory = appFactory;
+        this.db = db;
     }
 
-    public async Task<AppModel> Execute(RegisterAppRequest model, CancellationToken stoppingToken)
+    public async Task<AppModel> Execute(RegisterAppRequest registerRequest, CancellationToken stoppingToken)
     {
-        var app = await new AppRegistration(appFactory).Run
+        var registration = new AppRegistration(db);
+        var app = await db.Transaction
         (
-            model.AppTemplate,
-            model.VersionKey,
-            stoppingToken
+            () => registration.Run
+            (
+                registerRequest.AppTemplate,
+                registerRequest.VersionKey,
+                stoppingToken
+            )
         );
         return app;
     }

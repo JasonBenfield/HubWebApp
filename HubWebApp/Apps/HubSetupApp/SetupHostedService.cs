@@ -6,7 +6,7 @@ using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Credentials;
 using XTI_Hub;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApi;
 
 namespace HubSetupApp;
@@ -42,25 +42,28 @@ public sealed class SetupHostedService : IHostedService
 
     private static Task AddOrUpdateApp(IServiceScope scope, CancellationToken ct)
     {
-        var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
+        var db = scope.ServiceProvider.GetRequiredService<EfHubDB>();
         var options = scope.ServiceProvider.GetRequiredService<SetupOptions>();
         var clock = scope.ServiceProvider.GetRequiredService<IClock>();
-        return appFactory.Apps.AddOrUpdate
+        return db.Transaction
         (
-            new AppVersionName(options.VersionName),
-            HubInfo.AppKey,
-            clock.Now(),
-            ct
+            () => db.Apps.AddOrUpdate
+            (
+                new AppVersionName(options.VersionName),
+                HubInfo.AppKey,
+                clock.Now(),
+                ct
+            )
         );
     }
 
     private static async Task AddSystemUser(IServiceScope scope, CancellationToken ct)
     {
-        var appFactory = scope.ServiceProvider.GetRequiredService<HubFactory>();
+        var db = scope.ServiceProvider.GetRequiredService<EfHubDB>();
         var hashedPasswordFactory = scope.ServiceProvider.GetRequiredService<IHashedPasswordFactory>();
         var clock = scope.ServiceProvider.GetRequiredService<IClock>();
         var password = Guid.NewGuid().ToString();
-        var systemUser = await appFactory.SystemUsers.AddOrUpdateSystemUser
+        var systemUser = await db.SystemUsers.AddOrUpdateSystemUser
         (
             new SystemUserName(HubInfo.AppKey, Environment.MachineName),
             hashedPasswordFactory.Create(password),

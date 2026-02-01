@@ -90,7 +90,6 @@ internal sealed class TestHost
             }
         );
         host.Services.AddScoped<TempToPermanentLog>();
-        host.Services.AddScoped<TempToPermanentLogV1>();
         host.Services.AddFileSecretCredentials(xtiEnv);
         host.Services.AddScoped<InstallationUserCredentials>();
         host.Services.AddScoped<IInstallationUserCredentials>(sp => sp.GetRequiredService<InstallationUserCredentials>());

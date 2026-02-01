@@ -4,11 +4,11 @@ namespace XTI_HubWebAppApiActions.AppInstall;
 
 public sealed class AddInstallationUserAction : AppAction<AddInstallationUserRequest, AppUserModel>
 {
-    private readonly HubFactory appFactory;
+    private readonly EfHubDB appFactory;
     private readonly IClock clock;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
 
-    public AddInstallationUserAction(HubFactory appFactory, IClock clock, IHashedPasswordFactory hashedPasswordFactory)
+    public AddInstallationUserAction(EfHubDB appFactory, IClock clock, IHashedPasswordFactory hashedPasswordFactory)
     {
         this.appFactory = appFactory;
         this.clock = clock;

@@ -3,9 +3,9 @@
 public sealed class GetUsersWithAnyRoleAction : AppAction<SystemGetUsersWithAnyRoleRequest, AppUserModel[]>
 {
     private readonly AppFromSystemUser appFromSystemUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUsersWithAnyRoleAction(AppFromSystemUser appFromSystemUser, HubFactory hubFactory)
+    public GetUsersWithAnyRoleAction(AppFromSystemUser appFromSystemUser, EfHubDB hubFactory)
     {
         this.appFromSystemUser = appFromSystemUser;
         this.hubFactory = hubFactory;

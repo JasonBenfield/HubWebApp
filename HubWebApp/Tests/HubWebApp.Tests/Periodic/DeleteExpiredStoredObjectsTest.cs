@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core;
 using XTI_Core.Fakes;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
 
@@ -41,7 +41,7 @@ internal sealed class DeleteExpiredStoredObjectsTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
         var hubApi = apiFactory.CreateForSuperUser();

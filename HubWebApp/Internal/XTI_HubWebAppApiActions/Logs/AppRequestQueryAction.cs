@@ -7,9 +7,9 @@ namespace XTI_HubWebAppApiActions.Logs;
 public sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest, ExpandedRequest>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly IHubDbContext db;
+    private readonly EfHubDB db;
 
-    public AppRequestQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public AppRequestQueryAction(CurrentAppUser currentUser, EfHubDB db)
     {
         this.currentUser = currentUser;
         this.db = db;

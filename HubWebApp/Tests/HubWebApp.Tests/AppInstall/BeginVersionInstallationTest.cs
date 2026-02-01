@@ -51,7 +51,7 @@ sealed class BeginVersionInstallationTest
 
     private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
     {
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         return db.Installations.Retrieve()
             .Where(inst => inst.ID == installationID)
             .FirstAsync();

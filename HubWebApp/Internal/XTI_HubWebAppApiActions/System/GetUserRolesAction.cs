@@ -2,9 +2,9 @@
 
 public sealed class GetUserRolesAction : AppAction<GetUserRolesRequest, AppRoleModel[]>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetUserRolesAction(HubFactory hubFactory)
+    public GetUserRolesAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

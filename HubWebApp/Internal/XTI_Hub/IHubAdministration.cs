@@ -33,6 +33,8 @@ public interface IHubAdministration
 
     Task<InstallConfigurationModel[]> InstallConfigurations(GetInstallConfigurationsRequest getRequest, CancellationToken ct);
 
+    Task<InstallConfigurationModel> InstallConfiguration(int configurationID, CancellationToken ct);
+
     Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest configRequest, CancellationToken ct);
 
     Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct);

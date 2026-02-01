@@ -24,7 +24,7 @@ public static class FakeExtensions
         services.AddScoped<IUserContext>(sp => sp.GetRequiredService<ISourceUserContext>());
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddHubDbContextForInMemory();
-        services.AddScoped<HubFactory>();
+        services.AddScoped<EfHubDB>();
         services.AddScoped<InitialSetup>();
         services.AddTransient<AppFromPath>();
         services.AddHubAppApiServices();
@@ -35,7 +35,7 @@ public static class FakeExtensions
         {
             return new HubAppSetup
             (
-                sp.GetRequiredService<HubFactory>(),
+                sp.GetRequiredService<EfHubDB>(),
                 sp.GetRequiredService<HubAppApiFactory>()
             );
         });

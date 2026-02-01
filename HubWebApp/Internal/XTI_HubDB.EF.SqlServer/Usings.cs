@@ -1,0 +1,1 @@
+﻿global using XTI_HubDB.Entities;

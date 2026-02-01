@@ -40,7 +40,7 @@ internal sealed class HubTestHost
         builder.Services.AddConfigurationOptions<DefaultWebAppOptions>();
         builder.Services.AddSingleton(sp => sp.GetRequiredService<DefaultWebAppOptions>().DB);
         builder.Services.AddHubDbContextForSqlServer();
-        builder.Services.AddScoped<HubFactory>();
+        builder.Services.AddScoped<EfHubDB>();
         builder.Services.AddScoped<EfPermanentLog>();
         builder.Services.AddScoped<AppFromPath>();
         builder.Services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();

@@ -4,10 +4,10 @@ namespace XTI_HubWebAppApiActions.Periodic;
 
 public sealed class PurgeLogsAction : AppAction<EmptyRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public PurgeLogsAction(HubFactory hubFactory, IClock clock)
+    public PurgeLogsAction(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;

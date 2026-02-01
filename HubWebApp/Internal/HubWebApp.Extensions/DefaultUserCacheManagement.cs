@@ -9,11 +9,11 @@ namespace HubWebApp.Extensions;
 internal sealed class DefaultUserCacheManagement : IUserCacheManagement
 {
     private readonly ICachedUserContext userContext;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly GenericAppClientFactory appClientFactory;
     private readonly InstallationIDAccessor installationIDAccessor;
 
-    public DefaultUserCacheManagement(ICachedUserContext userContext, HubFactory hubFactory, GenericAppClientFactory appClientFactory, InstallationIDAccessor installationIDAccessor)
+    public DefaultUserCacheManagement(ICachedUserContext userContext, EfHubDB hubFactory, GenericAppClientFactory appClientFactory, InstallationIDAccessor installationIDAccessor)
     {
         this.userContext = userContext;
         this.hubFactory = hubFactory;

@@ -19,6 +19,7 @@ export class InstallGroup extends AppClientGroup {
 		this.ConfigureInstallAction = this.createAction<IConfigureInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
 		this.ConfigureInstallTemplateAction = this.createAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>('ConfigureInstallTemplate', 'Configure Install Template');
 		this.DeleteInstallConfigurationAction = this.createAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
+		this.GetInstallConfigurationAction = this.createAction<IInstallConfigurationIDRequest,IInstallConfigurationModel>('GetInstallConfiguration', 'Get Install Configuration');
 		this.GetInstallConfigurationsAction = this.createAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>('GetInstallConfigurations', 'Get Install Configurations');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
 		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
@@ -37,6 +38,7 @@ export class InstallGroup extends AppClientGroup {
 	readonly ConfigureInstallAction: AppClientAction<IConfigureInstallRequest,IInstallConfigurationModel>;
 	readonly ConfigureInstallTemplateAction: AppClientAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>;
 	readonly DeleteInstallConfigurationAction: AppClientAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>;
+	readonly GetInstallConfigurationAction: AppClientAction<IInstallConfigurationIDRequest,IInstallConfigurationModel>;
 	readonly GetInstallConfigurationsAction: AppClientAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>;
 	readonly GetVersionAction: AppClientAction<IGetVersionRequest,IXtiVersionModel>;
 	readonly GetVersionsAction: AppClientAction<IGetVersionsRequest,IXtiVersionModel[]>;
@@ -71,6 +73,9 @@ export class InstallGroup extends AppClientGroup {
 	}
 	DeleteInstallConfiguration(requestData: IDeleteInstallConfigurationRequest, errorOptions?: IActionErrorOptions) {
 		return this.DeleteInstallConfigurationAction.execute(requestData, errorOptions || {});
+	}
+	GetInstallConfiguration(requestData: IInstallConfigurationIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetInstallConfigurationAction.execute(requestData, errorOptions || {});
 	}
 	GetInstallConfigurations(requestData: IGetInstallConfigurationsRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetInstallConfigurationsAction.execute(requestData, errorOptions || {});

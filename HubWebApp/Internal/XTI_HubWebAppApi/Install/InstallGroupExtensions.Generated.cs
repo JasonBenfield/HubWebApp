@@ -20,6 +20,7 @@ internal static partial class InstallGroupExtensions
         services.AddScoped<ConfigureInstallTemplateValidation>();
         services.AddScoped<DeleteInstallConfigurationAction>();
         services.AddScoped<DeleteInstallConfigurationValidation>();
+        services.AddScoped<GetInstallConfigurationAction>();
         services.AddScoped<GetInstallConfigurationsAction>();
         services.AddScoped<GetInstallConfigurationsValidation>();
         services.AddScoped<GetVersionAction>();

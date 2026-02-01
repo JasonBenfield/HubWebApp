@@ -16,24 +16,7 @@ partial class PermanentLogGroupBuilder
                 (
                     Schedule.EveryDay().At(TimeRange.AllDay())
                 );
-        MoveToPermanentV1
-            .ThrottleRequestLogging().ForOneHour()
-            .ThrottleExceptionLogging().For(5).Minutes()
-            .RunContinuously()
-                .Interval(TimeSpan.FromMinutes(5))
-                .AddSchedule
-                (
-                    Schedule.EveryDay().At(TimeRange.AllDay())
-                );
         Retry
-            .RunContinuously()
-                .DelayAfterStart(TimeSpan.FromMinutes(1))
-                .Interval(TimeSpan.FromHours(1))
-                .AddSchedule
-                (
-                    Schedule.EveryDay().At(TimeRange.AllDay())
-                );
-        RetryV1
             .RunContinuously()
                 .DelayAfterStart(TimeSpan.FromMinutes(1))
                 .Interval(TimeSpan.FromHours(1))

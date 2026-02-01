@@ -7,9 +7,9 @@ namespace XTI_HubWebAppApiActions.UserGroups;
 public sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly IHubDbContext db;
+    private readonly EfHubDB db;
 
-    public UserQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public UserQueryAction(CurrentAppUser currentUser, EfHubDB db)
     {
         this.currentUser = currentUser;
         this.db = db;
@@ -26,26 +26,12 @@ public sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
             .Where
             (
                 ug =>
-                    string.IsNullOrWhiteSpace(model.UserGroupName) || 
+                    string.IsNullOrWhiteSpace(model.UserGroupName) ||
                     ug.GroupName.Equals(model.UserGroupName)
             )
             .Select(ug => ug.ID)
             .ToArray();
-        return from u in db.Users.Retrieve()
-               where userGroupIDs.Contains(u.GroupID)
-               join ug in db.UserGroups.Retrieve()
-               on u.GroupID equals ug.ID
-               select new ExpandedUser
-               {
-                   UserID = u.ID,
-                   UserName = u.UserName,
-                   PersonName = u.Name,
-                   Email = u.Email,
-                   TimeUserAdded = u.TimeAdded,
-                   UserGroupID = u.GroupID,
-                   UserGroupName = ug.DisplayText,
-                   TimeUserDeactivated = u.TimeDeactivated,
-                   IsActive = u.TimeDeactivated.Year == DateTimeOffset.MaxValue.Year
-               };
+        return db.ExpandedUsers.Retrieve()
+               .Where(u => userGroupIDs.Contains(u.UserGroupID));
     }
 }

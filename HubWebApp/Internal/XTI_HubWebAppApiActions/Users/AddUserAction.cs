@@ -5,11 +5,11 @@ namespace XTI_HubWebAppApiActions.UserList;
 public sealed class AddUserAction : AppAction<AddUserForm, AppUserModel>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public AddUserAction(UserGroupFromPath userGroupFromPath, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public AddUserAction(UserGroupFromPath userGroupFromPath, EfHubDB hubFactory, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.hubFactory = hubFactory;

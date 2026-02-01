@@ -31,7 +31,7 @@ internal sealed class AddUserGroupIfNotExistsTest
             GroupName = "Some Group"
         };
         await tester.Execute(addRequest);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userGroups = await db.UserGroups.Retrieve().ToArrayAsync();
         var userGroup = userGroups.FirstOrDefault
         (
@@ -50,7 +50,7 @@ internal sealed class AddUserGroupIfNotExistsTest
         };
         await tester.Execute(addRequest);
         await tester.Execute(addRequest);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userGroups = await db.UserGroups.Retrieve().ToArrayAsync();
         var userGroupName = new AppUserGroupName("Some Group");
         Assert.That
@@ -79,7 +79,7 @@ internal sealed class AddUserGroupIfNotExistsTest
                 GroupName = "Some Other Group"
             }
         );
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userGroups = await db.UserGroups.Retrieve().ToArrayAsync();
         Assert.That
         (

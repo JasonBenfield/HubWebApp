@@ -34,7 +34,7 @@ public static class HubWebAppExtensions
             }
         );
         services.AddHubDbContextForSqlServer();
-        services.AddScoped<HubFactory>();
+        services.AddScoped<EfHubDB>();
         services.AddScoped<EfPermanentLog>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
         services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();

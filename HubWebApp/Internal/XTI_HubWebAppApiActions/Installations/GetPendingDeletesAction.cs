@@ -2,9 +2,9 @@
 
 public sealed class GetPendingDeletesAction : AppAction<GetPendingDeletesRequest, AppVersionInstallationModel[]>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetPendingDeletesAction(HubFactory hubFactory)
+    public GetPendingDeletesAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

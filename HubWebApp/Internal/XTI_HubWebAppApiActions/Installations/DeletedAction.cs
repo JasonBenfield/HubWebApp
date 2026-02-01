@@ -2,9 +2,9 @@
 
 public sealed class DeletedAction : AppAction<GetInstallationRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public DeletedAction(HubFactory hubFactory)
+    public DeletedAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

@@ -2,16 +2,16 @@
 
 public sealed class UnverifiedUser
 {
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
 
-    public UnverifiedUser(HubFactory factory)
+    public UnverifiedUser(EfHubDB factory)
     {
         this.factory = factory;
     }
 
-    public async Task<AppUser> Verify(AppUserName userName, IHashedPassword hashedPassword, CancellationToken ct)
+    public async Task<EfAppUser> Verify(AppUserName userName, IHashedPassword hashedPassword, CancellationToken ct)
     {
-        AppUser user;
+        EfAppUser user;
         var userExists = await factory.Users.UserNameExists(userName, ct);
         if (userExists && !userName.IsAnon())
         {

@@ -7,9 +7,9 @@ namespace XTI_HubWebAppApiActions.Logs;
 public sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, ExpandedLogEntry>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly IHubDbContext db;
+    private readonly EfHubDB db;
 
-    public LogEntryQueryAction(CurrentAppUser currentUser, IHubDbContext db)
+    public LogEntryQueryAction(CurrentAppUser currentUser, EfHubDB db)
     {
         this.currentUser = currentUser;
         this.db = db;

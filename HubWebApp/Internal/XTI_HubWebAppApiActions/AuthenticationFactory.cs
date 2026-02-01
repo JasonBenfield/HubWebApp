@@ -9,13 +9,13 @@ namespace XTI_HubWebAppApiActions;
 public sealed class AuthenticationFactory
 {
     private readonly TempLogSession tempLogSession;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly CachedUserContext cachedUserContext;
     private readonly IClock clock;
     private readonly IServiceProvider sp;
 
-    public AuthenticationFactory(TempLogSession tempLogSession, HubFactory hubFactory, IHashedPasswordFactory hashedPasswordFactory, CachedUserContext cachedUserContext, IClock clock, IServiceProvider sp)
+    public AuthenticationFactory(TempLogSession tempLogSession, EfHubDB hubFactory, IHashedPasswordFactory hashedPasswordFactory, CachedUserContext cachedUserContext, IClock clock, IServiceProvider sp)
     {
         this.tempLogSession = tempLogSession;
         this.hubFactory = hubFactory;

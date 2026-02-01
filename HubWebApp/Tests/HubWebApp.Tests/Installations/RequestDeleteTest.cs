@@ -27,7 +27,7 @@ internal sealed class RequestDeleteTest
         const string qualifiedMachineName = "machine.example.com";
         var installationID = await PrepareInstallation(tester, qualifiedMachineName);
         await tester.Execute(new GetInstallationRequest(installationID));
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var installation = await db.Installations.Retrieve()
             .Where(inst => inst.ID == installationID)
             .FirstAsync();

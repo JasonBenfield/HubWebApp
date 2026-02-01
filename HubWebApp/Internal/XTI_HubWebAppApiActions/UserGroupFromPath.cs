@@ -2,16 +2,16 @@
 
 public sealed class UserGroupFromPath
 {
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
     private readonly IModifierKeyAccessor modifierKeyAccessor;
 
-    public UserGroupFromPath(HubFactory factory, IModifierKeyAccessor modifierKeyAccessor)
+    public UserGroupFromPath(EfHubDB factory, IModifierKeyAccessor modifierKeyAccessor)
     {
         this.factory = factory;
         this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
-    public async Task<AppUserGroup> Value(CancellationToken ct)
+    public async Task<EfAppUserGroup> Value(CancellationToken ct)
     {
         var modKey = modifierKeyAccessor.Value();
         if (modKey.Equals(ModifierKey.Default))

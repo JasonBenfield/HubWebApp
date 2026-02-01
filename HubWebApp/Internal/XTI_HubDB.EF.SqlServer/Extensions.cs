@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using XTI_Core;
 using XTI_DB;
-using XTI_HubDB.EF;
-using XTI_HubDB.Entities;
 
 namespace XTI_HubDB.Extensions;
 
@@ -41,6 +39,5 @@ public static class Extensions
             },
             lifetime
         );
-        services.AddScoped<IHubDbContext>(sp => sp.GetRequiredService<HubDbContext>());
     }
 }

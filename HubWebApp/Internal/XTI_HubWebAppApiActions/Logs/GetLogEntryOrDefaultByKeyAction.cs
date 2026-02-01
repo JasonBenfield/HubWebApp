@@ -2,9 +2,9 @@
 
 public sealed class GetLogEntryOrDefaultByKeyAction : AppAction<string, AppLogEntryModel>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetLogEntryOrDefaultByKeyAction(HubFactory hubFactory)
+    public GetLogEntryOrDefaultByKeyAction(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

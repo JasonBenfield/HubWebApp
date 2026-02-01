@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using XTI_App.Abstractions;
+﻿using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
@@ -140,6 +139,9 @@ public sealed class HcHubAdministration : IHubAdministration
 
     public Task<InstallConfigurationModel[]> InstallConfigurations(GetInstallConfigurationsRequest getRequest, CancellationToken ct) =>
         hubClient.Install.GetInstallConfigurations(getRequest, ct);
+
+    public Task<InstallConfigurationModel> InstallConfiguration(int configurationID, CancellationToken ct) =>
+        hubClient.Install.GetInstallConfiguration(new(configurationID: configurationID), ct);
 
     public Task<InstallConfigurationModel> ConfigureInstall(ConfigureInstallRequest configRequest, CancellationToken ct) =>
         hubClient.Install.ConfigureInstall(configRequest, ct);

@@ -221,6 +221,8 @@ interface IConfigureInstallRequest {
 }
 interface IInstallConfigurationModel {
 	ID: number;
+	RepoOwner: string;
+	RepoName: string;
 	ConfigurationName: string;
 	AppKey: IAppKey;
 	Template: IInstallConfigurationTemplateModel;
@@ -244,6 +246,9 @@ interface IDeleteInstallConfigurationRequest {
 	RepoName: string;
 	ConfigurationName: string;
 	AppKey: IAppKeyRequest;
+}
+interface IInstallConfigurationIDRequest {
+	ConfigurationID: number;
 }
 interface IGetInstallConfigurationsRequest {
 	RepoOwner: string;

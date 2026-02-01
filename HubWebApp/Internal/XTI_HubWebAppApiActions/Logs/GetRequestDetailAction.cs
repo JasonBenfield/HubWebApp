@@ -3,9 +3,9 @@
 public sealed class GetRequestDetailAction : AppAction<int, AppRequestDetailModel>
 {
     private readonly CurrentAppUser currentUser;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public GetRequestDetailAction(CurrentAppUser currentUser, HubFactory hubFactory)
+    public GetRequestDetailAction(CurrentAppUser currentUser, EfHubDB hubFactory)
     {
         this.currentUser = currentUser;
         this.hubFactory = hubFactory;

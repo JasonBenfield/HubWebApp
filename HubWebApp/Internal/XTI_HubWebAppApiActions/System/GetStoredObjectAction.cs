@@ -5,11 +5,11 @@ namespace XTI_HubWebAppApiActions.System;
 public sealed class GetStoredObjectAction : AppAction<GetStoredObjectRequest, string>
 {
     private readonly ICurrentUserName currentUserName;
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
     private readonly HubWebAppOptions options;
 
-    public GetStoredObjectAction(ICurrentUserName currentUserName, HubFactory hubFactory, IClock clock, HubWebAppOptions options)
+    public GetStoredObjectAction(ICurrentUserName currentUserName, EfHubDB hubFactory, IClock clock, HubWebAppOptions options)
     {
         this.currentUserName = currentUserName;
         this.hubFactory = hubFactory;

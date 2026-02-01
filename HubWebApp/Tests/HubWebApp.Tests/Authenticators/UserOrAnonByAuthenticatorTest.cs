@@ -83,7 +83,7 @@ internal sealed class UserOrAnonByAuthenticatorTest
             },
             modifier
         );
-        var factory = tester.Services.GetRequiredService<HubFactory>();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
         var user = await factory.Users.UserByUserName(new AppUserName(userName), ct: default);
         return user.ToModel();
     }

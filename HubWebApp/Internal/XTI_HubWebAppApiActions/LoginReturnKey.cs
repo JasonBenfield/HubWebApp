@@ -4,10 +4,10 @@ namespace XTI_HubWebAppApiActions;
 
 public sealed class LoginReturnKey : ILoginReturnKey
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IClock clock;
 
-    public LoginReturnKey(HubFactory hubFactory, IClock clock)
+    public LoginReturnKey(EfHubDB hubFactory, IClock clock)
     {
         this.hubFactory = hubFactory;
         this.clock = clock;

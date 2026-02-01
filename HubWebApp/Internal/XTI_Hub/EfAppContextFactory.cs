@@ -5,9 +5,9 @@ namespace XTI_Hub;
 
 public sealed class EfAppContextFactory
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
 
-    public EfAppContextFactory(HubFactory hubFactory)
+    public EfAppContextFactory(EfHubDB hubFactory)
     {
         this.hubFactory = hubFactory;
     }

@@ -151,7 +151,7 @@ internal sealed class LoginTest
         await Login(tester, loginResult, returnKey);
         var userContext = tester.Services.GetRequiredService<IUserContext>();
         var firstCachedUser = await userContext.User(ct: default);
-        var db = tester.Services.GetRequiredService<IHubDbContext>();
+        var db = tester.Services.GetRequiredService<HubDbContext>();
         var userEntity = await db.Users.Retrieve().FirstAsync(u => u.ID == user.ID);
         await db.Users.Update(userEntity, u => u.Name = "Changed Name");
         loginResult = await tester.Execute(model);

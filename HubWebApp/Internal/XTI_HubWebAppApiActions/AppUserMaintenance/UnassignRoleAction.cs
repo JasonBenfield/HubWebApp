@@ -3,11 +3,11 @@
 public sealed class UnassignRoleAction : AppAction<UserRoleRequest, EmptyActionResult>
 {
     private readonly UserGroupFromPath userGroupFromPath;
-    private readonly HubFactory factory;
+    private readonly EfHubDB factory;
     private readonly CurrentAppUser currentUser;
     private readonly IUserCacheManagement userCacheManagement;
 
-    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, HubFactory factory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
+    public UnassignRoleAction(UserGroupFromPath userGroupFromPath, EfHubDB factory, CurrentAppUser currentUser, IUserCacheManagement userCacheManagement)
     {
         this.userGroupFromPath = userGroupFromPath;
         this.factory = factory;

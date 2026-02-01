@@ -27,7 +27,7 @@ await Host.CreateDefaultBuilder(args)
         services.AddFileSecretCredentials(xtiEnv);
         services.AddScoped<SystemUserCredentials>();
         services.AddScoped<IHashedPasswordFactory, Md5HashedPasswordFactory>();
-        services.AddScoped<HubFactory>();
+        services.AddScoped<EfHubDB>();
         services.AddScoped<IClock, UtcClock>();
         services.AddScoped<HubAppApiFactory>();
         services.AddScoped(sp => sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser());
@@ -36,7 +36,7 @@ await Host.CreateDefaultBuilder(args)
         (
             sp => new HubAppSetup
             (
-                sp.GetRequiredService<HubFactory>(),
+                sp.GetRequiredService<EfHubDB>(),
                 sp.GetRequiredService<HubAppApiFactory>()
             )
         );

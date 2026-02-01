@@ -2,18 +2,18 @@
 
 public sealed class InitialSetup
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB db;
 
-    public InitialSetup(HubFactory hubFactory)
+    public InitialSetup(EfHubDB db)
     {
-        this.hubFactory = hubFactory;
+        this.db = db;
     }
 
     public async Task Run(CancellationToken ct)
     {
-        await hubFactory.Apps.AddUnknownIfNotFound(ct);
-        var xtiUserGroup = await hubFactory.UserGroups.AddXtiIfNotExists(ct);
+        await db.Transaction(() => db.Apps.AddUnknownIfNotFound(ct));
+        var xtiUserGroup = await db.UserGroups.AddXtiIfNotExists(ct);
         await xtiUserGroup.AddAnonIfNotExists(DateTimeOffset.Now, ct);
-        await hubFactory.UserGroups.AddGeneralIfNotExists(ct);
+        await db.UserGroups.AddGeneralIfNotExists(ct);
     }
 }

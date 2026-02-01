@@ -11,7 +11,7 @@ internal sealed class HubSetupTest
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current, ct: default);
-        var factory = sp.GetRequiredService<HubFactory>();
+        var factory = sp.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         Assert.That(hubApp.ToModel().AppKey, Is.EqualTo(HubInfo.AppKey), "Should add hub app");
     }
@@ -22,7 +22,7 @@ internal sealed class HubSetupTest
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current, ct: default);
-        var factory = sp.GetRequiredService<HubFactory>();
+        var factory = sp.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName, ct: default);
@@ -35,7 +35,7 @@ internal sealed class HubSetupTest
         var sp = await Setup();
         var hubSetup = sp.GetRequiredService<HubAppSetup>();
         await hubSetup.Run(AppVersionKey.Current, ct: default);
-        var factory = sp.GetRequiredService<HubFactory>();
+        var factory = sp.GetRequiredService<EfHubDB>();
         var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
         var modCategoryName = HubInfo.ModCategories.Apps;
         var modCategory = await hubApp.ModCategory(modCategoryName, ct: default);

@@ -645,7 +645,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppSessionDetailModel[]> GetSessionDetails(IServiceProvider sp)
     {
         var clock = sp.GetRequiredService<IClock>();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var sessions = await hubFactory.Sessions.SessionsByTimeRange
         (
             new DateTimeRange(clock.Now().AddDays(-1), clock.Now().AddDays(1)),
@@ -665,7 +665,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppSessionDetailModel> GetSessionDetail(IServiceProvider sp, SessionKey sessionKey)
     {
         var clock = sp.GetRequiredService<IClock>();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var session = await hubFactory.Sessions.Session(sessionKey.ID, ct: default);
         var sessionDetail = await GetSessionDetail(sp, session);
         return sessionDetail;
@@ -673,7 +673,7 @@ internal sealed class LogSessionDetailsTest
 
     private static async Task<AppRequestDetailModel[]> GetRequestDetails(IServiceProvider sp, AppSessionDetailModel sessionDetail)
     {
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var session = await hubFactory.Sessions.Session(sessionDetail.Session.ID, ct: default);
         var requests = await session.Requests(ct: default);
         var requestDetails = new List<AppRequestDetailModel>();
@@ -687,7 +687,7 @@ internal sealed class LogSessionDetailsTest
 
     private static async Task<AppRequestDetailModel> GetRequestDetail(IServiceProvider sp, string requestKey)
     {
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var request = await hubFactory.Requests.RequestOrDefault(requestKey, ct: default);
         var requestDetail = await GetRequestDetail(sp, request);
         return requestDetail;
@@ -696,7 +696,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppLogEntryModel[]> GetLogEntries(IServiceProvider sp, string requestKey)
     {
         var clock = sp.GetRequiredService<IClock>();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var request = await hubFactory.Requests.RequestOrPlaceHolder(requestKey, clock.Now(), ct: default);
         var logEntries = await request.Events(ct: default);
         return logEntries.Select(le => le.ToModel()).ToArray();
@@ -705,7 +705,7 @@ internal sealed class LogSessionDetailsTest
     private static async Task<AppLogEntryDetailModel> GetLogEntryDetail(IServiceProvider sp, string logEntryKey)
     {
         var clock = sp.GetRequiredService<IClock>();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var logEntry = await hubFactory.LogEntries.LogEntryOrDefaultByKey(logEntryKey, ct: default);
         var logEntryDetail = await GetLogEntryDetail(sp, logEntry);
         return logEntryDetail;
@@ -715,7 +715,7 @@ internal sealed class LogSessionDetailsTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var hubFactory = sp.GetRequiredService<HubFactory>();
+        var hubFactory = sp.GetRequiredService<EfHubDB>();
         var userGroup = await hubFactory.UserGroups.GetGeneral(ct: default);
         await userGroup.AddOrUpdate(new AppUserName("test.user"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
         await userGroup.AddOrUpdate(new AppUserName("Someone"), new FakeHashedPassword("Password12345"), DateTime.Now, ct: default);
@@ -809,19 +809,19 @@ internal sealed class LogSessionDetailsTest
         };
     }
 
-    private static Task<AppSessionDetailModel> GetSessionDetail(IServiceProvider sp, AppSession session)
+    private static Task<AppSessionDetailModel> GetSessionDetail(IServiceProvider sp, EfAppSession session)
     {
         var tester = HubActionTester.Create(sp, api => api.Logs.GetSessionDetail);
         return tester.Execute(session.ID);
     }
 
-    private static Task<AppRequestDetailModel> GetRequestDetail(IServiceProvider sp, AppRequest request)
+    private static Task<AppRequestDetailModel> GetRequestDetail(IServiceProvider sp, EfAppRequest request)
     {
         var tester = HubActionTester.Create(sp, api => api.Logs.GetRequestDetail);
         return tester.Execute(request.ToModel().ID);
     }
 
-    private static Task<AppLogEntryDetailModel> GetLogEntryDetail(IServiceProvider sp, LogEntry logEntry) =>
+    private static Task<AppLogEntryDetailModel> GetLogEntryDetail(IServiceProvider sp, EfLogEntry logEntry) =>
         GetLogEntryDetail(sp, logEntry.ToModel().ID);
 
     private static Task<AppLogEntryDetailModel> GetLogEntryDetail(IServiceProvider sp, int logEntryID)

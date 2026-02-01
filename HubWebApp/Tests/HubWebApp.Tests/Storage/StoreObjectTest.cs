@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_Core.Fakes;
-using XTI_HubDB.EF;
+using XTI_HubDB.Entities;
 using XTI_HubWebAppApiActions;
 using XTI_HubWebAppApiActions.Storage;
 
@@ -297,8 +297,8 @@ internal sealed class StoreObjectTest
         await tester.LoginAsAdmin();
         var request = new StoreObjectRequest
         (
-            new StorageName("something"), 
-            "Whatever", 
+            new StorageName("something"),
+            "Whatever",
             TimeSpan.FromMinutes(15)
         )
         .SingleUse();

@@ -2,10 +2,10 @@
 
 public sealed class SetUserAccessAction : AppAction<SetUserAccessRequest, EmptyActionResult>
 {
-    private readonly HubFactory hubFactory;
+    private readonly EfHubDB hubFactory;
     private readonly IUserCacheManagement userCacheManagement;
 
-    public SetUserAccessAction(HubFactory hubFactory, IUserCacheManagement userCacheManagement)
+    public SetUserAccessAction(EfHubDB hubFactory, IUserCacheManagement userCacheManagement)
     {
         this.hubFactory = hubFactory;
         this.userCacheManagement = userCacheManagement;
