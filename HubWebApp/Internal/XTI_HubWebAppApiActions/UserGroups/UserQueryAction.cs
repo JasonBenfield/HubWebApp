@@ -21,7 +21,7 @@ public sealed class UserQueryAction : QueryAction<UserGroupKey, ExpandedUser>
         var userPermissions = await user.GetUserGroupPermissions(ct);
         var userGroupModels = userPermissions
             .Where(p => p.CanView)
-            .Select(p => p.UserGroup.ToModel());
+            .Select(p => p.EfUserGroup.ToModel());
         var userGroupIDs = userGroupModels
             .Where
             (

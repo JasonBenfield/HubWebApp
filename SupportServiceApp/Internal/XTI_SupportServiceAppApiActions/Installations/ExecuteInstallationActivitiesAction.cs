@@ -7,13 +7,13 @@ using XTI_Installation;
 
 namespace XTI_SupportServiceAppApi.Installations;
 
-public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
+public sealed class ExecuteInstallationActivitiesAction : AppAction<EmptyRequest, EmptyActionResult>
 {
     private readonly HubAppClient hubClient;
     private readonly XtiFolder xtiFolder;
     private readonly XtiEnvironment xtiEnv;
 
-    public DeleteAction(HubAppClient hubClient, XtiFolder xtiFolder, XtiEnvironment xtiEnv)
+    public ExecuteInstallationActivitiesAction(HubAppClient hubClient, XtiFolder xtiFolder, XtiEnvironment xtiEnv)
     {
         this.hubClient = hubClient;
         this.xtiFolder = xtiFolder;
@@ -28,12 +28,16 @@ public sealed class DeleteAction : AppAction<EmptyRequest, EmptyActionResult>
         {
             machineNames.Add($"{Environment.MachineName}.{domain}");
         }
-        var pendingDeletes = await hubClient.Installations.GetPendingDeletes
+        var installationActivities = await hubClient.Installations.GetInstallationActivities
         (
-            new GetPendingDeletesRequest(machineNames.ToArray()),
+            new GetInstallationActivitiesRequest(machineNames.ToArray()),
             ct
         );
-        foreach (var pendingDelete in pendingDeletes)
+        foreach(var pendingInstallation in installationActivities.Installations)
+        {
+
+        }
+        foreach (var pendingDelete in installationActivities.Deletions)
         {
             await hubClient.Installations.BeginDelete(new GetInstallationRequest(pendingDelete.Installation.ID), ct);
             var versionKey = pendingDelete.Installation.IsCurrent

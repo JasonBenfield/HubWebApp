@@ -6,25 +6,25 @@ namespace XTI_Hub;
 
 public sealed class EfAppUserGroup
 {
-    private readonly EfHubDB factory;
-    private readonly UserGroupEntity entity;
+    private readonly EfHubDB db;
+    private readonly UserGroupEntity userGroup;
 
     internal EfAppUserGroup(EfHubDB factory, UserGroupEntity entity)
     {
-        this.factory = factory;
-        this.entity = entity;
+        this.db = factory;
+        this.userGroup = entity;
     }
 
-    internal int ID { get => entity.ID; }
+    internal int ID { get => userGroup.ID; }
 
-    public Task<EfAppUser> User(int id, CancellationToken ct) => factory.Users.User(this, id, ct);
+    public Task<EfAppUser> User(int id, CancellationToken ct) => db.Users.User(this, id, ct);
 
-    public Task<EfAppUser> UserOrAnon(AppUserName userName, CancellationToken ct) => factory.Users.UserOrAnon(this, userName, ct);
+    public Task<EfAppUser> UserOrAnon(AppUserName userName, CancellationToken ct) => db.Users.UserOrAnon(this, userName, ct);
 
-    public Task<EfAppUser[]> Users(CancellationToken ct) => factory.Users.Users(this, ct);
+    public Task<EfAppUser[]> Users(CancellationToken ct) => db.Users.Users(this, ct);
 
     internal Task<EfAppUser> AddAnonIfNotExists(DateTimeOffset timeAdded, CancellationToken ct) =>
-        factory.Users.AddAnonIfNotExists(this, timeAdded, ct);
+        db.Users.AddAnonIfNotExists(this, timeAdded, ct);
 
     public Task<EfAppUser> AddOrUpdate
     (
@@ -50,14 +50,14 @@ public sealed class EfAppUserGroup
         EmailAddress email,
         DateTimeOffset timeAdded,
         CancellationToken ct
-    ) => factory.Users.AddOrUpdate(this, userName, password, name, email, timeAdded, ct);
+    ) => db.Users.AddOrUpdate(this, userName, password, name, email, timeAdded, ct);
 
     public AppUserGroupModel ToModel() =>
         new AppUserGroupModel
         (
-            entity.ID,
-            new AppUserGroupName(entity.DisplayText),
-            new ModifierKey(entity.DisplayText)
+            userGroup.ID,
+            new AppUserGroupName(userGroup.DisplayText),
+            new ModifierKey(userGroup.DisplayText)
         );
 
     public override string ToString() => $"{nameof(EfAppUserGroup)} {ToModel()}";

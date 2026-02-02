@@ -10,6 +10,7 @@ public sealed class InstallStatus : NumericValue, IEquatable<InstallStatus>
             : base(new InstallStatus(0, nameof(NotSet)))
         {
             NotSet = DefaultValue;
+            InstallRequested = Add(new InstallStatus(5, nameof(InstallRequested)));
             InstallPending = Add(new InstallStatus(10, nameof(InstallPending)));
             InstallStarted = Add(new InstallStatus(20, nameof(InstallStarted)));
             Installed = Add(new InstallStatus(30, nameof(Installed)));
@@ -19,6 +20,7 @@ public sealed class InstallStatus : NumericValue, IEquatable<InstallStatus>
         }
 
         public InstallStatus NotSet { get; }
+        public InstallStatus InstallRequested { get; }
         public InstallStatus InstallPending { get; }
         public InstallStatus InstallStarted { get; }
         public InstallStatus Installed { get; }
@@ -27,7 +29,7 @@ public sealed class InstallStatus : NumericValue, IEquatable<InstallStatus>
         public InstallStatus Deleted { get; }
     }
 
-    public static readonly InstallStatuses Values = new InstallStatuses();
+    public static readonly InstallStatuses Values = new();
 
     private InstallStatus(int value, string displayText)
         : base(value, displayText)

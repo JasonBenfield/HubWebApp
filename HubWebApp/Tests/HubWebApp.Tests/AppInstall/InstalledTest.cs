@@ -25,12 +25,12 @@ sealed class InstalledTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
         await tester.Execute
         (
-            new GetInstallationRequest(newInstResult.CurrentInstallationID)
+            new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID)
         );
-        var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
+        var currentInstallation = await GetInstallation(tester, newInstResult.GetCurrentInstallation().Installation.ID);
         Assert.That
         (
             InstallStatus.Values.Value(currentInstallation?.Status ?? 0),
@@ -60,12 +60,12 @@ sealed class InstalledTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult.VersionInstallationID));
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult.GetVersionInstallation().Installation.ID));
         await tester.Execute
         (
-            new GetInstallationRequest(newInstResult.VersionInstallationID)
+            new GetInstallationRequest(newInstResult.GetVersionInstallation().Installation.ID)
         );
-        var versionInstallation = await GetInstallation(tester, newInstResult.VersionInstallationID);
+        var versionInstallation = await GetInstallation(tester, newInstResult.GetVersionInstallation().Installation.ID);
         Assert.That
         (
             InstallStatus.Values.Value(versionInstallation?.Status ?? 0),
@@ -106,13 +106,13 @@ sealed class InstalledTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult2.CurrentInstallationID));
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult2.GetCurrentInstallation().Installation.ID));
         await tester.Execute
         (
-            new GetInstallationRequest(newInstResult2.CurrentInstallationID)
+            new GetInstallationRequest(newInstResult2.GetCurrentInstallation().Installation.ID)
         );
         var factory = tester.Services.GetRequiredService<EfHubDB>();
-        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.GetCurrentInstallation().Installation.ID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.Deleted), "Should delete previous current installation");
     }
 
@@ -150,13 +150,13 @@ sealed class InstalledTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult2.CurrentInstallationID));
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult2.GetCurrentInstallation().Installation.ID));
         await tester.Execute
         (
-            new GetInstallationRequest(newInstResult2.CurrentInstallationID)
+            new GetInstallationRequest(newInstResult2.GetCurrentInstallation().Installation.ID)
         );
         var factory = tester.Services.GetRequiredService<EfHubDB>();
-        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.CurrentInstallationID, ct: default);
+        var installation1 = await factory.Installations.InstallationOrDefault(newInstResult1.GetCurrentInstallation().Installation.ID, ct: default);
         Assert.That(installation1.ToModel().Status, Is.EqualTo(InstallStatus.Values.InstallPending), "Should not delete previous current installation of a different app");
     }
 

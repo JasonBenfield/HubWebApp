@@ -6,6 +6,6 @@ internal static partial class InstallationsGroupExtensions
 {
     internal static void AddInstallationsServices(this IServiceCollection services)
     {
-        services.AddScoped<DeleteAction>();
+        services.AddScoped<ExecuteInstallationActivitiesAction>();
     }
 }

@@ -6,98 +6,92 @@ namespace XTI_Hub;
 
 public sealed class EfModifierCategories
 {
-    private readonly EfHubDB factory;
+    private readonly EfHubDB db;
 
-    internal EfModifierCategories(EfHubDB factory)
+    internal EfModifierCategories(EfHubDB db)
     {
-        this.factory = factory;
+        this.db = db;
     }
 
     internal async Task<EfModifierCategory> AddOrUpdate(EfApp app, ModifierCategoryName name, CancellationToken ct)
     {
-        var record = await factory.Context
-            .ModifierCategories
-            .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.Name == name.Value, ct);
-        if (record == null)
+        var category = await db.Context.ModifierCategories.Retrieve()
+            .Where(c => c.AppID == app.ID && c.Name == name.Value)
+            .FirstOrDefaultAsync(ct);
+        if (category == null)
         {
-            record = await AddModCategory(app, name, ct);
+            category = await AddModCategory(app, name, ct);
         }
         else
         {
-            await factory.Context.ModifierCategories.Update
+            await db.Context.ModifierCategories.Update
             (
-                record, 
+                category,
                 c => c.DisplayText = name.DisplayText,
                 ct
             );
         }
-        return factory.ModCategory(record);
+        return db.ModCategory(category);
     }
 
     private async Task<ModifierCategoryEntity> AddModCategory(EfApp app, ModifierCategoryName name, CancellationToken ct)
     {
-        var record = new ModifierCategoryEntity
+        var category = new ModifierCategoryEntity
         {
             AppID = app.ID,
             Name = name.Value
         };
-        await factory.Context.ModifierCategories.Create(record, ct);
-        return record;
+        await db.Context.ModifierCategories.Create(category, ct);
+        return category;
     }
 
     public async Task<EfModifierCategory> Category(int id, CancellationToken ct)
     {
-        var record = await factory.Context
-            .ModifierCategories
-            .Retrieve()
-            .FirstOrDefaultAsync(c => c.ID == id, ct);
-        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found"));
+        var category = await db.Context.ModifierCategories.Retrieve()
+            .Where(c => c.ID == id)
+            .FirstOrDefaultAsync(ct);
+        return db.ModCategory(category ?? throw new Exception($"Category {id} not found"));
     }
 
     internal Task<EfModifierCategory[]> Categories(EfApp app, CancellationToken ct) =>
-        factory.Context
-            .ModifierCategories
-            .Retrieve()
+        db.Context.ModifierCategories.Retrieve()
             .Where(c => c.AppID == app.ID)
             .OrderBy(c => c.Name)
-            .Select(c => factory.ModCategory(c))
+            .Select(c => db.ModCategory(c))
             .ToArrayAsync(ct);
 
     internal async Task<EfModifierCategory> Category(EfApp app, int id, CancellationToken ct)
     {
-        var record = await factory.Context
-            .ModifierCategories
-            .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.ID == id, ct);
-        return factory.ModCategory(record ?? throw new Exception($"Category {id} not found for app '{app.ToModel().AppKey.Format()}"));
+        var category = await db.Context.ModifierCategories.Retrieve()
+            .Where(c => c.AppID == app.ID && c.ID == id)
+            .FirstOrDefaultAsync(ct);
+        return db.ModCategory(category ?? throw new Exception($"Category {id} not found for app '{app.ToModel().AppKey.Format()}"));
     }
 
     internal async Task<EfModifierCategory> CategoryOrDefault(EfApp app, ModifierCategoryName name, CancellationToken ct)
     {
-        var record = await GetCategory(app, name, ct);
-        if (record == null)
+        var category = await GetCategory(app, name, ct);
+        if (category == null)
         {
-            record = await GetCategory(app, ModifierCategoryName.Default, ct);
+            category = await GetCategory(app, ModifierCategoryName.Default, ct);
         }
-        return factory.ModCategory
+        return db.ModCategory
         (
-            record ?? throw new Exception($"Category '{name.DisplayText}' not found")
+            category ?? throw new Exception($"Category '{name.DisplayText}' not found")
         );
     }
 
     internal async Task<EfModifierCategory> Category(EfApp app, ModifierCategoryName name, CancellationToken ct)
     {
-        var record = await GetCategory(app, name, ct);
-        return factory.ModCategory
+        var category = await GetCategory(app, name, ct);
+        return db.ModCategory
         (
-            record ?? throw new Exception($"Category '{name.DisplayText}' not found")
+            category ?? throw new Exception($"Category '{name.DisplayText}' not found")
         );
     }
 
     private Task<ModifierCategoryEntity?> GetCategory(EfApp app, ModifierCategoryName name, CancellationToken ct) =>
-        factory.Context
-            .ModifierCategories
-            .Retrieve()
-            .FirstOrDefaultAsync(c => c.AppID == app.ID && c.Name == name.Value, ct);
+        db.Context.ModifierCategories.Retrieve()
+            .Where(c => c.AppID == app.ID && c.Name == name.Value)
+            .FirstOrDefaultAsync(ct);
 }

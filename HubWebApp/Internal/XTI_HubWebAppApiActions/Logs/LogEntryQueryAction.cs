@@ -20,12 +20,12 @@ public sealed class LogEntryQueryAction : QueryAction<LogEntryQueryRequest, Expa
         var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
-            .Select(p => p.UserGroup.ToModel().ID)
+            .Select(p => p.EfUserGroup.ToModel().ID)
             .ToArray();
         var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
-            .Select(p => p.App.ToModel().ID)
+            .Select(p => p.EfApp.ToModel().ID)
             .ToArray();
         var query = db.ExpandedLogEntries.Retrieve()
             .Where(e => userGroupIDs.Contains(e.UserGroupID) && appIDs.Contains(e.AppID));

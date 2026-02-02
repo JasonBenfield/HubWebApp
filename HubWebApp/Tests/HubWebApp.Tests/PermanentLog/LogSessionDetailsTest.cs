@@ -213,7 +213,7 @@ internal sealed class LogSessionDetailsTest
                             TimeStarted = clock.Now(),
                             TimeEnded = timeEnded,
                             ActualCount = 5,
-                            InstallationID = installation.CurrentInstallationID,
+                            InstallationID = installation.GetCurrentInstallation().Installation.ID,
                             RequestData = "Request Data",
                             ResultData = "Result Data"
                         }
@@ -227,7 +227,7 @@ internal sealed class LogSessionDetailsTest
         Assert.That(requestDetails[0].Request.Path, Is.EqualTo("/Fake/Current"), "Should add request");
         Assert.That(requestDetails[0].Request.TimeStarted, Is.EqualTo(clock.Now()), "Should add request");
         Assert.That(requestDetails[0].Request.TimeEnded, Is.EqualTo(timeEnded), "Should add request");
-        Assert.That(requestDetails[0].Installation.ID, Is.EqualTo(installation.CurrentInstallationID), "Should add request");
+        Assert.That(requestDetails[0].Installation.ID, Is.EqualTo(installation.GetCurrentInstallation().Installation.ID), "Should add request");
         Assert.That(requestDetails[0].Request.ActualCount, Is.EqualTo(5), "Should add request");
         Assert.That(requestDetails[0].RequestData, Is.EqualTo("Request Data"), "Should add request");
         Assert.That(requestDetails[0].ResultData, Is.EqualTo("Result Data"), "Should add request");
@@ -636,7 +636,7 @@ internal sealed class LogSessionDetailsTest
             TimeStarted = clock.Now(),
             TimeEnded = timeEnded,
             ActualCount = 5,
-            InstallationID = installation.CurrentInstallationID
+            InstallationID = installation.GetCurrentInstallation().Installation.ID
         };
     }
 
@@ -780,7 +780,7 @@ internal sealed class LogSessionDetailsTest
                 siteName: ""
             )
         );
-        await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.CurrentInstallationID));
+        await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
         return newInstResult;
     }
 

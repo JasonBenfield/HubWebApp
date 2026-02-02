@@ -11,8 +11,8 @@ public sealed partial class InstallationsGroupBuilder
         this.source = source;
         BeginDelete = source.AddAction<GetInstallationRequest, EmptyActionResult>("BeginDelete").WithExecution<BeginDeleteAction>();
         Deleted = source.AddAction<GetInstallationRequest, EmptyActionResult>("Deleted").WithExecution<DeletedAction>();
+        GetInstallationActivities = source.AddAction<GetInstallationActivitiesRequest, InstallationActivitiesResult>("GetInstallationActivities").WithExecution<GetInstallationActivitiesAction>();
         GetInstallationDetail = source.AddAction<int, InstallationDetailModel>("GetInstallationDetail").WithExecution<GetInstallationDetailAction>();
-        GetPendingDeletes = source.AddAction<GetPendingDeletesRequest, AppVersionInstallationModel[]>("GetPendingDeletes").WithExecution<GetPendingDeletesAction>();
         Index = source.AddAction<InstallationQueryRequest, WebViewResult>("Index").WithExecution<IndexAction>();
         Installation = source.AddAction<InstallationViewRequest, WebViewResult>("Installation").WithExecution<InstallationPage>();
         RequestDelete = source.AddAction<GetInstallationRequest, EmptyActionResult>("RequestDelete").WithExecution<RequestDeleteAction>();
@@ -22,8 +22,8 @@ public sealed partial class InstallationsGroupBuilder
     partial void Configure();
     public AppApiActionBuilder<GetInstallationRequest, EmptyActionResult> BeginDelete { get; }
     public AppApiActionBuilder<GetInstallationRequest, EmptyActionResult> Deleted { get; }
+    public AppApiActionBuilder<GetInstallationActivitiesRequest, InstallationActivitiesResult> GetInstallationActivities { get; }
     public AppApiActionBuilder<int, InstallationDetailModel> GetInstallationDetail { get; }
-    public AppApiActionBuilder<GetPendingDeletesRequest, AppVersionInstallationModel[]> GetPendingDeletes { get; }
     public AppApiActionBuilder<InstallationQueryRequest, WebViewResult> Index { get; }
     public AppApiActionBuilder<InstallationViewRequest, WebViewResult> Installation { get; }
     public AppApiActionBuilder<GetInstallationRequest, EmptyActionResult> RequestDelete { get; }

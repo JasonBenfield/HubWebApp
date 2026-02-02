@@ -20,7 +20,7 @@ public sealed class InstallationQueryAction : QueryAction<InstallationQueryReque
         var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
-            .Select(p => p.App.ToModel().ID)
+            .Select(p => p.EfApp.ToModel().ID)
             .ToArray();
         var query = db.ExpandedInstallations.Retrieve()
             .Where(installation => appIDs.Contains(installation.AppID));

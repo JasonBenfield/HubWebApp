@@ -21,12 +21,12 @@ public sealed class AppRequestQueryAction : QueryAction<AppRequestQueryRequest, 
         var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
-            .Select(p => p.UserGroup.ToModel().ID)
+            .Select(p => p.EfUserGroup.ToModel().ID)
             .ToArray();
         var appPermissions = await currentUser.GetAppPermissions(ct);
         var appIDs = appPermissions
             .Where(p => p.CanView)
-            .Select(p => p.App.ToModel().ID)
+            .Select(p => p.EfApp.ToModel().ID)
             .ToArray();
         var query = db.ExpandedRequests.Retrieve()
             .Where(r => userGroupIDs.Contains(r.UserGroupID) && appIDs.Contains(r.AppID));

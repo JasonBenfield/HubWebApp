@@ -15,7 +15,7 @@ sealed class BeginVersionInstallationTest
         const string qualifiedMachineName = "machine.example.com";
         var newInstResult = await NewInstallation
         (
-            tester, 
+            tester,
             new NewInstallationRequest
             (
                 versionName: appVersion.Version.ToModel().VersionName,
@@ -25,8 +25,8 @@ sealed class BeginVersionInstallationTest
                 siteName: ""
             )
         );
-        await tester.Execute(new GetInstallationRequest(newInstResult.VersionInstallationID));
-        var versionInstallation = await GetInstallation(tester, newInstResult.VersionInstallationID);
+        await tester.Execute(new GetInstallationRequest(newInstResult.GetVersionInstallation().Installation.ID));
+        var versionInstallation = await GetInstallation(tester, newInstResult.GetVersionInstallation().Installation.ID);
         Assert.That
         (
             InstallStatus.Values.Value(versionInstallation.Status),

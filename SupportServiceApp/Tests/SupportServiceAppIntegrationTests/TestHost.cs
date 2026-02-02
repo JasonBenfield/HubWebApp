@@ -62,14 +62,6 @@ internal sealed class TestHost
         host.Services.AddSupportAppApiServices();
         host.Services.AddScoped<AppApiFactory, SupportAppApiFactory>();
         host.Services.AddScoped(sp => (SupportAppApi)sp.GetRequiredService<IAppApi>());
-        host.Services.AddScoped<ITempLogsV1>(sp =>
-        {
-            var dataProtector = sp.GetDataProtector("XTI_TempLog");
-            var hostEnv = sp.GetRequiredService<IHostEnvironment>();
-            var appKey = sp.GetRequiredService<AppKey>();
-            var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
-            return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
-        });
         host.Services.AddScoped<EfPermanentLog>();
         host.Services.AddScoped<HcPermanentLog>();
         host.Services.AddScoped

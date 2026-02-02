@@ -62,9 +62,9 @@ internal sealed class RequestDeleteTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        await Installed(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        return newInstResult.CurrentInstallationID;
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        await Installed(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        return newInstResult.GetCurrentInstallation().Installation.ID;
     }
 
     private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)

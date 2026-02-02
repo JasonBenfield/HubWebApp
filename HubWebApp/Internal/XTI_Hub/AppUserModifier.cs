@@ -5,30 +5,30 @@ namespace XTI_Hub;
 
 public sealed class AppUserModifier
 {
-    private readonly EfHubDB factory;
-    private readonly EfAppUser appUser;
+    private readonly EfHubDB db;
+    private readonly EfAppUser efUser;
 
-    internal AppUserModifier(EfHubDB factory, EfAppUser appUser, EfModifier modifier)
+    internal AppUserModifier(EfHubDB db, EfAppUser efUser, EfModifier efModifier)
     {
-        this.factory = factory;
-        this.appUser = appUser;
-        this.Modifier = modifier;
+        this.db = db;
+        this.efUser = efUser;
+        EfModifier = efModifier;
     }
 
-    public EfModifier Modifier { get; }
+    public EfModifier EfModifier { get; }
 
     public async Task AssignRole(EfAppRole role, CancellationToken ct)
     {
         var any = await GetUserRole(role).AnyAsync(ct);
         if (!any)
         {
-            var record = new AppUserRoleEntity
+            var userRole = new AppUserRoleEntity
             {
-                UserID = appUser.ID,
+                UserID = efUser.ID,
                 RoleID = role.ID,
-                ModifierID = Modifier.ID
+                ModifierID = EfModifier.ID
             };
-            await factory.Context.UserRoles.Create(record, ct);
+            await db.Context.UserRoles.Create(userRole, ct);
         }
     }
 
@@ -37,35 +37,35 @@ public sealed class AppUserModifier
         var userRole = await GetUserRole(role).FirstOrDefaultAsync(ct);
         if (userRole != null)
         {
-            await factory.Context.UserRoles.Delete(userRole, ct);
+            await db.Context.UserRoles.Delete(userRole, ct);
         }
     }
 
     private IQueryable<AppUserRoleEntity> GetUserRole(EfAppRole role) =>
-        factory.Context.UserRoles.Retrieve()
+        db.Context.UserRoles.Retrieve()
             .Where
             (
-                ur => ur.UserID == appUser.ID
-                    && ur.ModifierID == Modifier.ID
+                ur => ur.UserID == efUser.ID
+                    && ur.ModifierID == EfModifier.ID
                     && ur.RoleID == role.ID
             );
 
     public Task<EfAppRole[]> ExplicitlyUnassignedRoles(CancellationToken ct) => 
-        factory.Roles.RolesNotAssignedToUser(appUser, Modifier, ct);
+        db.Roles.RolesNotAssignedToUser(efUser, EfModifier, ct);
 
     public async Task<EfAppRole[]> AssignedRoles(CancellationToken ct)
     {
-        var roles = await ExplicitlyAssignedRoles(ct);
-        if (!roles.Any() && !Modifier.IsDefault())
+        var efRoles = await ExplicitlyAssignedRoles(ct);
+        if (!efRoles.Any() && !EfModifier.IsDefault())
         {
-            var defaultModifier = await Modifier.DefaultModifier(ct);
-            roles = await new AppUserModifier(factory, appUser, defaultModifier).AssignedRoles(ct);
+            var efDefaultModifier = await EfModifier.DefaultModifier(ct);
+            efRoles = await new AppUserModifier(db, efUser, efDefaultModifier).AssignedRoles(ct);
         }
-        return roles;
+        return efRoles;
     }
 
     public Task<EfAppRole[]> ExplicitlyAssignedRoles(CancellationToken ct) => 
-        factory.Roles.RolesAssignedToUser(appUser, Modifier, ct);
+        db.Roles.RolesAssignedToUser(efUser, EfModifier, ct);
 
 
 }

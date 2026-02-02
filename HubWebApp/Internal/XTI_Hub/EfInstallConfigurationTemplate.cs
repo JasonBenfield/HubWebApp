@@ -5,12 +5,12 @@ namespace XTI_Hub;
 
 public sealed class EfInstallConfigurationTemplate
 {
-    private readonly EfHubDB hubFactory;
+    private readonly EfHubDB db;
     private readonly InstallConfigurationTemplateEntity template;
 
-    internal EfInstallConfigurationTemplate(EfHubDB hubFactory, InstallConfigurationTemplateEntity template)
+    internal EfInstallConfigurationTemplate(EfHubDB db, InstallConfigurationTemplateEntity template)
     {
-        this.hubFactory = hubFactory;
+        this.db = db;
         this.template = template;
     }
 
@@ -23,7 +23,7 @@ public sealed class EfInstallConfigurationTemplate
         string siteName,
         CancellationToken ct
     ) =>
-        hubFactory.Context.InstallConfigurationTemplates.Update
+        db.Context.InstallConfigurationTemplates.Update
         (
             template,
             t =>

@@ -1,6 +1,5 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
-using XTI_Credentials;
+﻿using XTI_Core;
+using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
@@ -9,28 +8,26 @@ namespace XTI_Installation;
 public sealed class InstallServiceAppProcess : InstallAppProcess
 {
     private readonly XtiEnvironment xtiEnv;
-    private readonly XtiFolder xtiFolder;
     private readonly ISecretCredentialsFactory credentialsFactory;
 
-    public InstallServiceAppProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, ISecretCredentialsFactory credentialsFactory)
+    internal InstallServiceAppProcess(XtiFolder xtiFolder, IHubAdministration hubAdministration, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
+        : base(xtiFolder, hubAdministration)
     {
         this.xtiEnv = xtiEnv;
-        this.xtiFolder = xtiFolder;
         this.credentialsFactory = credentialsFactory;
     }
 
-    public async Task Run(string publishedAppDir, InstallConfigurationModel installConfig, AppVersionKey installVersionKey, CancellationToken ct)
+    protected override async Task _Run(string publishedAppDir, AppVersionInstallationModel versionInstallation, CancellationToken ct)
     {
         WinServiceInstallation? winService = null;
         var startService = false;
-        if (installVersionKey.IsCurrent())
+        if (versionInstallation.IsCurrent())
         {
-            winService = new WinServiceInstallation(xtiFolder, xtiEnv, installConfig.AppKey);
+            winService = new WinServiceInstallation(xtiFolder, xtiEnv, versionInstallation.App.AppKey);
             if (!winService.Exists())
             {
-                Console.WriteLine($"Creating service '{installConfig.AppKey.Name.DisplayText}'");
-                var secretCredentialsValue = await RetrieveCredentials("ServiceApp");
-                await winService.Create(secretCredentialsValue.UserName, secretCredentialsValue.Password);
+                var credentials = await credentialsFactory.Create("ServiceApp").Value();
+                await winService.Create(credentials.UserName, credentials.Password);
                 startService = true;
             }
             else if (winService.IsRunning())
@@ -42,18 +39,14 @@ public sealed class InstallServiceAppProcess : InstallAppProcess
         await new CopyToInstallDirProcess(xtiFolder).Run
         (
             publishedAppDir,
-            installConfig.AppKey,
-            installVersionKey,
+            versionInstallation.App.AppKey,
+            versionInstallation.GetVersionKey(),
             true
         );
         if (winService != null && startService)
         {
-            Console.WriteLine($"Starting service '{installConfig.AppKey.Name.DisplayText}'");
             winService.StartService();
         }
     }
-
-    private Task<CredentialValue> RetrieveCredentials(string credentialKey) =>
-        credentialsFactory.Create(credentialKey).Value();
 
 }

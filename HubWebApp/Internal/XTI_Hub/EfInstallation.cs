@@ -46,13 +46,13 @@ public sealed class EfInstallation
     public Task<EfAppRequest[]> MostRecentRequests(int howMany, CancellationToken ct) =>
         db.Requests.MostRecentForInstallation(this, howMany, ct);
 
-    public InstallationModel ToModel() => 
+    public InstallationModel ToModel() =>
         new InstallationModel
         (
-            ID, 
-            Status(), 
-            installation.IsCurrent, 
-            installation.Domain, 
+            ID,
+            Status(),
+            installation.IsCurrent,
+            installation.Domain,
             installation.SiteName
         );
 

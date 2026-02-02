@@ -6,6 +6,9 @@ partial class InstallationsGroupBuilder
     {
         BeginDelete.WithAllowed(HubInfo.Roles.InstallationManager);
         Deleted.WithAllowed(HubInfo.Roles.InstallationManager);
-        GetPendingDeletes.WithAllowed(HubInfo.Roles.InstallationManager);
+        GetInstallationActivities
+            .ThrottleRequestLogging().ForOneHour()
+            .ThrottleExceptionLogging().For(15).Minutes()
+            .WithAllowed(HubInfo.Roles.InstallationManager);
     }
 }

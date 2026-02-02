@@ -6,11 +6,11 @@ namespace XTI_Hub;
 
 public sealed class EfInstallConfigurationTemplates
 {
-    private readonly EfHubDB hubFactory;
+    private readonly EfHubDB db;
 
-    public EfInstallConfigurationTemplates(EfHubDB hubFactory)
+    public EfInstallConfigurationTemplates(EfHubDB db)
     {
-        this.hubFactory = hubFactory;
+        this.db = db;
     }
 
     public async Task<EfInstallConfigurationTemplate> AddOrUpdateTemplate
@@ -23,7 +23,7 @@ public sealed class EfInstallConfigurationTemplates
     )
     {
         EfInstallConfigurationTemplate installConfigurationTemplate;
-        var templateEntity = await hubFactory.Context.InstallConfigurationTemplates.Retrieve()
+        var templateEntity = await db.Context.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.TemplateName == templateName)
             .FirstOrDefaultAsync(ct);
         if (templateEntity == null)
@@ -35,12 +35,12 @@ public sealed class EfInstallConfigurationTemplates
                 Domain = domain,
                 SiteName = siteName
             };
-            await hubFactory.Context.InstallConfigurationTemplates.Create(templateEntity, ct);
-            installConfigurationTemplate = new EfInstallConfigurationTemplate(hubFactory, templateEntity);
+            await db.Context.InstallConfigurationTemplates.Create(templateEntity, ct);
+            installConfigurationTemplate = new EfInstallConfigurationTemplate(db, templateEntity);
         }
         else
         {
-            installConfigurationTemplate = new EfInstallConfigurationTemplate(hubFactory, templateEntity);
+            installConfigurationTemplate = new EfInstallConfigurationTemplate(db, templateEntity);
             await installConfigurationTemplate.Update(destinationMachineName, domain, siteName, ct);
         }
         return installConfigurationTemplate;
@@ -48,24 +48,24 @@ public sealed class EfInstallConfigurationTemplates
 
     internal async Task<EfInstallConfigurationTemplate> Template(int id, CancellationToken ct)
     {
-        var template = await hubFactory.Context.InstallConfigurationTemplates.Retrieve()
+        var template = await db.Context.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.ID == id)
             .FirstOrDefaultAsync(ct);
         return new EfInstallConfigurationTemplate
         (
-            hubFactory, 
+            db, 
             template ?? throw new Exception($"Template {id} was not found.")
         );
     }
 
     public async Task<EfInstallConfigurationTemplate> Template(string templateName, CancellationToken ct)
     {
-        var template = await hubFactory.Context.InstallConfigurationTemplates.Retrieve()
+        var template = await db.Context.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.TemplateName == templateName)
             .FirstOrDefaultAsync(ct);
         return new EfInstallConfigurationTemplate
         (
-            hubFactory,
+            db,
             template ?? throw new Exception($"Template '{templateName}' was not found.")
         );
     }

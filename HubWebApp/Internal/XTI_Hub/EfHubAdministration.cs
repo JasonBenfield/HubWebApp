@@ -109,18 +109,25 @@ public sealed class EfHubAdministration : IHubAdministration
 
     public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
     {
-        var version = await db.Versions.VersionByName(versionName, AppVersionKey.Current, ct);
-        var app = await db.Apps.App(appKey, ct);
-        await app.AddVersionIfNotFound(version, ct);
-        var appVersion = version.App(app);
-        var installLocation = await db.InstallLocations.AddIfNotFound(machineName, ct);
-        var currentInstallation = await installLocation.NewCurrentInstallation(appVersion, domain, siteName, clock.Now(), ct);
-        EfInstallation? versionInstallation = null;
+        var efVersion = await db.Versions.VersionByName(versionName, AppVersionKey.Current, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        await efApp.AddVersionIfNotFound(efVersion, ct);
+        var efAppVersion = efVersion.App(efApp);
+        var efInstallLocation = await db.InstallLocations.AddIfNotFound(machineName, ct);
+        var efCurrentInstallation = await efInstallLocation.NewCurrentInstallation(efAppVersion, domain, siteName, clock.Now(), ct);
+        EfInstallation? efVersionInstallation = null;
         if (xtiEnv.IsProduction())
         {
-            versionInstallation = await installLocation.NewVersionInstallation(appVersion, domain, siteName, clock.Now(), ct);
+            efVersionInstallation = await efInstallLocation.NewVersionInstallation(efAppVersion, domain, siteName, clock.Now(), ct);
         }
-        return new NewInstallationResult(currentInstallation.ID, versionInstallation?.ID ?? 0);
+        return new NewInstallationResult
+        (
+            CurrentInstallation: efCurrentInstallation.ToModel(),
+            VersionInstallation: efVersionInstallation?.ToModel() ?? new(),
+            Location: efInstallLocation.ToModel(),
+            App: efApp.ToModel(),
+            Version: efAppVersion.Version.ToModel()
+        );
     }
 
     public async Task BeginInstall(int installationID, CancellationToken ct)

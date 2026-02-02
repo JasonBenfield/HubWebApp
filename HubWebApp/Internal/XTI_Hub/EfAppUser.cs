@@ -234,7 +234,7 @@ public sealed class EfAppUser
         {
             permission = new AppPermission
             (
-                App: efApp,
+                EfApp: efApp,
                 CanView: userRoles
                     .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.AppViewerRoles)),
                 CanEdit: userRoles
@@ -294,7 +294,7 @@ public sealed class EfAppUser
         {
             userGroupPermission = new AppUserGroupPermission
             (
-                UserGroup: efUserGroup,
+                EfUserGroup: efUserGroup,
                 CanView: userRoles
                     .Any(ur => ur.Name.EqualsAny(HubInfo.Roles.UserViewerRoles)),
                 CanEdit: userRoles

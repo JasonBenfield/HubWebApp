@@ -7,10 +7,10 @@ public sealed partial class InstallationsGroup : AppApiGroupWrapper
 {
     internal InstallationsGroup(AppApiGroup source, InstallationsGroupBuilder builder) : base(source)
     {
-        Delete = builder.Delete.Build();
+        ExecuteInstallationActivities = builder.ExecuteInstallationActivities.Build();
         Configure();
     }
 
     partial void Configure();
-    public AppApiAction<EmptyRequest, EmptyActionResult> Delete { get; }
+    public AppApiAction<EmptyRequest, EmptyActionResult> ExecuteInstallationActivities { get; }
 }

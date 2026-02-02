@@ -22,15 +22,15 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int requestData, CancellationToken ct)
+    public Task<ResultContainer<InstallationActivitiesResult>> GetInstallationActivities([FromBody] GetInstallationActivitiesRequest requestData, CancellationToken ct)
     {
-        return api.Installations.GetInstallationDetail.Execute(requestData, ct);
+        return api.Installations.GetInstallationActivities.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppVersionInstallationModel[]>> GetPendingDeletes([FromBody] GetPendingDeletesRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int requestData, CancellationToken ct)
     {
-        return api.Installations.GetPendingDeletes.Execute(requestData, ct);
+        return api.Installations.GetInstallationDetail.Execute(requestData, ct);
     }
 
     public async Task<IActionResult> Index(InstallationQueryRequest requestData, CancellationToken ct)

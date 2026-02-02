@@ -2,6 +2,7 @@
 using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Credentials;
+using XTI_Hub;
 using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
@@ -9,52 +10,50 @@ namespace XTI_Installation;
 
 public sealed class InstallWebAppProcess : InstallAppProcess
 {
-    private readonly XtiFolder xtiFolder;
     private readonly XtiEnvironment xtiEnv;
     private readonly ISecretCredentialsFactory credentialsFactory;
 
-    public InstallWebAppProcess(XtiFolder xtiFolder, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
+    internal InstallWebAppProcess(XtiFolder xtiFolder, IHubAdministration hubAdministration, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
+        : base(xtiFolder, hubAdministration)
     {
-        this.xtiFolder = xtiFolder;
         this.xtiEnv = xtiEnv;
         this.credentialsFactory = credentialsFactory;
     }
 
-    public async Task Run(string publishedAppDir, InstallConfigurationModel installConfig, AppVersionKey installVersionKey, CancellationToken ct)
+    protected override async Task _Run(string publishedAppDir, AppVersionInstallationModel versionInstallation, CancellationToken ct)
     {
-        Console.WriteLine($"Installing {installConfig.AppKey.Name.DisplayText} {installVersionKey.DisplayText} to website {installConfig.Template.SiteName}");
-        var appOfflineFile = new AppOfflineFile(xtiFolder, installConfig.AppKey, installVersionKey);
-        await PrepareIis(installConfig.AppKey, installVersionKey, installConfig.Template.SiteName);
+        var versionKey = versionInstallation.GetVersionKey();
+        var appOfflineFile = new AppOfflineFile(xtiFolder, versionInstallation.App.AppKey, versionKey);
+        await PrepareIis(versionInstallation.App.AppKey, versionKey, versionInstallation.Installation.SiteName);
         try
         {
-            DeleteExistingWebFiles(installConfig.AppKey, installVersionKey);
+            DeleteExistingWebFiles(versionInstallation.App.AppKey, versionKey);
         }
         catch
         {
             await Task.Delay(TimeSpan.FromSeconds(15), ct);
-            await RetryDelete(installConfig, installVersionKey, ct);
+            await RetryDelete(versionInstallation.App.AppKey, versionKey, ct);
         }
-        await new CopyToInstallDirProcess(xtiFolder).Run(publishedAppDir, installConfig.AppKey, installVersionKey, false);
+        await new CopyToInstallDirProcess(xtiFolder).Run(publishedAppDir, versionInstallation.App.AppKey, versionKey, false);
         appOfflineFile.Delete();
     }
 
-    private async Task RetryDelete(InstallConfigurationModel adminInstOptions, AppVersionKey installVersionKey, CancellationToken ct)
+    private async Task RetryDelete(AppKey appKey, AppVersionKey installVersionKey, CancellationToken ct)
     {
         try
         {
-            DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+            DeleteExistingWebFiles(appKey, installVersionKey);
         }
         catch
         {
             await Task.Delay(TimeSpan.FromSeconds(15), ct);
-            DeleteExistingWebFiles(adminInstOptions.AppKey, installVersionKey);
+            DeleteExistingWebFiles(appKey, installVersionKey);
         }
     }
 
     private void DeleteExistingWebFiles(AppKey appKey, AppVersionKey installVersionKey)
     {
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
-        Console.WriteLine($"Deleting files in '{installDir}'");
         var files = Directory.GetFiles(installDir)
             .Where(f => !Path.GetFileName(f).Equals(AppOfflineFile.FileName, StringComparison.OrdinalIgnoreCase));
         foreach (var file in files)
@@ -69,11 +68,9 @@ public sealed class InstallWebAppProcess : InstallAppProcess
 
     private async Task PrepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
     {
-        var secretCredentialsValue = await retrieveCredentials("WebApp");
+        var credentials = await credentialsFactory.Create("WebApp").Value();
         var iisWebSite = new IisWebSite(xtiFolder, xtiEnv, appKey, versionKey, siteName);
-        await iisWebSite.CreateOrUpdate(secretCredentialsValue.UserName, secretCredentialsValue.Password);
+        await iisWebSite.CreateOrUpdate(credentials.UserName, credentials.Password);
     }
 
-    private Task<CredentialValue> retrieveCredentials(string credentialKey) =>
-        credentialsFactory.Create(credentialKey).Value();
 }

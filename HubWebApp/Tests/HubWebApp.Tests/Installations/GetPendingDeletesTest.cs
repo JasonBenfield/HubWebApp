@@ -11,7 +11,7 @@ internal sealed class GetPendingDeletesTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                new GetPendingDeletesRequest(qualifiedMachineName),
+                new GetInstallationActivitiesRequest(qualifiedMachineName),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.InstallationManager
             );
@@ -23,7 +23,7 @@ internal sealed class GetPendingDeletesTest
         var tester = await Setup();
         const string machineName = "machine.example.com";
         var installationID = await PrepareDeletePendingInstallation(tester, machineName);
-        var installations = await tester.Execute(new GetPendingDeletesRequest(machineName));
+        var installations = await tester.Execute(new GetInstallationActivitiesRequest(machineName));
         Assert.That
         (
             installations.Select(inst => inst.Installation.ID),
@@ -41,7 +41,7 @@ internal sealed class GetPendingDeletesTest
         var appVersion = await hubApp.CurrentVersion(ct: default);
         var newInstResult = await NewInstallation
         (
-            tester, 
+            tester,
             new NewInstallationRequest
             (
                 versionName: appVersion.Version.ToModel().VersionName,
@@ -51,10 +51,10 @@ internal sealed class GetPendingDeletesTest
                 siteName: ""
             )
         );
-        var installationID = newInstResult.CurrentInstallationID;
+        var installationID = newInstResult.GetCurrentInstallation().Installation.ID;
         await StartInstallation(tester, new GetInstallationRequest(installationID));
         await Installed(tester, new GetInstallationRequest(installationID));
-        var installations = await tester.Execute(new GetPendingDeletesRequest(machineName));
+        var installations = await tester.Execute(new GetInstallationActivitiesRequest(machineName));
         Assert.That
         (
             installations.Length,
@@ -63,14 +63,14 @@ internal sealed class GetPendingDeletesTest
         );
     }
 
-    private async Task<HubActionTester<GetPendingDeletesRequest, AppVersionInstallationModel[]>> Setup()
+    private async Task<HubActionTester<GetInstallationActivitiesRequest, AppVersionInstallationModel[]>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
         return HubActionTester.Create(services, hubApi => hubApi.Installations.GetPendingDeletes);
     }
 
-    private async Task<int> PrepareDeletePendingInstallation(HubActionTester<GetPendingDeletesRequest, AppVersionInstallationModel[]> tester, string qualifiedMachineName)
+    private async Task<int> PrepareDeletePendingInstallation(HubActionTester<GetInstallationActivitiesRequest, AppVersionInstallationModel[]> tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion(ct: default);
@@ -86,10 +86,10 @@ internal sealed class GetPendingDeletesTest
                 siteName: ""
             )
         );
-        await StartInstallation(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        await Installed(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        await RequestDelete(tester, new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        return newInstResult.CurrentInstallationID;
+        await StartInstallation(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        await Installed(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        await RequestDelete(tester, new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        return newInstResult.GetCurrentInstallation().Installation.ID;
     }
 
     private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)

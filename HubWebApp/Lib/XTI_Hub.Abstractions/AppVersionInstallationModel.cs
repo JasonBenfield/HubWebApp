@@ -9,6 +9,11 @@ public sealed record AppVersionInstallationModel(AppModel App, XtiVersionModel V
 	{
 	}
 
+    public AppVersionKey GetVersionKey() =>
+        IsCurrent() ? AppVersionKey.Current : Version.VersionKey;
+
+    public bool IsCurrent() => Installation.IsCurrent;
+
 	public bool IsWebApp() => App.AppKey.Type.Equals(AppType.Values.WebApp);
 
     public bool IsServiceApp() => App.AppKey.Type.Equals(AppType.Values.ServiceApp);

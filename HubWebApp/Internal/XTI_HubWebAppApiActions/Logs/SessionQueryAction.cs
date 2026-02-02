@@ -20,7 +20,7 @@ public sealed class SessionQueryAction : QueryAction<EmptyRequest, ExpandedSessi
         var userGroupPermissions = await currentUser.GetUserGroupPermissions(ct);
         var userGroupIDs = userGroupPermissions
             .Where(p => p.CanView)
-            .Select(p => p.UserGroup.ToModel().ID)
+            .Select(p => p.EfUserGroup.ToModel().ID)
             .ToArray();
         return db.ExpandedSessions.Retrieve().Where(s => userGroupIDs.Contains(s.UserGroupID));
     }

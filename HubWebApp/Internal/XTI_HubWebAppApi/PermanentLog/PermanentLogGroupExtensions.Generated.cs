@@ -6,7 +6,6 @@ internal static partial class PermanentLogGroupExtensions
 {
     internal static void AddPermanentLogServices(this IServiceCollection services)
     {
-        services.AddScoped<LogBatchAction>();
         services.AddScoped<LogSessionDetailsAction>();
     }
 }

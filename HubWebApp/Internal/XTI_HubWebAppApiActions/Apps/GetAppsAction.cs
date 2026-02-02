@@ -16,7 +16,7 @@ public sealed class GetAppsAction : AppAction<EmptyRequest, AppModel[]>
         var allowedApps = new List<AppModel>();
         foreach (var permission in permissions.Where(p => p.CanView))
         {
-            var appModel = permission.App.ToModel();
+            var appModel = permission.EfApp.ToModel();
             if (!appModel.AppKey.Equals(AppKey.Unknown))
             {
                 allowedApps.Add(appModel);

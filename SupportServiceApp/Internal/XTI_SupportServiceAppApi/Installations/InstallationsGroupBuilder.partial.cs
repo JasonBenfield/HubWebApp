@@ -7,8 +7,11 @@ partial class InstallationsGroupBuilder
 {
     partial void Configure()
     {
-        Delete .RunContinuously()
-            .Interval(TimeSpan.FromHours(1))
+        ExecuteInstallationActivities
+            .ThrottleRequestLogging().ForOneHour()
+            .ThrottleExceptionLogging().For(15).Minutes()
+            .RunContinuously()
+            .Interval(TimeSpan.FromMinutes(1))
             .AddSchedule
             (
                 Schedule.EveryDay().At(TimeRange.AllDay())

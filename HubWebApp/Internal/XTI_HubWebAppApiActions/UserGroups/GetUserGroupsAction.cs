@@ -14,7 +14,7 @@ public sealed class GetUserGroupsAction : AppAction<EmptyRequest, AppUserGroupMo
         var user = await currentUser.Value(stoppingToken);
         var permissions = await user.GetUserGroupPermissions(stoppingToken);
         var userGroupModels = permissions.Where(p => p.CanView)
-            .Select(p => p.UserGroup.ToModel())
+            .Select(p => p.EfUserGroup.ToModel())
             .OrderBy(ug => ug.GroupName.DisplayText)
             .ToArray();
         return userGroupModels;

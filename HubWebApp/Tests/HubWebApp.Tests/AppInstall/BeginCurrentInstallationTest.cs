@@ -26,8 +26,8 @@ sealed class BeginCurrentInstallationTest
                 siteName: ""
             )
         );
-        await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
+        await tester.Execute(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        var currentInstallation = await GetInstallation(tester, newInstResult.GetCurrentInstallation().Installation.ID);
         Assert.That
         (
             InstallStatus.Values.Value(currentInstallation.Status),
@@ -100,8 +100,8 @@ sealed class BeginCurrentInstallationTest
                 siteName: ""
             )
         );
-        await tester.Execute(new GetInstallationRequest(newInstResult.CurrentInstallationID));
-        var currentInstallation = await GetInstallation(tester, newInstResult.CurrentInstallationID);
+        await tester.Execute(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
+        var currentInstallation = await GetInstallation(tester, newInstResult.GetCurrentInstallation().Installation.ID);
         var installationVersion = await GetVersion(tester, currentInstallation);
         Assert.That
         (

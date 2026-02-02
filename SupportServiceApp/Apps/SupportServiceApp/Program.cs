@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XTI_App.Api;
-using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubAppClient.ServiceApp.Extensions;
@@ -10,8 +8,6 @@ using XTI_HubDB.Extensions;
 using XTI_PermanentLog;
 using XTI_PermanentLog.Implementations;
 using XTI_SupportServiceAppApi;
-using XTI_TempLog;
-using XTI_TempLog.Extensions;
 
 var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
     .ConfigureServices((hostContext, services) =>
@@ -19,12 +15,6 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
         services.AddSupportAppApiServices();
         services.AddScoped<AppApiFactory, SupportAppApiFactory>();
         services.AddScoped(sp => (SupportAppApi)sp.GetRequiredService<IAppApi>());
-        services.AddScoped<ITempLogsV1>(sp =>
-        {
-            var dataProtector = sp.GetDataProtector("XTI_TempLog");
-            var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
-            return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
-        });
         services.AddConfigurationOptions<SupportServiceAppOptions>();
         services.AddHubDbContextForSqlServer();
         services.AddScoped<EfHubDB>();

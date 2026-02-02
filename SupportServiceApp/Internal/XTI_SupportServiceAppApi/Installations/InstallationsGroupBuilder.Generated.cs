@@ -9,12 +9,12 @@ public sealed partial class InstallationsGroupBuilder
     internal InstallationsGroupBuilder(AppApiGroup source)
     {
         this.source = source;
-        Delete = source.AddAction<EmptyRequest, EmptyActionResult>("Delete").WithExecution<DeleteAction>();
+        ExecuteInstallationActivities = source.AddAction<EmptyRequest, EmptyActionResult>("ExecuteInstallationActivities").WithExecution<ExecuteInstallationActivitiesAction>();
         Configure();
     }
 
     partial void Configure();
-    public AppApiActionBuilder<EmptyRequest, EmptyActionResult> Delete { get; }
+    public AppApiActionBuilder<EmptyRequest, EmptyActionResult> ExecuteInstallationActivities { get; }
 
     public InstallationsGroup Build() => new InstallationsGroup(source, this);
 }

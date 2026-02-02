@@ -181,7 +181,6 @@ public sealed class CommandFactory
             command = new DecryptTempLogCommand
             (
                 scopes.GetRequiredService<IClock>(),
-                scopes.GetRequiredService<ITempLogsV1>(),
                 scopes.GetRequiredService<TempLog>(),
                 scopes.GetRequiredService<XtiFolder>()
             );

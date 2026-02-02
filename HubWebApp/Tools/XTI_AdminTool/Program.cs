@@ -119,13 +119,6 @@ await Host.CreateDefaultBuilder(args)
             );
             services.AddScoped(sp => new SlnFolder(slnDir));
             services.AddScoped<SelectedAppKeys>();
-            services.AddScoped<ITempLogsV1>(sp =>
-            {
-                var dataProtector = sp.GetDataProtector("XTI_TempLog");
-                var appDataFolder = sp.GetRequiredService<XtiFolder>().AppDataFolder();
-                return new DiskTempLogsV1(dataProtector, appDataFolder.Path(), "TempLogs");
-            });
-
             services.AddScoped(sp =>
             {
                 var xtiFolder = sp.GetRequiredService<XtiFolder>();

@@ -5,43 +5,43 @@ namespace XTI_Hub;
 
 public sealed class EfInstallLocation
 {
-    private readonly EfHubDB hubFactory;
-    private readonly InstallLocationEntity entity;
+    private readonly EfHubDB db;
+    private readonly InstallLocationEntity location;
 
-    internal EfInstallLocation(EfHubDB hubFactory, InstallLocationEntity entity)
+    internal EfInstallLocation(EfHubDB db, InstallLocationEntity location)
     {
-        this.hubFactory = hubFactory;
-        this.entity = entity;
-        ID = entity.ID;
+        this.db = db;
+        this.location = location;
+        ID = location.ID;
     }
 
     public int ID { get; }
 
-    public string QualifiedName() => entity.QualifiedMachineName;
+    public string QualifiedName() => location.QualifiedMachineName;
 
     public string MachineName()
     {
-        var dotIndex = entity.QualifiedMachineName.IndexOf(".");
+        var dotIndex = location.QualifiedMachineName.IndexOf(".");
         if (dotIndex > -1)
         {
-            return entity.QualifiedMachineName.Substring(0, dotIndex);
+            return location.QualifiedMachineName.Substring(0, dotIndex);
         }
-        return entity.QualifiedMachineName;
+        return location.QualifiedMachineName;
     }
 
     public Task<bool> HasCurrentInstallation(EfAppVersion appVersion, CancellationToken ct) =>
-        hubFactory.Installations.HasCurrentInstallation(this, appVersion, ct);
+        db.Installations.HasCurrentInstallation(this, appVersion, ct);
 
     public Task<EfInstallation> CurrentInstallation(EfAppVersion appVersion, CancellationToken ct) =>
-        hubFactory.Installations.CurrentInstallation(this, appVersion, ct);
+        db.Installations.CurrentInstallation(this, appVersion, ct);
 
     public Task<EfInstallation> NewCurrentInstallation(EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct) =>
-        hubFactory.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded, ct);
+        db.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded, ct);
 
     public Task<EfInstallation> NewVersionInstallation(EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct) =>
-        hubFactory.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded, ct);
+        db.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded, ct);
 
-    public InstallLocationModel ToModel() => new InstallLocationModel(entity.ID, entity.QualifiedMachineName);
+    public InstallLocationModel ToModel() => new InstallLocationModel(location.ID, location.QualifiedMachineName);
 
-    public override string ToString() => $"{nameof(EfInstallLocation)} {entity.ID}";
+    public override string ToString() => $"{nameof(EfInstallLocation)} {location.ID}";
 }

@@ -5,34 +5,33 @@ namespace XTI_Hub;
 
 public sealed class EfAppRole
 {
-    private readonly EfHubDB factory;
-    private readonly AppRoleEntity record;
+    private readonly EfHubDB db;
+    private readonly AppRoleEntity role;
 
-    internal EfAppRole(EfHubDB factory, AppRoleEntity record)
+    internal EfAppRole(EfHubDB db, AppRoleEntity role)
     {
-        this.factory = factory;
-        this.record = record;
-        ID = this.record.ID;
+        this.db = db;
+        this.role = role;
     }
 
-    internal int ID { get; }
+    internal int ID { get => role.ID; }
 
-    public bool IsDeactivated() => record.TimeDeactivated < DateTimeOffset.MaxValue;
+    public bool IsDeactivated() => role.TimeDeactivated < DateTimeOffset.MaxValue;
 
-    internal Task Deactivate(DateTimeOffset timeDeactivated, CancellationToken ct)
-        => UpdateTimeDeactivated(timeDeactivated, ct);
+    internal Task Deactivate(DateTimeOffset timeDeactivated, CancellationToken ct) =>
+        UpdateTimeDeactivated(timeDeactivated, ct);
 
     internal Task Activate(CancellationToken ct) => UpdateTimeDeactivated(DateTimeOffset.MaxValue, ct);
 
-    private Task UpdateTimeDeactivated(DateTimeOffset timeDeactivated, CancellationToken ct) => 
-        factory.Context.Roles.Update
+    private Task UpdateTimeDeactivated(DateTimeOffset timeDeactivated, CancellationToken ct) =>
+        db.Context.Roles.Update
         (
-            record, 
+            role,
             r => r.TimeDeactivated = timeDeactivated,
             ct
         );
 
-    public Task<EfApp> App(CancellationToken ct) => factory.Apps.App(record.AppID, ct);
+    public Task<EfApp> App(CancellationToken ct) => db.Apps.App(role.AppID, ct);
 
     public bool IsDenyAccess() => NameEquals(AppRoleName.DenyAccess);
 
@@ -44,7 +43,7 @@ public sealed class EfAppRole
         Name = GetRoleName()
     };
 
-    private AppRoleName GetRoleName() => new AppRoleName(record.DisplayText);
+    private AppRoleName GetRoleName() => new AppRoleName(role.DisplayText);
 
     public override string ToString() => $"{nameof(EfAppRole)} {ID}";
 }

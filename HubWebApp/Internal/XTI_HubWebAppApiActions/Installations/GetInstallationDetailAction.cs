@@ -13,22 +13,22 @@ public sealed class GetInstallationDetailAction : AppAction<int, InstallationDet
 
     public async Task<InstallationDetailModel> Execute(int installationID, CancellationToken stoppingToken)
     {
-        var installation = await hubFactory.Installations.InstallationOrDefault(installationID, stoppingToken);
-        var installLocation = await installation.Location(stoppingToken);
-        var requests = await installation.MostRecentRequests(1, stoppingToken);
-        var appVersion = await installation.AppVersion(stoppingToken);
-        var appPermission = await currentUser.GetPermissionsToApp(appVersion.App, stoppingToken);
+        var efInstallation = await hubFactory.Installations.InstallationOrDefault(installationID, stoppingToken);
+        var efLocation = await efInstallation.Location(stoppingToken);
+        var efRequests = await efInstallation.MostRecentRequests(1, stoppingToken);
+        var efAppVersion = await efInstallation.AppVersion(stoppingToken);
+        var appPermission = await currentUser.GetPermissionsToApp(efAppVersion.App, stoppingToken);
         if (!appPermission.CanView)
         {
-            throw new AccessDeniedException($"Access denied to App '{appVersion.App.ToModel().AppKey.Format()}'");
+            throw new AccessDeniedException($"Access denied to App '{efAppVersion.App.ToModel().AppKey.Format()}'");
         }
         var detail = new InstallationDetailModel
         (
-            InstallLocation: installLocation.ToModel(),
-            Installation: installation.ToModel(),
-            Version: appVersion.Version.ToModel(),
-            App: appVersion.App.ToModel(),
-            MostRecentRequest: requests.FirstOrDefault()?.ToModel() ?? new AppRequestModel()
+            InstallLocation: efLocation.ToModel(),
+            Installation: efInstallation.ToModel(),
+            Version: efAppVersion.Version.ToModel(),
+            App: efAppVersion.App.ToModel(),
+            MostRecentRequest: efRequests.FirstOrDefault()?.ToModel() ?? new AppRequestModel()
         );
         return detail;
     }

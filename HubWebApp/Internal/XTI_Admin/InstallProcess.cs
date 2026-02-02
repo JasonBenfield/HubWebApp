@@ -45,7 +45,7 @@ public sealed class InstallProcess
             var installMachineName = GetLocalMachineName();
             var versionName = versionNameAccessor.Value;
             using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
-            var instResult = await NewInstallation
+            var newInstallation = await NewInstallation
             (
                 installConfig.AppKey,
                 installMachineName,
@@ -54,14 +54,7 @@ public sealed class InstallProcess
                 installConfig.Template.SiteName,
                 ct
             );
-            var adminInstallOptions = new AdminInstallOptions
-            (
-                VersionKey: AppVersionKey.Parse(options.VersionKey),
-                Release: string.IsNullOrWhiteSpace(options.VersionNumber) ? "" : $"v{options.VersionNumber}",
-                CurrentInstallationID: instResult.CurrentInstallationID,
-                VersionInstallationID: instResult.VersionInstallationID
-            );
-            await localInstallProcess.Run(installConfig, adminInstallOptions, publishedAssets, ct);
+            await localInstallProcess.Run(newInstallation, publishedAssets, ct);
         }
         else
         {
@@ -134,7 +127,7 @@ public sealed class InstallProcess
                         installConfig.Template.DestinationMachineName;
                     if (isLocal)
                     {
-                        var instResult = await NewInstallation
+                        var newInstallation = await NewInstallation
                         (
                             installConfig.AppKey,
                             installMachineName,
@@ -143,14 +136,7 @@ public sealed class InstallProcess
                             installConfig.Template.SiteName,
                             ct
                         );
-                        var adminInstallOptions = new AdminInstallOptions
-                        (
-                            VersionKey: versionKey,
-                            Release: release,
-                            CurrentInstallationID: instResult.CurrentInstallationID,
-                            VersionInstallationID: instResult.VersionInstallationID
-                        );
-                        await localInstallProcess.Run(installConfig, adminInstallOptions, publishedAssets, ct);
+                        await localInstallProcess.Run(newInstallation, publishedAssets, ct);
                     }
                     else
                     {
@@ -159,8 +145,6 @@ public sealed class InstallProcess
                         remoteOptions.InstallConfigurationID = installConfig.ID;
                         remoteOptions.IsInitiatedRemotely = true;
                         remoteOptions.VersionName = versionName.DisplayText;
-                        remoteOptions.VersionKey = versionKey.DisplayText;
-                        remoteOptions.VersionNumber = string.IsNullOrWhiteSpace(release) ? "" : release.Substring(1);
                         remoteOptions.DestinationMachine = "";
                         remoteOptions.HubAdministrationType = options.HubAdministrationType == HubAdministrationTypes.Default && installConfig.AppKey.Equals(HubInfo.AppKey) ?
                             HubAdministrationTypes.DB :

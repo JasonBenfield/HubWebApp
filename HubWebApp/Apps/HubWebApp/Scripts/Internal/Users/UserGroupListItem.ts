@@ -3,7 +3,7 @@ import { TextButtonListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/L
 import { AppUserGroup } from "../../Lib/AppUserGroup";
 
 export class UserGroupListItem extends TextComponent {
-    constructor(readonly userGroup: AppUserGroup, protected readonly view: TextButtonListGroupItemView) {
+    constructor(protected readonly userGroup: AppUserGroup, protected readonly view: TextButtonListGroupItemView) {
         super(view);
         this.setText(userGroup.groupName.displayText);
     }

@@ -12,8 +12,8 @@ export class InstallationsGroup extends AppClientGroup {
 		super(events, resourceUrl, 'Installations');
 		this.BeginDeleteAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('BeginDelete', 'Begin Delete');
 		this.DeletedAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('Deleted', 'Deleted');
+		this.GetInstallationActivitiesAction = this.createAction<IGetInstallationActivitiesRequest,IInstallationActivitiesResult>('GetInstallationActivities', 'Get Installation Activities');
 		this.GetInstallationDetailAction = this.createAction<number,IInstallationDetailModel>('GetInstallationDetail', 'Get Installation Detail');
-		this.GetPendingDeletesAction = this.createAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>('GetPendingDeletes', 'Get Pending Deletes');
 		this.Index = this.createView<IInstallationQueryRequest>('Index');
 		this.Installation = this.createView<IInstallationViewRequest>('Installation');
 		this.RequestDeleteAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('RequestDelete', 'Request Delete');
@@ -21,8 +21,8 @@ export class InstallationsGroup extends AppClientGroup {
 	
 	readonly BeginDeleteAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
 	readonly DeletedAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
+	readonly GetInstallationActivitiesAction: AppClientAction<IGetInstallationActivitiesRequest,IInstallationActivitiesResult>;
 	readonly GetInstallationDetailAction: AppClientAction<number,IInstallationDetailModel>;
-	readonly GetPendingDeletesAction: AppClientAction<IGetPendingDeletesRequest,IAppVersionInstallationModel[]>;
 	readonly Index: AppClientView<IInstallationQueryRequest>;
 	readonly Installation: AppClientView<IInstallationViewRequest>;
 	readonly RequestDeleteAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
@@ -33,11 +33,11 @@ export class InstallationsGroup extends AppClientGroup {
 	Deleted(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.DeletedAction.execute(requestData, errorOptions || {});
 	}
+	GetInstallationActivities(requestData: IGetInstallationActivitiesRequest, errorOptions?: IActionErrorOptions) {
+		return this.GetInstallationActivitiesAction.execute(requestData, errorOptions || {});
+	}
 	GetInstallationDetail(requestData: number, errorOptions?: IActionErrorOptions) {
 		return this.GetInstallationDetailAction.execute(requestData, errorOptions || {});
-	}
-	GetPendingDeletes(requestData: IGetPendingDeletesRequest, errorOptions?: IActionErrorOptions) {
-		return this.GetPendingDeletesAction.execute(requestData, errorOptions || {});
 	}
 	RequestDelete(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
 		return this.RequestDeleteAction.execute(requestData, errorOptions || {});
