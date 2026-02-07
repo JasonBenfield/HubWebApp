@@ -2,9 +2,9 @@
 
 public sealed class DeleteInstallConfigurationAction : AppAction<DeleteInstallConfigurationRequest, EmptyActionResult>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public DeleteInstallConfigurationAction(IHubAdministration hubAdmin)
+    public DeleteInstallConfigurationAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

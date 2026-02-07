@@ -64,10 +64,10 @@ export class InstallationPanel implements IPanel {
     private menu() { this.awaitable.resolve(Result.menuRequested()); }
 
     private async onDelete() {
-        const isConfirmed = await this.confirm.confirm('Delete this installation?', 'Confirm Delete');
+        const isConfirmed = await this.confirm.confirm("Delete this installation?", "Confirm Delete");
         if (isConfirmed) {
             await this.alert.infoAction(
-                'Deleting...',
+                "Deleting...",
                 () => this.hubClient.Installations.RequestDelete({
                     InstallationID: this.installationID
                 })
@@ -89,8 +89,10 @@ export class InstallationPanel implements IPanel {
     async refresh() {
         this.deleteCommand.hide();
         const sourceDetail = await this.alert.infoAction(
-            'Loading...',
-            () => this.hubClient.Installations.GetInstallationDetail(this.installationID)
+            "Loading...",
+            () => this.hubClient.Installations.GetInstallationDetail({
+                InstallationID: this.installationID
+            })
         );
         const detail = new InstallationDetail(sourceDetail);
         this.appKey.setValue(detail.app.appKey.format());
@@ -98,7 +100,7 @@ export class InstallationPanel implements IPanel {
         this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
         this.installationStatus.setValue(detail.installation.status.DisplayText);
         this.location.setText(detail.installLocation.qualifiedMachineName);
-        this.current.setText(detail.installation.isCurrent ? '[ Current ]' : '');
+        this.current.setText(detail.installation.isCurrent ? "[ Current ]" : "");
         if (detail.installation.domain) {
             this.domain.setValue(detail.installation.domain);
             this.view.showDomain();

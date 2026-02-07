@@ -6,6 +6,7 @@ using XTI_App.Extensions;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Core.Fakes;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApiActions;
 using XTI_WebApp.Abstractions;
@@ -62,7 +63,7 @@ internal sealed class HubTestHost
         builder.Services.AddSingleton(_ => HubInfo.AppKey);
         builder.Services.AddScoped<AppApiFactory, HubAppApiFactory>();
         builder.Services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
-        builder.Services.AddScoped<IHubAdministration, EfHubAdministration>();
+        builder.Services.AddScoped<IHubService, EfHubService>();
         builder.Services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         builder.Services.AddHubAppApiServices();
         if (configure != null)

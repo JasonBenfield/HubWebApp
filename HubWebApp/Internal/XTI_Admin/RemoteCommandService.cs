@@ -8,9 +8,9 @@ public sealed class RemoteCommandService
 {
     private readonly XtiEnvironment xtiEnv;
     private readonly IHttpClientFactory httpClientFactory;
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public RemoteCommandService(XtiEnvironment xtiEnv, IHttpClientFactory httpClientFactory, IHubAdministration hubAdmin)
+    public RemoteCommandService(XtiEnvironment xtiEnv, IHttpClientFactory httpClientFactory, IHubService hubAdmin)
     {
         this.xtiEnv = xtiEnv;
         this.httpClientFactory = httpClientFactory;

@@ -10,13 +10,31 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> BeginDelete([FromBody] GetInstallationRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> BeginDelete([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.BeginDelete.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> Deleted([FromBody] GetInstallationRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<InstallationModel>> BeginInstallation([FromBody] BeginInstallationRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.BeginInstallation.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppCommandModel>> BeginRequestedInstallation([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.BeginRequestedInstallation.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppCommandStepModel>> BeginRequestedInstallationStep([FromBody] BeginAppCommandStepRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.BeginRequestedInstallationStep.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> Deleted([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.Deleted.Execute(requestData, ct);
     }
@@ -28,9 +46,15 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] int requestData, CancellationToken ct)
+    public Task<ResultContainer<InstallationDetailModel>> GetInstallationDetail([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.GetInstallationDetail.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppInstallCommandDetailModel>> GetRequestedInstallationDetail([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.GetRequestedInstallationDetail.Execute(requestData, ct);
     }
 
     public async Task<IActionResult> Index(InstallationQueryRequest requestData, CancellationToken ct)
@@ -46,8 +70,32 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RequestDelete([FromBody] GetInstallationRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] InstallationIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.Installed.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> RequestDelete([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.RequestDelete.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> RequestedInstallationEnded([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.RequestedInstallationEnded.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyRequest>> RequestedInstallationStepEnded([FromBody] AppCommandStepEndedRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.RequestedInstallationStepEnded.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppInstallCommandDetailModel>> RequestInstallation([FromBody] AddAppInstallCommandRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.RequestInstallation.Execute(requestData, ct);
     }
 }

@@ -4,16 +4,14 @@ using XTI_Hub.Abstractions;
 
 namespace XTI_Hub;
 
-public sealed class EfHubAdministration : IHubAdministration
+public sealed class EfHubService : IHubService
 {
-    private readonly XtiEnvironment xtiEnv;
     private readonly EfHubDB db;
     private readonly IHashedPasswordFactory hashedPasswordFactory;
     private readonly IClock clock;
 
-    public EfHubAdministration(XtiEnvironment xtiEnv, EfHubDB db, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
+    public EfHubService(EfHubDB db, IHashedPasswordFactory hashedPasswordFactory, IClock clock)
     {
-        this.xtiEnv = xtiEnv;
         this.db = db;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.clock = clock;
@@ -107,47 +105,12 @@ public sealed class EfHubAdministration : IHubAdministration
         return efVersion.ToModel();
     }
 
-    public async Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
-    {
-        var efVersion = await db.Versions.VersionByName(versionName, AppVersionKey.Current, ct);
-        var efApp = await db.Apps.App(appKey, ct);
-        await efApp.AddVersionIfNotFound(efVersion, ct);
-        var efAppVersion = efVersion.App(efApp);
-        var efInstallLocation = await db.InstallLocations.AddIfNotFound(machineName, ct);
-        var efCurrentInstallation = await efInstallLocation.NewCurrentInstallation(efAppVersion, domain, siteName, clock.Now(), ct);
-        EfInstallation? efVersionInstallation = null;
-        if (xtiEnv.IsProduction())
-        {
-            efVersionInstallation = await efInstallLocation.NewVersionInstallation(efAppVersion, domain, siteName, clock.Now(), ct);
-        }
-        return new NewInstallationResult
-        (
-            CurrentInstallation: efCurrentInstallation.ToModel(),
-            VersionInstallation: efVersionInstallation?.ToModel() ?? new(),
-            Location: efInstallLocation.ToModel(),
-            App: efApp.ToModel(),
-            Version: efAppVersion.Version.ToModel()
-        );
-    }
-
-    public async Task BeginInstall(int installationID, CancellationToken ct)
-    {
-        var installation = await db.Installations.InstallationOrDefault(installationID, ct);
-        await installation.BeginInstallation(ct);
-    }
-
-    public async Task Installed(int installationID, CancellationToken ct)
-    {
-        var installation = await db.Installations.InstallationOrDefault(installationID, ct);
-        await db.Transaction(() => installation.Installed(ct));
-    }
-
     public async Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password, CancellationToken ct)
     {
         machineName = GetMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await db.Installers.AddOrUpdateInstaller(machineName, hashedPassword, clock.Now(), ct);
-        return installationUser.ToModel();
+        var efInstallationUser = await db.Installers.AddOrUpdateInstaller(machineName, hashedPassword, clock.Now(), ct);
+        return efInstallationUser.ToModel();
     }
 
     private static string GetMachineName(string machineName)
@@ -164,15 +127,15 @@ public sealed class EfHubAdministration : IHubAdministration
     {
         machineName = GetMachineName(machineName);
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var installationUser = await db.SystemUsers.AddOrUpdateSystemUser(new SystemUserName(appKey, machineName), hashedPassword, clock.Now(), ct);
-        return installationUser.ToModel();
+        var efInstallationUser = await db.SystemUsers.AddOrUpdateSystemUser(new SystemUserName(appKey, machineName), hashedPassword, clock.Now(), ct);
+        return efInstallationUser.ToModel();
     }
 
     public async Task<AppUserModel> AddOrUpdateAdminUser(AppKey appKey, AppUserName userName, string password, CancellationToken ct)
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var defaultUserGroup = await db.UserGroups.GetGeneral(ct);
-        var user = await defaultUserGroup.AddOrUpdate
+        var efDefaultUserGroup = await db.UserGroups.GetGeneral(ct);
+        var efUser = await efDefaultUserGroup.AddOrUpdate
         (
             userName,
             hashedPassword,
@@ -181,34 +144,34 @@ public sealed class EfHubAdministration : IHubAdministration
             clock.Now(),
             ct
         );
-        var app = await db.Apps.App(appKey, ct);
-        var adminRole = await app.AddOrUpdateRole(AppRoleName.Admin, ct);
-        await user.AssignRole(adminRole, ct);
-        return user.ToModel();
+        var efApp = await db.Apps.App(appKey, ct);
+        var efAdminRole = await efApp.AddOrUpdateRole(AppRoleName.Admin, ct);
+        await efUser.AssignRole(efAdminRole, ct);
+        return efUser.ToModel();
     }
 
     public async Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, CancellationToken ct)
     {
-        var version = await db.Versions.StartNewVersion(versionName, clock.Now(), versionType, ct);
-        return version.ToModel();
+        var efVersion = await db.Versions.StartNewVersion(versionName, clock.Now(), versionType, ct);
+        return efVersion.ToModel();
     }
 
     public async Task<InstallConfigurationModel[]> InstallConfigurations(GetInstallConfigurationsRequest getRequest, CancellationToken ct)
     {
-        var installConfigs = await db.InstallConfigurations.Configurations
+        var efInstallConfigs = await db.InstallConfigurations.Configurations
         (
             getRequest.RepoOwner,
             getRequest.RepoName,
             getRequest.ConfigurationName,
             ct
         );
-        var installConfigModels = new List<InstallConfigurationModel>();
-        foreach (var installConfig in installConfigs)
+        var installConfigs = new List<InstallConfigurationModel>();
+        foreach (var efInstallConfig in efInstallConfigs)
         {
-            var installConfigModel = await installConfig.ToModel(ct);
-            installConfigModels.Add(installConfigModel);
+            var installConfig = await efInstallConfig.ToModel(ct);
+            installConfigs.Add(installConfig);
         }
-        return installConfigModels.ToArray();
+        return installConfigs.ToArray();
     }
 
     public async Task<InstallConfigurationModel> InstallConfiguration(int configurationID, CancellationToken ct)
@@ -244,19 +207,25 @@ public sealed class EfHubAdministration : IHubAdministration
         {
             throw new Exception("Template Name is required.");
         }
-        var template = await db.InstallConfigurationTemplates.Template(configRequest.TemplateName, ct);
-        var installConfig = await db.InstallConfigurations.AddOrUpdateConfiguration
+        var efInstallConfig = await db.Transaction(() => _ConfigureInstall(configRequest, ct));
+        var installConfig = await efInstallConfig.ToModel(ct);
+        return installConfig;
+    }
+
+    private async Task<EfInstallConfiguration> _ConfigureInstall(ConfigureInstallRequest configRequest, CancellationToken ct)
+    {
+        var efTemplate = await db.InstallConfigurationTemplates.Template(configRequest.TemplateName, ct);
+        var efInstallConfig = await db.InstallConfigurations.AddOrUpdateConfiguration
         (
             configRequest.RepoOwner,
             configRequest.RepoName,
             configRequest.ConfigurationName,
             configRequest.AppKey.ToAppKey(),
-            template,
+            efTemplate,
             configRequest.InstallSequence,
             ct
         );
-        var installConfigModel = await installConfig.ToModel(ct);
-        return installConfigModel;
+        return efInstallConfig;
     }
 
     public async Task<InstallConfigurationTemplateModel> ConfigureInstallTemplate(ConfigureInstallTemplateRequest configRequest, CancellationToken ct)
@@ -265,7 +234,8 @@ public sealed class EfHubAdministration : IHubAdministration
         {
             throw new Exception("Template Name is required.");
         }
-        var template = await db.InstallConfigurationTemplates.AddOrUpdateTemplate
+        var efInstallLocation = await db.InstallLocations.AddIfNotFound(configRequest.DestinationMachineName, ct);
+        var efTemplate = await db.InstallConfigurationTemplates.AddOrUpdateTemplate
         (
             configRequest.TemplateName,
             configRequest.DestinationMachineName,
@@ -273,7 +243,7 @@ public sealed class EfHubAdministration : IHubAdministration
             configRequest.SiteName,
             ct
         );
-        return template.ToModel();
+        return efTemplate.ToModel();
     }
 
     public async Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct)
@@ -298,7 +268,7 @@ public sealed class EfHubAdministration : IHubAdministration
         {
             throw new Exception("App Type is required.");
         }
-        var installConfig = await db.InstallConfigurations.ConfigurationOrDefault
+        var efInstallConfig = await db.InstallConfigurations.ConfigurationOrDefault
         (
             deleteRequest.RepoOwner,
             deleteRequest.RepoName,
@@ -306,10 +276,81 @@ public sealed class EfHubAdministration : IHubAdministration
             deleteRequest.AppKey.ToAppKey(),
             ct
         );
-        if (installConfig.IsFound())
+        if (efInstallConfig.IsFound())
         {
-            await installConfig.Delete(ct);
+            await efInstallConfig.Delete(ct);
         }
     }
 
+    public async Task<AppInstallCommandDetailModel> AddInstallCommand(AddAppInstallCommandRequest installRequest, CancellationToken ct)
+    {
+        var efApp = await db.Apps.App(installRequest.AppKey.ToAppKey(), ct);
+        var efInstallConfiguration = await db.InstallConfigurations.Configuration(installRequest.InstallConfigurationID, ct);
+        var installConfiguration = await efInstallConfiguration.ToModel(ct);
+        var versionKey = installRequest.ToAppVersionKey();
+        var efAppVersion = await efApp.AddVersionIfNotFound(versionKey, ct);
+        var efInstallCommand = await efApp.AddCommand
+        (
+            AppCommandName.Install,
+            installRequest.Serialize(),
+            installRequest.IsAutoStartEnabled ? clock.Now() : DateTimeOffset.MaxValue,
+            ct
+        );
+        var requestedInstallationDetail = await efInstallCommand.ToInstallCommandDetailModel(ct);
+        return requestedInstallationDetail;
+    }
+
+    public async Task<AppCommandModel> BeginInstallCommand(int requestedInstallationID, CancellationToken ct)
+    {
+        var efRequestedInstallation = await db.AppCommands.Command(requestedInstallationID, ct);
+        await efRequestedInstallation.Begin(clock.Now(), ct);
+        return efRequestedInstallation.ToModel();
+    }
+
+    public async Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int requestedInstallationID, CancellationToken ct)
+    {
+        var efRequestedInstallation = await db.AppCommands.Command(requestedInstallationID, ct);
+        var requestedInstallationDetail = await efRequestedInstallation.ToInstallCommandDetailModel(ct);
+        return requestedInstallationDetail;
+    }
+
+    public async Task<InstallationModel> BeginInstallation(int requestedInstallationID, bool isCurrent, CancellationToken ct)
+    {
+        var efRequestedInstallation = await db.AppCommands.Command(requestedInstallationID, ct);
+        var efInstallation = await db.Transaction
+        (
+            () => efRequestedInstallation.BeginInstallation
+            (
+                timeAdded: clock.Now(),
+                isCurrent: isCurrent,
+                ct: ct
+            )
+        );
+        return efInstallation.ToModel();
+    }
+
+    public async Task Installed(int installationID, CancellationToken ct)
+    {
+        var efInstallation = await db.Installations.InstallationOrDefault(installationID, ct);
+        await efInstallation.Installed(ct);
+    }
+
+    public async Task CommandEnded(int requestedInstallationID, CancellationToken ct)
+    {
+        var efRequestedInstallation = await db.AppCommands.Command(requestedInstallationID, ct);
+        await efRequestedInstallation.End(clock.Now(), ct);
+    }
+
+    public async Task<AppCommandStepModel> BeginCommandStep(int requestedInstallationID, string activity, CancellationToken ct)
+    {
+        var efRequestedInstallation = await db.AppCommands.Command(requestedInstallationID, ct);
+        var efStep = await efRequestedInstallation.BeginStep(activity, clock.Now(), ct);
+        return efStep.ToModel();
+    }
+
+    public async Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct)
+    {
+        var efStep = await db.AppCommandSteps.Step(stepID, ct);
+        await efStep.End(clock.Now(), errorMessage, ct);
+    }
 }

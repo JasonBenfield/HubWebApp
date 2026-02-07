@@ -25,45 +25,32 @@ public sealed class EfInstallations
             .ToArrayAsync(ct);
     }
 
-    internal async Task<EfInstallation> NewCurrentInstallation(EfInstallLocation location, EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
+    internal async Task<EfInstallation> NewInstallation(EfInstallLocation efLocation, EfAppVersion efAppVersion, string domain, string siteName, DateTimeOffset timeAdded, InstallStatus initialStatus, bool isCurrent, CancellationToken ct)
     {
-        var installation = await NewInstallation(location, appVersion, domain, siteName, timeAdded, true, ct);
-        return new EfInstallation(db, installation);
-    }
-
-    internal async Task<EfInstallation> NewVersionInstallation(EfInstallLocation location, EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct)
-    {
-        var installation = await NewInstallation(location, appVersion, domain, siteName, timeAdded, false, ct);
-        return new EfInstallation(db, installation);
-    }
-
-    private async Task<InstallationEntity> NewInstallation(EfInstallLocation location, EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, bool isCurrent, CancellationToken ct)
-    {
-        var appVersionID = await appVersion.AppVersionID(ct);
+        var appVersionID = await efAppVersion.AppVersionID(ct);
         var installation = new InstallationEntity
         {
-            LocationID = location.ID,
+            LocationID = efLocation.ID,
             AppVersionID = appVersionID,
-            Status = InstallStatus.Values.InstallPending.Value,
+            Status = initialStatus.Value,
             IsCurrent = isCurrent,
             TimeAdded = timeAdded,
             Domain = domain,
             SiteName = siteName
         };
         await db.Context.Installations.Create(installation, ct);
-        return installation;
+        return new EfInstallation(db, installation);
     }
 
-    internal Task BeginInstallation(InstallationEntity entity, CancellationToken ct) =>
-        SetInstallationStatus(entity, InstallStatus.Values.InstallStarted, ct);
+    internal async Task<EfInstallation[]> Installations(IQueryable<int> installationIDs, CancellationToken ct)
+    {
+        var installations = await db.Context.Installations.Retrieve()
+            .Where(inst => installationIDs.Contains(inst.ID))
+            .ToArrayAsync(ct);
+        return installations.Select(inst => new EfInstallation(db, inst)).ToArray();
+    }
 
-    internal Task BeginDelete(InstallationEntity entity, CancellationToken ct) =>
-        SetInstallationStatus(entity, InstallStatus.Values.DeleteStarted, ct);
-
-    internal Task Deleted(InstallationEntity entity, CancellationToken ct) =>
-        SetInstallationStatus(entity, InstallStatus.Values.Deleted, ct);
-
-    internal async Task Installed(InstallationEntity entity, CancellationToken ct)
+    internal async Task<EfInstallation[]> PreviousInstallations(InstallationEntity entity, CancellationToken ct)
     {
         var installationsQuery = db.Context.Installations.Retrieve();
         if (entity.IsCurrent)
@@ -98,39 +85,37 @@ public sealed class EfInstallations
                 );
         }
         var previousInstallations = await installationsQuery.ToArrayAsync(ct);
-        foreach (var previousInst in previousInstallations)
-        {
-            await SetInstallationStatus(previousInst, InstallStatus.Values.Deleted, ct);
-        }
-        await SetInstallationStatus(entity, InstallStatus.Values.Installed, ct);
+        var efPreviousInstallations = previousInstallations
+            .Select(inst => new EfInstallation(db, inst))
+            .ToArray();
+        return efPreviousInstallations;
     }
-
-    internal Task RequestDelete(InstallationEntity entity, CancellationToken ct) =>
-        SetInstallationStatus(entity, InstallStatus.Values.DeletePending, ct);
-
-    private Task SetInstallationStatus(InstallationEntity entity, InstallStatus status, CancellationToken ct) =>
-        db.Context.Installations
-            .Update
-            (
-                entity,
-                inst => inst.Status = status.Value,
-                ct
-            );
 
     public async Task<EfInstallation> InstallationOrDefault(int installationID, CancellationToken ct)
     {
-        var installation = await db.Context.Installations.Retrieve()
-            .Where(inst => inst.ID == installationID)
-            .Select(inst => new EfInstallation(db, inst))
-            .FirstOrDefaultAsync(ct);
-        if (installation == null)
+        EfInstallation efInstallation;
+        if (installationID > 0)
         {
-            var efUnknownLoc = await db.InstallLocations.UnknownLocation(ct);
-            var efUnknownApp = await db.Apps.AppOrUnknown(AppKey.Unknown, ct);
-            var efCurrentVersion = await efUnknownApp.CurrentVersion(ct);
-            installation = await efUnknownLoc.CurrentInstallation(efCurrentVersion, ct);
+            var installation = await db.Context.Installations.Retrieve()
+                .Where(inst => inst.ID == installationID)
+                .FirstOrDefaultAsync(ct);
+            if (installation == null)
+            {
+                var efUnknownLoc = await db.InstallLocations.UnknownLocation(ct);
+                var efUnknownApp = await db.Apps.AppOrUnknown(AppKey.Unknown, ct);
+                var efCurrentVersion = await efUnknownApp.CurrentVersion(ct);
+                efInstallation = await efUnknownLoc.CurrentInstallation(efCurrentVersion, ct);
+            }
+            else
+            {
+                efInstallation = new EfInstallation(db, installation);
+            }
         }
-        return installation;
+        else
+        {
+            efInstallation = new EfInstallation(db, new());
+        }
+        return efInstallation;
     }
 
     internal Task<bool> HasCurrentInstallation(EfInstallLocation location, EfAppVersion appVersion, CancellationToken ct) =>

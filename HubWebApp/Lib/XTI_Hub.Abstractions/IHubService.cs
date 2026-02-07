@@ -1,9 +1,8 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 
-namespace XTI_Hub;
+namespace XTI_Hub.Abstractions;
 
-public interface IHubAdministration
+public interface IHubService
 {
     Task<string> StoreSingleUse(StorageName storageName, GenerateKeyModel generateKey, object data, TimeSpan expireAfter, CancellationToken ct);
 
@@ -39,9 +38,20 @@ public interface IHubAdministration
 
     Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct);
 
-    Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct);
+    Task<AppInstallCommandDetailModel> AddInstallCommand(AddAppInstallCommandRequest installRequest, CancellationToken ct);
 
-    Task BeginInstall(int installationID, CancellationToken ct);
+    Task<AppCommandModel> BeginInstallCommand(int commandID, CancellationToken ct);
+
+    Task<AppCommandStepModel> BeginCommandStep(int requestedInstallationID, string activity, CancellationToken ct);
+
+    Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct);
+
+    Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int requestedInstallationID, CancellationToken ct);
+
+    Task<InstallationModel> BeginInstallation(int requestedInstallationID, bool isCurrent, CancellationToken ct);
 
     Task Installed(int installationID, CancellationToken ct);
+
+    Task CommandEnded(int requestedInstallationID, CancellationToken ct);
+
 }

@@ -26,7 +26,7 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
             {
                 IPermanentLog permanentLog;
                 var options = sp.GetRequiredService<SupportServiceAppOptions>();
-                if (options.PermanentLogType == "DB")
+                if (options.PermanentLogType.Equals("DB", StringComparison.OrdinalIgnoreCase))
                 {
                     permanentLog = sp.GetRequiredService<EfPermanentLog>();
                 }

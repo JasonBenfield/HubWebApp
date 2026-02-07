@@ -1,6 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
 namespace XTI_Installation;
@@ -11,11 +11,11 @@ public sealed class InstallAppProcessFactory
     private readonly InstallServiceAppProcess installServiceAppProcess;
     private readonly InstallDefaultAppProcess installDefaultAppProcess;
 
-    public InstallAppProcessFactory(IHubAdministration hubAdministration, XtiFolder xtiFolder, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
+    public InstallAppProcessFactory(IHubService hubService, XtiFolder xtiFolder, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
     {
-        installWebAppProcess = new InstallWebAppProcess(xtiFolder, hubAdministration, xtiEnv, credentialsFactory);
-        installServiceAppProcess = new InstallServiceAppProcess(xtiFolder, hubAdministration, xtiEnv, credentialsFactory);
-        installDefaultAppProcess = new InstallDefaultAppProcess(xtiFolder, hubAdministration);
+        installWebAppProcess = new InstallWebAppProcess(xtiEnv, xtiFolder, credentialsFactory);
+        installServiceAppProcess = new InstallServiceAppProcess(xtiEnv, xtiFolder, credentialsFactory);
+        installDefaultAppProcess = new InstallDefaultAppProcess(xtiFolder);
     }
 
     public InstallAppProcess Create(AppKey appKey)

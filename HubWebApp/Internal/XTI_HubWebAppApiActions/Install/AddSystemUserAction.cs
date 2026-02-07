@@ -2,9 +2,9 @@
 
 public sealed class AddSystemUserAction : AppAction<AddSystemUserRequest, AppUserModel>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public AddSystemUserAction(IHubAdministration hubAdmin)
+    public AddSystemUserAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

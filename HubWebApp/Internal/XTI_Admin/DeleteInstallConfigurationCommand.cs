@@ -5,11 +5,11 @@ namespace XTI_Admin;
 
 internal sealed class DeleteInstallConfigurationCommand : ICommand
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AdminOptions adminOptions;
     private readonly GitRepoInfo gitRepoInfo;
 
-    public DeleteInstallConfigurationCommand(IHubAdministration hubAdmin, AdminOptions adminOptions, GitRepoInfo gitRepoInfo)
+    public DeleteInstallConfigurationCommand(IHubService hubAdmin, AdminOptions adminOptions, GitRepoInfo gitRepoInfo)
     {
         this.hubAdmin = hubAdmin;
         this.adminOptions = adminOptions;

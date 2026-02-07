@@ -1,5 +1,5 @@
 ﻿using XTI_Core;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -7,9 +7,9 @@ internal sealed class FromRemoteCommand : ICommand
 {
     private readonly CommandFactory commandFactory;
     private readonly AdminOptions options;
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public FromRemoteCommand(CommandFactory commandFactory, AdminOptions options, IHubAdministration hubAdmin)
+    public FromRemoteCommand(CommandFactory commandFactory, AdminOptions options, IHubService hubAdmin)
     {
         this.commandFactory = commandFactory;
         this.options = options;

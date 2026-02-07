@@ -4,11 +4,16 @@ partial class InstallationsGroupBuilder
 {
     partial void Configure()
     {
-        BeginDelete.WithAllowed(HubInfo.Roles.InstallationManager);
-        Deleted.WithAllowed(HubInfo.Roles.InstallationManager);
+        source.WithAllowed(HubInfo.Roles.InstallationManager);
         GetInstallationActivities
             .ThrottleRequestLogging().ForOneHour()
             .ThrottleExceptionLogging().For(15).Minutes()
             .WithAllowed(HubInfo.Roles.InstallationManager);
+        GetRequestedInstallationDetail
+            .ThrottleRequestLogging().For(15).Minutes()
+            .ThrottleExceptionLogging().For(5).Minutes();
+        GetInstallationDetail
+            .ThrottleRequestLogging().For(15).Minutes()
+            .ThrottleExceptionLogging().For(5).Minutes();
     }
 }

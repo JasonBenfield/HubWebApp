@@ -1,14 +1,14 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
 public sealed class CurrentVersion
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public CurrentVersion(ProductionHubAdmin hubAdmin, AppVersionNameAccessor versionNameAccessor)
+    public CurrentVersion(ProductionHubService hubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
         this.hubAdmin = hubAdmin.Value;
         this.versionNameAccessor = versionNameAccessor;

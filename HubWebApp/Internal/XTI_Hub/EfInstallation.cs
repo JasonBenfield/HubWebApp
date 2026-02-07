@@ -20,15 +20,35 @@ public sealed class EfInstallation
 
     public Task<EfInstallLocation> Location(CancellationToken ct) => db.InstallLocations.Location(installation.LocationID, ct);
 
-    public Task BeginInstallation(CancellationToken ct) => db.Installations.BeginInstallation(installation, ct);
+    public Task BeginInstallation(CancellationToken ct) =>
+        SetInstallationStatus(InstallStatus.Values.InstallStarted, ct);
 
-    public Task Installed(CancellationToken ct) => db.Installations.Installed(installation, ct);
+    public async Task Installed(CancellationToken ct)
+    {
+        var efPreviousInstallations = await db.Installations.PreviousInstallations(installation, ct);
+        foreach (var efPreviousInstallation in efPreviousInstallations)
+        {
+            await efPreviousInstallation.Deleted(ct);
+        }
+        await SetInstallationStatus(InstallStatus.Values.Installed, ct);
+    }
 
-    public Task RequestDelete(CancellationToken ct) => db.Installations.RequestDelete(installation, ct);
+    public Task RequestDelete(CancellationToken ct) =>
+        SetInstallationStatus(InstallStatus.Values.DeletePending, ct);
 
-    public Task BeginDelete(CancellationToken ct) => db.Installations.BeginDelete(installation, ct);
+    public Task BeginDelete(CancellationToken ct) =>
+        SetInstallationStatus(InstallStatus.Values.DeleteStarted, ct);
 
-    public Task Deleted(CancellationToken ct) => db.Installations.Deleted(installation, ct);
+    public Task Deleted(CancellationToken ct) =>
+        SetInstallationStatus(InstallStatus.Values.Deleted, ct);
+
+    private Task SetInstallationStatus(InstallStatus status, CancellationToken ct) =>
+        db.Context.Installations.Update
+        (
+            installation,
+            inst => inst.Status = status.Value,
+            ct
+        );
 
     public async Task<EfAppVersion> AppVersion(CancellationToken ct)
     {
@@ -45,6 +65,9 @@ public sealed class EfInstallation
 
     public Task<EfAppRequest[]> MostRecentRequests(int howMany, CancellationToken ct) =>
         db.Requests.MostRecentForInstallation(this, howMany, ct);
+
+    internal Task<EfAppCommand> RequestedInstallationOrDefault(CancellationToken ct) =>
+        db.AppCommands.InstallCommandOrDefault(installation, ct);
 
     public InstallationModel ToModel() =>
         new InstallationModel

@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using XTI_App.Abstractions;
 using XTI_GitHub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -92,18 +93,19 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return appPath;
     }
 
-    public async Task<string> LoadVersions(string releaseTag)
+    public async Task<string> LoadVersions()
     {
         if (!Directory.Exists(tempDir))
         {
             Directory.CreateDirectory(tempDir);
         }
+        var latestRelease = await gitHubRepo.LatestRelease();
         var versionsPath = Path.Combine(tempDir, "versions.json");
         if (File.Exists(versionsPath))
         {
             File.Delete(versionsPath);
         }
-        var release = await gitHubRepo.Release(releaseTag);
+        var release = await gitHubRepo.Release(latestRelease.TagName);
         var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
         if (versionsAsset != null)
         {

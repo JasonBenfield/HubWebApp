@@ -19,7 +19,7 @@ internal sealed class DeleteTest
         var tester = new SupportActionTester<EmptyRequest, EmptyActionResult>
         (
             scope,
-            api => api.Installations.Delete
+            api => api.Installations.ExecuteInstallationActivities
         );
         return tester;
     }

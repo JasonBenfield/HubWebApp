@@ -4,6 +4,7 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Fakes;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApiActions;
@@ -54,7 +55,7 @@ public static class FakeExtensions
             )
         );
         services.AddScoped<AppRegistration>();
-        services.AddScoped<IHubAdministration, EfHubAdministration>();
+        services.AddScoped<IHubService, EfHubService>();
         services.AddScoped<EfPermanentLog>();
         services.AddScoped<ICachedUserContext>(sp => sp.GetRequiredService<CachedUserContext>());
         services.AddScoped<IUserCacheManagement, FakeUserCacheManagement>();

@@ -5,11 +5,11 @@ namespace XTI_Admin;
 
 internal sealed class ConfigureInstallCommand : ICommand
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AdminOptions adminOptions;
     private readonly GitRepoInfo gitRepoInfo;
 
-    public ConfigureInstallCommand(IHubAdministration hubAdmin, AdminOptions adminOptions, GitRepoInfo gitRepoInfo)
+    public ConfigureInstallCommand(IHubService hubAdmin, AdminOptions adminOptions, GitRepoInfo gitRepoInfo)
     {
         this.hubAdmin = hubAdmin;
         this.adminOptions = adminOptions;

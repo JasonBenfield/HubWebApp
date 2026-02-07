@@ -1,17 +1,17 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
 namespace XTI_Admin;
 
 internal sealed class AddAdminUserCommand : ICommand
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AdminOptions options;
     private readonly SelectedAppKeys selectedAppKeys;
     private readonly ISecretCredentialsFactory secretCredentialsFactory;
 
-    public AddAdminUserCommand(IHubAdministration hubAdmin, AdminOptions options, SelectedAppKeys selectedAppKeys, ISecretCredentialsFactory secretCredentialsFactory)
+    public AddAdminUserCommand(IHubService hubAdmin, AdminOptions options, SelectedAppKeys selectedAppKeys, ISecretCredentialsFactory secretCredentialsFactory)
     {
         this.hubAdmin = hubAdmin;
         this.options = options;

@@ -1,6 +1,6 @@
-﻿using XTI_Core;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
+﻿using XTI_App.Abstractions;
+using XTI_App.Extensions;
+using XTI_Core;
 using XTI_Secrets;
 
 namespace XTI_Installation;
@@ -8,22 +8,23 @@ namespace XTI_Installation;
 public sealed class InstallServiceAppProcess : InstallAppProcess
 {
     private readonly XtiEnvironment xtiEnv;
+    private readonly XtiFolder xtiFolder;
     private readonly ISecretCredentialsFactory credentialsFactory;
 
-    internal InstallServiceAppProcess(XtiFolder xtiFolder, IHubAdministration hubAdministration, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
-        : base(xtiFolder, hubAdministration)
+    public InstallServiceAppProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, ISecretCredentialsFactory credentialsFactory)
     {
         this.xtiEnv = xtiEnv;
+        this.xtiFolder = xtiFolder;
         this.credentialsFactory = credentialsFactory;
     }
 
-    protected override async Task _Run(string publishedAppDir, AppVersionInstallationModel versionInstallation, CancellationToken ct)
+    public async Task Run(string publishedAppDir, RequestedInstallation requestedInstallation, CancellationToken ct)
     {
         WinServiceInstallation? winService = null;
         var startService = false;
-        if (versionInstallation.IsCurrent())
+        if (requestedInstallation.IsCurrent)
         {
-            winService = new WinServiceInstallation(xtiFolder, xtiEnv, versionInstallation.App.AppKey);
+            winService = new WinServiceInstallation(xtiFolder, xtiEnv, requestedInstallation.AppKey);
             if (!winService.Exists())
             {
                 var credentials = await credentialsFactory.Create("ServiceApp").Value();
@@ -32,20 +33,44 @@ public sealed class InstallServiceAppProcess : InstallAppProcess
             }
             else if (winService.IsRunning())
             {
-                winService.StopService();
+                await requestedInstallation.RunStep
+                (
+                    "Stop Service",
+                    () =>
+                    {
+                        winService.StopService();
+                        return Task.CompletedTask;
+                    },
+                    ct
+                );
                 startService = true;
             }
         }
-        await new CopyToInstallDirProcess(xtiFolder).Run
+        var installDir = xtiFolder.InstallPath(requestedInstallation.AppKey, requestedInstallation.VersionKey);
+        await requestedInstallation.RunStep
         (
-            publishedAppDir,
-            versionInstallation.App.AppKey,
-            versionInstallation.GetVersionKey(),
-            true
+            $"Copy '{publishedAppDir}' to '{installDir}'",
+            () => new CopyToInstallDirProcess(xtiFolder).Run
+            (
+                publishedAppDir,
+                requestedInstallation.AppKey,
+                AppVersionKey.Current,
+                true
+            ),
+            ct
         );
         if (winService != null && startService)
         {
-            winService.StartService();
+            await requestedInstallation.RunStep
+            (
+                "Start Service",
+                () =>
+                {
+                    winService.StartService();
+                    return Task.CompletedTask;
+                },
+                ct
+            );
         }
     }
 

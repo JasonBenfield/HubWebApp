@@ -1,15 +1,15 @@
 ﻿using XTI_App.Secrets;
 using XTI_Credentials;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
 internal sealed class AddInstallationUserCommand : ICommand
 {
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubAdministration;
     private readonly InstallationUserCredentials credentials;
 
-    public AddInstallationUserCommand(IHubAdministration hubAdministration, InstallationUserCredentials credentials)
+    public AddInstallationUserCommand(IHubService hubAdministration, InstallationUserCredentials credentials)
     {
         this.hubAdministration = hubAdministration;
         this.credentials = credentials;

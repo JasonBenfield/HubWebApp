@@ -6,6 +6,7 @@ using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_Core.Extensions;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApiActions;
@@ -60,7 +61,7 @@ public static class HubWebAppExtensions
         services.AddSingleton(_ => HubInfo.AppKey);
         services.AddScoped<AppApiFactory, HubAppApiFactory>();
         services.AddScoped(sp => (HubAppApi)sp.GetRequiredService<IAppApi>());
-        services.AddScoped<IHubAdministration, EfHubAdministration>();
+        services.AddScoped<IHubService, EfHubService>();
         services.AddScoped<ILoginReturnKey, LoginReturnKey>();
         services.AddScoped<IMenuDefinitionBuilder, HubMenuDefinitionBuilder>();
         services.AddScoped<AuthenticationFactory>();

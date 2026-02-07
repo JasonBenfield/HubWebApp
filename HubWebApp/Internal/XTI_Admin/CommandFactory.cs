@@ -72,7 +72,7 @@ public sealed class CommandFactory
             (
                 this,
                 scopes.GetRequiredService<AdminOptions>(),
-                scopes.GetRequiredService<IHubAdministration>()
+                scopes.GetRequiredService<IHubService>()
             );
         }
         else if (commandName == CommandNames.Build)
@@ -86,7 +86,7 @@ public sealed class CommandFactory
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<XtiEnvironment>(),
                 scopes.GetRequiredService<PublishedAssetsFactory>(),
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<SelectedAppKeys>(),
                 scopes.GetRequiredService<AppVersionNameAccessor>(),
                 scopes.GetRequiredService<CurrentVersion>(),
@@ -100,7 +100,7 @@ public sealed class CommandFactory
                 scopes.GetRequiredService<IXtiGitRepository>(),
                 scopes.GetRequiredService<XtiGitHubRepository>(),
                 scopes.GetRequiredService<AdminOptions>(),
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<AppVersionNameAccessor>()
             );
         }
@@ -135,7 +135,7 @@ public sealed class CommandFactory
         {
             command = new AddInstallationUserCommand
             (
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<InstallationUserCredentials>()
             );
         }
@@ -144,7 +144,7 @@ public sealed class CommandFactory
             command = new AddSystemUserCommand
             (
                 scopes.GetRequiredService<SelectedAppKeys>(),
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<ISecretCredentialsFactory>(),
                 scopes.GetRequiredService<AppVersionNameAccessor>()
             );
@@ -153,7 +153,7 @@ public sealed class CommandFactory
         {
             command = new AddAdminUserCommand
             (
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<SelectedAppKeys>(),
                 scopes.GetRequiredService<ISecretCredentialsFactory>()
@@ -208,7 +208,7 @@ public sealed class CommandFactory
         {
             command = new ConfigureInstallTemplateCommand
             (
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<AdminOptions>()
             );
         }
@@ -216,7 +216,7 @@ public sealed class CommandFactory
         {
             command = new ConfigureInstallCommand
             (
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<GitRepoInfo>()
             );
@@ -225,7 +225,7 @@ public sealed class CommandFactory
         {
             command = new DeleteInstallConfigurationCommand
             (
-                scopes.GetRequiredService<IHubAdministration>(),
+                scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<AdminOptions>(),
                 scopes.GetRequiredService<GitRepoInfo>()
             );

@@ -40,12 +40,6 @@ public sealed partial class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> BeginInstallation([FromBody] GetInstallationRequest requestData, CancellationToken ct)
-    {
-        return api.Install.BeginInstallation.Execute(requestData, ct);
-    }
-
-    [HttpPost]
     public Task<ResultContainer<InstallConfigurationModel>> ConfigureInstall([FromBody] ConfigureInstallRequest requestData, CancellationToken ct)
     {
         return api.Install.ConfigureInstall.Execute(requestData, ct);
@@ -85,18 +79,6 @@ public sealed partial class InstallController : Controller
     public Task<ResultContainer<XtiVersionModel[]>> GetVersions([FromBody] GetVersionsRequest requestData, CancellationToken ct)
     {
         return api.Install.GetVersions.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] GetInstallationRequest requestData, CancellationToken ct)
-    {
-        return api.Install.Installed.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<NewInstallationResult>> NewInstallation([FromBody] NewInstallationRequest requestData, CancellationToken ct)
-    {
-        return api.Install.NewInstallation.Execute(requestData, ct);
     }
 
     [HttpPost]

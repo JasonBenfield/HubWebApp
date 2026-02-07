@@ -2,9 +2,9 @@
 
 public sealed class GetInstallConfigurationsAction : AppAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public GetInstallConfigurationsAction(IHubAdministration hubAdmin)
+    public GetInstallConfigurationsAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

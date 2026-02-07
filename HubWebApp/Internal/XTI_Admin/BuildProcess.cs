@@ -1,7 +1,6 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_Processes;
-using XTI_TempLog.Abstractions;
 
 namespace XTI_Admin;
 
@@ -9,10 +8,10 @@ public sealed class BuildProcess
 {
     private readonly SelectedAppKeys selectedAppKeys;
     private readonly AppVersionNameAccessor versionNameAccessor;
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly BranchVersion branchVersion;
 
-    public BuildProcess(SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, IHubAdministration hubAdmin, BranchVersion branchVersion)
+    public BuildProcess(SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, IHubService hubAdmin, BranchVersion branchVersion)
     {
         this.selectedAppKeys = selectedAppKeys;
         this.versionNameAccessor = versionNameAccessor;

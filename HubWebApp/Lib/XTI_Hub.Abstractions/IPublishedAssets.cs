@@ -1,10 +1,10 @@
 ﻿using XTI_App.Abstractions;
 
-namespace XTI_Admin;
+namespace XTI_Hub.Abstractions;
 
 public interface IPublishedAssets : IDisposable
 {
-    Task<string> LoadVersions(string releaseTag);
+    Task<string> LoadVersions();
 
     Task<string> LoadSetup(string releaseTag, AppKey appKey, AppVersionKey versionKey, CancellationToken ct);
 

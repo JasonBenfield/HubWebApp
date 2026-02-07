@@ -1,20 +1,22 @@
-﻿using XTI_App.Abstractions;
-using XTI_Core;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_HubAppClient;
-using XTI_HubAppClient.Extensions;
-using XTI_WebAppClient;
+﻿using XTI_HubAppClient;
 
 namespace XTI_AdminTool;
 
-public sealed class HcHubAdministration : IHubAdministration
+public sealed class HcHubService : IHubService
 {
     private readonly HubAppClient hubClient;
+    private Action resetDefaultToken;
 
-    public HcHubAdministration(HubAppClient hubClient)
+    public HcHubService(HubAppClient hubClient)
     {
         this.hubClient = hubClient;
+        resetDefaultToken = () => hubClient.UseToken<AnonymousXtiToken>();
+    }
+
+    public void UseDefaultToken<T>()
+        where T : IXtiToken
+    {
+        resetDefaultToken = () => hubClient.UseToken<T>();
     }
 
     public Task<AppUserModel> AddOrUpdateInstallationUser(string machineName, string password, CancellationToken ct)
@@ -50,9 +52,6 @@ public sealed class HcHubAdministration : IHubAdministration
             ct
         );
 
-    public Task BeginInstall(int installationID, CancellationToken ct) =>
-        hubClient.Install.BeginInstallation(new GetInstallationRequest(installationID), ct);
-
     public Task<XtiVersionModel> BeginPublish(AppVersionName versionName, AppVersionKey versionKey, CancellationToken ct)
     {
         var request = new PublishVersionRequest
@@ -71,22 +70,6 @@ public sealed class HcHubAdministration : IHubAdministration
             versionKey: versionKey
         );
         return hubClient.Publish.EndPublish(request, ct);
-    }
-
-    public Task Installed(int installationID, CancellationToken ct) =>
-        hubClient.Install.Installed(new GetInstallationRequest(installationID), ct);
-
-    public Task<NewInstallationResult> NewInstallation(AppVersionName versionName, AppKey appKey, string machineName, string domain, string siteName, CancellationToken ct)
-    {
-        var request = new NewInstallationRequest
-        (
-            versionName: versionName,
-            appKey: appKey,
-            qualifiedMachineName: machineName,
-            domain: domain,
-            siteName: siteName
-        );
-        return hubClient.Install.NewInstallation(request, ct);
     }
 
     public Task<XtiVersionModel> StartNewVersion(AppVersionName versionName, AppVersionType versionType, CancellationToken ct)
@@ -169,8 +152,48 @@ public sealed class HcHubAdministration : IHubAdministration
         }
         finally
         {
-            hubClient.UseToken<InstallationUserXtiToken>();
+            resetDefaultToken();
         }
         return serialized;
     }
+
+    public Task<AppInstallCommandDetailModel> AddInstallCommand(AddAppInstallCommandRequest installRequest, CancellationToken ct) =>
+        hubClient.Installations.RequestInstallation(installRequest, ct);
+
+    public Task<AppCommandModel> BeginInstallCommand(int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Installations.BeginRequestedInstallation(new(commandID: requestedInstallationID), ct);
+
+    public Task<AppCommandStepModel> BeginCommandStep(int requestedInstallationID, string activity, CancellationToken ct) =>
+        hubClient.Installations.BeginRequestedInstallationStep
+        (
+            new(commandID: requestedInstallationID, activity: activity),
+            ct
+        );
+
+    public Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct) =>
+        hubClient.Installations.RequestedInstallationStepEnded
+        (
+            new(stepID: stepID, errorMessage: errorMessage),
+            ct
+        );
+
+    public Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Installations.GetRequestedInstallationDetail
+        (
+            new(commandID: requestedInstallationID), 
+            ct
+        );
+
+    public Task<InstallationModel> BeginInstallation(int requestedInstallationID, bool isCurrent, CancellationToken ct) =>
+        hubClient.Installations.BeginInstallation
+        (
+            new(commandID: requestedInstallationID, isCurrent: isCurrent),
+            ct
+        );
+
+    public Task Installed(int installationID, CancellationToken ct) =>
+        hubClient.Installations.Installed(new InstallationIDRequest(installationID), ct);
+
+    public Task CommandEnded(int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Installations.RequestedInstallationEnded(new(commandID: requestedInstallationID), ct);
 }

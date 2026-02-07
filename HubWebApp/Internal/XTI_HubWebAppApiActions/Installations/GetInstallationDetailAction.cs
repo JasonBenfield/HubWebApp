@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApiActions.Installations;
 
-public sealed class GetInstallationDetailAction : AppAction<int, InstallationDetailModel>
+public sealed class GetInstallationDetailAction : AppAction<InstallationIDRequest, InstallationDetailModel>
 {
     private readonly CurrentAppUser currentUser;
     private readonly EfHubDB hubFactory;
@@ -11,9 +11,9 @@ public sealed class GetInstallationDetailAction : AppAction<int, InstallationDet
         this.hubFactory = hubFactory;
     }
 
-    public async Task<InstallationDetailModel> Execute(int installationID, CancellationToken stoppingToken)
+    public async Task<InstallationDetailModel> Execute(InstallationIDRequest requestData, CancellationToken stoppingToken)
     {
-        var efInstallation = await hubFactory.Installations.InstallationOrDefault(installationID, stoppingToken);
+        var efInstallation = await hubFactory.Installations.InstallationOrDefault(requestData.InstallationID, stoppingToken);
         var efLocation = await efInstallation.Location(stoppingToken);
         var efRequests = await efInstallation.MostRecentRequests(1, stoppingToken);
         var efAppVersion = await efInstallation.AppVersion(stoppingToken);

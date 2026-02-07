@@ -1,6 +1,7 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
+using XTI_Installation;
 
 namespace XTI_Admin;
 
@@ -9,18 +10,18 @@ internal sealed class SetupCommand : ICommand
     private readonly AdminOptions options;
     private readonly XtiEnvironment xtiEnv;
     private readonly PublishedAssetsFactory publishedAssetsFactory;
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubService;
     private readonly SelectedAppKeys selectedAppKeys;
     private readonly AppVersionNameAccessor versionNameAccessor;
     private readonly CurrentVersion currentVersionAccessor;
     private readonly PublishSetupProcess publishSetupProcess;
 
-    public SetupCommand(AdminOptions options, XtiEnvironment xtiEnv, PublishedAssetsFactory publishedAssetsFactory, IHubAdministration hubAdministration, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor, PublishSetupProcess publishSetupProcess)
+    public SetupCommand(AdminOptions options, XtiEnvironment xtiEnv, PublishedAssetsFactory publishedAssetsFactory, IHubService hubService, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor, PublishSetupProcess publishSetupProcess)
     {
         this.options = options;
         this.xtiEnv = xtiEnv;
         this.publishedAssetsFactory = publishedAssetsFactory;
-        this.hubAdministration = hubAdministration;
+        this.hubService = hubService;
         this.selectedAppKeys = selectedAppKeys;
         this.versionNameAccessor = versionNameAccessor;
         this.currentVersionAccessor = currentVersionAccessor;
@@ -35,7 +36,7 @@ internal sealed class SetupCommand : ICommand
             .Where(ak => !ak.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubAdministration.AddOrUpdateApps(versionName, appKeys, ct);
+        await hubService.AddOrUpdateApps(versionName, appKeys, ct);
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
         {

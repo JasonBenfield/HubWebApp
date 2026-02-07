@@ -213,7 +213,7 @@ internal sealed class LogSessionDetailsTest
                             TimeStarted = clock.Now(),
                             TimeEnded = timeEnded,
                             ActualCount = 5,
-                            InstallationID = installation.GetCurrentInstallation().Installation.ID,
+                            InstallationID = installation.ID,
                             RequestData = "Request Data",
                             ResultData = "Result Data"
                         }
@@ -223,14 +223,14 @@ internal sealed class LogSessionDetailsTest
         );
         var sessionDetail = await GetSessionDetail(sp, session.SessionKey);
         var requestDetails = await GetRequestDetails(sp, sessionDetail);
-        Assert.That(requestDetails.Length, Is.EqualTo(1), "Should add request");
-        Assert.That(requestDetails[0].Request.Path, Is.EqualTo("/Fake/Current"), "Should add request");
-        Assert.That(requestDetails[0].Request.TimeStarted, Is.EqualTo(clock.Now()), "Should add request");
-        Assert.That(requestDetails[0].Request.TimeEnded, Is.EqualTo(timeEnded), "Should add request");
-        Assert.That(requestDetails[0].Installation.ID, Is.EqualTo(installation.GetCurrentInstallation().Installation.ID), "Should add request");
-        Assert.That(requestDetails[0].Request.ActualCount, Is.EqualTo(5), "Should add request");
-        Assert.That(requestDetails[0].RequestData, Is.EqualTo("Request Data"), "Should add request");
-        Assert.That(requestDetails[0].ResultData, Is.EqualTo("Result Data"), "Should add request");
+        Assert.That(requestDetails.Length, Is.EqualTo(1));
+        Assert.That(requestDetails[0].Request.Path, Is.EqualTo("/Fake/Current"));
+        Assert.That(requestDetails[0].Request.TimeStarted, Is.EqualTo(clock.Now()));
+        Assert.That(requestDetails[0].Request.TimeEnded, Is.EqualTo(timeEnded));
+        Assert.That(requestDetails[0].Installation.ID, Is.EqualTo(installation.ID));
+        Assert.That(requestDetails[0].Request.ActualCount, Is.EqualTo(5));
+        Assert.That(requestDetails[0].RequestData, Is.EqualTo("Request Data"));
+        Assert.That(requestDetails[0].ResultData, Is.EqualTo("Result Data"));
     }
 
     [Test]
@@ -636,7 +636,7 @@ internal sealed class LogSessionDetailsTest
             TimeStarted = clock.Now(),
             TimeEnded = timeEnded,
             ActualCount = 5,
-            InstallationID = installation.GetCurrentInstallation().Installation.ID
+            InstallationID = installation.ID
         };
     }
 
@@ -722,7 +722,7 @@ internal sealed class LogSessionDetailsTest
         return sp;
     }
 
-    private static async Task<NewInstallationResult> BeginInstallation(IServiceProvider sp)
+    private static async Task<InstallationModel> BeginInstallation(IServiceProvider sp)
     {
         var clock = sp.GetRequiredService<IClock>();
         var apiFactory = sp.GetRequiredService<HubAppApiFactory>();
@@ -753,6 +753,17 @@ internal sealed class LogSessionDetailsTest
                 versionType: AppVersionType.Values.Major
             )
         );
+        await hubApi.Install.AddOrUpdateVersions.Invoke
+        (
+            new AddOrUpdateVersionsRequest
+            (
+                apps: [fakeApp.AppKey],
+                versions:
+                [
+                    new AddVersionRequest(version)
+                ]
+            )
+        );
         await hubApi.Publish.BeginPublish.Invoke
         (
             new PublishVersionRequest
@@ -769,19 +780,21 @@ internal sealed class LogSessionDetailsTest
                 versionKey: version.VersionKey
             )
         );
-        var newInstResult = await hubApi.Install.NewInstallation.Invoke
+        var config = await AddDefaultConfiguration(sp, "destination.xartogg.com");
+        var requestedInstallationDetail = await RequestInstallation
         (
-            new NewInstallationRequest
+            sp,
+            new AddAppInstallCommandRequest
             (
                 appKey: fakeApp.AppKey,
-                versionName: version.VersionName,
-                qualifiedMachineName: "destination.xartogg.com",
-                domain: "test.xartogg.com",
-                siteName: ""
+                versionKey: version.VersionKey,
+                installConfigurationID: config.ID,
+                installAsCurrent: true,
+                isAutoStartEnabled: true
             )
         );
-        await hubApi.Install.BeginInstallation.Invoke(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
-        return newInstResult;
+        var installation = await hubApi.Installations.BeginInstallation.Invoke(new BeginInstallationRequest(requestedInstallationDetail.Command.ID, true));
+        return installation;
     }
 
     private static Task LogSessionDetails(IServiceProvider sp, params TempLogSessionDetailModel[] sessionDetails)
@@ -828,5 +841,55 @@ internal sealed class LogSessionDetailsTest
     {
         var tester = HubActionTester.Create(sp, api => api.Logs.GetLogEntryDetail);
         return tester.Execute(logEntryID);
+    }
+
+    private async static Task<InstallConfigurationModel> AddDefaultConfiguration(IServiceProvider sp, string qualifiedMachineName)
+    {
+        var configTemplate = await AddConfigurationTemplate
+        (
+            sp,
+            new ConfigureInstallTemplateRequest
+            (
+                templateName: "Default",
+                destinationMachineName: qualifiedMachineName,
+                domain: "",
+                siteName: ""
+            )
+        );
+        var config = await AddConfiguration
+        (
+            sp,
+            new ConfigureInstallRequest
+            (
+                repoOwner: "JasonBenfield",
+                repoName: "Fake",
+                configurationName: "Default",
+                appKey: HubInfo.AppKey,
+                templateName: "Default",
+                installSequence: 0
+            )
+        );
+        return config;
+    }
+
+    private async static Task<InstallConfigurationTemplateModel> AddConfigurationTemplate(IServiceProvider sp, ConfigureInstallTemplateRequest configRequest)
+    {
+        var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Install.ConfigureInstallTemplate.Execute(configRequest);
+        return result.Data!;
+    }
+
+    private async static Task<InstallConfigurationModel> AddConfiguration(IServiceProvider sp, ConfigureInstallRequest configRequest)
+    {
+        var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Install.ConfigureInstall.Execute(configRequest);
+        return result.Data!;
+    }
+
+    private async static Task<AppInstallCommandDetailModel> RequestInstallation(IServiceProvider sp, AddAppInstallCommandRequest requestData)
+    {
+        var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        return result.Data!;
     }
 }

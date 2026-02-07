@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -142,6 +143,14 @@ public sealed class EfApp
         var efRequests = await efVersion.MostRecentLoggedErrors(howMany, ct);
         return efRequests;
     }
+
+    public Task<EfAppCommand> AddCommand
+    (
+        AppCommandName commandName,
+        string serializedRequest,
+        DateTimeOffset timeStarted,
+        CancellationToken ct
+    ) => db.AppCommands.Add(app, commandName, serializedRequest, timeStarted, ct);
 
     public AppModel ToModel()
     {

@@ -2,9 +2,9 @@
 
 public sealed class NewVersionAction : AppAction<NewVersionRequest, XtiVersionModel>
 {
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubAdministration;
 
-    public NewVersionAction(IHubAdministration hubAdministration)
+    public NewVersionAction(IHubService hubAdministration)
     {
         this.hubAdministration = hubAdministration;
     }

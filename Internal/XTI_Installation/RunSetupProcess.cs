@@ -1,11 +1,10 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub.Abstractions;
 using XTI_Processes;
 
-namespace XTI_Admin;
+namespace XTI_Installation;
 
-internal sealed class RunSetupProcess
+public sealed class RunSetupProcess
 {
     private readonly XtiEnvironment xtiEnv;
 

@@ -3,6 +3,7 @@ using XTI_Core;
 using XTI_GitHub;
 using XTI_Hub;
 using XTI_Hub.Abstractions;
+using XTI_Installation;
 
 namespace XTI_Admin;
 
@@ -12,49 +13,43 @@ public sealed class InstallProcess
     private readonly SelectedAppKeys selectedAppKeys;
     private readonly AppVersionNameAccessor versionNameAccessor;
     private readonly XtiEnvironment xtiEnv;
+    private readonly XtiFolder xtiFolder;
     private readonly XtiGitHubRepository gitHubRepo;
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubService;
     private readonly GitRepoInfo gitRepoInfo;
     private readonly PublishedAssetsFactory publishedAssetsFactory;
+    private readonly InstallAppProcessFactory installAppProcessFactory;
     private readonly RemoteCommandService remoteCommandService;
-    private readonly LocalInstallProcess localInstallProcess;
 
-    public InstallProcess(AdminOptions options, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, XtiEnvironment xtiEnv, XtiGitHubRepository gitHubRepo, IHubAdministration hubAdministration, GitRepoInfo gitRepoInfo, PublishedAssetsFactory publishedAssetsFactory, RemoteCommandService remoteCommandService, LocalInstallProcess localInstallProcess)
+    public InstallProcess(AdminOptions options, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, XtiEnvironment xtiEnv, XtiFolder xtiFolder, XtiGitHubRepository gitHubRepo, IHubService hubService, GitRepoInfo gitRepoInfo, PublishedAssetsFactory publishedAssetsFactory, InstallAppProcessFactory installAppProcessFactory, RemoteCommandService remoteCommandService)
     {
         this.options = options;
         this.selectedAppKeys = selectedAppKeys;
         this.versionNameAccessor = versionNameAccessor;
         this.xtiEnv = xtiEnv;
+        this.xtiFolder = xtiFolder;
         this.gitHubRepo = gitHubRepo;
-        this.hubAdministration = hubAdministration;
+        this.hubService = hubService;
         this.gitRepoInfo = gitRepoInfo;
         this.publishedAssetsFactory = publishedAssetsFactory;
+        this.installAppProcessFactory = installAppProcessFactory;
         this.remoteCommandService = remoteCommandService;
-        this.localInstallProcess = localInstallProcess;
     }
 
     public async Task Run(CancellationToken ct)
     {
         if (options.IsInitiatedRemotely)
         {
-            if (options.InstallConfigurationID <= 0)
+            if (options.RequestedInstallationID <= 0)
             {
-                throw new Exception("Install Configuration ID is required.");
+                throw new Exception("Requested Installation ID is required.");
             }
-            var installConfig = await hubAdministration.InstallConfiguration(options.InstallConfigurationID, ct);
-            var installMachineName = GetLocalMachineName();
-            var versionName = versionNameAccessor.Value;
-            using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
-            var newInstallation = await NewInstallation
+            var requestedInstallationDetail = await hubService.GetInstallCommandDetail
             (
-                installConfig.AppKey,
-                installMachineName,
-                versionName,
-                installConfig.Template.Domain,
-                installConfig.Template.SiteName,
+                options.RequestedInstallationID,
                 ct
             );
-            await localInstallProcess.Run(newInstallation, publishedAssets, ct);
+            await InstallFromRequest(requestedInstallationDetail, ct);
         }
         else
         {
@@ -65,32 +60,11 @@ public sealed class InstallProcess
             {
                 Console.WriteLine("Beginning Install");
                 var versionName = versionNameAccessor.Value;
-                using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
-                string release;
-                if (publishedAssets is GitHubPublishedAssets)
-                {
-                    var versionNumber = options.VersionNumber;
-                    if (string.IsNullOrWhiteSpace(versionNumber))
-                    {
-                        var latestRelease = await gitHubRepo.LatestRelease();
-                        release = latestRelease.TagName;
-                    }
-                    else
-                    {
-                        release = $"v{versionNumber}";
-                    }
-                }
-                else
-                {
-                    release = "";
-                }
-                var versionsPath = await publishedAssets.LoadVersions(release);
-                var versionReader = new VersionReader(versionsPath);
-                var versions = await versionReader.Versions();
+                var versions = await GetVersions();
                 Console.WriteLine("Adding or updating apps");
-                await hubAdministration.AddOrUpdateApps(versionName, appKeys, ct);
+                await hubService.AddOrUpdateApps(versionName, appKeys, ct);
                 Console.WriteLine("Adding or updating versions");
-                await hubAdministration.AddOrUpdateVersions
+                await hubService.AddOrUpdateVersions
                 (
                     appKeys,
                     versions.Select(v => new AddVersionRequest(v)).ToArray(),
@@ -101,7 +75,7 @@ public sealed class InstallProcess
                 {
                     versionKey = versions.First(v => v.IsCurrent()).VersionKey;
                 }
-                var installConfigs = await hubAdministration.InstallConfigurations
+                var installConfigs = await hubService.InstallConfigurations
                 (
                     new GetInstallConfigurationsRequest
                     (
@@ -125,26 +99,28 @@ public sealed class InstallProcess
                     var installMachineName = isLocal ?
                         GetLocalMachineName() :
                         installConfig.Template.DestinationMachineName;
+                    var requestedInstallationDetail = await hubService.AddInstallCommand
+                    (
+                        new AddAppInstallCommandRequest
+                        (
+                            appKey: installConfig.AppKey,
+                            versionKey: versionKey,
+                            installConfigurationID: options.RequestedInstallationID,
+                            installAsCurrent: true,
+                            isAutoStartEnabled: true
+                        ),
+                        ct
+                    );
                     if (isLocal)
                     {
-                        var newInstallation = await NewInstallation
-                        (
-                            installConfig.AppKey,
-                            installMachineName,
-                            versionName,
-                            installConfig.Template.Domain,
-                            installConfig.Template.SiteName,
-                            ct
-                        );
-                        await localInstallProcess.Run(newInstallation, publishedAssets, ct);
+                        await InstallFromRequest(requestedInstallationDetail, ct);
                     }
                     else
                     {
                         var remoteOptions = options.Copy();
                         remoteOptions.Command = CommandNames.Install;
-                        remoteOptions.InstallConfigurationID = installConfig.ID;
+                        remoteOptions.RequestedInstallationID = requestedInstallationDetail.Command.ID;
                         remoteOptions.IsInitiatedRemotely = true;
-                        remoteOptions.VersionName = versionName.DisplayText;
                         remoteOptions.DestinationMachine = "";
                         remoteOptions.HubAdministrationType = options.HubAdministrationType == HubAdministrationTypes.Default && installConfig.AppKey.Equals(HubInfo.AppKey) ?
                             HubAdministrationTypes.DB :
@@ -163,17 +139,35 @@ public sealed class InstallProcess
         }
     }
 
+    private async Task<XtiVersionModel[]> GetVersions()
+    {
+        using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
+        var versionsPath = await publishedAssets.LoadVersions();
+        var versionReader = new VersionReader(versionsPath);
+        var versions = await versionReader.Versions();
+        return versions;
+    }
+
+    private async Task InstallFromRequest(AppInstallCommandDetailModel requestedInstallationDetail, CancellationToken ct)
+    {
+        var installationSource = options.GetInstallationSource(xtiEnv);
+        using var publishedAssets = publishedAssetsFactory.Create(installationSource);
+        var installFromRequestProcess = new InstallFromRequestProcess
+        (
+            hubService: hubService,
+            publishedAssets: publishedAssets,
+            installFactory: installAppProcessFactory,
+            xtiEnv: xtiEnv,
+            xtiFolder: xtiFolder
+        );
+        await installFromRequestProcess.Run(requestedInstallationDetail, ct);
+    }
+
     private static string GetLocalMachineName()
     {
         var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
-        return string.IsNullOrWhiteSpace(domain) ? 
-            Environment.MachineName : 
+        return string.IsNullOrWhiteSpace(domain) ?
+            Environment.MachineName :
             $"{Environment.MachineName}.{domain}";
-    }
-
-    private Task<NewInstallationResult> NewInstallation(AppKey appKey, string machineName, AppVersionName versionName, string domain, string siteName, CancellationToken ct)
-    {
-        Console.WriteLine($"New installation {appKey.Name.DisplayText} {appKey.Type.DisplayText} {machineName} {versionName.DisplayText}");
-        return hubAdministration.NewInstallation(versionName, appKey, machineName, domain, siteName, ct);
     }
 }

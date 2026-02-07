@@ -2,7 +2,7 @@
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -10,10 +10,10 @@ public sealed class BranchVersion
 {
     private readonly IXtiGitRepository gitRepo;
     private readonly XtiGitHubRepository gitHubRepo;
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public BranchVersion(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, ProductionHubAdmin prodHubAdmin, AppVersionNameAccessor versionNameAccessor)
+    public BranchVersion(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, ProductionHubService prodHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
         this.gitRepo = gitRepo;
         this.gitHubRepo = gitHubRepo;

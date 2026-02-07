@@ -2,9 +2,9 @@
 
 public sealed class ConfigureInstallTemplateAction : AppAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public ConfigureInstallTemplateAction(IHubAdministration hubAdmin)
+    public ConfigureInstallTemplateAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

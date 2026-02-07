@@ -1,6 +1,6 @@
 ﻿namespace XTI_HubWebAppApiActions.Installations;
 
-public sealed class DeletedAction : AppAction<GetInstallationRequest, EmptyActionResult>
+public sealed class DeletedAction : AppAction<InstallationIDRequest, EmptyActionResult>
 {
     private readonly EfHubDB hubFactory;
 
@@ -9,7 +9,7 @@ public sealed class DeletedAction : AppAction<GetInstallationRequest, EmptyActio
         this.hubFactory = hubFactory;
     }
 
-    public async Task<EmptyActionResult> Execute(GetInstallationRequest model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(InstallationIDRequest model, CancellationToken stoppingToken)
     {
         var installation = await hubFactory.Installations.InstallationOrDefault(model.InstallationID, stoppingToken);
         await installation.Deleted(stoppingToken);

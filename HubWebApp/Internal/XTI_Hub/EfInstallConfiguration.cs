@@ -17,6 +17,8 @@ public sealed class EfInstallConfiguration
 
     public bool IsFound() => config.ID > 0;
 
+    internal int ID { get => config.ID; }
+
     internal Task Update(EfInstallConfigurationTemplate template, int installSequence, CancellationToken ct) =>
         db.Context.InstallConfigurations.Update
         (

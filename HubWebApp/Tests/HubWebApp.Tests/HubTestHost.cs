@@ -24,7 +24,7 @@ internal sealed class HubTestHost
         var sp = builder.Build().Scope();
         var initialSetup = sp.GetRequiredService<InitialSetup>();
         await initialSetup.Run(ct: default);
-        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        var hubAdmin = sp.GetRequiredService<IHubService>();
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),

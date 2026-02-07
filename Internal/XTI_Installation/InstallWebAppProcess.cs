@@ -1,9 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_App.Extensions;
 using XTI_Core;
-using XTI_Credentials;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_Secrets;
 
 namespace XTI_Installation;
@@ -11,31 +8,70 @@ namespace XTI_Installation;
 public sealed class InstallWebAppProcess : InstallAppProcess
 {
     private readonly XtiEnvironment xtiEnv;
+    private readonly XtiFolder xtiFolder;
     private readonly ISecretCredentialsFactory credentialsFactory;
 
-    internal InstallWebAppProcess(XtiFolder xtiFolder, IHubAdministration hubAdministration, XtiEnvironment xtiEnv, ISecretCredentialsFactory credentialsFactory)
-        : base(xtiFolder, hubAdministration)
+    public InstallWebAppProcess(XtiEnvironment xtiEnv, XtiFolder xtiFolder, ISecretCredentialsFactory credentialsFactory)
     {
         this.xtiEnv = xtiEnv;
+        this.xtiFolder = xtiFolder;
         this.credentialsFactory = credentialsFactory;
     }
 
-    protected override async Task _Run(string publishedAppDir, AppVersionInstallationModel versionInstallation, CancellationToken ct)
+    public async Task Run(string publishedAppDir, RequestedInstallation requestedInstallation, CancellationToken ct)
     {
-        var versionKey = versionInstallation.GetVersionKey();
-        var appOfflineFile = new AppOfflineFile(xtiFolder, versionInstallation.App.AppKey, versionKey);
-        await PrepareIis(versionInstallation.App.AppKey, versionKey, versionInstallation.Installation.SiteName);
-        try
-        {
-            DeleteExistingWebFiles(versionInstallation.App.AppKey, versionKey);
-        }
-        catch
-        {
-            await Task.Delay(TimeSpan.FromSeconds(15), ct);
-            await RetryDelete(versionInstallation.App.AppKey, versionKey, ct);
-        }
-        await new CopyToInstallDirProcess(xtiFolder).Run(publishedAppDir, versionInstallation.App.AppKey, versionKey, false);
-        appOfflineFile.Delete();
+        var appOfflineFile = new AppOfflineFile(xtiFolder, requestedInstallation.AppKey, requestedInstallation.VersionKey);
+        await requestedInstallation.RunStep
+        (
+            "Prepare IIS",
+            () => PrepareIis
+            (
+                requestedInstallation.AppKey,
+                requestedInstallation.VersionKey,
+                requestedInstallation.SiteName
+            ),
+            ct
+        );
+        await requestedInstallation.RunStep
+        (
+            "Delete Existing Files",
+            async () =>
+            {
+                try
+                {
+                    DeleteExistingWebFiles(requestedInstallation.AppKey, requestedInstallation.VersionKey);
+                }
+                catch
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(15), ct);
+                    await RetryDelete(requestedInstallation.AppKey, requestedInstallation.VersionKey, ct);
+                }
+            },
+            ct
+        );
+        var installDir = xtiFolder.InstallPath(requestedInstallation.AppKey, requestedInstallation.VersionKey);
+        await requestedInstallation.RunStep
+        (
+            $"Copy '{publishedAppDir}' to '{installDir}'",
+            () => new CopyToInstallDirProcess(xtiFolder).Run
+            (
+                publishedAppDir,
+                requestedInstallation.AppKey,
+                requestedInstallation.VersionKey,
+                false
+            ),
+            ct
+        );
+        await requestedInstallation.RunStep
+        (
+            "Delete Existing Files",
+            () =>
+            {
+                appOfflineFile.Delete();
+                return Task.CompletedTask;
+            },
+            ct
+        );
     }
 
     private async Task RetryDelete(AppKey appKey, AppVersionKey installVersionKey, CancellationToken ct)
@@ -55,7 +91,8 @@ public sealed class InstallWebAppProcess : InstallAppProcess
     {
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
         var files = Directory.GetFiles(installDir)
-            .Where(f => !Path.GetFileName(f).Equals(AppOfflineFile.FileName, StringComparison.OrdinalIgnoreCase));
+            .Where(f => !Path.GetFileName(f).Equals(AppOfflineFile.FileName, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
         foreach (var file in files)
         {
             File.Delete(file);

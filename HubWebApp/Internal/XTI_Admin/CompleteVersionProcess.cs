@@ -9,10 +9,10 @@ public sealed class CompleteVersionProcess
 {
     private readonly IXtiGitRepository gitRepo;
     private readonly XtiGitHubRepository gitHubRepo;
-    private readonly ProductionHubAdmin prodHubAdmin;
+    private readonly ProductionHubService prodHubAdmin;
     private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public CompleteVersionProcess(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, ProductionHubAdmin prodHubAdmin, AppVersionNameAccessor versionNameAccessor)
+    public CompleteVersionProcess(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, ProductionHubService prodHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
         this.gitRepo = gitRepo;
         this.gitHubRepo = gitHubRepo;

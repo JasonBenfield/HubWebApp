@@ -5,10 +5,10 @@ namespace XTI_Admin;
 
 internal sealed class ConfigureInstallTemplateCommand : ICommand
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
     private readonly AdminOptions adminOptions;
 
-    public ConfigureInstallTemplateCommand(IHubAdministration hubAdmin, AdminOptions adminOptions)
+    public ConfigureInstallTemplateCommand(IHubService hubAdmin, AdminOptions adminOptions)
     {
         this.hubAdmin = hubAdmin;
         this.adminOptions = adminOptions;

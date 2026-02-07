@@ -278,7 +278,7 @@ public sealed class RegisterAppTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        var hubAdmin = sp.GetRequiredService<IHubAdministration>();
+        var hubAdmin = sp.GetRequiredService<IHubService>();
         var versionName = new AppVersionName("FakeWebApp");
         await hubAdmin.AddOrUpdateApps(versionName, [FakeInfo.AppKey], default);
         await hubAdmin.AddOrUpdateVersions

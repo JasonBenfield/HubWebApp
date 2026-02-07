@@ -2,9 +2,9 @@
 
 public sealed class AddAdminUserAction : AppAction<AddAdminUserRequest, AppUserModel>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public AddAdminUserAction(IHubAdministration hubAdmin)
+    public AddAdminUserAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

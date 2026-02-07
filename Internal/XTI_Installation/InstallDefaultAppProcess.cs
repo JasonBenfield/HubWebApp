@@ -1,23 +1,31 @@
-﻿using XTI_Core;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
+﻿using XTI_App.Extensions;
+using XTI_Core;
 
 namespace XTI_Installation;
 
 public sealed class InstallDefaultAppProcess : InstallAppProcess
 {
-    internal InstallDefaultAppProcess(XtiFolder xtiFolder, IHubAdministration hubAdministration) : 
-        base(xtiFolder, hubAdministration)
+    private readonly XtiFolder xtiFolder;
+
+    public InstallDefaultAppProcess(XtiFolder xtiFolder)
     {
+        this.xtiFolder = xtiFolder;
     }
 
-    protected override Task _Run(string publishedAppDir, AppVersionInstallationModel versionInstallation, CancellationToken ct) =>
-        new CopyToInstallDirProcess(xtiFolder).Run
+    public Task Run(string publishedAppDir, RequestedInstallation requestedInstallation, CancellationToken ct)
+    {
+        var installDir = xtiFolder.InstallPath(requestedInstallation.AppKey, requestedInstallation.VersionKey);
+        return requestedInstallation.RunStep
         (
-            publishedAppDir,
-            versionInstallation.App.AppKey,
-            versionInstallation.GetVersionKey(),
-            true
+            $"Copy '{publishedAppDir}' to '{installDir}'",
+            () => new CopyToInstallDirProcess(xtiFolder).Run
+            (
+                publishedAppDir,
+                requestedInstallation.AppKey,
+                requestedInstallation.VersionKey,
+                true
+            ),
+            ct
         );
-
+    }
 }

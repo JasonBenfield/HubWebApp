@@ -1,4 +1,5 @@
 ﻿using XTI_App.Abstractions;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -11,7 +12,7 @@ public sealed class FolderPublishedAssets : IPublishedAssets
         this.publishFolder = publishFolder;
     }
 
-    public Task<string> LoadVersions(string releaseTag)
+    public Task<string> LoadVersions()
     {
         var versionsPath = publishFolder.VersionsPath();
         return Task.FromResult(versionsPath);
@@ -29,20 +30,6 @@ public sealed class FolderPublishedAssets : IPublishedAssets
         var sourceDir = publishFolder.AppDir(appKey, versionKey);
         var appPath = Path.Combine(sourceDir, "App");
         return Task.FromResult(appPath);
-    }
-
-    public Task<string> LoadTools(AppKey appKey, AppVersionKey versionKey)
-    {
-        var sourceDir = publishFolder.AppDir(appKey, versionKey);
-        var toolsPath = Path.Combine(sourceDir, "Tools");
-        return Task.FromResult(toolsPath);
-    }
-
-    public Task<string> LoadPowershell(AppKey appKey, AppVersionKey versionKey)
-    {
-        var sourceDir = publishFolder.AppDir(appKey, versionKey);
-        var psPath = Path.Combine(sourceDir, "Powershell");
-        return Task.FromResult(psPath);
     }
 
     public void Dispose() { }

@@ -2,9 +2,9 @@
 
 public sealed class AddOrUpdateVersionsAction : AppAction<AddOrUpdateVersionsRequest, EmptyActionResult>
 {
-    private readonly IHubAdministration hubAdmin;
+    private readonly IHubService hubAdmin;
 
-    public AddOrUpdateVersionsAction(IHubAdministration hubAdmin)
+    public AddOrUpdateVersionsAction(IHubService hubAdmin)
     {
         this.hubAdmin = hubAdmin;
     }

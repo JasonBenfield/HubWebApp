@@ -35,11 +35,15 @@ public sealed class HubDbContext : DbContext
         InstallConfigurationTemplates = new EfDataRepository<InstallConfigurationTemplateEntity>(this);
         InstallLocations = new EfDataRepository<InstallLocationEntity>(this);
         Installations = new EfDataRepository<InstallationEntity>(this);
+        AppCommands = new EfDataRepository<AppCommandEntity>(this);
+        AppCommandSteps = new EfDataRepository<AppCommandStepEntity>(this);
+        AppCommandInstallations = new EfDataRepository<AppCommandInstallationEntity>(this);
         StoredObjects = new EfDataRepository<StoredObjectEntity>(this);
         ExpandedSessions = new EfDataRepository<ExpandedSession>(this);
         ExpandedRequests = new EfDataRepository<ExpandedRequest>(this);
         ExpandedLogEntries = new EfDataRepository<ExpandedLogEntry>(this);
         ExpandedInstallations = new EfDataRepository<ExpandedInstallation>(this);
+        ExpandedUsers = new EfDataRepository<ExpandedUser>(this);
         ExpandedUserRoles = new EfDataRepository<ExpandedUserRole>(this);
         unitOfWork = new UnitOfWork(this);
     }
@@ -70,11 +74,15 @@ public sealed class HubDbContext : DbContext
         modelBuilder.ApplyConfiguration(new InstallConfigurationTemplateEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallLocationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new InstallationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AppCommandEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AppCommandStepEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AppCommandInstallationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new StoredObjectEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedSessionEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedRequestEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedLogEntryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedInstallationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ExpandedUserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ExpandedUserRoleEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
@@ -103,6 +111,9 @@ public sealed class HubDbContext : DbContext
     public DataRepository<InstallConfigurationTemplateEntity> InstallConfigurationTemplates { get; }
     public DataRepository<InstallLocationEntity> InstallLocations { get; }
     public DataRepository<InstallationEntity> Installations { get; }
+    public DataRepository<AppCommandEntity> AppCommands { get; }
+    public DataRepository<AppCommandStepEntity> AppCommandSteps { get; }
+    public DataRepository<AppCommandInstallationEntity> AppCommandInstallations { get; }
     public DataRepository<StoredObjectEntity> StoredObjects { get; }
     public DataRepository<ExpandedUser> ExpandedUsers { get; }
     public DataRepository<ExpandedSession> ExpandedSessions { get; }

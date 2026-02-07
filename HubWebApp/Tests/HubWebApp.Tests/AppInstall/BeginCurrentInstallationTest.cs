@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using XTI_HubDB.EF.SqlServer;
 using XTI_HubDB.Entities;
 
 namespace HubWebApp.Tests;
@@ -14,25 +15,31 @@ sealed class BeginCurrentInstallationTest
         var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        var newInstResult = await NewInstallation
+        var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
+        var requestedInstallationDetail = await RequestInstallation
         (
             tester,
-            new NewInstallationRequest
+            new AddAppInstallCommandRequest
             (
-                versionName: appVersion.Version.ToModel().VersionName,
                 appKey: HubInfo.AppKey,
-                qualifiedMachineName: qualifiedMachineName,
-                domain: "",
-                siteName: ""
+                versionKey: appVersion.Version.Key(),
+                installConfigurationID: config.ID,
+                installAsCurrent: true,
+                isAutoStartEnabled: true
             )
         );
-        await tester.Execute(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
-        var currentInstallation = await GetInstallation(tester, newInstResult.GetCurrentInstallation().Installation.ID);
+        var currentInstallation = await tester.Execute
+        (
+            new BeginInstallationRequest
+            (
+                commandID: requestedInstallationDetail.Command.ID,
+                isCurrent: true
+            )
+        );
         Assert.That
         (
-            InstallStatus.Values.Value(currentInstallation.Status),
-            Is.EqualTo(InstallStatus.Values.InstallStarted),
-            "Should set current installation status to install started"
+            currentInstallation.Status,
+            Is.EqualTo(InstallStatus.Values.InstallStarted)
         );
     }
 
@@ -40,18 +47,22 @@ sealed class BeginCurrentInstallationTest
     public async Task ShouldSetCurrentInstallationVersion()
     {
         var tester = await Setup();
+        var factory = tester.Services.GetRequiredService<EfHubDB>();
+        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct: default);
+        var appVersion = await hubApp.CurrentVersion(ct: default);
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
-        await NewInstallation
+        var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
+        var requestedInstallationDetail = await RequestInstallation
         (
             tester,
-            new NewInstallationRequest
+            new AddAppInstallCommandRequest
             (
-                versionName: new AppVersionName("HubWebApp"),
                 appKey: HubInfo.AppKey,
-                qualifiedMachineName: qualifiedMachineName,
-                domain: "",
-                siteName: ""
+                versionKey: appVersion.Version.Key(),
+                installConfigurationID: config.ID,
+                installAsCurrent: true,
+                isAutoStartEnabled: true
             )
         );
         var hubApiFactory = tester.Services.GetRequiredService<HubAppApiFactory>();
@@ -88,55 +99,100 @@ sealed class BeginCurrentInstallationTest
                 versionKey: nextVersion.VersionKey
             )
         );
-        var newInstResult = await NewInstallation
+        var newRequestedInstallationDetail = await RequestInstallation
         (
             tester,
-            new NewInstallationRequest
+            new AddAppInstallCommandRequest
             (
-                versionName: nextVersion.VersionName,
                 appKey: HubInfo.AppKey,
-                qualifiedMachineName: qualifiedMachineName,
-                domain: "",
-                siteName: ""
+                versionKey: appVersion.Version.Key(),
+                installConfigurationID: config.ID,
+                installAsCurrent: true,
+                isAutoStartEnabled: true
             )
         );
-        await tester.Execute(new GetInstallationRequest(newInstResult.GetCurrentInstallation().Installation.ID));
-        var currentInstallation = await GetInstallation(tester, newInstResult.GetCurrentInstallation().Installation.ID);
+        var currentInstallation = await tester.Execute
+        (
+            new BeginInstallationRequest
+            (
+                commandID: requestedInstallationDetail.Command.ID,
+                isCurrent: true
+            )
+        );
         var installationVersion = await GetVersion(tester, currentInstallation);
         Assert.That
         (
             installationVersion.VersionID,
-            Is.EqualTo(nextVersion.ID),
-            "Should set current installation version"
+            Is.EqualTo(nextVersion.ID)
         );
     }
 
-    private static Task<InstallationEntity> GetInstallation(IHubActionTester tester, int installationID)
+    private static async Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationModel installation)
     {
         var db = tester.Services.GetRequiredService<HubDbContext>();
-        return db.Installations.Retrieve()
-            .Where(inst => inst.ID == installationID)
+        var installationEntity = await db.Installations.Retrieve()
+            .Where(inst => inst.ID == installation.ID)
             .FirstAsync();
-    }
-
-    private static Task<AppXtiVersionEntity> GetVersion(IHubActionTester tester, InstallationEntity installation)
-    {
-        var db = tester.Services.GetRequiredService<HubDbContext>();
-        return db.AppVersions.Retrieve()
-            .Where(av => av.ID == installation.AppVersionID)
+        var appVersion = await db.AppVersions.Retrieve()
+            .Where(av => av.ID == installationEntity.AppVersionID)
             .FirstAsync();
+        return appVersion;
     }
 
-    private Task<NewInstallationResult> NewInstallation(IHubActionTester tester, NewInstallationRequest model)
-    {
-        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        return hubApi.Install.NewInstallation.Invoke(model);
-    }
-
-    private async Task<HubActionTester<GetInstallationRequest, EmptyActionResult>> Setup()
+    private async Task<HubActionTester<BeginInstallationRequest, InstallationModel>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Install.BeginInstallation);
+        return HubActionTester.Create(services, hubApi => hubApi.Installations.BeginInstallation);
+    }
+
+    private async Task<InstallConfigurationModel> AddDefaultConfiguration(HubActionTester<BeginInstallationRequest, InstallationModel> tester, string qualifiedMachineName)
+    {
+        var configTemplate = await AddConfigurationTemplate
+        (
+            tester,
+            new ConfigureInstallTemplateRequest
+            (
+                templateName: "Default",
+                destinationMachineName: qualifiedMachineName,
+                domain: "",
+                siteName: ""
+            )
+        );
+        var config = await AddConfiguration
+        (
+            tester,
+            new ConfigureInstallRequest
+            (
+                repoOwner: "JasonBenfield",
+                repoName: "Fake",
+                configurationName: "Default",
+                appKey: HubInfo.AppKey,
+                templateName: "Default",
+                installSequence: 0
+            )
+        );
+        return config;
+    }
+
+    private async Task<InstallConfigurationTemplateModel> AddConfigurationTemplate(IHubActionTester tester, ConfigureInstallTemplateRequest configRequest)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Install.ConfigureInstallTemplate.Execute(configRequest);
+        return result.Data!;
+    }
+
+    private async Task<InstallConfigurationModel> AddConfiguration(IHubActionTester tester, ConfigureInstallRequest configRequest)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Install.ConfigureInstall.Execute(configRequest);
+        return result.Data!;
+    }
+
+    private async Task<AppInstallCommandDetailModel> RequestInstallation(IHubActionTester tester, AddAppInstallCommandRequest requestData)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        return result.Data!;
     }
 }

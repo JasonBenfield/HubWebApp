@@ -90,6 +90,14 @@ public sealed class EfHubDB
 
     public EfInstallLocations InstallLocations { get => installLocations ??= new(this); }
 
+    private EfAppCommands? appCommands;
+
+    public EfAppCommands AppCommands { get => appCommands ??= new(this); }
+
+    private EfAppCommandSteps? appCommandSteps;
+
+    public EfAppCommandSteps AppCommandSteps { get => appCommandSteps ??= new(this); }
+
     private EfInstallations? installations;
 
     public EfInstallations Installations { get => installations ??= new(this); }

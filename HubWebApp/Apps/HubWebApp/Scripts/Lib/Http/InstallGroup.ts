@@ -15,7 +15,6 @@ export class InstallGroup extends AppClientGroup {
 		this.AddOrUpdateAppsAction = this.createAction<IAddOrUpdateAppsRequest,IAppModel[]>('AddOrUpdateApps', 'Add Or Update Apps');
 		this.AddOrUpdateVersionsAction = this.createAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>('AddOrUpdateVersions', 'Add Or Update Versions');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
-		this.BeginInstallationAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('BeginInstallation', 'Begin Installation');
 		this.ConfigureInstallAction = this.createAction<IConfigureInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
 		this.ConfigureInstallTemplateAction = this.createAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>('ConfigureInstallTemplate', 'Configure Install Template');
 		this.DeleteInstallConfigurationAction = this.createAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
@@ -23,8 +22,6 @@ export class InstallGroup extends AppClientGroup {
 		this.GetInstallConfigurationsAction = this.createAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>('GetInstallConfigurations', 'Get Install Configurations');
 		this.GetVersionAction = this.createAction<IGetVersionRequest,IXtiVersionModel>('GetVersion', 'Get Version');
 		this.GetVersionsAction = this.createAction<IGetVersionsRequest,IXtiVersionModel[]>('GetVersions', 'Get Versions');
-		this.InstalledAction = this.createAction<IGetInstallationRequest,IEmptyActionResult>('Installed', 'Installed');
-		this.NewInstallationAction = this.createAction<INewInstallationRequest,INewInstallationResult>('NewInstallation', 'New Installation');
 		this.RegisterAppAction = this.createAction<IRegisterAppRequest,IAppModel>('RegisterApp', 'Register App');
 		this.SetUserAccessAction = this.createAction<ISetUserAccessRequest,IEmptyActionResult>('SetUserAccess', 'Set User Access');
 	}
@@ -34,7 +31,6 @@ export class InstallGroup extends AppClientGroup {
 	readonly AddOrUpdateAppsAction: AppClientAction<IAddOrUpdateAppsRequest,IAppModel[]>;
 	readonly AddOrUpdateVersionsAction: AppClientAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>;
 	readonly AddSystemUserAction: AppClientAction<IAddSystemUserRequest,IAppUserModel>;
-	readonly BeginInstallationAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
 	readonly ConfigureInstallAction: AppClientAction<IConfigureInstallRequest,IInstallConfigurationModel>;
 	readonly ConfigureInstallTemplateAction: AppClientAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>;
 	readonly DeleteInstallConfigurationAction: AppClientAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>;
@@ -42,8 +38,6 @@ export class InstallGroup extends AppClientGroup {
 	readonly GetInstallConfigurationsAction: AppClientAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>;
 	readonly GetVersionAction: AppClientAction<IGetVersionRequest,IXtiVersionModel>;
 	readonly GetVersionsAction: AppClientAction<IGetVersionsRequest,IXtiVersionModel[]>;
-	readonly InstalledAction: AppClientAction<IGetInstallationRequest,IEmptyActionResult>;
-	readonly NewInstallationAction: AppClientAction<INewInstallationRequest,INewInstallationResult>;
 	readonly RegisterAppAction: AppClientAction<IRegisterAppRequest,IAppModel>;
 	readonly SetUserAccessAction: AppClientAction<ISetUserAccessRequest,IEmptyActionResult>;
 	
@@ -61,9 +55,6 @@ export class InstallGroup extends AppClientGroup {
 	}
 	AddSystemUser(requestData: IAddSystemUserRequest, errorOptions?: IActionErrorOptions) {
 		return this.AddSystemUserAction.execute(requestData, errorOptions || {});
-	}
-	BeginInstallation(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.BeginInstallationAction.execute(requestData, errorOptions || {});
 	}
 	ConfigureInstall(requestData: IConfigureInstallRequest, errorOptions?: IActionErrorOptions) {
 		return this.ConfigureInstallAction.execute(requestData, errorOptions || {});
@@ -85,12 +76,6 @@ export class InstallGroup extends AppClientGroup {
 	}
 	GetVersions(requestData: IGetVersionsRequest, errorOptions?: IActionErrorOptions) {
 		return this.GetVersionsAction.execute(requestData, errorOptions || {});
-	}
-	Installed(requestData: IGetInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.InstalledAction.execute(requestData, errorOptions || {});
-	}
-	NewInstallation(requestData: INewInstallationRequest, errorOptions?: IActionErrorOptions) {
-		return this.NewInstallationAction.execute(requestData, errorOptions || {});
 	}
 	RegisterApp(requestData: IRegisterAppRequest, errorOptions?: IActionErrorOptions) {
 		return this.RegisterAppAction.execute(requestData, errorOptions || {});

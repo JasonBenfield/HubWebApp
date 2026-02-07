@@ -2,9 +2,9 @@
 
 public sealed class EndPublishAction : AppAction<PublishVersionRequest, XtiVersionModel>
 {
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubAdministration;
 
-    public EndPublishAction(IHubAdministration hubAdministration)
+    public EndPublishAction(IHubService hubAdministration)
     {
         this.hubAdministration = hubAdministration;
     }

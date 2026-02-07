@@ -13,7 +13,6 @@ internal static partial class InstallGroupExtensions
         services.AddScoped<AddOrUpdateVersionsAction>();
         services.AddScoped<AddSystemUserAction>();
         services.AddScoped<AddSystemUserValidation>();
-        services.AddScoped<BeginInstallationAction>();
         services.AddScoped<ConfigureInstallAction>();
         services.AddScoped<ConfigureInstallValidation>();
         services.AddScoped<ConfigureInstallTemplateAction>();
@@ -25,9 +24,6 @@ internal static partial class InstallGroupExtensions
         services.AddScoped<GetInstallConfigurationsValidation>();
         services.AddScoped<GetVersionAction>();
         services.AddScoped<GetVersionsAction>();
-        services.AddScoped<InstalledAction>();
-        services.AddScoped<NewInstallationAction>();
-        services.AddScoped<NewInstallationValidation>();
         services.AddScoped<RegisterAppAction>();
         services.AddScoped<SetUserAccessAction>();
     }

@@ -17,7 +17,6 @@ internal sealed class CopyToInstallDirProcess
     public Task Run(string sourceDir, AppKey appKey, AppVersionKey installVersionKey, bool purge)
     {
         var installDir = xtiFolder.InstallPath(appKey, installVersionKey);
-        Console.WriteLine($"Copying from '{sourceDir}' to '{installDir}'");
         var process = new RobocopyProcess(sourceDir, installDir)
             .CopySubdirectoriesIncludingEmpty()
             .NoDirectoryLogging()

@@ -21,10 +21,10 @@ public sealed class PublishProcess
     private readonly PublishedFolder publishFolder;
     private readonly PublishLibProcess publishLibProcess;
     private readonly PublishSetupProcess publishSetupProcess;
-    private readonly ProductionHubAdmin prodHubAdmin;
+    private readonly ProductionHubService prodHubAdmin;
     private readonly CompleteVersionProcess completeVersionProcess;
 
-    public PublishProcess(XtiEnvironment xtiEnv, SlnFolder slnFolder, AdminOptions options, AppVersionNameAccessor versionNameAccessor, XtiGitHubRepository gitHubRepo, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, BeginPublishProcess beginPublishProcess, PublishedFolder publishFolder, PublishLibProcess publishLibProcess, PublishSetupProcess publishSetupProcess, ProductionHubAdmin prodHubAdmin, CompleteVersionProcess completeVersionProcess)
+    public PublishProcess(XtiEnvironment xtiEnv, SlnFolder slnFolder, AdminOptions options, AppVersionNameAccessor versionNameAccessor, XtiGitHubRepository gitHubRepo, CurrentVersion currentVersionAccessor, IXtiGitRepository gitRepo, BeginPublishProcess beginPublishProcess, PublishedFolder publishFolder, PublishLibProcess publishLibProcess, PublishSetupProcess publishSetupProcess, ProductionHubService prodHubAdmin, CompleteVersionProcess completeVersionProcess)
     {
         this.xtiEnv = xtiEnv;
         this.slnFolder = slnFolder;

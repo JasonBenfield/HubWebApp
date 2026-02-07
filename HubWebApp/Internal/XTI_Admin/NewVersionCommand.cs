@@ -2,7 +2,7 @@
 using XTI_Git;
 using XTI_Git.Abstractions;
 using XTI_GitHub;
-using XTI_Hub;
+using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -11,15 +11,15 @@ public sealed class NewVersionCommand : ICommand
     private readonly IXtiGitRepository gitRepo;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AdminOptions options;
-    private readonly IHubAdministration hubAdministration;
+    private readonly IHubService hubService;
     private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public NewVersionCommand(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, AdminOptions options, IHubAdministration hubAdministration, AppVersionNameAccessor versionNameAccessor)
+    public NewVersionCommand(IXtiGitRepository gitRepo, XtiGitHubRepository gitHubRepo, AdminOptions options, IHubService hubService, AppVersionNameAccessor versionNameAccessor)
     {
         this.gitRepo = gitRepo;
         this.gitHubRepo = gitHubRepo;
         this.options = options;
-        this.hubAdministration = hubAdministration;
+        this.hubService = hubService;
         this.versionNameAccessor = versionNameAccessor;
     }
 
@@ -37,7 +37,7 @@ public sealed class NewVersionCommand : ICommand
             throw new ArgumentException($"Version type '{options.VersionType}' is not valid");
         }
         var versionName = versionNameAccessor.Value;
-        var newVersion = await hubAdministration.StartNewVersion
+        var newVersion = await hubService.StartNewVersion
         (
             versionName,
             versionType,

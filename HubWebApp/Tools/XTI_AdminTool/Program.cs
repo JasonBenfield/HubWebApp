@@ -18,6 +18,7 @@ using XTI_Git.Secrets;
 using XTI_GitHub;
 using XTI_GitHub.Web;
 using XTI_Hub;
+using XTI_Hub.Abstractions;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
 using XTI_HubDB.Entities;
@@ -203,8 +204,16 @@ await Host.CreateDefaultBuilder(args)
                 return config.Get<AdminToolOptions>()?.HubClient ?? new HubClientOptions();
             });
             services.AddInstallationUserXtiToken();
-            services.AddScoped<EfHubAdministration>();
-            services.AddScoped<HcHubAdministration>();
+            services.AddScoped<EfHubService>();
+            services.AddScoped
+            (
+                sp =>
+                {
+                    var hcHubService = sp.GetRequiredService<HcHubService>();
+                    hcHubService.UseDefaultToken<InstallationUserXtiToken>();
+                    return hcHubService;
+                }
+            );
             services.AddScoped
             (
                 sp =>
@@ -230,36 +239,35 @@ await Host.CreateDefaultBuilder(args)
             (
                 sp =>
                 {
-                    IHubAdministration hubAdministration;
+                    IHubService hubService;
                     var hubDbType = sp.GetRequiredService<HubDbTypeAccessor>().Value;
                     if (hubDbType == HubAdministrationTypes.DB)
                     {
-                        hubAdministration = sp.GetRequiredService<EfHubAdministration>();
+                        hubService = sp.GetRequiredService<EfHubService>();
                     }
                     else if (hubDbType == HubAdministrationTypes.HubClient)
                     {
-                        hubAdministration = sp.GetRequiredService<HcHubAdministration>();
+                        hubService = sp.GetRequiredService<HcHubService>();
                     }
                     else
                     {
                         throw new NotSupportedException($"'{hubDbType}' is not supported.");
                     }
-                    return hubAdministration;
+                    return hubService;
                 }
             );
             services.AddScoped<RemoteCommandService>();
             services.AddScoped
             (
-                sp => new ProductionHubAdmin
+                sp => new ProductionHubService
                 (
-                    sp.GetRequiredService<Scopes>().Production().GetRequiredService<IHubAdministration>()
+                    sp.GetRequiredService<Scopes>().Production().GetRequiredService<IHubService>()
                 )
             );
             services.AddScoped<CurrentVersion>();
             services.AddScoped<VersionKeyFromCurrentBranch>();
             services.AddScoped<PublishLibProcess>();
             services.AddScoped<InstallAppProcessFactory>();
-            services.AddScoped<LocalInstallProcess>();
             services.AddScoped<InstallProcess>();
             services.AddScoped<BranchVersion>();
             services.AddScoped<BuildProcess>();

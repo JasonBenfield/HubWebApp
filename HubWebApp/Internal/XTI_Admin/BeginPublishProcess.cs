@@ -5,10 +5,10 @@ namespace XTI_Admin;
 public sealed class BeginPublishProcess
 {
     private readonly VersionKeyFromCurrentBranch versionKeyFromCurrentBranch;
-    private readonly ProductionHubAdmin productionHubAdmin;
+    private readonly ProductionHubService productionHubAdmin;
     private readonly AppVersionNameAccessor versionNameAccessor;
 
-    public BeginPublishProcess(VersionKeyFromCurrentBranch versionKeyFromCurrentBranch, ProductionHubAdmin productionHubAdmin, AppVersionNameAccessor versionNameAccessor)
+    public BeginPublishProcess(VersionKeyFromCurrentBranch versionKeyFromCurrentBranch, ProductionHubService productionHubAdmin, AppVersionNameAccessor versionNameAccessor)
     {
         this.versionKeyFromCurrentBranch = versionKeyFromCurrentBranch;
         this.productionHubAdmin = productionHubAdmin;

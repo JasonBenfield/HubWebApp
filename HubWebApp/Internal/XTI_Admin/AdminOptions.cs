@@ -20,7 +20,7 @@ public sealed class AdminOptions
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
-    public int InstallConfigurationID { get; set; }
+    public int RequestedInstallationID { get; set; }
     public bool IsInitiatedRemotely { get; set; }
     public string InstallerUserName { get; set; } = "";
     public string InstallerPassword { get; set; } = "";

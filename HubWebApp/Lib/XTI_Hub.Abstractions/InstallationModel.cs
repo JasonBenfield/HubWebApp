@@ -4,6 +4,8 @@ public sealed record InstallationModel(int ID, InstallStatus Status, bool IsCurr
 {
     public InstallationModel()
         : this(0, InstallStatus.Values.GetDefault(), false, "", "")
-{
-}
+    {
+    }
+
+    public bool IsFound() => ID > 0;
 }

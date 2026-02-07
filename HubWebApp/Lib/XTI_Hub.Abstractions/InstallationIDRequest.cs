@@ -1,13 +1,13 @@
 ﻿namespace XTI_Hub.Abstractions;
 
-public sealed class GetInstallationRequest
+public sealed class InstallationIDRequest
 {
-    public GetInstallationRequest()
+    public InstallationIDRequest()
         : this(0)
     {
     }
 
-    public GetInstallationRequest(int installationID)
+    public InstallationIDRequest(int installationID)
     {
         InstallationID = installationID;
     }

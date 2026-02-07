@@ -36,10 +36,7 @@ public sealed class EfInstallLocation
         db.Installations.CurrentInstallation(this, appVersion, ct);
 
     public Task<EfInstallation> NewCurrentInstallation(EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct) =>
-        db.Installations.NewCurrentInstallation(this, appVersion, domain, siteName, timeAdded, ct);
-
-    public Task<EfInstallation> NewVersionInstallation(EfAppVersion appVersion, string domain, string siteName, DateTimeOffset timeAdded, CancellationToken ct) =>
-        db.Installations.NewVersionInstallation(this, appVersion, domain, siteName, timeAdded, ct);
+        db.Installations.NewInstallation(this, appVersion, domain, siteName, timeAdded, InstallStatus.Values.InstallPending, true, ct);
 
     public InstallLocationModel ToModel() => new InstallLocationModel(location.ID, location.QualifiedMachineName);
 

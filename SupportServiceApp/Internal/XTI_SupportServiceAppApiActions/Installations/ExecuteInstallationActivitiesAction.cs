@@ -39,7 +39,7 @@ public sealed class ExecuteInstallationActivitiesAction : AppAction<EmptyRequest
         }
         foreach (var pendingDelete in installationActivities.Deletions)
         {
-            await hubClient.Installations.BeginDelete(new GetInstallationRequest(pendingDelete.Installation.ID), ct);
+            await hubClient.Installations.BeginDelete(new InstallationIDRequest(pendingDelete.Installation.ID), ct);
             var versionKey = pendingDelete.Installation.IsCurrent
                 ? AppVersionKey.Current
                 : pendingDelete.Version.VersionKey;
@@ -65,7 +65,7 @@ public sealed class ExecuteInstallationActivitiesAction : AppAction<EmptyRequest
             {
                 Directory.Delete(appFolder, true);
             }
-            await hubClient.Installations.Deleted(new GetInstallationRequest(pendingDelete.Installation.ID), ct);
+            await hubClient.Installations.Deleted(new InstallationIDRequest(pendingDelete.Installation.ID), ct);
         }
         return new EmptyActionResult();
     }

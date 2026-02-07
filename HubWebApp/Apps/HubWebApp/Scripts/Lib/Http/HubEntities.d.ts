@@ -208,9 +208,6 @@ interface IAddSystemUserRequest {
 	MachineName: string;
 	Password: string;
 }
-interface IGetInstallationRequest {
-	InstallationID: number;
-}
 interface IConfigureInstallRequest {
 	RepoOwner: string;
 	RepoName: string;
@@ -276,31 +273,6 @@ interface IAppVersionNumber {
 interface IGetVersionsRequest {
 	VersionName: string;
 }
-interface INewInstallationRequest {
-	VersionName: string;
-	AppKey: IAppKeyRequest;
-	QualifiedMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
-interface INewInstallationResult {
-	CurrentInstallation: IInstallationModel;
-	VersionInstallation: IInstallationModel;
-	Location: IInstallLocationModel;
-	App: IAppModel;
-	Version: IXtiVersionModel;
-}
-interface IInstallationModel {
-	ID: number;
-	Status: IInstallStatus;
-	IsCurrent: boolean;
-	Domain: string;
-	SiteName: string;
-}
-interface IInstallLocationModel {
-	ID: number;
-	QualifiedMachineName: string;
-}
 interface IRegisterAppRequest {
 	VersionKey: IAppVersionKey;
 	AppTemplate: IAppApiTemplateModel;
@@ -337,6 +309,40 @@ interface ISetUserAccessRoleRequest {
 	ModKey: string;
 	RoleNames: string[];
 }
+interface IInstallationIDRequest {
+	InstallationID: number;
+}
+interface IBeginInstallationRequest {
+	RequestedInstallationID: number;
+	IsCurrent: boolean;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+	SiteName: string;
+}
+interface IRequestedInstallationIDRequest {
+	RequestedInstallationID: number;
+}
+interface IRequestedInstallationModel {
+	ID: number;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	InstallAsCurrent: boolean;
+}
+interface IBeginRequestedInstallationStepRequest {
+	RequestedInstallationID: number;
+	Activity: string;
+}
+interface IRequestedInstallationStepModel {
+	ID: number;
+	Activity: string;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ErrorMessage: string;
+}
 interface IGetInstallationActivitiesRequest {
 	MachineNames: string[];
 }
@@ -356,6 +362,10 @@ interface IInstallationDetailModel {
 	App: IAppModel;
 	MostRecentRequest: IAppRequestModel;
 }
+interface IInstallLocationModel {
+	ID: number;
+	QualifiedMachineName: string;
+}
 interface IAppRequestModel {
 	ID: number;
 	Path: string;
@@ -365,11 +375,31 @@ interface IAppRequestModel {
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ActualCount: number;
 }
+interface IRequestedInstallationDetailModel {
+	RequestedInstallation: IRequestedInstallationModel;
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	InstallConfiguration: IInstallConfigurationModel;
+	Steps: IRequestedInstallationStepModel[];
+	CurrentInstallation: IInstallationModel;
+	VersionInstallation: IInstallationModel;
+}
 interface IInstallationQueryRequest {
 	QueryType: number;
 }
 interface IInstallationViewRequest {
 	InstallationID: number;
+}
+interface IRequestedInstallationStepEndedRequest {
+	StepID: number;
+	ErrorMessage: string;
+}
+interface IRequestInstallationRequest {
+	AppKey: IAppKeyRequest;
+	VersionKey: string;
+	InstallConfigurationID: number;
+	InstallAsCurrent: boolean;
+	IsAutoStartEnabled: boolean;
 }
 interface IAppRequestRequest {
 	RequestID: number;
