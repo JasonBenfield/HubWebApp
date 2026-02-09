@@ -1,6 +1,5 @@
-﻿using XTI_Core;
-using XTI_GitHub;
-using XTI_Hub.Abstractions;
+﻿using XTI_GitHub;
+using XTI_Internal.Implementations;
 
 namespace XTI_Admin;
 
@@ -9,14 +8,12 @@ public sealed class PublishedAssetsFactory
     private readonly PublishedFolder publishedFolder;
     private readonly XtiGitHubRepository gitHubRepo;
     private readonly AppVersionNameAccessor versionNameAccessor;
-    private readonly CurrentVersion currentVersionAccessor;
 
-    public PublishedAssetsFactory(PublishedFolder publishedFolder, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor)
+    public PublishedAssetsFactory(PublishedFolder publishedFolder, XtiGitHubRepository gitHubRepo, AppVersionNameAccessor versionNameAccessor)
     {
         this.publishedFolder = publishedFolder;
         this.gitHubRepo = gitHubRepo;
         this.versionNameAccessor = versionNameAccessor;
-        this.currentVersionAccessor = currentVersionAccessor;
     }
 
     public IPublishedAssets Create(InstallationSources installationSource)
@@ -28,11 +25,11 @@ public sealed class PublishedAssetsFactory
         }
         else if (installationSource == InstallationSources.GitHub)
         {
+            var versionName = versionNameAccessor.Value;
             publishedAssets = new GitHubPublishedAssets
             (
                 gitHubRepo,
-                versionNameAccessor,
-                currentVersionAccessor
+                $"xti_{versionName.Value}"
             );
         }
         else

@@ -1,5 +1,6 @@
 ﻿using HubWebApp.Fakes;
 using XTI_Core.Extensions;
+using XTI_Internal.Abstractions;
 
 namespace HubWebApp.Tests;
 
@@ -61,6 +62,8 @@ internal sealed class HubSetupTest
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
+            "Fake", 
+            "Fake",
             [HubInfo.AppKey],
             default
         );

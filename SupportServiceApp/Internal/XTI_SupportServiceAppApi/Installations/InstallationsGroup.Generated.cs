@@ -1,4 +1,4 @@
-using XTI_SupportServiceAppApi.Installations;
+using XTI_SupportServiceAppApiActions.Installations;
 
 // Generated Code
 #nullable enable
@@ -7,10 +7,10 @@ public sealed partial class InstallationsGroup : AppApiGroupWrapper
 {
     internal InstallationsGroup(AppApiGroup source, InstallationsGroupBuilder builder) : base(source)
     {
-        ExecuteInstallationActivities = builder.ExecuteInstallationActivities.Build();
+        ExecutePendingCommands = builder.ExecutePendingCommands.Build();
         Configure();
     }
 
     partial void Configure();
-    public AppApiAction<EmptyRequest, EmptyActionResult> ExecuteInstallationActivities { get; }
+    public AppApiAction<EmptyRequest, EmptyActionResult> ExecutePendingCommands { get; }
 }

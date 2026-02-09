@@ -14,17 +14,6 @@ public sealed class EfInstallations
         this.db = db;
     }
 
-    public Task<EfInstallation[]> GetPendingDeletes(string machineName, CancellationToken ct)
-    {
-        var locationIDs = db.Context.InstallLocations.Retrieve()
-            .Where(l => l.QualifiedMachineName == machineName.ToLower())
-            .Select(l => l.ID);
-        return db.Context.Installations.Retrieve()
-            .Where(inst => locationIDs.Contains(inst.LocationID) && inst.Status == InstallStatus.Values.DeletePending)
-            .Select(inst => new EfInstallation(db, inst))
-            .ToArrayAsync(ct);
-    }
-
     internal async Task<EfInstallation> NewInstallation(EfInstallLocation efLocation, EfAppVersion efAppVersion, string domain, string siteName, DateTimeOffset timeAdded, InstallStatus initialStatus, bool isCurrent, CancellationToken ct)
     {
         var appVersionID = await efAppVersion.AppVersionID(ct);

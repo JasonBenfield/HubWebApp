@@ -5,3 +5,4 @@ global using XTI_Hub;
 global using XTI_Hub.Abstractions;
 global using XTI_WebApp.Abstractions;
 global using XTI_WebApp.Api;
+global using XTI_Internal.Abstractions;

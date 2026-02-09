@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using XTI_Core;
 using XTI_Core.Extensions;
 using XTI_Core.Fakes;
+using XTI_Internal.Abstractions;
 
 namespace HubWebApp.Tests;
 
@@ -28,6 +29,8 @@ internal sealed class HubTestHost
         await hubAdmin.AddOrUpdateApps
         (
             new AppVersionName("HubWebApp"),
+            "Fake", 
+            "Fake",
             [HubInfo.AppKey],
             default
         );

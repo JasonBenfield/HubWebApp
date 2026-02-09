@@ -2,17 +2,16 @@
 
 public sealed class BeginDeleteAction : AppAction<InstallationIDRequest, EmptyActionResult>
 {
-    private readonly EfHubDB hubFactory;
+    private readonly IHubService hubService;
 
-    public BeginDeleteAction(EfHubDB hubFactory)
+    public BeginDeleteAction(IHubService hubService)
     {
-        this.hubFactory = hubFactory;
+        this.hubService = hubService;
     }
 
-    public async Task<EmptyActionResult> Execute(InstallationIDRequest model, CancellationToken stoppingToken)
+    public async Task<EmptyActionResult> Execute(InstallationIDRequest requestData, CancellationToken stoppingToken)
     {
-        var installation = await hubFactory.Installations.InstallationOrDefault(model.InstallationID, stoppingToken);
-        await installation.BeginDelete(stoppingToken);
+        await hubService.BeginDelete(requestData.InstallationID, stoppingToken);
         return new EmptyActionResult();
     }
 }

@@ -1,18 +1,17 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
+using XTI_Internal.Abstractions;
 using XTI_TempLog.Abstractions;
 
 namespace XTI_Hub;
 
-public sealed class EfPermanentLog : XTI_PermanentLog.IPermanentLog
+public sealed class EfPermanentLog : IPermanentLog
 {
     private readonly EfHubDB db;
-    private readonly IClock clock;
 
-    public EfPermanentLog(EfHubDB db, IClock clock)
+    public EfPermanentLog(EfHubDB db)
     {
         this.db = db;
-        this.clock = clock;
     }
 
     public async Task LogSessionDetails(TempLogSessionDetailModel[] sessionDetails, CancellationToken ct)

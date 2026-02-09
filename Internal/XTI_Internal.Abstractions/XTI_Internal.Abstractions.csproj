@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="XTI_TempLog" Version="1.2.38-dev260201163027004" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\HubWebApp\Lib\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

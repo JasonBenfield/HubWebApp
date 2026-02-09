@@ -12,13 +12,15 @@ internal sealed class AddSystemUserCommand : ICommand
     private readonly IHubService hubService;
     private readonly ISecretCredentialsFactory secretCredentialsFactory;
     private readonly AppVersionNameAccessor versionNameAccessor;
+    private readonly GitRepoInfo gitRepoInfo;
 
-    public AddSystemUserCommand(SelectedAppKeys selectedAppKeys, IHubService hubService, ISecretCredentialsFactory secretCredentialsFactory, AppVersionNameAccessor versionNameAccessor)
+    public AddSystemUserCommand(SelectedAppKeys selectedAppKeys, IHubService hubService, ISecretCredentialsFactory secretCredentialsFactory, AppVersionNameAccessor versionNameAccessor, GitRepoInfo gitRepoInfo)
     {
         this.selectedAppKeys = selectedAppKeys;
         this.hubService = hubService;
         this.secretCredentialsFactory = secretCredentialsFactory;
         this.versionNameAccessor = versionNameAccessor;
+        this.gitRepoInfo = gitRepoInfo;
     }
 
     public async Task Execute(CancellationToken ct)
@@ -27,7 +29,7 @@ internal sealed class AddSystemUserCommand : ICommand
             .Where(a => !a.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubService.AddOrUpdateApps(versionName, appKeys, ct);
+        await hubService.AddOrUpdateApps(versionName, gitRepoInfo.RepoOwner, gitRepoInfo.RepoName, appKeys, ct);
         foreach (var appKey in appKeys)
         {
             var password = Guid.NewGuid().ToString();

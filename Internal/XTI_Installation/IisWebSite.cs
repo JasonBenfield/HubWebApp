@@ -22,7 +22,7 @@ public sealed class IisWebSite
         this.siteName = siteName;
     }
 
-    public async Task CreateOrUpdate(string userName, string password)
+    public async Task CreateOrUpdate(string userName, string password, CancellationToken ct)
     {
         using var server = new ServerManager();
         if (string.IsNullOrWhiteSpace(siteName))
@@ -67,10 +67,10 @@ public sealed class IisWebSite
         }
         var appOfflineFile = new AppOfflineFile(xtiFolder, appKey, versionKey);
         await appOfflineFile.Write();
-        await Task.Delay(10000);
+        await Task.Delay(10000, ct);
     }
 
-    public async Task Delete()
+    public async Task Delete(CancellationToken ct)
     {
         using var server = new ServerManager();
         if (string.IsNullOrWhiteSpace(siteName))
@@ -80,7 +80,7 @@ public sealed class IisWebSite
         var site = server.Sites[siteName];
         var appOfflineFile = new AppOfflineFile(xtiFolder, appKey, versionKey);
         await appOfflineFile.Write();
-        await Task.Delay(10000);
+        await Task.Delay(10000, ct);
         var appName = appKey.Name.DisplayText.Replace(" ", "");
         var appPath = $"/{appName}/{versionKey.DisplayText}";
         var iisApp = site.Applications.FirstOrDefault(a => a.Path.Equals(appPath, StringComparison.OrdinalIgnoreCase));

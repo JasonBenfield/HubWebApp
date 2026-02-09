@@ -28,7 +28,8 @@ public sealed class InstallWebAppProcess : InstallAppProcess
             (
                 requestedInstallation.AppKey,
                 requestedInstallation.VersionKey,
-                requestedInstallation.SiteName
+                requestedInstallation.SiteName,
+                ct
             ),
             ct
         );
@@ -103,11 +104,11 @@ public sealed class InstallWebAppProcess : InstallAppProcess
         }
     }
 
-    private async Task PrepareIis(AppKey appKey, AppVersionKey versionKey, string siteName)
+    private async Task PrepareIis(AppKey appKey, AppVersionKey versionKey, string siteName, CancellationToken ct)
     {
         var credentials = await credentialsFactory.Create("WebApp").Value();
         var iisWebSite = new IisWebSite(xtiFolder, xtiEnv, appKey, versionKey, siteName);
-        await iisWebSite.CreateOrUpdate(credentials.UserName, credentials.Password);
+        await iisWebSite.CreateOrUpdate(credentials.UserName, credentials.Password, ct);
     }
 
 }

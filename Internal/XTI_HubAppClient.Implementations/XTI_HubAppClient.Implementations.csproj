@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\HubWebApp\Internal\XTI_Hub\XTI_Hub.csproj" />
+		<ProjectReference Include="..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
+		<ProjectReference Include="..\XTI_Internal.Abstractions\XTI_Internal.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using XTI_App.Abstractions;
+using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -33,8 +34,23 @@ public sealed class EfInstallation
         await SetInstallationStatus(InstallStatus.Values.Installed, ct);
     }
 
-    public Task RequestDelete(CancellationToken ct) =>
-        SetInstallationStatus(InstallStatus.Values.DeletePending, ct);
+    public async Task<EfAppCommand> AddDeleteCommand(DateTimeOffset timeAdded, CancellationToken ct)
+    {
+        var efAppVersion = await AppVersion(ct);
+        var efLocation = await Location(ct);
+        var deleteRequest = new InstallationIDRequest(installationID: installation.ID);
+        var efCommand = await efAppVersion.App.AddCommand
+        (
+            efLocation: efLocation,
+            commandName: AppCommandName.Delete,
+            serializedRequest: XtiSerializer.Serialize(deleteRequest),
+            timeAdded: timeAdded,
+            timeStarted: DateTimeOffset.MaxValue,
+            ct: ct
+        );
+        await SetInstallationStatus(InstallStatus.Values.DeletePending, ct);
+        return efCommand;
+    }
 
     public Task BeginDelete(CancellationToken ct) =>
         SetInstallationStatus(InstallStatus.Values.DeleteStarted, ct);

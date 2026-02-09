@@ -11,7 +11,7 @@ internal sealed class GetPendingDeletesTest
         await AccessAssertions.Create(tester)
             .ShouldThrowError_WhenAccessIsDenied
             (
-                new GetInstallationActivitiesRequest(qualifiedMachineName),
+                new GetPendingCommandsRequest([AppCommandName.Delete, AppCommandName.Install], [qualifiedMachineName]),
                 HubInfo.Roles.Admin,
                 HubInfo.Roles.InstallationManager
             );
@@ -22,28 +22,35 @@ internal sealed class GetPendingDeletesTest
     {
         var tester = await Setup();
         const string machineName = "machine.example.com";
-        var installationID = await PrepareDeletePendingInstallation(tester, machineName);
-        var activitiesResult = await tester.Execute(new GetInstallationActivitiesRequest(machineName));
+        var deleteCommandDetail = await PrepareDeletePendingInstallation(tester, machineName);
+        var commands = await tester.Execute
+        (
+            new GetPendingCommandsRequest
+            (
+                [AppCommandName.Delete, AppCommandName.Install],
+                [machineName]
+            )
+        );
+        Assert.That(commands.Length, Is.EqualTo(1));
         Assert.That
         (
-            activitiesResult.Deletions.Select(inst => inst.Installation.ID),
-            Is.EqualTo([installationID]),
-            "Should get pending deletes"
+            commands.Select(inst => inst.ID),
+            Is.EqualTo([deleteCommandDetail.Installation.ID])
         );
     }
 
     [Test]
-    public async Task ShouldNotIncludeOtherInstallations()
+    public async Task ShouldNotIncludeInstallationsForOtherMachines()
     {
         var tester = await Setup();
         const string machineName = "machine.example.com";
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion(ct: default);
         var config = await AddDefaultConfiguration(tester, "othermachine.example.com");
-        var requestedInstallationDetail = await RequestInstallation
+        var installCommandDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -52,32 +59,48 @@ internal sealed class GetPendingDeletesTest
                 isAutoStartEnabled: true
             )
         );
-        var installation = await StartInstallation(tester, new BeginInstallationRequest(requestedInstallationDetail.Command.ID, true));
-        await Installed(tester, new InstallationIDRequest(installation.ID));
-        var activitiesResult = await tester.Execute(new GetInstallationActivitiesRequest(machineName));
+        var otherInstallation = await BeginInstallation
+        (
+            tester,
+            new BeginInstallationRequest
+            (
+                commandID: installCommandDetail.Command.ID,
+                isCurrent: true
+            )
+        );
+        await Installed(tester, new InstallationIDRequest(otherInstallation.ID));
+        await AddDeleteCommand(tester, new InstallationIDRequest(otherInstallation.ID));
+        var commands = await tester.Execute
+        (
+            new GetPendingCommandsRequest
+            (
+                [AppCommandName.Delete, AppCommandName.Install],
+                [machineName]
+            )
+        );
         Assert.That
         (
-            activitiesResult.Deletions.Length,
+            commands.Length,
             Is.EqualTo(0)
         );
     }
 
-    private async Task<HubActionTester<GetInstallationActivitiesRequest, InstallationActivitiesResult>> Setup()
+    private async Task<HubActionTester<GetPendingCommandsRequest, AppCommandModel[]>> Setup()
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Installations.GetInstallationActivities);
+        return HubActionTester.Create(services, hubApi => hubApi.Installations.GetPendingCommands);
     }
 
-    private async Task<int> PrepareDeletePendingInstallation(IHubActionTester tester, string qualifiedMachineName)
+    private async Task<AppDeleteCommandDetailModel> PrepareDeletePendingInstallation(IHubActionTester tester, string qualifiedMachineName)
     {
         var hubApp = await tester.HubApp();
         var appVersion = await hubApp.CurrentVersion(ct: default);
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var installCommandDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -86,10 +109,12 @@ internal sealed class GetPendingDeletesTest
                 isAutoStartEnabled: true
             )
         );
-        var installation = await StartInstallation(tester, new BeginInstallationRequest(requestedInstallationDetail.Command.ID, true));
+        await BeginCommand(tester, installCommandDetail.Command);
+        var installation = await BeginInstallation(tester, new BeginInstallationRequest(installCommandDetail.Command.ID, true));
         await Installed(tester, new InstallationIDRequest(installation.ID));
-        await RequestDelete(tester, new InstallationIDRequest(installation.ID));
-        return installation.ID;
+        await CommandEnded(tester, installCommandDetail.Command);
+        var deleteCommandDetail = await AddDeleteCommand(tester, new InstallationIDRequest(installation.ID));
+        return deleteCommandDetail;
     }
 
     private async Task<InstallConfigurationModel> AddDefaultConfiguration(IHubActionTester tester, string qualifiedMachineName)
@@ -135,28 +160,46 @@ internal sealed class GetPendingDeletesTest
         return result.Data!;
     }
 
-    private async Task<AppInstallCommandDetailModel> RequestInstallation(IHubActionTester tester, AddAppInstallCommandRequest requestData)
+    private async Task<AppInstallCommandDetailModel> AddInstallCommand(IHubActionTester tester, AddInstallCommandRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 
-    private Task<InstallationModel> StartInstallation(IHubActionTester tester, BeginInstallationRequest requestData)
+    private Task<InstallationModel> BeginInstallation(IHubActionTester tester, BeginInstallationRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
         return hubApi.Installations.BeginInstallation.Invoke(requestData);
     }
 
-    private Task Installed(IHubActionTester tester, InstallationIDRequest model)
+    private Task<AppCommandModel> BeginCommand(IHubActionTester tester, AppCommandModel command)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        return hubApi.Installations.Installed.Invoke(model);
+        return hubApi.Installations.BeginCommand.Invoke(new(commandID: command.ID));
     }
 
-    private Task RequestDelete(IHubActionTester tester, InstallationIDRequest model)
+    private Task CommandEnded(IHubActionTester tester, AppCommandModel command)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        return hubApi.Installations.RequestDelete.Invoke(model);
+        return hubApi.Installations.CommandEnded.Invoke(new(commandID: command.ID));
+    }
+
+    private Task Installed(IHubActionTester tester, InstallationIDRequest requestData)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        return hubApi.Installations.Installed.Invoke(requestData);
+    }
+
+    private Task<AppDeleteCommandDetailModel> AddDeleteCommand(IHubActionTester tester, InstallationIDRequest requestData)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        return hubApi.Installations.AddDeleteCommand.Invoke(requestData);
+    }
+
+    private Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(IHubActionTester tester, AppCommandIDRequest requestData)
+    {
+        var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
+        return hubApi.Installations.GetDeleteCommandDetail.Invoke(requestData);
     }
 }

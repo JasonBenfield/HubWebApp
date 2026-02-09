@@ -2,11 +2,15 @@
 using Microsoft.Extensions.Hosting;
 using XTI_App.Api;
 using XTI_Core.Extensions;
+using XTI_Git.Abstractions;
+using XTI_Git.Secrets;
+using XTI_GitHub;
+using XTI_GitHub.Web;
 using XTI_Hub;
+using XTI_HubAppClient.Implementations;
 using XTI_HubAppClient.ServiceApp.Extensions;
 using XTI_HubDB.Extensions;
-using XTI_PermanentLog;
-using XTI_PermanentLog.Implementations;
+using XTI_Internal.Abstractions;
 using XTI_SupportServiceAppApi;
 
 var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
@@ -18,6 +22,25 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
         services.AddConfigurationOptions<SupportServiceAppOptions>();
         services.AddHubDbContextForSqlServer();
         services.AddScoped<EfHubDB>();
+        services.AddScoped<EfHubService>();
+        services.AddScoped<HcHubService>();
+        services.AddScoped
+        (
+            sp =>
+            {
+                IHubService hubService;
+                var options = sp.GetRequiredService<SupportServiceAppOptions>();
+                if (options.PermanentLogType.Equals("DB", StringComparison.OrdinalIgnoreCase))
+                {
+                    hubService = sp.GetRequiredService<EfHubService>();
+                }
+                else
+                {
+                    hubService = sp.GetRequiredService<HcHubService>();
+                }
+                return hubService;
+            }
+        );
         services.AddScoped<EfPermanentLog>();
         services.AddScoped<HcPermanentLog>();
         services.AddScoped
@@ -38,6 +61,8 @@ var hostBuilder = XtiServiceAppHost.CreateDefault(SupportAppKey.Value, args)
             }
         );
         services.AddScoped<TempToPermanentLog>();
+        services.AddScoped<IGitHubCredentialsAccessor, SecretGitHubCredentialsAccessor>();
+        services.AddScoped<IGitHubFactory, WebGitHubFactory>();
     });
 if (args.Length <= 0 || !args[0].Equals("RunAsConsole", StringComparison.OrdinalIgnoreCase))
 {

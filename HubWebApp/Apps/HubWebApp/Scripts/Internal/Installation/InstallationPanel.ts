@@ -68,7 +68,7 @@ export class InstallationPanel implements IPanel {
         if (isConfirmed) {
             await this.alert.infoAction(
                 "Deleting...",
-                () => this.hubClient.Installations.RequestDelete({
+                () => this.hubClient.Installations.AddDeleteCommand({
                     InstallationID: this.installationID
                 })
             );

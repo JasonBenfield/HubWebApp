@@ -1,9 +1,8 @@
 ﻿using HubWebApp.Extensions;
 using Microsoft.Extensions.Hosting;
-using XTI_Admin;
 using XTI_Core;
 using XTI_Core.Extensions;
-using XTI_Hub.Abstractions;
+using XTI_Internal.Abstractions;
 
 namespace HubWebApp.IntegrationTests;
 

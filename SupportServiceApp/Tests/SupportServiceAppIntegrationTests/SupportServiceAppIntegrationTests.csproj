@@ -34,7 +34,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\HubWebApp\Internal\XTI_Hub\XTI_Hub.csproj" />
 		<ProjectReference Include="..\..\..\HubWebApp\Lib\XTI_HubAppClient.ServiceApp.Extensions\XTI_HubAppClient.ServiceApp.Extensions.csproj" />
-		<ProjectReference Include="..\..\..\Internal\XTI_PermanentLog.Implementations\XTI_PermanentLog.Implementations.csproj" />
+		<ProjectReference Include="..\..\..\Internal\XTI_HubAppClient.Implementations\XTI_HubAppClient.Implementations.csproj" />
 		<ProjectReference Include="..\..\Internal\XTI_SupportServiceAppApi\XTI_SupportServiceAppApi.csproj" />
 	</ItemGroup>
 

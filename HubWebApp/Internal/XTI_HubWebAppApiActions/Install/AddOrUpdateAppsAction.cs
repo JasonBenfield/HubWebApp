@@ -2,18 +2,20 @@
 
 public sealed class AddOrUpdateAppsAction : AppAction<AddOrUpdateAppsRequest, AppModel[]>
 {
-    private readonly IHubService hubAdmin;
+    private readonly IHubService hubService;
 
-    public AddOrUpdateAppsAction(IHubService hubAdmin)
+    public AddOrUpdateAppsAction(IHubService hubService)
     {
-        this.hubAdmin = hubAdmin;
+        this.hubService = hubService;
     }
 
     public Task<AppModel[]> Execute(AddOrUpdateAppsRequest addRequest, CancellationToken stoppingToken) =>
-        hubAdmin.AddOrUpdateApps
+        hubService.AddOrUpdateApps
         (
-            addRequest.ToAppVersionName(),
-            addRequest.ToAppKeys(),
-            stoppingToken
+            versionName: addRequest.ToAppVersionName(),
+            repoOwner: addRequest.RepoOwner,
+            repoName: addRequest.RepoName,
+            appKeys: addRequest.ToAppKeys(),
+            ct: stoppingToken
         );
 }

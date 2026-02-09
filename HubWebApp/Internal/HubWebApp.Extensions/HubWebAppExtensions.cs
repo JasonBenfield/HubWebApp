@@ -5,11 +5,15 @@ using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_Core.Extensions;
+using XTI_Git.Abstractions;
+using XTI_Git.Secrets;
+using XTI_GitHub;
+using XTI_GitHub.Web;
 using XTI_Hub;
-using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApiActions;
+using XTI_Internal.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Api;
 using XTI_WebApp.Extensions;
@@ -37,6 +41,8 @@ public static class HubWebAppExtensions
         services.AddHubDbContextForSqlServer();
         services.AddScoped<EfHubDB>();
         services.AddScoped<EfPermanentLog>();
+        services.AddScoped<IGitHubCredentialsAccessor, SecretGitHubCredentialsAccessor>();
+        services.AddScoped<IGitHubFactory, WebGitHubFactory>();
         services.AddScoped<ISourceUserContext, WebUserContext>();
         services.AddScoped<IUserProfileUrl, DefaultUserProfileUrl>();
         services.AddScoped<EfAppContext>();
@@ -46,7 +52,7 @@ public static class HubWebAppExtensions
         services.AddScoped<JwtAccess>();
         services.AddKeyedScoped<IAccess>
         (
-            "Authenticate", 
+            "Authenticate",
             (sp, key) => sp.GetRequiredService<JwtAccess>()
         );
         services.AddKeyedScoped<IAccess>
@@ -102,7 +108,7 @@ public static class HubWebAppExtensions
                 var versionKey = sp.GetRequiredService<AppVersionKey>();
                 appClients.AddAppVersion
                 (
-                    appKey.Name.DisplayText.Replace(" ", ""), 
+                    appKey.Name.DisplayText.Replace(" ", ""),
                     versionKey.DisplayText
                 );
                 return appClients;

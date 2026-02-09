@@ -8,6 +8,8 @@ public sealed class AppEntity
     public string DisplayText { get; set; } = "xti_notfound";
     public string Title { get; set; } = "";
     public string VersionName { get; set; } = "";
+    public string RepoOwner { get; set; } = "";
+    public string RepoName { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
     public string SerializedDefaultOptions { get; set; } = "";
 }

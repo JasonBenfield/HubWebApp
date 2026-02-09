@@ -50,6 +50,8 @@ public sealed class SetupHostedService : IHostedService
             () => db.Apps.AddOrUpdate
             (
                 new AppVersionName(options.VersionName),
+                "JasonBenfield",
+                "HubWebApp",
                 HubInfo.AppKey,
                 clock.Now(),
                 ct

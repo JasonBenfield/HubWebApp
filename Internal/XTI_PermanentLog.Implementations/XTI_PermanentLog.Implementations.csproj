@@ -6,10 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\HubWebApp\Internal\XTI_Hub\XTI_Hub.csproj" />
-    <ProjectReference Include="..\..\HubWebApp\Lib\XTI_HubAppClient\XTI_HubAppClient.csproj" />
-    <ProjectReference Include="..\XTI_PermanentLog\XTI_PermanentLog.csproj" />
-  </ItemGroup>
-
 </Project>

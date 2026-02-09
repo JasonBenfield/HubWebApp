@@ -1,11 +1,7 @@
-﻿using System.Net.Http;
-using XTI_App.Secrets;
+﻿using XTI_App.Secrets;
 using XTI_Core;
 using XTI_Git;
 using XTI_GitHub;
-using XTI_Hub;
-using XTI_Hub.Abstractions;
-using XTI_PermanentLog;
 using XTI_Secrets;
 using XTI_TempLog;
 
@@ -90,7 +86,8 @@ public sealed class CommandFactory
                 scopes.GetRequiredService<SelectedAppKeys>(),
                 scopes.GetRequiredService<AppVersionNameAccessor>(),
                 scopes.GetRequiredService<CurrentVersion>(),
-                scopes.GetRequiredService<PublishSetupProcess>()
+                scopes.GetRequiredService<PublishSetupProcess>(),
+                scopes.GetRequiredService<GitRepoInfo>()
             );
         }
         else if (commandName == CommandNames.NewVersion)
@@ -146,7 +143,8 @@ public sealed class CommandFactory
                 scopes.GetRequiredService<SelectedAppKeys>(),
                 scopes.GetRequiredService<IHubService>(),
                 scopes.GetRequiredService<ISecretCredentialsFactory>(),
-                scopes.GetRequiredService<AppVersionNameAccessor>()
+                scopes.GetRequiredService<AppVersionNameAccessor>(),
+                scopes.GetRequiredService<GitRepoInfo>()
             );
         }
         else if (commandName == CommandNames.AddAdminUser)

@@ -16,10 +16,10 @@ sealed class BeginCurrentInstallationTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var requestedInstallationDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -53,10 +53,10 @@ sealed class BeginCurrentInstallationTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var installCommandDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -99,13 +99,13 @@ sealed class BeginCurrentInstallationTest
                 versionKey: nextVersion.VersionKey
             )
         );
-        var newRequestedInstallationDetail = await RequestInstallation
+        var newInstallCommandDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
-                versionKey: appVersion.Version.Key(),
+                versionKey: nextVersion.VersionKey,
                 installConfigurationID: config.ID,
                 installAsCurrent: true,
                 isAutoStartEnabled: true
@@ -115,7 +115,7 @@ sealed class BeginCurrentInstallationTest
         (
             new BeginInstallationRequest
             (
-                commandID: requestedInstallationDetail.Command.ID,
+                commandID: newInstallCommandDetail.Command.ID,
                 isCurrent: true
             )
         );
@@ -189,10 +189,10 @@ sealed class BeginCurrentInstallationTest
         return result.Data!;
     }
 
-    private async Task<AppInstallCommandDetailModel> RequestInstallation(IHubActionTester tester, AddAppInstallCommandRequest requestData)
+    private async Task<AppInstallCommandDetailModel> AddInstallCommand(IHubActionTester tester, AddInstallCommandRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 }

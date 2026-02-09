@@ -13,7 +13,7 @@ public sealed class RunSetupProcess
         this.xtiEnv = xtiEnv;
     }
 
-    public async Task Run(AppVersionName versionName, AppKey appKey, AppVersionKey versionKey, string setupAppDir)
+    public async Task Run(AppVersionName versionName, AppKey appKey, AppVersionKey versionKey, string repoOwner, string repoName, string setupAppDir)
     {
         var appName = appKey.Name.DisplayText.Replace(" ", "");
         var setupResult = await new XtiProcess(Path.Combine(setupAppDir, $"{appName}SetupApp.exe"))
@@ -24,7 +24,9 @@ public sealed class RunSetupProcess
                 new
                 {
                     VersionName = versionName.Value,
-                    VersionKey = versionKey.Value
+                    VersionKey = versionKey.Value,
+                    RepoOwner = repoOwner,
+                    RepoName = repoName
                 }
             )
             .Run();

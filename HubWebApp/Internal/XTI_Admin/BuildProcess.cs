@@ -10,13 +10,15 @@ public sealed class BuildProcess
     private readonly AppVersionNameAccessor versionNameAccessor;
     private readonly IHubService hubAdmin;
     private readonly BranchVersion branchVersion;
+    private readonly GitRepoInfo gitRepoInfo;
 
-    public BuildProcess(SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, IHubService hubAdmin, BranchVersion branchVersion)
+    public BuildProcess(SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, IHubService hubAdmin, BranchVersion branchVersion, GitRepoInfo gitRepoInfo)
     {
         this.selectedAppKeys = selectedAppKeys;
         this.versionNameAccessor = versionNameAccessor;
         this.hubAdmin = hubAdmin;
         this.branchVersion = branchVersion;
+        this.gitRepoInfo = gitRepoInfo;
     }
 
     public async Task Run(CancellationToken ct)
@@ -25,7 +27,7 @@ public sealed class BuildProcess
         var version = await branchVersion.Value(ct);
         var appKeys = selectedAppKeys.Values();
         var versionName = versionNameAccessor.Value;
-        await hubAdmin.AddOrUpdateApps(versionName, appKeys, ct);
+        await hubAdmin.AddOrUpdateApps(versionName, gitRepoInfo.RepoOwner, gitRepoInfo.RepoName, appKeys, ct);
         Console.WriteLine("Building Apps");
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)

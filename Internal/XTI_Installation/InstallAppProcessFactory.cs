@@ -1,6 +1,6 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub.Abstractions;
+using XTI_Internal.Abstractions;
 using XTI_Secrets;
 
 namespace XTI_Installation;

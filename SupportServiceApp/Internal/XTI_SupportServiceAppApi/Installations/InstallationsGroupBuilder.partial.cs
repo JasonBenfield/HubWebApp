@@ -7,7 +7,7 @@ partial class InstallationsGroupBuilder
 {
     partial void Configure()
     {
-        ExecuteInstallationActivities
+        ExecutePendingCommands
             .ThrottleRequestLogging().ForOneHour()
             .ThrottleExceptionLogging().For(15).Minutes()
             .RunContinuously()

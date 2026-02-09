@@ -10,6 +10,30 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppDeleteCommandDetailModel>> AddDeleteCommand([FromBody] InstallationIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.AddDeleteCommand.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppInstallCommandDetailModel>> AddInstallCommand([FromBody] AddInstallCommandRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.AddInstallCommand.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppCommandModel>> BeginCommand([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.BeginCommand.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppCommandStepModel>> BeginCommandStep([FromBody] BeginAppCommandStepRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.BeginCommandStep.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> BeginDelete([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.BeginDelete.Execute(requestData, ct);
@@ -22,15 +46,15 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppCommandModel>> BeginRequestedInstallation([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<EmptyActionResult>> CommandEnded([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
     {
-        return api.Installations.BeginRequestedInstallation.Execute(requestData, ct);
+        return api.Installations.CommandEnded.Execute(requestData, ct);
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppCommandStepModel>> BeginRequestedInstallationStep([FromBody] BeginAppCommandStepRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<EmptyRequest>> CommandStepEnded([FromBody] AppCommandStepEndedRequest requestData, CancellationToken ct)
     {
-        return api.Installations.BeginRequestedInstallationStep.Execute(requestData, ct);
+        return api.Installations.CommandStepEnded.Execute(requestData, ct);
     }
 
     [HttpPost]
@@ -40,9 +64,15 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallationActivitiesResult>> GetInstallationActivities([FromBody] GetInstallationActivitiesRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<AppDeleteCommandDetailModel>> GetDeleteCommandDetail([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
     {
-        return api.Installations.GetInstallationActivities.Execute(requestData, ct);
+        return api.Installations.GetDeleteCommandDetail.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppInstallCommandDetailModel>> GetInstallationCommandDetail([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Installations.GetInstallationCommandDetail.Execute(requestData, ct);
     }
 
     [HttpPost]
@@ -52,9 +82,9 @@ public sealed partial class InstallationsController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppInstallCommandDetailModel>> GetRequestedInstallationDetail([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<AppCommandModel[]>> GetPendingCommands([FromBody] GetPendingCommandsRequest requestData, CancellationToken ct)
     {
-        return api.Installations.GetRequestedInstallationDetail.Execute(requestData, ct);
+        return api.Installations.GetPendingCommands.Execute(requestData, ct);
     }
 
     public async Task<IActionResult> Index(InstallationQueryRequest requestData, CancellationToken ct)
@@ -73,29 +103,5 @@ public sealed partial class InstallationsController : Controller
     public Task<ResultContainer<EmptyActionResult>> Installed([FromBody] InstallationIDRequest requestData, CancellationToken ct)
     {
         return api.Installations.Installed.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RequestDelete([FromBody] InstallationIDRequest requestData, CancellationToken ct)
-    {
-        return api.Installations.RequestDelete.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyActionResult>> RequestedInstallationEnded([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
-    {
-        return api.Installations.RequestedInstallationEnded.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<EmptyRequest>> RequestedInstallationStepEnded([FromBody] AppCommandStepEndedRequest requestData, CancellationToken ct)
-    {
-        return api.Installations.RequestedInstallationStepEnded.Execute(requestData, ct);
-    }
-
-    [HttpPost]
-    public Task<ResultContainer<AppInstallCommandDetailModel>> RequestInstallation([FromBody] AddAppInstallCommandRequest requestData, CancellationToken ct)
-    {
-        return api.Installations.RequestInstallation.Execute(requestData, ct);
     }
 }

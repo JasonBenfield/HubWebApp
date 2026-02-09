@@ -1,4 +1,4 @@
-using XTI_SupportServiceAppApi.PermanentLog;
+using XTI_SupportServiceAppApiActions.PermanentLog;
 
 // Generated Code
 #nullable enable

@@ -734,6 +734,8 @@ internal sealed class LogSessionDetailsTest
             new AddOrUpdateAppsRequest
             (
                 versionName: new AppVersionName("FakeWebApp"),
+                "Fake", 
+                "Fake",
                 appKeys: [fakeApp.AppKey]
             )
         );
@@ -781,10 +783,10 @@ internal sealed class LogSessionDetailsTest
             )
         );
         var config = await AddDefaultConfiguration(sp, "destination.xartogg.com");
-        var requestedInstallationDetail = await RequestInstallation
+        var requestedInstallationDetail = await AddInstallCommand
         (
             sp,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: fakeApp.AppKey,
                 versionKey: version.VersionKey,
@@ -886,10 +888,10 @@ internal sealed class LogSessionDetailsTest
         return result.Data!;
     }
 
-    private async static Task<AppInstallCommandDetailModel> RequestInstallation(IServiceProvider sp, AddAppInstallCommandRequest requestData)
+    private async static Task<AppInstallCommandDetailModel> AddInstallCommand(IServiceProvider sp, AddInstallCommandRequest requestData)
     {
         var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 }

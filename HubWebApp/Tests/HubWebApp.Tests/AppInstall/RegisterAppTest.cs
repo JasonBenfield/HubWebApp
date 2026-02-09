@@ -1,4 +1,6 @@
-﻿namespace HubWebApp.Tests;
+﻿using XTI_Internal.Abstractions;
+
+namespace HubWebApp.Tests;
 
 public sealed class RegisterAppTest
 {
@@ -280,7 +282,7 @@ public sealed class RegisterAppTest
         var sp = await host.Setup();
         var hubAdmin = sp.GetRequiredService<IHubService>();
         var versionName = new AppVersionName("FakeWebApp");
-        await hubAdmin.AddOrUpdateApps(versionName, [FakeInfo.AppKey], default);
+        await hubAdmin.AddOrUpdateApps(versionName, "Fake", "Fake", [FakeInfo.AppKey], default);
         await hubAdmin.AddOrUpdateVersions
         (
             [FakeInfo.AppKey],

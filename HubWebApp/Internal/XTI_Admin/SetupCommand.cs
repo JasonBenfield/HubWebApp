@@ -1,6 +1,5 @@
 ﻿using XTI_App.Abstractions;
 using XTI_Core;
-using XTI_Hub.Abstractions;
 using XTI_Installation;
 
 namespace XTI_Admin;
@@ -15,8 +14,9 @@ internal sealed class SetupCommand : ICommand
     private readonly AppVersionNameAccessor versionNameAccessor;
     private readonly CurrentVersion currentVersionAccessor;
     private readonly PublishSetupProcess publishSetupProcess;
+    private readonly GitRepoInfo gitRepoInfo;
 
-    public SetupCommand(AdminOptions options, XtiEnvironment xtiEnv, PublishedAssetsFactory publishedAssetsFactory, IHubService hubService, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor, PublishSetupProcess publishSetupProcess)
+    public SetupCommand(AdminOptions options, XtiEnvironment xtiEnv, PublishedAssetsFactory publishedAssetsFactory, IHubService hubService, SelectedAppKeys selectedAppKeys, AppVersionNameAccessor versionNameAccessor, CurrentVersion currentVersionAccessor, PublishSetupProcess publishSetupProcess, GitRepoInfo gitRepoInfo)
     {
         this.options = options;
         this.xtiEnv = xtiEnv;
@@ -26,6 +26,7 @@ internal sealed class SetupCommand : ICommand
         this.versionNameAccessor = versionNameAccessor;
         this.currentVersionAccessor = currentVersionAccessor;
         this.publishSetupProcess = publishSetupProcess;
+        this.gitRepoInfo = gitRepoInfo;
     }
 
     public async Task Execute(CancellationToken ct)
@@ -36,7 +37,7 @@ internal sealed class SetupCommand : ICommand
             .Where(ak => !ak.Type.Equals(AppType.Values.Package))
             .ToArray();
         var versionName = versionNameAccessor.Value;
-        await hubService.AddOrUpdateApps(versionName, appKeys, ct);
+        await hubService.AddOrUpdateApps(versionName, gitRepoInfo.RepoOwner, gitRepoInfo.RepoName, appKeys, ct);
         var versionKey = AppVersionKey.Current;
         if (xtiEnv.IsProduction() && !string.IsNullOrWhiteSpace(options.VersionKey))
         {
@@ -49,7 +50,15 @@ internal sealed class SetupCommand : ICommand
             var appVersion = await currentVersionAccessor.Value(ct);
             var release = $"v{appVersion.VersionNumber.Format()}";
             var setupAppPath = await publishedAssets.LoadSetup(release, appKey, versionKey, ct);
-            await new RunSetupProcess(xtiEnv).Run(versionName, appKey, versionKey, setupAppPath);
+            await new RunSetupProcess(xtiEnv).Run
+            (
+                versionName: versionName,
+                appKey: appKey,
+                repoOwner: gitRepoInfo.RepoOwner,
+                repoName: gitRepoInfo.RepoName,
+                versionKey: versionKey,
+                setupAppDir: setupAppPath
+            );
         }
         Environment.CurrentDirectory = slnDir;
     }

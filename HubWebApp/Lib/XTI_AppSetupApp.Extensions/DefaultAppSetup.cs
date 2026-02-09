@@ -12,7 +12,7 @@ public sealed class DefaultAppSetup : IAppSetup
     private readonly HubAppClient hubClient;
     private readonly SystemUserCredentials systemUserCredentials;
     private readonly AppApiFactory apiFactory;
-    private readonly AppVersionName versionName;
+    private readonly SetupOptions options;
     private AppModel? app;
     private string? modKey;
 
@@ -21,7 +21,7 @@ public sealed class DefaultAppSetup : IAppSetup
         this.hubClient = hubClient;
         this.apiFactory = apiFactory;
         this.systemUserCredentials = systemUserCredentials;
-        versionName = new AppVersionName(options.VersionName);
+        this.options = options;
     }
 
     public AppModel App
@@ -37,11 +37,14 @@ public sealed class DefaultAppSetup : IAppSetup
     public async Task Run(AppVersionKey versionKey, CancellationToken ct)
     {
         var template = apiFactory.CreateTemplate();
+        var versionName = new AppVersionName(options.VersionName);
         await hubClient.Install.AddOrUpdateApps
         (
             new AddOrUpdateAppsRequest
             (
                 versionName: versionName,
+                repoOwner: options.RepoOwner,
+                repoName: options.RepoName,
                 appKeys: [template.AppKey]
             ),
             ct

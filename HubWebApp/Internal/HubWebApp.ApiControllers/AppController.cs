@@ -68,4 +68,10 @@ public sealed partial class AppController : Controller
         var result = await api.App.Index.Execute(new EmptyRequest(), ct);
         return View(result.Data!.ViewName);
     }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> UpdateVersionsFromPublished(CancellationToken ct)
+    {
+        return api.App.UpdateVersionsFromPublished.Execute(new EmptyRequest(), ct);
+    }
 }

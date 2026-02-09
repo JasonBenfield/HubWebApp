@@ -15,7 +15,7 @@ public sealed class EfApps
 
     internal async Task AddUnknownIfNotFound(CancellationToken ct)
     {
-        var efApp = await AddOrUpdate(AppVersionName.Unknown, AppKey.Unknown, DateTimeOffset.Now, ct);
+        var efApp = await AddOrUpdate(AppVersionName.Unknown, "", "", AppKey.Unknown, DateTimeOffset.Now, ct);
         var efVersion = await db.Versions.AddIfNotFound
         (
             AppVersionName.Unknown,
@@ -35,38 +35,46 @@ public sealed class EfApps
         await efGroup.AddOrUpdateResource(ResourceName.Unknown, ResourceResultType.Values.None, ct);
     }
 
-    public async Task<EfApp> AddOrUpdate(AppVersionName versionName, AppKey appKey, DateTimeOffset timeAdded, CancellationToken ct)
+    public async Task<EfApp> AddOrUpdate(AppVersionName versionName, string repoOwner, string repoName, AppKey appKey, DateTimeOffset timeAdded, CancellationToken ct)
     {
         EfApp efApp;
         var title = appKey.Format();
-        var record = await GetAppByKey(appKey, ct);
-        if (record == null)
+        var app = await GetAppByKey(appKey, ct);
+        if (app == null)
         {
-            efApp = await Add(versionName, appKey, title, timeAdded, ct);
+            efApp = await Add(versionName, repoOwner, repoName, appKey, title, timeAdded, ct);
         }
         else
         {
             await db.Context.Apps.Update
             (
-                record,
+                app,
                 r =>
                 {
                     r.DisplayText = appKey.Name.DisplayText;
                     r.VersionName = versionName.Value;
+                    if (!string.IsNullOrWhiteSpace(repoOwner))
+                    {
+                        r.RepoOwner = repoOwner;
+                    }
+                    if (!string.IsNullOrWhiteSpace(repoName))
+                    {
+                        r.RepoName = repoName;
+                    }
                     r.Title = title.Trim();
                 },
                 ct
             );
-            efApp = new EfApp(db, record);
+            efApp = new EfApp(db, app);
         }
         var efVersion = await db.Versions.AddCurrentVersionIfNotFound(versionName, timeAdded, ct);
         await efApp.AddVersionIfNotFound(efVersion, ct);
         return efApp;
     }
 
-    private async Task<EfApp> Add(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
+    private async Task<EfApp> Add(AppVersionName versionName, string repoOwner, string repoName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
     {
-        var app = await AddEntity(versionName, appKey, title, timeAdded, ct);
+        var app = await AddEntity(versionName, repoOwner, repoName, appKey, title, timeAdded, ct);
         var efApp = new EfApp(db, app);
         if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage))
         {
@@ -76,7 +84,7 @@ public sealed class EfApps
         return efApp;
     }
 
-    private async Task<AppEntity> AddEntity(AppVersionName versionName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
+    private async Task<AppEntity> AddEntity(AppVersionName versionName, string repoOwner, string repoName, AppKey appKey, string title, DateTimeOffset timeAdded, CancellationToken ct)
     {
         var app = new AppEntity
         {
@@ -84,6 +92,8 @@ public sealed class EfApps
             DisplayText = appKey.Name.DisplayText,
             Type = appKey.Type.Value,
             Title = title.Trim(),
+            RepoOwner = repoOwner,
+            RepoName = repoName,
             VersionName = versionName.Value,
             TimeAdded = timeAdded
         };

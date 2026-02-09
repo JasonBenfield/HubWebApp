@@ -185,6 +185,8 @@ interface IAddInstallationUserRequest {
 }
 interface IAddOrUpdateAppsRequest {
 	VersionName: string;
+	RepoOwner: string;
+	RepoName: string;
 	AppKeys: IAppKeyRequest[];
 }
 interface IAddOrUpdateVersionsRequest {
@@ -312,9 +314,21 @@ interface ISetUserAccessRoleRequest {
 interface IInstallationIDRequest {
 	InstallationID: number;
 }
-interface IBeginInstallationRequest {
-	RequestedInstallationID: number;
-	IsCurrent: boolean;
+interface IAppDeleteCommandDetailModel {
+	Command: IAppCommandModel;
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	Installation: IInstallationModel;
+}
+interface IAppCommandModel {
+	ID: number;
+	CommandName: IAppCommandName;
+	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface IAppCommandName {
+	Value: string;
 }
 interface IInstallationModel {
 	ID: number;
@@ -323,37 +337,48 @@ interface IInstallationModel {
 	Domain: string;
 	SiteName: string;
 }
-interface IRequestedInstallationIDRequest {
-	RequestedInstallationID: number;
-}
-interface IRequestedInstallationModel {
-	ID: number;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+interface IAddInstallCommandRequest {
+	AppKey: IAppKeyRequest;
+	VersionKey: string;
+	InstallConfigurationID: number;
 	InstallAsCurrent: boolean;
+	IsAutoStartEnabled: boolean;
 }
-interface IBeginRequestedInstallationStepRequest {
-	RequestedInstallationID: number;
-	Activity: string;
+interface IAppInstallCommandDetailModel {
+	Command: IAppCommandModel;
+	InstallRequest: IAddInstallCommandRequest;
+	App: IAppModel;
+	Version: IXtiVersionModel;
+	Location: IInstallLocationModel;
+	InstallConfiguration: IInstallConfigurationModel;
+	Steps: IAppCommandStepModel[];
+	Installations: IInstallationModel[];
 }
-interface IRequestedInstallationStepModel {
+interface IInstallLocationModel {
+	ID: number;
+	QualifiedMachineName: string;
+}
+interface IAppCommandStepModel {
 	ID: number;
 	Activity: string;
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ErrorMessage: string;
 }
-interface IGetInstallationActivitiesRequest {
-	MachineNames: string[];
+interface IAppCommandIDRequest {
+	CommandID: number;
 }
-interface IInstallationActivitiesResult {
-	Deletions: IAppVersionInstallationModel[];
-	Installations: IAppVersionInstallationModel[];
+interface IBeginAppCommandStepRequest {
+	CommandID: number;
+	Activity: string;
 }
-interface IAppVersionInstallationModel {
-	App: IAppModel;
-	Version: IXtiVersionModel;
-	Installation: IInstallationModel;
+interface IBeginInstallationRequest {
+	CommandID: number;
+	IsCurrent: boolean;
+}
+interface IAppCommandStepEndedRequest {
+	StepID: number;
+	ErrorMessage: string;
 }
 interface IInstallationDetailModel {
 	InstallLocation: IInstallLocationModel;
@@ -361,10 +386,6 @@ interface IInstallationDetailModel {
 	Version: IXtiVersionModel;
 	App: IAppModel;
 	MostRecentRequest: IAppRequestModel;
-}
-interface IInstallLocationModel {
-	ID: number;
-	QualifiedMachineName: string;
 }
 interface IAppRequestModel {
 	ID: number;
@@ -375,31 +396,15 @@ interface IAppRequestModel {
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ActualCount: number;
 }
-interface IRequestedInstallationDetailModel {
-	RequestedInstallation: IRequestedInstallationModel;
-	App: IAppModel;
-	Version: IXtiVersionModel;
-	InstallConfiguration: IInstallConfigurationModel;
-	Steps: IRequestedInstallationStepModel[];
-	CurrentInstallation: IInstallationModel;
-	VersionInstallation: IInstallationModel;
+interface IGetPendingCommandsRequest {
+	CommandNames: string[];
+	MachineNames: string[];
 }
 interface IInstallationQueryRequest {
 	QueryType: number;
 }
 interface IInstallationViewRequest {
 	InstallationID: number;
-}
-interface IRequestedInstallationStepEndedRequest {
-	StepID: number;
-	ErrorMessage: string;
-}
-interface IRequestInstallationRequest {
-	AppKey: IAppKeyRequest;
-	VersionKey: string;
-	InstallConfigurationID: number;
-	InstallAsCurrent: boolean;
-	IsAutoStartEnabled: boolean;
 }
 interface IAppRequestRequest {
 	RequestID: number;

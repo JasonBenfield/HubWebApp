@@ -14,10 +14,10 @@ sealed class BeginVersionInstallationTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var requestedInstallationDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -91,10 +91,10 @@ sealed class BeginVersionInstallationTest
         return result.Data!;
     }
 
-    private async Task<AppInstallCommandDetailModel> RequestInstallation(IHubActionTester tester, AddAppInstallCommandRequest requestData)
+    private async Task<AppInstallCommandDetailModel> AddInstallCommand(IHubActionTester tester, AddInstallCommandRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 }

@@ -20,6 +20,7 @@ export class AppGroup extends AppClientGroup {
 		this.GetResourceGroupsAction = this.createAction<IEmptyRequest,IResourceGroupModel[]>('GetResourceGroups', 'Get Resource Groups');
 		this.GetRolesAction = this.createAction<IEmptyRequest,IAppRoleModel[]>('GetRoles', 'Get Roles');
 		this.Index = this.createView<IEmptyRequest>('Index');
+		this.UpdateVersionsFromPublishedAction = this.createAction<IEmptyRequest,IEmptyActionResult>('UpdateVersionsFromPublished', 'Update Versions From Published');
 	}
 	
 	readonly GetAppAction: AppClientAction<IEmptyRequest,IAppModel>;
@@ -32,6 +33,7 @@ export class AppGroup extends AppClientGroup {
 	readonly GetResourceGroupsAction: AppClientAction<IEmptyRequest,IResourceGroupModel[]>;
 	readonly GetRolesAction: AppClientAction<IEmptyRequest,IAppRoleModel[]>;
 	readonly Index: AppClientView<IEmptyRequest>;
+	readonly UpdateVersionsFromPublishedAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	
 	GetApp(errorOptions?: IActionErrorOptions) {
 		return this.GetAppAction.execute({}, errorOptions || {});
@@ -59,5 +61,8 @@ export class AppGroup extends AppClientGroup {
 	}
 	GetRoles(errorOptions?: IActionErrorOptions) {
 		return this.GetRolesAction.execute({}, errorOptions || {});
+	}
+	UpdateVersionsFromPublished(errorOptions?: IActionErrorOptions) {
+		return this.UpdateVersionsFromPublishedAction.execute({}, errorOptions || {});
 	}
 }

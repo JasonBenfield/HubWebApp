@@ -1,6 +1,6 @@
-﻿using XTI_PermanentLog;
+﻿using XTI_Internal.Abstractions;
 
-namespace XTI_SupportServiceAppApi.PermanentLog;
+namespace XTI_SupportServiceAppApiActions.PermanentLog;
 
 public sealed class MoveToPermanentAction : AppAction<EmptyRequest, EmptyActionResult>
 {

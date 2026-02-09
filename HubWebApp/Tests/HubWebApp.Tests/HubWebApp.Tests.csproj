@@ -11,8 +11,8 @@
 		<PackageReference Include="NUnit" Version="4.4.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-		<PackageReference Include="XTI_Git.Fakes" Version="1.2.25" />
-		<PackageReference Include="XTI_GitHub.Fakes" Version="1.2.25" />
+		<PackageReference Include="XTI_Git.Fakes" Version="1.2.26-dev260208085001940" />
+		<PackageReference Include="XTI_GitHub.Fakes" Version="1.2.26-dev260208085001940" />
 	</ItemGroup>
 
 	<ItemGroup>

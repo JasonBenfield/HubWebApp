@@ -1,3 +1,4 @@
+using XTI_HubWebAppApiActions.App;
 using XTI_HubWebAppApiActions.AppInquiry;
 
 // Generated Code
@@ -16,5 +17,6 @@ internal static partial class AppGroupExtensions
         services.AddScoped<GetResourceGroupsAction>();
         services.AddScoped<GetRolesAction>();
         services.AddScoped<IndexAction>();
+        services.AddScoped<UpdateVersionsFromPublishedAction>();
     }
 }

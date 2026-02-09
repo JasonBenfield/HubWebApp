@@ -1,3 +1,4 @@
+using XTI_HubWebAppApiActions.App;
 using XTI_HubWebAppApiActions.AppInquiry;
 
 // Generated Code
@@ -17,6 +18,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
         GetResourceGroups = builder.GetResourceGroups.Build();
         GetRoles = builder.GetRoles.Build();
         Index = builder.Index.Build();
+        UpdateVersionsFromPublished = builder.UpdateVersionsFromPublished.Build();
         Configure();
     }
 
@@ -31,4 +33,5 @@ public sealed partial class AppGroup : AppApiGroupWrapper
     public AppApiAction<EmptyRequest, ResourceGroupModel[]> GetResourceGroups { get; }
     public AppApiAction<EmptyRequest, AppRoleModel[]> GetRoles { get; }
     public AppApiAction<EmptyRequest, WebViewResult> Index { get; }
+    public AppApiAction<EmptyRequest, EmptyActionResult> UpdateVersionsFromPublished { get; }
 }

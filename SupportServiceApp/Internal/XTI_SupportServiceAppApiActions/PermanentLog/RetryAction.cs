@@ -1,7 +1,7 @@
 ﻿using XTI_Core;
 using XTI_TempLog;
 
-namespace XTI_SupportServiceAppApi.PermanentLog;
+namespace XTI_SupportServiceAppApiActions.PermanentLog;
 
 public sealed class RetryAction : AppAction<EmptyRequest, EmptyActionResult>
 {

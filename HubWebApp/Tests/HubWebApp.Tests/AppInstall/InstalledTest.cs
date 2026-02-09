@@ -14,10 +14,10 @@ sealed class InstalledTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var requestedInstallationDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -49,10 +49,10 @@ sealed class InstalledTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail = await RequestInstallation
+        var requestedInstallationDetail = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -83,10 +83,10 @@ sealed class InstalledTest
         await tester.LoginAsAdmin();
         const string qualifiedMachineName = "machine.example.com";
         var config = await AddDefaultConfiguration(tester, qualifiedMachineName);
-        var requestedInstallationDetail1 = await RequestInstallation
+        var requestedInstallationDetail1 = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -96,10 +96,10 @@ sealed class InstalledTest
             )
         );
         var installation1 = await StartInstallation(tester, new BeginInstallationRequest(requestedInstallationDetail1.Command.ID, true));
-        var requestedInstallationDetail2 = await RequestInstallation
+        var requestedInstallationDetail2 = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -165,10 +165,10 @@ sealed class InstalledTest
                 installSequence: 0
             )
         );
-        var requestedInstallationDetail1 = await RequestInstallation
+        var requestedInstallationDetail1 = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
@@ -178,10 +178,10 @@ sealed class InstalledTest
             )
         );
         var installation1 = await StartInstallation(tester, new BeginInstallationRequest(requestedInstallationDetail1.Command.ID, true));
-        var requestedInstallationDetail2 = await RequestInstallation
+        var requestedInstallationDetail2 = await AddInstallCommand
         (
             tester,
-            new AddAppInstallCommandRequest
+            new AddInstallCommandRequest
             (
                 appKey: fakeApp.GetAppKey(),
                 versionKey: appVersion.Version.Key(),
@@ -203,7 +203,7 @@ sealed class InstalledTest
     private Task<EfApp> RegisterFakeApp(IHubActionTester tester)
     {
         var factory = tester.Services.GetRequiredService<EfHubDB>();
-        return factory.Apps.AddOrUpdate(new AppVersionName("fake"), FakeInfo.AppKey, DateTimeOffset.Now, ct: default);
+        return factory.Apps.AddOrUpdate(new AppVersionName("fake"), "Fake", "Fak", FakeInfo.AppKey, DateTimeOffset.Now, ct: default);
     }
 
     private async Task<HubActionTester<InstallationIDRequest, EmptyActionResult>> Setup()
@@ -256,10 +256,10 @@ sealed class InstalledTest
         return result.Data!;
     }
 
-    private async Task<AppInstallCommandDetailModel> RequestInstallation(IHubActionTester tester, AddAppInstallCommandRequest requestData)
+    private async Task<AppInstallCommandDetailModel> AddInstallCommand(IHubActionTester tester, AddInstallCommandRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.RequestInstallation.Execute(requestData);
+        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
-using XTI_App.Abstractions;
 using XTI_App.Api;
 using XTI_App.Extensions;
 using XTI_App.Hosting;
@@ -12,13 +10,12 @@ using XTI_Core.Extensions;
 using XTI_Hub;
 using XTI_HubAppClient;
 using XTI_HubAppClient.Extensions;
-using XTI_PermanentLog;
-using XTI_PermanentLog.Implementations;
+using XTI_HubAppClient.Implementations;
+using XTI_Internal.Abstractions;
 using XTI_Secrets.Extensions;
 using XTI_SupportServiceAppApi;
 using XTI_TempLog;
 using XTI_TempLog.Abstractions;
-using XTI_TempLog.Extensions;
 
 namespace SupportServiceAppIntegrationTests;
 

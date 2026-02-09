@@ -8,6 +8,7 @@ using XTI_Hub.Abstractions;
 using XTI_HubDB.Extensions;
 using XTI_HubWebAppApi;
 using XTI_HubWebAppApiActions;
+using XTI_Internal.Abstractions;
 using XTI_WebApp.Abstractions;
 using XTI_WebApp.Fakes;
 

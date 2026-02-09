@@ -76,6 +76,7 @@ public sealed class AdminOptions
             RemoteOptionsKey = RemoteOptionsKey,
             RepoName = RepoName,
             RepoOwner = RepoOwner,
+            IsInitiatedRemotely = IsInitiatedRemotely,
             InstallConfigurationName = InstallConfigurationName,
             InstallTemplateName = InstallTemplateName,
             InstallSequence = InstallSequence,
@@ -107,6 +108,7 @@ public sealed class AdminOptions
         RemoteOptionsKey = options.RemoteOptionsKey;
         RepoOwner = options.RepoOwner;
         RepoName = options.RepoName;
+        IsInitiatedRemotely = options.IsInitiatedRemotely;
         InstallConfigurationName = options.InstallConfigurationName;
         InstallTemplateName = options.InstallTemplateName;
         InstallSequence = options.InstallSequence;

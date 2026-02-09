@@ -74,7 +74,7 @@ public sealed class EfApp
         return new EfAppVersion(db, this, efVersion);
     }
 
-    internal Task AddVersionIfNotFound(EfVersion version, CancellationToken ct) => db.Versions.AddVersionToAppIfNotFound(this, version, ct);
+    public Task AddVersionIfNotFound(EfVersion version, CancellationToken ct) => db.Versions.AddVersionToAppIfNotFound(this, version, ct);
 
     public Task<EfAppVersion> CurrentVersion(CancellationToken ct) => db.Versions.VersionByApp(this, AppVersionKey.Current, ct);
 
@@ -146,11 +146,13 @@ public sealed class EfApp
 
     public Task<EfAppCommand> AddCommand
     (
+        EfInstallLocation efLocation,
         AppCommandName commandName,
         string serializedRequest,
+        DateTimeOffset timeAdded,
         DateTimeOffset timeStarted,
         CancellationToken ct
-    ) => db.AppCommands.Add(app, commandName, serializedRequest, timeStarted, ct);
+    ) => db.AppCommands.Add(app, efLocation, commandName, serializedRequest, timeAdded, timeStarted, ct);
 
     public AppModel ToModel()
     {
@@ -160,6 +162,8 @@ public sealed class EfApp
             ID: ID,
             AppKey: key,
             VersionName: new AppVersionName(app.VersionName),
+            RepoOwner: app.RepoOwner,
+            RepoName: app.RepoName,
             PublicKey: key.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage)
                 ? ModifierKey.Default
                 : new ModifierKey(key.Format())

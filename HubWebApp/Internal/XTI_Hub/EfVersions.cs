@@ -18,7 +18,7 @@ public sealed class EfVersions
             .Where(av => av.AppID == app.ID && av.VersionID == version.ID)
             .Select(av => av.ID);
 
-    internal async Task<EfVersion> AddIfNotFound
+    public async Task<EfVersion> AddIfNotFound
     (
         AppVersionName versionName,
         AppVersionKey key,

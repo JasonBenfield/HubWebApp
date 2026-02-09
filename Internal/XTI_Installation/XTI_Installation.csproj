@@ -9,7 +9,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.2" />
-		<PackageReference Include="XTI_App.Extensions" Version="1.8.54-dev260201163456873" />
+		<PackageReference Include="XTI_App.Extensions" Version="1.8.54-dev260208221308934" />
 		<PackageReference Include="XTI_Processes" Version="1.10.26-dev260131102223367" />
 	</ItemGroup>
 

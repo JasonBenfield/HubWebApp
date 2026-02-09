@@ -12,12 +12,12 @@ public sealed class EfInstallLocations
         this.db = db;
     }
 
-    internal async Task<EfInstallLocation> Location(int id, CancellationToken ct)
+    internal async Task<EfInstallLocation> Location(int locationID, CancellationToken ct)
     {
         var location = await db.Context.InstallLocations.Retrieve()
-            .Where(l => l.ID == id)
+            .Where(l => l.ID == locationID)
             .FirstOrDefaultAsync(ct);
-        return new EfInstallLocation(db, location ?? throw new Exception($"Install Location not found with ID {id}"));
+        return new EfInstallLocation(db, location ?? throw new Exception($"Install Location not found with ID {locationID}"));
     }
 
     public Task<EfInstallLocation> UnknownLocation(CancellationToken ct) =>

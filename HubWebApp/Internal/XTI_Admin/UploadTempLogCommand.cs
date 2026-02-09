@@ -1,6 +1,4 @@
-﻿using XTI_PermanentLog;
-
-namespace XTI_Admin;
+﻿namespace XTI_Admin;
 
 internal sealed class UploadTempLogCommand : ICommand
 {

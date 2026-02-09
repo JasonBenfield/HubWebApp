@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="XTI_GitHub" Version="1.2.26-dev260208085001940" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\XTI_Internal.Abstractions\XTI_Internal.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

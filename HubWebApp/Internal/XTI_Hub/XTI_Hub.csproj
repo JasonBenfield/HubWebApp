@@ -10,12 +10,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
     <PackageReference Include="System.Linq.Async" Version="7.0.0" />
-    <PackageReference Include="XTI_App.Api" Version="1.8.54-dev260201163456873" />
+    <PackageReference Include="XTI_App.Api" Version="1.8.54-dev260208221308934" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Internal\XTI_PermanentLog\XTI_PermanentLog.csproj" />
-    <ProjectReference Include="..\..\Lib\XTI_Hub.Abstractions\XTI_Hub.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Internal\XTI_Internal.Abstractions\XTI_Internal.Abstractions.csproj" />
     <ProjectReference Include="..\XTI_HubDB.Entities\XTI_HubDB.Entities.csproj" />
   </ItemGroup>
 

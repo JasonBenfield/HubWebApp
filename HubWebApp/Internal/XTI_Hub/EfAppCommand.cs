@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -43,7 +44,7 @@ public sealed class EfAppCommand
     internal async Task<EfInstallation> BeginInstallation(DateTimeOffset timeAdded, bool isCurrent, CancellationToken ct)
     {
         ThrowIfNotInstallCommand();
-        var installRequest = AddAppInstallCommandRequest.Deserialize(command.SerializedRequest);
+        var installRequest = AddInstallCommandRequest.Deserialize(command.SerializedRequest);
         var efConfiguration = await db.InstallConfigurations.Configuration(installRequest.InstallConfigurationID, ct);
         var configuration = await efConfiguration.ToModel(ct);
         var efLocation = await db.InstallLocations.Location(configuration.Template.DestinationMachineName, ct);
@@ -76,7 +77,8 @@ public sealed class EfAppCommand
     {
         ThrowIfNotInstallCommand();
         var efApp = await db.Apps.App(command.AppID, ct);
-        var installRequest = AddAppInstallCommandRequest.Deserialize(command.SerializedRequest);
+        var efLocation = await db.InstallLocations.Location(command.LocationID, ct);
+        var installRequest = AddInstallCommandRequest.Deserialize(command.SerializedRequest);
         var efAppVersion = await efApp.VersionOrDefault(installRequest.ToAppVersionKey(), ct);
         var efConfiguration = await db.InstallConfigurations.Configuration(installRequest.InstallConfigurationID, ct);
         var configuration = await efConfiguration.ToModel(ct);
@@ -88,11 +90,30 @@ public sealed class EfAppCommand
         return new AppInstallCommandDetailModel
         (
             Command: ToModel(),
+            InstallRequest: installRequest,
             App: efApp.ToModel(),
             Version: efAppVersion.Version.ToModel(),
+            Location: efLocation.ToModel(),
             InstallConfiguration: configuration,
             Steps: efSteps.Select(s => s.ToModel()).ToArray(),
             Installations: efInstallations.Select(inst => inst.ToModel()).ToArray()
+        );
+    }
+
+    public async Task<AppDeleteCommandDetailModel> ToDeleteCommandDetailModel(CancellationToken ct)
+    {
+        ThrowIfNotDeleteCommand();
+        var efApp = await db.Apps.App(command.AppID, ct);
+        var efLocation = await db.InstallLocations.Location(command.LocationID, ct);
+        var deleteRequest = XtiSerializer.Deserialize<InstallationIDRequest>(command.SerializedRequest);
+        var efInstallation = await db.Installations.InstallationOrDefault(deleteRequest.InstallationID, ct);
+        var efAppVersion = await efInstallation.AppVersion(ct);
+        return new AppDeleteCommandDetailModel
+        (
+            Command: ToModel(),
+            App: efApp.ToModel(),
+            Version: efAppVersion.Version.ToModel(),
+            Installation: efInstallation.ToModel()
         );
     }
 
@@ -104,11 +125,20 @@ public sealed class EfAppCommand
         }
     }
 
+    private void ThrowIfNotDeleteCommand()
+    {
+        if (!AppCommandName.Delete.Equals(command.CommandName))
+        {
+            throw new Exception($"Command {command.ID} has command name '{command.CommandName}'");
+        }
+    }
+
     public AppCommandModel ToModel() =>
         new AppCommandModel
         (
             ID: command.ID,
             CommandName: new AppCommandName(command.CommandName),
+            TimeAdded: command.TimeAdded,
             TimeStarted: command.TimeStarted,
             TimeEnded: command.TimeEnded
         );
