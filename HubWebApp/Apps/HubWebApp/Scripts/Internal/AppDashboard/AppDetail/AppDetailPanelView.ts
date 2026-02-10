@@ -1,20 +1,19 @@
-﻿import { MarginCss } from '@jasonbenfield/sharedwebapp/MarginCss';
-import { CssLengthUnit } from '@jasonbenfield/sharedwebapp/CssLengthUnit';
-import { BasicComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicComponentView';
-import { ButtonCommandView } from '@jasonbenfield/sharedwebapp/Views/Command';
-import { GridView } from '@jasonbenfield/sharedwebapp/Views/Grid';
-import { ToolbarView } from '@jasonbenfield/sharedwebapp/Views/ToolbarView';
-import { HubTheme } from '../../HubTheme';
-import { AppComponentView } from './AppComponentView';
-import { CurrentVersionComponentView } from './CurrentVersionComponentView';
-import { ModifierCategoryListCardView } from './ModifierCategoryListCardView';
-import { MostRecentErrorEventListCardView } from './MostRecentErrorEventListCardView';
-import { MostRecentRequestListCardView } from './MostRecentRequestListCardView';
-import { ResourceGroupListCardView } from './ResourceGroupListCardView';
-import { CardAlertView, CardView } from '@jasonbenfield/sharedwebapp/Views/Card';
-import { BasicTextComponentView } from '@jasonbenfield/sharedwebapp/Views/BasicTextComponentView';
-import { TextPreView } from '@jasonbenfield/sharedwebapp/Views/TextPreView';
-import { TextHeading3View } from '@jasonbenfield/sharedwebapp/Views/TextHeadings';
+﻿import { CssLengthUnit } from "@jasonbenfield/sharedwebapp/CssLengthUnit";
+import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
+import { BasicComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicComponentView";
+import { BasicTextComponentView } from "@jasonbenfield/sharedwebapp/Views/BasicTextComponentView";
+import { CardAlertView, CardView } from "@jasonbenfield/sharedwebapp/Views/Card";
+import { ButtonCommandView } from "@jasonbenfield/sharedwebapp/Views/Command";
+import { GridView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { TextPreView } from "@jasonbenfield/sharedwebapp/Views/TextPreView";
+import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
+import { HubTheme } from "../../HubTheme";
+import { AppComponentView } from "./AppComponentView";
+import { CurrentVersionComponentView } from "./CurrentVersionComponentView";
+import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
+import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCardView";
+import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
+import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
 export class AppDetailPanelView extends GridView {
     readonly app: AppComponentView;
@@ -38,19 +37,19 @@ export class AppDetailPanelView extends GridView {
         this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1));
         const mainContent = HubTheme.instance.mainContent(this.addCell());
-        this.app = mainContent.addView(AppComponentView)
-            this.app.setMargin(MarginCss.bottom(3));
+        this.app = mainContent.addView(AppComponentView);
+        this.app.setMargin(MarginCss.bottom(3));
         this.currentVersion = mainContent.addView(CurrentVersionComponentView)
-            .configure(b => b.setMargin(MarginCss.bottom(3)));
+        this.currentVersion.setMargin(MarginCss.bottom(3));
         this.appOptionsCardView = mainContent.addView(CardView);
         this.appOptionsCardView.setMargin(MarginCss.bottom(3));
-        this.appOptionsCardView.addCardTitleHeader().setText('Default App Options');
+        this.appOptionsCardView.addCardTitleHeader().setText("Default App Options");
         this.appOptionsAlertView = this.appOptionsCardView.addCardAlert();
         const appOptionsBodyView = this.appOptionsCardView.addCardBody();
         this.appOptionsTextView = appOptionsBodyView.addView(TextPreView);
         this.optionsCardView = mainContent.addView(CardView);
         this.optionsCardView.setMargin(MarginCss.bottom(3));
-        this.optionsCardView.addCardTitleHeader().setText('Default Shared Options');
+        this.optionsCardView.addCardTitleHeader().setText("Default Shared Options");
         this.optionsAlertView = this.optionsCardView.addCardAlert();
         const optionsBodyView = this.optionsCardView.addCardBody();
         this.optionsTextView = optionsBodyView.addView(TextPreView);

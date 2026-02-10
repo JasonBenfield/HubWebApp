@@ -5,17 +5,17 @@ namespace XTI_Hub.Abstractions;
 public sealed record AppInstallCommandDetailModel
 (
     AppCommandModel Command,
-    AddInstallCommandRequest InstallRequest,
     AppModel App,
-    XtiVersionModel Version,
     InstallLocationModel Location,
-    InstallConfigurationModel InstallConfiguration,
     AppCommandStepModel[] Steps,
+    AddInstallCommandRequest InstallRequest,
+    XtiVersionModel Version,
+    InstallConfigurationModel InstallConfiguration,
     InstallationModel[] Installations
 )
 {
     public AppInstallCommandDetailModel()
-        : this(new(), new(), new(), new(), new(), new(), [], [])
+        : this(new(), new(), new(), [], new(), new(), new(), [])
     {
     }
 

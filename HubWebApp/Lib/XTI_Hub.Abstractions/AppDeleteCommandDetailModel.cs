@@ -5,14 +5,15 @@ namespace XTI_Hub.Abstractions;
 public sealed record AppDeleteCommandDetailModel
 (
     AppCommandModel Command, 
-    AppModel App, 
+    AppModel App,
+    InstallLocationModel Location,
+    AppCommandStepModel[] Steps, 
     XtiVersionModel Version,
-    InstallationModel Installation,
-    AppCommandStepModel[] Steps
+    InstallationModel Installation
 )
 {
     public AppDeleteCommandDetailModel()
-        : this(new(), new(), new(), new(), [])
+        : this(new(), new(), new(), [], new(), new())
     {
     }
 }

@@ -9,11 +9,17 @@ public sealed partial class CommandGroupBuilder
     internal CommandGroupBuilder(AppApiGroup source)
     {
         this.source = source;
+        GetCommand = source.AddAction<AppCommandIDRequest, AppCommandModel>("GetCommand").WithExecution<GetCommandAction>().WithValidation<GetCommandValidation>();
+        GetDeleteCommandDetail = source.AddAction<AppCommandIDRequest, AppDeleteCommandDetailModel>("GetDeleteCommandDetail").WithExecution<GetDeleteCommandDetailAction>().WithValidation<GetDeleteCommandDetailValidation>();
+        GetInstallationCommandDetail = source.AddAction<AppCommandIDRequest, AppInstallCommandDetailModel>("GetInstallationCommandDetail").WithExecution<GetInstallationCommandDetailAction>().WithValidation<GetInstallationCommandDetailValidation>();
         Index = source.AddAction<AppCommandIDRequest, WebViewResult>("Index").WithExecution<IndexAction>();
         Configure();
     }
 
     partial void Configure();
+    public AppApiActionBuilder<AppCommandIDRequest, AppCommandModel> GetCommand { get; }
+    public AppApiActionBuilder<AppCommandIDRequest, AppDeleteCommandDetailModel> GetDeleteCommandDetail { get; }
+    public AppApiActionBuilder<AppCommandIDRequest, AppInstallCommandDetailModel> GetInstallationCommandDetail { get; }
     public AppApiActionBuilder<AppCommandIDRequest, WebViewResult> Index { get; }
 
     public CommandGroup Build() => new CommandGroup(source, this);

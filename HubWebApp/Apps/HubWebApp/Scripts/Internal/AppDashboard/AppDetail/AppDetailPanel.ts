@@ -1,19 +1,19 @@
-﻿import { Awaitable } from '@jasonbenfield/sharedwebapp/Awaitable';
-import { CardAlert } from '@jasonbenfield/sharedwebapp/Components/CardAlert';
-import { Command } from '@jasonbenfield/sharedwebapp/Components/Command';
-import { TextComponent } from '@jasonbenfield/sharedwebapp/Components/TextComponent';
-import { IMessageAlert } from '@jasonbenfield/sharedwebapp/Components/Types';
-import { AppResourceGroup } from '../../../Lib/AppResourceGroup';
-import { HubAppClient } from '../../../Lib/Http/HubAppClient';
-import { ModifierCategory } from '../../../Lib/ModifierCategory';
-import { ResourceGroupListItem } from '../ResourceGroupListItem';
-import { AppComponent } from './AppComponent';
-import { AppDetailPanelView } from './AppDetailPanelView';
-import { CurrentVersionComponent } from './CurrentVersionComponent';
-import { ModifierCategoryListCard } from './ModifierCategoryListCard';
-import { MostRecentErrorEventListCard } from './MostRecentErrorEventListCard';
-import { MostRecentRequestListCard } from './MostRecentRequestListCard';
-import { ResourceGroupListCard } from './ResourceGroupListCard';
+﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
+import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { ModifierCategory } from "../../../Lib/ModifierCategory";
+import { ResourceGroupListItem } from "../ResourceGroupListItem";
+import { AppComponent } from "./AppComponent";
+import { AppDetailPanelView } from "./AppDetailPanelView";
+import { CurrentVersionComponent } from "./CurrentVersionComponent";
+import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
+import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
+import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
+import { ResourceGroupListCard } from "./ResourceGroupListCard";
 
 interface IResult {
     backRequested?: {};
@@ -115,10 +115,10 @@ export class AppDetailPanel implements IPanel {
     }
 
     private async refreshDefaultAppOptions() {
-        this.appOptionsTextComponent.setText('');
+        this.appOptionsTextComponent.setText("");
         this.view.showAppOptions();
         const defaultAppOptions = await this.appOptionsAlert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.App.GetDefaultAppOptions()
         );
         if (defaultAppOptions) {
@@ -131,10 +131,10 @@ export class AppDetailPanel implements IPanel {
     }
 
     private async refreshDefaultOptions() {
-        this.optionsTextComponent.setText('');
+        this.optionsTextComponent.setText("");
         this.view.showAppOptions();
         const defaultOptions = await this.optionsAlert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.App.GetDefaultOptions()
         );
         if (defaultOptions) {

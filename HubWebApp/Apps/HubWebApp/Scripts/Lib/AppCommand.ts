@@ -17,5 +17,10 @@ export class AppCommand {
 		this.timeAdded = source ? source.TimeAdded : DateTimeOffset.max();
 		this.timeStarted = source ? source.TimeStarted : DateTimeOffset.max();
 		this.timeEnded = source ? source.TimeEnded : DateTimeOffset.max();
-    }
+	}
+
+	get isPending() { return this.status.equals(AppCommandStatus.values.Pending); }
+	get isInProgress() { return this.status.equals(AppCommandStatus.values.Started); }
+	get isComplete() { return this.status.equals(AppCommandStatus.values.Completed); }
+	get isFailed() { return this.status.equals(AppCommandStatus.values.Failed); }
 }

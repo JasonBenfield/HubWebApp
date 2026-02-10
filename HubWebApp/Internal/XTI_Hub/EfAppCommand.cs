@@ -104,12 +104,12 @@ public sealed class EfAppCommand
         return new AppInstallCommandDetailModel
         (
             Command: ToModel(),
-            InstallRequest: installRequest,
             App: efApp.ToModel(),
-            Version: efAppVersion.Version.ToModel(),
             Location: efLocation.ToModel(),
-            InstallConfiguration: configuration,
             Steps: efSteps.Select(s => s.ToModel()).ToArray(),
+            InstallRequest: installRequest,
+            Version: efAppVersion.Version.ToModel(),
+            InstallConfiguration: configuration,
             Installations: efInstallations.Select(inst => inst.ToModel()).ToArray()
         );
     }
@@ -127,9 +127,10 @@ public sealed class EfAppCommand
         (
             Command: ToModel(),
             App: efApp.ToModel(),
+            Location: efLocation.ToModel(),
+            Steps: efSteps.Select(s => s.ToModel()).ToArray(),
             Version: efAppVersion.Version.ToModel(),
-            Installation: efInstallation.ToModel(),
-            Steps: efSteps.Select(s => s.ToModel()).ToArray()
+            Installation: efInstallation.ToModel()
         );
     }
 

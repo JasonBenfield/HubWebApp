@@ -4,6 +4,8 @@ interface IAppModel {
 	ID: number;
 	AppKey: IAppKey;
 	VersionName: IAppVersionName;
+	RepoOwner: string;
+	RepoName: string;
 	PublicKey: IModifierKey;
 }
 interface IAppKey {
@@ -169,6 +171,94 @@ interface IPersonName {
 interface IAppCommandIDRequest {
 	CommandID: number;
 }
+interface IAppCommandModel {
+	ID: number;
+	CommandName: IAppCommandName;
+	Status: IAppCommandStatus;
+	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface IAppCommandName {
+	Value: string;
+}
+interface IAppDeleteCommandDetailModel {
+	Command: IAppCommandModel;
+	App: IAppModel;
+	Location: IInstallLocationModel;
+	Steps: IAppCommandStepModel[];
+	Version: IXtiVersionModel;
+	Installation: IInstallationModel;
+}
+interface IInstallLocationModel {
+	ID: number;
+	QualifiedMachineName: string;
+}
+interface IAppCommandStepModel {
+	ID: number;
+	Activity: string;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ErrorMessage: string;
+}
+interface IXtiVersionModel {
+	ID: number;
+	VersionName: IAppVersionName;
+	VersionKey: IAppVersionKey;
+	VersionNumber: IAppVersionNumber;
+	VersionType: IAppVersionType;
+	Status: IAppVersionStatus;
+	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+}
+interface IAppVersionNumber {
+	Major: number;
+	Minor: number;
+	Patch: number;
+}
+interface IInstallationModel {
+	ID: number;
+	Status: IInstallStatus;
+	IsCurrent: boolean;
+	Domain: string;
+	SiteName: string;
+}
+interface IAppInstallCommandDetailModel {
+	Command: IAppCommandModel;
+	App: IAppModel;
+	Location: IInstallLocationModel;
+	Steps: IAppCommandStepModel[];
+	InstallRequest: IAddInstallCommandRequest;
+	Version: IXtiVersionModel;
+	InstallConfiguration: IInstallConfigurationModel;
+	Installations: IInstallationModel[];
+}
+interface IAddInstallCommandRequest {
+	AppKey: IAppKeyRequest;
+	VersionKey: string;
+	InstallConfigurationID: number;
+	InstallAsCurrent: boolean;
+	IsAutoStartEnabled: boolean;
+}
+interface IAppKeyRequest {
+	AppName: string;
+	AppType: number;
+}
+interface IInstallConfigurationModel {
+	ID: number;
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKey;
+	Template: IInstallConfigurationTemplateModel;
+	InstallSequence: number;
+}
+interface IInstallConfigurationTemplateModel {
+	ID: number;
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
 interface IExternalAuthKeyModel {
 	AuthenticatorKey: string;
 	ExternalUserKey: string;
@@ -177,10 +267,6 @@ interface IAddAdminUserRequest {
 	AppKey: IAppKeyRequest;
 	UserName: string;
 	Password: string;
-}
-interface IAppKeyRequest {
-	AppName: string;
-	AppType: number;
 }
 interface IAddInstallationUserRequest {
 	MachineName: string;
@@ -221,22 +307,6 @@ interface IConfigureInstallRequest {
 	TemplateName: string;
 	InstallSequence: number;
 }
-interface IInstallConfigurationModel {
-	ID: number;
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-	AppKey: IAppKey;
-	Template: IInstallConfigurationTemplateModel;
-	InstallSequence: number;
-}
-interface IInstallConfigurationTemplateModel {
-	ID: number;
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
 interface IConfigureInstallTemplateRequest {
 	TemplateName: string;
 	DestinationMachineName: string;
@@ -260,20 +330,6 @@ interface IGetInstallConfigurationsRequest {
 interface IGetVersionRequest {
 	VersionName: string;
 	VersionKey: string;
-}
-interface IXtiVersionModel {
-	ID: number;
-	VersionName: IAppVersionName;
-	VersionKey: IAppVersionKey;
-	VersionNumber: IAppVersionNumber;
-	VersionType: IAppVersionType;
-	Status: IAppVersionStatus;
-	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-}
-interface IAppVersionNumber {
-	Major: number;
-	Minor: number;
-	Patch: number;
 }
 interface IGetVersionsRequest {
 	VersionName: string;
@@ -316,59 +372,6 @@ interface ISetUserAccessRoleRequest {
 }
 interface IInstallationIDRequest {
 	InstallationID: number;
-}
-interface IAppDeleteCommandDetailModel {
-	Command: IAppCommandModel;
-	App: IAppModel;
-	Version: IXtiVersionModel;
-	Installation: IInstallationModel;
-	Steps: IAppCommandStepModel[];
-}
-interface IAppCommandModel {
-	ID: number;
-	CommandName: IAppCommandName;
-	Status: IAppCommandStatus;
-	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-}
-interface IAppCommandName {
-	Value: string;
-}
-interface IInstallationModel {
-	ID: number;
-	Status: IInstallStatus;
-	IsCurrent: boolean;
-	Domain: string;
-	SiteName: string;
-}
-interface IAppCommandStepModel {
-	ID: number;
-	Activity: string;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	ErrorMessage: string;
-}
-interface IAddInstallCommandRequest {
-	AppKey: IAppKeyRequest;
-	VersionKey: string;
-	InstallConfigurationID: number;
-	InstallAsCurrent: boolean;
-	IsAutoStartEnabled: boolean;
-}
-interface IAppInstallCommandDetailModel {
-	Command: IAppCommandModel;
-	InstallRequest: IAddInstallCommandRequest;
-	App: IAppModel;
-	Version: IXtiVersionModel;
-	Location: IInstallLocationModel;
-	InstallConfiguration: IInstallConfigurationModel;
-	Steps: IAppCommandStepModel[];
-	Installations: IInstallationModel[];
-}
-interface IInstallLocationModel {
-	ID: number;
-	QualifiedMachineName: string;
 }
 interface IBeginAppCommandStepRequest {
 	CommandID: number;
@@ -855,15 +858,15 @@ interface IResourceResultType {
 	Value: number;
 	DisplayText: string;
 }
+interface IAppCommandStatus {
+	Value: number;
+	DisplayText: string;
+}
 interface IAppVersionType {
 	Value: number;
 	DisplayText: string;
 }
 interface IAppVersionStatus {
-	Value: number;
-	DisplayText: string;
-}
-interface IAppCommandStatus {
 	Value: number;
 	DisplayText: string;
 }
