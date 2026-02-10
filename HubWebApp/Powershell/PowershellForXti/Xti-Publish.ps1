@@ -13,6 +13,7 @@
         [Parameter(ValueFromPipelineByPropertyName = $true)]
         $AppType = "",
         [switch] $NoInstall,
+        [switch] $IsImmediate,
         [ValidateSet("Default", "DB", "HubClient")]
         $HubAdministrationType = "Default",
         $HubAppVersionKey = "",
@@ -25,45 +26,11 @@
     if($NoInstall){
         $Command = "Publish"
     }
-    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
-}
-
-function Xti-Build {
-    param (
-        [ValidateSet("Production", "Development", "Staging", "Test")]
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppName = "",
-        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppType = "",
-        [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default",
-        $HubAppVersionKey = ""
-    )
-    ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Build -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType -HubAppVersionKey "`"$($HubAppVersionKey)`""
-}
-
-function Xti-Setup {
-    param (
-        [ValidateSet("Production", "Development", "Staging", "Test")]
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppName = "",
-        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppType = "",
-        [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default",
-        [ValidateSet("Default", "GitHub", "Folder")]
-        $InstallationSource = "Default",
-        $HubAppVersionKey = ""
-    )
-    ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Setup -AppName "`"$($AppName)`"" -AppType $AppType -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`""
+    $IsImmediateValue = "false"
+    if($IsImmediate){
+        $IsImmediateValue = "true"
+    }
+    Xti-Admin -EnvName $EnvName -Command $Command -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -IsImmediate $IsImmediateValue
 }
 
 function Xti-Install {
@@ -88,31 +55,15 @@ function Xti-Install {
         $InstallationSource = "Default",
         $InstallConfigurationName = "",
         $HubAppVersionKey = "",
-        $Release = ""
+        $Release = "",
+        [switch] $IsImmediate
     )
     ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -Release "`"$($Release)`""
-}
-
-function Xti-PublishLib {
-    param (
-        [ValidateSet("Production", "Development", "Staging", "Test")]
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $EnvName,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppName = "",
-        [ValidateSet("", "WebApp", "WebPackage", "ServiceApp", "ConsoleApp", "Package")]
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $AppType = "",
-        $RepoOwner,
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $RepoName,
-        [ValidateSet("Default", "DB", "HubClient")]
-        $HubAdministrationType = "Default",
-        $HubAppVersionKey = ""
-    )
-    ThrowIfNotSolutionDir
-    Xti-Admin -EnvName $EnvName -Command PublishLib -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -HubAdministrationType $HubAdministrationType
+    $IsImmediateValue = "false"
+    if($IsImmediate){
+        $IsImmediateValue = "true"
+    }
+    Xti-Admin -EnvName $EnvName -Command Install -AppName "`"$($AppName)`"" -AppType $AppType -RepoOwner "`"$($RepoOwner)`"" -RepoName "`"$($RepoName)`"" -VersionNumber "`"$($VersionNumber)`"" -InstallConfigurationName "`"$($InstallConfigurationName)`"" -HubAdministrationType $HubAdministrationType -InstallationSource $InstallationSource -HubAppVersionKey "`"$($HubAppVersionKey)`"" -Release "`"$($Release)`"" -IsImmediate $IsImmediateValue
 }
 
 function Xti-AddInstallationUser {
@@ -326,7 +277,8 @@ function Xti-Admin {
 		$Password = "",
 		$InstallTemplateName = "",
 		$InstallConfigurationName = "",
-		$InstallSequence = 0
+		$InstallSequence = 0,
+		$IsImmediate = "false"
     )
     $ErrorActionPreference = "Stop"
     $Args = @()
@@ -403,6 +355,9 @@ function Xti-Admin {
     }
     if(-not [string]::IsNullOrWhiteSpace($InstallConfigurationName) -and $InstallConfigurationName -ne "`"`"") {
         $Args += "--InstallConfigurationName $InstallConfigurationName"
+    }
+    if($IsImmediate -eq "true") {
+        $Args += "--IsImmediate true"
     }
     if($InstallSequence -ne 0) {
         $Args += "--InstallSequence $InstallSequence"

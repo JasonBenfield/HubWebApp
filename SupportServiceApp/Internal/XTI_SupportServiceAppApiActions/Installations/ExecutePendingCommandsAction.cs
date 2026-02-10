@@ -43,27 +43,33 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
         foreach (var pendingCommand in pendingCommands)
         {
             await hubService.BeginCommand(pendingCommand.ID, ct);
-            if (pendingCommand.CommandName.Equals(AppCommandName.Delete))
+            try
             {
-                await DeleteApp(pendingCommand, ct);
-            }
-            else if (pendingCommand.CommandName.Equals(AppCommandName.Install))
-            {
-                var commandDetail = await hubService.GetInstallCommandDetail(pendingCommand.ID, ct);
-                using (var publishedAssets = CreatePublishedAssets(commandDetail.InstallConfiguration.RepoOwner, commandDetail.InstallConfiguration.RepoName))
+                if (pendingCommand.CommandName.Equals(AppCommandName.Delete))
                 {
-                    var installFromRequestProcess = new InstallFromRequestProcess
-                    (
-                        hubService: hubService,
-                        publishedAssets: publishedAssets,
-                        installFactory: installAppProcessFactory,
-                        xtiEnv: xtiEnv,
-                        xtiFolder: xtiFolder
-                    );
-                    await installFromRequestProcess.Run(commandDetail, ct);
+                    await DeleteApp(pendingCommand, ct);
                 }
+                else if (pendingCommand.CommandName.Equals(AppCommandName.Install))
+                {
+                    var commandDetail = await hubService.GetInstallCommandDetail(pendingCommand.ID, ct);
+                    using (var publishedAssets = CreatePublishedAssets(commandDetail.InstallConfiguration.RepoOwner, commandDetail.InstallConfiguration.RepoName))
+                    {
+                        var installFromRequestProcess = new InstallFromRequestProcess
+                        (
+                            hubService: hubService,
+                            publishedAssets: publishedAssets,
+                            installFactory: installAppProcessFactory,
+                            xtiEnv: xtiEnv,
+                            xtiFolder: xtiFolder
+                        );
+                        await installFromRequestProcess.Run(commandDetail, ct);
+                    }
+                }
+                await hubService.CommandEnded(pendingCommand.ID, ct);
             }
-            await hubService.CommandEnded(pendingCommand.ID, ct);
+            catch (AppCommandStepException)
+            {
+            }
         }
         return new EmptyActionResult();
     }
@@ -77,15 +83,24 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
             : deleteCommandDetail.Version.VersionKey;
         if (deleteCommandDetail.App.AppKey.IsAppType(AppType.Values.WebApp))
         {
-            var iisWebSite = new IisWebSite
+            await RunStep
             (
-                xtiFolder,
-                xtiEnv,
-                deleteCommandDetail.App.AppKey,
-                versionKey,
-                deleteCommandDetail.Installation.SiteName
+                pendingCommand,
+                "Delete IIS Website",
+                () =>
+                {
+                    var iisWebSite = new IisWebSite
+                    (
+                        xtiFolder,
+                        xtiEnv,
+                        deleteCommandDetail.App.AppKey,
+                        versionKey,
+                        deleteCommandDetail.Installation.SiteName
+                    );
+                    return iisWebSite.Delete(ct);
+                },
+                ct
             );
-            await RunStep(pendingCommand, "Delete IIS Website", () => iisWebSite.Delete(ct), ct);
         }
         else if
         (
@@ -93,8 +108,17 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
             deleteCommandDetail.Installation.IsCurrent
         )
         {
-            var winService = new WinServiceInstallation(xtiFolder, xtiEnv, deleteCommandDetail.App.AppKey);
-            await RunStep(pendingCommand, "Delete Windows Service", () => winService.Delete(), ct);
+            await RunStep
+            (
+                pendingCommand,
+                "Delete Windows Service",
+                () =>
+                {
+                    var winService = new WinServiceInstallation(xtiFolder, xtiEnv, deleteCommandDetail.App.AppKey);
+                    return winService.Delete();
+                },
+                ct
+            );
         }
         var appFolder = xtiFolder.InstallPath(deleteCommandDetail.App.AppKey, versionKey);
         if (Directory.Exists(appFolder))

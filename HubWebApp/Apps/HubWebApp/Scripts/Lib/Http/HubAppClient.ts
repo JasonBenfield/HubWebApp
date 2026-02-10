@@ -10,6 +10,7 @@ import { AppUserMaintenanceGroup } from "./AppUserMaintenanceGroup";
 import { AuthGroup } from "./AuthGroup";
 import { AuthApiGroup } from "./AuthApiGroup";
 import { AuthenticatorsGroup } from "./AuthenticatorsGroup";
+import { CommandGroup } from "./CommandGroup";
 import { CurrentUserGroup } from "./CurrentUserGroup";
 import { ExternalAuthGroup } from "./ExternalAuthGroup";
 import { HomeGroup } from "./HomeGroup";
@@ -46,6 +47,7 @@ export class HubAppClient extends AppClient {
 		this.Auth = this.addGroup((evts, resourceUrl) => new AuthGroup(evts, resourceUrl));
 		this.AuthApi = this.addGroup((evts, resourceUrl) => new AuthApiGroup(evts, resourceUrl));
 		this.Authenticators = this.addGroup((evts, resourceUrl) => new AuthenticatorsGroup(evts, resourceUrl));
+		this.Command = this.addGroup((evts, resourceUrl) => new CommandGroup(evts, resourceUrl));
 		this.CurrentUser = this.addGroup((evts, resourceUrl) => new CurrentUserGroup(evts, resourceUrl));
 		this.ExternalAuth = this.addGroup((evts, resourceUrl) => new ExternalAuthGroup(evts, resourceUrl));
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
@@ -81,6 +83,7 @@ export class HubAppClient extends AppClient {
 	readonly Auth: AuthGroup;
 	readonly AuthApi: AuthApiGroup;
 	readonly Authenticators: AuthenticatorsGroup;
+	readonly Command: CommandGroup;
 	readonly CurrentUser: CurrentUserGroup;
 	readonly ExternalAuth: ExternalAuthGroup;
 	readonly Home: HomeGroup;

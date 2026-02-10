@@ -27,8 +27,16 @@ public sealed class InstallServiceAppProcess : InstallAppProcess
             winService = new WinServiceInstallation(xtiFolder, xtiEnv, requestedInstallation.AppKey);
             if (!winService.Exists())
             {
-                var credentials = await credentialsFactory.Create("ServiceApp").Value();
-                await winService.Create(credentials.UserName, credentials.Password);
+                await requestedInstallation.RunStep
+                (
+                    "Create Service",
+                    async () =>
+                    {
+                        var credentials = await credentialsFactory.Create("ServiceApp").Value();
+                        await winService.Create(credentials.UserName, credentials.Password);
+                    },
+                    ct
+                );
                 startService = true;
             }
             else if (winService.IsRunning())

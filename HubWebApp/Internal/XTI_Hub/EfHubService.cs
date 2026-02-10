@@ -356,6 +356,11 @@ public sealed class EfHubService : IHubService
     {
         var efStep = await db.AppCommandSteps.Step(stepID, ct);
         await efStep.End(clock.Now(), errorMessage, ct);
+        if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            var efCommand = await efStep.Command(ct);
+            await efCommand.Failed(clock.Now(), ct);
+        }
     }
 
     public async Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(int commandID, CancellationToken ct)

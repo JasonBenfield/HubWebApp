@@ -17,7 +17,7 @@ public sealed class EfAppCommandSteps
     {
         var step = new AppCommandStepEntity
         {
-            RequestedInstallationID = requestedInstallation.ID,
+            CommandID = requestedInstallation.ID,
             Activity = new TruncatedText(activity, 1000).Value,
             TimeStarted = timeStarted,
             TimeEnded = DateTimeOffset.MaxValue,
@@ -38,7 +38,7 @@ public sealed class EfAppCommandSteps
     internal async Task<EfAppCommandStep[]> Steps(AppCommandEntity requestedInstallation, CancellationToken ct)
     {
         var steps = await db.Context.AppCommandSteps.Retrieve()
-            .Where(s => s.RequestedInstallationID == requestedInstallation.ID)
+            .Where(s => s.CommandID == requestedInstallation.ID)
             .ToArrayAsync(ct);
         return steps.Select(s => new EfAppCommandStep(db, s)).ToArray();
     }

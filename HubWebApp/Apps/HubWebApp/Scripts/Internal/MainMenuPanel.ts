@@ -20,7 +20,7 @@ export class MainMenuPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
             
     constructor(hubClient: HubAppClient, private readonly view: MainMenuPanelView) {
-        const menu = new MenuComponent(hubClient, 'main', view.menu);
+        const menu = new MenuComponent(hubClient, "main", view.menu);
         menu.refresh();
         new Command(this.back.bind(this)).add(view.backButton);
     }

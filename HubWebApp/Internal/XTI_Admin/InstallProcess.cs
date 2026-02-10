@@ -37,16 +37,21 @@ public sealed class InstallProcess
     {
         if (options.IsInitiatedRemotely)
         {
-            if (options.RequestedInstallationID <= 0)
+            if (options.CommandID <= 0)
             {
-                throw new Exception("Requested Installation ID is required.");
+                throw new Exception("Command ID is required.");
             }
-            var requestedInstallationDetail = await hubService.GetInstallCommandDetail
+            var installCommandDetail = await hubService.GetInstallCommandDetail
             (
-                options.RequestedInstallationID,
+                options.CommandID,
                 ct
             );
-            await InstallFromRequest(requestedInstallationDetail, ct);
+            var t = Task.Run(() => InstallFromRequest(installCommandDetail, ct));
+            installCommandDetail = await new InstallCommandLog(hubService).WriteLog(installCommandDetail, ct);
+            if (!installCommandDetail.Command.Status.Equals(AppCommandStatus.Values.Completed))
+            {
+                throw new Exception("Install Command Failed");
+            }
         }
         else
         {
@@ -96,41 +101,51 @@ public sealed class InstallProcess
                     var installMachineName = isLocal ?
                         GetLocalMachineName() :
                         installConfig.Template.DestinationMachineName;
+                    var isImmediate = options.IsImmediate ||
+                        options.GetInstallationSource(xtiEnv) == InstallationSources.Folder;
                     var installCommandDetail = await hubService.AddInstallCommand
                     (
                         new AddInstallCommandRequest
                         (
                             appKey: installConfig.AppKey,
                             versionKey: versionKey,
-                            installConfigurationID: options.RequestedInstallationID,
+                            installConfigurationID: options.CommandID,
                             installAsCurrent: true,
-                            isAutoStartEnabled: true
+                            isAutoStartEnabled: isImmediate
                         ),
                         ct
                     );
-                    if (isLocal)
+                    if (isImmediate)
                     {
-                        await InstallFromRequest(installCommandDetail, ct);
+                        if (isLocal)
+                        {
+                            var t = Task.Run(() => InstallFromRequest(installCommandDetail, ct));
+                        }
+                        else
+                        {
+                            var remoteOptions = options.Copy();
+                            remoteOptions.Command = CommandNames.Install;
+                            remoteOptions.CommandID = installCommandDetail.Command.ID;
+                            remoteOptions.IsImmediate = true;
+                            remoteOptions.IsInitiatedRemotely = true;
+                            remoteOptions.DestinationMachine = "";
+                            remoteOptions.HubAdministrationType = options.HubAdministrationType == HubAdministrationTypes.Default && installConfig.AppKey.Equals(HubInfo.AppKey) ?
+                                HubAdministrationTypes.DB :
+                                options.HubAdministrationType;
+                            Console.WriteLine($"Starting remote install {installConfig.AppKey.Name.DisplayText} {installConfig.AppKey.Type.DisplayText} {versionKey.DisplayText}");
+                            await remoteCommandService.Run
+                            (
+                                installConfig.Template.DestinationMachineName,
+                                CommandNames.FromRemote.ToString(),
+                                remoteOptions
+                            );
+                        }
                     }
-                    else
+                    installCommandDetail = await new InstallCommandLog(hubService).WriteLog(installCommandDetail, ct);
+                    if (!installCommandDetail.Command.Status.Equals(AppCommandStatus.Values.Completed))
                     {
-                        var remoteOptions = options.Copy();
-                        remoteOptions.Command = CommandNames.Install;
-                        remoteOptions.RequestedInstallationID = installCommandDetail.Command.ID;
-                        remoteOptions.IsInitiatedRemotely = true;
-                        remoteOptions.DestinationMachine = "";
-                        remoteOptions.HubAdministrationType = options.HubAdministrationType == HubAdministrationTypes.Default && installConfig.AppKey.Equals(HubInfo.AppKey) ?
-                            HubAdministrationTypes.DB :
-                            options.HubAdministrationType;
-                        Console.WriteLine($"Starting remote install {installConfig.AppKey.Name.DisplayText} {installConfig.AppKey.Type.DisplayText} {versionKey.DisplayText}");
-                        await remoteCommandService.Run
-                        (
-                            installConfig.Template.DestinationMachineName,
-                            CommandNames.FromRemote.ToString(),
-                            remoteOptions
-                        );
+                        throw new Exception("Install Command Failed");
                     }
-                    await Task.Delay(TimeSpan.FromSeconds(15), ct);
                 }
             }
         }
@@ -145,7 +160,7 @@ public sealed class InstallProcess
         return versions;
     }
 
-    private async Task InstallFromRequest(AppInstallCommandDetailModel installCommandDetail, CancellationToken ct)
+    private Task InstallFromRequest(AppInstallCommandDetailModel installCommandDetail, CancellationToken ct)
     {
         var installationSource = options.GetInstallationSource(xtiEnv);
         using var publishedAssets = publishedAssetsFactory.Create(installationSource);
@@ -157,7 +172,7 @@ public sealed class InstallProcess
             xtiEnv: xtiEnv,
             xtiFolder: xtiFolder
         );
-        await installFromRequestProcess.Run(installCommandDetail, ct);
+        return installFromRequestProcess.Run(installCommandDetail, ct);
     }
 
     private static string GetLocalMachineName()

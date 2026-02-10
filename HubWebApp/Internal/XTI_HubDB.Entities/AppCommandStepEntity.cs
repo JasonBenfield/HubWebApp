@@ -3,7 +3,7 @@
 public sealed class AppCommandStepEntity
 {
     public int ID { get; set; }
-    public int RequestedInstallationID { get; set; }
+    public int CommandID { get; set; }
     public string Activity { get; set; } = "";
     public DateTimeOffset TimeStarted { get; set; } = DateTimeOffset.MaxValue;
     public DateTimeOffset TimeEnded { get; set; } = DateTimeOffset.MaxValue;

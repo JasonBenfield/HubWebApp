@@ -6,6 +6,7 @@ public sealed class AppCommandEntity
     public int AppID { get; set; }
     public int LocationID { get; set; }
     public string CommandName { get; set; } = "";
+    public int Status { get; set; } = 0;
     public string SerializedRequest { get; set; } = "";
     public DateTimeOffset TimeAdded { get; set; } = DateTimeOffset.MaxValue;
     public DateTimeOffset TimeStarted { get; set; } = DateTimeOffset.MaxValue;

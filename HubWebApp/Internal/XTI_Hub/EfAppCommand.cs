@@ -22,6 +22,7 @@ public sealed class EfAppCommand
             command,
             c =>
             {
+                c.Status = AppCommandStatus.Values.Started;
                 c.TimeStarted = timeStarted;
             },
             ct
@@ -36,7 +37,20 @@ public sealed class EfAppCommand
             command,
             c =>
             {
+                c.Status = AppCommandStatus.Values.Completed;
                 c.TimeEnded = timeEnded;
+            },
+            ct
+        );
+
+    internal Task Failed(DateTimeOffset timeFailed, CancellationToken ct) =>
+        db.Context.AppCommands.Update
+        (
+            command,
+            c =>
+            {
+                c.Status = AppCommandStatus.Values.Failed;
+                c.TimeEnded = timeFailed;
             },
             ct
         );
@@ -108,12 +122,14 @@ public sealed class EfAppCommand
         var deleteRequest = XtiSerializer.Deserialize<InstallationIDRequest>(command.SerializedRequest);
         var efInstallation = await db.Installations.InstallationOrDefault(deleteRequest.InstallationID, ct);
         var efAppVersion = await efInstallation.AppVersion(ct);
+        var efSteps = await db.AppCommandSteps.Steps(command, ct);
         return new AppDeleteCommandDetailModel
         (
             Command: ToModel(),
             App: efApp.ToModel(),
             Version: efAppVersion.Version.ToModel(),
-            Installation: efInstallation.ToModel()
+            Installation: efInstallation.ToModel(),
+            Steps: efSteps.Select(s => s.ToModel()).ToArray()
         );
     }
 
@@ -138,6 +154,7 @@ public sealed class EfAppCommand
         (
             ID: command.ID,
             CommandName: new AppCommandName(command.CommandName),
+            Status: AppCommandStatus.Values.Value(command.Status),
             TimeAdded: command.TimeAdded,
             TimeStarted: command.TimeStarted,
             TimeEnded: command.TimeEnded

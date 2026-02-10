@@ -5,6 +5,7 @@ using XTI_HubWebAppApi.AppUserMaintenance;
 using XTI_HubWebAppApi.Auth;
 using XTI_HubWebAppApi.AuthApi;
 using XTI_HubWebAppApi.Authenticators;
+using XTI_HubWebAppApi.Command;
 using XTI_HubWebAppApi.CurrentUser;
 using XTI_HubWebAppApi.ExternalAuth;
 using XTI_HubWebAppApi.Home;
@@ -41,6 +42,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
         Auth = builder.Auth.Build();
         AuthApi = builder.AuthApi.Build();
         Authenticators = builder.Authenticators.Build();
+        Command = builder.Command.Build();
         CurrentUser = builder.CurrentUser.Build();
         ExternalAuth = builder.ExternalAuth.Build();
         Home = builder.Home.Build();
@@ -78,6 +80,7 @@ public sealed partial class HubAppApi : WebAppApiWrapper
     public AuthGroup Auth { get; }
     public AuthApiGroup AuthApi { get; }
     public AuthenticatorsGroup Authenticators { get; }
+    public CommandGroup Command { get; }
     public CurrentUserGroup CurrentUser { get; }
     public ExternalAuthGroup ExternalAuth { get; }
     public HomeGroup Home { get; }

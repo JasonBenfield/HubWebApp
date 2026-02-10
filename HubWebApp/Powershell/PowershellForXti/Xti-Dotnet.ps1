@@ -102,26 +102,6 @@ function Xti-NewConsoleApp {
     Xti-Dotnet -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`""  -AppType ConsoleApp -SrcDir "`"$($SrcDir)`""
 }
 
-function Xti-NewApiGroup {
-    param (
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $AppName = "",
-        [ValidateSet("WebApp", “ServiceApp", "ConsoleApp")]
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $AppType,
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]
-        $GroupName = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $RepoOwner = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $RepoName = "",
-        [Parameter(ValueFromPipelineByPropertyName = $true)]
-        $SrcDir = ""
-    )
-    ThrowIfNotSolutionDir
-    Xti-Dotnet -Command ApiGroup -RepoOwner "`"$($RepoOwner)`""  -RepoName "`"$($RepoName)`""  -AppName "`"$($AppName)`"" -GroupName "`"$($GroupName)`""  -AppType $AppType -SrcDir "`"$($SrcDir)`""
-}
-
 function Xti-NewTests {
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName = $true)]

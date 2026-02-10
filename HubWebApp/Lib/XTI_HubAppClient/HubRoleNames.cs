@@ -13,8 +13,8 @@ public sealed partial class HubRoleNames
     public string EditUser { get; } = "Edit User";
     public string ViewUser { get; } = "View User";
     public string System { get; } = "System";
-    public string Authenticator { get; } = "Authenticator";
     public string InstallationManager { get; } = "Installation Manager";
+    public string Authenticator { get; } = "Authenticator";
     public string ViewLog { get; } = "View Log";
     public string PermanentLog { get; } = "Permanent Log";
     public string AddStoredObject { get; } = "Add Stored Object";

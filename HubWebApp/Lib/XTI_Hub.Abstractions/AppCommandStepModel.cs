@@ -14,5 +14,9 @@ public sealed record AppCommandStepModel
     {
     }
 
+    public bool HasStarted() => TimeStarted.Year < 9999;
+
+    public bool HasEnded() => TimeEnded.Year < 9999;
+
     public bool HasError() => !string.IsNullOrWhiteSpace(ErrorMessage);
 }

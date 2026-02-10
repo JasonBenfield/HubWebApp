@@ -15,6 +15,8 @@ public sealed class EfAppCommandStep
         this.step = step;
     }
 
+    public Task<EfAppCommand> Command(CancellationToken ct) => db.AppCommands.Command(step.CommandID, ct);
+
     public Task End(DateTimeOffset timeEnded, string errorMessage, CancellationToken ct) =>
         db.Context.AppCommandSteps.Update
         (

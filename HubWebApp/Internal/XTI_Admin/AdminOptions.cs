@@ -20,7 +20,8 @@ public sealed class AdminOptions
     public string Domain { get; set; } = "";
     public string SiteName { get; set; } = "";
     public string DestinationMachine { get; set; } = "";
-    public int RequestedInstallationID { get; set; }
+    public int CommandID { get; set; }
+    public bool IsImmediate { get; set; }
     public bool IsInitiatedRemotely { get; set; }
     public string InstallerUserName { get; set; } = "";
     public string InstallerPassword { get; set; } = "";
@@ -76,6 +77,7 @@ public sealed class AdminOptions
             RemoteOptionsKey = RemoteOptionsKey,
             RepoName = RepoName,
             RepoOwner = RepoOwner,
+            IsImmediate = IsImmediate,
             IsInitiatedRemotely = IsInitiatedRemotely,
             InstallConfigurationName = InstallConfigurationName,
             InstallTemplateName = InstallTemplateName,
@@ -108,6 +110,7 @@ public sealed class AdminOptions
         RemoteOptionsKey = options.RemoteOptionsKey;
         RepoOwner = options.RepoOwner;
         RepoName = options.RepoName;
+        IsImmediate = options.IsImmediate;
         IsInitiatedRemotely = options.IsInitiatedRemotely;
         InstallConfigurationName = options.InstallConfigurationName;
         InstallTemplateName = options.InstallTemplateName;

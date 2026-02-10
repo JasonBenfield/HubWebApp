@@ -31,6 +31,7 @@ public sealed class EfAppCommands
             CommandName = commandName.Value,
             SerializedRequest = serializedRequest,
             TimeAdded = timeAdded,
+            Status = timeStarted.Year == 9999 ? AppCommandStatus.Values.Started : AppCommandStatus.Values.Pending,
             TimeStarted = timeStarted,
             TimeEnded = DateTimeOffset.MaxValue
         };
@@ -44,6 +45,22 @@ public sealed class EfAppCommands
             .Where(c => c.ID == commandID)
             .FirstOrDefaultAsync(ct);
         return new EfAppCommand(db, command ?? throw new Exception($"Command {commandID} not found."));
+    }
+
+    internal async Task<EfAppCommand> Command(AppEntity app, int commandID, CancellationToken ct)
+    {
+        var command = await db.Context.AppCommands.Retrieve()
+            .Where(c => c.ID == commandID)
+            .FirstOrDefaultAsync(ct);
+        if(command == null)
+        {
+            throw new Exception($"Command {commandID} not found.");
+        }
+        if(command.AppID != app.ID)
+        {
+            throw new Exception($"Command {commandID} does not belong to app {app.ID}.");
+        }
+        return new EfAppCommand(db, command);
     }
 
     internal async Task<EfAppCommand> InstallCommandOrDefault(InstallationEntity installation, CancellationToken ct)
@@ -63,13 +80,14 @@ public sealed class EfAppCommands
         var locationIDs = db.Context.InstallLocations.Retrieve()
             .Where(l => l.QualifiedMachineName == machineName)
             .Select(l => l.ID);
+        var pendingStatus = AppCommandStatus.Values.Pending.Value;
         var commands = await db.Context.AppCommands.Retrieve()
             .Where
             (
                 c =>
                     locationIDs.Contains(c.LocationID) &&
                     commandNameValues.Contains(c.CommandName) &&
-                    c.TimeStarted.Year == 9999
+                    c.Status == pendingStatus
             )
             .OrderBy(c => c.TimeAdded)
             .ToArrayAsync(ct);

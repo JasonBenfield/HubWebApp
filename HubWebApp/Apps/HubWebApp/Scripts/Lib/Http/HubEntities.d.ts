@@ -166,6 +166,9 @@ interface IPersonName {
 	Value: string;
 	DisplayText: string;
 }
+interface IAppCommandIDRequest {
+	CommandID: number;
+}
 interface IExternalAuthKeyModel {
 	AuthenticatorKey: string;
 	ExternalUserKey: string;
@@ -319,10 +322,12 @@ interface IAppDeleteCommandDetailModel {
 	App: IAppModel;
 	Version: IXtiVersionModel;
 	Installation: IInstallationModel;
+	Steps: IAppCommandStepModel[];
 }
 interface IAppCommandModel {
 	ID: number;
 	CommandName: IAppCommandName;
+	Status: IAppCommandStatus;
 	TimeAdded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
@@ -336,6 +341,13 @@ interface IInstallationModel {
 	IsCurrent: boolean;
 	Domain: string;
 	SiteName: string;
+}
+interface IAppCommandStepModel {
+	ID: number;
+	Activity: string;
+	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
+	ErrorMessage: string;
 }
 interface IAddInstallCommandRequest {
 	AppKey: IAppKeyRequest;
@@ -357,16 +369,6 @@ interface IAppInstallCommandDetailModel {
 interface IInstallLocationModel {
 	ID: number;
 	QualifiedMachineName: string;
-}
-interface IAppCommandStepModel {
-	ID: number;
-	Activity: string;
-	TimeStarted: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
-	ErrorMessage: string;
-}
-interface IAppCommandIDRequest {
-	CommandID: number;
 }
 interface IBeginAppCommandStepRequest {
 	CommandID: number;
@@ -858,6 +860,10 @@ interface IAppVersionType {
 	DisplayText: string;
 }
 interface IAppVersionStatus {
+	Value: number;
+	DisplayText: string;
+}
+interface IAppCommandStatus {
 	Value: number;
 	DisplayText: string;
 }

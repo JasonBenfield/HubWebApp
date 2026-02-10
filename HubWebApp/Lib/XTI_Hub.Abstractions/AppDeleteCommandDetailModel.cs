@@ -7,11 +7,12 @@ public sealed record AppDeleteCommandDetailModel
     AppCommandModel Command, 
     AppModel App, 
     XtiVersionModel Version,
-    InstallationModel Installation
+    InstallationModel Installation,
+    AppCommandStepModel[] Steps
 )
 {
     public AppDeleteCommandDetailModel()
-        : this(new(), new(), new(), new())
+        : this(new(), new(), new(), new(), [])
     {
     }
 }

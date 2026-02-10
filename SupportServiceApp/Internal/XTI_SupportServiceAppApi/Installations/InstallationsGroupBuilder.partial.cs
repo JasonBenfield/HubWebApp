@@ -11,7 +11,7 @@ partial class InstallationsGroupBuilder
             .ThrottleRequestLogging().ForOneHour()
             .ThrottleExceptionLogging().For(15).Minutes()
             .RunContinuously()
-            .Interval(TimeSpan.FromMinutes(1))
+            .Interval(TimeSpan.FromSeconds(30))
             .AddSchedule
             (
                 Schedule.EveryDay().At(TimeRange.AllDay())

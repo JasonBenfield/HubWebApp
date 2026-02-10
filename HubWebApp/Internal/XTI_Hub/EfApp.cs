@@ -154,6 +154,9 @@ public sealed class EfApp
         CancellationToken ct
     ) => db.AppCommands.Add(app, efLocation, commandName, serializedRequest, timeAdded, timeStarted, ct);
 
+    public Task<EfAppCommand> Command(int commandID, CancellationToken ct) =>
+        db.AppCommands.Command(app, commandID, ct);
+
     public AppModel ToModel()
     {
         var key = GetAppKey();
@@ -174,4 +177,5 @@ public sealed class EfApp
 
     public AppKey GetAppKey() =>
         new AppKey(new AppName(app.DisplayText), AppType.Values.Value(app.Type));
+
 }

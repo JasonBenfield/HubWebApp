@@ -4,8 +4,10 @@ internal sealed class AppCommandEntityConfiguration : IEntityTypeConfiguration<A
 {
     public void Configure(EntityTypeBuilder<AppCommandEntity> builder)
     {
-        builder.HasKey(ri => ri.ID);
+        builder.HasKey(c => c.ID);
+        builder.HasIndex(c => new { c.LocationID, c.CommandName, c.Status });
         builder.Property(c => c.CommandName).HasMaxLength(100).HasDefaultValue("");
+        builder.Property(c => c.Status).HasDefaultValue(0);
         builder.Property(c => c.SerializedRequest).HasMaxLength(1000).HasDefaultValue("");
         builder.Property(c => c.TimeAdded).HasDefaultValueSql("getdate()");
         builder.Property(c => c.TimeStarted).HasDefaultValue(DateTimeOffset.MaxValue);
