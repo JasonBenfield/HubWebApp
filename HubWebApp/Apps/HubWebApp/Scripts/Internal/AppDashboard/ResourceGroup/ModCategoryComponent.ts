@@ -7,23 +7,24 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { Modifier } from "../../../Lib/Modifier";
 
 type Events = { clicked: ModifierCategory };
 
 export class ModCategoryComponent {
     private readonly alert: IMessageAlert;
     private readonly modCategoryName: TextComponent;
-    private readonly eventSource = new EventSource<Events>(this, { clicked: null });
+    private readonly eventSource = new EventSource<Events>(this, { clicked: new ModifierCategory() });
     readonly when = this.eventSource.when;
 
-    private groupID: number;
-    private modCategory: ModifierCategory;
+    private groupID = 0;
+    private modCategory = new ModifierCategory();
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: ModCategoryComponentView
     ) {
-        new TextComponent(view.titleHeader).setText('Modifier Category');
+        new TextComponent(view.titleHeader).setText("Modifier Category");
         this.alert = new CardAlert(view.alert);
         this.modCategoryName = new TextComponent(view.modCategoryName);
         new ListGroup(view.listGroup).when.itemClicked.then(this.onClicked.bind(this));
@@ -47,9 +48,9 @@ export class ModCategoryComponent {
 
     private getModCategory(groupID: number) {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceGroupInquiry.GetModCategory({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 GroupID: groupID
             })
         );

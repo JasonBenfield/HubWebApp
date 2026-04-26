@@ -29,7 +29,7 @@ public sealed class CompleteVersionProcess
             throw new ArgumentException($"Branch '{currentBranchName}' is not a version branch");
         }
         await gitRepo.CommitChanges($"Version {versionBranchName.Version.Key}");
-        await gitHubRepo.CompleteVersion(versionBranchName);
+        await gitHubRepo.CompleteVersion(versionBranchName, ct);
         var repoInfo = await gitHubRepo.RepositoryInformation();
         var isDefaultCheckedOut = false;
         try

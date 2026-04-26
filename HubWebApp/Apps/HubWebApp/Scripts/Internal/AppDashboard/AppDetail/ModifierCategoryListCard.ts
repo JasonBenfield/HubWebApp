@@ -14,14 +14,14 @@ type Events = { modCategorySelected: ModifierCategory };
 export class ModifierCategoryListCard {
     private readonly alert: IMessageAlert;
     private readonly modCategories: ListGroup<ModifierCategoryListItem, ModifierCategoryListItemView>;
-    private readonly eventSource = new EventSource<Events>(this, { modCategorySelected: null });
+    private readonly eventSource = new EventSource<Events>(this, { modCategorySelected: new ModifierCategory() });
     readonly when = this.eventSource.when;
 
     constructor(
         private readonly hubClient: HubAppClient,
         view: ModifierCategoryListCardView
     ) {
-        new TextComponent(view.titleHeader).setText('Modifier Categories');
+        new TextComponent(view.titleHeader).setText("Modifier Categories");
         this.alert = new CardAlert(view.alert);
         this.alert.disableAutoScrollIntoView();
         this.modCategories = new ListGroup(view.modCategories);
@@ -41,13 +41,13 @@ export class ModifierCategoryListCard {
                 new ModifierCategoryListItem(modCategory, itemView)
         );
         if (modCategories.length === 0) {
-            this.alert.danger('No Modifier Categories were Found');
+            this.alert.danger("No Modifier Categories were Found");
         }
     }
 
     private getModCategories() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.App.GetModifierCategories()
         );
     }

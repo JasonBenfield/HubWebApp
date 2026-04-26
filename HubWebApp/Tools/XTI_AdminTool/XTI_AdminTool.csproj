@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_Git.GitLib" Version="1.2.26-dev260208085001940" />
-		<PackageReference Include="XTI_GitHub.Web" Version="1.2.26-dev260208085001940" />
-		<PackageReference Include="XTI_Git.Secrets" Version="1.2.26-dev260208085001940" />
-		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.14-dev260131102818704" />
+		<PackageReference Include="XTI_Git.GitLib" Version="1.2.26-dev260424142207931" />
+		<PackageReference Include="XTI_GitHub.Web" Version="1.2.26-dev260424142207931" />
+		<PackageReference Include="XTI_Git.Secrets" Version="1.2.26-dev260424142207931" />
+		<PackageReference Include="XTI_Secrets.Extensions" Version="1.8.14-dev260424143319067" />
 	</ItemGroup>
 
 	<ItemGroup>

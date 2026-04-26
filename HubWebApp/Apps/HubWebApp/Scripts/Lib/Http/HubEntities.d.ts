@@ -31,6 +31,22 @@ interface IModifierModel {
 	TargetKey: string;
 	DisplayText: string;
 }
+interface IInstallConfigurationModel {
+	ID: number;
+	RepoOwner: string;
+	RepoName: string;
+	ConfigurationName: string;
+	AppKey: IAppKey;
+	Template: IInstallConfigurationTemplateModel;
+	InstallSequence: number;
+}
+interface IInstallConfigurationTemplateModel {
+	ID: number;
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
 interface IModifierCategoryModel {
 	ID: number;
 	Name: IModifierCategoryName;
@@ -243,21 +259,10 @@ interface IAppKeyRequest {
 	AppName: string;
 	AppType: number;
 }
-interface IInstallConfigurationModel {
-	ID: number;
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-	AppKey: IAppKey;
-	Template: IInstallConfigurationTemplateModel;
-	InstallSequence: number;
-}
-interface IInstallConfigurationTemplateModel {
-	ID: number;
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
+interface IAppCommandSummaryModel {
+	Command: IAppCommandModel;
+	App: IAppModel;
+	Location: IInstallLocationModel;
 }
 interface IExternalAuthKeyModel {
 	AuthenticatorKey: string;

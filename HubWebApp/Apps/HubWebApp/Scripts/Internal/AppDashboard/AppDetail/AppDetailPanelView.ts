@@ -14,10 +14,13 @@ import { ModifierCategoryListCardView } from "./ModifierCategoryListCardView";
 import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCardView";
 import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
+import { ButtonContainerView } from "@jasonbenfield/sharedwebapp/Views/ButtonContainerView";
 
 export class AppDetailPanelView extends GridView {
     readonly app: AppComponentView;
     readonly currentVersion: CurrentVersionComponentView;
+    readonly refreshPublishedVersionsButton: ButtonCommandView;
+    readonly installCurrentVersionButton: ButtonCommandView;
     private readonly appOptionsCardView: CardView;
     readonly appOptionsAlertView: CardAlertView;
     readonly appOptionsTextView: BasicTextComponentView;
@@ -41,6 +44,9 @@ export class AppDetailPanelView extends GridView {
         this.app.setMargin(MarginCss.bottom(3));
         this.currentVersion = mainContent.addView(CurrentVersionComponentView)
         this.currentVersion.setMargin(MarginCss.bottom(3));
+        const buttonContainerView = mainContent.addView(ButtonContainerView);
+        this.refreshPublishedVersionsButton = buttonContainerView.addButtonCommand();
+        this.installCurrentVersionButton = buttonContainerView.addButtonCommand();
         this.appOptionsCardView = mainContent.addView(CardView);
         this.appOptionsCardView.setMargin(MarginCss.bottom(3));
         this.appOptionsCardView.addCardTitleHeader().setText("Default App Options");

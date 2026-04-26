@@ -12,13 +12,13 @@ import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 type Events = { resourceGroupSelected: AppResourceGroup };
 
 export class ResourceGroupListCard {
-    private readonly eventSource = new EventSource<Events>(this, { resourceGroupSelected: null });
+    private readonly eventSource = new EventSource<Events>(this, { resourceGroupSelected: new AppResourceGroup() });
     readonly when = this.eventSource.when;
 
     private readonly alert: IMessageAlert;
     private readonly requests: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
 
-    private modCategoryID: number;
+    private modCategoryID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,

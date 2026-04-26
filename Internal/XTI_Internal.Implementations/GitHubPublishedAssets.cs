@@ -27,7 +27,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         var appTempDir = PrepareTempDir(appKey);
         var appKeyText = GetAppKeyText(appKey);
         var release = await GetRelease(releaseTag, ct);
-        var setupPath = await DownloadSetup(appTempDir, appKeyText, release);
+        var setupPath = await DownloadSetup(appTempDir, appKeyText, release, ct);
         return setupPath;
     }
 
@@ -36,11 +36,11 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         var appTempDir = PrepareTempDir(appKey);
         var appKeyText = GetAppKeyText(appKey);
         var release = await GetRelease(releaseTag, ct);
-        var appPath = await DownloadApp(appTempDir, appKeyText, release);
+        var appPath = await DownloadApp(appTempDir, appKeyText, release, ct);
         return appPath;
     }
 
-    private async Task<string> DownloadSetup(string appTempDir, string appKeyText, GitHubRelease release)
+    private async Task<string> DownloadSetup(string appTempDir, string appKeyText, GitHubRelease release, CancellationToken ct)
     {
         var setupAppPath = "";
         var setupAsset = release.Assets
@@ -48,7 +48,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         if (setupAsset != null)
         {
             Console.WriteLine($"Downloading Setup {release.TagName} {setupAsset.Name}");
-            var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset);
+            var setupContent = await gitHubRepo.DownloadReleaseAsset(setupAsset, ct);
             var setupZipPath = Path.Combine(appTempDir, "setup.zip");
             if (File.Exists(setupZipPath))
             {
@@ -66,7 +66,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return setupAppPath;
     }
 
-    private async Task<string> DownloadApp(string appTempDir, string appKeyText, GitHubRelease release)
+    private async Task<string> DownloadApp(string appTempDir, string appKeyText, GitHubRelease release, CancellationToken ct)
     {
         var appPath = "";
         var appAsset = release.Assets
@@ -74,7 +74,7 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         if (appAsset != null)
         {
             Console.WriteLine($"Downloading App {release.TagName} {appAsset.Name}");
-            var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset);
+            var appContent = await gitHubRepo.DownloadReleaseAsset(appAsset, ct);
             var appZipPath = Path.Combine(appTempDir, "setup.zip");
             if (File.Exists(appZipPath))
             {
@@ -92,24 +92,24 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         return appPath;
     }
 
-    public async Task<string> LoadVersions()
+    public async Task<string> LoadVersions(CancellationToken ct)
     {
         if (!Directory.Exists(tempDir))
         {
             Directory.CreateDirectory(tempDir);
         }
-        var latestRelease = await gitHubRepo.LatestRelease();
+        var latestRelease = await gitHubRepo.LatestRelease(ct);
         var versionsPath = Path.Combine(tempDir, "versions.json");
         if (File.Exists(versionsPath))
         {
             File.Delete(versionsPath);
         }
-        var release = await gitHubRepo.Release(latestRelease.TagName);
+        var release = await gitHubRepo.Release(latestRelease.TagName, ct);
         var versionsAsset = release.Assets.FirstOrDefault(a => a.Name.Equals("versions.json", StringComparison.OrdinalIgnoreCase));
         if (versionsAsset != null)
         {
             Console.WriteLine($"Downloading versions.json {release.TagName} {versionsAsset.Name}");
-            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset);
+            var versionsContent = await gitHubRepo.DownloadReleaseAsset(versionsAsset, ct);
             await File.WriteAllBytesAsync(versionsPath, versionsContent);
         }
         return versionsPath;
@@ -137,11 +137,11 @@ public sealed class GitHubPublishedAssets : IPublishedAssets
         {
             if (string.IsNullOrWhiteSpace(releaseTag))
             {
-                release = await gitHubRepo.LatestRelease();
+                release = await gitHubRepo.LatestRelease(ct);
             }
             else
             {
-                release = await gitHubRepo.Release(releaseTag);
+                release = await gitHubRepo.Release(releaseTag, ct);
             }
         }
         return release;

@@ -12,6 +12,7 @@ public sealed partial class HubAppClient : AppClient
         AuthApi = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthApiGroup(_clientFactory, _tokenAccessor, _url, _options));
         Authenticators = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new AuthenticatorsGroup(_clientFactory, _tokenAccessor, _url, _options));
         Command = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new CommandGroup(_clientFactory, _tokenAccessor, _url, _options));
+        Commands = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new CommandsGroup(_clientFactory, _tokenAccessor, _url, _options));
         CurrentUser = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new CurrentUserGroup(_clientFactory, _tokenAccessor, _url, _options));
         ExternalAuth = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ExternalAuthGroup(_clientFactory, _tokenAccessor, _url, _options));
         Home = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new HomeGroup(_clientFactory, _tokenAccessor, _url, _options));
@@ -52,6 +53,7 @@ public sealed partial class HubAppClient : AppClient
     public AuthApiGroup AuthApi { get; }
     public AuthenticatorsGroup Authenticators { get; }
     public CommandGroup Command { get; }
+    public CommandsGroup Commands { get; }
     public CurrentUserGroup CurrentUser { get; }
     public ExternalAuthGroup ExternalAuth { get; }
     public HomeGroup Home { get; }

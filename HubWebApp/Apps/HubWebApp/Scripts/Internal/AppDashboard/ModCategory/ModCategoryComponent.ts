@@ -6,7 +6,7 @@ import { ModifierCategory } from "../../../Lib/ModifierCategory";
 import { ModCategoryComponentView } from "./ModCategoryComponentView";
 
 export class ModCategoryComponent {
-    private modCategoryID: number;
+    private modCategoryID = 0;
     private readonly alert: IMessageAlert;
     private readonly modCategoryName: TextComponent;
 

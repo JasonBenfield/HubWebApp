@@ -18,7 +18,7 @@ export class CurrentVersionComponentView extends CardView {
         const row = this.addCardBody()
             .addView(RowView);
         this.versionKey = row.addColumn()
-            .configure(c => c.setColumnCss(ColumnCss.xs('auto')))
+            .configure(c => c.setColumnCss(ColumnCss.xs("auto")))
             .addView(TextSpanView);
         this.version = row.addColumn()
             .addView(TextSpanView);

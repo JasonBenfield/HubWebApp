@@ -1,6 +1,6 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
@@ -14,6 +14,7 @@ import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
+import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 
 interface IResult {
     backRequested?: {};
@@ -59,6 +60,8 @@ export class AppDetailPanel implements IPanel {
     private readonly modifierCategoryListCard: ModifierCategoryListCard;
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
+    private readonly refreshPublishedVersionsCommand: AsyncCommand;
+    private readonly installCurrentVersionCommand: AsyncCommand;
 
     private readonly awaitable = new Awaitable<Result>();
 
@@ -84,13 +87,29 @@ export class AppDetailPanel implements IPanel {
         );
         this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
         this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
+        this.refreshPublishedVersionsCommand = new AsyncCommand(this.refreshPublishedVersions.bind(this));
+        this.refreshPublishedVersionsCommand.add(view.refreshPublishedVersionsButton);
+        this.refreshPublishedVersionsCommand.setText("Refresh Published Versions");
+        this.refreshPublishedVersionsCommand.hide();
+        this.installCurrentVersionCommand = new AsyncCommand(this.installCurrentVersion.bind(this));
+        this.installCurrentVersionCommand.add(view.installCurrentVersionButton);
+        this.installCurrentVersionCommand.setText("Install Current Version");
+        this.installCurrentVersionCommand.hide();
 
         this.backCommand.add(view.backButton);
     }
 
-    private onResourceGroupSelected(listItem: ResourceGroupListItem) {
+    private async refreshPublishedVersions() {
+
+    }
+
+    private async installCurrentVersion() {
+
+    }
+
+    private onResourceGroupSelected(group: AppResourceGroup) {
         this.awaitable.resolve(
-            Result.resourceGroupSelected(listItem.group)
+            Result.resourceGroupSelected(group)
         );
     }
 
@@ -112,6 +131,17 @@ export class AppDetailPanel implements IPanel {
             this.mostRecentErrorEventListCard.refresh()
         ];
         return Promise.all(promises);
+    }
+
+    private async refreshInstallConfigurations() {
+        const sourceInstallConfigurations = await this.hubClient.App.GetInstallConfigurations();
+        const installConfigurations = sourceInstallConfigurations.map(cfg => new InstallConfiguration(cfg));
+        if (installConfigurations.length > 0) {
+            this.installCurrentVersionCommand.show();
+        }
+        else {
+            this.installCurrentVersionCommand.hide();
+        }
     }
 
     private async refreshDefaultAppOptions() {

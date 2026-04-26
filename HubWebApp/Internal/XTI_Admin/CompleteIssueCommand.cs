@@ -27,9 +27,9 @@ public sealed class CompleteIssueCommand : ICommand
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not an issue branch");
         }
-        var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
+        var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber, ct);
         await gitRepo.CommitChanges(issue.Title);
-        await gitHubRepo.CompleteIssue(issueBranchName);
+        await gitHubRepo.CompleteIssue(issueBranchName, ct);
         var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
         var branchName = milestoneName.Version.BranchName();
         await gitRepo.CheckoutBranch(branchName.Value);

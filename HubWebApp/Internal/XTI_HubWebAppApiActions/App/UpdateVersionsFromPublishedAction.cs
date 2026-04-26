@@ -32,7 +32,7 @@ public sealed class UpdateVersionsFromPublishedAction : AppAction<EmptyRequest, 
             throw new AppException("Repo Name is required.");
         }
         using var publishedAssets = CreatePublishedAssets(app.RepoOwner, app.RepoName);
-        var versionsPath = await publishedAssets.LoadVersions();
+        var versionsPath = await publishedAssets.LoadVersions(stoppingToken);
         var versionReader = new VersionReader(versionsPath);
         var publishedVersions = await versionReader.Versions();
         foreach (var publishedVersion in publishedVersions)

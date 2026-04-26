@@ -11,6 +11,7 @@ internal static partial class AppGroupExtensions
         services.AddScoped<GetDefaultAppOptionsAction>();
         services.AddScoped<GetDefaultModifierAction>();
         services.AddScoped<GetDefaultOptionsAction>();
+        services.AddScoped<GetInstallConfigurationsAction>();
         services.AddScoped<GetModifierCategoriesAction>();
         services.AddScoped<GetMostRecentErrorEventsAction>();
         services.AddScoped<GetMostRecentRequestsAction>();

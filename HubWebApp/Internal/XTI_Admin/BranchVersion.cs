@@ -27,7 +27,7 @@ public sealed class BranchVersion
         AppVersionKey versionKey;
         if (xtiBranchName is XtiIssueBranchName issueBranchName)
         {
-            var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
+            var issue = await gitHubRepo.Issue(issueBranchName.IssueNumber, ct);
             var milestoneName = XtiMilestoneName.Parse(issue.Milestone.Title);
             versionKey = AppVersionKey.Parse(milestoneName.Version.Key);
         }

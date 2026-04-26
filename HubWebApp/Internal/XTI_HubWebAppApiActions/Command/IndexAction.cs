@@ -9,6 +9,6 @@ public sealed class IndexAction : AppAction<AppCommandIDRequest, WebViewResult>
         this.viewFactory = viewFactory;
     }
 
-    public Task<WebViewResult> Execute(AppCommandIDRequest model, CancellationToken stoppingToken)=>
+    public Task<WebViewResult> Execute(AppCommandIDRequest requestData, CancellationToken stoppingToken)=>
         Task.FromResult(viewFactory.Default("command", "Command"));
 }

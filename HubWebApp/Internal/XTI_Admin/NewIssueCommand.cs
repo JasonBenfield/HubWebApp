@@ -29,7 +29,7 @@ internal sealed class NewIssueCommand : ICommand
             {
                 throw new ArgumentException("Unable to start issue when not a version branch");
             }
-            var branchIssue = await gitHubRepo.Issue(issueBranchName.IssueNumber);
+            var branchIssue = await gitHubRepo.Issue(issueBranchName.IssueNumber, ct);
             var xtiMilestoneName = XtiMilestoneName.Parse(branchIssue.Milestone.Title);
             xtiGitVersion = xtiMilestoneName.Version;
         }
@@ -41,10 +41,10 @@ internal sealed class NewIssueCommand : ICommand
         {
             throw new ArgumentException($"Branch '{currentBranchName}' is not an issue branch or a version branch");
         }
-        var issue = await gitHubRepo.CreateIssue(xtiGitVersion, options.IssueTitle);
+        var issue = await gitHubRepo.CreateIssue(xtiGitVersion, options.IssueTitle, ct);
         if (options.StartIssue)
         {
-            await gitHubRepo.StartIssue(xtiGitVersion, issue.Number);
+            await gitHubRepo.StartIssue(xtiGitVersion, issue.Number, ct);
             await gitRepo.CheckoutBranch(issue.BranchName().Value);
         }
     }

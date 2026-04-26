@@ -1,13 +1,16 @@
 import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { DateTimeOffset } from "@jasonbenfield/sharedwebapp/Common";
+import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { TextLinkComponent } from "@jasonbenfield/sharedwebapp/Components/TextLinkComponent";
 import { AppCommand } from "../../Lib/AppCommand";
-import { HubAppClient } from "../../Lib/Http/HubAppClient";
-import { CommandPanelView } from "./CommandPanelView";
-import { IAppCommandDetail } from "../../Lib/IAppCommandDetail";
-import { AppInstallCommandDetail } from "../../Lib/AppInstallCommandDetail";
 import { AppDeleteCommandDetail } from "../../Lib/AppDeleteCommandDetail";
+import { AppInstallCommandDetail } from "../../Lib/AppInstallCommandDetail";
+import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { IAppCommandDetail } from "../../Lib/IAppCommandDetail";
 import { CommandCard } from "./CommandCard";
-import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { CommandPanelView } from "./CommandPanelView";
+import { CommandStepListCard } from "./CommandStepListCard";
 
 interface IResult {
     menu?: boolean;
@@ -24,22 +27,47 @@ class Result {
 }
 
 export class CommandPanel implements IPanel {
-    private readonly awaitable: Awaitable<Result>;
+    private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly commandCard: CommandCard;
-    private commandID: number;
+    private readonly viewAppLinkComponent: TextLinkComponent;
+    private readonly viewCurrentInstallationLinkComponent: TextLinkComponent;
+    private readonly viewVersionInstallationLinkComponent: TextLinkComponent;
+    private readonly viewInstallationLinkComponent: TextLinkComponent;
+    private readonly stepListCard: CommandStepListCard;
+    private readonly refreshCommand: AsyncCommand;
+    private timeoutTime = DateTimeOffset.max();
+    private timeoutID: number | null = null;
+    private commandID = 0;
+    private command = new AppCommand();
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: CommandPanelView) {
         this.alert = new MessageAlert(view.alertView);
         this.commandCard = new CommandCard(view.commandCardView);
         this.commandCard.hide();
+        this.viewAppLinkComponent = new TextLinkComponent(view.viewAppButton);
+        this.viewAppLinkComponent.setText("View App");
+        this.viewCurrentInstallationLinkComponent = new TextLinkComponent(view.viewCurrentInstallationButton);
+        this.viewCurrentInstallationLinkComponent.setText("View Current Installation");
+        this.viewVersionInstallationLinkComponent = new TextLinkComponent(view.viewVersionInstallationButton);
+        this.viewVersionInstallationLinkComponent.setText("View Version Installation");
+        this.viewInstallationLinkComponent = new TextLinkComponent(view.viewInstallationButton);
+        this.viewInstallationLinkComponent.setText("View Installation");
+        this.stepListCard = new CommandStepListCard(view.stepListCardView);
+        this.stepListCard.hide();
         new Command(this.menu.bind(this)).add(view.menuButton);
+        this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
+        this.refreshCommand.add(view.refreshButton);
+        this.refreshCommand.animateIconWhenInProgress("spin");
     }
 
     private menu() { this.awaitable.resolve(Result.menu()); }
 
     setCommandID(commandID: number) {
         this.commandID = commandID;
+        this.command = new AppCommand();
+        this.timeoutID = null;
+        this.stepListCard.clear();
     }
 
     start() {
@@ -47,10 +75,72 @@ export class CommandPanel implements IPanel {
     }
 
     async refresh() {
-        const command = await this.getCommand();
-        const commandDetail = await this.getCommandDetail(command);
-        this.commandCard.setCommandDetail(commandDetail);
-        this.commandCard.show();
+        this.viewAppLinkComponent.hide();
+        this.viewCurrentInstallationLinkComponent.hide();
+        this.viewVersionInstallationLinkComponent.hide();
+        this.viewInstallationLinkComponent.hide();
+        this.command = await this.getCommand();
+        await this.refreshCommand.execute();
+        this.timeoutTime = DateTimeOffset.now().addMinutes(5);
+        this.autoRefresh();
+    }
+
+    private autoRefresh() {
+        const command = this.command;
+        if ((command.isPending || command.isInProgress) && DateTimeOffset.now().isBefore(this.timeoutTime)) {
+            this.timeoutID = window.setTimeout(
+                async () => {
+                    await this.refreshCommand.execute();
+                    this.autoRefresh();
+                },
+                5000
+            );
+        }
+        else {
+            this.timeoutID = null;
+        }
+    }
+
+    private async _refresh() {
+        const command = this.command;
+        if (command.isFound) {
+            const commandDetail = await this.getCommandDetail(command);
+            this.command = commandDetail.command;
+            this.commandCard.setCommandDetail(commandDetail);
+            this.commandCard.show();
+            this.stepListCard.addOrUpdateCommandSteps(commandDetail.steps);
+            if (commandDetail.steps.length > 0) {
+                this.stepListCard.show();
+            }
+            else {
+                this.stepListCard.hide();
+            }
+            this.viewAppLinkComponent.setHref(
+                this.hubClient.App.Index.getModifierUrl(commandDetail.app.publicKey.displayText, {})
+            )
+            if (commandDetail instanceof AppInstallCommandDetail) {
+                const currentInstallation = commandDetail.getCurrentInstallationOrDefault();
+                if (currentInstallation.isFound) {
+                    this.viewCurrentInstallationLinkComponent.setHref(
+                        this.hubClient.Installations.Installation.getUrl({ InstallationID: currentInstallation.id })
+                    );
+                    this.viewCurrentInstallationLinkComponent.show();
+                }
+                const versionInstallation = commandDetail.getVersionInstallationOrDefault();
+                if (versionInstallation.isFound) {
+                    this.viewVersionInstallationLinkComponent.setHref(
+                        this.hubClient.Installations.Installation.getUrl({ InstallationID: versionInstallation.id })
+                    );
+                    this.viewVersionInstallationLinkComponent.show();
+                }
+            }
+            else if (commandDetail instanceof AppDeleteCommandDetail) {
+                this.viewInstallationLinkComponent.setHref(
+                    this.hubClient.Installations.Installation.getUrl({ InstallationID: commandDetail.installation.id })
+                );
+                this.viewInstallationLinkComponent.show();
+            }
+        }
     }
 
     private async getCommand() {
@@ -89,6 +179,14 @@ export class CommandPanel implements IPanel {
 
     activate() { this.view.show(); }
 
-    deactivate() { this.view.hide(); }
+    deactivate() {
+        this.view.hide();
+        this.command = new AppCommand();
+        const timeoutID = this.timeoutID;
+        if (timeoutID) {
+            window.clearTimeout(timeoutID);
+        }
+        this.timeoutID = null;
+    }
 
 }

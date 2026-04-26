@@ -62,7 +62,7 @@ public sealed class InstallProcess
             {
                 Console.WriteLine("Beginning Install");
                 var versionName = versionNameAccessor.Value;
-                var versions = await GetVersions();
+                var versions = await GetVersions(ct);
                 Console.WriteLine("Adding or updating apps");
                 await hubService.AddOrUpdateApps(versionName, gitRepoInfo.RepoOwner, gitRepoInfo.RepoName, appKeys, ct);
                 Console.WriteLine("Adding or updating versions");
@@ -151,10 +151,10 @@ public sealed class InstallProcess
         }
     }
 
-    private async Task<XtiVersionModel[]> GetVersions()
+    private async Task<XtiVersionModel[]> GetVersions(CancellationToken ct)
     {
         using var publishedAssets = publishedAssetsFactory.Create(options.GetInstallationSource(xtiEnv));
-        var versionsPath = await publishedAssets.LoadVersions();
+        var versionsPath = await publishedAssets.LoadVersions(ct);
         var versionReader = new VersionReader(versionsPath);
         var versions = await versionReader.Versions();
         return versions;

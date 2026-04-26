@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_TempLog" Version="1.2.38-dev260201163027004" />
+		<PackageReference Include="XTI_TempLog" Version="1.2.38-dev260424145059777" />
 	</ItemGroup>
 
 	<ItemGroup>

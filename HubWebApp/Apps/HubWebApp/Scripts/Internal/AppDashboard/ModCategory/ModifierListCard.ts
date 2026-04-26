@@ -9,7 +9,7 @@ import { ModifierListItem } from "./ModifierListItem";
 import { ModifierListItemView } from "./ModifierListItemView";
 
 export class ModifierListCard {
-    private modCategoryID: number;
+    private modCategoryID = 0;
     private readonly alert: IMessageAlert;
     private readonly modifiers: ListGroup<ModifierListItem, ModifierListItemView>;
 

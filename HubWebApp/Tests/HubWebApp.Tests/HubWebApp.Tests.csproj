@@ -8,11 +8,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NUnit" Version="4.4.0" />
-		<PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-		<PackageReference Include="XTI_Git.Fakes" Version="1.2.26-dev260208085001940" />
-		<PackageReference Include="XTI_GitHub.Fakes" Version="1.2.26-dev260208085001940" />
+		<PackageReference Include="NUnit" Version="4.5.1" />
+		<PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+		<PackageReference Include="XTI_Git.Fakes" Version="1.2.26-dev260424142207931" />
+		<PackageReference Include="XTI_GitHub.Fakes" Version="1.2.26-dev260424142207931" />
 	</ItemGroup>
 
 	<ItemGroup>

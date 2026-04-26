@@ -9,6 +9,8 @@ public sealed class EfAppUsers
 {
     private readonly EfHubDB db;
 
+    private EfAppUser? cachedAnonUser;
+
     public EfAppUsers(EfHubDB db)
     {
         this.db = db;
@@ -101,15 +103,28 @@ public sealed class EfAppUsers
         {
             userName = AppUserName.Anon;
         }
+        EfAppUser efUser;
         var user = await GetUser(userName, ct);
         if (user == null && !userName.IsAnon())
         {
-            user = await GetUser(AppUserName.Anon, ct);
+            efUser = await Anon(ct);
         }
-        return new EfAppUser(db, user ?? throw new ArgumentNullException(nameof(user)));
+        else
+        {
+            efUser = new EfAppUser(db, user ?? throw new Exception($"User '{userName.Value}' not found."));
+        }
+        return efUser;
     }
 
-    public Task<EfAppUser> Anon(CancellationToken ct) => UserByUserName(AppUserName.Anon, ct);
+    public async Task<EfAppUser> Anon(CancellationToken ct)
+    {
+        if (cachedAnonUser == null)
+        {
+            var user = await GetUser(AppUserName.Anon, ct);
+            cachedAnonUser = new EfAppUser(db, user ?? throw new Exception("Anon User not found."));
+        }
+        return cachedAnonUser;
+    }
 
     public async Task<bool> UserNameExists(AppUserName userName, CancellationToken ct)
     {
@@ -146,11 +161,16 @@ public sealed class EfAppUsers
         var user = await db.Context.Users.Retrieve()
             .Where(u => userIDs.Contains(u.ID))
             .FirstOrDefaultAsync(ct);
+        EfAppUser efUser;
         if (user == null)
         {
-            user = await GetUser(AppUserName.Anon, ct);
+            efUser = await Anon(ct);
         }
-        return new EfAppUser(db, user ?? throw new ExternalUserNotFoundException(authenticatorKey, externalUserKey));
+        else
+        {
+            efUser = new EfAppUser(db, user);
+        }
+        return efUser;
     }
 
     private Task<AppUserEntity?> GetUser(AppUserName userName, CancellationToken ct) =>

@@ -1,5 +1,4 @@
 ﻿using XTI_App.Abstractions;
-using XTI_Hub.Abstractions;
 
 namespace XTI_Admin;
 
@@ -12,7 +11,7 @@ public sealed class FolderPublishedAssets : IPublishedAssets
         this.publishFolder = publishFolder;
     }
 
-    public Task<string> LoadVersions()
+    public Task<string> LoadVersions(CancellationToken ct)
     {
         var versionsPath = publishFolder.VersionsPath();
         return Task.FromResult(versionsPath);

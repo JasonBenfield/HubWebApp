@@ -10,7 +10,7 @@ export class CurrentVersionComponent {
     private readonly version: TextComponent;
 
     constructor(private readonly hubClient: HubAppClient, view: CurrentVersionComponentView) {
-        new TextComponent(view.titleHeader).setText('Version');
+        new TextComponent(view.titleHeader).setText("Version");
         this.alert = new MessageAlert(view.alert);
         this.versionKey = new TextComponent(view.versionKey);
         this.version = new TextComponent(view.version);
@@ -21,12 +21,13 @@ export class CurrentVersionComponent {
         const currentVersion = new XtiVersion(sourceCurrentVersion);
         this.versionKey.setText(currentVersion.versionKey.displayText);
         this.version.setText(currentVersion.versionNumber.format());
+        return currentVersion;
     }
 
     private getCurrentVersion() {
         return this.alert.infoAction(
-            'Loading...',
-            () => this.hubClient.Version.GetVersion('current')
+            "Loading...",
+            () => this.hubClient.Version.GetVersion("current")
         );
     }
 } 

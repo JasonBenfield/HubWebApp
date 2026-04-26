@@ -78,7 +78,8 @@ public sealed class EfStoredObjects
             .Where(so => so.StorageName == storageName.Value && so.StorageKey == storageKey)
             .AnyAsync(ct);
 
-    public Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds, CancellationToken ct) where T : new() =>
+    public Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds, CancellationToken ct) 
+        where T : new() =>
         StoredObject(storageName, storageKey, now, singleUseExpirationInSeconds, () => new T(), ct);
 
     public async Task<T> StoredObject<T>(StorageName storageName, string storageKey, DateTimeOffset now, int singleUseExpirationInSeconds, Func<T> ifnull, CancellationToken ct)

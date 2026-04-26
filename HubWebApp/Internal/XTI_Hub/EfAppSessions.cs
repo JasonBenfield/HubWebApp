@@ -95,6 +95,11 @@ public sealed class EfAppSessions
         }
         else
         {
+            var efAnonUser = await db.Users.Anon(ct);
+            if (efUser.ID != efAnonUser.ID && session.UserID != efAnonUser.ID && session.UserID != efUser.ID)
+            {
+                throw new Exception($"Session {session.ID} authenticated with user {session.UserID} and cannot be changed to user {efUser.ID}.");
+            }
             await Update(session, efUser, timeStarted, timeEnded, requesterKey, userAgent, remoteAddress, ct);
         }
         return new EfAppSession(db, session);
@@ -134,9 +139,18 @@ public sealed class EfAppSessions
                 {
                     r.TimeEnded = timeEnded;
                 }
-                r.RequesterKey = requesterKey;
-                r.UserAgent = userAgent ?? "";
-                r.RemoteAddress = remoteAddress ?? "";
+                if (!string.IsNullOrWhiteSpace(requesterKey))
+                {
+                    r.RequesterKey = requesterKey;
+                }
+                if (!string.IsNullOrWhiteSpace(userAgent))
+                {
+                    r.UserAgent = userAgent;
+                }
+                if (!string.IsNullOrWhiteSpace(remoteAddress))
+                {
+                    r.RemoteAddress = remoteAddress;
+                }
             },
             ct
         );

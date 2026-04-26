@@ -44,7 +44,7 @@ public sealed class NewVersionCommand : ICommand
             ct
         );
         var gitVersion = new XtiGitVersion(versionType.DisplayText, newVersion.VersionKey.DisplayText);
-        await gitHubRepo.CreateNewVersion(gitVersion);
+        await gitHubRepo.CreateNewVersion(gitVersion, ct);
         var newVersionBranchName = gitVersion.BranchName();
         await gitRepo.CheckoutBranch(newVersionBranchName.Value);
     }

@@ -22,8 +22,7 @@ public sealed class VerifyLoginAction : AppAction<VerifyLoginForm, Authenticated
         var userName = loginForm.UserName.Value() ?? "";
         var password = loginForm.Password.Value() ?? "";
         var hashedPassword = hashedPasswordFactory.Create(password);
-        var user = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword, stoppingToken);
-        await user.LoggedIn(clock.Now(), stoppingToken);
+        var efUser = await unverifiedUser.Verify(new AppUserName(userName), hashedPassword, stoppingToken);
         var authID = Guid.NewGuid().ToString("N");
         var authKey = await hubFactory.StoredObjects.StoreSingleUse
         (

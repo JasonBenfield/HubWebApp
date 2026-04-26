@@ -14,6 +14,7 @@ export class AppGroup extends AppClientGroup {
 		this.GetDefaultAppOptionsAction = this.createAction<IEmptyRequest,string>('GetDefaultAppOptions', 'Get Default App Options');
 		this.GetDefaultModifierAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModifier', 'Get Default Modifier');
 		this.GetDefaultOptionsAction = this.createAction<IEmptyRequest,string>('GetDefaultOptions', 'Get Default Options');
+		this.GetInstallConfigurationsAction = this.createAction<IEmptyRequest,IInstallConfigurationModel[]>('GetInstallConfigurations', 'Get Install Configurations');
 		this.GetModifierCategoriesAction = this.createAction<IEmptyRequest,IModifierCategoryModel[]>('GetModifierCategories', 'Get Modifier Categories');
 		this.GetMostRecentErrorEventsAction = this.createAction<number,IAppLogEntryModel[]>('GetMostRecentErrorEvents', 'Get Most Recent Error Events');
 		this.GetMostRecentRequestsAction = this.createAction<number,IAppRequestExpandedModel[]>('GetMostRecentRequests', 'Get Most Recent Requests');
@@ -27,6 +28,7 @@ export class AppGroup extends AppClientGroup {
 	readonly GetDefaultAppOptionsAction: AppClientAction<IEmptyRequest,string>;
 	readonly GetDefaultModifierAction: AppClientAction<IEmptyRequest,IModifierModel>;
 	readonly GetDefaultOptionsAction: AppClientAction<IEmptyRequest,string>;
+	readonly GetInstallConfigurationsAction: AppClientAction<IEmptyRequest,IInstallConfigurationModel[]>;
 	readonly GetModifierCategoriesAction: AppClientAction<IEmptyRequest,IModifierCategoryModel[]>;
 	readonly GetMostRecentErrorEventsAction: AppClientAction<number,IAppLogEntryModel[]>;
 	readonly GetMostRecentRequestsAction: AppClientAction<number,IAppRequestExpandedModel[]>;
@@ -46,6 +48,9 @@ export class AppGroup extends AppClientGroup {
 	}
 	GetDefaultOptions(errorOptions?: IActionErrorOptions) {
 		return this.GetDefaultOptionsAction.execute({}, errorOptions || {});
+	}
+	GetInstallConfigurations(errorOptions?: IActionErrorOptions) {
+		return this.GetInstallConfigurationsAction.execute({}, errorOptions || {});
 	}
 	GetModifierCategories(errorOptions?: IActionErrorOptions) {
 		return this.GetModifierCategoriesAction.execute({}, errorOptions || {});

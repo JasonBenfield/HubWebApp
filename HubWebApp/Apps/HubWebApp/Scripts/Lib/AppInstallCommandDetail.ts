@@ -26,5 +26,13 @@ export class AppInstallCommandDetail implements IAppCommandDetail {
 		this.version = new XtiVersion(source && source.Version);
 		this.installConfiguration = new InstallConfiguration(source && source.InstallConfiguration);
 		this.installations = source ? source.Installations.map(inst => new Installation(inst)) : [];
-    }
+	}
+
+	getCurrentInstallationOrDefault() {
+		return this.installations.find(inst => inst.isCurrent) || new Installation();
+	}
+
+	getVersionInstallationOrDefault() {
+		return this.installations.find(inst => !inst.isCurrent) || new Installation();
+	}
 }

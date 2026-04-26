@@ -34,6 +34,12 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<InstallConfigurationModel[]>> GetInstallConfigurations(CancellationToken ct)
+    {
+        return api.App.GetInstallConfigurations.Execute(new EmptyRequest(), ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<ModifierCategoryModel[]>> GetModifierCategories(CancellationToken ct)
     {
         return api.App.GetModifierCategories.Execute(new EmptyRequest(), ct);

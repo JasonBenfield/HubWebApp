@@ -14,6 +14,7 @@ public sealed partial class AppGroupBuilder
         GetDefaultAppOptions = source.AddAction<EmptyRequest, string>("GetDefaultAppOptions").WithExecution<GetDefaultAppOptionsAction>();
         GetDefaultModifier = source.AddAction<EmptyRequest, ModifierModel>("GetDefaultModifier").WithExecution<GetDefaultModifierAction>();
         GetDefaultOptions = source.AddAction<EmptyRequest, string>("GetDefaultOptions").WithExecution<GetDefaultOptionsAction>();
+        GetInstallConfigurations = source.AddAction<EmptyRequest, InstallConfigurationModel[]>("GetInstallConfigurations").WithExecution<GetInstallConfigurationsAction>();
         GetModifierCategories = source.AddAction<EmptyRequest, ModifierCategoryModel[]>("GetModifierCategories").WithExecution<GetModifierCategoriesAction>();
         GetMostRecentErrorEvents = source.AddAction<int, AppLogEntryModel[]>("GetMostRecentErrorEvents").WithExecution<GetMostRecentErrorEventsAction>();
         GetMostRecentRequests = source.AddAction<int, AppRequestExpandedModel[]>("GetMostRecentRequests").WithExecution<GetMostRecentRequestsAction>();
@@ -29,6 +30,7 @@ public sealed partial class AppGroupBuilder
     public AppApiActionBuilder<EmptyRequest, string> GetDefaultAppOptions { get; }
     public AppApiActionBuilder<EmptyRequest, ModifierModel> GetDefaultModifier { get; }
     public AppApiActionBuilder<EmptyRequest, string> GetDefaultOptions { get; }
+    public AppApiActionBuilder<EmptyRequest, InstallConfigurationModel[]> GetInstallConfigurations { get; }
     public AppApiActionBuilder<EmptyRequest, ModifierCategoryModel[]> GetModifierCategories { get; }
     public AppApiActionBuilder<int, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
     public AppApiActionBuilder<int, AppRequestExpandedModel[]> GetMostRecentRequests { get; }

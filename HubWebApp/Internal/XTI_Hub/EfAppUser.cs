@@ -356,8 +356,23 @@ public sealed class EfAppUser
             .ToArray();
     }
 
-    public Task LoggedIn(DateTimeOffset timeLoggedIn, CancellationToken ct) =>
-        db.Context.Users.Update
+    public async Task LoggedIn(string sessionKey, DateTimeOffset timeLoggedIn, CancellationToken ct)
+    {
+        if (!string.IsNullOrWhiteSpace(sessionKey))
+        {
+            await db.Sessions.AddOrUpdate
+            (
+                sessionKey: sessionKey,
+                efUser: this,
+                timeStarted: timeLoggedIn,
+                timeEnded: DateTimeOffset.MaxValue,
+                requesterKey: "",
+                userAgent: "",
+                remoteAddress: "",
+                ct: ct
+            );
+        }
+        await db.Context.Users.Update
         (
             user,
             u =>
@@ -366,6 +381,7 @@ public sealed class EfAppUser
             },
             ct
         );
+    }
 
     public AppUserModel ToModel() =>
         new AppUserModel

@@ -63,7 +63,7 @@ public sealed class PublishProcess
             var currentVersion = await currentVersionAccessor.Value(ct);
             semanticVersion = currentVersion.NextPatch().FormatAsDev();
         }
-        var release = await CreateGitHubRelease(versionKey, semanticVersion);
+        var release = await CreateGitHubRelease(versionKey, semanticVersion, ct);
         var slnDir = Environment.CurrentDirectory;
         foreach (var appKey in appKeys)
         {
@@ -88,7 +88,7 @@ public sealed class PublishProcess
             }
             if (!appKey.IsAnyAppType(AppType.Values.Package, AppType.Values.WebPackage) && release != null)
             {
-                await UploadReleaseAssets(appKey, versionKey, release);
+                await UploadReleaseAssets(appKey, versionKey, release, ct);
             }
             await publishLibProcess.Run(appKey, versionKey, semanticVersion);
             Environment.CurrentDirectory = slnDir;
@@ -101,21 +101,21 @@ public sealed class PublishProcess
         if (xtiEnv.IsProduction() && release != null)
         {
             Console.WriteLine($"Finalizing release {release.TagName}");
-            await gitHubRepo.FinalizeRelease(release);
+            await gitHubRepo.FinalizeRelease(release, ct);
             options.VersionNumber = semanticVersion;
         }
     }
 
-    private async Task<GitHubRelease?> CreateGitHubRelease(AppVersionKey versionKey, string semanticVersion)
+    private async Task<GitHubRelease?> CreateGitHubRelease(AppVersionKey versionKey, string semanticVersion, CancellationToken ct)
     {
         var appKeys = slnFolder.AppKeys();
         GitHubRelease? release = null;
         if (appKeys.Any(appKey => !appKey.Type.Equals(AppType.Values.Package)) && xtiEnv.IsProduction())
         {
             var tagName = $"v{semanticVersion}";
-            await gitHubRepo.DeleteReleaseIfExists(tagName);
+            await gitHubRepo.DeleteReleaseIfExists(tagName, ct);
             Console.WriteLine($"Creating release {tagName}");
-            release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "");
+            release = await gitHubRepo.CreateRelease(tagName, versionKey.DisplayText, "", ct);
         }
         return release;
     }
@@ -136,7 +136,7 @@ public sealed class PublishProcess
         {
             Console.WriteLine("Uploading versions.json");
             using var versionStream = new MemoryStream(File.ReadAllBytes(versionsPath));
-            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(versionStream, "versions.json", "text/plain"));
+            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(versionStream, "versions.json", "text/plain"), ct);
         }
     }
 
@@ -149,7 +149,7 @@ public sealed class PublishProcess
         }
     }
 
-    private async Task UploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, GitHubRelease release)
+    private async Task UploadReleaseAssets(AppKey appKey, AppVersionKey versionKey, GitHubRelease release, CancellationToken ct)
     {
         Console.WriteLine("Uploading app.zip");
         var publishDir = GetPublishDir(appKey, versionKey);
@@ -163,7 +163,7 @@ public sealed class PublishProcess
         using (var appStream = new MemoryStream(File.ReadAllBytes(appZipPath)))
         {
             appStream.Seek(0, SeekOrigin.Begin);
-            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(appStream, $"{appKeyText}.zip", "application/zip"));
+            await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(appStream, $"{appKeyText}.zip", "application/zip"), ct);
         }
         var publishSetupDir = Path.Combine(publishDir, "Setup");
         if (Directory.Exists(publishSetupDir))
@@ -178,7 +178,7 @@ public sealed class PublishProcess
             using (var setupStream = new MemoryStream(File.ReadAllBytes(setupZipPath)))
             {
                 setupStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(setupStream, $"{appKeyText}Setup.zip", "application/zip"), ct);
             }
         }
         var toolsPath = Path.Combine(publishDir, "Tools");
@@ -193,7 +193,7 @@ public sealed class PublishProcess
             using (var toolsStream = new MemoryStream(File.ReadAllBytes(toolsZipPath)))
             {
                 toolsStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Tools.zip", "application/zip"), ct);
             }
         }
         var psPath = Path.Combine(publishDir, "Powershell");
@@ -208,7 +208,7 @@ public sealed class PublishProcess
             using (var toolsStream = new MemoryStream(File.ReadAllBytes(psZipPath)))
             {
                 toolsStream.Seek(0, SeekOrigin.Begin);
-                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Powershell.zip", "application/zip"));
+                await gitHubRepo.UploadReleaseAsset(release, new GitHubFileUpload(toolsStream, $"{appKeyText}Powershell.zip", "application/zip"), ct);
             }
         }
     }
@@ -251,6 +251,18 @@ public sealed class PublishProcess
         foreach (var privateFile in privateFiles)
         {
             File.Delete(privateFile);
+        }
+        if (xtiEnv.IsProduction() && appKey.IsAppType(AppType.Values.WebApp))
+        {
+            var jsDevDirectoryPath = Path.Combine(publishAppDir, "wwwroot", "js", "dev");
+            if (Directory.Exists(jsDevDirectoryPath))
+            {
+                try
+                {
+                    Directory.Delete(jsDevDirectoryPath, true);
+                }
+                catch { }
+            }
         }
     }
 

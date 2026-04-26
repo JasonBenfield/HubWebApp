@@ -9,27 +9,27 @@ import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { ResourceGroupListItemView } from "../ResourceGroupListItemView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 
-type Events = { resourceGroupClicked: ResourceGroupListItem };
+type Events = { resourceGroupClicked: AppResourceGroup };
 
 export class ResourceGroupListCard {
     private readonly alert: IMessageAlert;
     private readonly resourceGroups: ListGroup<ResourceGroupListItem, ResourceGroupListItemView>;
-    private readonly eventSource = new EventSource<Events>(this, { resourceGroupClicked: null });
+    private readonly eventSource = new EventSource<Events>(this, { resourceGroupClicked: new AppResourceGroup() });
     readonly when = this.eventSource.when;
 
     constructor(
         private readonly hubClient: HubAppClient,
         view: ResourceGroupListCardView
     ) {
-        new TextComponent(view.titleHeader).setText('Resource Groups');
+        new TextComponent(view.titleHeader).setText("Resource Groups");
         this.alert = new CardAlert(view.alert);
         this.alert.disableAutoScrollIntoView();
         this.resourceGroups = new ListGroup(view.resourceGroups);
         this.resourceGroups.when.itemClicked.then(this.onResourceGroupClicked.bind(this));
     }
 
-    private onResourceGroupClicked(resourceGroup: ResourceGroupListItem) {
-        this.eventSource.events.resourceGroupClicked.invoke(resourceGroup);
+    private onResourceGroupClicked(listItem: ResourceGroupListItem) {
+        this.eventSource.events.resourceGroupClicked.invoke(listItem.group);
     }
 
     async refresh() {
@@ -41,13 +41,13 @@ export class ResourceGroupListCard {
                 new ResourceGroupListItem(sourceItem, listItem)
         );
         if (resourceGroups.length === 0) {
-            this.alert.danger('No Resource Groups were Found');
+            this.alert.danger("No Resource Groups were Found");
         }
     }
 
     private getResourceGroups() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.App.GetResourceGroups()
         );
     }

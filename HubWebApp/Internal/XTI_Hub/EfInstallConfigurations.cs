@@ -30,6 +30,18 @@ public sealed class EfInstallConfigurations
         return configs.Select(c => new EfInstallConfiguration(db, c)).ToArray();
     }
 
+    internal async Task<EfInstallConfiguration[]> Configurations(string repoOwner, string repoName, AppKey appKey, CancellationToken ct)
+    {
+        var appName = appKey.Name.DisplayText;
+        var appType = appKey.Type.Value;
+        var configs = await db.Context.InstallConfigurations.Retrieve()
+            .Where(c => c.RepoOwner == repoOwner && c.RepoName == repoName && c.AppName == appName && c.AppType == appType)
+            .OrderBy(c => c.ConfigurationName)
+            .ThenBy(c => c.InstallSequence)
+            .ToArrayAsync(ct);
+        return configs.Select(c => new EfInstallConfiguration(db, c)).ToArray();
+    }
+
     public async Task<EfInstallConfiguration> AddOrUpdateConfiguration
     (
         string repoOwner,

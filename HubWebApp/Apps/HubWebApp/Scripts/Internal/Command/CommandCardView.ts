@@ -12,6 +12,7 @@ export class CommandCardView extends CardView {
     readonly titleTextView: BasicTextComponentView;
     readonly cardAlertView: CardAlertView;
     readonly appFormGroupView: FormGroupTextView;
+    readonly locationFormGroupView: FormGroupTextView;
     readonly versionFormGroupView: FormGroupView;
     readonly versionTextView: BasicTextComponentView;
     readonly currentVersionTextView: BasicTextComponentView;
@@ -26,6 +27,8 @@ export class CommandCardView extends CardView {
         const formGroupContainerView = bodyView.addView(FormGroupContainerView);
         this.appFormGroupView = formGroupContainerView.addFormGroupTextView();
         this.appFormGroupView.valueTextView.styleAsUserSelectAll();
+        this.locationFormGroupView = formGroupContainerView.addFormGroupTextView();
+        this.locationFormGroupView.valueTextView.styleAsUserSelectAll();
         this.versionFormGroupView = formGroupContainerView.addFormGroup(FormGroupView);
         this.versionFormGroupView.caption.setText("Version");
         const versionContainerView = this.versionFormGroupView.valueCell.addView(BlockView);

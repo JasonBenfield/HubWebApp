@@ -1,4 +1,5 @@
-﻿using XTI_App.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using XTI_App.Abstractions;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -156,6 +157,9 @@ public sealed class EfApp
 
     public Task<EfAppCommand> Command(int commandID, CancellationToken ct) =>
         db.AppCommands.Command(app, commandID, ct);
+
+    public Task<EfInstallConfiguration[]> InstallConfigurations(CancellationToken ct) =>
+        db.InstallConfigurations.Configurations(app.RepoOwner, app.RepoName, GetAppKey(), ct);
 
     public AppModel ToModel()
     {

@@ -24,7 +24,7 @@ public sealed class StartIssueCommand : ICommand
         var xtiBranchName = XtiBranchName.Parse(currentBranchName);
         if(xtiBranchName is XtiVersionBranchName xtiVersionBranchName)
         {
-            var issue = await gitHubRepo.StartIssue(xtiVersionBranchName.Version, options.IssueNumber);
+            var issue = await gitHubRepo.StartIssue(xtiVersionBranchName.Version, options.IssueNumber, ct);
             await gitRepo.CheckoutBranch(issue.BranchName().Value);
         }
         else

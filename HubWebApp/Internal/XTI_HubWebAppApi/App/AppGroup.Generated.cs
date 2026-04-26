@@ -12,6 +12,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
         GetDefaultAppOptions = builder.GetDefaultAppOptions.Build();
         GetDefaultModifier = builder.GetDefaultModifier.Build();
         GetDefaultOptions = builder.GetDefaultOptions.Build();
+        GetInstallConfigurations = builder.GetInstallConfigurations.Build();
         GetModifierCategories = builder.GetModifierCategories.Build();
         GetMostRecentErrorEvents = builder.GetMostRecentErrorEvents.Build();
         GetMostRecentRequests = builder.GetMostRecentRequests.Build();
@@ -27,6 +28,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
     public AppApiAction<EmptyRequest, string> GetDefaultAppOptions { get; }
     public AppApiAction<EmptyRequest, ModifierModel> GetDefaultModifier { get; }
     public AppApiAction<EmptyRequest, string> GetDefaultOptions { get; }
+    public AppApiAction<EmptyRequest, InstallConfigurationModel[]> GetInstallConfigurations { get; }
     public AppApiAction<EmptyRequest, ModifierCategoryModel[]> GetModifierCategories { get; }
     public AppApiAction<int, AppLogEntryModel[]> GetMostRecentErrorEvents { get; }
     public AppApiAction<int, AppRequestExpandedModel[]> GetMostRecentRequests { get; }

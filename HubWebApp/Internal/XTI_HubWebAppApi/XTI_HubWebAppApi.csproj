@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="XTI_ApiClientGeneratorTask" Version="1.4.2-dev260210072721413" />
+    <PackageReference Include="XTI_ApiClientGeneratorTask" Version="1.4.2-dev260424150358032" />
   </ItemGroup>
 
   <ItemGroup>

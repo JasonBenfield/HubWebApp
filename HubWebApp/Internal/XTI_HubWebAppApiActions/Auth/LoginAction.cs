@@ -1,4 +1,5 @@
 ﻿using XTI_Core;
+using XTI_TempLog;
 
 namespace XTI_HubWebAppApiActions.Auth;
 
@@ -7,21 +8,21 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
     private readonly Authentication auth;
     private readonly IAnonClient anonClient;
     private readonly HubWebAppOptions options;
-    private readonly EfHubDB hubFactory;
+    private readonly EfHubDB db;
     private readonly IClock clock;
 
-    public LoginAction(AuthenticationFactory authFactory, IAnonClient anonClient, HubWebAppOptions options, EfHubDB hubFactory, IClock clock)
+    public LoginAction(AuthenticationFactory authFactory, IAnonClient anonClient, HubWebAppOptions options, EfHubDB db, IClock clock)
     {
         auth = authFactory.CreateForLogin();
         this.anonClient = anonClient;
         this.options = options;
-        this.hubFactory = hubFactory;
+        this.db = db;
         this.clock = clock;
     }
 
     public async Task<WebRedirectResult> Execute(AuthenticatedLoginRequest loginRequest, CancellationToken stoppingToken)
     {
-        var authenticated = await hubFactory.StoredObjects.StoredObject<AuthenticatedModel>
+        var authenticated = await db.StoredObjects.StoredObject<AuthenticatedModel>
         (
             new StorageName("XTI Authenticated"),
             loginRequest.AuthKey,
@@ -37,10 +38,12 @@ public sealed class LoginAction : AppAction<AuthenticatedLoginRequest, WebRedire
         {
             throw new Exception($"AuthKey auth id '{authenticated.AuthID}' does not match given auth id '{loginRequest.AuthID}'");
         }
-        await auth.Authenticate(new AppUserName(authenticated.UserName));
+        var userName = new AppUserName(authenticated.UserName);
+        var efUser = await db.Users.UserOrAnon(userName, stoppingToken);
+        await auth.Authenticate(efUser, stoppingToken);
         anonClient.Load();
         anonClient.Persist("", DateTimeOffset.MinValue, anonClient.RequesterKey);
-        var loginReturn = await hubFactory.StoredObjects.StoredObject<LoginReturnModel>
+        var loginReturn = await db.StoredObjects.StoredObject<LoginReturnModel>
         (
             new StorageName("Login Return"),
             loginRequest.ReturnKey,

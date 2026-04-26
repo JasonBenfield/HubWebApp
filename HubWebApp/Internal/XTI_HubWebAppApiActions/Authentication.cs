@@ -35,18 +35,23 @@ public sealed class Authentication
     {
         var hashedPassword = hashedPasswordFactory.Create(password);
         var userName = new AppUserName(userNameText);
-        var user = await unverifiedUser.Verify(userName, hashedPassword, ct);
-        var result = await Authenticate(userName);
-        await user.LoggedIn(clock.Now(), ct);
+        var efUser = await unverifiedUser.Verify(userName, hashedPassword, ct);
+        var result = await Authenticate(efUser, ct);
         return result;
     }
 
-    public async Task<LoginResult> Authenticate(AppUserName userName)
+    public async Task<LoginResult> Authenticate(EfAppUser efUser, CancellationToken ct)
     {
-        var authSession = await tempLog.AuthenticateSession(userName.Value);
-        var claims = new XtiClaimsCreator(authSession.SessionKey, userName).Values();
+        var user = efUser.ToModel();
+        if(user.UserName.IsBlank() || user.UserName.IsAnon())
+        {
+            throw new Exception($"User {user.ID} cannot be authenticated");
+        }
+        var authSession = await tempLog.AuthenticateSession(user.UserName.Value);
+        var claims = new XtiClaimsCreator(authSession.SessionKey, user.UserName).Values();
         var token = await access.GenerateToken(claims);
-        userContext.ClearCache(userName);
+        userContext.ClearCache(user.UserName);
+        await efUser.LoggedIn(authSession.SessionKey.ID, clock.Now(), ct);
         return new LoginResult(token);
     }
 }

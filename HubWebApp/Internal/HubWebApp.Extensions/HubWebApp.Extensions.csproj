@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.54-dev260208221308934" />
-		<PackageReference Include="XTI_App.Hosting" Version="1.8.54-dev260208221308934" />
-		<PackageReference Include="XTI_WebAppClient" Version="1.8.54-dev260208221308934" />
-		<PackageReference Include="XTI_GitHub.Web" Version="1.2.26-dev260208085001940" />
-		<PackageReference Include="XTI_Git.Secrets" Version="1.2.26-dev260208085001940" />
+		<PackageReference Include="XTI_WebApp.Extensions" Version="1.8.54-dev260424145310111" />
+		<PackageReference Include="XTI_App.Hosting" Version="1.8.54-dev260424145310111" />
+		<PackageReference Include="XTI_WebAppClient" Version="1.8.54-dev260424145310111" />
+		<PackageReference Include="XTI_GitHub.Web" Version="1.2.26-dev260424142207931" />
+		<PackageReference Include="XTI_Git.Secrets" Version="1.2.26-dev260424142207931" />
 	</ItemGroup>
 
 	<ItemGroup>

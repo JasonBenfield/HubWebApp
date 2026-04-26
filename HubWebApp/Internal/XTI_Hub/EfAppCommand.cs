@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_Core;
+﻿using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_HubDB.Entities;
 
@@ -148,6 +147,18 @@ public sealed class EfAppCommand
         {
             throw new Exception($"Command {command.ID} has command name '{command.CommandName}'");
         }
+    }
+
+    public async Task<AppCommandSummaryModel> ToSummaryModel(CancellationToken ct)
+    {
+        var efApp = await db.Apps.App(command.AppID, ct);
+        var efLocation = await db.InstallLocations.Location(command.LocationID, ct);
+        return new AppCommandSummaryModel
+        (
+            Command: ToModel(),
+            App: efApp.ToModel(),
+            Location: efLocation.ToModel()
+        );
     }
 
     public AppCommandModel ToModel() =>

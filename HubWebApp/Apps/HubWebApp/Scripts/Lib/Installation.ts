@@ -14,4 +14,6 @@ export class Installation {
         this.domain = source ? source.Domain : "";
         this.siteName = source ? source.SiteName : "";
     }
+
+    get isFound() { return this.id > 0; }
 }

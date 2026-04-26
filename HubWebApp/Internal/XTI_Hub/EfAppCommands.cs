@@ -52,11 +52,11 @@ public sealed class EfAppCommands
         var command = await db.Context.AppCommands.Retrieve()
             .Where(c => c.ID == commandID)
             .FirstOrDefaultAsync(ct);
-        if(command == null)
+        if (command == null)
         {
             throw new Exception($"Command {commandID} not found.");
         }
-        if(command.AppID != app.ID)
+        if (command.AppID != app.ID)
         {
             throw new Exception($"Command {commandID} does not belong to app {app.ID}.");
         }
@@ -68,10 +68,10 @@ public sealed class EfAppCommands
         var commandIDs = db.Context.AppCommandInstallations.Retrieve()
             .Where(ci => ci.InstallationID == installation.ID)
             .Select(ci => ci.CommandID);
-        var requestedInstallation = await db.Context.AppCommands.Retrieve()
+        var command = await db.Context.AppCommands.Retrieve()
             .Where(c => commandIDs.Contains(c.ID))
             .FirstOrDefaultAsync(ct);
-        return new EfAppCommand(db, requestedInstallation ?? new());
+        return new EfAppCommand(db, command ?? new());
     }
 
     public async Task<EfAppCommand[]> GetPendingCommands(AppCommandName[] commandNames, string machineName, CancellationToken ct)
@@ -91,7 +91,16 @@ public sealed class EfAppCommands
             )
             .OrderBy(c => c.TimeAdded)
             .ToArrayAsync(ct);
-        return commands.Select(inst => new EfAppCommand(db, inst)).ToArray();
+        return commands.Select(c => new EfAppCommand(db, c)).ToArray();
     }
 
+    public async Task<EfAppCommand[]> GetPendingCommands(CancellationToken ct)
+    {
+        int[] statuses = [AppCommandStatus.Values.Pending.Value, AppCommandStatus.Values.Started.Value];
+        var commands = await db.Context.AppCommands.Retrieve()
+            .Where(c => statuses.Contains(c.Status))
+            .OrderBy(c => c.TimeAdded)
+            .ToArrayAsync(ct);
+        return commands.Select(c => new EfAppCommand(db, c)).ToArray();
+    }
 }
