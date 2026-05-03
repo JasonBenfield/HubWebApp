@@ -35,7 +35,7 @@ export class ResourceResultType extends NumericValue implements IResourceResultT
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IResourceResultType[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IResourceResultType[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IResourceResultType | number | string) => boolean;
+	declare equals: (other: this | IResourceResultType | number | string) => boolean;
 }

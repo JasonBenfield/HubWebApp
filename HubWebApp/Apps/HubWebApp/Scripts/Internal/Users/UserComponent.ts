@@ -3,10 +3,10 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserComponentView } from "./UserComponentView";
-import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 
 type Events = {
     editRequested: number;
@@ -15,7 +15,6 @@ type Events = {
 }
 
 export class UserComponent {
-    private userID: number;
     private readonly alert: IMessageAlert;
     private readonly userNameFormGroup: FormGroupText;
     private readonly fullNameFormGroup: FormGroupText;
@@ -27,14 +26,15 @@ export class UserComponent {
     private readonly deactivateCommand: AsyncCommand;
     private readonly reactivateCommand: AsyncCommand;
     private readonly editUserGroupCommand: Command;
+    private userID = 0;
 
     private readonly eventSource = new EventSource<Events>(this, {
-        editRequested: null as number,
-        changePasswordRequested: null as number,
-        editUserGroupRequested: null as number
+        editRequested: 0,
+        changePasswordRequested: 0,
+        editUserGroupRequested: 0
     });
     readonly when = this.eventSource.when;
-    private canEdit: boolean = null;
+    private canEdit: boolean | null = null;
 
     constructor(
         private readonly hubClient: HubAppClient,

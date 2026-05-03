@@ -20,7 +20,7 @@ export class DefaultChangeCurrentUserPasswordFormViewLayout implements IFormGrou
 }
 
 export class ChangeCurrentUserPasswordFormView extends BaseFormView {
-	private formGroups: IChangeCurrentUserPasswordFormView;
+	private formGroups: IChangeCurrentUserPasswordFormView | null = null;
 	
 	constructor(container: BasicComponentView) {
 		super(container);
@@ -33,6 +33,6 @@ export class ChangeCurrentUserPasswordFormView extends BaseFormView {
 		this.formGroups = layout.addFormGroups(this);
 	}
 	
-	get Password() { return this.formGroups.Password; }
-	get Confirm() { return this.formGroups.Confirm; }
+	get Password() { return this.formGroups!.Password; }
+	get Confirm() { return this.formGroups!.Confirm; }
 }

@@ -16,7 +16,6 @@ export class InstallationQueryPanelView extends GridView {
     readonly queryTypes: LinkListGroupView<TextLinkListGroupItemView>;
     readonly odataComponent: ODataComponentView;
     readonly columns: ODataExpandedInstallationColumnViewsBuilder;
-    readonly dropdownColumn: ODataColumnViewBuilder;
 
     constructor(container: BasicComponentView) {
         super(container);

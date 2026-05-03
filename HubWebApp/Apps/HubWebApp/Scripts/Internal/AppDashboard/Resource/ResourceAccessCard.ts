@@ -13,13 +13,13 @@ export class ResourceAccessCard {
     private readonly alert: IMessageAlert;
     private readonly accessItems: ListGroup<RoleAccessListItem, RoleAccessListItemView>;
 
-    private resourceID: number;
+    private resourceID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
         view: ResourceAccessCardView
     ) {
-        new TextComponent(view.titleHeader).setText('Permissions');
+        new TextComponent(view.titleHeader).setText("Permissions");
         this.alert = new CardAlert(view.alert);
         this.accessItems = new ListGroup(view.accessItems);
     }
@@ -36,15 +36,15 @@ export class ResourceAccessCard {
                 new RoleAccessListItem(sourceItem, listItem)
         );
         if (accessItems.length === 0) {
-            this.alert.danger('No Roles were Found');
+            this.alert.danger("No Roles were Found");
         }
     }
 
     private async getRoleAccessItems() {
         const sourceRoles = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceInquiry.GetRoleAccess({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 ResourceID: this.resourceID
             })
         );

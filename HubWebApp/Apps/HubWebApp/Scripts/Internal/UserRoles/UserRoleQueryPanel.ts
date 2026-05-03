@@ -39,7 +39,7 @@ export class UserRoleQueryPanel implements IPanel {
         const options = new ODataComponentOptionsBuilder<IExpandedUserRole>('hub_userRoles', columns);
         options.setCreateLinkRow(
             (rowIndex, columns, record: Queryable<IExpandedUserRole>, row) => {
-                row.setHref(hubClient.UserRoles.UserRole.getUrl({ UserRoleID: record.UserRoleID }));
+                row.setHref(hubClient.UserRoles.UserRole.getUrl({ UserRoleID: record.UserRoleID || 0 }));
             }
         );
         options.query.select.addFields(

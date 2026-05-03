@@ -10,7 +10,7 @@ import { UserAuthenticatorListCardView } from "./UserAuthenticatorListCardView";
 export class UserAuthenticatorListCard extends BasicComponent {
     private readonly alert: IMessageAlert;
     private readonly userAuthenticators: ListGroup<TextComponent, TextListGroupItemView>;
-    private userID: number;
+    private userID = 0;
 
     constructor(private readonly hubClient: HubAppClient, protected readonly view: UserAuthenticatorListCardView) {
         super(view);
@@ -24,7 +24,7 @@ export class UserAuthenticatorListCard extends BasicComponent {
 
     async refresh() {
         const userAuthenticators = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserInquiry.GetUserAuthenticators({ UserID: this.userID })
         );
         this.userAuthenticators.setItems(
@@ -36,7 +36,7 @@ export class UserAuthenticatorListCard extends BasicComponent {
             }
         );
         if (userAuthenticators.length === 0) {
-            this.alert.warning('No authenticators have been added.');
+            this.alert.warning("No authenticators have been added.");
         }
     }
 }

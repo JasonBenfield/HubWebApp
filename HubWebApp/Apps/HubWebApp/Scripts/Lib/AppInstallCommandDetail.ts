@@ -22,10 +22,16 @@ export class AppInstallCommandDetail implements IAppCommandDetail {
 		this.app = new App(source && source.App);
 		this.location = new InstallLocation(source && source.Location);
 		this.steps = source ? source.Steps.map(s => new AppCommandStep(s)) : [];
-		this.installRequest = source && source.InstallRequest;
+		this.installRequest = source?.InstallRequest || {
+			AppKey: { AppName: "", AppType: 0 },
+			VersionKey: "",
+			InstallAsCurrent: false,
+			IsAutoStartEnabled: false,
+			InstallConfigurationID: 0
+		};
 		this.version = new XtiVersion(source && source.Version);
 		this.installConfiguration = new InstallConfiguration(source && source.InstallConfiguration);
-		this.installations = source ? source.Installations.map(inst => new Installation(inst)) : [];
+		this.installations = source?.Installations.map(inst => new Installation(inst)) || [];
 	}
 
 	getCurrentInstallationOrDefault() {

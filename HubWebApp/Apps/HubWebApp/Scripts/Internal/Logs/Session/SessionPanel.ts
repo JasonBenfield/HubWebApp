@@ -29,7 +29,7 @@ export class SessionPanel implements IPanel {
     private readonly userAgentFormGroup: FormGroupText;
     private readonly userLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
-    private sessionID: number;
+    private sessionID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: SessionPanelView) {
         this.alert = new MessageAlert(view.alert);
@@ -71,13 +71,13 @@ export class SessionPanel implements IPanel {
         this.userLink.setHref(
             this.hubClient.Users.Index.getModifierUrl(
                 detail.userGroup.getModifier(),
-                { UserID: detail.user.id, ReturnTo: null }
+                { UserID: detail.user.id, ReturnTo: "" }
             )
         );
         this.requestsLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
             SessionID: this.sessionID,
-            InstallationID: null,
-            SourceRequestID: null
+            InstallationID: 0,
+            SourceRequestID: 0
         }));
     }
 

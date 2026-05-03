@@ -4,9 +4,7 @@ import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { AddUserFormView } from './AddUserFormView';
 
 export class AddUserForm extends BaseForm {
-	protected readonly view: AddUserFormView;
-	
-	constructor(view: AddUserFormView) {
+	constructor(protected readonly view: AddUserFormView) {
 		super('AddUserForm', view);
 		this.UserName.setCaption('User Name');
 		this.UserName.constraints.mustNotBeNull();
@@ -21,9 +19,9 @@ export class AddUserForm extends BaseForm {
 		this.PersonName.setCaption('Name');
 		this.Email.setCaption('Email');
 	}
-	readonly UserName = this.addTextInputFormGroup('UserName', this.view.UserName);
-	readonly Password = this.addTextInputFormGroup('Password', this.view.Password);
-	readonly Confirm = this.addTextInputFormGroup('Confirm', this.view.Confirm);
-	readonly PersonName = this.addTextInputFormGroup('PersonName', this.view.PersonName);
-	readonly Email = this.addTextInputFormGroup('Email', this.view.Email);
+	get UserName() { return this.addTextInputFormGroup('UserName', this.view.UserName); };
+	get Password() { return this.addTextInputFormGroup('Password', this.view.Password); };
+	get Confirm() { return this.addTextInputFormGroup('Confirm', this.view.Confirm); };
+	get PersonName() { return this.addTextInputFormGroup('PersonName', this.view.PersonName); };
+	get Email() { return this.addTextInputFormGroup('Email', this.view.Email); };
 }

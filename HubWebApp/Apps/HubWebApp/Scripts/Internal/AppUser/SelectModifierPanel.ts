@@ -37,7 +37,7 @@ export class SelectModifierPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly modifiers: ListGroup<ModifierListItem, ModifierButtonListItemView>;
-    private modCategory: ModifierCategory;
+    private modCategory = new ModifierCategory();
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -70,7 +70,7 @@ export class SelectModifierPanel implements IPanel {
 
     private async delayedStart() {
         const sourceModifiers = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ModCategory.GetModifiers(this.modCategory.id)
         );
         const modifiers = sourceModifiers.map(m => new Modifier(m));

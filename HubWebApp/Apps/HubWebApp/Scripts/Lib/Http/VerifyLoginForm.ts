@@ -4,9 +4,7 @@ import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { VerifyLoginFormView } from './VerifyLoginFormView';
 
 export class VerifyLoginForm extends BaseForm {
-	protected readonly view: VerifyLoginFormView;
-	
-	constructor(view: VerifyLoginFormView) {
+	constructor(protected readonly view: VerifyLoginFormView) {
 		super('VerifyLoginForm', view);
 		this.UserName.setCaption('User Name');
 		this.UserName.constraints.mustNotBeNull();
@@ -18,6 +16,6 @@ export class VerifyLoginForm extends BaseForm {
 		this.Password.setMaxLength(100);
 		this.Password.protect();
 	}
-	readonly UserName = this.addTextInputFormGroup('UserName', this.view.UserName);
-	readonly Password = this.addTextInputFormGroup('Password', this.view.Password);
+	get UserName() { return this.addTextInputFormGroup('UserName', this.view.UserName); };
+	get Password() { return this.addTextInputFormGroup('Password', this.view.Password); };
 }

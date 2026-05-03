@@ -26,7 +26,7 @@ export class DefaultAddUserFormViewLayout implements IFormGroupLayout<IAddUserFo
 }
 
 export class AddUserFormView extends BaseFormView {
-	private formGroups: IAddUserFormView;
+	private formGroups: IAddUserFormView | null = null;
 	
 	constructor(container: BasicComponentView) {
 		super(container);
@@ -39,9 +39,9 @@ export class AddUserFormView extends BaseFormView {
 		this.formGroups = layout.addFormGroups(this);
 	}
 	
-	get UserName() { return this.formGroups.UserName; }
-	get Password() { return this.formGroups.Password; }
-	get Confirm() { return this.formGroups.Confirm; }
-	get PersonName() { return this.formGroups.PersonName; }
-	get Email() { return this.formGroups.Email; }
+	get UserName() { return this.formGroups!.UserName; }
+	get Password() { return this.formGroups!.Password; }
+	get Confirm() { return this.formGroups!.Confirm; }
+	get PersonName() { return this.formGroups!.PersonName; }
+	get Email() { return this.formGroups!.Email; }
 }

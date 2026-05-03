@@ -26,7 +26,7 @@ class MainPage extends HubPage {
             this.activateLogEntryPanel();
         }
         else {
-            this.hubClient.UserRoles.Index.open({ AppID: null });
+            this.hubClient.UserRoles.Index.open({ AppID: 0 });
         }
     }
 

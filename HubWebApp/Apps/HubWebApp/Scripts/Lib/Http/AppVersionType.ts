@@ -25,7 +25,7 @@ export class AppVersionType extends NumericValue implements IAppVersionType {
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IAppVersionType[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IAppVersionType[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IAppVersionType | number | string) => boolean;
+	declare equals: (other: this | IAppVersionType | number | string) => boolean;
 }

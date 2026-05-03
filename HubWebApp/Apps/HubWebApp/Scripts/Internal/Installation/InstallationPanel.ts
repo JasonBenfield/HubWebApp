@@ -39,7 +39,7 @@ export class InstallationPanel implements IPanel {
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
     private readonly deleteCommand: AsyncCommand;
-    private installationID: number;
+    private installationID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
         this.alert = new MessageAlert(view.alert);

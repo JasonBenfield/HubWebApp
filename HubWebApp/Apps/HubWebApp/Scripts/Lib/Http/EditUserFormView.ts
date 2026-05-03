@@ -22,7 +22,7 @@ export class DefaultEditUserFormViewLayout implements IFormGroupLayout<IEditUser
 }
 
 export class EditUserFormView extends BaseFormView {
-	private formGroups: IEditUserFormView;
+	private formGroups: IEditUserFormView | null = null;
 	
 	constructor(container: BasicComponentView) {
 		super(container);
@@ -35,7 +35,7 @@ export class EditUserFormView extends BaseFormView {
 		this.formGroups = layout.addFormGroups(this);
 	}
 	
-	get UserID() { return this.formGroups.UserID; }
-	get PersonName() { return this.formGroups.PersonName; }
-	get Email() { return this.formGroups.Email; }
+	get UserID() { return this.formGroups!.UserID; }
+	get PersonName() { return this.formGroups!.PersonName; }
+	get Email() { return this.formGroups!.Email; }
 }

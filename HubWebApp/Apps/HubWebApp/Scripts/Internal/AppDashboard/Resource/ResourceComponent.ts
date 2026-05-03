@@ -3,20 +3,20 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { AppResource } from "../../../Lib/AppResource";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
-import { ResourceResultType } from '../../../Lib/Http/ResourceResultType';
+import { ResourceResultType } from "../../../Lib/Http/ResourceResultType";
 import { ResourceComponentView } from "./ResourceComponentView";
 
 export class ResourceComponent {
     private readonly alert: IMessageAlert;
-    private resourceID: number;
     private readonly resourceName: TextComponent;
     private readonly resultType: TextComponent;
+    private resourceID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: ResourceComponentView
     ) {
-        new TextComponent(view.titleHeader).setText('Resource');
+        new TextComponent(view.titleHeader).setText("Resource");
         this.alert = new CardAlert(view.alert);
         this.resourceName = new TextComponent(view.resourceName);
         this.resultType = new TextComponent(view.resultType);
@@ -24,8 +24,8 @@ export class ResourceComponent {
 
     setResourceID(resourceID: number) {
         this.resourceID = resourceID;
-        this.resourceName.setText('');
-        this.resultType.setText('');
+        this.resourceName.setText("");
+        this.resultType.setText("");
         this.view.hideAnon();
     }
 
@@ -43,7 +43,7 @@ export class ResourceComponent {
         if (
             resource.resultType.equalsAny(ResourceResultType.values.None, ResourceResultType.values.Json)
         ) {
-            resultTypeText = '';
+            resultTypeText = "";
         }
         else {
             resultTypeText = resource.resultType.DisplayText;
@@ -53,9 +53,9 @@ export class ResourceComponent {
 
     private getResource(resourceID: number) {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceInquiry.GetResource({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 ResourceID: resourceID
             })
         );

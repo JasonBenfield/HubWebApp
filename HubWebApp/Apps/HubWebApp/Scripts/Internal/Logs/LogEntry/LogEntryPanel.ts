@@ -37,7 +37,7 @@ export class LogEntryPanel implements IPanel {
     private readonly targetLogEntryLink: TextLinkComponent;
     private readonly requestLink: TextLinkComponent;
     private readonly installationLink: TextLinkComponent;
-    private logEntryID: number;
+    private logEntryID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: LogEntryPanelView) {
         this.alert = new MessageAlert(view.alert);
@@ -66,7 +66,7 @@ export class LogEntryPanel implements IPanel {
 
     async refresh() {
         const sourceDetail = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.Logs.GetLogEntryDetail(this.logEntryID)
         );
         const detail = new AppLogEntryDetail(sourceDetail);

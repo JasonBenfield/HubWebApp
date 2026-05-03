@@ -25,7 +25,7 @@ export class GeneratedKeyType extends NumericValue implements IGeneratedKeyType 
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IGeneratedKeyType[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IGeneratedKeyType[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IGeneratedKeyType | number | string) => boolean;
+	declare equals: (other: this | IGeneratedKeyType | number | string) => boolean;
 }

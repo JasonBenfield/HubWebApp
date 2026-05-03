@@ -12,13 +12,13 @@ export class MostRecentRequestListCard {
     private readonly alert: IMessageAlert;
     private readonly requests: ListGroup<RequestExpandedListItem, RequestExpandedListItemView>;
 
-    private groupID: number;
+    private groupID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
         view: MostRecentRequestListCardView
     ) {
-        new TextComponent(view.titleHeader).setText('Most Recent Requests');
+        new TextComponent(view.titleHeader).setText("Most Recent Requests");
         this.alert = new CardAlert(view.alert);
         this.requests = new ListGroup(view.requests);
     }
@@ -36,15 +36,15 @@ export class MostRecentRequestListCard {
                 new RequestExpandedListItem(sourceItem, listItem)
         );
         if (requests.length === 0) {
-            this.alert.danger('No Requests were Found');
+            this.alert.danger("No Requests were Found");
         }
     }
 
     private getRequests() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceGroupInquiry.GetMostRecentRequests({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 GroupID: this.groupID,
                 HowMany: 10
             })

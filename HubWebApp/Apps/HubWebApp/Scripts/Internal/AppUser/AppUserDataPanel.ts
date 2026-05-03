@@ -27,7 +27,7 @@ class Result {
 export class AppUserDataPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private userID: number;
+    private userID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -47,7 +47,7 @@ export class AppUserDataPanel implements IPanel {
 
     private async delayedStart() {
         const appUserData = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             async () => {
                 const sourceApp = await this.hubClient.App.GetApp();
                 const app = new App(sourceApp);

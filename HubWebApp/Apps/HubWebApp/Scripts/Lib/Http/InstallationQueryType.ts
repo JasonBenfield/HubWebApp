@@ -25,7 +25,7 @@ export class InstallationQueryType extends NumericValue implements IInstallation
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IInstallationQueryType[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IInstallationQueryType[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IInstallationQueryType | number | string) => boolean;
+	declare equals: (other: this | IInstallationQueryType | number | string) => boolean;
 }

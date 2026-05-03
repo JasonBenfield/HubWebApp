@@ -2,8 +2,8 @@
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
-import { DelayedAction } from '@jasonbenfield/sharedwebapp/DelayedAction';
-import { EditUserForm } from '../../Lib/Http/EditUserForm';
+import { DelayedAction } from "@jasonbenfield/sharedwebapp/DelayedAction";
+import { EditUserForm } from "../../Lib/Http/EditUserForm";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserEditPanelView } from "./UserEditPanelView";
 
@@ -28,10 +28,10 @@ class Result {
 export class UserEditPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly editUserForm: EditUserForm;
-    private userID: number;
     private readonly awaitable = new Awaitable<Result>();
     private readonly cancelCommand = new Command(this.cancel.bind(this));
     private readonly saveCommand = new AsyncCommand(this.save.bind(this));
+    private userID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -40,7 +40,7 @@ export class UserEditPanel implements IPanel {
         this.alert = new MessageAlert(this.view.alert);
         this.cancelCommand.add(this.view.cancelButton);
         this.saveCommand.add(this.view.saveButton);
-        new TextComponent(this.view.titleHeader).setText('Edit User');
+        new TextComponent(this.view.titleHeader).setText("Edit User");
         this.editUserForm = new EditUserForm(this.view.editUserForm);
         this.editUserForm.handleSubmit(this.onFormSubmit.bind(this));
     }
@@ -65,7 +65,7 @@ export class UserEditPanel implements IPanel {
 
     private getUserForEdit(userID: number) {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserMaintenance.GetUserForEdit(userID)
         );
     }
@@ -80,7 +80,7 @@ export class UserEditPanel implements IPanel {
 
     private async save() {
         const result = await this.alert.infoAction(
-            'Saving...',
+            "Saving...",
             () => this.editUserForm.save(this.hubClient.UserMaintenance.EditUserAction),
         );
         if (result.succeeded()) {

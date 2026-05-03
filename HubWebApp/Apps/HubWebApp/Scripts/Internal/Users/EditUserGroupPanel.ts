@@ -32,7 +32,7 @@ export class EditUserGroupPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly userGroupListGroup: ListGroup<UserGroupListItem, TextButtonListGroupItemView>;
-    private userID: number;
+    private userID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,

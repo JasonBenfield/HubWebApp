@@ -27,7 +27,7 @@ export class AppVersionStatus extends NumericValue implements IAppVersionStatus 
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IAppVersionStatus[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IAppVersionStatus[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IAppVersionStatus | number | string) => boolean;
+	declare equals: (other: this | IAppVersionStatus | number | string) => boolean;
 }

@@ -1,17 +1,16 @@
-﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { HubPage } from '../../HubPage';
-import { MainMenuPanel } from '../../MainMenuPanel';
-import { LogEntryQueryPanel } from './LogEntryQueryPanel';
-import { MainPageView } from './MainPageView';
+﻿import { SingleActivePanel } from "@jasonbenfield/sharedwebapp/Panel/SingleActivePanel";
+import { HubPage } from "../../HubPage";
+import { MainMenuPanel } from "../../MainMenuPanel";
+import { LogEntryQueryPanel } from "./LogEntryQueryPanel";
+import { MainPageView } from "./MainPageView";
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly logEntryQueryPanel: LogEntryQueryPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.logEntryQueryPanel = this.panels.add(
             new LogEntryQueryPanel(this.hubClient, this.view.logEntryQueryPanel)
@@ -22,7 +21,7 @@ class MainPage extends HubPage {
         this.logEntryQueryPanel.refresh();
         this.activateLogEntryQueryPanel();
     }
-    
+
     private async activateLogEntryQueryPanel() {
         this.panels.activate(this.logEntryQueryPanel);
         const result = await this.logEntryQueryPanel.start();
@@ -39,4 +38,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

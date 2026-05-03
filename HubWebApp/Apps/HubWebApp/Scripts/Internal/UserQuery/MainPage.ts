@@ -1,10 +1,10 @@
-﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { HubPage } from '../HubPage';
-import { MainMenuPanel } from '../MainMenuPanel';
-import { AddUserPanel } from './AddUserPanel';
-import { MainPageView } from './MainPageView';
-import { UserQueryPanel } from './UserQueryPanel';
+﻿import { SingleActivePanel } from "@jasonbenfield/sharedwebapp/Panel/SingleActivePanel";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { HubPage } from "../HubPage";
+import { MainMenuPanel } from "../MainMenuPanel";
+import { AddUserPanel } from "./AddUserPanel";
+import { MainPageView } from "./MainPageView";
+import { UserQueryPanel } from "./UserQueryPanel";
 
 class MainPage extends HubPage {
     private readonly panels: SingleActivePanel;
@@ -24,7 +24,7 @@ class MainPage extends HubPage {
         this.addUserPanel = this.panels.add(
             new AddUserPanel(this.hubClient, this.view.addUserPanel)
         );
-        const userGroupName = Url.current().query.getValue('UserGroupName') || '';
+        const userGroupName = Url.current().query.getValue("UserGroupName") || "";
         this.hubClient.Users.withModifier(userGroupName);
         this.userQueryPanel.setUserGroupName(userGroupName);
         this.userQueryPanel.refresh();

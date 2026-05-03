@@ -8,9 +8,9 @@ import { HubAppClient } from "../../Lib/Http/HubAppClient";
 export class UserDataRow extends ODataLinkRow {
     constructor(hubClient: HubAppClient, rowIndex: number, columns: ODataColumn[], record: Queryable<IExpandedUser>, view: LinkGridRowView) {
         super(rowIndex, columns, record, view);
-        const userID: number = record['UserID'];
-        let userGroupName: string = record['UserGroupName'];
-        userGroupName = userGroupName.replace(/\s+/g, '');
+        const userID = record["UserID"] || 0;
+        let userGroupName = record["UserGroupName"] || "";
+        userGroupName = userGroupName.replace(/\s+/g, "");
         this.setHref(
             hubClient.Users.Index.getModifierUrl(
                 userGroupName, {

@@ -8,7 +8,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 export class RequestDataRow extends ODataLinkRow {
     constructor(hubClient: HubAppClient, rowIndex: number, columns: ODataColumn[], record: Queryable<IExpandedRequest>, view: LinkGridRowView) {
         super(rowIndex, columns, record, view);
-        const requestID: number = record.RequestID;
+        const requestID = record.RequestID as number;
         this.setHref(hubClient.Logs.AppRequest.getUrl({ RequestID: requestID }));
         if (!record.Succeeded) {
             view.setContext(ContextualClass.danger);

@@ -22,7 +22,7 @@ export class DefaultChangePasswordFormViewLayout implements IFormGroupLayout<ICh
 }
 
 export class ChangePasswordFormView extends BaseFormView {
-	private formGroups: IChangePasswordFormView;
+	private formGroups: IChangePasswordFormView | null = null;
 	
 	constructor(container: BasicComponentView) {
 		super(container);
@@ -35,7 +35,7 @@ export class ChangePasswordFormView extends BaseFormView {
 		this.formGroups = layout.addFormGroups(this);
 	}
 	
-	get UserID() { return this.formGroups.UserID; }
-	get Password() { return this.formGroups.Password; }
-	get Confirm() { return this.formGroups.Confirm; }
+	get UserID() { return this.formGroups!.UserID; }
+	get Password() { return this.formGroups!.Password; }
+	get Confirm() { return this.formGroups!.Confirm; }
 }

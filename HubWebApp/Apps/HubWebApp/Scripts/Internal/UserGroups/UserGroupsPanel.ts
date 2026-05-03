@@ -37,7 +37,7 @@ export class UserGroupsPanel implements IPanel {
         this.userGroups = new ListGroup(view.userGroupListView);
         this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
         this.refreshCommand.add(view.refreshButton);
-        this.refreshCommand.animateIconWhenInProgress('spin');
+        this.refreshCommand.animateIconWhenInProgress("spin");
         new Command(this.requestMainMenu.bind(this)).add(view.menuButton);
         this.addCommand = new Command(this.requestAdd.bind(this));
         this.addCommand.add(view.addButton);
@@ -63,7 +63,7 @@ export class UserGroupsPanel implements IPanel {
     private async _refresh() {
         const sourceUserGroups = await this.getUserGroups();
         const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
-        userGroups.splice(0, 0, null);
+        userGroups.splice(0, 0, new AppUserGroup());
         this.userGroups.setItems(
             userGroups,
             (ug, itemView) => new UserGroupListItem(this.hubClient, ug, itemView)
@@ -72,7 +72,7 @@ export class UserGroupsPanel implements IPanel {
 
     private getUserGroups() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserGroups.GetUserGroups()
         );
     }

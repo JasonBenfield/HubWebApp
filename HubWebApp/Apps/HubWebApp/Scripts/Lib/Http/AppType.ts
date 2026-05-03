@@ -29,7 +29,7 @@ export class AppType extends NumericValue implements IAppType {
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IAppType[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IAppType[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IAppType | number | string) => boolean;
+	declare equals: (other: this | IAppType | number | string) => boolean;
 }

@@ -3,7 +3,7 @@ import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { App } from "../../Lib/App";
-import { AppType } from '../../Lib/Http/AppType';
+import { AppType } from "../../Lib/Http/AppType";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { AppListCardView } from "../Apps/AppListCardView";
 import { AppListItem } from "../Apps/AppListItem";
@@ -13,13 +13,13 @@ import { Url } from "@jasonbenfield/sharedwebapp/Url";
 export class AppListCard {
     private readonly alert: IMessageAlert;
     private readonly apps: ListGroup<AppListItem, AppListItemView>;
-    private userID: number;
+    private userID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: AppListCardView
     ) {
-        new TextComponent(this.view.titleHeader).setText('Apps');
+        new TextComponent(this.view.titleHeader).setText("Apps");
         this.alert = new CardAlert(this.view.alert);
         this.apps = new ListGroup(this.view.apps);
     }
@@ -41,14 +41,14 @@ export class AppListCard {
                         {
                             App: app.publicKey.displayText,
                             UserID: this.userID,
-                            ReturnTo: returnTo ? returnTo : null
+                            ReturnTo: returnTo ? returnTo : ""
                         }
                     ).toString(),
                     listItem
                 )
         );
         if (webApps.length === 0) {
-            this.alert.danger('No Web Apps were Found');
+            this.alert.danger("No Web Apps were Found");
         }
     }
 

@@ -45,13 +45,13 @@ export class UserRolesPanel implements IPanel {
     private readonly alert: IMessageAlert;
     private readonly userRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
     private readonly awaitable: Awaitable<Result>;
-    private user: AppUser;
-    private defaultModifier: Modifier;
-    private modifier: Modifier;
     private readonly addCommand: Command;
     private readonly allowAccessCommand: AsyncCommand;
     private readonly denyAccessCommand: AsyncCommand;
     private readonly defaultUserRoles: ListGroup<UserRoleListItem, UserRoleListItemView>;
+    private user = new AppUser();
+    private defaultModifier = new Modifier();
+    private modifier = new Modifier();
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -74,7 +74,7 @@ export class UserRolesPanel implements IPanel {
         this.allowAccessCommand.add(view.allowAccessButton);
         this.denyAccessCommand = new AsyncCommand(this.denyAccess.bind(this));
         this.denyAccessCommand.add(view.denyAccessButton);
-        new TextComponent(view.defaultUserRolesTitle).setText('Default Roles');
+        new TextComponent(view.defaultUserRolesTitle).setText("Default Roles");
         this.defaultUserRoles = new ListGroup(view.defaultUserRoles);
         new Command(this.back.bind(this)).add(view.backButton);
     }
@@ -83,7 +83,7 @@ export class UserRolesPanel implements IPanel {
         const returnTo = Url.current().query.getValue("ReturnTo");
         this.hubClient.Users.Index.open({
             UserID: this.user.id,
-            ReturnTo: returnTo ? returnTo : null
+            ReturnTo: returnTo ? returnTo : ""
         });
     }
 
@@ -97,7 +97,7 @@ export class UserRolesPanel implements IPanel {
 
     private async allowAccess() {
         await this.alert.infoAction(
-            'Allowing Access...',
+            "Allowing Access...",
             () => this.hubClient.AppUserMaintenance.AllowAccess({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id
@@ -108,7 +108,7 @@ export class UserRolesPanel implements IPanel {
 
     private async denyAccess() {
         await this.alert.infoAction(
-            'Denying Access...',
+            "Denying Access...",
             () => this.hubClient.AppUserMaintenance.DenyAccess({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id
@@ -127,8 +127,8 @@ export class UserRolesPanel implements IPanel {
     }
 
     setDefaultModifier() {
-        this.categoryName.setText('Default');
-        this.modifierDisplayText.setText('');
+        this.categoryName.setText("Default");
+        this.modifierDisplayText.setText("");
         this.modifier = this.defaultModifier;
     }
 
@@ -152,10 +152,10 @@ export class UserRolesPanel implements IPanel {
         this.denyAccessCommand.hide();
         this.addCommand.hide();
         let isDefaultModifier = this.modifier.id === this.defaultModifier.id;
-        let userAccess: UserAccess;
-        let defaultUserAccess: UserAccess;
+        let userAccess = new UserAccess();
+        let defaultUserAccess = new UserAccess();
         await this.alert.infoAction(
-            'Loading',
+            "Loading",
             async () => {
                 const sourceUserAccess = await this.hubClient.AppUserInquiry.GetExplicitUserAccess({
                     UserID: this.user.id,
@@ -206,17 +206,17 @@ export class UserRolesPanel implements IPanel {
             );
         }
         if (!userAccess.hasAccess) {
-            this.alert.danger('Access is denied.');
+            this.alert.danger("Access is denied.");
         }
         else if (userAccess.assignedRoles.length === 0) {
-            this.alert.warning('No roles have been assigned.');
+            this.alert.warning("No roles have been assigned.");
         }
     }
 
     private async onDeleteRoleClicked(el: HTMLElement) {
         const roleListItem = this.userRoles.getItemByElement(el);
         await this.alert.infoAction(
-            'Removing role...',
+            "Removing role...",
             () => this.hubClient.AppUserMaintenance.UnassignRole({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id,

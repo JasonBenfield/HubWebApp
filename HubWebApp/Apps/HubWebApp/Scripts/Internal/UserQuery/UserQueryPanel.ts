@@ -52,8 +52,8 @@ export class UserQueryPanel implements IPanel {
         columns.IsActive.setFormatter({ format: (col, record) => record[col.columnName] ? "Yes" : "No" });
         const options = new ODataComponentOptionsBuilder<IExpandedUser>("hub_users", columns);
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedRequest>, view: LinkGridRowView) =>
-                new UserDataRow(hubClient, rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedRequest>, view) =>
+                new UserDataRow(hubClient, rowIndex, columns, record, view as LinkGridRowView)
         );
         options.query.select.addFields(
             columns.UserName,
@@ -90,10 +90,10 @@ export class UserQueryPanel implements IPanel {
         }
     }
 
-    setUserGroupName(userGroupName: string) {
+    async setUserGroupName(userGroupName: string) {
         this.queryArgs.args.UserGroupName = userGroupName;
         if (userGroupName) {
-            const canAdd = this.canAdd(userGroupName);
+            const canAdd = await this.canAdd(userGroupName);
             if (canAdd) {
                 this.addCommand.show();
             }
@@ -116,7 +116,7 @@ export class UserQueryPanel implements IPanel {
     async refresh() {
         const sourceUserGroups = await this.getUserGroups();
         const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
-        userGroups.splice(0, 0, null);
+        userGroups.splice(0, 0, new AppUserGroup());
         this.userGroups.setItems(
             userGroups,
             (ug, itemView) => {

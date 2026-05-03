@@ -1,28 +1,24 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": [ "es2018", "dom" ],
+    "lib": [ "es2022", "dom" ],
     "module": "commonjs",
+    "esModuleInterop": true,
     "noImplicitAny": false,
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es6",
+    "target": "es2022",
     "importHelpers": true,
-    "baseUrl": ".",
     "typeRoots": [
       "../../node_modules/@types"
-    ],
-    "paths": {
-      //"@jasonbenfield/sharedwebapp/*": [ "C:\\XTI\\Published\\Development\\SharedWebApp\\SharedPackage\\Current\\npm\\*" ]
-    }
+    ]
   },
   "include": [
     "./**/*.ts",
     "../Lib/**/*.d.ts",
-    "../../node_modules/@jasonbenfield/**/*.d.ts"
+    "../../node_modules/@jasonbenfield/**/*.d.ts",
+    "../../node_modules/@types/jquery/**/*.d.ts"
   ],
   "exclude": [
     "Imports",

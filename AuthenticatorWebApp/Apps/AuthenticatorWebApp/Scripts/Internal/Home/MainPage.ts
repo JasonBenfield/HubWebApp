@@ -3,11 +3,9 @@ import { LoginComponent } from './LoginComponent';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends AuthenticatorPage {
-    protected readonly view: MainPageView;
-
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         new LoginComponent(this.hubClient, this.view.loginComponent);
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

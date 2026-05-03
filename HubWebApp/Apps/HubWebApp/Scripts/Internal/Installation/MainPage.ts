@@ -26,7 +26,7 @@ class MainPage extends HubPage {
             this.activateInstallationPanel();
         }
         else {
-            this.hubClient.Installations.Index.open({ QueryType: null });
+            this.hubClient.Installations.Index.open({ QueryType: 0 });
         }
     }
 

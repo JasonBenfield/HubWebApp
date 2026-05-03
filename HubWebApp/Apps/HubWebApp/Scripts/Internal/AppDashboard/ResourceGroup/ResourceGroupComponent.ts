@@ -5,7 +5,7 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { ResourceGroupComponentView } from "./ResourceGroupComponentView";
 
 export class ResourceGroupComponent {
-    private groupID: number;
+    private groupID = 0;
 
     private readonly alert: IMessageAlert;
     private readonly groupName: TextComponent;
@@ -14,7 +14,7 @@ export class ResourceGroupComponent {
         private readonly hubClient: HubAppClient,
         private readonly view: ResourceGroupComponentView
     ) {
-        new TextComponent(view.titleHeader).setText('Resource Group');
+        new TextComponent(view.titleHeader).setText("Resource Group");
         this.alert = new CardAlert(view.alert);
         this.groupName = new TextComponent(view.groupName);
         this.view.hideAnonMessage();
@@ -37,9 +37,9 @@ export class ResourceGroupComponent {
 
     private getResourceGroup(groupID: number) {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceGroupInquiry.GetResourceGroup({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 GroupID: groupID
             })
         );

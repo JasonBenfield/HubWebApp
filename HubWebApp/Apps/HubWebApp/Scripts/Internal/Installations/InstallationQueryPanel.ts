@@ -8,7 +8,7 @@ import { ODataComponent } from "@jasonbenfield/sharedwebapp/OData/ODataComponent
 import { ODataComponentOptionsBuilder } from "@jasonbenfield/sharedwebapp/OData/ODataComponentOptionsBuilder";
 import { Queryable } from "@jasonbenfield/sharedwebapp/OData/Types";
 import { Url } from "@jasonbenfield/sharedwebapp/Url";
-import { LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
+import { BasicGridRowView, LinkGridRowView } from "@jasonbenfield/sharedwebapp/Views/Grid";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationQueryType } from "../../Lib/Http/InstallationQueryType";
@@ -78,8 +78,9 @@ export class InstallationQueryPanel implements IPanel {
             { args: { QueryType: selectedQueryType.Value } }
         );
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: LinkGridRowView) =>
-                new InstallationDataRow(this.hubClient, rowIndex, columns, record, view)
+            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: BasicGridRowView) => {
+                return new InstallationDataRow(this.hubClient, rowIndex, columns, record, view as LinkGridRowView)
+            }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
         this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));

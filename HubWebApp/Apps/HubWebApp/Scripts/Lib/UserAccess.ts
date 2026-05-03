@@ -5,7 +5,7 @@ export class UserAccess {
     readonly assignedRoles: AppRole[];
 
     constructor(source?: IUserAccessModel) {
-        this.hasAccess = source ? source.HasAccess : false;
-        this.assignedRoles = source ? source.AssignedRoles.map(r => new AppRole(r)) : [];
+        this.hasAccess = source?.HasAccess || false;
+        this.assignedRoles = source?.AssignedRoles.map(r => new AppRole(r)) || [];
     }
 }

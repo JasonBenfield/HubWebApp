@@ -38,7 +38,7 @@ export class RequestPanel implements IPanel {
     private readonly sessionLink: TextLinkComponent;
     private readonly installationLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
-    private requestID: number;
+    private requestID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: RequestPanelView) {
         this.alert = new MessageAlert(view.alert);
@@ -47,9 +47,9 @@ export class RequestPanel implements IPanel {
         this.versionStatusTextComponent = new TextComponent(view.versionStatusFormGroupView);
         this.userNameFormGroup = new FormGroupText(view.userNameFormGroupView);
         this.userAgentFormGroup = new FormGroupText(view.userAgentFormGroupView);
-        this.userAgentFormGroup.setCaption('User Agent');
+        this.userAgentFormGroup.setCaption("User Agent");
         this.remoteAddressFormGroup = new FormGroupText(view.remoteAddressFormGroupView);
-        this.remoteAddressFormGroup.setCaption('Remote Address');
+        this.remoteAddressFormGroup.setCaption("Remote Address");
         this.currentInstallationFormGroup = new FormGroupText(view.currentInstallationFormGroupView);
         this.timeRangeFormGroup = new FormGroupText(view.timeRangeFormGroupView);
         this.pathFormGroup = new FormGroupText(view.pathFormGroupView);
@@ -73,7 +73,7 @@ export class RequestPanel implements IPanel {
         this.userAgentFormGroup.hide();
         this.remoteAddressFormGroup.hide();
         const sourceDetail = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.Logs.GetRequestDetail(this.requestID)
         );
         const detail = new AppRequestDetail(sourceDetail);
@@ -82,7 +82,7 @@ export class RequestPanel implements IPanel {
         this.versionStatusTextComponent.setText(`[ ${detail.version.status.DisplayText} ]`);
         this.userNameFormGroup.setValue(detail.user.userName.displayText);
         if (detail.installation.isCurrent) {
-            this.currentInstallationFormGroup.setValue('Current');
+            this.currentInstallationFormGroup.setValue("Current");
             this.view.showCurrentInstallation();
         }
         else {
@@ -106,8 +106,8 @@ export class RequestPanel implements IPanel {
         }
         if (detail.targetRequestIDs.length > 0) {
             this.targetRequestLink.setHref(this.hubClient.Logs.AppRequests.getUrl({
-                SessionID: null,
-                InstallationID: null,
+                SessionID: 0,
+                InstallationID: 0,
                 SourceRequestID: detail.request.id
             }));
             this.targetRequestLink.show();

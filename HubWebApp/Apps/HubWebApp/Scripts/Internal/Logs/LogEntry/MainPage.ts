@@ -6,13 +6,12 @@ import { LogEntryPanel } from './LogEntryPanel';
 import { MainPageView } from './MainPageView';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly logEntryPanel: LogEntryPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.logEntryPanel = this.panels.add(
             new LogEntryPanel(this.hubClient, this.view.logEntryPanel)
@@ -47,4 +46,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

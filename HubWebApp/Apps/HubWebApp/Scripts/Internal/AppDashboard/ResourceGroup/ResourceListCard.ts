@@ -14,15 +14,15 @@ type Events = { resourceSelected: AppResource };
 export class ResourceListCard {
     private readonly alert: IMessageAlert;
     private readonly resources: ListGroup<ResourceListItem, ResourceListItemView>;
-    private readonly eventSource = new EventSource<Events>(this, { resourceSelected: null });
+    private readonly eventSource = new EventSource<Events>(this, { resourceSelected: new AppResource() });
     readonly when = this.eventSource.when;
-    private groupID: number;
+    private groupID = 0;
 
     constructor(
         private readonly hubClient: HubAppClient,
         view: ResourceListCardView
     ) {
-        new TextComponent(view.titleHeader).setText('Resources');
+        new TextComponent(view.titleHeader).setText("Resources");
         this.alert = new CardAlert(view.alert);
         this.resources = new ListGroup(view.resources);
         this.resources.when.itemClicked.then(this.onItemSelected.bind(this));
@@ -44,15 +44,15 @@ export class ResourceListCard {
             (sourceItem, listItem) => new ResourceListItem(sourceItem, listItem)
         );
         if (resources.length === 0) {
-            this.alert.danger('No Resources were Found');
+            this.alert.danger("No Resources were Found");
         }
     }
 
     private getResources() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.ResourceGroupInquiry.GetResources({
-                VersionKey: 'Current',
+                VersionKey: "Current",
                 GroupID: this.groupID
             })
         );

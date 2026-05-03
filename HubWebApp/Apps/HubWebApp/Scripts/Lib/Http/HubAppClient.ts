@@ -1,6 +1,6 @@
 // Generated code
 
-import { AppClient } from "@jasonbenfield/sharedwebapp/Http/AppClient";
+import { AppClient, IGetUserAccessRequest, AppClientMethod } from "@jasonbenfield/sharedwebapp/Http/AppClient";
 import { AppClientEvents } from "@jasonbenfield/sharedwebapp/Http/AppClientEvents";
 import { AppClientQuery } from "@jasonbenfield/sharedwebapp/Http/AppClientQuery";
 import { AppGroup } from "./AppGroup";
@@ -113,4 +113,8 @@ export class HubAppClient extends AppClient {
 	readonly SessionQuery: AppClientQuery<IEmptyRequest, IExpandedSession>;
 	readonly UserQuery: AppClientQuery<IUserGroupKey, IExpandedUser>;
 	readonly UserRoleQuery: AppClientQuery<IUserRoleQueryRequest, IExpandedUserRole>;
+	
+	getAccessRequest(getAction: (api: HubAppClient) => AppClientMethod, modKey?: string) { return this._getAccessRequest(getAction, modKey); }
+	
+	getUserAccess(resources: IGetUserAccessRequest<HubAppClient>) { return this._getUserAccess(resources); }
 }

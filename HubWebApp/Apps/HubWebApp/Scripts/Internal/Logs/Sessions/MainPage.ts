@@ -1,17 +1,16 @@
-﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { HubPage } from '../../HubPage';
-import { MainMenuPanel } from '../../MainMenuPanel';
-import { MainPageView } from './MainPageView';
-import { SessionQueryPanel } from './SessionQueryPanel';
+﻿import { SingleActivePanel } from "@jasonbenfield/sharedwebapp/Panel/SingleActivePanel";
+import { HubPage } from "../../HubPage";
+import { MainMenuPanel } from "../../MainMenuPanel";
+import { MainPageView } from "./MainPageView";
+import { SessionQueryPanel } from "./SessionQueryPanel";
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly sessionQueryPanel: SessionQueryPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.sessionQueryPanel = this.panels.add(
             new SessionQueryPanel(this.hubClient, this.view.sessionQueryPanel)
@@ -39,4 +38,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

@@ -5,13 +5,12 @@ import { MainPageView } from './MainPageView';
 import { RequestQueryPanel } from './RequestQueryPanel';
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly requestQueryPanel: RequestQueryPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.requestQueryPanel = this.panels.add(
             new RequestQueryPanel(this.hubClient, this.view.requestQueryPanel)
@@ -39,4 +38,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

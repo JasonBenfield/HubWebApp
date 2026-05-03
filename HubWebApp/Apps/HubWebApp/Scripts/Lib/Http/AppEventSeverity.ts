@@ -29,7 +29,7 @@ export class AppEventSeverity extends NumericValue implements IAppEventSeverity 
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IAppEventSeverity[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IAppEventSeverity[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IAppEventSeverity | number | string) => boolean;
+	declare equals: (other: this | IAppEventSeverity | number | string) => boolean;
 }

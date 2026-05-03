@@ -3,6 +3,7 @@ import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { MenuComponent } from "@jasonbenfield/sharedwebapp/Components/MenuComponent";
 import { HubAppClient } from "../Lib/Http/HubAppClient";
 import { MainMenuPanelView } from "./MainMenuPanelView";
+import { AppClient } from "@jasonbenfield/sharedwebapp/Http/AppClient";
 
 interface IResult {
     back?: boolean;

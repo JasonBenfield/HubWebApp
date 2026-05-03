@@ -36,15 +36,15 @@ export class AddRolePanel implements IPanel {
     private readonly awaitable: Awaitable<Result>;
     private readonly alert: IMessageAlert;
     private readonly roles: ListGroup<RoleListItem, RoleButtonListItemView>;
-    private user: AppUser;
-    private modifier: Modifier;
-    private defaultModifier: Modifier;
+    private user = new AppUser();
+    private modifier = new Modifier();
+    private defaultModifier = new Modifier();
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: AddRolePanelView
     ) {
-        new TextComponent(view.titleHeader).setText('Select Role');
+        new TextComponent(view.titleHeader).setText("Select Role");
         this.awaitable = new Awaitable();
         this.alert = new CardAlert(view.alert);
         this.roles = new ListGroup(view.roles);
@@ -74,7 +74,7 @@ export class AddRolePanel implements IPanel {
 
     private addRole(role: AppRole) {
         return this.alert.infoAction(
-            'Adding role...',
+            "Adding role...",
             () => this.hubClient.AppUserMaintenance.AssignRole({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id,
@@ -91,7 +91,7 @@ export class AddRolePanel implements IPanel {
 
     private async delayedStart() {
         const sourceRoles = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.AppUserInquiry.GetExplicitlyUnassignedRoles({
                 UserID: this.user.id,
                 ModifierID: this.modifier.id

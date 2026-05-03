@@ -11,12 +11,12 @@ export class AppSession {
     readonly userAgent: string;
 
     constructor(source?: IAppSessionModel) {
-        this.id = source ? source.ID : 0;
-        this.timeStarted = source ? source.TimeStarted : DateTimeOffset.max();
-        this.timeEnded = source ? source.TimeEnded : DateTimeOffset.max();
-        this.remoteAddress = source ? source.RemoteAddress : "";
-        this.rawUserAgent = source ? source.UserAgent : "";
-        if (source.UserAgent) {
+        this.id = source?.ID || 0;
+        this.timeStarted = source?.TimeStarted || DateTimeOffset.max();
+        this.timeEnded = source?.TimeEnded || DateTimeOffset.max();
+        this.remoteAddress = source?.RemoteAddress || "";
+        this.rawUserAgent = source?.UserAgent || "";
+        if (source?.UserAgent) {
             const parsedUA = Bowser.getParser(source.UserAgent);
             const browser = parsedUA.getBrowser();
             const engine = parsedUA.getEngine();

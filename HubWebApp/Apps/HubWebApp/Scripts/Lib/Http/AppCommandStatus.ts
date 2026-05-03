@@ -29,7 +29,7 @@ export class AppCommandStatus extends NumericValue implements IAppCommandStatus 
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IAppCommandStatus[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IAppCommandStatus[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IAppCommandStatus | number | string) => boolean;
+	declare equals: (other: this | IAppCommandStatus | number | string) => boolean;
 }

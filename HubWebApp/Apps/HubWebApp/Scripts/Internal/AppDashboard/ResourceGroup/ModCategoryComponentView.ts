@@ -8,7 +8,6 @@ export class ModCategoryComponentView extends CardView {
     readonly alert: CardAlertView;
     readonly listGroup: ListGroupView<ListGroupItemView>;
     readonly modCategoryName: TextSpanView;
-    readonly clicked: IEventHandler<any>;
 
     constructor(container: BasicComponentView) {
         super(container);

@@ -36,22 +36,22 @@ export class UserRolePanel implements IPanel {
     private readonly deleteCommand: AsyncCommand;
     private readonly modalAlert: ModalMessageAlert;
     private readonly modalConfirm: ModalConfirm;
-    private userRoleDetail: UserRoleDetail;
-    private userRoleID: number;
+    private userRoleDetail = new UserRoleDetail();
+    private userRoleID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserRolePanelView) {
         this.alert = new MessageAlert(view.alert);
         this.formGroups = new FormGroupContainer(view.formGroupContainerView);
         this.userNameFormGroup = this.formGroups.addFormGroupText(view.userNameFormGroupView);
-        this.userNameFormGroup.setCaption('User Name');
+        this.userNameFormGroup.setCaption("User Name");
         this.appKeyFormGroup = this.formGroups.addFormGroupText(view.appKeyFormGroupView);
-        this.appKeyFormGroup.setCaption('App');
+        this.appKeyFormGroup.setCaption("App");
         this.modCategoryNameFormGroup = this.formGroups.addFormGroupText(view.modCategoryNameFormGroupView);
-        this.modCategoryNameFormGroup.setCaption('Mod Category');
+        this.modCategoryNameFormGroup.setCaption("Mod Category");
         this.modifierNameFormGroup = this.formGroups.addFormGroupText(view.modifierNameFormGroupView);
-        this.modifierNameFormGroup.setCaption('Modifier');
+        this.modifierNameFormGroup.setCaption("Modifier");
         this.roleNameFormGroup = this.formGroups.addFormGroupText(view.roleNameFormGroupView);
-        this.roleNameFormGroup.setCaption('Role');
+        this.roleNameFormGroup.setCaption("Role");
         this.viewAppLink = new LinkComponent(view.appLink);
         this.viewUserLink = new LinkComponent(view.userLink);
         this.deleteCommand = new AsyncCommand(this.deleteUserRole.bind(this));
@@ -66,23 +66,23 @@ export class UserRolePanel implements IPanel {
 
     private async deleteUserRole() {
         const isConfirmed = await this.modalConfirm.confirm(
-            `Delete user role '${this.userRoleDetail.role.name.displayText}'?`,
-            'Confirm Delete'
+            `Delete user role "${this.userRoleDetail.role.name.displayText}"?`,
+            "Confirm Delete"
         );
         if (isConfirmed) {
             await this.alert.infoAction(
-                'Deleting...',
+                "Deleting...",
                 () => this.hubClient.UserRoles.DeleteUserRole({ UserRoleID: this.userRoleID })
             );
             await this.modalAlert.alert(
                 a => {
-                    a.success('User Role has been deleted.');
+                    a.success("User Role has been deleted.");
                 }
             );
-            this.hubClient.UserRoles.Index.open({ AppID: null });
+            this.hubClient.UserRoles.Index.open({ AppID: 0 });
         }
     }
-    
+
     setUserRoleID(userRoleID: number) {
         this.userRoleID = userRoleID;
     }
@@ -100,7 +100,7 @@ export class UserRolePanel implements IPanel {
     async refresh() {
         this.hideComponents();
         const sourceDetail = await this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.UserRoles.GetUserRoleDetail({ UserRoleID: this.userRoleID })
         );
         const detail = new UserRoleDetail(sourceDetail);
@@ -128,7 +128,7 @@ export class UserRolePanel implements IPanel {
                 detail.userGroup.getModifier(),
                 {
                     UserID: detail.user.id,
-                    ReturnTo: null
+                    ReturnTo: ""
                 }
             )
         );

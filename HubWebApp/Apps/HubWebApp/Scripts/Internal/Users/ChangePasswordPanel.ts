@@ -23,7 +23,7 @@ export class ChangePasswordPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly changePasswordForm: ChangePasswordForm;
     private readonly saveCommand; AsyncCommand;
-    private userID: number;
+    private userID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: ChangePasswordPanelView) {
         this.alert = new MessageAlert(view.alert);

@@ -20,7 +20,7 @@ export class DefaultVerifyLoginFormViewLayout implements IFormGroupLayout<IVerif
 }
 
 export class VerifyLoginFormView extends BaseFormView {
-	private formGroups: IVerifyLoginFormView;
+	private formGroups: IVerifyLoginFormView | null = null;
 	
 	constructor(container: BasicComponentView) {
 		super(container);
@@ -33,6 +33,6 @@ export class VerifyLoginFormView extends BaseFormView {
 		this.formGroups = layout.addFormGroups(this);
 	}
 	
-	get UserName() { return this.formGroups.UserName; }
-	get Password() { return this.formGroups.Password; }
+	get UserName() { return this.formGroups!.UserName; }
+	get Password() { return this.formGroups!.Password; }
 }

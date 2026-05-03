@@ -14,14 +14,14 @@ type Events = { appSelected: App };
 export class AppListCard {
     private readonly alert: IMessageAlert;
     private readonly apps: ListGroup<AppListItem, AppListItemView>;
-    private readonly eventSource = new EventSource<Events>(this, { appSelected: null });
+    private readonly eventSource = new EventSource<Events>(this, { appSelected: new App() });
     readonly when = this.eventSource.when;
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: AppListCardView
     ) {
-        new TextComponent(this.view.titleHeader).setText('Apps');
+        new TextComponent(this.view.titleHeader).setText("Apps");
         this.alert = new CardAlert(this.view.alert);
         this.apps = new ListGroup(this.view.apps);
         this.apps.when.itemClicked.then(this.onAppSelected.bind(this))
@@ -44,13 +44,13 @@ export class AppListCard {
                 )
         );
         if (apps.length === 0) {
-            this.alert.danger('No Apps were Found');
+            this.alert.danger("No Apps were Found");
         }
     }
 
     private getApps() {
         return this.alert.infoAction(
-            'Loading...',
+            "Loading...",
             () => this.hubClient.Apps.GetApps()
         );
     }

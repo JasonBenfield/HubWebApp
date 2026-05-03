@@ -4,17 +4,18 @@ import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAler
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { UserPanelView } from "./UserPanelView";
+import { AppUser } from "../../Lib/AppUser";
 
 interface IResult {
     readonly menuRequested?: boolean;
-    readonly editRequested?: { user: IAppUserModel };
+    readonly editRequested?: { user: AppUser };
     readonly changePasswordRequested?: boolean;
 }
 
 class Result {
     static menuRequested() { return new Result({ menuRequested: true }); }
 
-    static editRequested(user: IAppUserModel) { return new Result({ editRequested: { user: user } }); }
+    static editRequested(user: AppUser) { return new Result({ editRequested: { user: user } }); }
 
     static changePasswordRequested() { return new Result({ changePasswordRequested: true }); }
 
@@ -36,7 +37,7 @@ export class UserPanel implements IPanel {
     private readonly alert: MessageAlert;
     private readonly editCommand: Command;
     private readonly changePasswordCommand: Command;
-    private user: IAppUserModel;
+    private user = new AppUser();
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserPanelView) {
         this.userName = new TextComponent(view.userName);
@@ -61,20 +62,21 @@ export class UserPanel implements IPanel {
     }
 
     async refresh() {
-        const user = await this.alert.infoAction(
-            'Loading...',
+        const sourceUser = await this.alert.infoAction(
+            "Loading...",
             () => this.hubClient.CurrentUser.GetUser()
         );
+        const user = new AppUser(sourceUser);
         this.setUser(user);
         this.editCommand.show();
         this.changePasswordCommand.show();
     }
 
-    setUser(user: IAppUserModel) {
+    setUser(user: AppUser) {
         this.user = user;
-        this.userName.setText(user.UserName.DisplayText);
-        this.personName.setText(user.Name.DisplayText);
-        this.email.setText(user.Email);
+        this.userName.setText(user.userName.displayText);
+        this.personName.setText(user.name.displayText);
+        this.email.setText(user.email);
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

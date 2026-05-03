@@ -31,7 +31,7 @@ export class InstallStatus extends NumericValue implements IInstallStatus {
 		super(Value, DisplayText);
 	}
 	
-	equalsAny: (...other: this[] | IInstallStatus[] | number[] | string[]) => boolean;
+	declare equalsAny: (...other: this[] | IInstallStatus[] | number[] | string[]) => boolean;
 	
-	equals: (other: this | IInstallStatus | number | string) => boolean;
+	declare equals: (other: this | IInstallStatus | number | string) => boolean;
 }

@@ -1,18 +1,17 @@
-﻿import { SingleActivePanel } from '@jasonbenfield/sharedwebapp/Panel/SingleActivePanel';
-import { Url } from '@jasonbenfield/sharedwebapp/Url';
-import { HubPage } from '../../HubPage';
-import { MainMenuPanel } from '../../MainMenuPanel';
-import { RequestPanel } from './RequestPanel';
-import { MainPageView } from './MainPageView';
+﻿import { SingleActivePanel } from "@jasonbenfield/sharedwebapp/Panel/SingleActivePanel";
+import { Url } from "@jasonbenfield/sharedwebapp/Url";
+import { HubPage } from "../../HubPage";
+import { MainMenuPanel } from "../../MainMenuPanel";
+import { RequestPanel } from "./RequestPanel";
+import { MainPageView } from "./MainPageView";
 
 class MainPage extends HubPage {
-    protected readonly view: MainPageView;
     private readonly panels: SingleActivePanel;
     private readonly requestPanel: RequestPanel;
     private readonly mainMenuPanel: MainMenuPanel;
 
-    constructor() {
-        super(new MainPageView());
+    constructor(protected readonly view: MainPageView) {
+        super(view);
         this.panels = new SingleActivePanel();
         this.requestPanel = this.panels.add(
             new RequestPanel(this.hubClient, this.view.requestPanel)
@@ -28,9 +27,9 @@ class MainPage extends HubPage {
         }
         else {
             this.hubClient.Logs.AppRequests.open({
-                SessionID: null,
-                InstallationID: null,
-                SourceRequestID: null
+                SessionID: 0,
+                InstallationID: 0,
+                SourceRequestID: 0
             });
         }
     }
@@ -51,4 +50,4 @@ class MainPage extends HubPage {
         }
     }
 }
-new MainPage();
+new MainPage(new MainPageView());

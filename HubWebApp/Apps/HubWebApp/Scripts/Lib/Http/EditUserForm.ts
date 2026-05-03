@@ -4,14 +4,12 @@ import { BaseForm } from '@jasonbenfield/sharedwebapp/Forms/BaseForm';
 import { EditUserFormView } from './EditUserFormView';
 
 export class EditUserForm extends BaseForm {
-	protected readonly view: EditUserFormView;
-	
-	constructor(view: EditUserFormView) {
+	constructor(protected readonly view: EditUserFormView) {
 		super('EditUserForm', view);
 		this.PersonName.setCaption('Person Name');
 		this.Email.setCaption('Email');
 	}
-	readonly UserID = this.addHiddenNumber('UserID', this.view.UserID);
-	readonly PersonName = this.addTextInputFormGroup('PersonName', this.view.PersonName);
-	readonly Email = this.addTextInputFormGroup('Email', this.view.Email);
+	get UserID() { return this.addHiddenNumber('UserID', this.view.UserID); };
+	get PersonName() { return this.addTextInputFormGroup('PersonName', this.view.PersonName); };
+	get Email() { return this.addTextInputFormGroup('Email', this.view.Email); };
 }
