@@ -20,5 +20,5 @@ export class AuthenticatorAppClient extends AppClient {
 	
 	getAccessRequest(getAction: (api: AuthenticatorAppClient) => AppClientMethod, modKey?: string) { return this._getAccessRequest(getAction, modKey); }
 	
-	getUserAccess(resources: IGetUserAccessRequest<AuthenticatorAppClient>) { return this._getUserAccess(resources); }
+	getUserAccess<T extends IGetUserAccessRequest<AuthenticatorAppClient>>(resources: T) { return this._getUserAccess(resources); }
 }

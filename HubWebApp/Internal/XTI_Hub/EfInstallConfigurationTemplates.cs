@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using XTI_App.Abstractions;
 using XTI_HubDB.Entities;
 
 namespace XTI_Hub;
@@ -8,7 +7,7 @@ public sealed class EfInstallConfigurationTemplates
 {
     private readonly EfHubDB db;
 
-    public EfInstallConfigurationTemplates(EfHubDB db)
+    internal EfInstallConfigurationTemplates(EfHubDB db)
     {
         this.db = db;
     }
@@ -53,7 +52,7 @@ public sealed class EfInstallConfigurationTemplates
             .FirstOrDefaultAsync(ct);
         return new EfInstallConfigurationTemplate
         (
-            db, 
+            db,
             template ?? throw new Exception($"Template {id} was not found.")
         );
     }
@@ -68,5 +67,11 @@ public sealed class EfInstallConfigurationTemplates
             db,
             template ?? throw new Exception($"Template '{templateName}' was not found.")
         );
+    }
+
+    public async Task<EfInstallConfigurationTemplate[]> Templates(CancellationToken ct)
+    {
+        var templates = await db.Context.InstallConfigurationTemplates.Retrieve().ToArrayAsync(ct);
+        return templates.Select(t => new EfInstallConfigurationTemplate(db, t)).ToArray();
     }
 }

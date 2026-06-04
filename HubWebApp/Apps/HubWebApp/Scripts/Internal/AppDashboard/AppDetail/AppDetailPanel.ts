@@ -5,8 +5,8 @@ import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextCompon
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
-import { ResourceGroupListItem } from "../ResourceGroupListItem";
 import { AppComponent } from "./AppComponent";
 import { AppDetailPanelView } from "./AppDetailPanelView";
 import { CurrentVersionComponent } from "./CurrentVersionComponent";
@@ -14,7 +14,6 @@ import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
-import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 
 interface IResult {
     backRequested?: {};

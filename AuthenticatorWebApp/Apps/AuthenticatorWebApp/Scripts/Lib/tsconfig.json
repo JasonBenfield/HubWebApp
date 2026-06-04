@@ -12,14 +12,12 @@
     "importHelpers": true,
     "typeRoots": [
       "../../node_modules/@types"
-    ],
-    "paths": {
-      //"@jasonbenfield/sharedwebapp/*": [ "C:\\XTI\\Published\\Development\\SharedWebApp\\SharedPackage\\Current\\npm\\*" ]
-    }
+    ]
   },
   "include": [
     "./**/*.ts",
-    "../../node_modules/@jasonbenfield/**/*.d.ts"
+    "../../node_modules/@jasonbenfield/**/*.d.ts",
+    "../../node_modules/@types/jquery/**/*.d.ts"
   ],
   "exclude": [
     "Imports",

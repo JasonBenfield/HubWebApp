@@ -18,6 +18,7 @@ public sealed partial class HubAppClient : AppClient
         Home = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new HomeGroup(_clientFactory, _tokenAccessor, _url, _options));
         Install = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new InstallGroup(_clientFactory, _tokenAccessor, _url, _options));
         Installations = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new InstallationsGroup(_clientFactory, _tokenAccessor, _url, _options));
+        InstallTemplates = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new InstallTemplatesGroup(_clientFactory, _tokenAccessor, _url, _options));
         Logs = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new LogsGroup(_clientFactory, _tokenAccessor, _url, _options));
         ModCategory = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new ModCategoryGroup(_clientFactory, _tokenAccessor, _url, _options));
         Periodic = CreateGroup((_clientFactory, _tokenAccessor, _url, _options) => new PeriodicGroup(_clientFactory, _tokenAccessor, _url, _options));
@@ -59,6 +60,7 @@ public sealed partial class HubAppClient : AppClient
     public HomeGroup Home { get; }
     public InstallGroup Install { get; }
     public InstallationsGroup Installations { get; }
+    public InstallTemplatesGroup InstallTemplates { get; }
     public LogsGroup Logs { get; }
     public ModCategoryGroup ModCategory { get; }
     public PeriodicGroup Periodic { get; }

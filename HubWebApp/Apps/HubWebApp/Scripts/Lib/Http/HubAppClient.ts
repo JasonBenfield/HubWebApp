@@ -17,6 +17,7 @@ import { ExternalAuthGroup } from "./ExternalAuthGroup";
 import { HomeGroup } from "./HomeGroup";
 import { InstallGroup } from "./InstallGroup";
 import { InstallationsGroup } from "./InstallationsGroup";
+import { InstallTemplatesGroup } from "./InstallTemplatesGroup";
 import { LogsGroup } from "./LogsGroup";
 import { ModCategoryGroup } from "./ModCategoryGroup";
 import { PeriodicGroup } from "./PeriodicGroup";
@@ -55,6 +56,7 @@ export class HubAppClient extends AppClient {
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 		this.Install = this.addGroup((evts, resourceUrl) => new InstallGroup(evts, resourceUrl));
 		this.Installations = this.addGroup((evts, resourceUrl) => new InstallationsGroup(evts, resourceUrl));
+		this.InstallTemplates = this.addGroup((evts, resourceUrl) => new InstallTemplatesGroup(evts, resourceUrl));
 		this.Logs = this.addGroup((evts, resourceUrl) => new LogsGroup(evts, resourceUrl));
 		this.ModCategory = this.addGroup((evts, resourceUrl) => new ModCategoryGroup(evts, resourceUrl));
 		this.Periodic = this.addGroup((evts, resourceUrl) => new PeriodicGroup(evts, resourceUrl));
@@ -92,6 +94,7 @@ export class HubAppClient extends AppClient {
 	readonly Home: HomeGroup;
 	readonly Install: InstallGroup;
 	readonly Installations: InstallationsGroup;
+	readonly InstallTemplates: InstallTemplatesGroup;
 	readonly Logs: LogsGroup;
 	readonly ModCategory: ModCategoryGroup;
 	readonly Periodic: PeriodicGroup;
@@ -116,5 +119,5 @@ export class HubAppClient extends AppClient {
 	
 	getAccessRequest(getAction: (api: HubAppClient) => AppClientMethod, modKey?: string) { return this._getAccessRequest(getAction, modKey); }
 	
-	getUserAccess(resources: IGetUserAccessRequest<HubAppClient>) { return this._getUserAccess(resources); }
+	getUserAccess<T extends IGetUserAccessRequest<HubAppClient>>(resources: T) { return this._getUserAccess(resources); }
 }

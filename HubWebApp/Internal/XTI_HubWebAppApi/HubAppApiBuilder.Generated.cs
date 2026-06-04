@@ -12,6 +12,7 @@ using XTI_HubWebAppApi.ExternalAuth;
 using XTI_HubWebAppApi.Home;
 using XTI_HubWebAppApi.Install;
 using XTI_HubWebAppApi.Installations;
+using XTI_HubWebAppApi.InstallTemplates;
 using XTI_HubWebAppApi.Logs;
 using XTI_HubWebAppApi.ModCategory;
 using XTI_HubWebAppApi.Periodic;
@@ -54,6 +55,7 @@ public sealed partial class HubAppApiBuilder
         Home = new HomeGroupBuilder(source.AddGroup("Home"));
         Install = new InstallGroupBuilder(source.AddGroup("Install"));
         Installations = new InstallationsGroupBuilder(source.AddGroup("Installations"));
+        InstallTemplates = new InstallTemplatesGroupBuilder(source.AddGroup("InstallTemplates"));
         Logs = new LogsGroupBuilder(source.AddGroup("Logs"));
         ModCategory = new ModCategoryGroupBuilder(source.AddGroup("ModCategory"));
         Periodic = new PeriodicGroupBuilder(source.AddGroup("Periodic"));
@@ -93,6 +95,7 @@ public sealed partial class HubAppApiBuilder
     public HomeGroupBuilder Home { get; }
     public InstallGroupBuilder Install { get; }
     public InstallationsGroupBuilder Installations { get; }
+    public InstallTemplatesGroupBuilder InstallTemplates { get; }
     public LogsGroupBuilder Logs { get; }
     public ModCategoryGroupBuilder ModCategory { get; }
     public PeriodicGroupBuilder Periodic { get; }

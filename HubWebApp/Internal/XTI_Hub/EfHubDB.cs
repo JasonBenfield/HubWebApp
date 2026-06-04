@@ -84,7 +84,7 @@ public sealed class EfHubDB
 
     private EfInstallConfigurationTemplates? installConfigurationTemplates;
 
-    internal EfInstallConfigurationTemplates InstallConfigurationTemplates { get => installConfigurationTemplates ??= new(this); }
+    public EfInstallConfigurationTemplates InstallConfigurationTemplates { get => installConfigurationTemplates ??= new(this); }
 
     private EfInstallLocations? installLocations;
 

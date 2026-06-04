@@ -10,7 +10,7 @@
 		<PackageReference Include="XTI_App.Extensions" Version="1.8.54-dev260424145310111" />
 		<PackageReference Include="XTI_ODataQuery.Api" Version="1.8.54-dev260424145310111" />
 		<PackageReference Include="XTI_WebApp.Api" Version="1.8.54-dev260424145310111" />
-		<PackageReference Include="XTI_ApiGeneratorTask" Version="1.4.2-dev260502232503181" />
+		<PackageReference Include="XTI_ApiGeneratorTask" Version="1.4.2-dev260507080211865" />
 	</ItemGroup>
 
 	<ItemGroup>

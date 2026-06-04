@@ -22,7 +22,8 @@ const entry = {
     logEntry: './Scripts/Internal/Logs/LogEntry/MainPage.ts',
     logEntries: './Scripts/Internal/Logs/LogEntries/MainPage.ts',
     installation: './Scripts/Internal/Installation/MainPage.ts',
-    installations: './Scripts/Internal/Installations/MainPage.ts'
+    installations: './Scripts/Internal/Installations/MainPage.ts',
+    installTemplates: './Scripts/Internal/InstallTemplates/MainPage.ts'
 };
 const exportModule = {
     rules: [

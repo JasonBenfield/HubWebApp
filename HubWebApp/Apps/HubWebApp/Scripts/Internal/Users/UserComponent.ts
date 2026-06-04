@@ -6,6 +6,7 @@ import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
 import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
 import { AppUser } from "../../Lib/AppUser";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { HubPermissions } from "../../Lib/HubPermissions";
 import { UserComponentView } from "./UserComponentView";
 
 type Events = {
@@ -106,10 +107,11 @@ export class UserComponent {
         this.reset();
         const user = await this.getUser(this.userID);
         if (this.canEdit === null) {
-            const access = await this.hubClient.getUserAccess({
-                canEdit: this.hubClient.getAccessRequest(api => api.UserMaintenance.EditUserAction)
-            });
-            this.canEdit = access.canEdit;
+            const access = await this.alert.infoAction(
+                "Loading...",
+                () => new HubPermissions(this.hubClient).userPermissions()
+            );
+            this.canEdit = access.canEditUser;
         }
         this.loadUser(new AppUser(user));
     }

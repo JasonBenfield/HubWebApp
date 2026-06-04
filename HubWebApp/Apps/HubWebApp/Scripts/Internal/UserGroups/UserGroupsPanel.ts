@@ -3,10 +3,11 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
+import { AppUserGroup } from "../../Lib/AppUserGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { HubPermissions, IHubPermissions } from "../../Lib/HubPermissions";
 import { UserGroupListItem } from "./UserGroupListItem";
 import { UserGroupsPanelView } from "./UserGroupsPanelView";
-import { AppUserGroup } from "../../Lib/AppUserGroup";
 
 interface IResult {
     addRequested?: boolean;
@@ -31,6 +32,7 @@ export class UserGroupsPanel implements IPanel {
     private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly refreshCommand: AsyncCommand;
     private readonly addCommand: Command;
+    private permissions: IHubPermissions | null = null;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserGroupsPanelView) {
         this.alert = new MessageAlert(view.alert);
@@ -42,16 +44,6 @@ export class UserGroupsPanel implements IPanel {
         this.addCommand = new Command(this.requestAdd.bind(this));
         this.addCommand.add(view.addButton);
         this.addCommand.hide();
-        this.getPermissions();
-    }
-
-    private async getPermissions() {
-        const permissions = await this.hubClient.getUserAccess({
-            canAdd: this.hubClient.getAccessRequest(api => api.UserGroups.AddUserGroupIfNotExistsAction)
-        });
-        if (permissions.canAdd) {
-            this.addCommand.show();
-        }
     }
 
     private requestMainMenu() { this.awaitable.resolve(Result.mainMenuRequested()); }
@@ -61,6 +53,15 @@ export class UserGroupsPanel implements IPanel {
     refresh() { return this.refreshCommand.execute(); }
 
     private async _refresh() {
+        if (!this.permissions) {
+            this.permissions = await this.alert.infoAction(
+                "Loading...",
+                () => new HubPermissions(this.hubClient).value()
+            );
+            if (this.permissions.canAddUserGroup) {
+                this.addCommand.show();
+            }
+        }
         const sourceUserGroups = await this.getUserGroups();
         const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
         userGroups.splice(0, 0, new AppUserGroup());

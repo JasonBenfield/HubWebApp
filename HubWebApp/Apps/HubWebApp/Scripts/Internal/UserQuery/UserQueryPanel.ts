@@ -13,6 +13,7 @@ import { TextLinkListGroupItemView } from "@jasonbenfield/sharedwebapp/Views/Lis
 import { AppUserGroup } from "../../Lib/AppUserGroup";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { ODataExpandedUserColumnsBuilder } from "../../Lib/Http/ODataExpandedUserColumnsBuilder";
+import { HubPermissions, IUserPermissions } from "../../Lib/HubPermissions";
 import { UserGroupListItem } from "../UserGroups/UserGroupListItem";
 import { UserDataRow } from "./UserDataRow";
 import { UserQueryPanelView } from "./UserQueryPanelView";
@@ -41,6 +42,7 @@ export class UserQueryPanel implements IPanel {
     private readonly userGroups: ListGroup<UserGroupListItem, TextLinkListGroupItemView>;
     private readonly odataComponent: ODataComponent<IExpandedUser>;
     private readonly queryArgs = { args: <IUserGroupKey>{ UserGroupName: "" } };
+    private permissions: IUserPermissions | null = null;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: UserQueryPanelView) {
         this.alert = new MessageAlert(this.view.alert);
@@ -92,28 +94,19 @@ export class UserQueryPanel implements IPanel {
 
     async setUserGroupName(userGroupName: string) {
         this.queryArgs.args.UserGroupName = userGroupName;
-        if (userGroupName) {
-            const canAdd = await this.canAdd(userGroupName);
-            if (canAdd) {
-                this.addCommand.show();
-            }
-            else {
-                this.addCommand.hide();
-            }
-        }
-        else {
-            this.addCommand.hide();
-        }
     }
 
-    private async canAdd(userGroupName: string) {
-        const permissions = await this.hubClient.getUserAccess({
-            canAdd: this.hubClient.getAccessRequest(api => api.Users.AddUserAction, userGroupName)
-        });
-        return permissions.canAdd;
-    }
-    
     async refresh() {
+        this.addCommand.hide();
+        if (!this.permissions) {
+            this.permissions = await this.alert.infoAction(
+                "Loading...",
+                () => new HubPermissions(this.hubClient).userPermissions()
+            );
+        }
+        if (this.queryArgs.args.UserGroupName && this.permissions.canAddUser) {
+            this.addCommand.show();
+        }
         const sourceUserGroups = await this.getUserGroups();
         const userGroups = sourceUserGroups.map(ug => new AppUserGroup(ug));
         userGroups.splice(0, 0, new AppUserGroup());
@@ -122,7 +115,7 @@ export class UserQueryPanel implements IPanel {
             (ug, itemView) => {
                 const listItem = new UserGroupListItem(this.hubClient, ug, itemView);
                 const listItemGroupName = ug ? ug.publicKey.displayText.toLowerCase() : "";
-                if (this.queryArgs.args.UserGroupName.replace(/\s+/g, '').toLowerCase() === listItemGroupName) {
+                if (this.queryArgs.args.UserGroupName.replace(/\s+/g, "").toLowerCase() === listItemGroupName) {
                     listItem.makeActive();
                 }
                 return listItem;
