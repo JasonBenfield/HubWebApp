@@ -19,6 +19,7 @@ export class MainMenuPanelView extends GridView {
     readonly accessLogButton: LinkCommandView;
     readonly eventLogButton: LinkCommandView;
     readonly installationsButton: LinkCommandView;
+    readonly installTemplatesButton: LinkCommandView;
     readonly backButton: ButtonCommandView;
     private readonly toolbar: ToolbarView;
 
@@ -45,6 +46,8 @@ export class MainMenuPanelView extends GridView {
         this.eventLogButton.setText("Event Log");
         this.installationsButton = buttonContainer.addLinkCommand();
         this.installationsButton.setText("Installations");
+        this.installTemplatesButton = buttonContainer.addLinkCommand();
+        this.installTemplatesButton.setText("Install Templates");
         const menu = mainContent.addView(NavView);
         menu.pills();
         menu.setFlexCss(new FlexCss().column());

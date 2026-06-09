@@ -80,7 +80,7 @@ sealed class BeginVersionInstallationTest
     private async Task<InstallConfigurationTemplateModel> AddConfigurationTemplate(IHubActionTester tester, ConfigureInstallTemplateRequest configRequest)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.ConfigureInstallTemplate.Execute(configRequest);
+        var result = await hubApi.InstallTemplates.ConfigureInstallTemplate.Execute(configRequest);
         return result.Data!;
     }
 

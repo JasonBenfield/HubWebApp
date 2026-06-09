@@ -46,12 +46,6 @@ public sealed partial class InstallController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<InstallConfigurationTemplateModel>> ConfigureInstallTemplate([FromBody] ConfigureInstallTemplateRequest requestData, CancellationToken ct)
-    {
-        return api.Install.ConfigureInstallTemplate.Execute(requestData, ct);
-    }
-
-    [HttpPost]
     public Task<ResultContainer<EmptyActionResult>> DeleteInstallConfiguration([FromBody] DeleteInstallConfigurationRequest requestData, CancellationToken ct)
     {
         return api.Install.DeleteInstallConfiguration.Execute(requestData, ct);

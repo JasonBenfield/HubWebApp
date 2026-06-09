@@ -124,7 +124,7 @@ public sealed class HcHubService : IHubService
         );
 
     public Task<InstallConfigurationTemplateModel> ConfigureInstallTemplate(ConfigureInstallTemplateRequest configRequest, CancellationToken ct) =>
-        hubClient.Install.ConfigureInstallTemplate(configRequest, ct);
+        hubClient.InstallTemplates.ConfigureInstallTemplate(configRequest, ct);
 
     public Task<InstallConfigurationModel[]> InstallConfigurations(GetInstallConfigurationsRequest getRequest, CancellationToken ct) =>
         hubClient.Install.GetInstallConfigurations(getRequest, ct);

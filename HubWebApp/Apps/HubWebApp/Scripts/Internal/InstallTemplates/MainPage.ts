@@ -34,7 +34,10 @@ class MainPage extends HubPage {
             this.activateMainMenuPanel();
         }
         else if (result.configureTemplateRequested) {
-            this.configureInstallTemplatePanel.setTemplate(result.configureTemplateRequested.template);
+            this.configureInstallTemplatePanel.setTemplate(
+                result.configureTemplateRequested.templates,
+                result.configureTemplateRequested.template
+            );
             this.activateConfigureInstallTemplatePanel();
         }
     }

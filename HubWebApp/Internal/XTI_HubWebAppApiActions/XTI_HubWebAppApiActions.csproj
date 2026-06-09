@@ -29,6 +29,11 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 		</Compile>
+		<Compile Update="InstallErrors.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>InstallErrors.resx</DependentUpon>
+		</Compile>
 		<Compile Update="Storage\StorageErrors.Designer.cs">
 			<DependentUpon>StorageErrors.resx</DependentUpon>
 			<DesignTime>True</DesignTime>
@@ -49,6 +54,10 @@
 		<EmbeddedResource Update="Auth\AuthErrors.resx">
 			<LastGenOutput>AuthErrors.Designer.cs</LastGenOutput>
 			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="InstallErrors.resx">
+		  <Generator>PublicResXFileCodeGenerator</Generator>
+		  <LastGenOutput>InstallErrors.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Storage\StorageErrors.resx">
 			<LastGenOutput>StorageErrors.Designer.cs</LastGenOutput>

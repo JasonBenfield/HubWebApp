@@ -7,5 +7,11 @@ partial class AppGroupBuilder
         source
             .WithModCategory(HubInfo.ModCategories.Apps)
             .ResetAccessWithAllowed(HubInfo.Roles.AppViewerRoles);
+        ConfigureInstall
+            .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
+        DeleteInstallConfiguration
+            .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
+        GetInstallConfigurations
+            .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
     }
 }

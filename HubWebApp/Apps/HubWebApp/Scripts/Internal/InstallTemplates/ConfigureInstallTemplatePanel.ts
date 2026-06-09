@@ -8,6 +8,8 @@ import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { InstallConfigurationTemplate } from "../../Lib/InstallConfigurationTemplate";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
+import { ModalError } from "@jasonbenfield/sharedwebapp/Components/ModalError";
+import { ErrorModel } from "@jasonbenfield/sharedwebapp/ErrorModel";
 
 interface IResult {
     saved?: boolean;
@@ -37,6 +39,8 @@ export class ConfigureInstallTemplatePanel implements IPanel {
     private readonly domainInputFormGroup: FormGroupTextInput;
     private readonly siteNameInputFormGroup: FormGroupTextInput;
     private readonly saveCommand: AsyncCommand;
+    private readonly modalError: ModalError;
+    private readonly installTemplates: InstallConfigurationTemplate[] = [];
     private installTemplate = new InstallConfigurationTemplate();
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: ConfigureInstallTemplatePanelView) {
@@ -51,6 +55,7 @@ export class ConfigureInstallTemplatePanel implements IPanel {
         this.domainInputFormGroup.setCaption("Domain");
         this.siteNameInputFormGroup = new FormGroupTextInput(view.siteNameInputFormGroupView);
         this.siteNameInputFormGroup.setCaption("Site Name");
+        this.modalError = new ModalError(view.modalErrorView);
         new Command(this.cancel.bind(this)).add(view.cancelButton);
         this.saveCommand = new AsyncCommand(this.save.bind(this));
         this.saveCommand.add(view.saveButton);
@@ -59,25 +64,43 @@ export class ConfigureInstallTemplatePanel implements IPanel {
     private cancel() { this.awaitable.resolve(Result.cancelled()); }
 
     private async save() {
-        const templateName = this.installTemplate.isFound ?
-            this.installTemplate.templateName :
-            this.templateNameInputFormGroup.getValue()?.trim() || "";
-        const machineName = this.machineNameInputFormGroup.getValue()?.trim() || "";
-        const domain = this.domainInputFormGroup.getValue()?.trim() || "";
-        const siteName = this.siteNameInputFormGroup.getValue()?.trim() || "";
-        await this.alert.infoAction(
-            "Saving...",
-            () => this.hubClient.Install.ConfigureInstallTemplate({
-                TemplateName: templateName,
-                DestinationMachineName: machineName,
-                Domain: domain,
-                SiteName: siteName
-            })
-        );
-        this.awaitable.resolve(Result.saved());
+        const errors = this.validate();
+        if (errors.length > 0) {
+            this.modalError.show(errors.map(e => new ErrorModel(e)));
+        }
+        else {
+            const templateName = this.installTemplate.isFound ?
+                this.installTemplate.templateName :
+                this.templateNameInputFormGroup.getValue()?.trim() || "";
+            const machineName = this.machineNameInputFormGroup.getValue()?.trim() || "";
+            const domain = this.domainInputFormGroup.getValue()?.trim() || "";
+            const siteName = this.siteNameInputFormGroup.getValue()?.trim() || "";
+            await this.alert.infoAction(
+                "Saving...",
+                () => this.hubClient.InstallTemplates.ConfigureInstallTemplate({
+                    TemplateName: templateName,
+                    DestinationMachineName: machineName,
+                    Domain: domain,
+                    SiteName: siteName
+                })
+            );
+            this.awaitable.resolve(Result.saved());
+        }
     }
 
-    setTemplate(installTemplate: InstallConfigurationTemplate) {
+    private validate() {
+        const errors: string[] = [];
+        if (!this.installTemplate.isFound) {
+            const templateName = this.templateNameInputFormGroup.getValue()?.trim().toUpperCase() || "";
+            if (templateName && this.installTemplates.find(t => t.templateName.toUpperCase() === templateName)) {
+                errors.push(`Template '${templateName}' already exists.`);
+            }
+        }
+        return errors;
+    }
+
+    setTemplate(installTemplates: InstallConfigurationTemplate[], installTemplate: InstallConfigurationTemplate) {
+        this.installTemplates.splice(0, this.installTemplates.length, ...installTemplates);
         this.installTemplate = installTemplate;
         this.templateNameFormGroup.setValue(installTemplate.templateName);
         if (installTemplate.isFound) {

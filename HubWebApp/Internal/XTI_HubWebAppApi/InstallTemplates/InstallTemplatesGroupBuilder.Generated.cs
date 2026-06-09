@@ -9,12 +9,14 @@ public sealed partial class InstallTemplatesGroupBuilder
     internal InstallTemplatesGroupBuilder(AppApiGroup source)
     {
         this.source = source;
+        ConfigureInstallTemplate = source.AddAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>("ConfigureInstallTemplate").WithExecution<ConfigureInstallTemplateAction>().WithValidation<ConfigureInstallTemplateValidation>();
         GetInstallTemplates = source.AddAction<EmptyRequest, InstallConfigurationTemplateModel[]>("GetInstallTemplates").WithExecution<GetInstallTemplatesAction>();
         Index = source.AddAction<EmptyRequest, WebViewResult>("Index").WithExecution<IndexAction>();
         Configure();
     }
 
     partial void Configure();
+    public AppApiActionBuilder<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel> ConfigureInstallTemplate { get; }
     public AppApiActionBuilder<EmptyRequest, InstallConfigurationTemplateModel[]> GetInstallTemplates { get; }
     public AppApiActionBuilder<EmptyRequest, WebViewResult> Index { get; }
 

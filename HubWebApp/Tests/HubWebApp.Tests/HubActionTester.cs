@@ -105,11 +105,7 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
         return user;
     }
 
-    public Task<EfApp> HubApp()
-    {
-        var factory = Services.GetRequiredService<EfHubDB>();
-        return factory.Apps.App(HubInfo.AppKey, ct: default);
-    }
+    public Task<EfApp> HubApp() => Services.HubApp();
 
     public async Task<EfAppRole> AdminRole()
     {
@@ -147,30 +143,8 @@ internal sealed class HubActionTester<TRequest, TResult> : IHubActionTester
 
     public Task<ModifierModel> HubAppModifier() => AppModifier(HubInfo.AppKey);
 
-    public async Task<ModifierModel> AppModifier(AppKey appKey)
-    {
-        var factory = Services.GetRequiredService<EfHubDB>();
-        var app = await factory.Apps.App(appKey, ct: default);
-        var appModel = app.ToModel();
-        EfApp hubApp;
-        if (appKey.Equals(HubInfo.AppKey))
-        {
-            hubApp = app;
-        }
-        else
-        {
-            hubApp = await HubApp();
-        }
-        var appsModCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct: default);
-        var hubAppModifier = await appsModCategory.AddOrUpdateModifier
-        (
-            appModel.PublicKey,
-            appModel.ID.ToString(),
-            appModel.AppKey.Format(),
-            ct: default
-        );
-        return hubAppModifier.ToModel();
-    }
+    public Task<ModifierModel> AppModifier(AppKey appKey) =>
+        Services.AppModifier(appKey);
 
     public Task<TResult> Execute(TRequest requestData) =>
         Execute(requestData, ModifierKey.Default);

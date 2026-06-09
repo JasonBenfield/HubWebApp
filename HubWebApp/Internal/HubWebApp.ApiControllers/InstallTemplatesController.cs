@@ -10,6 +10,12 @@ public sealed partial class InstallTemplatesController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<InstallConfigurationTemplateModel>> ConfigureInstallTemplate([FromBody] ConfigureInstallTemplateRequest requestData, CancellationToken ct)
+    {
+        return api.InstallTemplates.ConfigureInstallTemplate.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<InstallConfigurationTemplateModel[]>> GetInstallTemplates(CancellationToken ct)
     {
         return api.InstallTemplates.GetInstallTemplates.Execute(new EmptyRequest(), ct);

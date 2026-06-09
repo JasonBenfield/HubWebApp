@@ -25,7 +25,7 @@ internal sealed class InstallConfigurationTest
     public async Task ShouldConfigureInstallTemplate()
     {
         var sp = await Setup();
-        var tester = HubActionTester.Create(sp, api => api.Install.ConfigureInstallTemplate);
+        var tester = HubActionTester.Create(sp, api => api.InstallTemplates.ConfigureInstallTemplate);
         var installTemplate = await tester.Execute
         (
             new ConfigureInstallTemplateRequest

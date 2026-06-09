@@ -10,6 +10,8 @@ public sealed partial class AppGroupBuilder
     internal AppGroupBuilder(AppApiGroup source)
     {
         this.source = source;
+        ConfigureInstall = source.AddAction<ConfigureAppInstallRequest, InstallConfigurationModel>("ConfigureInstall").WithExecution<ConfigureInstallAction>();
+        DeleteInstallConfiguration = source.AddAction<InstallConfigurationIDRequest, EmptyActionResult>("DeleteInstallConfiguration").WithExecution<DeleteInstallConfigurationAction>();
         GetApp = source.AddAction<EmptyRequest, AppModel>("GetApp").WithExecution<GetAppAction>();
         GetDefaultAppOptions = source.AddAction<EmptyRequest, string>("GetDefaultAppOptions").WithExecution<GetDefaultAppOptionsAction>();
         GetDefaultModifier = source.AddAction<EmptyRequest, ModifierModel>("GetDefaultModifier").WithExecution<GetDefaultModifierAction>();
@@ -26,6 +28,8 @@ public sealed partial class AppGroupBuilder
     }
 
     partial void Configure();
+    public AppApiActionBuilder<ConfigureAppInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
+    public AppApiActionBuilder<InstallConfigurationIDRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiActionBuilder<EmptyRequest, AppModel> GetApp { get; }
     public AppApiActionBuilder<EmptyRequest, string> GetDefaultAppOptions { get; }
     public AppApiActionBuilder<EmptyRequest, ModifierModel> GetDefaultModifier { get; }

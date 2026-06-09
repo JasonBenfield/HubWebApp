@@ -15,7 +15,6 @@ public sealed partial class InstallGroupBuilder
         AddOrUpdateVersions = source.AddAction<AddOrUpdateVersionsRequest, EmptyActionResult>("AddOrUpdateVersions").WithExecution<AddOrUpdateVersionsAction>();
         AddSystemUser = source.AddAction<AddSystemUserRequest, AppUserModel>("AddSystemUser").WithExecution<AddSystemUserAction>().WithValidation<AddSystemUserValidation>();
         ConfigureInstall = source.AddAction<ConfigureInstallRequest, InstallConfigurationModel>("ConfigureInstall").WithExecution<ConfigureInstallAction>().WithValidation<ConfigureInstallValidation>();
-        ConfigureInstallTemplate = source.AddAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>("ConfigureInstallTemplate").WithExecution<ConfigureInstallTemplateAction>().WithValidation<ConfigureInstallTemplateValidation>();
         DeleteInstallConfiguration = source.AddAction<DeleteInstallConfigurationRequest, EmptyActionResult>("DeleteInstallConfiguration").WithExecution<DeleteInstallConfigurationAction>().WithValidation<DeleteInstallConfigurationValidation>();
         GetInstallConfiguration = source.AddAction<InstallConfigurationIDRequest, InstallConfigurationModel>("GetInstallConfiguration").WithExecution<GetInstallConfigurationAction>();
         GetInstallConfigurations = source.AddAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]>("GetInstallConfigurations").WithExecution<GetInstallConfigurationsAction>().WithValidation<GetInstallConfigurationsValidation>();
@@ -33,7 +32,6 @@ public sealed partial class InstallGroupBuilder
     public AppApiActionBuilder<AddOrUpdateVersionsRequest, EmptyActionResult> AddOrUpdateVersions { get; }
     public AppApiActionBuilder<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiActionBuilder<ConfigureInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
-    public AppApiActionBuilder<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel> ConfigureInstallTemplate { get; }
     public AppApiActionBuilder<DeleteInstallConfigurationRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiActionBuilder<InstallConfigurationIDRequest, InstallConfigurationModel> GetInstallConfiguration { get; }
     public AppApiActionBuilder<GetInstallConfigurationsRequest, InstallConfigurationModel[]> GetInstallConfigurations { get; }

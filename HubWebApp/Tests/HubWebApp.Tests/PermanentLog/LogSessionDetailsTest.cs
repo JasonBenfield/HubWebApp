@@ -877,7 +877,7 @@ internal sealed class LogSessionDetailsTest
     private async static Task<InstallConfigurationTemplateModel> AddConfigurationTemplate(IServiceProvider sp, ConfigureInstallTemplateRequest configRequest)
     {
         var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Install.ConfigureInstallTemplate.Execute(configRequest);
+        var result = await hubApi.InstallTemplates.ConfigureInstallTemplate.Execute(configRequest);
         return result.Data!;
     }
 

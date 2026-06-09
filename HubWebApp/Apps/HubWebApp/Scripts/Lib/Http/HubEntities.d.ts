@@ -1,12 +1,18 @@
 // Generated code
 
-interface IAppModel {
+interface IConfigureAppInstallRequest {
+	ConfigurationName: string;
+	TemplateID: number;
+	InstallSequence: number;
+}
+interface IInstallConfigurationModel {
 	ID: number;
-	AppKey: IAppKey;
-	VersionName: IAppVersionName;
 	RepoOwner: string;
 	RepoName: string;
-	PublicKey: IModifierKey;
+	ConfigurationName: string;
+	AppKey: IAppKey;
+	Template: IInstallConfigurationTemplateModel;
+	InstallSequence: number;
 }
 interface IAppKey {
 	Name: IAppName;
@@ -15,6 +21,24 @@ interface IAppKey {
 interface IAppName {
 	Value: string;
 	DisplayText: string;
+}
+interface IInstallConfigurationTemplateModel {
+	ID: number;
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
+}
+interface IInstallConfigurationIDRequest {
+	ConfigurationID: number;
+}
+interface IAppModel {
+	ID: number;
+	AppKey: IAppKey;
+	VersionName: IAppVersionName;
+	RepoOwner: string;
+	RepoName: string;
+	PublicKey: IModifierKey;
 }
 interface IAppVersionName {
 	Value: string;
@@ -30,22 +54,6 @@ interface IModifierModel {
 	ModKey: IModifierKey;
 	TargetKey: string;
 	DisplayText: string;
-}
-interface IInstallConfigurationModel {
-	ID: number;
-	RepoOwner: string;
-	RepoName: string;
-	ConfigurationName: string;
-	AppKey: IAppKey;
-	Template: IInstallConfigurationTemplateModel;
-	InstallSequence: number;
-}
-interface IInstallConfigurationTemplateModel {
-	ID: number;
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
 }
 interface IModifierCategoryModel {
 	ID: number;
@@ -312,20 +320,11 @@ interface IConfigureInstallRequest {
 	TemplateName: string;
 	InstallSequence: number;
 }
-interface IConfigureInstallTemplateRequest {
-	TemplateName: string;
-	DestinationMachineName: string;
-	Domain: string;
-	SiteName: string;
-}
 interface IDeleteInstallConfigurationRequest {
 	RepoOwner: string;
 	RepoName: string;
 	ConfigurationName: string;
 	AppKey: IAppKeyRequest;
-}
-interface IInstallConfigurationIDRequest {
-	ConfigurationID: number;
 }
 interface IGetInstallConfigurationsRequest {
 	RepoOwner: string;
@@ -415,6 +414,12 @@ interface IInstallationQueryRequest {
 }
 interface IInstallationViewRequest {
 	InstallationID: number;
+}
+interface IConfigureInstallTemplateRequest {
+	TemplateName: string;
+	DestinationMachineName: string;
+	Domain: string;
+	SiteName: string;
 }
 interface IAppRequestRequest {
 	RequestID: number;

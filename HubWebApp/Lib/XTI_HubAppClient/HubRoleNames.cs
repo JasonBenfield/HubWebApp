@@ -10,10 +10,10 @@ public sealed partial class HubRoleNames
     public string Admin { get; } = "Admin";
     public string EditApp { get; } = "Edit App";
     public string ViewApp { get; } = "View App";
+    public string InstallationManager { get; } = "Installation Manager";
     public string EditUser { get; } = "Edit User";
     public string ViewUser { get; } = "View User";
     public string System { get; } = "System";
-    public string InstallationManager { get; } = "Installation Manager";
     public string Authenticator { get; } = "Authenticator";
     public string ViewLog { get; } = "View Log";
     public string PermanentLog { get; } = "Permanent Log";

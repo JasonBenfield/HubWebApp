@@ -6,6 +6,8 @@ internal static partial class InstallTemplatesGroupExtensions
 {
     internal static void AddInstallTemplatesServices(this IServiceCollection services)
     {
+        services.AddScoped<ConfigureInstallTemplateAction>();
+        services.AddScoped<ConfigureInstallTemplateValidation>();
         services.AddScoped<GetInstallTemplatesAction>();
         services.AddScoped<IndexAction>();
     }

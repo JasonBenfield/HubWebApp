@@ -158,6 +158,9 @@ public sealed class EfApp
     public Task<EfAppCommand> Command(int commandID, CancellationToken ct) =>
         db.AppCommands.Command(app, commandID, ct);
 
+    public Task<EfInstallConfiguration> InstallConfiguration(int configurationID, CancellationToken ct) =>
+        db.InstallConfigurations.Configuration(app.RepoOwner, app.RepoName, GetAppKey(), configurationID, ct);
+
     public Task<EfInstallConfiguration[]> InstallConfigurations(CancellationToken ct) =>
         db.InstallConfigurations.Configurations(app.RepoOwner, app.RepoName, GetAppKey(), ct);
 

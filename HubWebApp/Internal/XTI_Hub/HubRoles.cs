@@ -12,6 +12,7 @@ public sealed class HubRoles
         AppEditorRoles = [Admin, EditApp];
         UserViewerRoles = [Admin, EditUser, ViewUser];
         UserEditorRoles = [Admin, EditUser];
+        InstallRoles = [Admin, InstallationManager];
     }
 
     public AppRoleName Admin { get; } = AppRoleName.Admin;
@@ -32,4 +33,5 @@ public sealed class HubRoles
     public AppRoleName[] AppEditorRoles { get; }
     public AppRoleName[] UserViewerRoles { get; }
     public AppRoleName[] UserEditorRoles { get; }
+    public AppRoleName[] InstallRoles { get; }
 }

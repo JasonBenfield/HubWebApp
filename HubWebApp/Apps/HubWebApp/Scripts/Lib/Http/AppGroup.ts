@@ -10,6 +10,8 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class AppGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'App');
+		this.ConfigureInstallAction = this.createAction<IConfigureAppInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
+		this.DeleteInstallConfigurationAction = this.createAction<IInstallConfigurationIDRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
 		this.GetAppAction = this.createAction<IEmptyRequest,IAppModel>('GetApp', 'Get App');
 		this.GetDefaultAppOptionsAction = this.createAction<IEmptyRequest,string>('GetDefaultAppOptions', 'Get Default App Options');
 		this.GetDefaultModifierAction = this.createAction<IEmptyRequest,IModifierModel>('GetDefaultModifier', 'Get Default Modifier');
@@ -24,6 +26,8 @@ export class AppGroup extends AppClientGroup {
 		this.UpdateVersionsFromPublishedAction = this.createAction<IEmptyRequest,IEmptyActionResult>('UpdateVersionsFromPublished', 'Update Versions From Published');
 	}
 	
+	readonly ConfigureInstallAction: AppClientAction<IConfigureAppInstallRequest,IInstallConfigurationModel>;
+	readonly DeleteInstallConfigurationAction: AppClientAction<IInstallConfigurationIDRequest,IEmptyActionResult>;
 	readonly GetAppAction: AppClientAction<IEmptyRequest,IAppModel>;
 	readonly GetDefaultAppOptionsAction: AppClientAction<IEmptyRequest,string>;
 	readonly GetDefaultModifierAction: AppClientAction<IEmptyRequest,IModifierModel>;
@@ -37,6 +41,12 @@ export class AppGroup extends AppClientGroup {
 	readonly Index: AppClientView<IEmptyRequest>;
 	readonly UpdateVersionsFromPublishedAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	
+	ConfigureInstall(requestData: IConfigureAppInstallRequest, errorOptions?: IActionErrorOptions) {
+		return this.ConfigureInstallAction.execute(requestData, errorOptions || {});
+	}
+	DeleteInstallConfiguration(requestData: IInstallConfigurationIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.DeleteInstallConfigurationAction.execute(requestData, errorOptions || {});
+	}
 	GetApp(errorOptions?: IActionErrorOptions) {
 		return this.GetAppAction.execute({}, errorOptions || {});
 	}

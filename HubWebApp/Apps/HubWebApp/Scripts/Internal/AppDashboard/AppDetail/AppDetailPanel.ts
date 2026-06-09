@@ -129,7 +129,7 @@ export class AppDetailPanel implements IPanel {
             this.mostRecentRequestListCard.refresh(),
             this.mostRecentErrorEventListCard.refresh()
         ];
-        return Promise.all(promises);
+        await Promise.all(promises);
     }
 
     private async refreshInstallConfigurations() {

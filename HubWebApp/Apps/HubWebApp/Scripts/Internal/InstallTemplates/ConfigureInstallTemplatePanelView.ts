@@ -9,6 +9,7 @@ import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { MarginCss } from "@jasonbenfield/sharedwebapp/MarginCss";
 import { FormView } from "@jasonbenfield/sharedwebapp/Views/FormView";
 import { FormGroupInputView, FormGroupTextView } from "@jasonbenfield/sharedwebapp/Views/FormGroup";
+import { ModalErrorView } from "@jasonbenfield/sharedwebapp/Views/ModalError";
 
 export class ConfigureInstallTemplatePanelView extends GridView {
     readonly cardAlertView: CardAlertView;
@@ -20,6 +21,7 @@ export class ConfigureInstallTemplatePanelView extends GridView {
     readonly siteNameInputFormGroupView: FormGroupInputView;
     readonly cancelButton: ButtonCommandView;
     readonly saveButton: ButtonCommandView;
+    readonly modalErrorView: ModalErrorView;
 
     constructor(container: BasicComponentView) {
         super(container);
@@ -32,6 +34,7 @@ export class ConfigureInstallTemplatePanelView extends GridView {
         const titleTextView = cardView.addCardHeader().addView(TextHeading3View);
         titleTextView.addCssName("card-title");
         titleTextView.setText("Configuration Install Template");
+        this.cardAlertView = cardView.addCardAlert();
         const cardBodyView = cardView.addCardBody();
         this.formView = cardBodyView.addView(FormView);
         this.formView.addOffscreenSubmit();
@@ -51,6 +54,7 @@ export class ConfigureInstallTemplatePanelView extends GridView {
         this.saveButton = HubTheme.instance.commandToolbar.saveButton(
             toolbar.addButtonCommandToEnd()
         );
+        this.modalErrorView = this.addView(ModalErrorView);
     }
 
     handleFormSubmit(action: () => void) {

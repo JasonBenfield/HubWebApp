@@ -27,6 +27,7 @@ export class InstallTemplateListHeader extends BasicComponent {
         machineNameTextComponent.setText("Location");
         domainTextCompnent.setText("Domain");
         siteNameTextComponent.setText("Site Name");
+        view.styleAsHeader();
     }
 }
 

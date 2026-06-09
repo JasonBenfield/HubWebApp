@@ -1,12 +1,10 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
-import { MenuComponent } from "@jasonbenfield/sharedwebapp/Components/MenuComponent";
-import { HubAppClient } from "../Lib/Http/HubAppClient";
-import { MainMenuPanelView } from "./MainMenuPanelView";
-import { AppClient } from "@jasonbenfield/sharedwebapp/Http/AppClient";
 import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
+import { HubAppClient } from "../Lib/Http/HubAppClient";
 import { HubPermissions } from "../Lib/HubPermissions";
+import { MainMenuPanelView } from "./MainMenuPanelView";
 
 interface IResult {
     back?: boolean;
@@ -28,9 +26,9 @@ export class MainMenuPanel implements IPanel {
     private readonly accessLogLink: LinkComponent;
     private readonly eventLogLink: LinkComponent;
     private readonly installationsLink: LinkComponent;
+    private readonly installTemplatesLink: LinkComponent;
     private hasLoaded = false;
 
-            
     constructor(private readonly hubClient: HubAppClient, private readonly view: MainMenuPanelView) {
         this.alert = new MessageAlert(view.alertView);
         const appLink = new LinkComponent(view.appsButton);
@@ -52,6 +50,9 @@ export class MainMenuPanel implements IPanel {
         this.installationsLink = new LinkComponent(view.installationsButton);
         this.installationsLink.setHref(hubClient.Installations.Index.getUrl({ QueryType: 0 }));
         this.installationsLink.hide();
+        this.installTemplatesLink = new LinkComponent(view.installTemplatesButton);
+        this.installTemplatesLink.setHref(hubClient.InstallTemplates.Index.getUrl({}));
+        this.installTemplatesLink.hide();
         new Command(this.back.bind(this)).add(view.backButton);
     }
 
@@ -79,6 +80,7 @@ export class MainMenuPanel implements IPanel {
         }
         if (permissions.canManageInstallations) {
             this.installationsLink.show();
+            this.installTemplatesLink.show();
         }
         this.hasLoaded = true;
     }

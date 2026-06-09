@@ -7,6 +7,8 @@ internal static partial class AppGroupExtensions
 {
     internal static void AddAppServices(this IServiceCollection services)
     {
+        services.AddScoped<ConfigureInstallAction>();
+        services.AddScoped<DeleteInstallConfigurationAction>();
         services.AddScoped<GetAppAction>();
         services.AddScoped<GetDefaultAppOptionsAction>();
         services.AddScoped<GetDefaultModifierAction>();

@@ -45,7 +45,7 @@ public sealed class EfInstallConfigurationTemplates
         return installConfigurationTemplate;
     }
 
-    internal async Task<EfInstallConfigurationTemplate> Template(int id, CancellationToken ct)
+    public async Task<EfInstallConfigurationTemplate> Template(int id, CancellationToken ct)
     {
         var template = await db.Context.InstallConfigurationTemplates.Retrieve()
             .Where(t => t.ID == id)

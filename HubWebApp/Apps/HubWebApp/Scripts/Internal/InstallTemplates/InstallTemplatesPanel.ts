@@ -11,13 +11,13 @@ import { InstallTemplateListItemView } from "./InstallTemplateListItemView";
 import { InstallTemplatesPanelView } from "./InstallTemplatesPanelView";
 
 interface IResult {
-    configureTemplateRequested?: { template: InstallConfigurationTemplate };
+    configureTemplateRequested?: { templates: InstallConfigurationTemplate[], template: InstallConfigurationTemplate };
     mainMenuRequested?: boolean;
 }
 
 class Result {
-    static configureTemplateRequested(template: InstallConfigurationTemplate) {
-        return new Result({ configureTemplateRequested: { template: template } });
+    static configureTemplateRequested(templates: InstallConfigurationTemplate[], template: InstallConfigurationTemplate) {
+        return new Result({ configureTemplateRequested: { templates: templates, template: template } });
     }
 
     static mainMenuRequested() { return new Result({ mainMenuRequested: true }); }
@@ -35,10 +35,10 @@ export class InstallTemplatesPanel implements IPanel {
     private readonly templateListGroup: ListGroup<InstallTemplateListItem, InstallTemplateListItemView>;
     private readonly refreshCommand: AsyncCommand;
     private readonly addCommand: Command;
-    private permissions: IHubPermissions | null = null;
+    private readonly installTemplates: InstallConfigurationTemplate[] = [];
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallTemplatesPanelView) {
-        this.alert = new CardAlert(view.alert);
+        this.alert = new CardAlert(view.cardAlertView);
         this.templateListGroup = new ListGroup(view.templateListView, new InstallTemplateListFactory());
         this.templateListGroup.when.itemClicked.then(this.onTemplateClicked.bind(this));
         this.refreshCommand = new AsyncCommand(this._refresh.bind(this));
@@ -53,36 +53,28 @@ export class InstallTemplatesPanel implements IPanel {
     private requestMainMenu() { this.awaitable.resolve(Result.mainMenuRequested()); }
 
     private requestAdd() {
-        this.awaitable.resolve(Result.configureTemplateRequested(new InstallConfigurationTemplate()));
+        this.awaitable.resolve(Result.configureTemplateRequested(this.installTemplates, new InstallConfigurationTemplate()));
     }
 
     private onTemplateClicked(templateListItem: InstallTemplateListItem) {
-        if (this.permissions && this.permissions.canConfigureInstallTemplate) {
-            this.awaitable.resolve(Result.configureTemplateRequested(templateListItem.installTemplate));
-        }
+        this.awaitable.resolve(Result.configureTemplateRequested(this.installTemplates, templateListItem.installTemplate));
     }
 
     refresh() { return this.refreshCommand.execute(); }
 
     private async _refresh() {
-        if (!this.permissions) {
-            this.permissions = await this.alert.infoAction(
-                "Loading...",
-                () => new HubPermissions(this.hubClient).value()
-            );
-            if (this.permissions.canConfigureInstallTemplate) {
-                this.addCommand.show();
-            }
-        }
+        this.addCommand.hide();
         const sourceTemplates = await this.alert.infoAction(
             "Loading...",
             () => this.hubClient.InstallTemplates.GetInstallTemplates()
         );
         const templates = sourceTemplates.map(t => new InstallConfigurationTemplate(t));
+        this.installTemplates.splice(0, this.installTemplates.length, ...templates);
         this.templateListGroup.setItems(templates);
         if (templates.length === 0) {
             this.alert.danger("No Install Templates were found.");
         }
+        this.addCommand.show();
     }
 
     start() { return this.awaitable.start(); }

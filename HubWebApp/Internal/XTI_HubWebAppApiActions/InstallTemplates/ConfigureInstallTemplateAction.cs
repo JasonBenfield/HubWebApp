@@ -1,4 +1,4 @@
-﻿namespace XTI_HubWebAppApiActions.AppInstall;
+﻿namespace XTI_HubWebAppApiActions.InstallTemplates;
 
 public sealed class ConfigureInstallTemplateAction : AppAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel>
 {

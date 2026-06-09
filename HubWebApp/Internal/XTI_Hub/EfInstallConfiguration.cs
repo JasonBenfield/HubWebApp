@@ -31,7 +31,7 @@ public sealed class EfInstallConfiguration
             ct
         );
 
-    internal Task Delete(CancellationToken ct) =>
+    public Task Delete(CancellationToken ct) =>
         db.Context.InstallConfigurations.Delete(config, ct);
 
     public async Task<InstallConfigurationModel> ToModel(CancellationToken ct)

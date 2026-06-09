@@ -10,6 +10,18 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<InstallConfigurationModel>> ConfigureInstall([FromBody] ConfigureAppInstallRequest requestData, CancellationToken ct)
+    {
+        return api.App.ConfigureInstall.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> DeleteInstallConfiguration([FromBody] InstallConfigurationIDRequest requestData, CancellationToken ct)
+    {
+        return api.App.DeleteInstallConfiguration.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppModel>> GetApp(CancellationToken ct)
     {
         return api.App.GetApp.Execute(new EmptyRequest(), ct);

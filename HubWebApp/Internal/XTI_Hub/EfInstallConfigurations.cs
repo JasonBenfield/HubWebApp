@@ -30,6 +30,36 @@ public sealed class EfInstallConfigurations
         return configs.Select(c => new EfInstallConfiguration(db, c)).ToArray();
     }
 
+    internal async Task<EfInstallConfiguration> Configuration(string repoOwner, string repoName, AppKey appKey, int configurationID, CancellationToken ct)
+    {
+        var appName = appKey.Name.DisplayText;
+        var appType = appKey.Type.Value;
+        var config = await db.Context.InstallConfigurations.Retrieve()
+            .Where(c => c.ID == configurationID)
+            .FirstOrDefaultAsync(ct);
+        if(config == null)
+        {
+            throw new Exception($"Install Configuration {configurationID} not found.");
+        }
+        if(!config.RepoOwner.Equals(repoOwner, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception($"Install Configuration {configurationID} does not have repo owner '{repoOwner}'.");
+        }
+        if (!config.RepoName.Equals(repoName, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception($"Install Configuration {configurationID} does not have repo name '{repoName}'.");
+        }
+        if (!appKey.Name.Equals( config.AppName))
+        {
+            throw new Exception($"Install Configuration {configurationID} does not have app name '{appKey.Name.DisplayText}'.");
+        }
+        if (!appKey.Type.Equals(config.AppType))
+        {
+            throw new Exception($"Install Configuration {configurationID} does not have app type '{appKey.Type.DisplayText}'.");
+        }
+        return new EfInstallConfiguration(db, config);
+    }
+
     internal async Task<EfInstallConfiguration[]> Configurations(string repoOwner, string repoName, AppKey appKey, CancellationToken ct)
     {
         var appName = appKey.Name.DisplayText;
@@ -48,7 +78,7 @@ public sealed class EfInstallConfigurations
         string repoName,
         string configurationName,
         AppKey appKey,
-        EfInstallConfigurationTemplate template,
+        EfInstallConfigurationTemplate efTemplate,
         int installSequence,
         CancellationToken ct
     )
@@ -75,7 +105,7 @@ public sealed class EfInstallConfigurations
                 ConfigurationName = configurationName,
                 AppName = appKey.Name.DisplayText,
                 AppType = appKey.Type.Value,
-                TemplateID = template.ID,
+                TemplateID = efTemplate.ID,
                 InstallSequence = installSequence
             };
             await db.Context.InstallConfigurations.Create(config, ct);
@@ -84,7 +114,7 @@ public sealed class EfInstallConfigurations
         else
         {
             installConfiguration = new EfInstallConfiguration(db, config);
-            await installConfiguration.Update(template, installSequence, ct);
+            await installConfiguration.Update(efTemplate, installSequence, ct);
         }
         return installConfiguration;
     }

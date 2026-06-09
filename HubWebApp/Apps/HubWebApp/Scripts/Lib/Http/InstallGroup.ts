@@ -16,7 +16,6 @@ export class InstallGroup extends AppClientGroup {
 		this.AddOrUpdateVersionsAction = this.createAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>('AddOrUpdateVersions', 'Add Or Update Versions');
 		this.AddSystemUserAction = this.createAction<IAddSystemUserRequest,IAppUserModel>('AddSystemUser', 'Add System User');
 		this.ConfigureInstallAction = this.createAction<IConfigureInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
-		this.ConfigureInstallTemplateAction = this.createAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>('ConfigureInstallTemplate', 'Configure Install Template');
 		this.DeleteInstallConfigurationAction = this.createAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
 		this.GetInstallConfigurationAction = this.createAction<IInstallConfigurationIDRequest,IInstallConfigurationModel>('GetInstallConfiguration', 'Get Install Configuration');
 		this.GetInstallConfigurationsAction = this.createAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>('GetInstallConfigurations', 'Get Install Configurations');
@@ -32,7 +31,6 @@ export class InstallGroup extends AppClientGroup {
 	readonly AddOrUpdateVersionsAction: AppClientAction<IAddOrUpdateVersionsRequest,IEmptyActionResult>;
 	readonly AddSystemUserAction: AppClientAction<IAddSystemUserRequest,IAppUserModel>;
 	readonly ConfigureInstallAction: AppClientAction<IConfigureInstallRequest,IInstallConfigurationModel>;
-	readonly ConfigureInstallTemplateAction: AppClientAction<IConfigureInstallTemplateRequest,IInstallConfigurationTemplateModel>;
 	readonly DeleteInstallConfigurationAction: AppClientAction<IDeleteInstallConfigurationRequest,IEmptyActionResult>;
 	readonly GetInstallConfigurationAction: AppClientAction<IInstallConfigurationIDRequest,IInstallConfigurationModel>;
 	readonly GetInstallConfigurationsAction: AppClientAction<IGetInstallConfigurationsRequest,IInstallConfigurationModel[]>;
@@ -58,9 +56,6 @@ export class InstallGroup extends AppClientGroup {
 	}
 	ConfigureInstall(requestData: IConfigureInstallRequest, errorOptions?: IActionErrorOptions) {
 		return this.ConfigureInstallAction.execute(requestData, errorOptions || {});
-	}
-	ConfigureInstallTemplate(requestData: IConfigureInstallTemplateRequest, errorOptions?: IActionErrorOptions) {
-		return this.ConfigureInstallTemplateAction.execute(requestData, errorOptions || {});
 	}
 	DeleteInstallConfiguration(requestData: IDeleteInstallConfigurationRequest, errorOptions?: IActionErrorOptions) {
 		return this.DeleteInstallConfigurationAction.execute(requestData, errorOptions || {});

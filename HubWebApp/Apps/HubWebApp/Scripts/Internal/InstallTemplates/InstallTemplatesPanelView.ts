@@ -8,9 +8,10 @@ import { GridListGroupView } from "@jasonbenfield/sharedwebapp/Views/ListGroup";
 import { ToolbarView } from "@jasonbenfield/sharedwebapp/Views/ToolbarView";
 import { HubTheme } from "../HubTheme";
 import { InstallTemplateListItemView } from "./InstallTemplateListItemView";
+import { TextHeading3View } from "@jasonbenfield/sharedwebapp/Views/TextHeadings";
 
 export class InstallTemplatesPanelView extends GridView {
-    readonly alert: CardAlertView;
+    readonly cardAlertView: CardAlertView;
     readonly templateListView: GridListGroupView<InstallTemplateListItemView>;
     readonly menuButton: ButtonCommandView;
     readonly refreshButton: ButtonCommandView;
@@ -24,7 +25,10 @@ export class InstallTemplatesPanelView extends GridView {
         const mainContent = HubTheme.instance.mainContent(this.addCell());
         const cardView = mainContent.addView(CardView);
         cardView.setMargin(MarginCss.bottom(3));
-        this.alert = cardView.addCardAlert();
+        const titleTextView = cardView.addCardHeader().addView(TextHeading3View);
+        titleTextView.addCssName("card-title");
+        titleTextView.setText("Install Templates");
+        this.cardAlertView = cardView.addCardAlert();
         this.templateListView = cardView.addGridListGroup(InstallTemplateListItemView);
         InstallTemplateListItemView.setTemplateColumns(this.templateListView);
         this.templateListView.setHeaderViewType(InstallTemplateListItemView);

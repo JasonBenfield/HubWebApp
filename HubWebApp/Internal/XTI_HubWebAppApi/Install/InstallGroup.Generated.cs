@@ -13,7 +13,6 @@ public sealed partial class InstallGroup : AppApiGroupWrapper
         AddOrUpdateVersions = builder.AddOrUpdateVersions.Build();
         AddSystemUser = builder.AddSystemUser.Build();
         ConfigureInstall = builder.ConfigureInstall.Build();
-        ConfigureInstallTemplate = builder.ConfigureInstallTemplate.Build();
         DeleteInstallConfiguration = builder.DeleteInstallConfiguration.Build();
         GetInstallConfiguration = builder.GetInstallConfiguration.Build();
         GetInstallConfigurations = builder.GetInstallConfigurations.Build();
@@ -31,7 +30,6 @@ public sealed partial class InstallGroup : AppApiGroupWrapper
     public AppApiAction<AddOrUpdateVersionsRequest, EmptyActionResult> AddOrUpdateVersions { get; }
     public AppApiAction<AddSystemUserRequest, AppUserModel> AddSystemUser { get; }
     public AppApiAction<ConfigureInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
-    public AppApiAction<ConfigureInstallTemplateRequest, InstallConfigurationTemplateModel> ConfigureInstallTemplate { get; }
     public AppApiAction<DeleteInstallConfigurationRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiAction<InstallConfigurationIDRequest, InstallConfigurationModel> GetInstallConfiguration { get; }
     public AppApiAction<GetInstallConfigurationsRequest, InstallConfigurationModel[]> GetInstallConfigurations { get; }
