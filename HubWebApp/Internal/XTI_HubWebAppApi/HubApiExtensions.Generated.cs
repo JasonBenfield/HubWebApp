@@ -17,6 +17,7 @@ public static partial class HubApiExtensions
         services.AddExternalAuthServices();
         services.AddHomeServices();
         services.AddInstallServices();
+        services.AddInstallationServices();
         services.AddInstallationsServices();
         services.AddInstallTemplatesServices();
         services.AddLogsServices();

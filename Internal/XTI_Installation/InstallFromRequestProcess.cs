@@ -64,17 +64,17 @@ public sealed class InstallFromRequestProcess
         var installAppProcess = installFactory.Create(appKey);
         if (xtiEnv.IsProduction())
         {
-            var versionInstallation = await hubService.BeginInstallation(installCommandDetail.Command.ID, isCurrent: false, ct: ct);
+            var versionInstallation = await hubService.BeginInstallation(appKey, installCommandDetail.Command.ID, isCurrent: false, ct: ct);
             await installAppProcess.Run(publishedAppPath, requestedInstallation, ct);
-            await hubService.Installed(versionInstallation.ID, ct);
+            await hubService.Installed(appKey, versionInstallation.ID, ct);
             await WriteInstallationID(versionInstallation.ID, requestedInstallation, ct);
         }
         if (installCommandDetail.InstallRequest.InstallAsCurrent)
         {
             requestedInstallation.SetIsCurrent(true);
-            var currentInstallation = await hubService.BeginInstallation(installCommandDetail.InstallConfiguration.ID, isCurrent: true, ct: ct);
+            var currentInstallation = await hubService.BeginInstallation(appKey, installCommandDetail.InstallConfiguration.ID, isCurrent: true, ct: ct);
             await installAppProcess.Run(publishedAppPath, requestedInstallation, ct);
-            await hubService.Installed(currentInstallation.ID, ct);
+            await hubService.Installed(appKey, currentInstallation.ID, ct);
             await WriteInstallationID(currentInstallation.ID, requestedInstallation, ct);
         }
     }

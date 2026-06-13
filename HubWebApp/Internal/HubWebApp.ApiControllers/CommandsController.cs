@@ -15,6 +15,12 @@ public sealed partial class CommandsController : Controller
         return api.Commands.GetCommandsInProgress.Execute(new EmptyRequest(), ct);
     }
 
+    [HttpPost]
+    public Task<ResultContainer<AppCommandSummaryModel[]>> GetPendingCommands([FromBody] GetPendingCommandsRequest requestData, CancellationToken ct)
+    {
+        return api.Commands.GetPendingCommands.Execute(requestData, ct);
+    }
+
     public async Task<IActionResult> Index(AppCommandIDRequest requestData, CancellationToken ct)
     {
         var result = await api.Commands.Index.Execute(requestData, ct);

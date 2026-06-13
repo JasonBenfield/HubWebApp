@@ -17,17 +17,13 @@ export class CurrentVersionComponent {
     }
 
     async refresh() {
-        const sourceCurrentVersion = await this.getCurrentVersion();
+        const sourceCurrentVersion = await this.alert.infoAction(
+            "Loading...",
+            () => this.hubClient.Version.GetVersion("current")
+        );
         const currentVersion = new XtiVersion(sourceCurrentVersion);
         this.versionKey.setText(currentVersion.versionKey.displayText);
         this.version.setText(currentVersion.versionNumber.format());
         return currentVersion;
-    }
-
-    private getCurrentVersion() {
-        return this.alert.infoAction(
-            "Loading...",
-            () => this.hubClient.Version.GetVersion("current")
-        );
     }
 } 

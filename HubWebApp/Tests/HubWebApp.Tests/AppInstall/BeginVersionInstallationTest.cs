@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using XTI_HubDB.Entities;
-
-namespace HubWebApp.Tests;
+﻿namespace HubWebApp.Tests;
 
 sealed class BeginVersionInstallationTest
 {
@@ -45,7 +42,7 @@ sealed class BeginVersionInstallationTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        return HubActionTester.Create(sp, hubApi => hubApi.Installations.BeginInstallation);
+        return HubActionTester.Create(sp, hubApi => hubApi.Command.BeginInstallation);
     }
 
     private async Task<InstallConfigurationModel> AddDefaultConfiguration(HubActionTester<BeginInstallationRequest, InstallationModel> tester, string qualifiedMachineName)

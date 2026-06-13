@@ -33,15 +33,15 @@ public sealed class RequestedInstallation
 
     public async Task RunStep(string activity, Func<Task> action, CancellationToken ct)
     {
-        var step = await hubService.BeginCommandStep(installCommandDetail.Command.ID, activity, ct);
+        var step = await hubService.BeginCommandStep(AppKey, installCommandDetail.Command.ID, activity, ct);
         try
         {
             await action();
-            await hubService.CommandStepEnded(step.ID, "", ct);
+            await hubService.CommandStepEnded(AppKey, step.ID, "", ct);
         }
         catch (Exception ex)
         {
-            await hubService.CommandStepEnded(step.ID, ex.ToString(), ct);
+            await hubService.CommandStepEnded(AppKey, step.ID, ex.ToString(), ct);
             throw new AppCommandStepException(step);
         }
     }
@@ -49,15 +49,15 @@ public sealed class RequestedInstallation
     public async Task<T> RunStep<T>(string activity, Func<Task<T>> action, CancellationToken ct)
     {
         T result;
-        var step = await hubService.BeginCommandStep(installCommandDetail.Command.ID, activity, ct);
+        var step = await hubService.BeginCommandStep(AppKey, installCommandDetail.Command.ID, activity, ct);
         try
         {
             result = await action();
-            await hubService.CommandStepEnded(step.ID, "", ct);
+            await hubService.CommandStepEnded(AppKey, step.ID, "", ct);
         }
         catch (Exception ex)
         {
-            await hubService.CommandStepEnded(step.ID, ex.ToString(), ct);
+            await hubService.CommandStepEnded(AppKey, step.ID, ex.ToString(), ct);
             throw new AppCommandStepException(step);
         }
         return result;

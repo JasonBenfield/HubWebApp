@@ -51,7 +51,6 @@ internal sealed class SystemTest
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                installationID: 1190,
                 roleNames: AppRoleName.Admin
             )
         );
@@ -118,7 +117,6 @@ internal sealed class SystemTest
         (
             new SystemAddOrUpdateModifierByModKeyRequest
             (
-                installationID: 0,
                 modCategoryName: new ModifierCategoryName("Department"),
                 modKey: new ModifierKey("IT"),
                 targetKey: "16",
@@ -138,7 +136,6 @@ internal sealed class SystemTest
         (
             new SystemAddOrUpdateModifierByTargetKeyRequest
             (
-                installationID: 0,
                 modCategoryName: new ModifierCategoryName("Department"),
                 generateModKey: GenerateKeyModel.TenDigit(),
                 targetKey: "18",

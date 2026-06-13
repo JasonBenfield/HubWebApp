@@ -2,12 +2,12 @@
 
 public sealed class AppFromPath
 {
-    private readonly EfHubDB factory;
+    private readonly EfHubDB db;
     private readonly IModifierKeyAccessor modifierKeyAccessor;
 
-    public AppFromPath(EfHubDB factory, IModifierKeyAccessor modifierKeyAccessor)
+    public AppFromPath(EfHubDB db, IModifierKeyAccessor modifierKeyAccessor)
     {
-        this.factory = factory;
+        this.db = db;
         this.modifierKeyAccessor = modifierKeyAccessor;
     }
 
@@ -18,10 +18,10 @@ public sealed class AppFromPath
         {
             throw new Exception(AppErrors.ModifierIsRequired);
         }
-        var hubApp = await factory.Apps.App(HubInfo.AppKey, ct);
-        var modCategory = await hubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
-        var modifier = await modCategory.ModifierByModKey(modKey, ct);
-        var app = await factory.Apps.App(modifier.TargetID(), ct);
-        return app;
+        var efHubApp = await db.Apps.App(HubInfo.AppKey, ct);
+        var efModCategory = await efHubApp.ModCategory(HubInfo.ModCategories.Apps, ct);
+        var efModifier = await efModCategory.ModifierByModKey(modKey, ct);
+        var efApp = await db.Apps.App(efModifier.TargetID(), ct);
+        return efApp;
     }
 }

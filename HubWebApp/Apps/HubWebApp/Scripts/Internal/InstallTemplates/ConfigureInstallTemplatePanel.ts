@@ -103,17 +103,13 @@ export class ConfigureInstallTemplatePanel implements IPanel {
         this.installTemplates.splice(0, this.installTemplates.length, ...installTemplates);
         this.installTemplate = installTemplate;
         this.templateNameFormGroup.setValue(installTemplate.templateName);
-        if (installTemplate.isFound) {
-            this.templateNameFormGroup.show();
-        }
-        else {
-            this.templateNameFormGroup.hide();
-        }
         this.templateNameInputFormGroup.setValue(installTemplate.templateName);
         if (installTemplate.isFound) {
+            this.templateNameFormGroup.show();
             this.templateNameInputFormGroup.hide();
         }
         else {
+            this.templateNameFormGroup.hide();
             this.templateNameInputFormGroup.show();
         }
         this.machineNameInputFormGroup.setValue(installTemplate.destinationMachineName);

@@ -40,6 +40,7 @@ export class ConfigureInstallTemplatePanelView extends GridView {
         this.formView.addOffscreenSubmit();
         const formGroupContainerView = this.formView.addFormGroupContainer();
         this.templateNameFormGroupView = formGroupContainerView.addFormGroupTextView();
+        this.templateNameFormGroupView.valueTextView.styleAsUserSelectAll();
         this.templateNameInputFormGroupView = formGroupContainerView.addFormGroupInputView();
         this.machineNameInputFormGroupView = formGroupContainerView.addFormGroupInputView();
         this.domainInputFormGroupView = formGroupContainerView.addFormGroupInputView();

@@ -39,30 +39,30 @@ public interface IHubService
 
     Task DeleteInstallConfiguration(DeleteInstallConfigurationRequest deleteRequest, CancellationToken ct);
 
-    Task<AppCommandModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct);
+    Task<AppCommandSummaryModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct);
 
     Task<AppInstallCommandDetailModel> AddInstallCommand(AddInstallCommandRequest installRequest, CancellationToken ct);
 
-    Task<AppCommandModel> BeginCommand(int commandID, CancellationToken ct);
+    Task<AppCommandModel> BeginCommand(AppKey appKey, int commandID, CancellationToken ct);
 
-    Task<AppCommandStepModel> BeginCommandStep(int commandID, string activity, CancellationToken ct);
+    Task<AppCommandStepModel> BeginCommandStep(AppKey appKey, int commandID, string activity, CancellationToken ct);
 
-    Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct);
+    Task CommandStepEnded(AppKey appKey, int stepID, string errorMessage, CancellationToken ct);
 
-    Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int commandID, CancellationToken ct);
+    Task<AppInstallCommandDetailModel> GetInstallCommandDetail(AppKey appKey, int commandID, CancellationToken ct);
 
-    Task<InstallationModel> BeginInstallation(int commandID, bool isCurrent, CancellationToken ct);
+    Task<InstallationModel> BeginInstallation(AppKey appKey, int commandID, bool isCurrent, CancellationToken ct);
 
-    Task Installed(int installationID, CancellationToken ct);
+    Task Installed(AppKey appKey, int installationID, CancellationToken ct);
 
-    Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(int commandID, CancellationToken ct);
+    Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(AppKey appKey, int commandID, CancellationToken ct);
 
-    Task<AppDeleteCommandDetailModel> AddDeleteCommand(int installationID, CancellationToken ct);
+    Task<AppDeleteCommandDetailModel> AddDeleteCommand(AppKey appKey, int installationID, CancellationToken ct);
 
-    Task BeginDelete(int installationID, CancellationToken ct);
+    Task BeginDelete(AppKey appKey, int installationID, CancellationToken ct);
 
-    Task Deleted(int installationID, CancellationToken ct);
+    Task Deleted(AppKey appKey, int installationID, CancellationToken ct);
 
-    Task CommandEnded(int commandID, CancellationToken ct);
+    Task CommandEnded(AppKey appKey, int commandID, CancellationToken ct);
 
 }

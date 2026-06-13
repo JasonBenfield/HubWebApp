@@ -10,6 +10,36 @@ public sealed partial class CommandController : Controller
     }
 
     [HttpPost]
+    public Task<ResultContainer<AppCommandModel>> BeginCommand([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Command.BeginCommand.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<AppCommandStepModel>> BeginCommandStep([FromBody] BeginAppCommandStepRequest requestData, CancellationToken ct)
+    {
+        return api.Command.BeginCommandStep.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<InstallationModel>> BeginInstallation([FromBody] BeginInstallationRequest requestData, CancellationToken ct)
+    {
+        return api.Command.BeginInstallation.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyActionResult>> CommandEnded([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
+    {
+        return api.Command.CommandEnded.Execute(requestData, ct);
+    }
+
+    [HttpPost]
+    public Task<ResultContainer<EmptyRequest>> CommandStepEnded([FromBody] AppCommandStepEndedRequest requestData, CancellationToken ct)
+    {
+        return api.Command.CommandStepEnded.Execute(requestData, ct);
+    }
+
+    [HttpPost]
     public Task<ResultContainer<AppCommandModel>> GetCommand([FromBody] AppCommandIDRequest requestData, CancellationToken ct)
     {
         return api.Command.GetCommand.Execute(requestData, ct);

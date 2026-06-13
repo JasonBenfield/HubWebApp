@@ -1,15 +1,20 @@
 ﻿import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { MessageAlert } from "@jasonbenfield/sharedwebapp/Components/MessageAlert";
 import { TextComponent } from "@jasonbenfield/sharedwebapp/Components/TextComponent";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { XtiUrl } from "@jasonbenfield/sharedwebapp/Http/XtiUrl";
+import { App } from "../../../Lib/App";
 import { AppResourceGroup } from "../../../Lib/AppResourceGroup";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { HubPermissions, IAppPermissions } from "../../../Lib/HubPermissions";
 import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
 import { AppComponent } from "./AppComponent";
 import { AppDetailPanelView } from "./AppDetailPanelView";
 import { CurrentVersionComponent } from "./CurrentVersionComponent";
+import { ConfigureInstallEventArgs, InstallConfigurationListCard } from "./InstallConfigurationListCard";
 import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
@@ -19,6 +24,7 @@ interface IResult {
     backRequested?: {};
     resourceGroupSelected?: { resourceGroup: AppResourceGroup; };
     modCategorySelected?: { modCategory: ModifierCategory; };
+    configureInstallRequested?: { app: App, installConfigurations: InstallConfiguration[], installConfiguration: InstallConfiguration; };
 }
 
 class Result {
@@ -38,6 +44,16 @@ class Result {
         });
     }
 
+    static configureInstallRequested(app: App, installConfigurations: InstallConfiguration[], installConfiguration: InstallConfiguration) {
+        return new Result({
+            configureInstallRequested: {
+                app: app,
+                installConfigurations: installConfigurations,
+                installConfiguration: installConfiguration
+            }
+        });
+    }
+
     private constructor(private readonly results: IResult) {
     }
 
@@ -46,11 +62,16 @@ class Result {
     get resourceGroupSelected() { return this.results.resourceGroupSelected; }
 
     get modCategorySelected() { return this.results.modCategorySelected; }
+
+    get configureInstallRequested() { return this.results.configureInstallRequested; }
 }
 
 export class AppDetailPanel implements IPanel {
-    private readonly app: AppComponent;
-    private readonly currentVersion: CurrentVersionComponent;
+    private readonly awaitable = new Awaitable<Result>();
+    private readonly alert: MessageAlert;
+    private readonly appComponent: AppComponent;
+    private readonly currentVersionComponent: CurrentVersionComponent;
+    private readonly installConfigurationListCard: InstallConfigurationListCard;
     private readonly appOptionsAlert: IMessageAlert;
     private readonly appOptionsTextComponent: TextComponent;
     private readonly optionsAlert: IMessageAlert;
@@ -61,17 +82,20 @@ export class AppDetailPanel implements IPanel {
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
     private readonly refreshPublishedVersionsCommand: AsyncCommand;
     private readonly installCurrentVersionCommand: AsyncCommand;
-
-    private readonly awaitable = new Awaitable<Result>();
-
     private readonly backCommand = new Command(this.back.bind(this));
+    private permissions: IAppPermissions | null = null;
+    private app = new App();
 
     constructor(
         private readonly hubClient: HubAppClient,
         private readonly view: AppDetailPanelView
     ) {
-        this.app = new AppComponent(hubClient, view.app);
-        this.currentVersion = new CurrentVersionComponent(hubClient, view.currentVersion);
+        this.alert = new MessageAlert(view.alertView);
+        this.appComponent = new AppComponent(hubClient, view.app);
+        this.currentVersionComponent = new CurrentVersionComponent(hubClient, view.currentVersion);
+        this.installConfigurationListCard = new InstallConfigurationListCard(hubClient, view.installConfigurationListCardView);
+        this.installConfigurationListCard.when.configureRequested.then(this.configureInstallRequested.bind(this));
+        this.installConfigurationListCard.hide();
         this.appOptionsAlert = new CardAlert(view.appOptionsAlertView);
         this.appOptionsTextComponent = new TextComponent(view.appOptionsTextView);
         this.optionsAlert = new CardAlert(view.optionsAlertView);
@@ -98,12 +122,23 @@ export class AppDetailPanel implements IPanel {
         this.backCommand.add(view.backButton);
     }
 
-    private async refreshPublishedVersions() {
+    private configureInstallRequested(args: ConfigureInstallEventArgs) {
+        this.awaitable.resolve(Result.configureInstallRequested(
+            this.app,
+            args.installConfigurations,
+            args.installConfiguration
+        ));
+    }
 
+    private async refreshPublishedVersions() {
+        await this.alert.infoAction(
+            "Refreshing Published Versions...",
+            () => this.hubClient.App.UpdateVersionsFromPublished()
+        );
+        await this.refresh();
     }
 
     private async installCurrentVersion() {
-
     }
 
     private onResourceGroupSelected(group: AppResourceGroup) {
@@ -119,9 +154,19 @@ export class AppDetailPanel implements IPanel {
     }
 
     async refresh() {
+        if (this.permissions?.modKey !== XtiUrl.current().path.modifier) {
+            this.permissions = await this.alert.infoAction(
+                "Loading...",
+                () => new HubPermissions(this.hubClient).appPermissions()
+            );
+            if (this.permissions.canManageInstallation) {
+                this.installConfigurationListCard.show();
+            }
+        }
         const promises: Promise<any>[] = [
-            this.app.refresh(),
-            this.currentVersion.refresh(),
+            this.refreshApp(),
+            this.currentVersionComponent.refresh(),
+            this.refreshInstallConfigurations(),
             this.refreshDefaultAppOptions(),
             this.refreshDefaultOptions(),
             this.resourceGroupListCard.refresh(),
@@ -132,14 +177,24 @@ export class AppDetailPanel implements IPanel {
         await Promise.all(promises);
     }
 
-    private async refreshInstallConfigurations() {
-        const sourceInstallConfigurations = await this.hubClient.App.GetInstallConfigurations();
-        const installConfigurations = sourceInstallConfigurations.map(cfg => new InstallConfiguration(cfg));
-        if (installConfigurations.length > 0) {
-            this.installCurrentVersionCommand.show();
+    private async refreshApp() {
+        this.app = await this.appComponent.refresh();
+        if (this.permissions.canManageInstallation) {
+            this.refreshPublishedVersionsCommand.show();
         }
-        else {
+    }
+
+    private async refreshInstallConfigurations() {
+        if (this.permissions.canManageInstallation) {
             this.installCurrentVersionCommand.hide();
+            const installConfigurations = await this.installConfigurationListCard.refresh();
+            if (
+                installConfigurations.length > 0 &&
+                (!this.app.appKey.name.equals("Hub") || !this.app.appKey.isWebApp) &&
+                (!this.app.appKey.name.equals("Support") || !this.app.appKey.isServiceApp)
+            ) {
+                this.installCurrentVersionCommand.show();
+            }
         }
     }
 

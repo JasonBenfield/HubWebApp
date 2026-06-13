@@ -1,5 +1,6 @@
 ﻿import { HubPageView } from '../HubPageView';
 import { AppDetailPanelView } from './AppDetail/AppDetailPanelView';
+import { InstallAppPanelView } from './AppDetail/InstallAppPanelView';
 import { ModCategoryPanelView } from './ModCategory/ModCategoryPanelView';
 import { ResourcePanelView } from './Resource/ResourcePanelView';
 import { ResourceGroupPanelView } from './ResourceGroup/ResourceGroupPanelView';
@@ -9,6 +10,7 @@ export class MainPageView extends HubPageView {
     readonly resourceGroupPanel: ResourceGroupPanelView;
     readonly resourcePanel: ResourcePanelView;
     readonly modCategoryPanel: ModCategoryPanelView;
+    readonly installAppPanelView: InstallAppPanelView;
 
     constructor() {
         super();
@@ -16,5 +18,6 @@ export class MainPageView extends HubPageView {
         this.resourceGroupPanel = this.addView(ResourceGroupPanelView);
         this.resourcePanel = this.addView(ResourcePanelView);
         this.modCategoryPanel = this.addView(ModCategoryPanelView);
+        this.installAppPanelView = this.addView(InstallAppPanelView);
     }
 }

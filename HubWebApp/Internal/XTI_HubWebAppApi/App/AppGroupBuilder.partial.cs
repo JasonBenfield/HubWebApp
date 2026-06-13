@@ -13,5 +13,7 @@ partial class AppGroupBuilder
             .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
         GetInstallConfigurations
             .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
+        UpdateVersionsFromPublished
+            .ResetAccessWithAllowed(HubInfo.Roles.InstallRoles);
     }
 }

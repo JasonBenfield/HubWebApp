@@ -2,17 +2,17 @@
 
 public sealed class GetUserRolesAction : AppAction<GetUserRolesRequest, AppRoleModel[]>
 {
-    private readonly EfHubDB hubFactory;
+    private readonly EfHubDB db;
 
-    public GetUserRolesAction(EfHubDB hubFactory)
+    public GetUserRolesAction(EfHubDB db)
     {
-        this.hubFactory = hubFactory;
+        this.db = db;
     }
 
     public async Task<AppRoleModel[]> Execute(GetUserRolesRequest getRequest, CancellationToken stoppingToken)
     {
-        var user = await hubFactory.Users.User(getRequest.UserID, stoppingToken);
-        var modifier = await hubFactory.Modifiers.Modifier(getRequest.ModifierID, stoppingToken);
+        var user = await db.Users.User(getRequest.UserID, stoppingToken);
+        var modifier = await db.Modifiers.Modifier(getRequest.ModifierID, stoppingToken);
         var roles = await user.Modifier(modifier).AssignedRoles(stoppingToken);
         return roles.Select(r => r.ToModel()).ToArray();
     }

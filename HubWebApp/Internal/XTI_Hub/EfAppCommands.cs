@@ -39,7 +39,7 @@ public sealed class EfAppCommands
         return new EfAppCommand(db, command);
     }
 
-    public async Task<EfAppCommand> Command(int commandID, CancellationToken ct)
+    internal async Task<EfAppCommand> Command(int commandID, CancellationToken ct)
     {
         var command = await db.Context.AppCommands.Retrieve()
             .Where(c => c.ID == commandID)

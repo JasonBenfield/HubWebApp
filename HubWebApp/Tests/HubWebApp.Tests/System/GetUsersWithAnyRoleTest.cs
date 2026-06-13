@@ -16,7 +16,6 @@ internal sealed class GetUsersWithAnyRoleTest
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                0,
                 HubInfo.ModCategories.Apps,
                 hubAppModifier.ModKey,
                 HubInfo.Roles.ViewUser
@@ -45,7 +44,6 @@ internal sealed class GetUsersWithAnyRoleTest
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                0,
                 HubInfo.ModCategories.Apps,
                 hubAppModifier.ModKey,
                 HubInfo.Roles.ViewUser
@@ -76,7 +74,6 @@ internal sealed class GetUsersWithAnyRoleTest
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                installationID: 0,
                 modCategoryName: HubInfo.ModCategories.Apps,
                 modKey: hubAppModifier.ModKey,
                 roleNames: HubInfo.Roles.ViewUser
@@ -85,8 +82,7 @@ internal sealed class GetUsersWithAnyRoleTest
         Assert.That
         (
             users.Length,
-            Is.EqualTo(0),
-            "Should not get user with default role when the user has modified roles"
+            Is.EqualTo(0)
         );
     }
 

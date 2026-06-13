@@ -16,7 +16,8 @@ export class InstallationDataRow extends ODataLinkRow {
         else if (InstallStatus.values.DeletePending.equals(status) || InstallStatus.values.DeleteStarted.equals(status)) {
             view.setContext(ContextualClass.warning);
         }
+        const appKey = record["AppKey"] as string;
         const installationID = record["InstallationID"] as number;
-        this.setHref(hubClient.Installations.Installation.getUrl({ InstallationID: installationID }));
+        this.setHref(hubClient.Installation.Index.getModifierUrl(appKey.replace(/\s+/g, ""), { InstallationID: installationID }));
     }
 }

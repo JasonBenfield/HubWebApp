@@ -13,13 +13,14 @@ internal sealed class InstallCommandLog
 
     public async Task<AppInstallCommandDetailModel> WriteLog(AppInstallCommandDetailModel installCommandDetail, CancellationToken ct)
     {
+        var appKey = installCommandDetail.App.AppKey;
         var timeout = DateTime.UtcNow.AddMinutes(5);
         var previousStep = installCommandDetail.Steps.LastOrDefault() ?? new();
         Console.WriteLine($"{installCommandDetail.Command.TimeAdded:HH:mm:ss} Install {installCommandDetail.App.AppKey.Format()} {installCommandDetail.Version.VersionKey.DisplayText} Requested");
         while (!installCommandDetail.Command.HasStarted() && DateTime.UtcNow < timeout)
         {
             await Task.Delay(TimeSpan.FromSeconds(5), ct);
-            installCommandDetail = await hubService.GetInstallCommandDetail(installCommandDetail.Command.ID, ct);
+            installCommandDetail = await hubService.GetInstallCommandDetail(appKey, installCommandDetail.Command.ID, ct);
         }
         if (installCommandDetail.Command.HasStarted())
         {
@@ -28,7 +29,7 @@ internal sealed class InstallCommandLog
         while (!installCommandDetail.Command.HasEnded() && DateTime.UtcNow < timeout)
         {
             await Task.Delay(TimeSpan.FromSeconds(5), ct);
-            installCommandDetail = await hubService.GetInstallCommandDetail(installCommandDetail.Command.ID, ct);
+            installCommandDetail = await hubService.GetInstallCommandDetail(appKey, installCommandDetail.Command.ID, ct);
             if (installCommandDetail.Steps.Any())
             {
                 var steps = installCommandDetail.Steps.ToList();
@@ -57,7 +58,7 @@ internal sealed class InstallCommandLog
         }
         if (installCommandDetail.Command.HasEnded())
         {
-            Console.WriteLine($"{DateTime.Now:HH:mm:ss} Install {installCommandDetail.App.AppKey.Format()} {installCommandDetail.Version.VersionKey.DisplayText} Complete");
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss} Install {appKey.Format()} {installCommandDetail.Version.VersionKey.DisplayText} Complete");
         }
         return installCommandDetail;
     }

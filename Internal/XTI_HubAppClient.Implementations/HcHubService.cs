@@ -1,4 +1,5 @@
-﻿using XTI_App.Abstractions;
+﻿using System.Text.RegularExpressions;
+using XTI_App.Abstractions;
 using XTI_Core;
 using XTI_Hub.Abstractions;
 using XTI_Internal.Abstractions;
@@ -166,60 +167,69 @@ public sealed class HcHubService : IHubService
     public Task<AppInstallCommandDetailModel> AddInstallCommand(AddInstallCommandRequest installRequest, CancellationToken ct) =>
         hubClient.Installations.AddInstallCommand(installRequest, ct);
 
-    public Task<AppCommandModel> BeginCommand(int requestedInstallationID, CancellationToken ct) =>
-        hubClient.Installations.BeginCommand(new(commandID: requestedInstallationID), ct);
+    private static readonly Regex whitespaceRegex = new Regex("\\s+");
 
-    public Task<AppCommandStepModel> BeginCommandStep(int requestedInstallationID, string activity, CancellationToken ct) =>
-        hubClient.Installations.BeginCommandStep
+    public Task<AppCommandModel> BeginCommand(AppKey appKey, int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Command.BeginCommand(GetModifier(appKey), new(commandID: requestedInstallationID), ct);
+
+    private static string GetModifier(AppKey appKey) =>
+        whitespaceRegex.Replace(appKey.Format(), "");
+
+    public Task<AppCommandStepModel> BeginCommandStep(AppKey appKey, int requestedInstallationID, string activity, CancellationToken ct) =>
+        hubClient.Command.BeginCommandStep
         (
+            GetModifier(appKey),
             new(commandID: requestedInstallationID, activity: activity),
             ct
         );
 
-    public Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct) =>
-        hubClient.Installations.CommandStepEnded
+    public Task CommandStepEnded(AppKey appKey, int stepID, string errorMessage, CancellationToken ct) =>
+        hubClient.Command.CommandStepEnded
         (
+            GetModifier(appKey),
             new(stepID: stepID, errorMessage: errorMessage),
             ct
         );
 
-    public Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int requestedInstallationID, CancellationToken ct) =>
-        hubClient.Installations.GetInstallationCommandDetail
+    public Task<AppInstallCommandDetailModel> GetInstallCommandDetail(AppKey appKey, int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Command.GetInstallationCommandDetail
         (
+            GetModifier(appKey),
             new(commandID: requestedInstallationID),
             ct
         );
 
-    public Task<InstallationModel> BeginInstallation(int requestedInstallationID, bool isCurrent, CancellationToken ct) =>
-        hubClient.Installations.BeginInstallation
+    public Task<InstallationModel> BeginInstallation(AppKey appKey, int requestedInstallationID, bool isCurrent, CancellationToken ct) =>
+        hubClient.Command.BeginInstallation
         (
+            GetModifier(appKey),
             new(commandID: requestedInstallationID, isCurrent: isCurrent),
             ct
         );
 
-    public Task Installed(int installationID, CancellationToken ct) =>
-        hubClient.Installations.Installed(new InstallationIDRequest(installationID), ct);
+    public Task Installed(AppKey appKey, int installationID, CancellationToken ct) =>
+        hubClient.Installation.Installed(GetModifier(appKey), new InstallationIDRequest(installationID), ct);
 
-    public Task CommandEnded(int requestedInstallationID, CancellationToken ct) =>
-        hubClient.Installations.CommandEnded(new(commandID: requestedInstallationID), ct);
+    public Task CommandEnded(AppKey appKey, int requestedInstallationID, CancellationToken ct) =>
+        hubClient.Command.CommandEnded(GetModifier(appKey), new(commandID: requestedInstallationID), ct);
 
-    public Task<AppCommandModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct) =>
-        hubClient.Installations.GetPendingCommands
+    public Task<AppCommandSummaryModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct) =>
+        hubClient.Commands.GetPendingCommands
         (
             new(commandNames: commandNames, machineNames: machineNames),
             ct
         );
 
-    public Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(int commandID, CancellationToken ct) =>
-        hubClient.Installations.GetDeleteCommandDetail(new(commandID: commandID), ct);
+    public Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(AppKey appKey, int commandID, CancellationToken ct) =>
+        hubClient.Command.GetDeleteCommandDetail(GetModifier(appKey), new(commandID: commandID), ct);
 
-    public Task<AppDeleteCommandDetailModel> AddDeleteCommand(int installationID, CancellationToken ct) =>
-        hubClient.Installations.AddDeleteCommand(new(installationID: installationID), ct);
+    public Task<AppDeleteCommandDetailModel> AddDeleteCommand(AppKey appKey, int installationID, CancellationToken ct) =>
+        hubClient.Installation.AddDeleteCommand(GetModifier(appKey), new(installationID: installationID), ct);
 
-    public Task BeginDelete(int installationID, CancellationToken ct) =>
-        hubClient.Installations.BeginDelete(new(installationID: installationID), ct);
+    public Task BeginDelete(AppKey appKey, int installationID, CancellationToken ct) =>
+        hubClient.Installation.BeginDelete(GetModifier(appKey), new(installationID: installationID), ct);
 
-    public Task Deleted(int installationID, CancellationToken ct) =>
-        hubClient.Installations.Deleted(new(installationID: installationID), ct);
+    public Task Deleted(AppKey appKey, int installationID, CancellationToken ct) =>
+        hubClient.Installation.Deleted(GetModifier(appKey), new(installationID: installationID), ct);
 
 }

@@ -10,6 +10,7 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class AppGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'App');
+		this.AddInstallCommandAction = this.createAction<IInstallConfigurationIDRequest,IAppInstallCommandDetailModel>('AddInstallCommand', 'Add Install Command');
 		this.ConfigureInstallAction = this.createAction<IConfigureAppInstallRequest,IInstallConfigurationModel>('ConfigureInstall', 'Configure Install');
 		this.DeleteInstallConfigurationAction = this.createAction<IInstallConfigurationIDRequest,IEmptyActionResult>('DeleteInstallConfiguration', 'Delete Install Configuration');
 		this.GetAppAction = this.createAction<IEmptyRequest,IAppModel>('GetApp', 'Get App');
@@ -26,6 +27,7 @@ export class AppGroup extends AppClientGroup {
 		this.UpdateVersionsFromPublishedAction = this.createAction<IEmptyRequest,IEmptyActionResult>('UpdateVersionsFromPublished', 'Update Versions From Published');
 	}
 	
+	readonly AddInstallCommandAction: AppClientAction<IInstallConfigurationIDRequest,IAppInstallCommandDetailModel>;
 	readonly ConfigureInstallAction: AppClientAction<IConfigureAppInstallRequest,IInstallConfigurationModel>;
 	readonly DeleteInstallConfigurationAction: AppClientAction<IInstallConfigurationIDRequest,IEmptyActionResult>;
 	readonly GetAppAction: AppClientAction<IEmptyRequest,IAppModel>;
@@ -41,6 +43,9 @@ export class AppGroup extends AppClientGroup {
 	readonly Index: AppClientView<IEmptyRequest>;
 	readonly UpdateVersionsFromPublishedAction: AppClientAction<IEmptyRequest,IEmptyActionResult>;
 	
+	AddInstallCommand(requestData: IInstallConfigurationIDRequest, errorOptions?: IActionErrorOptions) {
+		return this.AddInstallCommandAction.execute(requestData, errorOptions || {});
+	}
 	ConfigureInstall(requestData: IConfigureAppInstallRequest, errorOptions?: IActionErrorOptions) {
 		return this.ConfigureInstallAction.execute(requestData, errorOptions || {});
 	}

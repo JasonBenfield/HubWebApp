@@ -8,6 +8,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
 {
     internal AppGroup(AppApiGroup source, AppGroupBuilder builder) : base(source)
     {
+        AddInstallCommand = builder.AddInstallCommand.Build();
         ConfigureInstall = builder.ConfigureInstall.Build();
         DeleteInstallConfiguration = builder.DeleteInstallConfiguration.Build();
         GetApp = builder.GetApp.Build();
@@ -26,6 +27,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
     }
 
     partial void Configure();
+    public AppApiAction<InstallConfigurationIDRequest, AppInstallCommandDetailModel> AddInstallCommand { get; }
     public AppApiAction<ConfigureAppInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
     public AppApiAction<InstallConfigurationIDRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiAction<EmptyRequest, AppModel> GetApp { get; }

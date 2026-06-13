@@ -107,6 +107,14 @@ public sealed class EfInstallations
         return efInstallation;
     }
 
+    internal async Task<EfInstallation> Installation(AppEntity app, int installationID, CancellationToken ct)
+    {
+        var installation = await db.Context.Installations.Retrieve()
+            .Where(inst => inst.ID == installationID)
+            .FirstOrDefaultAsync(ct);
+        return new EfInstallation(db, installation ?? throw new Exception($"Installation {installationID} was not found."));
+    }
+
     internal Task<bool> HasCurrentInstallation(EfInstallLocation location, EfAppVersion appVersion, CancellationToken ct) =>
         GetCurrentInstallation(location, appVersion).AnyAsync(ct);
 

@@ -116,27 +116,27 @@ export class CommandPanel implements IPanel {
                 this.stepListCard.hide();
             }
             this.viewAppLinkComponent.setHref(
-                this.hubClient.App.Index.getModifierUrl(commandDetail.app.publicKey.displayText, {})
-            )
+                this.hubClient.App.Index.getUrl({})
+            );
             if (commandDetail instanceof AppInstallCommandDetail) {
                 const currentInstallation = commandDetail.getCurrentInstallationOrDefault();
                 if (currentInstallation.isFound) {
                     this.viewCurrentInstallationLinkComponent.setHref(
-                        this.hubClient.Installations.Installation.getUrl({ InstallationID: currentInstallation.id })
+                        this.hubClient.Installation.Index.getUrl({ InstallationID: currentInstallation.id })
                     );
                     this.viewCurrentInstallationLinkComponent.show();
                 }
                 const versionInstallation = commandDetail.getVersionInstallationOrDefault();
                 if (versionInstallation.isFound) {
                     this.viewVersionInstallationLinkComponent.setHref(
-                        this.hubClient.Installations.Installation.getUrl({ InstallationID: versionInstallation.id })
+                        this.hubClient.Installation.Index.getUrl({ InstallationID: versionInstallation.id })
                     );
                     this.viewVersionInstallationLinkComponent.show();
                 }
             }
             else if (commandDetail instanceof AppDeleteCommandDetail) {
                 this.viewInstallationLinkComponent.setHref(
-                    this.hubClient.Installations.Installation.getUrl({ InstallationID: commandDetail.installation.id })
+                    this.hubClient.Installation.Index.getUrl({ InstallationID: commandDetail.installation.id })
                 );
                 this.viewInstallationLinkComponent.show();
             }

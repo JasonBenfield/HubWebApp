@@ -795,7 +795,7 @@ internal sealed class LogSessionDetailsTest
                 isAutoStartEnabled: true
             )
         );
-        var installation = await hubApi.Installations.BeginInstallation.Invoke(new BeginInstallationRequest(requestedInstallationDetail.Command.ID, true));
+        var installation = await hubApi.Command.BeginInstallation.Invoke(new BeginInstallationRequest(requestedInstallationDetail.Command.ID, true));
         return installation;
     }
 

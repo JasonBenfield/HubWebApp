@@ -25,6 +25,7 @@ export class AppComponent {
         this.appName.setText(app.appKey.name.displayText);
         this.appTitle.setText(`${app.appKey.format()}`);
         this.appType.setText(app.appKey.type.DisplayText);
+        return app;
     }
 
     private getApp() {

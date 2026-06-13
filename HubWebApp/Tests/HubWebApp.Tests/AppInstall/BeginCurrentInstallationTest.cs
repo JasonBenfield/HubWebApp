@@ -143,7 +143,7 @@ sealed class BeginCurrentInstallationTest
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Installations.BeginInstallation);
+        return HubActionTester.Create(services, hubApi => hubApi.Command.BeginInstallation);
     }
 
     private async Task<InstallConfigurationModel> AddDefaultConfiguration(HubActionTester<BeginInstallationRequest, InstallationModel> tester, string qualifiedMachineName)

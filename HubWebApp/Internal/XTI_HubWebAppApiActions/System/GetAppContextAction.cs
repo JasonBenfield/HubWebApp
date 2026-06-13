@@ -10,5 +10,5 @@ public sealed class GetAppContextAction : AppAction<GetAppContextRequest, AppCon
     }
 
     public Task<AppContextModel> Execute(GetAppContextRequest getRequest, CancellationToken ct) =>
-        appFromSystemUser.App(getRequest.InstallationID, ct);
+        appFromSystemUser.AppContext(getRequest.InstallationID, ct);
 }

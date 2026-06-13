@@ -38,7 +38,7 @@ export class InstallationQueryPanel implements IPanel {
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationQueryPanelView) {
         new Command(this.menu.bind(this)).add(view.menuButton);
         this.queryTypes = new ListGroup(this.view.queryTypes);
-        const selectedQueryTypeValue = Url.current().query.getNumberValue('QueryType');
+        const selectedQueryTypeValue = Url.current().query.getNumberValue("QueryType");
         const selectedQueryType = InstallationQueryType.values.value(selectedQueryTypeValue);
         this.queryTypes.setItems(
             InstallationQueryType.values.all,
@@ -54,7 +54,8 @@ export class InstallationQueryPanel implements IPanel {
         );
         const columns = new ODataExpandedInstallationColumnsBuilder(this.view.columns);
         columns.InstallationID.require();
-        const options = new ODataComponentOptionsBuilder<IExpandedInstallation>('hub_installations', columns);
+        columns.AppKey.require();
+        const options = new ODataComponentOptionsBuilder<IExpandedInstallation>("hub_installations", columns);
         options.query.select.addFields(
             columns.AppKey,
             columns.QualifiedMachineName,
@@ -78,14 +79,13 @@ export class InstallationQueryPanel implements IPanel {
             { args: { QueryType: selectedQueryType.Value } }
         );
         options.setCreateDataRow(
-            (rowIndex, columns, record: Queryable<IExpandedInstallation>, view: BasicGridRowView) => {
+            (rowIndex, columns, record, view) => {
                 return new InstallationDataRow(this.hubClient, rowIndex, columns, record, view as LinkGridRowView)
             }
         );
         this.odataComponent = new ODataComponent(this.view.odataComponent, options.build());
-        this.odataComponent.when.dataCellClicked.then(this.onCellClicked.bind(this));
         this.odataComponent.when.refreshed.then(this.onRefreshed.bind(this));
-        const page = Url.current().query.getNumberValue('page');
+        const page = Url.current().query.getNumberValue("page");
         if (page) {
             this.odataComponent.setCurrentPage(Number(page));
         }
@@ -93,24 +93,19 @@ export class InstallationQueryPanel implements IPanel {
     }
 
     private onRefreshed(args: ODataRefreshedEventArgs) {
-        const page = args.page > 1 ? args.page.toString() : '';
+        const page = args.page > 1 ? args.page.toString() : "";
         const url = UrlBuilder.current();
-        const queryPageValue = url.query.getNumberValue('page');
-        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : '';
+        const queryPageValue = url.query.getNumberValue("page");
+        const queryPage = queryPageValue > 1 ? queryPageValue.toString() : "";
         if (page !== queryPage) {
             if (page) {
-                url.replaceQuery('page', page);
+                url.replaceQuery("page", page);
             }
             else {
-                url.removeQuery('page');
+                url.removeQuery("page");
             }
-            history.replaceState({}, '', url.value());
+            history.replaceState({}, "", url.value());
         }
-    }
-
-    private onCellClicked(args: ODataCellClickedEventArgs) {
-        const installationID: number = args.record['InstallationID'];
-        this.hubClient.Installations.Installation.open({ InstallationID: installationID });
     }
 
     private menu() { this.awaitable.resolve(Result.menuRequested()); }

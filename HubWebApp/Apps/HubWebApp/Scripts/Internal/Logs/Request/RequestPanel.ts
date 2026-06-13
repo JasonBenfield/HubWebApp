@@ -113,7 +113,7 @@ export class RequestPanel implements IPanel {
             this.targetRequestLink.show();
         }
         this.installationLink.setHref(
-            this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.installation.id })
+            this.hubClient.Installation.Index.getModifierUrl(detail.app.getModifier(), { InstallationID: detail.installation.id })
         );
         this.logEntriesLink.setHref(this.hubClient.Logs.LogEntries.getUrl({ RequestID: this.requestID, InstallationID: null }));
     }

@@ -9,6 +9,8 @@ import { HubAppClient } from "../../Lib/Http/HubAppClient";
 import { InstallationPanelView } from "./InstallationPanelView";
 import { InstallationDetail } from "../../Lib/InstallationDetail";
 import { InstallStatus } from "../../Lib/Http/InstallStatus";
+import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
+import { AppDeleteCommandDetail } from "../../Lib/AppDeleteCommandDetail";
 
 interface IResult {
     menuRequested?: boolean;
@@ -26,33 +28,34 @@ export class InstallationPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
     private readonly confirm: ModalConfirm;
-    private readonly appKey: FormGroupText;
-    private readonly versionKey: TextComponent;
-    private readonly versionStatus: TextComponent;
-    private readonly installationStatus: FormGroupText;
-    private readonly location: TextComponent;
-    private readonly current: TextComponent;
-    private readonly domain: FormGroupText;
-    private readonly siteName: FormGroupText;
-    private readonly mostRecentRequest: FormGroupText;
+    private readonly appKeyFormGroup: FormGroupText;
+    private readonly versionKeyTextComponent: TextComponent;
+    private readonly versionStatusTextComponent: TextComponent;
+    private readonly installationStatusFormGroup: FormGroupText;
+    private readonly locationTextComponent: TextComponent;
+    private readonly currentTextComponent: TextComponent;
+    private readonly domainTextComponent: FormGroupText;
+    private readonly siteNameFormGroup: FormGroupText;
+    private readonly mostRecentRequestFormGroup: FormGroupText;
     private readonly appLink: TextLinkComponent;
     private readonly logEntriesLink: TextLinkComponent;
     private readonly requestsLink: TextLinkComponent;
     private readonly deleteCommand: AsyncCommand;
+    private installationDetail = new InstallationDetail();
     private installationID = 0;
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallationPanelView) {
         this.alert = new MessageAlert(view.alert);
         this.confirm = new ModalConfirm(view.confirm);
-        this.appKey = new FormGroupText(view.appKey);
-        this.versionKey = new TextComponent(view.versionKey);
-        this.versionStatus = new TextComponent(view.versionStatus);
-        this.installationStatus = new FormGroupText(view.installationStatus);
-        this.location = new TextComponent(view.location);
-        this.current = new TextComponent(view.current);
-        this.domain = new FormGroupText(view.domain);
-        this.siteName = new FormGroupText(view.siteName);
-        this.mostRecentRequest = new FormGroupText(view.mostRecentRequest);
+        this.appKeyFormGroup = new FormGroupText(view.appKey);
+        this.versionKeyTextComponent = new TextComponent(view.versionKey);
+        this.versionStatusTextComponent = new TextComponent(view.versionStatus);
+        this.installationStatusFormGroup = new FormGroupText(view.installationStatus);
+        this.locationTextComponent = new TextComponent(view.location);
+        this.currentTextComponent = new TextComponent(view.current);
+        this.domainTextComponent = new FormGroupText(view.domain);
+        this.siteNameFormGroup = new FormGroupText(view.siteName);
+        this.mostRecentRequestFormGroup = new FormGroupText(view.mostRecentRequest);
         this.appLink = new TextLinkComponent(view.appLink);
         this.logEntriesLink = new TextLinkComponent(view.logEntriesLink);
         this.requestsLink = new TextLinkComponent(view.requestsLink);
@@ -66,13 +69,19 @@ export class InstallationPanel implements IPanel {
     private async onDelete() {
         const isConfirmed = await this.confirm.confirm("Delete this installation?", "Confirm Delete");
         if (isConfirmed) {
-            await this.alert.infoAction(
+            const sourceCommandDetail =await this.alert.infoAction(
                 "Deleting...",
-                () => this.hubClient.Installations.AddDeleteCommand({
+                () => this.hubClient.Installation.AddDeleteCommand({
                     InstallationID: this.installationID
                 })
             );
-            await this.refresh();
+            const commandDetail = new AppDeleteCommandDetail(sourceCommandDetail);
+            new WebPage(
+                this.hubClient.Command.Index.getModifierUrl(
+                    this.installationDetail.app.getModifier(),
+                    { CommandID: commandDetail.command.id }
+                )
+            );
         }
     }
 
@@ -90,33 +99,33 @@ export class InstallationPanel implements IPanel {
         this.deleteCommand.hide();
         const sourceDetail = await this.alert.infoAction(
             "Loading...",
-            () => this.hubClient.Installations.GetInstallationDetail({
+            () => this.hubClient.Installation.GetInstallationDetail({
                 InstallationID: this.installationID
             })
         );
         const detail = new InstallationDetail(sourceDetail);
-        this.appKey.setValue(detail.app.appKey.format());
-        this.versionKey.setText(detail.version.versionKey.displayText);
-        this.versionStatus.setText(`[ ${detail.version.status.DisplayText} ]`);
-        this.installationStatus.setValue(detail.installation.status.DisplayText);
-        this.location.setText(detail.installLocation.qualifiedMachineName);
-        this.current.setText(detail.installation.isCurrent ? "[ Current ]" : "");
+        this.appKeyFormGroup.setValue(detail.app.appKey.format());
+        this.versionKeyTextComponent.setText(detail.version.versionKey.displayText);
+        this.versionStatusTextComponent.setText(`[ ${detail.version.status.DisplayText} ]`);
+        this.installationStatusFormGroup.setValue(detail.installation.status.DisplayText);
+        this.locationTextComponent.setText(detail.installLocation.qualifiedMachineName);
+        this.currentTextComponent.setText(detail.installation.isCurrent ? "[ Current ]" : "");
         if (detail.installation.domain) {
-            this.domain.setValue(detail.installation.domain);
+            this.domainTextComponent.setValue(detail.installation.domain);
             this.view.showDomain();
         }
         else {
             this.view.hideDomain();
         }
         if (detail.installation.siteName) {
-            this.siteName.setValue(detail.installation.siteName);
+            this.siteNameFormGroup.setValue(detail.installation.siteName);
             this.view.showSiteName();
         }
         else {
             this.view.hideSiteName();
         }
         if (detail.mostRecentRequest.id) {
-            this.mostRecentRequest.setValue(detail.mostRecentRequest.timeStarted.format());
+            this.mostRecentRequestFormGroup.setValue(detail.mostRecentRequest.timeStarted.format());
             this.view.showMostRecentRequest();
         }
         else {

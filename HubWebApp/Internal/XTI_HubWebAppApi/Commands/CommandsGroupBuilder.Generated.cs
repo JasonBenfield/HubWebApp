@@ -10,12 +10,14 @@ public sealed partial class CommandsGroupBuilder
     {
         this.source = source;
         GetCommandsInProgress = source.AddAction<EmptyRequest, AppCommandSummaryModel[]>("GetCommandsInProgress").WithExecution<GetCommandsInProgressAction>();
+        GetPendingCommands = source.AddAction<GetPendingCommandsRequest, AppCommandSummaryModel[]>("GetPendingCommands").WithExecution<GetPendingCommandsAction>();
         Index = source.AddAction<AppCommandIDRequest, WebViewResult>("Index").WithExecution<IndexAction>();
         Configure();
     }
 
     partial void Configure();
     public AppApiActionBuilder<EmptyRequest, AppCommandSummaryModel[]> GetCommandsInProgress { get; }
+    public AppApiActionBuilder<GetPendingCommandsRequest, AppCommandSummaryModel[]> GetPendingCommands { get; }
     public AppApiActionBuilder<AppCommandIDRequest, WebViewResult> Index { get; }
 
     public CommandsGroup Build() => new CommandsGroup(source, this);

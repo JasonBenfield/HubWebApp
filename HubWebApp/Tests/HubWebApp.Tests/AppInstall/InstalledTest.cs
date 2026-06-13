@@ -210,7 +210,7 @@ sealed class InstalledTest
     {
         var host = new HubTestHost();
         var sp = await host.Setup();
-        return HubActionTester.Create(sp, hubApi => hubApi.Installations.Installed);
+        return HubActionTester.Create(sp, hubApi => hubApi.Installation.Installed);
     }
 
     private async Task<InstallConfigurationModel> AddDefaultConfiguration(IHubActionTester tester, string qualifiedMachineName)
@@ -266,7 +266,7 @@ sealed class InstalledTest
     private async Task<InstallationModel> StartInstallation(IHubActionTester tester, BeginInstallationRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var resultData = await hubApi.Installations.BeginInstallation.Execute(requestData);
+        var resultData = await hubApi.Command.BeginInstallation.Execute(requestData);
         return resultData.Data!;
     }
 

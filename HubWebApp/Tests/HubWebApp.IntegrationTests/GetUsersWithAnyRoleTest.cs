@@ -14,7 +14,6 @@ internal sealed class GetUsersWithAnyRoleTest
         (
             new SystemGetUsersWithAnyRoleRequest
             (
-                0,
                 HubInfo.ModCategories.Apps,
                 new ModifierKey("Scheduled Jobs Web App"),
                 HubInfo.Roles.PermanentLog

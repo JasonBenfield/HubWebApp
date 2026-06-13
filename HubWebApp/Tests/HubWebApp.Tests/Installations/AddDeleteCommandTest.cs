@@ -43,7 +43,7 @@ internal sealed class AddDeleteCommandTest
     {
         var host = new HubTestHost();
         var services = await host.Setup();
-        return HubActionTester.Create(services, hubApi => hubApi.Installations.AddDeleteCommand);
+        return HubActionTester.Create(services, hubApi => hubApi.Installation.AddDeleteCommand);
     }
 
     private async Task<int> PrepareInstallation(IHubActionTester tester, string qualifiedMachineName)
@@ -121,12 +121,12 @@ internal sealed class AddDeleteCommandTest
     private Task<InstallationModel> StartInstallation(IHubActionTester tester, BeginInstallationRequest requestData)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        return hubApi.Installations.BeginInstallation.Invoke(requestData);
+        return hubApi.Command.BeginInstallation.Invoke(requestData);
     }
 
     private Task Installed(IHubActionTester tester, InstallationIDRequest model)
     {
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        return hubApi.Installations.Installed.Execute(model);
+        return hubApi.Installation.Installed.Execute(model);
     }
 }

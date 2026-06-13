@@ -16,6 +16,7 @@ import { CurrentUserGroup } from "./CurrentUserGroup";
 import { ExternalAuthGroup } from "./ExternalAuthGroup";
 import { HomeGroup } from "./HomeGroup";
 import { InstallGroup } from "./InstallGroup";
+import { InstallationGroup } from "./InstallationGroup";
 import { InstallationsGroup } from "./InstallationsGroup";
 import { InstallTemplatesGroup } from "./InstallTemplatesGroup";
 import { LogsGroup } from "./LogsGroup";
@@ -55,6 +56,7 @@ export class HubAppClient extends AppClient {
 		this.ExternalAuth = this.addGroup((evts, resourceUrl) => new ExternalAuthGroup(evts, resourceUrl));
 		this.Home = this.addGroup((evts, resourceUrl) => new HomeGroup(evts, resourceUrl));
 		this.Install = this.addGroup((evts, resourceUrl) => new InstallGroup(evts, resourceUrl));
+		this.Installation = this.addGroup((evts, resourceUrl) => new InstallationGroup(evts, resourceUrl));
 		this.Installations = this.addGroup((evts, resourceUrl) => new InstallationsGroup(evts, resourceUrl));
 		this.InstallTemplates = this.addGroup((evts, resourceUrl) => new InstallTemplatesGroup(evts, resourceUrl));
 		this.Logs = this.addGroup((evts, resourceUrl) => new LogsGroup(evts, resourceUrl));
@@ -93,6 +95,7 @@ export class HubAppClient extends AppClient {
 	readonly ExternalAuth: ExternalAuthGroup;
 	readonly Home: HomeGroup;
 	readonly Install: InstallGroup;
+	readonly Installation: InstallationGroup;
 	readonly Installations: InstallationsGroup;
 	readonly InstallTemplates: InstallTemplatesGroup;
 	readonly Logs: LogsGroup;

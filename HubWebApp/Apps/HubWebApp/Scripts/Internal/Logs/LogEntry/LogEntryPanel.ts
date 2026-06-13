@@ -123,7 +123,7 @@ export class LogEntryPanel implements IPanel {
             this.hubClient.Logs.AppRequest.getUrl({ RequestID: detail.request.id })
         );
         this.installationLink.setHref(
-            this.hubClient.Installations.Installation.getUrl({ InstallationID: detail.installation.id })
+            this.hubClient.Installation.Index.getModifierUrl(detail.app.getModifier(), { InstallationID: detail.installation.id })
         );
     }
 

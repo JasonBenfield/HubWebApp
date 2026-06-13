@@ -11,6 +11,7 @@ using XTI_HubWebAppApi.CurrentUser;
 using XTI_HubWebAppApi.ExternalAuth;
 using XTI_HubWebAppApi.Home;
 using XTI_HubWebAppApi.Install;
+using XTI_HubWebAppApi.Installation;
 using XTI_HubWebAppApi.Installations;
 using XTI_HubWebAppApi.InstallTemplates;
 using XTI_HubWebAppApi.Logs;
@@ -54,6 +55,7 @@ public sealed partial class HubAppApiBuilder
         ExternalAuth = new ExternalAuthGroupBuilder(source.AddGroup("ExternalAuth"));
         Home = new HomeGroupBuilder(source.AddGroup("Home"));
         Install = new InstallGroupBuilder(source.AddGroup("Install"));
+        Installation = new InstallationGroupBuilder(source.AddGroup("Installation"));
         Installations = new InstallationsGroupBuilder(source.AddGroup("Installations"));
         InstallTemplates = new InstallTemplatesGroupBuilder(source.AddGroup("InstallTemplates"));
         Logs = new LogsGroupBuilder(source.AddGroup("Logs"));
@@ -94,6 +96,7 @@ public sealed partial class HubAppApiBuilder
     public ExternalAuthGroupBuilder ExternalAuth { get; }
     public HomeGroupBuilder Home { get; }
     public InstallGroupBuilder Install { get; }
+    public InstallationGroupBuilder Installation { get; }
     public InstallationsGroupBuilder Installations { get; }
     public InstallTemplatesGroupBuilder InstallTemplates { get; }
     public LogsGroupBuilder Logs { get; }

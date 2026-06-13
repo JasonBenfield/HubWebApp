@@ -304,23 +304,26 @@ public sealed class EfHubService : IHubService
         return installCommandDetail;
     }
 
-    public async Task<AppCommandModel> BeginCommand(int commandID, CancellationToken ct)
+    public async Task<AppCommandModel> BeginCommand(AppKey appKey, int commandID, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(commandID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         await efCommand.Begin(clock.Now(), ct);
         return efCommand.ToModel();
     }
 
-    public async Task<AppInstallCommandDetailModel> GetInstallCommandDetail(int commandID, CancellationToken ct)
+    public async Task<AppInstallCommandDetailModel> GetInstallCommandDetail(AppKey appKey, int commandID, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(commandID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         var installCommandDetail = await efCommand.ToInstallCommandDetailModel(ct);
         return installCommandDetail;
     }
 
-    public async Task<InstallationModel> BeginInstallation(int commandID, bool isCurrent, CancellationToken ct)
+    public async Task<InstallationModel> BeginInstallation(AppKey appKey, int commandID, bool isCurrent, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(commandID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         var efInstallation = await db.Transaction
         (
             () => efCommand.BeginInstallation
@@ -333,28 +336,32 @@ public sealed class EfHubService : IHubService
         return efInstallation.ToModel();
     }
 
-    public async Task Installed(int installationID, CancellationToken ct)
+    public async Task Installed(AppKey appKey, int installationID, CancellationToken ct)
     {
-        var efInstallation = await db.Installations.InstallationOrDefault(installationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efInstallation = await efApp.Installation(installationID, ct);
         await efInstallation.Installed(ct);
     }
 
-    public async Task CommandEnded(int requestedInstallationID, CancellationToken ct)
+    public async Task CommandEnded(AppKey appKey, int commandID, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(requestedInstallationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         await efCommand.End(clock.Now(), ct);
     }
 
-    public async Task<AppCommandStepModel> BeginCommandStep(int requestedInstallationID, string activity, CancellationToken ct)
+    public async Task<AppCommandStepModel> BeginCommandStep(AppKey appKey, int commandID, string activity, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(requestedInstallationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         var efStep = await efCommand.BeginStep(activity, clock.Now(), ct);
         return efStep.ToModel();
     }
 
-    public async Task CommandStepEnded(int stepID, string errorMessage, CancellationToken ct)
+    public async Task CommandStepEnded(AppKey appKey, int stepID, string errorMessage, CancellationToken ct)
     {
-        var efStep = await db.AppCommandSteps.Step(stepID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efStep = await efApp.CommandStep(stepID, ct);
         await efStep.End(clock.Now(), errorMessage, ct);
         if (!string.IsNullOrWhiteSpace(errorMessage))
         {
@@ -363,36 +370,40 @@ public sealed class EfHubService : IHubService
         }
     }
 
-    public async Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(int commandID, CancellationToken ct)
+    public async Task<AppDeleteCommandDetailModel> GetDeleteCommandDetail(AppKey appKey, int commandID, CancellationToken ct)
     {
-        var efCommand = await db.AppCommands.Command(commandID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efCommand = await efApp.Command(commandID, ct);
         var deleteCommandDetail = await efCommand.ToDeleteCommandDetailModel(ct);
         return deleteCommandDetail;
     }
 
-    public async Task<AppDeleteCommandDetailModel> AddDeleteCommand(int installationID, CancellationToken ct)
+    public async Task<AppDeleteCommandDetailModel> AddDeleteCommand(AppKey appKey, int installationID, CancellationToken ct)
     {
-        var efInstallation = await db.Installations.InstallationOrDefault(installationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efInstallation = await efApp.Installation(installationID, ct);
         var efCommand = await efInstallation.AddDeleteCommand(timeAdded: clock.Now(), ct: ct);
         var commandDetail = await efCommand.ToDeleteCommandDetailModel(ct);
         return commandDetail;
     }
 
-    public async Task BeginDelete(int installationID, CancellationToken ct)
+    public async Task BeginDelete(AppKey appKey, int installationID, CancellationToken ct)
     {
-        var efInstallation = await db.Installations.InstallationOrDefault(installationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efInstallation = await efApp.Installation(installationID, ct);
         await efInstallation.BeginDelete(ct);
     }
 
-    public async Task Deleted(int installationID, CancellationToken ct)
+    public async Task Deleted(AppKey appKey, int installationID, CancellationToken ct)
     {
-        var efInstallation = await db.Installations.InstallationOrDefault(installationID, ct);
+        var efApp = await db.Apps.App(appKey, ct);
+        var efInstallation = await efApp.Installation(installationID, ct);
         await efInstallation.Deleted(ct);
     }
 
-    public async Task<AppCommandModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct)
+    public async Task<AppCommandSummaryModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct)
     {
-        var commands = new List<AppCommandModel>();
+        var commandSummaries = new List<AppCommandSummaryModel>();
         foreach (var machineName in machineNames)
         {
             var efCommands = await db.AppCommands.GetPendingCommands
@@ -401,9 +412,13 @@ public sealed class EfHubService : IHubService
                 machineName,
                 ct
             );
-            commands.AddRange(efCommands.Select(c => c.ToModel()));
+            foreach(var efCommand in efCommands)
+            {
+                var commandSummary = await efCommand.ToSummaryModel(ct);
+                commandSummaries.Add(commandSummary);
+            }
         }
-        return commands.ToArray();
+        return commandSummaries.ToArray();
     }
 
 }

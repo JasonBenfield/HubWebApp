@@ -27,6 +27,17 @@ public sealed class EfAppCommandSteps
         return new EfAppCommandStep(db, step);
     }
 
+    internal async Task<EfAppCommandStep> Step(AppEntity app, int stepID, CancellationToken ct)
+    {
+        var commandIDs = db.Context.AppCommands.Retrieve()
+            .Where(c => c.AppID == app.ID)
+            .Select(c => c.ID);
+        var step = await db.Context.AppCommandSteps.Retrieve()
+            .Where(s => commandIDs.Contains(s.CommandID) && s.ID == stepID)
+            .FirstOrDefaultAsync(ct);
+        return new EfAppCommandStep(db, step ?? throw new Exception($"Requested Installation Step {stepID} not found for app {app.ID}."));
+    }
+
     public async Task<EfAppCommandStep> Step(int stepID, CancellationToken ct)
     {
         var step = await db.Context.AppCommandSteps.Retrieve()

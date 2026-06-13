@@ -6,6 +6,16 @@ internal static partial class CommandGroupExtensions
 {
     internal static void AddCommandServices(this IServiceCollection services)
     {
+        services.AddScoped<BeginCommandAction>();
+        services.AddScoped<BeginCommandValidation>();
+        services.AddScoped<BeginCommandStepAction>();
+        services.AddScoped<BeginCommandStepValidation>();
+        services.AddScoped<BeginInstallationAction>();
+        services.AddScoped<BeginInstallationValidation>();
+        services.AddScoped<CommandEndedAction>();
+        services.AddScoped<CommandEndedValidation>();
+        services.AddScoped<CommandStepEndedAction>();
+        services.AddScoped<CommandStepEndedValidation>();
         services.AddScoped<GetCommandAction>();
         services.AddScoped<GetCommandValidation>();
         services.AddScoped<GetDeleteCommandDetailAction>();

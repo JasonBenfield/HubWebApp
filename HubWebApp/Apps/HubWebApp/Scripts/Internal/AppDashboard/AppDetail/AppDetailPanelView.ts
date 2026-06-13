@@ -15,10 +15,14 @@ import { MostRecentErrorEventListCardView } from "./MostRecentErrorEventListCard
 import { MostRecentRequestListCardView } from "./MostRecentRequestListCardView";
 import { ResourceGroupListCardView } from "./ResourceGroupListCardView";
 import { ButtonContainerView } from "@jasonbenfield/sharedwebapp/Views/ButtonContainerView";
+import { InstallConfigurationListCardView } from "./InstallConfigurationListCardView";
+import { MessageAlertView } from "@jasonbenfield/sharedwebapp/Views/MessageAlertView";
 
 export class AppDetailPanelView extends GridView {
+    readonly alertView: MessageAlertView;
     readonly app: AppComponentView;
     readonly currentVersion: CurrentVersionComponentView;
+    readonly installConfigurationListCardView: InstallConfigurationListCardView;
     readonly refreshPublishedVersionsButton: ButtonCommandView;
     readonly installCurrentVersionButton: ButtonCommandView;
     private readonly appOptionsCardView: CardView;
@@ -40,10 +44,13 @@ export class AppDetailPanelView extends GridView {
         this.styleAsLayout();
         this.setTemplateRows(CssLengthUnit.flex(1));
         const mainContent = HubTheme.instance.mainContent(this.addCell());
+        this.alertView = mainContent.addView(MessageAlertView);
         this.app = mainContent.addView(AppComponentView);
         this.app.setMargin(MarginCss.bottom(3));
-        this.currentVersion = mainContent.addView(CurrentVersionComponentView)
+        this.currentVersion = mainContent.addView(CurrentVersionComponentView);
         this.currentVersion.setMargin(MarginCss.bottom(3));
+        this.installConfigurationListCardView = mainContent.addView(InstallConfigurationListCardView);
+        this.installConfigurationListCardView.setMargin(MarginCss.bottom(3));
         const buttonContainerView = mainContent.addView(ButtonContainerView);
         this.refreshPublishedVersionsButton = buttonContainerView.addButtonCommand();
         this.installCurrentVersionButton = buttonContainerView.addButtonCommand();

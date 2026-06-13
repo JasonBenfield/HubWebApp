@@ -34,24 +34,24 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
         {
             machineNames.Add($"{Environment.MachineName}.{domain}");
         }
-        var pendingCommands = await hubService.GetPendingCommands
+        var pendingCommandSummaries = await hubService.GetPendingCommands
         (
             [AppCommandName.Delete, AppCommandName.Install],
             machineNames.ToArray(),
             ct
         );
-        foreach (var pendingCommand in pendingCommands)
+        foreach (var pendingCommandSummary in pendingCommandSummaries)
         {
-            await hubService.BeginCommand(pendingCommand.ID, ct);
+            await hubService.BeginCommand(pendingCommandSummary.App.AppKey, pendingCommandSummary.Command.ID, ct);
             try
             {
-                if (pendingCommand.CommandName.Equals(AppCommandName.Delete))
+                if (pendingCommandSummary.Command.CommandName.Equals(AppCommandName.Delete))
                 {
-                    await DeleteApp(pendingCommand, ct);
+                    await DeleteApp(pendingCommandSummary, ct);
                 }
-                else if (pendingCommand.CommandName.Equals(AppCommandName.Install))
+                else if (pendingCommandSummary.Command.CommandName.Equals(AppCommandName.Install))
                 {
-                    var commandDetail = await hubService.GetInstallCommandDetail(pendingCommand.ID, ct);
+                    var commandDetail = await hubService.GetInstallCommandDetail(pendingCommandSummary.App.AppKey, pendingCommandSummary.Command.ID, ct);
                     using (var publishedAssets = CreatePublishedAssets(commandDetail.InstallConfiguration.RepoOwner, commandDetail.InstallConfiguration.RepoName))
                     {
                         var installFromRequestProcess = new InstallFromRequestProcess
@@ -65,7 +65,7 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
                         await installFromRequestProcess.Run(commandDetail, ct);
                     }
                 }
-                await hubService.CommandEnded(pendingCommand.ID, ct);
+                await hubService.CommandEnded(pendingCommandSummary.App.AppKey, pendingCommandSummary.Command.ID, ct);
             }
             catch (AppCommandStepException)
             {
@@ -74,18 +74,19 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
         return new EmptyActionResult();
     }
 
-    private async Task DeleteApp(AppCommandModel pendingCommand, CancellationToken ct)
+    private async Task DeleteApp(AppCommandSummaryModel pendingCommandSummary, CancellationToken ct)
     {
-        var deleteCommandDetail = await hubService.GetDeleteCommandDetail(pendingCommand.ID, ct);
-        await hubService.BeginDelete(deleteCommandDetail.Installation.ID, ct);
+        var appKey = pendingCommandSummary.App.AppKey;
+        var deleteCommandDetail = await hubService.GetDeleteCommandDetail(appKey, pendingCommandSummary.Command.ID, ct);
+        await hubService.BeginDelete(appKey, deleteCommandDetail.Installation.ID, ct);
         var versionKey = deleteCommandDetail.Installation.IsCurrent
             ? AppVersionKey.Current
             : deleteCommandDetail.Version.VersionKey;
-        if (deleteCommandDetail.App.AppKey.IsAppType(AppType.Values.WebApp))
+        if (appKey.IsAppType(AppType.Values.WebApp))
         {
             await RunStep
             (
-                pendingCommand,
+                pendingCommandSummary,
                 "Delete IIS Website",
                 () =>
                 {
@@ -93,7 +94,7 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
                     (
                         xtiFolder,
                         xtiEnv,
-                        deleteCommandDetail.App.AppKey,
+                        appKey,
                         versionKey,
                         deleteCommandDetail.Installation.SiteName
                     );
@@ -104,13 +105,13 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
         }
         else if
         (
-            deleteCommandDetail.App.AppKey.IsAppType(AppType.Values.ServiceApp) &&
+            appKey.IsAppType(AppType.Values.ServiceApp) &&
             deleteCommandDetail.Installation.IsCurrent
         )
         {
             await RunStep
             (
-                pendingCommand,
+                pendingCommandSummary,
                 "Delete Windows Service",
                 () =>
                 {
@@ -120,12 +121,12 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
                 ct
             );
         }
-        var appFolder = xtiFolder.InstallPath(deleteCommandDetail.App.AppKey, versionKey);
+        var appFolder = xtiFolder.InstallPath(appKey, versionKey);
         if (Directory.Exists(appFolder))
         {
             await RunStep
             (
-                pendingCommand,
+                pendingCommandSummary,
                 "Delete App Folder",
                 () =>
                 {
@@ -135,20 +136,21 @@ public sealed class ExecutePendingCommandsAction : AppAction<EmptyRequest, Empty
                 ct
             );
         }
-        await hubService.Deleted(deleteCommandDetail.Installation.ID, ct);
+        await hubService.Deleted(appKey, deleteCommandDetail.Installation.ID, ct);
     }
 
-    private async Task RunStep(AppCommandModel command, string activity, Func<Task> action, CancellationToken ct)
+    private async Task RunStep(AppCommandSummaryModel commandSummary, string activity, Func<Task> action, CancellationToken ct)
     {
-        var step = await hubService.BeginCommandStep(command.ID, activity, ct);
+        var appKey = commandSummary.App.AppKey;
+        var step = await hubService.BeginCommandStep(appKey, commandSummary.Command.ID, activity, ct);
         try
         {
             await action();
-            await hubService.CommandStepEnded(step.ID, "", ct);
+            await hubService.CommandStepEnded(appKey, step.ID, "", ct);
         }
         catch (Exception ex)
         {
-            await hubService.CommandStepEnded(step.ID, ex.ToString(), ct);
+            await hubService.CommandStepEnded(appKey, step.ID, ex.ToString(), ct);
             throw new AppCommandStepException(step);
         }
     }

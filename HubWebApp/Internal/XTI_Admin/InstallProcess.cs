@@ -41,8 +41,10 @@ public sealed class InstallProcess
             {
                 throw new Exception("Command ID is required.");
             }
+            var appKey = options.AppKey();
             var installCommandDetail = await hubService.GetInstallCommandDetail
             (
+                appKey,
                 options.CommandID,
                 ct
             );
@@ -102,7 +104,8 @@ public sealed class InstallProcess
                         GetLocalMachineName() :
                         installConfig.Template.DestinationMachineName;
                     var isImmediate = options.IsImmediate ||
-                        options.GetInstallationSource(xtiEnv) == InstallationSources.Folder;
+                        options.GetInstallationSource(xtiEnv) == InstallationSources.Folder ||
+                        installConfig.AppKey.Equals(AppKey.ServiceApp("Support"));
                     var installCommandDetail = await hubService.AddInstallCommand
                     (
                         new AddInstallCommandRequest
@@ -132,6 +135,8 @@ public sealed class InstallProcess
                             remoteOptions.HubAdministrationType = options.HubAdministrationType == HubAdministrationTypes.Default && installConfig.AppKey.Equals(HubInfo.AppKey) ?
                                 HubAdministrationTypes.DB :
                                 options.HubAdministrationType;
+                            remoteOptions.AppName = installConfig.AppKey.Name.DisplayText;
+                            remoteOptions.AppType = installConfig.AppKey.Type.DisplayText;
                             Console.WriteLine($"Starting remote install {installConfig.AppKey.Name.DisplayText} {installConfig.AppKey.Type.DisplayText} {versionKey.DisplayText}");
                             await remoteCommandService.Run
                             (

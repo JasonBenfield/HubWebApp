@@ -11,12 +11,14 @@ export class InstallConfiguration {
     readonly installSequence: number;
 
     constructor(source?: IInstallConfigurationModel) {
-        this.id = source ? source.ID : 0;
-        this.repoOwner = source ? source.RepoOwner : "";
-        this.repoName = source ? source.RepoName : "";
-        this.configurationName = source ? source.ConfigurationName : "";
+        this.id = source?.ID || 0;
+        this.repoOwner = source?.RepoOwner || "";
+        this.repoName = source?.RepoName || "";
+        this.configurationName = source?.ConfigurationName || "";
         this.appKey = new AppKey(source && source.AppKey);
         this.template = new InstallConfigurationTemplate(source && source.Template);
-        this.installSequence = source ? source.InstallSequence : 0;
+        this.installSequence = source?.InstallSequence || 0;
     }
+
+    get isFound() { return this.id > 0; }
 }

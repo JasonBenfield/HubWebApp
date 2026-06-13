@@ -3,21 +3,18 @@
 public sealed class AddOrUpdateModifierByTargetKeyAction : AppAction<SystemAddOrUpdateModifierByTargetKeyRequest, ModifierModel>
 {
     private readonly AppFromSystemUser appFromSystemUser;
-    private readonly EfHubDB hubFactory;
 
-    public AddOrUpdateModifierByTargetKeyAction(AppFromSystemUser appFromSystemUser, EfHubDB hubFactory)
+    public AddOrUpdateModifierByTargetKeyAction(AppFromSystemUser appFromSystemUser)
     {
         this.appFromSystemUser = appFromSystemUser;
-        this.hubFactory = hubFactory;
     }
 
-    public async Task<ModifierModel> Execute(SystemAddOrUpdateModifierByTargetKeyRequest model, CancellationToken stoppingToken)
+    public async Task<ModifierModel> Execute(SystemAddOrUpdateModifierByTargetKeyRequest requestData, CancellationToken stoppingToken)
     {
-        var appContextModel = await appFromSystemUser.App(model.InstallationID, stoppingToken);
-        var app = await hubFactory.Apps.App(appContextModel.App.ID, stoppingToken);
-        var modCategory = await app.ModCategory(new ModifierCategoryName(model.ModCategoryName), stoppingToken);
-        var generatedModKey = new GeneratedKeyFactory().Create(model.GenerateModKey);
-        var modifier = await modCategory.AddOrUpdateModifier(generatedModKey, model.TargetKey, model.TargetDisplayText, stoppingToken);
-        return modifier.ToModel();
+        var efApp = await appFromSystemUser.App(stoppingToken);
+        var efModCategory = await efApp.ModCategory(new ModifierCategoryName(requestData.ModCategoryName), stoppingToken);
+        var generatedModKey = new GeneratedKeyFactory().Create(requestData.GenerateModKey);
+        var efModifier = await efModCategory.AddOrUpdateModifier(generatedModKey, requestData.TargetKey, requestData.TargetDisplayText, stoppingToken);
+        return efModifier.ToModel();
     }
 }
