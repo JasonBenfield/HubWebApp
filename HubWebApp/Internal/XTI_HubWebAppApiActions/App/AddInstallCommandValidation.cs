@@ -2,13 +2,18 @@
 
 namespace XTI_HubWebAppApiActions.App;
 
-public sealed class AddInstallCommandValidation : AppActionValidation<InstallConfigurationIDRequest>
+public sealed class AddInstallCommandValidation : AppActionValidation<AddInstallCommandRequest>
 {
-    public Task Validate(ErrorList errors, InstallConfigurationIDRequest requestData, CancellationToken stoppingToken)
+    public Task Validate(ErrorList errors, AddInstallCommandRequest requestData, CancellationToken stoppingToken)
     {
-        if (requestData.ConfigurationID <= 0)
+        var versionKey = requestData.ToAppVersionKey();
+        if (versionKey.IsNone())
         {
-            errors.Add("Configuration ID is required.");
+            errors.Add("Version Key is required.");
+        }
+        if(requestData.InstallConfigurationID <= 0)
+        {
+            errors.Add("Install Configuration ID is required.");
         }
         return Task.CompletedTask;
     }

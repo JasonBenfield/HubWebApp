@@ -9,12 +9,6 @@ public sealed partial class InstallationsController : Controller
         this.api = api;
     }
 
-    [HttpPost]
-    public Task<ResultContainer<AppInstallCommandDetailModel>> AddInstallCommand([FromBody] AddInstallCommandRequest requestData, CancellationToken ct)
-    {
-        return api.Installations.AddInstallCommand.Execute(requestData, ct);
-    }
-
     public async Task<IActionResult> Index(InstallationQueryRequest requestData, CancellationToken ct)
     {
         var result = await api.Installations.Index.Execute(requestData, ct);

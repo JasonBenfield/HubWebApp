@@ -15,12 +15,12 @@ export class XtiVersion {
     readonly timeAdded: DateTimeOffset;
 
     constructor(source?: IXtiVersionModel) {
-        this.id = source ? source.ID : 0;
-        this.versionName = new AppVersionName(source && source.VersionName);
-        this.versionKey = new AppVersionKey(source && source.VersionKey);
-        this.versionNumber = new AppVersionNumber(source && source.VersionNumber);
-        this.versionType = source ? AppVersionType.values.value(source.VersionType) : AppVersionType.values.NotSet;
-        this.status = source ? AppVersionStatus.values.value(source.Status) : AppVersionStatus.values.NotSet;
-        this.timeAdded = source ? source.TimeAdded : DateTimeOffset.max();
+        this.id = source?.ID || 0;
+        this.versionName = new AppVersionName(source?.VersionName);
+        this.versionKey = new AppVersionKey(source?.VersionKey);
+        this.versionNumber = new AppVersionNumber(source?.VersionNumber);
+        this.versionType = AppVersionType.values.value(source?.VersionType.Value || 0);
+        this.status = AppVersionStatus.values.value(source?.Status.Value || 0);
+        this.timeAdded = source?.TimeAdded || DateTimeOffset.max();
     }
 }

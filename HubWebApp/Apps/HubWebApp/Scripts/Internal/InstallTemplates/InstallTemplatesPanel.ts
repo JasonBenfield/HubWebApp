@@ -4,7 +4,6 @@ import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Co
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
 import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { HubAppClient } from "../../Lib/Http/HubAppClient";
-import { HubPermissions, IHubPermissions } from "../../Lib/HubPermissions";
 import { InstallConfigurationTemplate } from "../../Lib/InstallConfigurationTemplate";
 import { InstallTemplateListFactory, InstallTemplateListItem } from "./InstallTemplateListItem";
 import { InstallTemplateListItemView } from "./InstallTemplateListItemView";

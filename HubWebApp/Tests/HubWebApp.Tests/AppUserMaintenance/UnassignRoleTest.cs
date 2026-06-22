@@ -66,7 +66,6 @@ internal sealed class UnassignRoleTest
         );
         var generalUserGroupModifier = await tester.GeneralUserGroupModifier();
         await tester.Execute(request, generalUserGroupModifier);
-        var hubAppModifier = await tester.HubAppModifier();
         var userRoles = await GetExplicitlyAssignedRoles(tester, userToEdit);
         Assert.That
         (

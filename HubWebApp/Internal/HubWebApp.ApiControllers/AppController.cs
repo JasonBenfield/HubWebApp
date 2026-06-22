@@ -10,7 +10,7 @@ public sealed partial class AppController : Controller
     }
 
     [HttpPost]
-    public Task<ResultContainer<AppInstallCommandDetailModel>> AddInstallCommand([FromBody] InstallConfigurationIDRequest requestData, CancellationToken ct)
+    public Task<ResultContainer<AppInstallCommandDetailModel>> AddInstallCommand([FromBody] AddInstallCommandRequest requestData, CancellationToken ct)
     {
         return api.App.AddInstallCommand.Execute(requestData, ct);
     }

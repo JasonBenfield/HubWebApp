@@ -9,20 +9,18 @@ public sealed class AddInstallCommandRequest
         XtiSerializer.Deserialize<AddInstallCommandRequest>(serializedRequest);
 
     public AddInstallCommandRequest()
-        : this(XTI_App.Abstractions.AppKey.Unknown, AppVersionKey.None, 0, false, false)
+        : this(AppVersionKey.None, 0, false, false)
     {
     }
 
-    public AddInstallCommandRequest(AppKey appKey, AppVersionKey versionKey, int installConfigurationID, bool installAsCurrent, bool isAutoStartEnabled)
+    public AddInstallCommandRequest(AppVersionKey versionKey, int installConfigurationID, bool installAsCurrent, bool isAutoStartEnabled)
     {
-        AppKey = new AppKeyRequest(appKey);
         VersionKey = versionKey.DisplayText;
         InstallConfigurationID = installConfigurationID;
         InstallAsCurrent = installAsCurrent;
         IsAutoStartEnabled = isAutoStartEnabled;
     }
 
-    public AppKeyRequest AppKey { get; set; }
     public string VersionKey { get; set; }
     public int InstallConfigurationID { get; set; }
     public bool InstallAsCurrent { get; set; }

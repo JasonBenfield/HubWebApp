@@ -283,9 +283,9 @@ public sealed class EfHubService : IHubService
         }
     }
 
-    public async Task<AppInstallCommandDetailModel> AddInstallCommand(AddInstallCommandRequest installRequest, CancellationToken ct)
+    public async Task<AppInstallCommandDetailModel> AddInstallCommand(AppKey appKey, AddInstallCommandRequest installRequest, CancellationToken ct)
     {
-        var efApp = await db.Apps.App(installRequest.AppKey.ToAppKey(), ct);
+        var efApp = await db.Apps.App(appKey, ct);
         var efInstallConfiguration = await db.InstallConfigurations.Configuration(installRequest.InstallConfigurationID, ct);
         var installConfiguration = await efInstallConfiguration.ToModel(ct);
         var versionKey = installRequest.ToAppVersionKey();

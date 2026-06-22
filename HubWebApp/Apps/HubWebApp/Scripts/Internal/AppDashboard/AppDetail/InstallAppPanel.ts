@@ -10,6 +10,11 @@ import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AppInstallCommandDetail } from "../../../Lib/AppInstallCommandDetail";
 import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
+import { AppVersionKey } from "../../../Lib/AppVersionKey";
+import { AppKey } from "../../../Lib/AppKey";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { FormGroupTextArea } from "@jasonbenfield/sharedwebapp/Forms/FormGroupTextArea";
+import { version } from "webpack";
 
 interface IResult {
     back?: boolean;
@@ -28,10 +33,16 @@ class Result {
 export class InstallAppPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: IMessageAlert;
+    private readonly appKeyFormGroup: FormGroupText;
+    private readonly versionKeyFormGroup: FormGroupText;
     private readonly configurationListGroup: ListGroup<InstallConfigurationListItem, InstallConfigurationListItemView>;
+    private appKey = new AppKey();
+    private versionKey = new AppVersionKey();
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallAppPanelView) {
         this.alert = new CardAlert(view.cardAlertView);
+        this.appKeyFormGroup = new FormGroupText(view.appKeyFormGroupView);
+        this.versionKeyFormGroup = new FormGroupText(view.versionKeyFormGroupView);
         this.configurationListGroup = new ListGroup(view.configurationListView);
         this.configurationListGroup.when.itemClicked.then(this.onConfigurationClicked.bind(this));
         new Command(this.back.bind(this)).add(view.backButton);
@@ -43,11 +54,24 @@ export class InstallAppPanel implements IPanel {
         return this.startInstall(listItem.configuration);
     }
 
+    setApp(appKey: AppKey, versionKey: AppVersionKey) {
+        this.appKey = appKey;
+        this.versionKey = versionKey;
+        this.appKeyFormGroup.setValue(appKey.format());
+        this.versionKeyFormGroup.setValue(versionKey.displayText);
+    }
+
     setInstallConfigurations(installConfigurations: InstallConfiguration[]) {
         this.configurationListGroup.setItems(
             installConfigurations,
             (c, itemView) => new InstallConfigurationListItem(c, itemView)
         );
+        if (installConfigurations.length > 0) {
+            this.alert.info("Select configuration to begin install.");
+        }
+        else {
+            this.alert.danger("No install configurations were found.");
+        }
     }
 
     start() {
@@ -58,7 +82,10 @@ export class InstallAppPanel implements IPanel {
         const sourceCommandDetail = await this.alert.infoAction(
             "Installing...",
             () => this.hubClient.App.AddInstallCommand({
-                ConfigurationID: installConfiguration.id
+                VersionKey: this.versionKey.displayText,
+                InstallConfigurationID: installConfiguration.id,
+                InstallAsCurrent: true,
+                IsAutoStartEnabled: false
             })
         );
         const commandDetail = new AppInstallCommandDetail(sourceCommandDetail);

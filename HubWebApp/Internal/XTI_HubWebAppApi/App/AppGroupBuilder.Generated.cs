@@ -10,7 +10,7 @@ public sealed partial class AppGroupBuilder
     internal AppGroupBuilder(AppApiGroup source)
     {
         this.source = source;
-        AddInstallCommand = source.AddAction<InstallConfigurationIDRequest, AppInstallCommandDetailModel>("AddInstallCommand").WithExecution<AddInstallCommandAction>().WithValidation<AddInstallCommandValidation>();
+        AddInstallCommand = source.AddAction<AddInstallCommandRequest, AppInstallCommandDetailModel>("AddInstallCommand").WithExecution<AddInstallCommandAction>().WithValidation<AddInstallCommandValidation>();
         ConfigureInstall = source.AddAction<ConfigureAppInstallRequest, InstallConfigurationModel>("ConfigureInstall").WithExecution<ConfigureInstallAction>();
         DeleteInstallConfiguration = source.AddAction<InstallConfigurationIDRequest, EmptyActionResult>("DeleteInstallConfiguration").WithExecution<DeleteInstallConfigurationAction>();
         GetApp = source.AddAction<EmptyRequest, AppModel>("GetApp").WithExecution<GetAppAction>();
@@ -29,7 +29,7 @@ public sealed partial class AppGroupBuilder
     }
 
     partial void Configure();
-    public AppApiActionBuilder<InstallConfigurationIDRequest, AppInstallCommandDetailModel> AddInstallCommand { get; }
+    public AppApiActionBuilder<AddInstallCommandRequest, AppInstallCommandDetailModel> AddInstallCommand { get; }
     public AppApiActionBuilder<ConfigureAppInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
     public AppApiActionBuilder<InstallConfigurationIDRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiActionBuilder<EmptyRequest, AppModel> GetApp { get; }

@@ -164,8 +164,8 @@ public sealed class HcHubService : IHubService
         return serialized;
     }
 
-    public Task<AppInstallCommandDetailModel> AddInstallCommand(AddInstallCommandRequest installRequest, CancellationToken ct) =>
-        hubClient.Installations.AddInstallCommand(installRequest, ct);
+    public Task<AppInstallCommandDetailModel> AddInstallCommand(AppKey appKey, AddInstallCommandRequest installRequest, CancellationToken ct) =>
+        hubClient.App.AddInstallCommand(GetModifier(appKey), installRequest, ct);
 
     private static readonly Regex whitespaceRegex = new Regex("\\s+");
 

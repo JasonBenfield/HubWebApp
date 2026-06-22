@@ -21,7 +21,6 @@ sealed class BeginCurrentInstallationTest
             tester,
             new AddInstallCommandRequest
             (
-                appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
                 installConfigurationID: config.ID,
                 installAsCurrent: true,
@@ -58,7 +57,6 @@ sealed class BeginCurrentInstallationTest
             tester,
             new AddInstallCommandRequest
             (
-                appKey: HubInfo.AppKey,
                 versionKey: appVersion.Version.Key(),
                 installConfigurationID: config.ID,
                 installAsCurrent: true,
@@ -104,7 +102,6 @@ sealed class BeginCurrentInstallationTest
             tester,
             new AddInstallCommandRequest
             (
-                appKey: HubInfo.AppKey,
                 versionKey: nextVersion.VersionKey,
                 installConfigurationID: config.ID,
                 installAsCurrent: true,
@@ -191,8 +188,10 @@ sealed class BeginCurrentInstallationTest
 
     private async Task<AppInstallCommandDetailModel> AddInstallCommand(IHubActionTester tester, AddInstallCommandRequest requestData)
     {
+        var modKeyAccessor = tester.Services.GetRequiredService<FakeModifierKeyAccessor>();
+        modKeyAccessor.SetValue(new ModifierKey(HubInfo.AppKey.Format()));
         var hubApi = tester.Services.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
+        var result = await hubApi.App.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 }

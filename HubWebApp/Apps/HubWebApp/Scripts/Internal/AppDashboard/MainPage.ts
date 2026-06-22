@@ -8,6 +8,8 @@ import { ModCategoryPanel } from "./ModCategory/ModCategoryPanel";
 import { ResourcePanel } from "./Resource/ResourcePanel";
 import { ResourceGroupPanel } from "./ResourceGroup/ResourceGroupPanel";
 import { InstallAppPanel } from "./AppDetail/InstallAppPanel";
+import { ConfigureInstallPanel } from "./AppDetail/ConfigureInstallPanel";
+import { SelectInstallTemplatesPanel } from "./AppDetail/SelectInstallTemplatesPanel";
 
 class MainPage extends HubPage {
     private readonly panels: SingleActivePanel;
@@ -15,15 +17,19 @@ class MainPage extends HubPage {
     private readonly resourceGroupPanel: ResourceGroupPanel;
     private readonly resourcePanel: ResourcePanel;
     private readonly modCategoryPanel: ModCategoryPanel;
+    private readonly selectInstallTemplatePanel: SelectInstallTemplatesPanel;
+    private readonly configureInstallPanel: ConfigureInstallPanel;
     private readonly installAppPanel: InstallAppPanel;
 
     constructor(protected readonly view: MainPageView) {
         super(view);
         this.panels = new SingleActivePanel();
-        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubClient, this.view.appDetailPanel));
-        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubClient, this.view.resourceGroupPanel));
-        this.resourcePanel = this.panels.add(new ResourcePanel(this.hubClient, this.view.resourcePanel));
-        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubClient, this.view.modCategoryPanel));
+        this.appDetailPanel = this.panels.add(new AppDetailPanel(this.hubClient, view.appDetailPanel));
+        this.resourceGroupPanel = this.panels.add(new ResourceGroupPanel(this.hubClient, view.resourceGroupPanel));
+        this.resourcePanel = this.panels.add(new ResourcePanel(this.hubClient, view.resourcePanel));
+        this.modCategoryPanel = this.panels.add(new ModCategoryPanel(this.hubClient, view.modCategoryPanel));
+        this.selectInstallTemplatePanel = this.panels.add(new SelectInstallTemplatesPanel(this.hubClient, view.selectInstallTemplatePanelView));
+        this.configureInstallPanel = this.panels.add(new ConfigureInstallPanel(this.hubClient, view.configureInstallPanelView));
         this.installAppPanel = this.panels.add(new InstallAppPanel(this.hubClient, view.installAppPanelView));
         if (XtiUrl.current().path.modifier) {
             this.activateAppDetailPanel();
@@ -47,7 +53,29 @@ class MainPage extends HubPage {
             this.activateModCategoryPanel(result.modCategorySelected.modCategory.id);
         }
         else if (result.configureInstallRequested) {
-
+            if (result.configureInstallRequested.installConfiguration.isFound) {
+                this.configureInstallPanel.setInstallConfiguration(
+                    result.configureInstallRequested.app,
+                    result.configureInstallRequested.installConfigurations,
+                    result.configureInstallRequested.installConfiguration
+                );
+                this.configureInstallPanel.setInstallTemplate(result.configureInstallRequested.installConfiguration.template);
+                this.activateConfigureInstallPanel();
+            }
+            else {
+                this.configureInstallPanel.setInstallConfiguration(
+                    result.configureInstallRequested.app,
+                    result.configureInstallRequested.installConfigurations,
+                    result.configureInstallRequested.installConfiguration
+                );
+                this.selectInstallTemplatePanel.refresh();
+                this.activateSelectInstallTemplatePanel(this.appDetailPanel);
+            }
+        }
+        else if (result.installRequested) {
+            this.installAppPanel.setApp(result.installRequested.app.appKey, result.installRequested.version.versionKey);
+            this.installAppPanel.setInstallConfigurations(result.installRequested.installConfigurations);
+            this.activateInstallAppPanel();
         }
     }
 
@@ -91,6 +119,39 @@ class MainPage extends HubPage {
         }
         else if (result.resourceGroupSelected) {
             this.activateResourceGroupPanel(result.resourceGroupSelected.resourceGroup.id);
+        }
+    }
+
+    private async activateSelectInstallTemplatePanel(returnTo: AppDetailPanel | ConfigureInstallPanel) {
+        this.panels.activate(this.selectInstallTemplatePanel);
+        const result = await this.selectInstallTemplatePanel.start();
+        if (result.back) {
+            if (returnTo === this.appDetailPanel) {
+                this.activateAppDetailPanel();
+            }
+            else if (returnTo === this.configureInstallPanel) {
+                this.activateConfigureInstallPanel();
+            }
+        }
+        else if (result.templateSelected) {
+            this.configureInstallPanel.setInstallTemplate(result.templateSelected.template);
+            this.activateConfigureInstallPanel();
+        }
+    }
+
+    private async activateConfigureInstallPanel() {
+        this.panels.activate(this.configureInstallPanel);
+        const result = await this.configureInstallPanel.start();
+        if (result.cancelled) {
+            this.activateAppDetailPanel();
+        }
+        else if (result.saved) {
+            this.appDetailPanel.refresh();
+            this.activateAppDetailPanel();
+        }
+        else if (result.selectTemplateRequested) {
+            this.selectInstallTemplatePanel.refresh();
+            this.activateSelectInstallTemplatePanel(this.configureInstallPanel);
         }
     }
 

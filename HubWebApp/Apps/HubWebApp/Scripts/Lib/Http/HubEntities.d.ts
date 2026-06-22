@@ -1,7 +1,10 @@
 // Generated code
 
-interface IInstallConfigurationIDRequest {
-	ConfigurationID: number;
+interface IAddInstallCommandRequest {
+	VersionKey: string;
+	InstallConfigurationID: number;
+	InstallAsCurrent: boolean;
+	IsAutoStartEnabled: boolean;
 }
 interface IAppInstallCommandDetailModel {
 	Command: IAppCommandModel;
@@ -59,17 +62,6 @@ interface IAppCommandStepModel {
 	TimeEnded: import('@jasonbenfield/sharedwebapp/Common').DateTimeOffset;
 	ErrorMessage: string;
 }
-interface IAddInstallCommandRequest {
-	AppKey: IAppKeyRequest;
-	VersionKey: string;
-	InstallConfigurationID: number;
-	InstallAsCurrent: boolean;
-	IsAutoStartEnabled: boolean;
-}
-interface IAppKeyRequest {
-	AppName: string;
-	AppType: number;
-}
 interface IXtiVersionModel {
 	ID: number;
 	VersionName: IAppVersionName;
@@ -115,6 +107,9 @@ interface IConfigureAppInstallRequest {
 	ConfigurationName: string;
 	TemplateID: number;
 	InstallSequence: number;
+}
+interface IInstallConfigurationIDRequest {
+	ConfigurationID: number;
 }
 interface IModifierModel {
 	ID: number;
@@ -296,6 +291,10 @@ interface IAddAdminUserRequest {
 	AppKey: IAppKeyRequest;
 	UserName: string;
 	Password: string;
+}
+interface IAppKeyRequest {
+	AppName: string;
+	AppType: number;
 }
 interface IAddInstallationUserRequest {
 	MachineName: string;

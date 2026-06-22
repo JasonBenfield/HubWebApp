@@ -27,7 +27,7 @@ public sealed partial class AppGroup : AppApiGroupWrapper
     }
 
     partial void Configure();
-    public AppApiAction<InstallConfigurationIDRequest, AppInstallCommandDetailModel> AddInstallCommand { get; }
+    public AppApiAction<AddInstallCommandRequest, AppInstallCommandDetailModel> AddInstallCommand { get; }
     public AppApiAction<ConfigureAppInstallRequest, InstallConfigurationModel> ConfigureInstall { get; }
     public AppApiAction<InstallConfigurationIDRequest, EmptyActionResult> DeleteInstallConfiguration { get; }
     public AppApiAction<EmptyRequest, AppModel> GetApp { get; }

@@ -23,7 +23,6 @@ export class AppInstallCommandDetail implements IAppCommandDetail {
 		this.location = new InstallLocation(source && source.Location);
 		this.steps = source ? source.Steps.map(s => new AppCommandStep(s)) : [];
 		this.installRequest = source?.InstallRequest || {
-			AppKey: { AppName: "", AppType: 0 },
 			VersionKey: "",
 			InstallAsCurrent: false,
 			IsAutoStartEnabled: false,

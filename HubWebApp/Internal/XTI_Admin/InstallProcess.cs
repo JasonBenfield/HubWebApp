@@ -108,9 +108,9 @@ public sealed class InstallProcess
                         installConfig.AppKey.Equals(AppKey.ServiceApp("Support"));
                     var installCommandDetail = await hubService.AddInstallCommand
                     (
+                        installConfig.AppKey,
                         new AddInstallCommandRequest
                         (
-                            appKey: installConfig.AppKey,
                             versionKey: versionKey,
                             installConfigurationID: options.CommandID,
                             installAsCurrent: true,

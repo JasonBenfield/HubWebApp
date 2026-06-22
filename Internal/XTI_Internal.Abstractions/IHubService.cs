@@ -41,7 +41,7 @@ public interface IHubService
 
     Task<AppCommandSummaryModel[]> GetPendingCommands(AppCommandName[] commandNames, string[] machineNames, CancellationToken ct);
 
-    Task<AppInstallCommandDetailModel> AddInstallCommand(AddInstallCommandRequest installRequest, CancellationToken ct);
+    Task<AppInstallCommandDetailModel> AddInstallCommand(AppKey appKey, AddInstallCommandRequest installRequest, CancellationToken ct);
 
     Task<AppCommandModel> BeginCommand(AppKey appKey, int commandID, CancellationToken ct);
 

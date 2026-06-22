@@ -788,7 +788,6 @@ internal sealed class LogSessionDetailsTest
             sp,
             new AddInstallCommandRequest
             (
-                appKey: fakeApp.AppKey,
                 versionKey: version.VersionKey,
                 installConfigurationID: config.ID,
                 installAsCurrent: true,
@@ -890,8 +889,10 @@ internal sealed class LogSessionDetailsTest
 
     private async static Task<AppInstallCommandDetailModel> AddInstallCommand(IServiceProvider sp, AddInstallCommandRequest requestData)
     {
+        var modKeyAccessor = sp.GetRequiredService<FakeModifierKeyAccessor>();
+        modKeyAccessor.SetValue(new ModifierKey(HubInfo.AppKey.Format()));
         var hubApi = sp.GetRequiredService<HubAppApiFactory>().CreateForSuperUser();
-        var result = await hubApi.Installations.AddInstallCommand.Execute(requestData);
+        var result = await hubApi.App.AddInstallCommand.Execute(requestData);
         return result.Data!;
     }
 }

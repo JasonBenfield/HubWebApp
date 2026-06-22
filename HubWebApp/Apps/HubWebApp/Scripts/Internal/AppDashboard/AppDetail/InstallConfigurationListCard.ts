@@ -11,7 +11,6 @@ import { EventSource } from "@jasonbenfield/sharedwebapp/Events";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 
 export interface ConfigureInstallEventArgs {
-    installConfigurations: InstallConfiguration[],
     installConfiguration: InstallConfiguration
 }
 
@@ -33,7 +32,6 @@ export class InstallConfigurationListCard extends BasicComponent {
 
     private add() {
         this.eventSource.events.configureRequested.invoke({
-            installConfigurations: this.installConfigurations,
             installConfiguration: new InstallConfiguration()
         });
     }

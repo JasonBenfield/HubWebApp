@@ -19,12 +19,22 @@ import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
+import { XtiVersion } from "../../../Lib/XtiVersion";
 
 interface IResult {
     backRequested?: {};
     resourceGroupSelected?: { resourceGroup: AppResourceGroup; };
     modCategorySelected?: { modCategory: ModifierCategory; };
-    configureInstallRequested?: { app: App, installConfigurations: InstallConfiguration[], installConfiguration: InstallConfiguration; };
+    configureInstallRequested?: {
+        app: App,
+        installConfigurations: InstallConfiguration[],
+        installConfiguration: InstallConfiguration
+    };
+    installRequested?: {
+        app: App,
+        version: XtiVersion,
+        installConfigurations: InstallConfiguration[]
+    };
 }
 
 class Result {
@@ -54,6 +64,16 @@ class Result {
         });
     }
 
+    static installRequested(app: App, version: XtiVersion, installConfigurations: InstallConfiguration[]) {
+        return new Result({
+            installRequested: {
+                app: app,
+                version: version,
+                installConfigurations: installConfigurations
+            }
+        });
+    }
+
     private constructor(private readonly results: IResult) {
     }
 
@@ -64,6 +84,8 @@ class Result {
     get modCategorySelected() { return this.results.modCategorySelected; }
 
     get configureInstallRequested() { return this.results.configureInstallRequested; }
+
+    get installRequested() { return this.results.installRequested; }
 }
 
 export class AppDetailPanel implements IPanel {
@@ -83,8 +105,10 @@ export class AppDetailPanel implements IPanel {
     private readonly refreshPublishedVersionsCommand: AsyncCommand;
     private readonly installCurrentVersionCommand: AsyncCommand;
     private readonly backCommand = new Command(this.back.bind(this));
-    private permissions: IAppPermissions | null = null;
+    private readonly installConfigurations: InstallConfiguration[] = [];
     private app = new App();
+    private version = new XtiVersion();
+    private permissions: IAppPermissions | null = null;
 
     constructor(
         private readonly hubClient: HubAppClient,
@@ -123,9 +147,10 @@ export class AppDetailPanel implements IPanel {
     }
 
     private configureInstallRequested(args: ConfigureInstallEventArgs) {
+        const app = this.app;
         this.awaitable.resolve(Result.configureInstallRequested(
-            this.app,
-            args.installConfigurations,
+            app,
+            this.installConfigurations,
             args.installConfiguration
         ));
     }
@@ -139,6 +164,13 @@ export class AppDetailPanel implements IPanel {
     }
 
     private async installCurrentVersion() {
+        const app = this.app;
+        const version = this.version;
+        this.awaitable.resolve(Result.installRequested(
+            app,
+            version,
+            this.installConfigurations
+        ));
     }
 
     private onResourceGroupSelected(group: AppResourceGroup) {
@@ -165,7 +197,7 @@ export class AppDetailPanel implements IPanel {
         }
         const promises: Promise<any>[] = [
             this.refreshApp(),
-            this.currentVersionComponent.refresh(),
+            this.refreshCurrentVersion(),
             this.refreshInstallConfigurations(),
             this.refreshDefaultAppOptions(),
             this.refreshDefaultOptions(),
@@ -175,6 +207,13 @@ export class AppDetailPanel implements IPanel {
             this.mostRecentErrorEventListCard.refresh()
         ];
         await Promise.all(promises);
+        if (
+            this.installConfigurations.length > 0 &&
+            (!this.app.appKey.name.equals("Hub") || !this.app.appKey.isWebApp) &&
+            (!this.app.appKey.name.equals("Support") || !this.app.appKey.isServiceApp)
+        ) {
+            this.installCurrentVersionCommand.show();
+        }
     }
 
     private async refreshApp() {
@@ -184,17 +223,15 @@ export class AppDetailPanel implements IPanel {
         }
     }
 
+    private async refreshCurrentVersion() {
+        this.version = await this.currentVersionComponent.refresh();
+    }
+
     private async refreshInstallConfigurations() {
         if (this.permissions.canManageInstallation) {
             this.installCurrentVersionCommand.hide();
             const installConfigurations = await this.installConfigurationListCard.refresh();
-            if (
-                installConfigurations.length > 0 &&
-                (!this.app.appKey.name.equals("Hub") || !this.app.appKey.isWebApp) &&
-                (!this.app.appKey.name.equals("Support") || !this.app.appKey.isServiceApp)
-            ) {
-                this.installCurrentVersionCommand.show();
-            }
+            this.installConfigurations.splice(0, this.installConfigurations.length, ...installConfigurations);
         }
     }
 

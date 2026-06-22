@@ -20,6 +20,7 @@ export class ConfigureInstallPanelView extends GridView {
     readonly configurationNameFormGroupView: FormGroupTextView;
     readonly configurationNameInputFormGroupView: FormGroupInputView;
     readonly templateNameFormGroupView: FormGroupTextView;
+    readonly selectTemplateButton: ButtonCommandView;
     readonly machineNameFormGroupView: FormGroupTextView;
     readonly installSequenceInputFormGroupView: FormGroupInputView;
     readonly deleteButton: ButtonCommandView;
@@ -48,6 +49,8 @@ export class ConfigureInstallPanelView extends GridView {
         this.configurationNameInputFormGroupView = formGroupContainerView.addFormGroupInputView();
         this.templateNameFormGroupView = formGroupContainerView.addFormGroupTextView();
         this.templateNameFormGroupView.valueTextView.styleAsUserSelectAll();
+        this.selectTemplateButton = this.templateNameFormGroupView.valueCell.addView(ButtonContainerView).addButtonCommand();
+        this.selectTemplateButton.setText("Select a different template");
         this.machineNameFormGroupView = formGroupContainerView.addFormGroupTextView();
         this.machineNameFormGroupView.valueTextView.styleAsUserSelectAll();
         this.installSequenceInputFormGroupView = formGroupContainerView.addFormGroupInputView();

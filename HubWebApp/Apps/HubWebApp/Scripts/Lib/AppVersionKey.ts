@@ -4,8 +4,8 @@ export class AppVersionKey {
     readonly displayText: string;
 
     constructor(source?: IAppVersionKey) {
-        this.value = source ? source.Value : "";
-        this.displayText = source ? source.DisplayText : "";
+        this.value = source?.Value || "";
+        this.displayText = source?.DisplayText || "";
     }
 
     toString() { return this.displayText; }

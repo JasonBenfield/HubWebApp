@@ -10,14 +10,9 @@ import { AppResourceUrl } from "@jasonbenfield/sharedwebapp/Http/AppResourceUrl"
 export class InstallationsGroup extends AppClientGroup {
 	constructor(events: AppClientEvents, resourceUrl: AppResourceUrl) {
 		super(events, resourceUrl, 'Installations');
-		this.AddInstallCommandAction = this.createAction<IAddInstallCommandRequest,IAppInstallCommandDetailModel>('AddInstallCommand', 'Add Install Command');
 		this.Index = this.createView<IInstallationQueryRequest>('Index');
 	}
 	
-	readonly AddInstallCommandAction: AppClientAction<IAddInstallCommandRequest,IAppInstallCommandDetailModel>;
 	readonly Index: AppClientView<IInstallationQueryRequest>;
 	
-	AddInstallCommand(requestData: IAddInstallCommandRequest, errorOptions?: IActionErrorOptions) {
-		return this.AddInstallCommandAction.execute(requestData, errorOptions || {});
-	}
 }

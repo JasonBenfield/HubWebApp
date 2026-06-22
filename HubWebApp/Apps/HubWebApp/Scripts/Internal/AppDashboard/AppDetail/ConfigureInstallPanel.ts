@@ -1,24 +1,25 @@
 import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
-import { ConfigureInstallPanelView } from "./ConfigureInstallPanelView";
-import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
-import { FormGroupInput } from "@jasonbenfield/sharedwebapp/Forms/FormGroupInput";
-import { FormGroupTextInput } from "@jasonbenfield/sharedwebapp/Forms/FormGroupTextInput";
-import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { AsyncCommand, Command } from "@jasonbenfield/sharedwebapp/Components/Command";
+import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfirm";
 import { ModalError } from "@jasonbenfield/sharedwebapp/Components/ModalError";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
 import { ErrorModel } from "@jasonbenfield/sharedwebapp/ErrorModel";
+import { FormGroupInput } from "@jasonbenfield/sharedwebapp/Forms/FormGroupInput";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { FormGroupTextInput } from "@jasonbenfield/sharedwebapp/Forms/FormGroupTextInput";
 import { TextToNumberViewValue } from "@jasonbenfield/sharedwebapp/Forms/TextToNumberViewValue";
-import { HubAppClient } from "../../../Lib/Http/HubAppClient";
-import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 import { App } from "../../../Lib/App";
 import { AppType } from "../../../Lib/Http/AppType";
+import { HubAppClient } from "../../../Lib/Http/HubAppClient";
+import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 import { InstallConfigurationTemplate } from "../../../Lib/InstallConfigurationTemplate";
-import { ModalConfirm } from "@jasonbenfield/sharedwebapp/Components/ModalConfirm";
+import { ConfigureInstallPanelView } from "./ConfigureInstallPanelView";
 
 interface IResult {
     saved?: boolean;
     cancelled?: boolean;
+    selectTemplateRequested?: { template: InstallConfigurationTemplate };
 }
 
 class Result {
@@ -28,11 +29,17 @@ class Result {
 
     static cancelled() { return new Result({ cancelled: true }); }
 
+    static selectTemplateRequested(template: InstallConfigurationTemplate) {
+        return new Result({ selectTemplateRequested: { template: template } });
+    }
+
     private constructor(private readonly result: IResult) { }
 
     get saved() { return this.result.saved; }
 
     get cancelled() { return this.result.cancelled; }
+
+    get selectTemplateRequested() { return this.result.selectTemplateRequested; }
 }
 
 export class ConfigureInstallPanel implements IPanel {
@@ -71,6 +78,7 @@ export class ConfigureInstallPanel implements IPanel {
         this.saveCommand = new AsyncCommand(this.save.bind(this));
         this.saveCommand.add(view.saveButton);
         new AsyncCommand(this.deleteInstallConfiguration.bind(this)).add(view.deleteButton);
+        new Command(this.selectTemplate.bind(this)).add(view.selectTemplateButton);
     }
 
     private cancel() { this.awaitable.resolve(Result.cancelled()); }
@@ -108,6 +116,10 @@ export class ConfigureInstallPanel implements IPanel {
             );
             this.awaitable.resolve(Result.saved());
         }
+    }
+
+    private selectTemplate() {
+        this.awaitable.resolve(Result.selectTemplateRequested(this.installTemplate));
     }
 
     private validate() {
