@@ -11,15 +11,15 @@ import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { HubPermissions, IAppPermissions } from "../../../Lib/HubPermissions";
 import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
 import { ModifierCategory } from "../../../Lib/ModifierCategory";
-import { AppComponent } from "./AppComponent";
+import { XtiVersion } from "../../../Lib/XtiVersion";
+import { AppCard } from "./AppCard";
 import { AppDetailPanelView } from "./AppDetailPanelView";
-import { CurrentVersionComponent } from "./CurrentVersionComponent";
 import { ConfigureInstallEventArgs, InstallConfigurationListCard } from "./InstallConfigurationListCard";
 import { ModifierCategoryListCard } from "./ModifierCategoryListCard";
 import { MostRecentErrorEventListCard } from "./MostRecentErrorEventListCard";
 import { MostRecentRequestListCard } from "./MostRecentRequestListCard";
 import { ResourceGroupListCard } from "./ResourceGroupListCard";
-import { XtiVersion } from "../../../Lib/XtiVersion";
+import { LinkComponent } from "@jasonbenfield/sharedwebapp/Components/LinkComponent";
 
 interface IResult {
     backRequested?: {};
@@ -91,8 +91,7 @@ class Result {
 export class AppDetailPanel implements IPanel {
     private readonly awaitable = new Awaitable<Result>();
     private readonly alert: MessageAlert;
-    private readonly appComponent: AppComponent;
-    private readonly currentVersionComponent: CurrentVersionComponent;
+    private readonly appCard: AppCard;
     private readonly installConfigurationListCard: InstallConfigurationListCard;
     private readonly appOptionsAlert: IMessageAlert;
     private readonly appOptionsTextComponent: TextComponent;
@@ -102,6 +101,7 @@ export class AppDetailPanel implements IPanel {
     private readonly modifierCategoryListCard: ModifierCategoryListCard;
     private readonly mostRecentRequestListCard: MostRecentRequestListCard;
     private readonly mostRecentErrorEventListCard: MostRecentErrorEventListCard;
+    private readonly repositoryLinkComponent: LinkComponent;
     private readonly refreshPublishedVersionsCommand: AsyncCommand;
     private readonly installCurrentVersionCommand: AsyncCommand;
     private readonly backCommand = new Command(this.back.bind(this));
@@ -115,8 +115,7 @@ export class AppDetailPanel implements IPanel {
         private readonly view: AppDetailPanelView
     ) {
         this.alert = new MessageAlert(view.alertView);
-        this.appComponent = new AppComponent(hubClient, view.app);
-        this.currentVersionComponent = new CurrentVersionComponent(hubClient, view.currentVersion);
+        this.appCard = new AppCard(hubClient, view.appCardView);
         this.installConfigurationListCard = new InstallConfigurationListCard(hubClient, view.installConfigurationListCardView);
         this.installConfigurationListCard.when.configureRequested.then(this.configureInstallRequested.bind(this));
         this.installConfigurationListCard.hide();
@@ -134,6 +133,9 @@ export class AppDetailPanel implements IPanel {
         );
         this.mostRecentRequestListCard = new MostRecentRequestListCard(hubClient, view.mostRecentRequestListCard);
         this.mostRecentErrorEventListCard = new MostRecentErrorEventListCard(hubClient, view.mostRecentErrorEventListCard);
+        this.repositoryLinkComponent = new LinkComponent(view.repositoryLinkView);
+        this.repositoryLinkComponent.setTargetToBlank();
+        this.repositoryLinkComponent.hide();
         this.refreshPublishedVersionsCommand = new AsyncCommand(this.refreshPublishedVersions.bind(this));
         this.refreshPublishedVersionsCommand.add(view.refreshPublishedVersionsButton);
         this.refreshPublishedVersionsCommand.setText("Refresh Published Versions");
@@ -197,7 +199,6 @@ export class AppDetailPanel implements IPanel {
         }
         const promises: Promise<any>[] = [
             this.refreshApp(),
-            this.refreshCurrentVersion(),
             this.refreshInstallConfigurations(),
             this.refreshDefaultAppOptions(),
             this.refreshDefaultOptions(),
@@ -217,14 +218,17 @@ export class AppDetailPanel implements IPanel {
     }
 
     private async refreshApp() {
-        this.app = await this.appComponent.refresh();
+        this.repositoryLinkComponent.hide();
+        const { app, version } = await this.appCard.refresh();
+        this.app = app;
+        this.version = version;
+        if (app.repoOwner && app.repoName) {
+            this.repositoryLinkComponent.setHref(`https://github.com/${app.repoOwner}/${app.repoName}`);
+            this.repositoryLinkComponent.show();
+        }
         if (this.permissions.canManageInstallation) {
             this.refreshPublishedVersionsCommand.show();
         }
-    }
-
-    private async refreshCurrentVersion() {
-        this.version = await this.currentVersionComponent.refresh();
     }
 
     private async refreshInstallConfigurations() {

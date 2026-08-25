@@ -1,20 +1,18 @@
 import { Awaitable } from "@jasonbenfield/sharedwebapp/Awaitable";
+import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
 import { Command } from "@jasonbenfield/sharedwebapp/Components/Command";
 import { ListGroup } from "@jasonbenfield/sharedwebapp/Components/ListGroup";
+import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
+import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
+import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
+import { AppInstallCommandDetail } from "../../../Lib/AppInstallCommandDetail";
+import { AppKey } from "../../../Lib/AppKey";
+import { AppVersionKey } from "../../../Lib/AppVersionKey";
 import { HubAppClient } from "../../../Lib/Http/HubAppClient";
 import { InstallConfiguration } from "../../../Lib/InstallConfiguration";
+import { InstallAppPanelView } from "./InstallAppPanelView";
 import { InstallConfigurationListItem } from "./InstallConfigurationListItem";
 import { InstallConfigurationListItemView } from "./InstallConfigurationListItemView";
-import { InstallAppPanelView } from "./InstallAppPanelView";
-import { IMessageAlert } from "@jasonbenfield/sharedwebapp/Components/Types";
-import { CardAlert } from "@jasonbenfield/sharedwebapp/Components/CardAlert";
-import { AppInstallCommandDetail } from "../../../Lib/AppInstallCommandDetail";
-import { WebPage } from "@jasonbenfield/sharedwebapp/Http/WebPage";
-import { AppVersionKey } from "../../../Lib/AppVersionKey";
-import { AppKey } from "../../../Lib/AppKey";
-import { FormGroupText } from "@jasonbenfield/sharedwebapp/Forms/FormGroupText";
-import { FormGroupTextArea } from "@jasonbenfield/sharedwebapp/Forms/FormGroupTextArea";
-import { version } from "webpack";
 
 interface IResult {
     back?: boolean;
@@ -36,7 +34,6 @@ export class InstallAppPanel implements IPanel {
     private readonly appKeyFormGroup: FormGroupText;
     private readonly versionKeyFormGroup: FormGroupText;
     private readonly configurationListGroup: ListGroup<InstallConfigurationListItem, InstallConfigurationListItemView>;
-    private appKey = new AppKey();
     private versionKey = new AppVersionKey();
 
     constructor(private readonly hubClient: HubAppClient, private readonly view: InstallAppPanelView) {
@@ -55,7 +52,6 @@ export class InstallAppPanel implements IPanel {
     }
 
     setApp(appKey: AppKey, versionKey: AppVersionKey) {
-        this.appKey = appKey;
         this.versionKey = versionKey;
         this.appKeyFormGroup.setValue(appKey.format());
         this.versionKeyFormGroup.setValue(versionKey.displayText);

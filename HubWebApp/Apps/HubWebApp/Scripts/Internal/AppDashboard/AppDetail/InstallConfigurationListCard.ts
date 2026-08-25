@@ -48,6 +48,9 @@ export class InstallConfigurationListCard extends BasicComponent {
             configurations,
             (c, itemView) => new InstallConfigurationListItem(c, itemView)
         );
+        if (configurations.length === 0) {
+            this.alert.warning("No configurations have been added.");
+        }
         return configurations;
     }
 
